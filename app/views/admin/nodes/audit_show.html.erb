@@ -1,0 +1,49 @@
+<div id="right_panel_body">
+  <%
+    link_options = { :popup_window => true }
+    link_options[:skip_link_self] = true unless @previous_url
+  %>
+  <div class="bread_crumbs">
+    <%= bread_crumbs_track_for(@node, link_options) %>
+  </div>
+
+  <div id="tab_panel">
+    <div id="tab_current_content" class="x-hide-display">
+    </div>
+
+    <% if @previous_url %>
+      <div id="tab_previous_content" class="x-hide-display">
+      </div>
+      
+      <div id="tab_diff_content" class="x-hide-display">
+      </div>      
+    <% end %>
+  </div>
+</div>
+
+<script type="text/javascript">
+//<![CDATA
+Ext.QuickTips.init();
+
+<%
+  if @previous_url
+    tabs = [%({contentEl: 'tab_diff_content', title: '#{ escape_javascript(@node.content.title)} (#{I18n.t("nodes.diff")})', autoLoad: '#{@diff_url}' })]
+    tabs << %({contentEl: 'tab_current_content', title: '#{escape_javascript(@node.content.title)} (#{I18n.t("nodes.new_version")})', autoLoad: '#{@current_url}' })
+    tabs << %({contentEl: 'tab_previous_content', title: '#{ escape_javascript(@node.content.previous_version.title)} (#{I18n.t("nodes.previous_version")})', autoLoad: '#{@previous_url}' })    
+  else
+    tabs = [%({contentEl: 'tab_current_content', title: '#{escape_javascript(@node.content.title)}', autoLoad: '#{@current_url}' })]
+  end
+%>
+
+var tabs = new Ext.TabPanel({
+    activeTab: 0,
+    renderTo: 'tab_panel',
+    border: false,
+    defaults: {autoHeight: true},
+    items:[
+    <%= tabs.join(',') %>
+    ]
+});
+
+//]]>
+</script>

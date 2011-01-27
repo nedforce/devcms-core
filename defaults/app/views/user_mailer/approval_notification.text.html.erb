@@ -1,0 +1,24 @@
+<div style="font-family: arial, sans-serif; font-size: 12px">
+  <p>
+      Beste <%=@node.editor.full_name-%>,
+  </p>
+  <p>
+    De wijzigingen aan <a href="<%= "#{@host}/#{@node.url_alias}" %>"><%= "#{@host}/#{@node.url_alias}" %></a> die u gemaakt heeft zijn goedgekeurd.
+  </p>
+  <%- unless @comment.blank? -%>
+  <p>
+    Het volgende commentaar is tevens opgegeven:
+  </p>
+  <p>
+    "<%= h @comment -%>"
+  </p>
+  <%- end -%>
+  <p>
+    Neem voor meer informatie contact op met <a href="mailto:<%= Settler[:mail_approvals_from_address] %>"><%= Settler[:mail_approvals_from_address] %></a>.
+  </p>
+  <p>
+      Met vriendelijke groet,
+      <br/><br/>
+      Het <%= @host %> team
+  </p>
+</div>

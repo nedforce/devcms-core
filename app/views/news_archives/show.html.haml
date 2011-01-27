@@ -1,0 +1,14 @@
+.regularPage.newsArchive
+  - readspeaker(@news_archive.node.id) do |readspeaker_id|
+    %h1= h @news_archive.title
+
+    = render :partial => '/shared/metadata', :locals => { :last_update_date => @news_archive.last_updated_at(current_user) }
+
+    - if @news_archive.description.present?
+      .htmlField.newsArchiveDescription
+        = w @news_archive.description
+      - if Settler[:readspeaker_cid].present?
+        .buttons.clearfix
+          = readspeaker_button(:rid => readspeaker_id, :title => h(@news_archive.title))
+
+  = render :partial => 'news_items/news_items', :locals => { :news_items => @news_items, :latest_news_items => @latest_news_items, :news_items_for_table => @news_items_for_table }

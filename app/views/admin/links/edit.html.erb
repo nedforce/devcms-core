@@ -1,0 +1,47 @@
+<div class="right_panel_content">
+
+    <h1><%=t 'links.edit' -%> '<%=h @link.title -%>'</h1>
+
+    <% admin_remote_form_for @link,
+      :url => admin_link_path(@link, :format => 'html'),
+      :update => 'right_panel_body' do %>
+        <% 
+          # Required to have all fields be named 'link[attr]' instead of 'ex/internal_link[attr]'
+          admin_fields_for :link do |form|    
+        %>
+           
+          <%= error_messages_for :link %>
+
+          <%= form.text_field(:title, { :label => t('shared.title') }) %>
+          
+          <%= form.text_area :description, { :label => t('shared.description'), :rows => 2 } %>
+
+          <%= wrap_with_label content_tag(:div, (@link.is_a?(ExternalLink) ? t('links.external') : t('links.internal')), :id => 'link_type'), { :text => t('links.type'), :for => 'link_type' } %>
+
+          <%= form.text_field :url, :label => t('links.url') if @link.is_a?(ExternalLink) %>
+          
+          <% if @link.is_a?(InternalLink) %>
+            <% txt = "#{t 'links.node'}<br/><small>#{t 'links.drag_and_drop'}</small>" %>
+            <%= wrap_with_label content_tag(:div, '', :id => 'node_selector'), { :text => txt, :for => 'link_linked_node_id' } %>
+
+            <% javascript_tag do %>
+              ndf = new Ext.dvtr.NodeDropField({
+                  renderTo: 'node_selector',
+                  ddGroup: 'TreeAndSorterDD',
+                  name: 'link[linked_node_id]',
+                  value: '<%= @link.linked_node_id || String.new -%>',
+                  text: '<%= escape_javascript(@link.linked_node.content.tree_text) rescue String.new -%>',
+                  id: 'link_linked_node_id'
+              });
+            <% end %>
+          <% end %>
+
+          <%= category_settings_for @link -%>
+
+          <%= approval_field -%>
+
+          <%= form.submit t('shared.save') %>
+        <% end %>
+    <% end %>
+
+</div>

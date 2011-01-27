@@ -1,0 +1,14 @@
+- content = node.content
+%div{:class => "content_box #{node.content_type.underscore}_content_box"}
+  %div{:class => "content_box_wrapper #{node.content_box_colour || content_box_color || 'default'}"}
+    - if content.show_content_box_header
+      .header
+        .corner_overlay.transparent
+        - unless content.is_a?(Poll) || content.is_a?(NewsletterArchive) || node.content_box_icon.blank?
+          = image_tag "icons/content_box_#{node.content_box_icon}.png", :class => 'icon_overlay transparent', :alt => content_box_icon_alt_for(node)
+        - unless sidebox_title.blank?
+          %h2= sidebox_title
+        - else
+          %h2= link_to_content_node content_box_title_for(node), content
+    .content.hoverable
+      = render :partial => "/#{node.content_type.tableize}/#{partial}", :locals => { :node => node, :parent => parent }

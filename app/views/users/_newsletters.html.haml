@@ -1,0 +1,11 @@
+- if @newsletter_archives.any?
+  .reg_form_additional_info
+    .reg_form_additional_info_header.formFieldCt
+      == #{t 'users.select_newsletter_archives'}:
+
+    .checkboxes_container.clearfix
+      - @newsletter_archives.each do |newsletter_archive|
+        .form_checkbox.clearfix
+          = check_box_tag "user[newsletter_archive_ids][]", newsletter_archive.id, @user.newsletter_archives.include?(newsletter_archive), :id => dom_id(newsletter_archive)
+          %label{ :for => dom_id(newsletter_archive) }
+            = h newsletter_archive.title

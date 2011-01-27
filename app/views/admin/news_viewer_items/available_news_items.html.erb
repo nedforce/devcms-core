@@ -1,0 +1,125 @@
+<script type="text/javascript">
+//<![CDATA[
+Ext.Updater.defaults.loadScripts = true;
+
+Ext.onReady(function() {
+  perPage = 25;
+
+  Ext.QuickTips.init();
+
+  var selModel = new Ext.grid.SmartCheckboxSelectionModel({
+    excel: false,
+    alwaysSelectOnCheck: true,
+    dataIndex: 'checked'
+  });
+  
+  // the column model has information about grid columns
+  // dataIndex maps the column to the specific data field in
+  // the data store (created below)
+  var cm = new Ext.grid.ColumnModel([
+      selModel,
+      {
+         id:'id',          
+         header: '<%= NewsItem.human_attribute_name('title') %>',
+         dataIndex: 'title',
+         width: 450
+      },{
+         header: "<%= NewsItem.human_attribute_name('publication_date') %>",
+         dataIndex: 'publication_date',
+         width: 200
+      }
+  ]);
+
+  // create the Data Store
+  var store = new Ext.data.Store({
+      // load using HTTP
+      url: '/admin/news_viewers/<%= @news_viewer.id %>/news_viewer_items/available_news_items.xml?news_archive_id=<%= @news_archive.id %>',
+      remoteSort: false,
+
+      // the return will be XML, so lets set up a reader
+      reader: new Ext.data.XmlReader({
+             record: 'news_item',
+             id: 'id',
+             totalRecords: 'total_count'
+         }, [
+             // set up the fields mapping into the xml doc
+             'id', 'title', 'publication_date', 'checked'
+         ]),
+
+      autoLoad: {params: {start: 0, limit: perPage}}
+  });
+
+  // create the grid
+  var grid = new Ext.grid.GridPanel({
+      id: 'news_items_grid',
+      store: store,
+      selModel: selModel,
+      cm: cm,
+      stripeRows: true,
+      autoExpandColumn: 1,
+      border: false,
+      frame: false,
+      viewConfig: {
+          forceFit:true
+      },        
+      width: '100%',
+      height: 500,        
+      renderTo: 'news_items_panel',     
+      tbar: new Ext.PagingToolbar({
+          store: store,
+          pageSize: perPage,
+          displayInfo: true,
+          displayMsg: '<%= I18n.t("news_viewer_items.count_message") %>',
+          emptyMsg: '<%= I18n.t("news_viewer_items.empty_message") %>',
+          afterPageText: '<%= I18n.t("news_viewer_items.of_page") %>',
+          beforePageText: '<%= I18n.t("news_viewer_items.page") %>'
+      })
+  });
+  
+  grid.store.on('beforeload', function(p){
+    selModel.purgeListeners();
+    return true;
+  });  
+
+  grid.store.on('load', function(p){
+    selModel.addListener('rowselect', onRowSelect);
+    selModel.addListener('rowdeselect', onRowDeselect);
+  });
+  
+  // Events
+  function onRowSelect (selModel, rowIndex, record) {                    
+    Ext.Ajax.request({
+        url: '/admin/news_viewers/<%= @news_viewer.id %>/news_viewer_items',
+        method: 'POST',
+        params: Ext.urlEncode({ authenticity_token: '<%= form_authenticity_token -%>', news_item_id: record.id }),
+        callback: function(options, success, response){
+          if(!success && response.status == 422){
+            var responseJson = Ext.util.JSON.decode(response.responseText)
+            Ext.Msg.alert('<%= I18n.t("news_viewer_items.error") %>', responseJson.errors )
+          }
+          else if(!success) Ext.ux.alertResponseError(response, '<%= I18n.t("news_viewer_items.create_failed") %>')
+        }
+    });  
+  }    
+  
+  function onRowDeselect (selModel, rowIndex, record) {        
+    Ext.Ajax.request({
+        url: '/admin/news_viewers/<%= @news_viewer.id %>/news_viewer_items/delete_news_item',
+        method: 'DELETE',
+        params: Ext.urlEncode({ authenticity_token: '<%= form_authenticity_token -%>', news_item_id: record.id }),
+        callback: function(options, success, response){
+          if(!success && response.status == 422){
+            var responseJson = Ext.util.JSON.decode(response.responseText)
+            Ext.Msg.alert('<%= I18n.t("news_viewer_items.error") %>', responseJson.errors )
+          }
+          else if(!success) Ext.ux.alertResponseError(response, '<%= I18n.t("news_viewer_items.delete_failed") %>')
+        }
+    }); 
+  }   
+});
+
+//]]>
+</script>
+
+<div id="news_items_panel"></div>
+

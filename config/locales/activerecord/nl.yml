@@ -1,0 +1,308 @@
+---
+nl:
+  activerecord:
+    models:
+      abbreviation: Afkorting
+      address: Adres
+      address_book: Adresboek
+      agenda_item: Agendapunt
+      agenda_item_category: Categorie
+      alphabetic_index: Alfabetische index
+      attachment: Bijlage
+      calendar: Kalender
+      calendar_item: Kalender item
+      carrousel: Carrousel
+      category: Project
+      combined_calendar: Gecombineerde kalender
+      comment: Reactie
+      contact_box: Contactbox
+      contact_form: Contactformulier
+      contact_form_field: Invoerveld
+      course: Cursus
+      external_link: Externe link
+      feed: RSS feed
+      forum: Forum
+      forum_post: Reactie
+      forum_thread: Discussie
+      forum_topic: Onderwerp
+      html_page: HTML pagina
+      image: Afbeelding
+      internal_link: Interne link
+      meeting: Vergadering
+      meeting_category: Categorie
+      news_archive: Nieuwsarchief
+      news_item: Nieuwsbericht
+      newsletter_archive: Nieuwsbrief
+      newsletter_edition: Nieuwsbrief editie
+      news_viewer: Nieuwsselectie
+      page: Pagina
+      poll: Poll
+      poll_question: Vraagstelling
+      product: Product
+      product_catalogue: Productcatalogus
+      search_page: Zoekpagina
+      section: Sectie
+      site: Site
+      social_media_links_box: Social media links box
+      top_hits_page: Top 10 pagina
+      user: Gebruiker
+      weblog: Weblog
+      weblog_archive: Weblogarchief
+      weblog_post: Weblogbericht
+    attributes:
+      address:
+        name: Naam
+      address_book:
+        title: Titel
+      agenda_item:
+        agenda_item_category: Categorie
+        description: Beschrijving
+      agenda_item_category:
+        name: Naam
+      alphabetic_index:
+        title: Titel
+      attachment:
+        filename: Bestandsnaam
+        size: Grootte
+        title: Titel
+      calendar:
+        description: Beschrijving
+        title: Titel
+      calendar_item:
+        end_time: Eindtijd
+        start_time: Starttijd
+        title: Titel
+      carrousel:
+        display_time: Weergavetijd
+      category:
+        name: Naam
+      combined_calendar:
+        description: Beschrijving
+        title: Titel
+      comment:
+        comment: Reactie
+        user_name: Naam
+      contact_box:
+        contact_information: Contactinformatie
+        default_text: Standaardinformatie
+        friday_text: Informatie vr.
+        monday_text: Informatie ma.
+        saturday_text: Informatie za.
+        sunday_text: Informatie zo.
+        thursday_text: Informatie do.
+        title: Titel
+        tuesday_text: Informatie di.
+        wednesday_text: Informatie wo.
+      contact_form:
+        description_after_contact_fields: Omschrijving na de invoervelden
+        description_before_contact_fields: Omschrijving voor de invoervelden
+        email_address: E-mailadres
+        title: Titel
+      contact_form_field:
+        default_value: Standaardwaarde
+        field_type: Veldtype
+        label: Label
+        obligatory: Verplicht
+        position: Positie
+      course:
+        contact_email_address: E-mailadres contactpersoon
+        contact_name: Naam contactpersoon
+        contact_phone_number: Telefoonnummer contactpersoon
+        contents: Inhoud
+        costs: Kosten
+        dates: Data
+        details: Bijzonderheden
+        goal: Doelstelling
+        location_adres: Adres
+        location_name: Naam
+        organization_name: Naam organisatie
+        organization_website: Website organisatie
+        registration_information: Informatie over aanmelden
+        target_group: Doelgroep
+        title: Naam product
+      external_link:
+        url: URL
+      feed:
+        url: URL
+      forum:
+        description: Beschrijving
+        title: Titel
+      forum_post:
+        body: Tekst
+        user_name: Naam
+      forum_thread:
+        title: Titel
+      forum_topic:
+        description: Beschrijving
+        title: Titel
+      html_page:
+        body: Tekst
+        title: Titel
+      image:
+        data: Bestand
+        title: Titel
+      internal_link:
+        linked_node: Gelinkte node
+      meeting:
+        end_time: Eindtijd
+        meeting_category: Categorie
+        start_time: Starttijd
+        title: Titel
+      meeting_category:
+        name: Naam
+      news_item:
+        body: Tekst
+        title: Titel
+        publication_date: Publicatiedatum        
+      newsletter_archive:
+        title: Titel
+      newsletter_edition:
+        body: Tekst
+        publication_date: Datum
+        title: Titel
+      news_viewer:
+        title: Titel
+        description: Beschrijving  
+      page:
+        body: Tekst
+        preamble: Samenvatting
+        title: Titel
+      poll:
+        title: Titel
+        requires_login: Login vereist
+      poll_question:
+        question: Vraagstelling
+      product:
+        title: Titel
+      product_catalogue:
+        title: Titel
+      search_page:
+        title: Titel
+      section:
+        title: Titel
+      setting:
+        key: Instelling
+        alt: Omschrijving
+        value: Waarde
+      share:
+        from_email_address: Uw e-mailadres
+        from_name: Uw naam
+        to_email_address: E-mail ontvanger
+        to_name: Naam ontvanger
+        message: Bericht
+      social_media_links_box:
+        facebook_url: Facebook URL
+        flickr_url: Flickr URL
+        hyves_url: Hyves URL
+        linkedin_url: LinkedIn URL
+        title: Titel
+        twitter_url: Twitter URL
+        youtube_url: YouTube URL
+      user:
+        email_address: E-mailadres
+        login: Inlognaam
+        password: Wachtwoord
+        password_confirmation: Wachtwoordbevestiging
+      weblog:
+        title: Titel
+      weblog_post:
+        body: Tekst
+        title: Titel
+    errors:
+      models:
+        agenda_item:
+          attributes:
+            agenda_item_category:
+              invalid: heeft geen geldige naam.
+            calendar_item:
+              calendar_item_must_be_a_meeting: Een agenda item kan alleen met een vergadering geassocieerd worden.
+        calendar_item:
+          attributes:
+            end_time:
+              end_time_not_after_start_time: moet na starttijd zijn.
+            repeat_end:
+              repeat_end_should_be_in_the_future: Einddatum van herhaling moet in de toekomst zijn.
+        category:
+          attributes:
+            base:
+              elements_still_present: Er zijn nog elementen in deze categorie.
+            name:
+              must_be_unique: moet uniek zijn.
+        content_copy:
+          attributes:
+            base:
+              copied_content_cannot_be_content_copy: De gekopieerde node mag niet geassocieerd worden met een content copy node.
+              copied_content_must_be_copyable: De gekopieerde node moet geassocieerd zijn met een kopieerbare content node.
+              copied_node_cannot_be_root: De gekopieerde nod kan geen root node zijn.
+        contact_form:
+          attributes:
+            contact_form_fields:
+              invalid_contact_form_field: bevatten ongeldige waardes
+        contact_form_field:
+          attributes:
+            position:
+              must_be_unique: moet uniek zijn
+        feed:
+          attributes:
+            url:
+              invalid_feed: geeft een ongeldige RSS-feed.
+        forum_post:
+          attributes:
+            base:
+              cannot_be_added_to_closed_thread: U kunt niet reageren op een gesloten discussie.
+              cannot_destroy_first_post: Dit is een openingsbericht van een forum discussie en kan dus niet verwijderd worden.
+        internal_link:
+          attributes:
+            base:
+              not_linked_node: De gelinkte node mag niet geassocieerd worden met een link content node.
+              linked_node_must_be_contained_in_same_site: De gelinkte node moet in dezelfde site zitten als de link.
+        link:
+          attributes:
+            base:
+              not_direct: "Links kunnen niet direct worden geïnstantieerd."
+        meeting:
+          attributes:
+            meeting_category:
+              invalid: heeft geen geldige naam.
+        node:
+          attributes:
+            base:
+              cant_hide_frontpage: Frontpage kan niet verborgen worden.
+              cant_remove_root: Kan root node niet verwijderen.
+              not_directly: "Nodes kunnen niet direct worden geïnstantieerd."
+            url_alias:
+              invalid: "kan alleen letters, cijfers en '-' bevatten."
+              reserved_url_alias: bevat gereserveerde woorden.
+        role_assignment:
+          attributes:
+            base:
+              inherited_roles: Gebruiker heeft al rechten op het geselecteerde item.
+            node:
+              admin_requires_root: Er kan alleen webmaster toegang op de websiteroot toegewezen worden.
+              invalid_node_type: Er kan geen recht toegewezen worden op dit contenttype.
+        section:
+          attributes:
+            base:
+              frontpage_node_cannot_be_a_section_with_a_frontpage: De startpagina kan geen sectie met een startpagina zijn.
+              frontpage_node_should_be_descendant: De startpagina moet een kind zijn van de sectie.
+              frontpage_node_should_be_nil: De startpagina mag niet ingesteld worden bij het aanmaken van een sectie.
+        share_point_list:
+          attributes:
+            section_node_id:
+              node_needs_to_be_section: De node moet een sectie zijn.
+        content_representation:
+          attributes:
+            base:
+              horizontal_position_too_great: Ongeldige kolom opgegeven voor de nieuwe content box.
+              non_existant_custom_type: Special type onbekend.
+            content:
+              should_be_in_same_site: moet zich in dezelfde site bevinden als de content box zelf.
+              not_allowed_as: is niet toegestaan als content box content.
+        site:
+          attributes:
+            base:
+              parent_must_be_root_or_not_a_site: Parent node moet root zijn of geen site zijn.
+        user:
+          attributes:
+            login:
+              reserved_login: is een gereserveerde login, gelieve een andere te kiezen.

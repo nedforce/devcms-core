@@ -1,0 +1,10 @@
+- content = node.content
+.content_box.sub_menu_content_box
+  %div{:class => "content_box_wrapper #{node.content_box_colour || 'default'}"}
+    .header
+      .corner_overlay.transparent
+      - unless content.is_a?(Poll) || content.is_a?(NewsletterArchive) || node.content_box_icon.blank?
+        = image_tag "icons/content_box_#{node.content_box_icon}.png", :class => 'icon_overlay transparent'
+      %h2= link_to_content_node content.title, content
+    .content
+      = menu

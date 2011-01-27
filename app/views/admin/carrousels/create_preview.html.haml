@@ -1,0 +1,10 @@
+= render :partial => 'show', :locals => { :record => @carrousel }
+
+.forms
+  - remote_form_for @carrousel, :method => :get, :url => new_admin_carrousel_path(:format => 'html', :parent_node_id => @parent_node.id), :update => 'right_panel_body' do |form|
+    = render :partial => 'preview_form', :locals => { :form => form }
+    = form.submit t('shared.edit')
+
+  - remote_form_for @carrousel, :url => admin_carrousels_path(:format => 'html', :parent_node_id => @parent_node.id), :update => 'right_panel_body' do |form|
+    = render :partial => 'preview_form', :locals => { :form => form }
+    = form.submit t('shared.save')

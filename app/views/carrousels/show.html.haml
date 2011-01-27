@@ -1,0 +1,11 @@
+.carrousel
+  %h1= h @carrousel.title
+
+  - if @carrousel_item
+    - readspeaker(@carrousel.node.id) do |readspeaker_id|
+      = readspeaker_button :class => 'topRightReadspeaker'
+
+      .carrousel_item
+        .regularPage
+          %h2= link_to_content_node h(@carrousel_item.title), @carrousel_item.item
+          = render :partial => '/carrousels/carrousel_item', :object => @carrousel_item

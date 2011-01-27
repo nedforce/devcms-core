@@ -1,0 +1,19 @@
+- content        = node.content
+- limit          = node.content_box_number_of_items || 10
+- calendar_items = content.calendar_items.current_and_future_for(current_user, Time.now, limit)
+
+- unless calendar_items.empty?
+  %ul
+    - calendar_items.each do |event|
+      %li.clearfix
+        .date
+          - if event.end_time.to_date > event.start_time.to_date
+            == #{l event.start_time.to_date, :format => :short}<br/>t/m<br/>#{l event.end_time.to_date, :format => :short}
+          - else
+            = l event.start_time.to_date, :format => :short
+        .link
+          = link_to_content_node(h(event.title), event)
+  = read_more_link(content, t('shared.more_activities'))
+
+- else
+  %p= t 'calendars.no_calendar_items'

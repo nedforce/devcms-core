@@ -1,0 +1,17 @@
+%p.attachmentsTableExplanation= t 'attachments.attachments_table'
+
+%table.attachmentsTable
+  %thead
+    %tr
+      %th{ :scope => "col" }= t 'shared.title'
+      %th{ :scope => "col" }= t 'shared.type'
+      %th{ :scope => "col" }= t 'shared.size'
+      %th{ :scope => "col" }= t 'shared.download'
+
+  %tbody
+    - attachments.each do |attachment|
+      %tr
+        %td= h attachment.title
+        %td== #{attachment_icon(attachment)}&nbsp;#{attachment.extension}
+        %td== #{number_with_precision(attachment.size.to_f / 1024, :precision => 1)} KB
+        %td= link_to_content_node t('shared.download'), attachment, {}, :title => h(attachment.title)

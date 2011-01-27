@@ -1,0 +1,25 @@
+.section.regularPage
+  - readspeaker do
+    = readspeaker_button :class => 'topRightReadspeaker'
+
+    %h1= h @section.title
+
+    = render :partial => '/shared/metadata', :locals => { :publication_date => @section.publication_start_date, :last_update_date => @section.last_updated_at(current_user) }
+
+    - if @section.description.present?
+      = content_tag(:div, w(@section.description), :class => 'htmlField')
+
+    = render_images
+
+    - unless @children.empty?
+      %ul.section_items
+        - @children.each do |content_node|
+          - if content_node.node.content_type_configuration[:show_in_menu]
+            %li
+              = image_tag "icons/#{content_node.icon_filename}", :class => 'icon', :alt => h(content_node.title)
+              = link_to_content_node h(content_node.title), content_node
+
+    = render_attachments
+
+    .buttons.clearfix
+      = print_button

@@ -1,0 +1,4 @@
+default_root_template:
+  title: Standaard template
+  description: Dit is de standaard template.
+  filename: default

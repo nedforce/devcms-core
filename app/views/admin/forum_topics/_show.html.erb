@@ -1,0 +1,31 @@
+<div class="regularPage forumTopic">
+  <h2><span class="prefix"><%=t 'forums.forum_topic' -%></span><%=h @forum_topic.title -%></h2>
+
+  <div class="htmlField forumTopicDescription"><%=w @forum_topic.description -%></div>
+
+  <div class="forumThreadsOverview clearfix">
+    <div class="clearfix">
+      <h3><%=t 'forums.forum_threads' -%></h3>
+    </div>
+  <% if @forum_threads.blank? %>
+    <p><%=t 'forums.no_threads_found' -%></p>
+  <% else %>
+    <div class="forumThreads">
+    <% @forum_threads.each do |forum_thread| %>
+      <div class="<%= cycle('oddForumThread', 'evenForumThread') -%> clearfix">
+        <h4 <%= "class='closed'" if forum_thread.closed? -%>><%= link_to h(forum_thread.title), '#' -%></h4>
+
+        <div class="forumThreadBody"><%= truncate(strip_tags(forum_thread.start_post.body), :length => 110) -%></div>
+        <div class="forumThreadDetails">
+          <p><%= "#{t 'forums.created_by'     }: <span class='userLogin'>#{truncate(forum_thread.user.login, :length => 12)}</span>" -%></p>
+          <p><%= "#{t 'forums.number_of_posts'}: #{forum_thread.number_of_replies}" -%></p>
+        <% unless forum_thread.replies.empty? %>
+          <p><%= "#{t 'forums.last_reply'     }: #{forum_thread.last_update_date.to_s(:long)}" -%></p>
+        <% end %>
+        </div>
+      </div>
+    <% end %>
+    </div>
+  <% end %>
+  </div>
+</div>

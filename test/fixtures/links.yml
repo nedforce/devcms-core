@@ -1,0 +1,23 @@
+internal_link:
+  title: This is a link to the root node.
+  description: No kidding!
+  type: InternalLink
+  linked_node_id: <%= Fixtures.identify(:root_section_node) %>
+
+external_link:
+  title: This is an external link.
+  description: No kidding!
+  type: ExternalLink
+  url: http://www.google.com
+
+unapproved_internal_link:
+  title: This is a unapproved link to the root node.
+  description: No kidding!
+  type: InternalLink
+  linked_node_id: <%= Fixtures.identify(:root_section_node) %>
+
+unapproved_external_link:
+  title: This is an unapproved external link.
+  description: No kidding!
+  type: ExternalLink
+  url: http://www.google.com

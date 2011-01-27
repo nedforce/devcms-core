@@ -1,0 +1,7 @@
+%div{ :class => "search_field_wrapper clearfix #{"disabled" unless @programme}" }
+
+  .search_description
+    == #{t 'search.in_project'}:
+
+  .search_field
+    = select_tag 'project', options_for_select(@projects.map { |p| [ p.name, p.id ] }.unshift([ t('search.select_project'), nil ]), @project.present? ? @project.id : nil), :disabled => @programme.nil?

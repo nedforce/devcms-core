@@ -1,0 +1,24 @@
+javascripts:
+- base:
+  - plugin: devcms-core
+  - application
+  - prototype
+  - prototype_custom
+  - builder_custom
+  - effects
+  - lightbox
+  - CookieJar
+  - readspeaker
+  - fontresize
+  - default
+- application:
+  - i18n  
+- admin:
+  - i18n_admin
+stylesheets:
+- base:
+  - application
+- print:
+  - print
+- plain:
+  - plain  

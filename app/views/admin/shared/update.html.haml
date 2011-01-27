@@ -1,0 +1,8 @@
+- if @for_approval
+  = javascript_tag "Ext.getCmp('approvals-grid').getStore().reload();"
+- elsif @refresh
+  = javascript_tag "treePanel.refreshNodesOf(#{@node.parent.id})"
+  = update_message
+- else
+  = javascript_tag "treePanel.getNodeById(#{@node.id}).setText('#{@node.tree_text}')"
+  = update_message

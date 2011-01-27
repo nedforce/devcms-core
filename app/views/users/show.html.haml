@@ -1,0 +1,73 @@
+.regularPage
+  %h1== #{t 'users.profile_of'} #{h @user.login}
+
+  %table#user_details{ :cellpadding => "0", :cellspacing => "0" }
+    %tr#login
+      %th{ :scope => "row" }
+        = t 'users.login'
+      %td= h @user.login
+
+    - if @user.full_name.present?
+      %tr#full_name
+        %th{ :scope => "row" }
+          = t 'users.full_name'
+        %td= h @user.full_name
+
+    - if @user.sex.present?
+      %tr#sex
+        %th{ :scope => "row" }
+          = t 'users.sex'
+        %td= t "users.#{User::SEXES[@user.sex]}"
+
+    - if current_user == @user
+      %tr#email_address
+        %th{ :scope => "row" }
+          = t 'users.email_address'
+        %td
+          = h @user.email_address
+          %br/
+          %small= t 'users.not_public'
+
+    %tr#joined_at
+      %th{ :scope => "row" }
+        = t 'users.joined_at'
+      %td= l(@user.created_at.to_date, :format => :long)
+
+    %tr#verified
+      %th{ :scope => "row" }
+        = t 'users.verified?'
+      %td= t @user.verified? ? 'shared.y' : 'shared.n'
+
+  - if current_user == @user
+    .buttons.clearfix
+      - edit_button t('users.edit_details') do
+        = link_to t('users.edit_details'), secure_url(:url_for, { :action => 'edit', :id => @user })
+
+  - unless @user.weblogs.empty?
+    #weblogs
+      %h2= t 'users.weblog'
+
+      %table.items{ :cellpadding => "0", :cellspacing => "0" }
+        %thead
+          %tr
+            %th.gray{ :scope => "col" }
+              = t 'users.weblog_title'
+            %th.gray{ :scope => "col" }
+              = t 'users.last_update'
+            %th.right.gray{ :scope => "col" }
+              = t 'users.options'
+        %tbody
+          - @user.weblogs.each do |wl|
+            %tr{ :class => cycle('alt','', :name => 'weblogs') }
+              %td= h wl.title
+              %td.gray= h wl.last_updated_at(@user).to_s(:short)
+              %td.right.gray= link_to_content_node t('users.view_weblog'), wl, {}, :title => h(wl.title)
+
+  - form_for @user, :url => secure_url(:url_for, { :action => 'update', :id => @user }) do |f|
+    %div= hidden_field_tag(:update_newsletters_and_interests, 1)
+
+    = render :partial => 'newsletters'
+    = render :partial => 'interests'
+
+    .formButtonCt
+      = submit_tag t('users.save'), :class => 'submit', :class => 'left'

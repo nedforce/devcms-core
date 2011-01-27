@@ -1,0 +1,21 @@
+<% include AttachmentTestHelper %>
+
+test_image:
+  data: <%= fixture_data('files/test.jpg') %>
+  title: A test image for the tests!
+
+test_image_two:
+  data: <%= fixture_data('files/test.jpg') %>
+  title: Another test image for the tests!
+
+hidden_image:
+  data: <%= fixture_data('files/test.jpg') %>
+  title: A hidden image!
+
+henks_weblog_image:
+  data: <%= fixture_data('files/test.jpg') %>
+  title: A hidden image!
+
+root_section_image:
+  data: <%= fixture_data('files/test.jpg') %>
+  title: An image in a section!

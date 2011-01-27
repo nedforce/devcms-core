@@ -1,0 +1,113 @@
+<div id="right_panel_init" class="rightPanelDefault">
+  <table><tr><td><%=t 'nodes.select_one' -%></td></tr></table>
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+
+Ext.onReady(function(){
+    // Set default parameters for ajax requests
+    defaultParams = {
+        authenticity_token: '<%= form_authenticity_token -%>',
+        format: 'json'
+    }
+
+    // Create initial root node
+    root = new Ext.dvtr.AsyncContentTreeNode(
+        Ext.util.JSON.decode('<%= @root_node.to_tree_node_for(current_user).to_json -%>')
+    );
+
+    <% if params[:active_node_id] -%>
+      loaderParams = Ext.apply({active_node_id: <%=params[:active_node_id] -%>}, defaultParams)
+    <% else %>
+      loaderParams = defaultParams
+    <% end %>
+
+    // Create the tree panel
+    treePanel = new Ext.tree.TreePanel({
+        title: '<%= I18n.t("nodes.sitemap") %>',
+        loader: new Ext.dvtr.TreeLoader({
+          url: '/admin/' + root.attributes.treeLoaderName,
+          baseParams: loaderParams,
+          activeNodeId: <%=params[:active_node_id] || 'null'-%>
+        }),
+        selModel: new Ext.tree.MultiSelectionModel(),
+        root: root,
+        rootVisible: true,
+        enableDD:true,
+        // Custom function to refresh the children of a specific node:
+        refreshNodesOf: function(nodeId){
+            var n = this.getNodeById(nodeId);
+
+            if (n.isExpanded()) {
+              n.reload();
+            } else {
+              n.expand();
+            }
+
+            n.constructMenu();
+        },
+        ddGroup: 'TreeAndSorterDD',
+        listeners: {
+          contextmenu: function(node, e) {
+            var selectionModel = node.getOwnerTree().getSelectionModel();
+            var selectedNodes = selectionModel.getSelectedNodes();
+            
+            if (selectedNodes.size() > 1 && selectedNodes.indexOf(node) != -1) {
+              new Ext.dvtr.MultipleTreeNodeContextMenu().show(node, selectedNodes);
+            } else {
+              selectionModel.select(node);
+
+              if (node.userHasRole()) {
+                node.onContextmenu();
+              }
+            }
+          },
+          nodedragover: function(e) {
+            var dropNode = e.dropNode;
+            var targetNode = e.target;
+
+            if (e.point == "above" || e.point == "below") {
+              targetNode = targetNode.parentNode;
+            }
+
+            if (targetNode.allowedChildContentTypes.indexOf(dropNode.ownContentType) == -1) {
+              e.cancel = true;
+              return false;
+            } else {
+              e.cancel = false;
+              return true;
+            }
+          }
+        }
+    });
+
+   rightPanel = new Ext.dvtr.Panel({
+      contentEl: 'right_panel_init',
+      id: 'right_panel',
+      listeners: {
+          'beforeload': resetTinyMCE
+      }
+   });
+
+   mainPanelCfg = {
+        layout: 'border',
+        border: false,
+        defaults: { autoScroll: true },
+        items: [
+            Ext.apply(treePanel, {region: 'west', width: 250, split: true}),
+            Ext.apply(rightPanel, {region: 'center'})
+        ]
+    }
+
+    initViewport(mainPanelCfg);
+
+    root.expand()
+
+    // Assign an id to the right panel's body DOM element.
+    // (Needed by the :update argument for admin_form_remote_for.)
+    rightPanel.body.dom.id = 'right_panel_body'
+});
+//]]>
+</script>
+

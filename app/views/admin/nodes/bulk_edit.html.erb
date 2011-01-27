@@ -1,0 +1,44 @@
+<div class="right_panel_content">
+  <h1><%=t 'nodes.bulk_edit' -%></h1>
+
+  <% admin_form_remote_tag :url => bulk_update_admin_nodes_path(:format => 'html', :ids => @nodes.map(&:id)), :update => 'right_panel_body', :html => { :method => :put } do %>
+
+    <%= javascript_tag("document.getElementById('right_panel_body').scrollTop = 0;") %>
+
+    <% first_root_category = Category.root_categories.first -%>
+
+    <% if first_root_category.present? -%>
+    <div id="category_settings" class="clearfix">
+
+      <% field_set_tag t('categories.settings') do %>
+        <div>
+        <%= hidden_field_tag :has_categories, true %>
+        </div>
+
+        <div id="category_selection_fields_wrapper" class="clearfix">
+          <%= render '/admin/shared/category_selection_fields', { :categories => nil, :root_category => nil, :category => nil } -%>
+        </div>
+
+        <div class="category_combination_actions">
+          <fieldset id="favorite_category_combinations">
+            <%= render '/admin/categories/favorites' -%>
+          </fieldset>
+
+          <p><%= insert_new_category_combination_link(first_root_category) -%></p>
+
+          <div class="keep_existing_categories_field">
+            <%= check_box_tag 'node[keep_existing_categories]', '1', true -%>
+            <%= label_tag 'node[keep_existing_categories]', t('categories.keep_existing') -%>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <% javascript_tag do %>
+      javascriptifyCategoryFields();
+    <% end %>
+    <% end %>
+    
+    <%= admin_submit_tag t('shared.save') -%>
+  <% end %>
+</div>

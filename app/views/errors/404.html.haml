@@ -1,0 +1,7 @@
+- @page_title = t('errors.page_not_found')
+
+%h1= @page_title
+
+%p= t 'errors.page_was_not_found'
+%p== #{t 'errors.search_page_in'} #{link_to 'sitemap', sitemap_path}. #{t 'errors.use_search_field'}
+%p== #{t 'errors.or_go_back'} #{link_to 'startpagina', root_path}.

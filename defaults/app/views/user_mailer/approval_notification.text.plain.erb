@@ -1,0 +1,16 @@
+Beste <%=@node.editor.full_name-%>,
+
+De wijzigingen aan http://<%= @host %>/<%= @node.url_alias %> die u gemaakt heeft zijn goedgekeurd.
+
+<%- unless @comment.blank? -%>
+Het volgende commentaar is tevens opgegeven:
+
+"<%= h @comment -%>"
+<%- end -%>
+
+Neem voor meer informatie contact op met <%= Settler[:mail_approvals_from_address] %>
+
+Met vriendelijke groet,
+
+Het <%= @host %> team
+

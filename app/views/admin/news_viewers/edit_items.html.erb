@@ -1,0 +1,47 @@
+<div id="news-viewer-tabs"></div>
+  <div id="news_archive_tab" class="x-hide-display">
+    <div id="archive_panel">
+      <div id="news_archive_panel"></div>
+      <div id="news_item_panel" class="rightPanelDefault">
+        <table><tr><td><%=t 'news_viewers.select_a_news_archive_left' -%></td></tr></table>        
+      </div>  
+    </div>
+  </div>
+  <div id="news_order_tab" class="x-hide-display">
+    <div id="order_panel"></div>
+  </div>
+</div>
+
+<script type="text/javascript">
+//<![CDATA
+Ext.onReady(function(){ 
+
+ Ext.QuickTips.init();
+
+ // Tabpanel
+ var tabs = new Ext.TabPanel({
+     renderTo: 'news-viewer-tabs',
+     defaults: {autoHeight: true},
+     border: false,        
+     frame: false,    
+     activeTab: 0,
+     items:[
+         {contentEl:'news_archive_tab', title:'<%= t('news_viewers.news_archives_and_items') -%>', id: 'select_tab'},
+         {contentEl:'news_order_tab', title:'<%= t('news_viewers.news_order') -%>', id:'order_tab'}
+     ]
+ });
+
+	tabs.on('tabchange', function(tabPanel, newTab){
+		if(newTab.id == 'select_tab') archivePanel.doLayout();
+		if(newTab.id == 'order_tab') newsItemOrderPanel.doLayout();
+	});
+	
+ // Archives panel
+ <%= render 'news_archive_panel' %>
+
+ // Item order panel
+ <%= render 'news_ordering_panel' %>
+});
+	
+//]]>
+</script>

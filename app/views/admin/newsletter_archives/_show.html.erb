@@ -1,0 +1,59 @@
+<div class="regularPage newsletterArchive">
+  <h2><%=h @newsletter_archive.title -%></h2>
+
+  <%- unless @newsletter_archive.new_record? -%>
+  <div class="metadata">
+    <p class="lastUpdateDate"><%=t 'shared.last_updated' -%>: <%= l(@newsletter_archive.last_updated_at(current_user), :format => :long) -%></p>
+  </div>
+  <%- end -%>
+
+  <% if @newsletter_archive.description.present? %>
+    <div class="htmlField newsletterArchiveDescription"><%=w @newsletter_archive.description -%></div>
+  <% end %>
+  <div class="newsletterEditions">
+  <% if @newsletter_editions.blank? %>
+    <p><%=t 'newsletters.no_editions' -%></p>
+  <% else %>
+    <% @latest_newsletter_editions.each do |newsletter_edition| %>
+    <div class="newsletterEdition">
+      <h3><%= link_to h(newsletter_edition.title), '#' -%></h3>
+
+      <div class="metadata clearfix">
+        <p class="publicationDate"><%=t 'shared.published'   -%>: <%= l(newsletter_edition.publication_start_date, :format => :long) -%></p>
+        <p class="lastUpdateDate"><%=t 'shared.last_updated' -%>: <%= l(newsletter_edition.updated_at,             :format => :long) -%></p>
+      </div>
+
+      <div class="htmlEditor clearfix">
+        <%= newsletter_edition.body -%>
+      </div>
+
+      <div class="buttons clearfix">
+      <% news_item_button t('newsletters.full_edition') do %>
+        <%= link_to t('newsletters.full_edition'), '#', :class => 'article', :title => h(newsletter_edition.title) -%>
+      <% end %>
+      </div>
+    </div>
+    <% end %>
+  <% end %>
+
+  <% if @newsletter_editions_for_table.present? %>
+    <h3><%=t 'newsletters.older_newsletter_editions' -%></h3>
+    <table cellpadding="0" cellspacing="0" id="items">
+    <thead>
+      <tr>
+        <th scope="col" class="gray"><%=t 'newsletters.newsletter_title' -%></th>
+        <th scope="col" class="right gray"><%=t 'newsletters.publication_date' -%></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @newsletter_editions_for_table.each_with_index do |newsletter_edition, i| %>
+      <tr <% if i.even? %>class="alt"<% end %>>
+        <td><%= link_to h(newsletter_edition.title), '#' -%></td>
+        <td class="right_sized date"><%= l(newsletter_edition.publication_start_date, :format => :long) -%></td>
+      </tr>
+      <% end %>
+    </tbody>
+    </table>
+  <% end %>
+  </div>
+</div>

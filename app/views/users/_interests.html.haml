@@ -1,0 +1,12 @@
+- if @interests.any?
+  .reg_form_additional_info
+    .reg_form_additional_info_header.formFieldCt
+      == #{t 'users.select_interests'}:
+    %p= t 'users.privacy_explanation'
+
+    .checkboxes_container.clearfix
+      - @interests.each do |interest|
+        .form_checkbox.clearfix
+          = check_box_tag 'user[interest_ids][]', interest.id, @user.interests.include?(interest), :id => dom_id(interest)
+          %label{ :for => dom_id(interest) }
+            = h interest.title

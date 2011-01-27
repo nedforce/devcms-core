@@ -1,0 +1,17 @@
+= javascript_tag("document.getElementById('right_panel_body').scrollTop = 0;")
+
+- admin_form_for(:attachment, @attachment, :url => { :action => 'create', :format => 'js' }, :html => { :multipart => true, :target => 'upload_target' }) do |f|
+  = error_messages_for :attachment
+
+  = f.text_field :title, :label => t('shared.title')
+
+  - if current_user.has_role?('editor')
+    = f.text_area :editor_comment, :label => t('attachments.editor_comment'), :rows => 3
+
+  = f.file_field :uploaded_data, :label => t('attachments.data')
+
+  = hidden_field_tag :parent_node_id, params[:parent_node_id]
+
+  = category_settings_for @attachment
+
+  = f.submit t('attachments.add')

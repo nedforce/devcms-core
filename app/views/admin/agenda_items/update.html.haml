@@ -1,0 +1,5 @@
+- if @for_approval
+  = javascript_tag "Ext.getCmp('approvals-grid').getStore().reload();"
+- else
+  = javascript_tag "treePanel.refreshNodesOf(#{@agenda_item.calendar_item.node.id})"
+  = update_message

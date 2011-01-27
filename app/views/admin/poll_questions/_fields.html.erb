@@ -1,0 +1,105 @@
+pollQuestionForm.add({
+    id: 'poll_question_question',
+    fieldLabel: '<%= t "polls.question" -%>',
+    name: 'poll_question[question]',
+    xtype: 'textfield',
+    allowBlank: false,
+    width: 400,
+    value: '<%= escape_javascript(@poll_question.question) -%>'
+});
+
+pollQuestionForm.add({
+  id: 'poll_question_publication_start_date_day',
+  fieldLabel: '<%= t "polls.date" -%>',
+  name: 'poll_question[publication_start_date_day]',
+  xtype: 'datefield',
+  format: 'd-m-Y',
+  width: 400,
+  value: '<%= @poll_question.publication_start_date.strftime("%d-%m-%Y") if @poll_question.publication_start_date -%>'
+});
+
+pollQuestionForm.add({
+  id: 'poll_question_publication_start_date_time',
+  fieldLabel: '<%= I18n.t("polls.time") %>',
+  name: 'poll_question[publication_start_date_time]',
+  xtype: 'timefield',
+  format: 'H:i',
+  width: 400,
+  value: '<%= @poll_question.publication_start_date.strftime("%H:%M") if @poll_question.publication_start_date -%>'
+});
+
+pollQuestionForm.add({
+    id: 'poll_question_active',
+    fieldLabel: '<%= t "polls.activate" -%>',
+    name: 'poll_question[active]',
+    xtype: 'checkbox',
+    checked: <%=  @poll_question.active -%>
+});
+
+var findOptionFields = function() {
+  return pollQuestionForm.findBy(function(item, ct){
+    return (item.id.indexOf('poll_option_attributes') != -1)
+  });
+}
+var validateRemove = function(e) {
+  if (findOptionFields().length <= 2) { // minimum of 2 options
+    Ext.Msg.alert('<%= t "polls.caution" -%>', '<%= t "polls.minimum_options" -%>');
+    return false;
+  } else {
+    return true;
+  }
+}
+
+<% new_field_count = 1 %>
+
+<% @poll_question.poll_options.each do |poll_option| %>
+  pollQuestionForm.add({
+    id: 'poll_question_<%= (poll_option.new_record?) ? 'new' : 'existing' -%>_poll_option_attributes_<%= (poll_option.new_record?) ? "new_#{new_field_count}" : poll_option.id -%>_text',
+    fieldLabel: '<%= t "polls.option" -%>',
+    name: 'poll_question[<%= (poll_option.new_record?) ? 'new' : 'existing' -%>_poll_option_attributes][<%= poll_option.id unless poll_option.new_record? -%>][text]',
+    xtype: 'removabletextfield',
+    width: 400,
+    allowBlank: false,
+    value: '<%= escape_javascript(poll_option.text) -%>',
+    listeners: {
+        'beforeremove': validateRemove
+    }
+  });
+
+  <% new_field_count += 1 if poll_option.new_record? %>
+<% end %>
+
+var newFieldCount = <%= new_field_count -%>;
+
+var addField = function() {
+  var lastOptionField = findOptionFields().last();
+  var index = pollQuestionForm.items.items.indexOf(lastOptionField);
+
+  var newField = new Ext.dvtr.RemovableTextField({
+    id: 'poll_question_new_poll_option_attributes_new_' + newFieldCount + '_text',
+    fieldLabel: '<%= t "polls.option" -%>',
+    name: 'poll_question[new_poll_option_attributes][][text]',
+    width: 400,
+    allowBlank: false,
+    listeners: {
+      'beforeremove': validateRemove
+    }
+  });
+
+  newFieldCount++;
+  pollQuestionForm.insert(index + 1, newField);
+  pollQuestionForm.doLayout();
+  newField.validate();
+}
+
+var addFieldBtn = new Ext.Button({
+  cls: 'x-btn-text-icon',
+  style: 'margin-left: 150px',
+  icon: '/images/icons/add.png',
+  text: '<%= t "polls.add_option" -%>',
+  listeners: {
+      'click': addField
+  }
+})
+
+pollQuestionForm.add(addFieldBtn);

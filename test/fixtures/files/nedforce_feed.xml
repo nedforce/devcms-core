@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xml:lang="en-US" xmlns="http://www.w3.org/2005/Atom">
+  <title>Nedforce - Home</title>
+  <id>tag:www.nedforce.com,2008:mephisto/</id>
+  <generator uri="http://mephistoblog.com" version="0.7.3">Mephisto Noh-Varr</generator>
+  <link href="http://www.nedforce.com/feed/atom.xml" rel="self" type="application/atom+xml"/>
+  <link href="http://www.nedforce.com/" rel="alternate" type="text/html"/>
+  <updated>2008-03-26T09:56:03Z</updated>
+  <entry xml:base="http://www.nedforce.com/">
+    <author>
+      <name>Roderick van Domburg</name>
+    </author>
+    <id>tag:www.nedforce.com,2008-03-26:47</id>
+    <published>2008-03-26T09:30:00Z</published>
+    <updated>2008-03-26T09:56:03Z</updated>
+    <category term="News"/>
+    <category term="rails"/>
+    <category term="ruby"/>
+    <category term="rubyenrails"/>
+    <link href="http://www.nedforce.com/2008/3/26/nedforce-mede-organisator-rubyenrails-2008" rel="alternate" type="text/html"/>
+    <title>Nedforce mede-organisator RubyEnRails 2008</title>
+<content type="html">
+            &lt;p&gt;Op 10 juni staat RubyEnRails 2008 op stapel: hét Nederlandse congres over de nieuwste ontwikkelingen in zowel Ruby als Rails. Nedforce staat de Stichting RubyEnRails bij als mede-organisator.&lt;/p&gt;
+
+&lt;p&gt;De locatie is de Hogeschool van Amsterdam en de inschrijving opent binnenkort op &lt;a href=&quot;http://2008.rubyenrails.nl&quot;&gt;http://2008.rubyenrails.nl&lt;/a&gt;.&lt;/p&gt;
+          </content>  </entry>
+  <entry xml:base="http://www.nedforce.com/">
+    <author>
+      <name>Roderick van Domburg</name>
+    </author>
+    <id>tag:www.nedforce.com,2007-10-29:46</id>
+    <published>2007-10-29T11:59:00Z</published>
+    <updated>2008-03-22T20:22:48Z</updated>
+    <category term="froodi"/>
+    <category term="podcasts"/>
+    <category term="vodcasts"/>
+    <link href="http://www.nedforce.com/2007/10/29/froodi-find-your-media" rel="alternate" type="text/html"/>
+    <title>Froodi: find your media!</title>
+<content type="html">
+            &lt;p&gt;Nedforce is proud to present &lt;a href=&quot;http://www.froodi.nl&quot;&gt;Froodi&lt;/a&gt;: &lt;em&gt;the&lt;/em&gt; place to discover your audio and video shows. Fully Ruby on Rails-powered and touting sophisticated searching algorithms, Froodi features an enormous database of podcasts and vodcasts for you to discover, subscribe to, share, and enjoy. Check it out!&lt;/p&gt;
+          </content>  </entry>
+  <entry xml:base="http://www.nedforce.com/">
+    <author>
+      <name>Roderick van Domburg</name>
+    </author>
+    <id>tag:www.nedforce.com,2007-10-29:45</id>
+    <published>2007-10-29T11:39:00Z</published>
+    <updated>2007-10-29T11:59:20Z</updated>
+    <category term="News"/>
+    <category term="different"/>
+    <category term="eventbrite"/>
+    <category term="rails"/>
+    <category term="rest"/>
+    <category term="restful"/>
+    <category term="soa"/>
+    <category term="web services"/>
+    <category term="world usability day"/>
+    <category term="wud"/>
+    <link href="http://www.nedforce.com/2007/10/29/integrating-world-usability-day-with-web-services" rel="alternate" type="text/html"/>
+    <title>Integrating World Usability Day with web services</title>
+<content type="html">
+            &lt;p&gt;Nedforce has teamed up with &lt;a href=&quot;http://www.different.com.au&quot;&gt;Different&lt;/a&gt;, a leading Australian interactive agency, to enhance the event management and listings at the &lt;a href=&quot;http://www.worldusabilityday.org&quot;&gt;World Usability Day&lt;/a&gt; website. An annual earth day, the World Usability Day features events across the globe to raise and improve awareness about product and service usability.&lt;/p&gt;
+
+&lt;p&gt;The Ruby on Rails-powered World Usability Day website now taps into the power of &lt;a href=&quot;http://www.eventbrite.com&quot;&gt;Eventbrite&lt;/a&gt;, an online event registration service. At a user configurable time interval, the World Usability Day website updates its event listing with that of Eventbrite by consuming Eventbrite&#8217;s RESTful interface.&lt;/p&gt;
+
+&lt;p&gt;This web service integration has provided World Usability Day event organizers with a more powerful way to manage their events. At the same time, Nedforce has integrated the new event management in a manner true to the World Usability Day: hassle-free and understandable web service integration.&lt;/p&gt;
+          </content>  </entry>
+  <entry xml:base="http://www.nedforce.com/">
+    <author>
+      <name>Roderick van Domburg</name>
+    </author>
+    <id>tag:www.nedforce.com,2007-10-11:44</id>
+    <published>2007-10-11T16:24:00Z</published>
+    <updated>2007-10-11T16:44:28Z</updated>
+    <category term="News"/>
+    <category term="co-creation"/>
+    <category term="ecci x"/>
+    <category term="innovation"/>
+    <category term="innovation management"/>
+    <category term="mechanisms"/>
+    <category term="open innovation"/>
+    <link href="http://www.nedforce.com/2007/10/11/how-to-organize-open-innovation-systems" rel="alternate" type="text/html"/>
+    <title>How to organize open innovation systems </title>
+<content type="html">
+            &lt;p&gt;The &lt;a href=&quot;http://www.eccix.org&quot;&gt;10th European Conference on Creativity and Innovation&lt;/a&gt; is about to start, and Nedforce is anxiously preparing its paper jam session.&lt;/p&gt;
+
+&lt;p&gt;Roderick van Domburg (COO Nedforce) and Han van der Meer (CEO &lt;a href=&quot;http://www.innovation.nl&quot;&gt;Van der Meer &amp;amp; Van Tilburg&lt;/a&gt;; assistant professor &lt;a href=&quot;http://www.tudelft.nl&quot;&gt;Delft University of Technology&lt;/a&gt;; lector &lt;a href=&quot;http://www.saxion.edu&quot;&gt;Saxion University of Applied Sciences&lt;/a&gt;) are proud to be presenting their research on how to organize open innovation systems:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.nedforce.com/assets/2007/10/11/Mechanisms_for_importing_and_exporting_technological_knowledge_in_open_innovation.pdf&quot;&gt;Co-creation: Mechanisms for importang and exporting technological knowledge in open innovation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.nedforce.com/assets/2007/10/11/Poster%20ECCI%20X.pdf&quot;&gt;Blitz presentation poster&lt;/a&gt; (A0 format)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Nedforce is leading solution provider for web enabled, premium quality software to help improve and grow businesses. Touting a firm understanding of innovation management and business science, Nedforce is expert in business-IT alignment, e-commerce, and organizational development.&lt;/p&gt;
+          </content>  </entry>
+  <entry xml:base="http://www.nedforce.com/">
+    <author>
+      <name>Roderick van Domburg</name>
+    </author>
+    <id>tag:www.nedforce.com,2007-06-11:29</id>
+    <published>2007-06-11T13:07:00Z</published>
+    <updated>2007-08-13T07:37:39Z</updated>
+    <category term="News"/>
+    <category term="2007"/>
+    <category term="flash"/>
+    <category term="rails"/>
+    <category term="ruby on rails"/>
+    <category term="rubyenrails"/>
+    <category term="video streaming"/>
+    <category term="whootube"/>
+    <link href="http://www.nedforce.com/2007/6/11/whootube-ruby-on-rails-video-streaming-open-sourced" rel="alternate" type="text/html"/>
+    <title>WhooTube: Ruby on Rails video streaming</title>
+<content type="html">
+            &lt;p&gt;After the &lt;a href=&quot;/2007/06/11/rubyenrails-2007-a-great-success&quot;&gt;hugely successful&lt;/a&gt; &lt;a href=&quot;http://2007.rubyenrails.nl&quot;&gt;RubyEnRails 2007&lt;/a&gt; conference, Nedforce is excited to open source a proof-of-concept of its Flash video streaming solution using Ruby technology. Dubbed &#8216;WhooTube&#8217;, it serves as a great jumping board to start developing video-enabled Ruby on Rails applications.&lt;/p&gt;
+
+&lt;p&gt;If you&#8217;re looking to put this code to commercial use, then we warmly invite you to &lt;a href=&quot;/contact&quot;&gt;get in
+touch&lt;/a&gt; with us. We&#8217;ve got a &lt;a href=&quot;/2007/4/24/unveiling-ruby-on-rails-video-streaming&quot;&gt;proven solution&lt;/a&gt; that not only saves you precious development
+time, and also gives you:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;A deployment scenario that&#8217;s tweaked for scalability&lt;/li&gt;
+&lt;li&gt;Automated, schedulable maintenance utilities for cleanup and error correction&lt;/li&gt;
+&lt;li&gt;Vastly improved exception handling improving the user experience&lt;/li&gt;
+&lt;li&gt;Optional authorization that&#8217;s compatible with your current authentication&lt;/li&gt;
+&lt;li&gt;Optional permalinking and clean URLs for search engine optimization&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/2007/6/11/whootube-0.9.2.zip&quot;&gt;Download WhooTube now&lt;/a&gt; or &lt;a href=&quot;/contact&quot;&gt;inquire&lt;/a&gt; about our commercial solution.&lt;/p&gt;
+          </content>  </entry>
+  <entry xml:base="http://www.nedforce.com/">
+    <author>
+      <name>Roderick van Domburg</name>
+    </author>
+    <id>tag:www.nedforce.com,2007-06-11:31</id>
+    <published>2007-06-11T11:57:00Z</published>
+    <updated>2007-10-11T16:44:05Z</updated>
+    <category term="News"/>
+    <category term="ecci"/>
+    <category term="innovation management"/>
+    <link href="http://www.nedforce.com/2007/6/11/nedforce-to-speak-at-ecci-x" rel="alternate" type="text/html"/>
+    <title>Nedforce to speak at ECCI X</title>
+<content type="html">
+            &lt;p&gt;Nedforce is continuing its conference streak and is proud to have a paper accepted into the academic track of the &lt;a href=&quot;http://www.eccix.org&quot;&gt;10th European Conference for Creativity and Innovation&lt;/a&gt;. Held at the &lt;a href=&quot;http://uk.cbs.dk/&quot;&gt;Copenhagen Business School&lt;/a&gt;, the ECCI is a prominent conference featuring innovation and project managers from all trades.&lt;/p&gt;
+
+&lt;p&gt;Roderick van Domburg (COO Nedforce) and Han van der Meer (CEO &lt;a href=&quot;http://www.innovation.nl/&quot;&gt;Van der Meer &amp;amp; Van Tilburg&lt;/a&gt;; assistant professor &lt;a href=&quot;http://www.tudelft.nl/&quot;&gt;Delft University of Technology&lt;/a&gt;; lector &lt;a href=&quot;http://www.saxion.edu/&quot;&gt;Saxion University of Applied Sciences&lt;/a&gt;) will be presenting an interactive workshop dubbed &#8220;Co-creation: mechanisms for importing and exporting technological knowledge in open innovation&#8221;.&lt;/p&gt;
+
+&lt;p&gt;Quoting from the abstract: &#8220;As the innovation funnel converges to evolve ideas into actual business, a tendency towards closed systems behavior is evident that causes internal valuable ideas to be weeded out and external valuable ideas to be left underused. The paper will present mechanisms and a framework to select between this mechanisms to overcome this natural tendency in creative problem solving processes, enabling better use of valuable ideas and improved innovation project performance.&#8221;&lt;/p&gt;
+
+&lt;p&gt;Nedforce is leading solution provider for web enabled, premium quality software to help improve and grow businesses. Touting a firm understanding of innovation management and business science, Nedforce is expert in business-IT alignment, e-commerce, and organizational development.&lt;/p&gt;
+          </content>  </entry>
+  <entry xml:base="http://www.nedforce.com/">
+    <author>
+      <name>Roderick van Domburg</name>
+    </author>
+    <id>tag:www.nedforce.com,2007-05-03:26</id>
+    <published>2007-05-03T15:41:00Z</published>
+    <updated>2007-08-11T14:21:20Z</updated>
+    <category term="News"/>
+    <category term="2007"/>
+    <category term="rails"/>
+    <category term="ruby"/>
+    <category term="ruby on rails"/>
+    <category term="rubyenrails"/>
+    <link href="http://www.nedforce.com/2007/5/3/nedforce-to-speak-at-rubyenrails-2007" rel="alternate" type="text/html"/>
+    <title>Nedforce to speak at RubyEnRails 2007</title>
+<content type="html">
+            &lt;p&gt;Nedforce is proud to be speaking at RubyEnRails 2007 on June 7th in Amsterdam, the second Dutch conference on both Ruby and Rails.&lt;/p&gt;
+
+&lt;p&gt;Lead Ruby on Rails developer Sjoerd Andringa and tech-savvy chief operating officer Roderick van Domburg will be uncovering Nedforce&#8217;s &lt;a href=&quot;/2007/4/24/unveiling-ruby-on-rails-video-streaming&quot;&gt;Ruby on Rails video streaming solution&lt;/a&gt; in a 45-minute live coding demonstration.&lt;/p&gt;
+
+&lt;p&gt;There will be many more interesting lectures on many aspects of Ruby and Rails, and registration is free to boot. Visit &lt;a href=&quot;http://2007.rubyenrails.nl/&quot;&gt;http://2007.rubyenrails.nl/&lt;/a&gt; to claim your seat before it is too late.&lt;/p&gt;
+          </content>  </entry>
+  <entry xml:base="http://www.nedforce.com/">
+    <author>
+      <name>Roderick van Domburg</name>
+    </author>
+    <id>tag:www.nedforce.com,2007-04-24:23</id>
+    <published>2007-04-24T12:40:00Z</published>
+    <updated>2007-08-12T11:17:18Z</updated>
+    <category term="News"/>
+    <category term="flash"/>
+    <category term="rails"/>
+    <category term="ruby on rails"/>
+    <category term="video streaming"/>
+    <link href="http://www.nedforce.com/2007/4/24/unveiling-ruby-on-rails-video-streaming" rel="alternate" type="text/html"/>
+    <title>Unveiling Ruby on Rails video streaming</title>
+<content type="html">
+            &lt;p&gt;Nedforce has been working with an international client to develop a scalable video processing and streaming solution for a social networking site that is powered by Ruby on Rails. The site has not been unveiled to the general public just yet, so what follows is a sneak peek of this exciting technology.&lt;/p&gt;
+
+&lt;h3&gt;Sneak preview&lt;/h3&gt;
+
+&lt;table class=&quot;screenshots&quot;&gt;
+  &lt;tr&gt;
+    &lt;td&gt;
+      &lt;a href=&quot;/assets/2007/4/24/watch_video.PNG&quot; title=&quot;Uploaded movies are converted to Flash for online display&quot;&gt;&lt;img src=&quot;/assets/2007/4/24/watch_video_thumb.PNG&quot; alt=&quot;Movie viewer&quot; /&gt;&lt;/a&gt;
+    &lt;/td&gt;
+    &lt;td&gt;
+      &lt;a href=&quot;/assets/2007/4/24/video_overview.PNG&quot; title=&quot;Movie thumbnails are automatically extracted for display on the overview page.&quot;&gt;&lt;img src=&quot;/assets/2007/4/24/video_overview_thumb.PNG&quot; alt=&quot;Movie thumbnails&quot; /&gt;&lt;/a&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;
+
+&lt;h3&gt;Exciting technology&lt;/h3&gt;
+
+&lt;p&gt;The requirements for the project were clear: a user should be able to upload a video, which is then converted to Flash video for online display. To make it just as unobtrusive to the user as that sounds, Nedforce has put some exciting technology to work.&lt;/p&gt;
+
+&lt;p&gt;The solution consists of the following components:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Background task queuing.&lt;/strong&gt; The web application interfaces with a BackgrounDRb server where it queues any uploaded for videos for further processing. This queuing mechanism ensures that the server will be able to handle the work load of a busy social networking site. The number of worker threads is adjustable to scale with future demand.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Video processing and thumbnail generation.&lt;/strong&gt; Any uploaded videos are converted to Flash video for online display. The converter supports a wide number of input formats including ASF, DivX, MOV, MPEG4, XviD and WMV. A thumbnail is automatically extracted during conversion. And because accidents happen (bad input formats, server going down for maintenance) the solution comes complete with intelligent error reporting and scavenging mechanisms.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Application server load balancing.&lt;/strong&gt; An Apache2 + proxy balancer + Mongrel cluster deployment scenario has been implemented to cope with the demand placed on the website.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Video streaming.&lt;/strong&gt; Processed videos are injected with the Flash video meta data necessary to allow rewinding and fast forwarding videos, and the Mongrel cluster has been enhanced to send video streams without having to buffer entire videos into memory.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;To be continued&#8230;&lt;/h3&gt;
+
+&lt;p&gt;Want to see our solution in action? Check back regularly as we will let you know the moment the site goes live.&lt;/p&gt;
+          </content>  </entry>
+  <entry xml:base="http://www.nedforce.com/">
+    <author>
+      <name>Roderick van Domburg</name>
+    </author>
+    <id>tag:www.nedforce.com,2007-03-12:14</id>
+    <published>2007-03-12T15:03:00Z</published>
+    <updated>2007-08-12T11:19:11Z</updated>
+    <category term="News"/>
+    <category term=".net"/>
+    <category term="informatie"/>
+    <category term="informatiemanagement"/>
+    <category term="kennis"/>
+    <category term="kennismanagement"/>
+    <category term="pdf"/>
+    <category term="productif"/>
+    <category term="rtf"/>
+    <category term="sharepoint"/>
+    <category term="web part"/>
+    <link href="http://www.nedforce.com/2007/3/12/new-web-parts-for-sharepoint-server-2007" rel="alternate" type="text/html"/>
+    <title>New Web Parts for SharePoint Server 2007</title>
+<content type="html">
+            &lt;p&gt;At Nedforce we feel that it is important to keep up with Microsoft .NET development so we can ensure greater enterprise interoperability of our Ruby on Rails solutions. We are pleased to announce our collaboration with Microsoft Office SharePoint Server experts &lt;a href=&quot;http://www.productif.nl&quot;&gt;Productif&lt;/a&gt; and the immediate availability of three ASP.NET 2.0 Web Parts focused on managing discussion boards and exporting SharePoint lists to PDF and RTF.&lt;/p&gt;
+
+&lt;h3&gt;Complete discussion portal&lt;/h3&gt;
+
+&lt;table class=&quot;screenshots&quot;&gt;
+  &lt;tr&gt;
+    &lt;td&gt;
+      &lt;a href=&quot;/assets/2007/3/12/Discussion_Boards.PNG&quot; title=&quot;The Discussion Boards Web Part and Create Discussion Board Web Part offer everything needed for a complete discussion portal.&quot;&gt;&lt;img src=&quot;/assets/2007/3/12/Discussion_Boards_thumb.PNG&quot; alt=&quot;Web Parts: Discussion Boards &amp;amp;amp; Create Discussion Board&quot; /&gt;&lt;/a&gt;
+    &lt;/td&gt;
+    &lt;td&gt;
+      &lt;p&gt;It can happen to any site collection that is crowded with discussion boards: so many useful information, that you just do not know where to look for it anymore. So how to find it, and where? The &lt;em&gt;Discussion Boards&lt;/em&gt; and &lt;em&gt;Create Discussion Board Web Parts&lt;/em&gt; that we developed offer everything needed for a complete discussion portal.&lt;/p&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;
+
+&lt;h3&gt;Exporting SharePoint lists to PDF and RTF&lt;/h3&gt;
+
+&lt;table class=&quot;screenshots&quot;&gt;
+  &lt;tr&gt;
+    &lt;td&gt;
+      &lt;p&gt;Being able to download SharePoint lists is ever useful in getting a quick overview, as a starting point for generating a report, or as a printout for a meeting.&lt;/p&gt;
+    &lt;/td&gt;
+    &lt;td&gt;
+      &lt;a href=&quot;/assets/2007/3/12/Save_to_PDF_or_RTF.PNG&quot; title=&quot;The Export to PDF/RTF Web Part enables you to download lists in PDF and RTF in a highly user-friendly manner.&quot;&gt;&lt;img src=&quot;/assets/2007/3/12/Save_to_PDF_or_RTF_thumb.PNG&quot; alt=&quot;Save to PDF/RTF Web Part&quot; /&gt;&lt;/a&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;
+      &lt;p&gt;The &lt;em&gt;Export to PDF/RTF Web Part&lt;/em&gt; that we developed enables you to download lists with a single click of a button. Two file formats are supported: the edit-everywhere RTF and the read-everywhere PDF format.&lt;/p&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;
+
+&lt;h3&gt;Information &amp;amp; knowledge management&lt;/h3&gt;
+
+&lt;p&gt;The collaboration with Microsoft Office SharePoint Server experts &lt;a href=&quot;http://www.productif.nl&quot;&gt;Productif&lt;/a&gt; is a close match with our portfolio in solutions for information and knowledge management. The collaboration enables Productif and us to share one another&#8217;s expertise and development capacity. This offers Productif and us the advantage to provide our customers with shorter lead times and tailored information solutions.&lt;/p&gt;
+
+&lt;h3&gt;About Productif&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.productif.nl&quot;&gt;Productif&lt;/a&gt; is a firm of IT architects that aims to develop solutions for organizational issues by using Microsoft Office technology. The focus here lies on SharePoint 2003 and 2007 in combination with other Office applications, such as InfoPath/Forms, Outlook, Word, and SQL Services.&lt;/p&gt;
+
+&lt;h3&gt;About Nedforce&lt;/h3&gt;
+
+&lt;p&gt;Nedforce is your premier Ruby on Rails solution provider operating worldwide from the Netherlands. We deliver web enabled, premium quality software to improve and grow your business. By keeping up with Microsoft .NET development, we can ensure better enterprise systems interoperability of our Ruby on Rails solutions.&lt;/p&gt;
+          </content>  </entry>
+  <entry xml:base="http://www.nedforce.com/">
+    <author>
+      <name>Roderick van Domburg</name>
+    </author>
+    <id>tag:www.nedforce.com,2007-01-02:1</id>
+    <published>2007-01-02T14:23:00Z</published>
+    <updated>2007-08-11T12:12:24Z</updated>
+    <category term="News"/>
+    <category term="corporate style"/>
+    <category term="information management"/>
+    <category term="innovation"/>
+    <category term="knowledge management"/>
+    <category term="marssteden"/>
+    <category term="project management"/>
+    <category term="risk management"/>
+    <category term="saxion"/>
+    <category term="skybase"/>
+    <category term="software"/>
+    <category term="university of twente"/>
+    <category term="web applications"/>
+    <category term="web services"/>
+    <link href="http://www.nedforce.com/2007/1/2/new-corporate-style-and-housing" rel="alternate" type="text/html"/>
+    <title>New corporate style and housing</title>
+<content type="html">
+            &lt;p&gt;All Nedforce employees wish you a happy 2007! In 2007 we continue to help you improve and grow your business with our premium quality Ruby on Rails solutions, and offer our consultancy services in corporate governance.&lt;/p&gt;
+
+&lt;p&gt;We are proud to give our ambitions an early start in 2007 and present you our new corporate housing and style.&lt;/p&gt;
+
+&lt;h3&gt;New corporate housing&lt;/h3&gt;
+
+&lt;p&gt;Having been situated in the Dr. Neher Laboratory in Leidschendam for several years, we have moved to a corporate office on the &lt;a href=&quot;http://www.marssteden.nl&quot;&gt;Marssteden business park&lt;/a&gt; in Enschede.&lt;/p&gt;
+
+&lt;p&gt;This location is an excellent match with our innovation strategy. In particular we are looking forward to tap in and contribute to the following:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;the research and development on the &lt;a href=&quot;http://www.utwente.nl&quot;&gt;University of Twente&lt;/a&gt; and the &lt;a href=&quot;http://www.hen.nl&quot;&gt;Saxion University Enschede&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;the &lt;a href=&quot;http://www.twentse-innovatieroute.nl&quot;&gt;innovative climate&lt;/a&gt; of the Twente region&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We kindly refer you to &lt;a href=&quot;/contact&quot;&gt;Contact&lt;/a&gt; for our new contact information.&lt;/p&gt;
+
+&lt;h3&gt;New corporate style&lt;/h3&gt;
+
+&lt;p&gt;Both the IT industry and we have been developing at a fast pace. We have focused in providing services of a knowledge-intensive character and developing innovative technologies based on the latest insights in computer science. Important developments in the industry are the focus on web services and increasing user interactivity in web applications.&lt;/p&gt;
+
+&lt;p&gt;To meet the future we have developed a new corporate style that is reflective of these developments. Characterizing our new house style are the following elements:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;a multi-faceted brand image that includes the following metaphors:
+&lt;ul&gt;
+&lt;li&gt;building blocks&lt;/li&gt;
+&lt;li&gt;flexibility&lt;/li&gt;
+&lt;li&gt;meeting success&lt;/li&gt;
+&lt;li&gt;modularity&lt;/li&gt;
+&lt;li&gt;reaching a higher level&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;refined and professional fonts&lt;/li&gt;
+&lt;li&gt;a fresh and corporate color palette&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We hope you like our new corporate image and are looking forward to meeting you in our new office.&lt;/p&gt;
+          </content>  </entry>
+</feed>

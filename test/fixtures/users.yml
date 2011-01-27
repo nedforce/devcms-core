@@ -1,0 +1,92 @@
+<% SALT = 'NaCl' if !defined?(SALT) %>
+
+gerjan:
+  email_address: w.g.j.stokkink@nedforce.nl
+  login: gerjan
+  password_salt: <%= SALT %>
+  password_hash: <%= User.encrypt('gerjan', SALT) %>
+  verification_code: <%= User.generate_verification_code_for(User.new(:login => 'gerjan')) %>
+  verified: true
+arthur:
+  email_address: a.holstvoogd@nedforce.nl
+  login: arthur
+  password_salt: <%= SALT %>
+  password_hash: <%= User.encrypt('arthur', SALT) %>
+  verification_code: <%= User.generate_verification_code_for(User.new(:login => 'arthur')) %>
+sjoerd:
+  email_address: s.andringa@nedforce.nl
+  login: sjoerd
+  first_name: Sjoerd
+  surname: Andringa
+  password_salt: <%= SALT %>
+  password_hash: <%= User.encrypt('sjoerd', SALT) %>
+  verification_code: <%= User.generate_verification_code_for(User.new(:login => 'sjoerd')) %>
+  verified: true
+roderick:
+  email_address: r.s.a.vandomburg@nedforce.nl
+  login: roderick
+  password_salt: <%= SALT %>
+  password_hash: <%= User.encrypt('roderick', SALT) %>
+  verification_code: <%= User.generate_verification_code_for(User.new(:login => 'roderick')) %>
+editor:
+  email_address: editor@nedforce.nl
+  login: editor
+  password_salt: <%= SALT %>
+  password_hash: <%= User.encrypt('editor', SALT) %>
+  verification_code: <%= User.generate_verification_code_for(User.new(:login => 'editor')) %>
+final_editor:
+  email_address: final_editor@nedforce.nl
+  login: final_editor
+  password_salt: <%= SALT %>
+  password_hash: <%= User.encrypt('final_editor', SALT) %>
+  verification_code: <%= User.generate_verification_code_for(User.new(:login => 'final_editor')) %>
+normal_user:
+  email_address: normal_user@nedforce.nl
+  login: normal_user
+  password_salt: <%= SALT %>
+  password_hash: <%= User.encrypt('normal_user', SALT) %>
+  verification_code: <%= User.generate_verification_code_for(User.new(:login => 'normal_user')) %>
+henk:
+  email_address: henk@henk.nl
+  login: henk
+  password_salt: <%= SALT %>
+  password_hash: <%= User.encrypt('henk', SALT) %>
+  verification_code: <%= User.generate_verification_code_for(User.new(:login => 'henk')) %>
+piet:
+  email_address: piet@piet.nl
+  login: piet
+  password_salt: <%= SALT %>
+  password_hash: <%= User.encrypt('piet', SALT) %>
+  verification_code: <%= User.generate_verification_code_for(User.new(:login => 'piet')) %>
+jan:
+  email_address: jan@jan.nl
+  login: jan
+  password_salt: <%= SALT %>
+  password_hash: <%= User.encrypt('jan', SALT) %>
+  verification_code: <%= User.generate_verification_code_for(User.new(:login => 'jan')) %>
+klaas:
+  email_address: klaas@klaas.nl
+  login: klaas
+  password_salt: <%= SALT %>
+  password_hash: <%= User.encrypt('klaas', SALT) %>
+  verification_code: <%= User.generate_verification_code_for(User.new(:login => 'klaas')) %>
+unverified_user:
+  email_address: unverified@user.nl
+  login: im_not_verified
+  password_salt: <%= SALT %>
+  password_hash: <%= User.encrypt('pass', SALT) %>
+  verification_code: <%= User.generate_verification_code_for(User.new(:login => 'im_not_verified')) %>
+  verified: false
+reader:
+  email_address: reader@reader.nl
+  login: reader
+  password_salt: <%= SALT %>
+  password_hash: <%= User.encrypt('reader', SALT) %>
+  verification_code: <%= User.generate_verification_code_for(User.new(:login => 'reader')) %>
+indexer:
+  email_address: indexer@indexer.nl
+  login: indexer
+  password_salt: <%= SALT %>
+  password_hash: <%= User.encrypt('indexer', SALT) %>
+  verification_code: <%= User.generate_verification_code_for(User.new(:login => 'indexer')) %>
+  verified: true

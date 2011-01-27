@@ -1,0 +1,332 @@
+<script type="text/javascript">
+//<![CDATA[
+
+Ext.onReady(function(){
+    Ext.QuickTips.init();
+
+    // shorthand alias
+    var fm = Ext.form;
+
+    // create the Data Store
+    var store = new Ext.data.GroupingStore({
+        proxy: new Ext.data.HttpProxy({
+          url: '/admin/categories.json',
+          method: 'GET'
+        }),
+
+        reader: new Ext.data.JsonReader({
+          root: 'categories',
+          id: 'id',
+          totalProperty: 'total_count'
+        },
+          [ 'table_name', 'name', 'group', 'is_root', 'created_at', 'updated_at' ]
+        ),
+
+        groupField:'group',
+        autoLoad: true
+    });
+
+    store.setDefaultSort('table_name', 'ASC');
+
+    // create the grid
+    grid = new Ext.grid.GridPanel({
+        store: store,
+
+        columns: [
+            {id:'id', header: "<%= I18n.t('categories.name') %>", width: 400, sortable: true, dataIndex: 'table_name'},
+            {header: "<%= I18n.t('categories.group') %>", width: 300, sortable: true, dataIndex: 'group'},
+            {header: "<%= I18n.t('categories.created_at') %>", width: 100, sortable: true, renderer: Ext.util.Format.dateRenderer('d-m-Y'), dataIndex: 'created_at'},
+            {header: "<%= I18n.t('categories.updated_at') %>", width: 100, sortable: true, renderer: Ext.util.Format.dateRenderer('d-m-Y'), dataIndex: 'updated_at'}
+        ],
+
+        view: new Ext.grid.GroupingView({
+
+            groupTextTpl: '{text} ({[values.rs.length]} {[values.rs.length > 1 ? "<%= I18n.t(:items, :scope => :categories) %>" : "<%= I18n.t(:item, :scope => :categories) %>"]})',
+            startCollapsed: true
+        }),
+
+        tbar: [
+              {
+                  text: '<%= I18n.t("categories.new_group") %>',
+                  tooltip: '<%= I18n.t("categories.new_group_tooltip") %>',
+                  handler: handleNewGroupAction,
+                  iconCls:'menu_item_create'
+              },{
+                  text: '<%= I18n.t("categories.new_category") %>',
+                  tooltip: '<%= I18n.t("categories.new_category_tooltip") %>',
+                  handler: handleNewCategoryAction,
+                  iconCls:'menu_item_create'
+              },
+              {
+                  text: '<%= I18n.t("categories.edit") %>',
+                  tooltip: '<%= I18n.t("categories.edit_tooltip") %>',
+                  handler: handleEditAction,
+                  iconCls:'menu_item_edit'
+              },
+              {
+                  text: '<%= I18n.t("categories.delete") %>',
+                  tooltip: '<%= I18n.t("categories.del_tooltip") %>',
+                  handler: handleDeleteAction,
+                  iconCls:'menu_item_delete'
+              }
+        ],
+
+        stripeRows: true,
+        collapsible: false
+    });
+
+    // create the roots store
+    var roots_store = new Ext.data.Store({
+        proxy: new Ext.data.HttpProxy({
+          url: '/admin/categories/root_categories.json',
+          method: 'GET'
+        }),
+
+        reader: new Ext.data.JsonReader({
+          root: 'categories',
+          id: 'id',
+          totalProperty: 'total_count'
+        },[ 'id', 'name' ])
+    });
+
+    function handleNewGroupAction(createEvent) {
+        wnd = new Ext.Window({
+            animateTarget: createEvent.getEl(),
+            modal: true,
+            layout: 'fit',
+            height: 100,
+            width: 300,
+            title: '<%= I18n.t("categories.new_group") %>',
+            items: [{
+              xtype: 'form',
+              itemId: 'new_group',
+              bodyStyle: 'padding:5px',
+              items: [{
+                  xtype: 'textfield',
+                  fieldLabel: '<%= I18n.t("categories.category_name") %>',
+                  minLength: 2,
+                  minLengthText: '<%= I18n.t("categories.name_cannot_be_blank") %>',
+                  name: 'category[name]'
+              },{
+                  xtype: 'hidden',
+                  name: 'authenticity_token',
+                  value: '<%= form_authenticity_token -%>'
+              }]
+            }],
+            buttonAlign: 'center',
+            buttons: [{
+                  xtype: 'button',
+                  text: '<%= I18n.t("categories.save") %>',
+                  type: 'submit',
+                  handler: function(e){
+                      wnd.getComponent('new_group').getForm().submit({
+                          url: 'categories.json',
+                          method: 'POST',
+                          failure: function(form,action) {
+                              Ext.MessageBox.alert('<%= I18n.t("categories.error") %>',action.response.responseText);
+                          },
+                          success: function(form,action) {
+                              store.reload();
+                              wnd.close();
+                          }
+                      });
+                  }
+              },{
+                  xtype: 'button',
+                  text: '<%= I18n.t("categories.cancel") %>',
+                  type: 'reset',
+                  handler: function(e){
+                      wnd.close();
+                  }
+              }]
+        });
+        wnd.show();
+    }
+
+    function handleNewCategoryAction(createEvent) {
+       wnd = new Ext.Window({
+            animateTarget: createEvent.getEl(),
+            modal: true,
+            layout: 'fit',
+            height: 135,
+            width: 285,
+            title: '<%= I18n.t("categories.new_category") %>',
+            items: [{
+              xtype: 'form',
+              itemId: 'new_category',
+              bodyStyle: 'padding:5px',
+              items: [{
+                  xtype: 'combo',
+                  emptyText: '<%= I18n.t("categories.choose_main_category") %>',
+                  fieldLabel: '<%= I18n.t("categories.main_category") %>',
+                  store: roots_store,
+                  displayField:'name',
+                  valueField:'id',
+                  forceSelection: true,
+                  triggerAction: 'all',
+                  editable: false,
+                  mode:'remote',
+                  width: 150,
+                  hiddenName: 'category[parent_id]'
+              },{
+                  xtype: 'textfield',
+                  fieldLabel: '<%= I18n.t("categories.category_name") %>',
+                  minLength: 2,
+                  minLengthText: '<%= I18n.t("categories.name_cannot_be_blank") %>',
+                  width: 150,
+                  name: 'category[name]'
+              },{
+                  xtype: 'hidden',
+                  name: 'authenticity_token',
+                  value: '<%= form_authenticity_token -%>'
+              }]
+            }],
+            buttonAlign: 'center',
+            buttons: [{
+                  xtype: 'button',
+                  text: '<%= I18n.t("categories.save") %>',
+                  type: 'submit',
+                  handler: function(e){
+                      wnd.getComponent('new_category').getForm().submit({
+                          url: 'categories.json',
+                          method: 'POST',
+                          failure: function(form,action) {
+                              Ext.MessageBox.alert('<%= I18n.t("categories.error") %>',action.response.responseText);
+                          },
+                          success: function(form,action) {
+                              store.reload();
+                              wnd.close();
+                          }
+                      });
+                  }
+              },{
+                  xtype: 'button',
+                  text: '<%= I18n.t("categories.cancel") %>',
+                  type: 'reset',
+                  handler: function(e){
+                      wnd.close();
+                  }
+              }]
+        });
+        wnd.show();
+    }
+
+    function handleEditAction(editEvent) {
+      var item = grid.selModel.getSelected();
+      if (item == null)
+       {
+            Ext.MessageBox.alert('<%= I18n.t("categories.message") %>','<%= I18n.t("categories.select_one") %>');
+       }
+      else {
+        var item = grid.selModel.getSelected();
+        wnd = new Ext.Window({
+            animateTarget: editEvent.getEl(),
+            modal: true,
+            layout: 'fit',
+            height: 135,
+            width: 285,
+            title: '<%= I18n.t("categories.edit_category") %>',
+            items: [{
+              xtype: 'form',
+              itemId: 'edit_category',
+              bodyStyle: 'padding:5px',
+              items: [{
+                  xtype: 'combo',
+                  itemId: 'edit_category_combo',
+                  emptyText: '<%= I18n.t("categories.choose_main_category") %>',
+                  fieldLabel: '<%= I18n.t("categories.main_category") %>',
+                  store: roots_store,
+                  displayField:'name',
+                  valueField:'id',
+                  forceSelection: true,
+                  triggerAction: 'all',
+                  editable: false,
+                  mode:'remote',
+                  width: 150,
+                  hiddenName: 'category[parent_id]'
+              },{
+                  xtype: 'textfield',
+                  fieldLabel: '<%= I18n.t("categories.category_name") %>',
+                  minLength: 2,
+                  minLengthText: '<%= I18n.t("categories.name_cannot_be_blank") %>',
+                  width: 150,
+                  name: 'category[name]',
+                  value: item.get('name')
+              },{
+                  xtype: 'hidden',
+                  name: 'authenticity_token',
+                  value: '<%= form_authenticity_token -%>'
+              }]
+            }],
+            buttonAlign: 'center',
+            buttons: [{
+                  xtype: 'button',
+                  text: '<%= I18n.t("categories.save") %>',
+                  type: 'submit',
+                  handler: function(e){
+                      wnd.getComponent('edit_category').getForm().submit({
+                          url: 'categories/' + item.id + '.json',
+                          method: 'PUT',
+                          failure: function(form,action) {
+                              Ext.MessageBox.alert('<%= I18n.t("categories.error") %>',action.response.responseText);
+                          },
+                          success: function(form,action) {
+                              store.reload();
+                              wnd.close();
+                          }
+                      });
+                  }
+              },{
+                  xtype: 'button',
+                  text: '<%= I18n.t("categories.cancel") %>',
+                  type: 'reset',
+                  handler: function(e){
+                      wnd.close();
+                  }
+              }]
+        });
+        if(item.get('is_root') == true) {
+          wnd.getComponent('edit_category').getComponent('edit_category_combo').disable();
+        }
+        wnd.show();
+        }
+    }
+
+    function handleDeleteAction(delEvent) {
+        var selectedItems = grid.selModel.getSelections();
+        if (selectedItems.length > 0)
+        {
+            Ext.MessageBox.confirm('<%= I18n.t("categories.message") %>','<%= I18n.t("categories.confirm_deletion") %>', deleteRecord);
+        }
+        else
+        {
+            Ext.MessageBox.alert('<%= I18n.t("categories.message") %>','<%= I18n.t("categories.select_one") %>');
+        }
+    }
+
+    function deleteRecord(button) {
+        if (button == 'yes')
+        {
+            var item = grid.selModel.getSelected();
+                Ext.Ajax.request({
+                    waitMsg: '<%= I18n.t("categories.deleting") %>',
+                    url: 'categories/' + item.id + '.json',
+                    method: 'DELETE',
+                    params: "authenticity_token=<%= form_authenticity_token -%>",
+                    callback: function(options, success, response){
+                      if(!success){
+                          Ext.ux.alertResponseError(response)
+                      }else{
+                          store.reload();
+                      }
+                    }
+                });
+        }
+    };
+
+
+    initViewport(grid);
+});
+
+//]]>
+</script>

@@ -1,0 +1,13 @@
+= form.hidden_field :title
+= form.hidden_field :publication_start_date
+= form.hidden_field :body
+
+- @item_ids.each do |item_id|
+  = hidden_field_tag('items[]', item_id, :id => "items_#{item_id}")
+
+- if current_user.has_role?('editor')
+  = form.hidden_field :editor_comment
+
+= category_hidden_fields form
+
+= approval_field

@@ -1,0 +1,10 @@
+<div style="font-family: arial, sans-serif; font-size: 12px">
+  <p>
+    De volgende velden zijn ingevuld in het <%= @title -%>:
+  </p>
+  <% @entered_fields.each do |id, label, value| %>
+  <p>
+	<%= label -%>: <%= value -%>
+  </p>
+  <% end %>
+</div>

@@ -1,0 +1,19 @@
+henk_weblog_post_one:
+  title: Het is hier fantastisch!
+  preamble: Jaja, geen grappen!
+  body: Serieus hoor!
+
+henk_weblog_post_two:
+  title: Het is hier saai!
+  preamble: Jaja, geen grappen!
+  body: Serieus hoor!
+
+piet_weblog_post_one:
+  title: Het is hier geweldig!
+  preamble: Jaja, geen grappen!
+  body: Serieus hoor!
+
+piet_weblog_post_two:
+  title: Het is hier boring!
+  preamble: Jaja, geen grappen!
+  body: Serieus hoor!

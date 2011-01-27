@@ -1,0 +1,6 @@
+- @page_title = t('errors.internal_server_error')
+
+%h1= @page_title
+
+%p= t 'errors.internal_server_error_occurred'
+%p== #{t 'errors.go_back'} #{link_to 'startpagina', root_path}.

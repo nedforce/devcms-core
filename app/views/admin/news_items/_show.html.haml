@@ -1,0 +1,26 @@
+.newsItem.regularPage
+  %h2= h record.title
+
+  .metadata.clearfix
+    - if record.publication_start_date.present?
+      %p.publicationDate
+        == #{t 'shared.published'}: #{l record.publication_start_date, :format => :long}
+    - unless record.new_record?
+      %p.lastUpdateDate
+        == #{t 'shared.last_updated'}: #{l record.updated_at, :format => :long}
+
+  .content
+    - if record.preamble.present?
+      = content_tag(:div, simple_format(white_list_preamble(record.preamble)), :class => 'preamble')
+
+    = render_images
+    .htmlField
+      = process_video_tags(record.body)
+
+    = render_attachments
+
+    .header_image
+      %p.explanation
+        = t 'images.header_image_explanation'
+      - if @header_image
+        = image_tag(content_box_header_image_path(@header_image), :alt => h(@header_image.title), :class => 'content_box_header')

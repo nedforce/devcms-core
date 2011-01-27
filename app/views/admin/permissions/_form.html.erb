@@ -1,0 +1,44 @@
+<%= error_messages_for :role_assignment %>
+
+<%= javascript_tag("document.getElementById('right_panel_body').scrollTop = 0;") %>
+
+<%= wrap_with_label(content_tag(:div, '', :id => 'auto_complete_ct'), { :text => t('permissions.user'), :for => 'auto_complete_field' }) %>
+
+<script type="text/javascript">
+//<![CDATA[
+var userStore = new Ext.data.Store({
+      proxy: new Ext.data.HttpProxy({
+      url: '<%= admin_users_path :format => 'json' %>',
+      method: 'GET'
+    }),
+    reader: new Ext.data.JsonReader({
+      root: 'users',      
+      id: 'id'
+    }, 
+    [ 'login' ]
+  )
+});
+
+new Ext.form.ComboBox({
+  id: 'auto_complete_combo',
+  name: 'role_assignment[user_login]',
+  store: userStore,
+  valueField: 'login',
+  displayField: 'login',
+  typeAhead: true,
+  hideTrigger: true,
+  mode: 'remote',
+  minChars: 2,
+  triggerAction: 'all',
+  emptyText: '<%= I18n.t('permissions.select_a_user') %>',
+  selectOnFocus: true,
+  width: 200,
+  renderTo: 'auto_complete_ct'
+});
+//]]>
+</script>
+
+<%= form.radio_button :name, 'admin',        :label => RoleAssignment::ROLES[:admin] if @node && @node.root? %>
+<%= form.radio_button :name, 'editor',       :label => RoleAssignment::ROLES[:editor]       %>
+<%= form.radio_button :name, 'final_editor', :label => RoleAssignment::ROLES[:final_editor] %>
+<%= form.radio_button :name, 'read_access',  :label => RoleAssignment::ROLES[:read_access]  %>

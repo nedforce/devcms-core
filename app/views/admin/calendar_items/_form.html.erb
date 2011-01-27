@@ -1,0 +1,68 @@
+<%= javascript_tag("document.getElementById('right_panel_body').scrollTop = 0;") %>
+
+<% if @calendar_item.is_a?(Meeting) %>
+<div id="meetingCategoryFields">
+  <div id="existing_meeting_category_wrapper" class="formFieldCt clearfix" <%= "style='display:none;'" if @categories.empty? || @calendar_item.meeting_category.try(:new_record?) -%>>
+    <label for="meeting_category_select"><%=t 'calendars.meeting_category' -%></label>
+    <%= select_tag "meeting_category_select", options_from_collection_for_select(@categories, 'name', 'name', @calendar_item.meeting_category_name), :onclick => 'setMeetingCategoryName()', :id => 'meeting_category_select' -%>
+    <%= link_to_function t('calendars.new_category'), "toggleNewMeetingCategoryField()" -%>
+  </div>
+
+  <div id="new_meeting_category_wrapper" class="formFieldCt clearfix" <%= "style='display:none;'" unless @categories.empty? || @calendar_item.meeting_category.try(:new_record?) -%>>
+    <label for="meeting_category_name"><%=t 'calendars.meeting_category' -%></label>
+    <%= text_field_tag 'calendar_item[meeting_category_name]', @calendar_item.meeting_category_name || (@categories.any? ? @categories.first.name : nil), :class => 'admin_form_text_field', :id => 'meeting_category_name' -%>
+    <%= link_to_function t('calendars.existing_category'), "toggleExistingMeetingCategoryField()" unless @categories.empty? -%>
+  </div>
+</div>
+
+<% javascript_tag do %>
+  var existingMeetingCategoryFieldWrapper = Ext.get('existing_meeting_category_wrapper');
+  var newMeetingCategoryFieldWrapper      = Ext.get('new_meeting_category_wrapper');
+  var meetingCategoryNameField            = Ext.getDom('meeting_category_name')
+  var oldSelectedMeetingCategory          = meetingCategoryNameField.value
+
+  existingMeetingCategoryFieldWrapper.setVisibilityMode(Ext.Element.DISPLAY);
+  newMeetingCategoryFieldWrapper.setVisibilityMode(Ext.Element.DISPLAY);
+
+  toggleExistingMeetingCategoryField = function() {
+    newMeetingCategoryFieldWrapper.toggle();
+    meetingCategoryNameField.value = oldSelectedMeetingCategory;
+    existingMeetingCategoryFieldWrapper.toggle();
+  }
+
+  toggleNewMeetingCategoryField = function() {
+    existingMeetingCategoryFieldWrapper.toggle();
+    oldSelectedMeetingCategory = meetingCategoryNameField.value;
+    meetingCategoryNameField.value = "";
+    newMeetingCategoryFieldWrapper.toggle();
+  }
+
+  setMeetingCategoryName = function() {
+    meetingCategoryNameField.value = Ext.getDom('meeting_category_select').value;
+  }
+<% end %>
+<% end %>
+
+<%= form.text_field :title,              :label => t('shared.title') %>
+<%= form.text_field :title_alternatives, :label => t('shared.title_alternatives') %>
+
+<%- now = Time.now -%>
+
+<%= form.date_field  :date,        :label => t('calendars.date'),            :value => @calendar_item.start_time || now %>
+<%= form.time_field  :start_time,  :label => t('calendars.start_time_time'), :value => @calendar_item.start_time || now %>
+<%= form.time_field  :end_time,    :label => t('calendars.end_time_time'),   :value => @calendar_item.end_time   || now + 1.hour %>
+
+<%= form.text_field  :location,    :label => t('calendars.location') %>
+<%= form.html_editor :body,        :label => t('calendars.body'), :height => 100, :heading => 'h3' %>
+
+<%= form.check_box   :commentable, :label => t('shared.commentable') -%>
+
+<%- if current_user.has_role?('editor') -%>
+  <%= form.html_editor :editor_comment, :label => t('shared.editor_comment'), :rows => 3 %>
+<%- end -%>
+
+<%= category_settings_for @calendar_item -%>
+
+<%= approval_field -%>
+
+<%= commit_fields form -%>

@@ -1,0 +1,222 @@
+<script type="text/javascript">
+//<![CDATA[
+
+Ext.onReady(function(){
+    perPage = 25
+
+    Ext.QuickTips.init();
+
+    // shorthand alias
+    var fm = Ext.form;
+
+    // the column model has information about grid columns
+    // dataIndex maps the column to the specific data field in
+    // the data store (created below)
+    var cm = new Ext.grid.ColumnModel([{
+           id: 'id',
+           header: "<%= I18n.t('synonyms.original') %>",
+           dataIndex: 'original',
+           width: 200,
+           editor: new fm.TextField()
+        },{
+           header: "<%= I18n.t('synonyms.name') %>",
+           dataIndex: 'name',
+           width: 200,
+           editor: new fm.TextField()
+        },{
+           header: "<%= I18n.t('synonyms.weight') %>",
+           dataIndex: 'weight',
+           width: 100,
+           editor: new fm.TextField()
+        }
+    ]);
+
+    // by default columns are sortable
+    cm.defaultSortable = true;
+
+    // create the Data Store
+    var store = new Ext.data.Store({
+        proxy: new Ext.data.HttpProxy({
+          url: "/admin/synonyms.json?node_id=<%= @node.id -%>",
+          method: 'GET'
+        }),
+
+        remoteSort: true,
+
+        reader: new Ext.data.JsonReader({
+          root: 'synonyms',
+          id: 'id',
+          totalProperty: 'total_count'
+        },
+          [ 'original', 'name', 'weight' ]
+        ),
+
+        autoLoad: {params: {start: 0, limit: perPage}}
+    });
+
+    // create the grid
+    var grid = new Ext.grid.EditorGridPanel({
+        renderTo: 'synonyms-panel',
+        store: store,
+        cm: cm,
+        stripeRows: true,
+        autoExpandColumn: 0,
+        clicksToEdit: 2,
+        border: false,
+        width: '100%',
+        height: 500,
+        selModel: new Ext.grid.RowSelectionModel({singleSelect:false}),
+
+        bbar: new Ext.PagingToolbar({
+            store: store,
+            pageSize: perPage,
+            displayInfo: true,
+            displayMsg: '<%= I18n.t("synonyms.count_msg") %>',
+            emptyMsg: '<%= I18n.t("synonyms.empty_msg") %>',
+            afterPageText: '<%= I18n.t("synonyms.of_page") %>',
+            beforePageText: '<%= I18n.t("synonyms.page") %>'
+        }),
+        tbar: [
+              {
+                  text: '<%= I18n.t("synonyms.new") %>',
+                  tooltip: '<%= I18n.t("synonyms.new_tooltip") %>',
+                  handler: handleCreate,
+                  iconCls: 'menu_item_create'
+              },{
+                  text: '<%= I18n.t("synonyms.delete") %>',
+                  tooltip: '<%= I18n.t("synonyms.del_tooltip") %>',
+                  handler: handleDelete,
+                  iconCls: 'menu_item_delete'
+              }
+          ],
+        listeners:{
+            'afteredit': handleEdit
+        }
+    });
+
+    function handleDelete(deleteEvent) {
+        var selectedItems = grid.selModel.getSelections();
+        if (selectedItems.length > 0)
+        {
+            Ext.MessageBox.confirm('<%= I18n.t("synonyms.message") %>','<%= I18n.t("synonyms.confirm_deletion") %>', deleteRecord);
+        }
+        else
+        {
+            Ext.MessageBox.alert('<%= I18n.t("synonyms.message") %>','<%= I18n.t("synonyms.select_one") %>');
+        }
+    }
+
+    function deleteRecord(button) {
+        if (button == 'yes')
+        {
+            var selectedRows = grid.selModel.getSelections();
+            selectedRows.each(function(item) {
+
+                Ext.Ajax.request({
+                    waitMsg: '<%= I18n.t("synonyms.deleting")%>',
+                    url: 'synonyms/' + item.id + '.json',
+                    method: 'POST',
+
+                    params: "_method=delete&authenticity_token=<%= form_authenticity_token -%>" +
+                            "&node_id=<%= @node.id -%>",
+                    callback: function(options, success, response){
+                      if(!success){
+                          Ext.ux.alertResponseError(response)
+                      }else{
+                          store.reload();
+                      }
+                    }
+                });
+            });
+        }
+    };
+
+    function handleEdit(editEvent) {
+        Ext.Ajax.request({
+            waitMsg: '<%= I18n.t("synonyms.saving")%>',
+            url: 'synonyms/' + editEvent.record.id + '.json',
+            method: 'POST',
+
+            params: "_method=put&authenticity_token=<%= form_authenticity_token -%>" +
+                    "&node_id=<%= @node.id -%>" +
+                    "&synonym[" + editEvent.field + "]=" + editEvent.value,
+
+            failure: function(response,options) {
+                Ext.MessageBox.alert('<%= I18n.t("synonyms.error")%>','<%= I18n.t("synonyms.could_not_save") %>');
+            },
+            success: function(response,options) {
+                store.commitChanges();
+            }
+        });
+    }
+
+    function handleCreate(createEvent) {
+        wnd = new Ext.Window({
+            animateTarget: createEvent.getEl(),
+            modal: true,
+            layout: 'fit',
+            height: 152,
+            width: 300,
+            title: '<%= I18n.t("synonyms.new_synonym") %>',
+            items: [{
+              xtype: 'form',
+              itemId: 'new_synonym',
+              bodyStyle: 'padding:5px',
+              items: [{
+                  xtype: 'textfield',
+                  fieldLabel: '<%= I18n.t("synonyms.original") %>',
+                  name: 'synonym[original]'
+              },{
+                  xtype: 'textfield',
+                  fieldLabel: '<%= I18n.t("synonyms.name") %>',
+                  name: 'synonym[name]'
+              },{
+                  xtype: 'textfield',
+                  fieldLabel: '<%= I18n.t("synonyms.weight") %>',
+                  name: 'synonym[weight]',
+                  value: '<%= Search::FerretSearch.ferret_configuration[:synonym_weight] %>'
+              },{
+                  xtype: 'hidden',
+                  name: 'node_id',
+                  value: '<%= @node.id -%>'
+              },{
+                  xtype: 'hidden',
+                  name: 'authenticity_token',
+                  value: '<%= form_authenticity_token -%>'
+              }]
+            }],
+            buttonAlign: 'center',
+            buttons: [{
+                  xtype: 'button',
+                  text: '<%= I18n.t("synonyms.save") %>',
+                  type: 'submit',              
+                  handler: function(e){
+                      wnd.getComponent('new_synonym').getForm().submit({
+                          url: 'synonyms.json',
+                          method: 'POST',
+                          failure: function(form,action) {
+                              Ext.MessageBox.alert('<%= I18n.t("synonyms.error") %>',action.response.responseText);
+                          },
+                          success: function(form,action) {
+                              store.reload();
+                              wnd.close();
+                          }
+                      });
+                  }
+              },{
+                  xtype: 'button',
+                  text: '<%= I18n.t("synonyms.cancel") %>',
+                  type: 'reset',
+                  handler: function(e){
+                      wnd.close();
+                  }
+              }]
+        });
+        wnd.show();
+    }
+});
+
+//]]>
+</script>
+
+<div id="synonyms-panel"></div>

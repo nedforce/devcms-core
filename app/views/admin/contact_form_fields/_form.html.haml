@@ -1,0 +1,11 @@
+= error_messages_for :contact_form_field
+
+= form.text_field   :position,                 :label => t('contact_form_fields.position')
+= form.text_field   :label,                    :label => t('contact_form_fields.label')
+= form.check_box    :obligatory,               :label => t('contact_form_fields.obligatory')
+= form.select_field :field_type, @field_types, :label => t('contact_form_fields.field_type')
+= form.text_area    :default_value,            :label => t('contact_form_fields.default_value')
+
+= hidden_field_tag :commit_type, 'save'
+
+= form.submit t('shared.save')

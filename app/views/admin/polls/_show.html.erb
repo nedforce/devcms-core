@@ -1,0 +1,31 @@
+<div class="regularPage poll">
+  <h2><%=h @poll.title -%></h2>
+
+<% if @question %>
+  <%= render :partial => '/admin/poll_questions/question', :object => @question %>
+<% else %>
+  <p><%=t 'polls.no_active_question' -%></p>
+<% end %>
+
+<% if @earlier_questions.present? %>
+  <div id="earlier_questions">
+    <h3><%=t 'polls.earlier_questions' -%></h3>
+    <table cellpadding="0" cellspacing="0" id="items">
+      <thead>
+        <tr>
+          <th scope="col" class="gray"><%=t 'polls.question' -%></th>
+          <th scope="col" class="right_sized gray"><%=t 'polls.publication_date' -%></th>
+        </tr>
+      </thead>
+      <tbody>
+      <% @earlier_questions.each_with_index do |q, i| %>
+        <tr <% if i.even? %>class="alt"<% end %>>
+          <td><%= link_to h(q.question), '#' -%></td>
+          <td class="right date"><%= q.created_at.to_date.to_formatted_s :long -%></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>
+</div>

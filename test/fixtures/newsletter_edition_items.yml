@@ -1,0 +1,6 @@
+devcms_newsletter_edition_1:
+  newsletter_edition: devcms_newsletter_edition
+  item: devcms_news_item (NewsItem)
+devcms_newsletter_edition_2:
+  newsletter_edition: devcms_newsletter_edition
+  item: devcms_news_item_voor_vorige_maand (NewsItem)

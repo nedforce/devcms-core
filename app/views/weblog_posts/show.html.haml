@@ -1,0 +1,38 @@
+.weblogPost.regularPage
+  - readspeaker do
+    = readspeaker_button :class => 'topRightReadspeaker'
+
+    %h1
+      %span.prefix
+        = t 'weblogs.weblog_post_title'
+      = h @weblog_post.title
+
+    = render :partial => '/shared/metadata', :locals => { :publication_date => @weblog_post.publication_start_date, :last_update_date => @weblog_post.updated_at }
+
+    - if @weblog_post.preamble
+      .preamble
+        = simple_format(h(@weblog_post.preamble))
+
+    .htmlField.weblogPostBody
+      = process_video_tags(@weblog_post.body)
+
+    - unless @images.empty?
+      %div
+        %p.clearfix
+          %label.left
+            = t 'weblogs.images'
+
+        #images_bar.clearfix
+          = render :partial => 'image', :collection => @images, :locals => { :is_form => false }
+
+    .buttons.clearfix
+      - if logged_in? && (@weblog_post.weblog.is_owned_by_user?(current_user) || current_user.has_role?('admin'))
+        - delete_button t('weblogs.delete_post') do
+          = link_to t('weblogs.delete_post'), destroy_weblog_archive_weblog_weblog_post_path(@weblog_post.weblog.weblog_archive, @weblog_post.weblog, @weblog_post)
+        - edit_button t('weblogs.edit_post') do
+          = link_to t('weblogs.edit_post'), edit_weblog_archive_weblog_weblog_post_path(@weblog_post.weblog.weblog_archive, @weblog_post.weblog, @weblog_post)
+      = print_button
+
+- if @weblog_post.commentable?
+  #comment_container
+    = render :partial => '/shared/comments', :locals => { :commentable => @node }

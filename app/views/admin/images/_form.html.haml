@@ -1,0 +1,27 @@
+- admin_form_for(:image, @image, :url => { :action => 'create', :format => 'js' }, :html => { :multipart => true, :target => 'upload_target' }) do |f|
+  = error_messages_for :image
+
+  = f.check_box  :is_for_header,   :label => t('images.is_for_header') if current_user.has_role?('admin')
+  = f.text_field :title,           :label => t('shared.title')
+  = f.text_field :alt,             :label => t('images.alt')
+  = f.text_field :vertical_offset, :label => t('images.vertical_offset')
+  = f.text_area  :description,     :label => t('images.description'), :rows => 4
+
+  - if current_user.has_role?('editor')
+    = f.html_editor :editor_comment, :label => t('shared.editor_comment'), :rows => 3
+
+  - if @show_image_url_control
+    = f.text_field :url, :label => t('images.url')
+
+    %div{ :style => "margin-top: -9px; margin-bottom: 15px; font-size: 9px;" }
+      = t 'images.url_explanation'
+
+  = f.file_field :data, :label => t('images.data')
+
+  = category_settings_for @image
+
+  = hidden_field_tag :parent_node_id, params[:parent_node_id]
+
+  = f.submit t('images.add')
+
+  = approval_field

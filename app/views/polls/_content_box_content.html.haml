@@ -1,0 +1,31 @@
+- content = node.content
+
+%div{ :id => "poll_content_box_#{content.id}" }
+  - if content.active_question
+    %p.question
+      = h content.active_question.question
+
+    %div{ :id => "poll_content_box_content_#{content.id}" }
+      - if already_voted_for?(content.active_question)
+        = render :partial => '/poll_questions/results_side_box', :locals => { :question => content.active_question }
+
+      - else
+        / Voting options
+        - form_tag vote_poll_question_url(content.active_question), :method => :put, :id => "poll_content_box_form_#{content.id}", :class => 'poll_content_box_form' do
+          - content.active_question.poll_options.each do |o|
+            .option.transparent
+              = radio_button_tag 'poll_option_id', o.id, false, :id => "sb_poll_option_#{o.id}", :disabled => !poll_enabled?(content)
+              %label{ :for => "sb_poll_option_#{o.id}" }
+                = h o.text
+
+          .buttons.clearfix
+            - unless poll_enabled?(content)
+              = link_to t('polls.login_link'), login_path, :class => 'results_link login_link'
+
+            - else
+              = submit_tag t('polls.vote'), :class => 'submit_orange vote_button'
+              - arrow_block_button t('polls.view_results'), :class => 'results' do
+                = link_to t('polls.results'), results_poll_question_url(content.active_question), :class => 'results_link', :id => "poll_results_link_#{content.id}"
+
+  - else
+    %p.not_active= t 'polls.no_active_question'

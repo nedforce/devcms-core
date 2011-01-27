@@ -1,0 +1,19 @@
+= error_messages_for :section
+
+= javascript_tag("document.getElementById('right_panel_body').scrollTop = 0;")
+
+= form.text_field :title,              :label => t('shared.title')
+= form.text_field :title_alternatives, :label => t('shared.title_alternatives')
+
+- if @section.is_a?(Site)
+  = form.text_field :domain, :label => t('sections.domain')
+
+= form.date_field :publication_start_date_day,  :label => "#{t 'sections.begin_date'}", :value => @section.publication_start_date, :allow_empty => true
+= form.time_field :publication_start_date_time, :label => "#{t 'sections.begin_time'}", :value => @section.publication_start_date, :allow_empty => true
+
+= form.html_editor :description, :label => t('shared.description'), :height => 100
+
+- if current_user.has_role?('editor')
+  = form.html_editor :editor_comment, :label => t('sections.editor_comment'), :rows => 3
+
+= approval_field

@@ -1,0 +1,4 @@
+#main .item .picture img {
+	display: block;
+	margin: auto;
+}

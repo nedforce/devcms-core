@@ -1,0 +1,5 @@
+- if logged_in? && current_user.has_role?("admin")
+  = form.hidden_field :content_box_title
+  = form.hidden_field :content_box_number_of_items
+  = form.hidden_field :content_box_colour
+  = form.hidden_field :content_box_icon

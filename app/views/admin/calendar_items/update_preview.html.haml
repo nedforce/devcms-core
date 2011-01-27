@@ -1,0 +1,10 @@
+= render :partial => '/admin/calendar_items/show', :locals => { :record => @calendar_item }
+
+.forms
+  - remote_form_for @calendar_item, :method => :get, :url => @calendar_item.is_a?(Meeting) ? edit_admin_meeting_path(@calendar_item, :format => 'html') : edit_admin_calendar_item_path(@calendar_item, :format => 'html'), :update => 'right_panel_body' do |form|
+    = render :partial => '/admin/calendar_items/preview_form', :locals => { :form => form }
+    = form.submit t('shared.edit')
+
+  - remote_form_for @calendar_item, :url => @calendar_item.is_a?(Meeting) ? admin_meeting_path(@calendar_item, :format => 'html') : admin_calendar_item_path(@calendar_item, :format => 'html'), :method => :post, :update => 'right_panel_body' do |form|
+    = render :partial => '/admin/calendar_items/preview_form', :locals => { :form => form }
+    = form.submit t('shared.save')

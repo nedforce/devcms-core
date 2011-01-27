@@ -1,0 +1,4 @@
+- content    = node.content
+- news_items = content.news_items.find_accessible(:all, :for => current_user, :approved_content => true, :limit => node.content_box_number_of_items)
+
+= render :partial => '/news_archives/news_items_listing', :locals => { :news_items => news_items, :content => content }

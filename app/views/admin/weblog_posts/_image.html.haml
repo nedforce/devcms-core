@@ -1,0 +1,2 @@
+.weblogPostImage{ :id => "weblog_post_image_#{image.id}" }
+  = link_to(image_tag(content_node_path(image.node, :action => :thumbnail), :alt => h(image.title)), '#', { :rel => "lightbox[#{@weblog_post.node.id}]", :title => h(image.title) })

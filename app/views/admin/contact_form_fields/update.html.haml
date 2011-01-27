@@ -1,0 +1,7 @@
+%td{ :colspan => "6" }
+  = javascript_tag "treePanel.getNodeById(#{@contact_form.node.id}).setText('#{h @contact_form.tree_text(@contact_form.node)}')"
+  %p
+    %strong= t 'shared.updated'
+  %table.contact_form_field
+    %tr
+      = render :partial => '/admin/contact_form_fields/show', :locals => { :contact_form_field => @contact_form_field }

@@ -1,0 +1,10 @@
+.regularPage.pollQuestion
+  - readspeaker do
+    %h1= h @poll_question.poll.title
+
+    = render :partial => '/shared/metadata', :locals => { :publication_date => @poll_question.publication_start_date, :last_update_date => @poll_question.updated_at }
+
+    = render :partial => '/poll_questions/question', :object => @poll_question
+
+    .buttons.clearfix
+      = readspeaker_button(:title => h(@poll_question.poll.title))

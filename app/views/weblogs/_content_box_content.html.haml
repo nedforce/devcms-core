@@ -1,0 +1,16 @@
+- recent_weblog_posts = content.find_last_published_weblog_posts(current_user, node.content_box_number_of_items)
+
+- unless recent_weblog_posts.empty?
+  %p= t 'weblogs.recent_posts'
+
+  %ul
+    - recent_weblog_posts.each do |weblog_post|
+      %li.clearfix.hover
+        .date
+          = weblog_post.publication_start_date.to_s :short
+        .link
+          = link_to_content_node h(weblog_post.title), weblog_post
+
+  = read_more_link(node.content)
+- else
+  %p= t 'weblogs.no_posts_found'

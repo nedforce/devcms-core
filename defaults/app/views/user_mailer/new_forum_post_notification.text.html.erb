@@ -1,0 +1,27 @@
+<div style="font-family: arial, sans-serif; font-size: 12px">
+  <p>
+      Beste <%= @user.full_name-%>,
+  </p>
+  <p>
+    <%= "#{@post.user.full_name} (#{@post.user.login})" %> heeft de volgende reactie geplaatst in de discussie '<%= @thread.title %>':
+  </p>
+  <p>
+    <br/>
+    <%= @post.body -%>
+    <br/>
+  </p>
+  <p>
+    Klik op onderstaande link om het betreffende forum te bekijken.
+  </p>
+  <p>
+    <% url = polymorphic_url([ @topic, @thread ], :host => @host) %>
+    <%= link_to url, url -%>
+  </p>
+  <p>
+      <br/>
+      Met vriendelijke groet,
+      <br/><br/>
+      Het <%= Settler[:host] %> team
+  </p>
+</div>
+

@@ -1,0 +1,46 @@
+#top_header.clearfix
+  #logo
+    = link_to_node(image_tag("logo.png", :alt => I18n.t('layouts.logo_alt')), current_site)
+  #language_selection_and_rss
+    - if @rss_feed_url
+      = link_to image_tag('icons/feed_icon.png', :alt => I18n.t('layouts.rss_alt'), :title => I18n.t('layouts.rss_title')), @rss_feed_url, :id => 'rss'
+  - unless logged_in?
+    #login
+      - form_tag secure_url(:session_url), :method => :post do
+        .login_username_container.clearfix
+          .field_wrapper
+            = text_field_tag :login, (params[:login] or I18n.t('layouts.username')), :id => "login_username"
+          %label{:for => "login_username"}= I18n.t('layouts.username')
+        .login_password_container.clearfix
+          .field_wrapper
+            = password_field_tag :password, nil, :id => "login_password"
+          %label{:for => "login_password"}= I18n.t('layouts.password')
+        .links
+          = link_to I18n.t('layouts.registration_link'), signup_path, :class => 'signup_link'
+          = link_to I18n.t('layouts.forgot_password'), request_password_users_path, :class => 'request_password_link'
+        %div= submit_tag I18n.t('layouts.login'), :class => 'submit'
+#header.clearfix
+  .corner.transparent
+  #meta_links_and_search
+    / Meta links
+    .meta_links
+      = link_to_node image_tag('icons/icon_home.png', :class => 'transparent', :alt => t('layouts.home_icon_link')), Node.global_frontpage, {}, :title => I18n.t('layouts.home_title')
+      #fontsize.fontsize.hidden
+    / Search
+    #search
+      - form_tag(search_url(:protocol => 'http'), { :method => :get, :class => 'clearfix' }) do
+        .search_terms
+          %label.hidden{:for => "search_terms"} Zoeken
+          = text_field_tag(:query, @query, :id => "search_terms")
+        = render :partial => 'search/search_options'
+        .clearfix
+          = submit_tag I18n.t('layouts.search'), :class => 'submit'
+          = link_to t('layouts.advanced_search'), search_url(:protocol => 'http', :advanced => true)
+  #main_menu_and_header_photo
+    / Main menu
+    - cache(:controller => 'admin/nodes', :action => :index, :updated_at => Node.maximum('updated_at').to_i, :site => current_site.id) do
+      = create_main_menu
+    .header_photo
+      - header_image = header_image(@node)
+      = header_image[:image_tag]
+      = content_tag :div, nil, :class => "overlay transparent", :title => header_image[:title]

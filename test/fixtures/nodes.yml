@@ -1,0 +1,665 @@
+<% def fixtures_to_ancestry(*names); names.collect { |name| Fixtures.identify(name) }.join("/"); end %>
+!!omap
+- root_section_node:
+    content: root_section (Section)
+    layout: deventer
+    layout_variant: default
+    layout_configuration: "<%= {'template_color'=>'default'}.to_yaml %>"
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 1
+
+- help_page_node:
+    content: help_page (Page)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    url_alias: help
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 1
+
+- contact_page_node:
+    content: contact_page (Page)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 2
+
+- feedback_page_node:
+    content: feedback_page (Page)
+    status: drafted
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 3
+
+- devcms_news_node:
+    content: devcms_news (NewsArchive)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 4
+
+- devcms_news_item_node:
+    content: devcms_news_item (NewsItem)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_news_node) %>
+    url_alias: nieuws-voor-iedereen
+    commentable: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 1
+
+- test_image_two_node:
+    content: test_image_two (Image)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_news_node, :devcms_news_item_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 1
+
+- devcms_news_item_voor_vorige_maand_node:
+    content: devcms_news_item_voor_vorige_maand (NewsItem)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_news_node) %>
+    commentable: false
+    publication_start_date: <%= 1.month.ago.to_s(:db) %>
+    position: 2
+
+- devcms_news_item_voor_vorig_jaar_node:
+    content: devcms_news_item_voor_vorig_jaar (NewsItem)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_news_node) %>
+    publication_start_date: <%= 1.year.ago.to_s(:db) %>
+    position: 3
+
+- economie_section_node:
+    content: economie_section (Section)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    url_alias: economie
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 5
+
+- economie_poll_node:
+    content: economy_poll (Poll)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :economie_section_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 1
+
+- eco_question_1_node:
+    content: eco_question_1 (PollQuestion)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :economie_section_node, :economie_poll_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 1
+
+- healthcare_poll_node:
+    content: healthcare_poll (Poll)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :economie_section_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 2
+
+- hc_question_1_node:
+    content: hc_question_1 (PollQuestion)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :economie_section_node, :healthcare_poll_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 1
+
+- hc_question_2_node:
+    content: hc_question_2 (PollQuestion)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :economie_section_node, :healthcare_poll_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 2
+
+- about_page_node:
+    content: about_page (Page)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    url_alias: about
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 6
+
+- test_image_node:
+    content: test_image (Image)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :about_page_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 1
+
+- internal_link_node:
+    content: internal_link (Link)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 7
+
+- external_link_node:
+    content: external_link (Link)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 8
+
+- unapproved_page_node:
+    content: unapproved_page (Page)
+    status: unapproved
+    edited_by: <%= Fixtures.identify(:editor) %>
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 9
+
+- rejected_page_node:
+    content: rejected_page (Page)
+    status: rejected
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 10
+
+- newsletter_archive_node:
+    content: devcms_newsletter_archive (NewsletterArchive)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 11
+
+- newsletter_edition_node:
+    content: devcms_newsletter_edition (NewsletterEdition)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :newsletter_archive_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 1
+
+- newsletter_edition_volgend_jaar_node:
+    content: devcms_newsletter_edition_volgend_jaar (NewsletterEdition)
+    status: unapproved
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :newsletter_archive_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 2
+
+- events_calendar_node:
+    content: events_calendar (Calendar)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 12
+
+- events_calendar_item_one_node:
+    content: events_calendar_item_one (Event)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :events_calendar_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 1
+
+- events_calendar_item_two_node:
+    content: events_calendar_item_two (Event)
+    status: unapproved
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :events_calendar_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 2
+
+- events_calendar_item_three_node:
+    content: events_calendar_item_three (Event)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :events_calendar_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 3
+
+- events_calendar_item_four_node:
+    content: events_calendar_item_four (Event)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :events_calendar_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 4
+
+- devcms_weblog_archive_node:
+    content: devcms_weblog_archive (WeblogArchive)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 13
+
+- henk_weblog_node:
+    content: henk_weblog (Weblog)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 1
+
+- henk_weblog_post_one_node:
+    content: henk_weblog_post_one (WeblogPost)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node, :henk_weblog_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 1
+
+- henks_weblog_image_node:
+    content: henks_weblog_image (Image)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node, :henk_weblog_node, :henk_weblog_post_one_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 1
+
+- henk_weblog_post_two_node:
+    content: henk_weblog_post_two (WeblogPost)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node, :henk_weblog_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 2
+
+- piet_weblog_node:
+    content: piet_weblog (Weblog)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 2
+
+- piet_weblog_post_one_node:
+    content: piet_weblog_post_one (WeblogPost)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node, :piet_weblog_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 1
+
+- piet_weblog_post_two_node:
+    content: piet_weblog_post_two (WeblogPost)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node, :piet_weblog_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 2
+
+- jan_weblog_node:
+    content: jan_weblog (Weblog)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 3
+
+- klaas_weblog_node:
+    content: klaas_weblog (Weblog)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 4
+
+- example_weblog_archive_node:
+    content: example_weblog_archive (WeblogArchive)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 14
+
+- downloads_page_node:
+    content: downloads_page (Page)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 15
+
+- besluit_attachment_node:
+    content: besluit_attachment (Attachment)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :downloads_page_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 1
+
+- verslag_attachment_node:
+    content: verslag_attachment (Attachment)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :downloads_page_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 2
+
+- hidden_section_node:
+    content: hidden_section (Section)
+    hidden: true
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 16
+
+- hidden_page_node:
+    content: hidden_page (Page)
+    hidden: true
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :hidden_section_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 1
+
+- nested_page_node:
+    content: nested_page (Page)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :hidden_section_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 1
+
+- not_hidden_section_node:
+    content: not_hidden_section (Section)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 17
+
+- not_hidden_page_node:
+    content: not_hidden_page (Page)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :not_hidden_section_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 1
+
+- hidden_image_node:
+    content: hidden_image (Image)
+    hidden: true
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :not_hidden_section_node, :not_hidden_page_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 1
+
+- hidden_attachment_node:
+    content: hidden_attachment (Attachment)
+    hidden: true
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :not_hidden_section_node, :not_hidden_page_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 2
+
+- bewoners_forum_node:
+    content: bewoners_forum (Forum)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 18
+
+- bewoners_forum_topic_wonen_node:
+    content: bewoners_forum_topic_wonen (ForumTopic)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :bewoners_forum_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 1
+
+- bewoners_forum_topic_werken_node:
+    content: bewoners_forum_topic_werken (ForumTopic)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :bewoners_forum_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 2
+
+- bedrijven_forum_node:
+    content: bedrijven_forum (Forum)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 19
+
+- example_newsletter_archive_node:
+    content: example_newsletter_archive (NewsletterArchive)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 20
+
+- example_newsletter_edition_node:
+    content: example_newsletter_edition (NewsletterEdition)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :example_newsletter_archive_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 1
+
+- no_extention_attachment_node:
+    content: no_extension_attachment (Attachment)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 21
+
+- meetings_calendar_node:
+    content: meetings_calendar (Calendar)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 22
+
+- meetings_calendar_meeting_one_node:
+    content: meetings_calendar_meeting_one (Event)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :meetings_calendar_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 1
+
+- agenda_item_one_node:
+    content: agenda_item_one (AgendaItem)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :meetings_calendar_node, :meetings_calendar_meeting_one_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 1
+
+- agenda_item_two_node:
+    content: agenda_item_two (AgendaItem)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :meetings_calendar_node, :meetings_calendar_meeting_one_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 2
+
+- agenda_item_three_node:
+    content: agenda_item_three (AgendaItem)
+    status: unapproved
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :meetings_calendar_node, :meetings_calendar_meeting_one_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 3
+
+- meetings_calendar_meeting_two_node:
+    content: meetings_calendar_meeting_two (Event)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :meetings_calendar_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 2
+
+- meetings_calendar_meeting_three_node:
+    content: meetings_calendar_meeting_three (Event)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :meetings_calendar_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 3
+
+- meetings_calendar_meeting_four_node:
+    content: meetings_calendar_meeting_four (Event)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :meetings_calendar_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 4
+
+- editor_section_node:
+    content: editor_section (Section)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 23
+
+- editor_section_page_node:
+    content: editor_section_page (Page)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :editor_section_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 1
+
+- test_image_copy_node:
+    content: test_image_copy (ContentCopy)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 24
+
+- bewoners_forum_copy_node:
+    content: bewoners_forum_copy (ContentCopy)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 25
+
+- root_section_image_node:
+    content: root_section_image (Image)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 26
+
+- node_for_sorting:
+    content: section_for_sorting (Section)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 27
+
+- ccc_node:
+    content: page_for_sorting_ccc (Page)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :node_for_sorting) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 1
+
+- aaa_node:
+    content: page_for_sorting_aaa (Page)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :node_for_sorting) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 2
+
+- bbb_node:
+    content: page_for_sorting_bbb (Page)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :node_for_sorting) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 3
+
+- combined_calendar_node:
+    content: combined_calendar (CombinedCalendar)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 28
+
+- without_header_image:
+    content: no_header_image (Page)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 29
+
+- section_with_frontpage_node:
+    content: section_with_frontpage (Section)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 30
+
+- frontpage_for_section_node:
+    content: frontpage_for_section (Page)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :section_with_frontpage_node) %>
+    show_in_menu: false
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 1
+
+- bis_section_node:
+    content: bis_section (Section)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :section_with_frontpage_node) %>
+    url_alias: bestuur/bestuursinformatie
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 2
+
+- bis_page_node:
+    content: bis_page (Page)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :section_with_frontpage_node, :bis_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 1
+
+- about_html_page_node:
+    content: about_html_page (HtmlPage)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    url_alias: html_about
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 31
+
+- unapproved_external_link_node:
+    content: unapproved_external_link (Link)
+    status: unapproved
+    edited_by: <%= Fixtures.identify(:editor) %>
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: false
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 32
+
+- unapproved_internal_link_node:
+    content: unapproved_internal_link (Link)
+    status: unapproved
+    edited_by: <%= Fixtures.identify(:editor) %>
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: false
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 33
+
+- yet_another_calendar_node:
+    content: yet_another_calendar (Calendar)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 34
+
+- unapproved_calendar_item_node:
+    content: unapproved_calendar_item (Event)
+    status: unapproved
+    edited_by: <%= Fixtures.identify(:editor) %>
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :yet_another_calendar_node) %>
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 1
+
+- unapproved_meeting_node:
+    content: unapproved_meeting (Event)
+    status: unapproved
+    edited_by: <%= Fixtures.identify(:editor) %>
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :yet_another_calendar_node) %>
+    show_in_menu: false
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 2
+
+- top_ten_page_node:
+    content: top_ten_page (TopHitsPage)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 35
+
+- contact_box_node:
+    content: contact_box (ContactBox)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 36
+
+- standard_search_page_node:
+    content: standard_search_page (SearchPage)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 37
+
+- nedforce_feed_node:
+    content: nedforce_feed (Feed)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 38
+
+- contact_form_node:
+    content: help_form (ContactForm)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 39
+
+- info_form_node:
+    content: info_form (ContactForm)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 40
+
+- sub_site_section_node:
+    content: sub_site_section (Section)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 41
+
+- yet_another_page_node:
+    content: yet_another_page (Page)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :sub_site_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 1
+
+- subsection_alphabetic_index_node:
+    content: subsection_alphabetic_index (AlphabeticIndex)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node, :sub_site_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 2
+
+- root_alphabetic_index_node:
+    content: root_alphabetic_index (AlphabeticIndex)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 42
+
+- test_social_media_links_box_node:
+    content: test_social_media_links_box (SocialMediaLinksBox)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 43

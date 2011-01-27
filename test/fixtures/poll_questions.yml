@@ -1,0 +1,9 @@
+hc_question_1:
+  question: Wat vind u van de nieuwe zorgtoeslagregeling?
+  active: true
+hc_question_2:
+  question: Wat vind u van de oude zorgtoeslagregeling?
+  active: false
+eco_question_1:
+  question: Heeft u al belastingaangifte gedaan?
+  active: false

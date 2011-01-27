@@ -1,0 +1,19 @@
+/* top_hits_pages styling */
+
+ol.top_hits
+  margin: 0px 0px 0px 16px
+  padding: 8px
+  padding-right: 3px
+  li
+    padding: 0px 0px 0px 0px
+    margin: 0px 0px 0px 0px
+    a
+      position: relative
+      left: -5px
+      display: inline-block
+
+*
+  &:first-child+html ol.top_hits, html ol.top_hits
+    margin-left: 22px
+  &:first-child+html ol.top_hits li a, html ol.top_hits li a
+    left: -8px

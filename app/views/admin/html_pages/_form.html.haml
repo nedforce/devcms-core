@@ -1,0 +1,11 @@
+= error_messages_for :html_page
+
+= javascript_tag("document.getElementById('right_panel_body').scrollTop = 0;")
+
+= form.text_field :title,              :label => t('shared.title')
+= form.text_field :title_alternatives, :label => t('shared.title_alternatives')
+= form.text_area  :body,               :label => t('html_pages.body')
+
+= content_box_settings_for @html_page
+
+= commit_fields form

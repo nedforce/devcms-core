@@ -1,0 +1,2 @@
+#new_contact_form_field{ :style => "border-top: 1px black solid; border-bottom: 1px black solid;" }
+  = link_to_remote t('contact_form_fields.new_contact_field'), :url => { :controller => 'contact_form_fields', :action => 'new', :format => :js, :contact_form_id => @contact_form.id }, :method => :get

@@ -1,0 +1,48 @@
+#reg_form
+  %h1= t 'users.registration_form'
+
+  = error_messages_for :user
+
+  - form_for :user, :url => secure_url(:users_url) do |f|
+
+    %div= hidden_field_tag :invitation_email, @invitation_email
+    %div= hidden_field_tag :invitation_code,  @invitation_code
+
+    #reg_form_user_info.clearfix
+      %fieldset#reg_form_fieldset
+
+        %legend= t 'users.login_information'
+
+        #reg_form_info_msg_wrapper.formFieldCtNoLabel
+          = t 'users.login_info_message'
+
+        #reg_form_login_wrapper.formFieldCt
+          %label{ :for => "user_login" }
+            = t 'users.login'
+          = f.text_field :login, :class => 'textfield'
+
+        #reg_form_email_wrapper.formFieldCt
+          %label{ :for => "user_email_address" }
+            = t 'users.email_address'
+          = f.text_field :email_address, :class => 'textfield'
+
+        #reg_form_password_wrapper.formFieldCt
+          %label{ :for => "user_password" }
+            = t 'users.password'
+          = f.password_field :password, :class => 'textfield'
+
+        #reg_form_password_conf_wrapper.formFieldCt
+          %label{ :for => "user_password_confirmation" }
+            = t 'users.password_confirmation'
+          = f.password_field :password_confirmation, :class => 'textfield'
+
+        #reg_form_username_wrapper.formFieldCt.formFieldPt
+          %label{ :for => "user_username" }
+            = t 'users.leave_empty'
+          = text_field_tag 'user[username]', '', :id => 'user_username', :class => 'textfield'
+
+    = render :partial => 'newsletters'
+    = render :partial => 'interests'
+
+    .formButtonCt
+      = submit_tag t('shared.submit'), :class => 'submit'

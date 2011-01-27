@@ -1,0 +1,8 @@
+- current_version = capture do
+  = render :partial => "/admin/#{@controller_path}/show", :locals => { :record => @content }
+
+- previous_version = capture do
+  = render :partial => "/admin/#{@controller_path}/show", :locals => { :record => @previous_content }
+
+#show
+  = diff(previous_version, current_version)

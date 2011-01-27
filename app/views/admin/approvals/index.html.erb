@@ -1,0 +1,327 @@
+<div id="right_panel_init" class="rightPanelDefault">
+  <table><tr><td><%=t 'approvals.select_a_node_left' -%></td></tr></table>
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+Ext.Updater.defaults.loadScripts = true;
+
+Ext.onReady(function() {
+    perPage = 25;
+
+    // Set default parameters for ajax requests
+    defaultParams = {
+      authenticity_token: '<%= form_authenticity_token -%>',
+      format: 'xml'
+    };
+
+    Ext.QuickTips.init();
+
+    // shorthand alias
+    var fm = Ext.form;
+
+    // the column model has information about grid columns
+    // dataIndex maps the column to the specific data field in
+    // the data store (created below)
+    var cm = new Ext.grid.ColumnModel([{
+           id:'id',
+           header: "<%= I18n.t('approvals.id') %>",
+           width: 40,
+           dataIndex: 'node_id'
+        },{
+           header: "<%= I18n.t('shared.title') %>",
+           dataIndex: 'title'
+        },{
+           header: "<%= I18n.t('approvals.content') %>",
+           width: 100,
+           dataIndex: 'content_type'
+        },{
+           header: "<%= I18n.t('approvals.edited_by') %>",
+           dataIndex: 'edited_by',
+           width: 100
+        },{
+           header: "<%= I18n.t('approvals.updated_at') %>",
+           dataIndex: 'updated_at',
+           width: 90
+        },{
+           header: "<%= I18n.t('approvals.status') %>",
+           width: 100,
+           dataIndex: 'status'
+        }
+    ]);
+
+    // by default columns are sortable
+    cm.defaultSortable = false;
+
+    // create the Data Store
+    var store = new Ext.data.Store({
+        // load using HTTP
+        url: 'approvals.xml',
+        remoteSort: false,
+
+        // the return will be XML, so lets set up a reader
+        reader: new Ext.data.XmlReader({
+               // records will have an "approval" tag
+               record: 'approval',
+               id: 'node_id',
+               totalRecords: 'total_count'
+           }, [
+               // set up the fields mapping into the xml doc
+               'node_id', 'content_type', 'title', 'edited_by', 'updated_at', 'status', 'editor_comment'
+           ]),
+
+        autoLoad: {params: {start: 0, limit: perPage}}
+    });
+
+    selModel = new Ext.grid.RowSelectionModel({singleSelect:false});
+
+    // create the grid
+    grid = new Ext.grid.GridPanel({
+        id: 'approvals-grid',
+        store: store,
+        cm: cm,
+        stripeRows: true,
+        autoExpandColumn: 1,
+        frame: false,
+        selModel: selModel,
+
+        bbar: new Ext.PagingToolbar({
+            store: store,
+            pageSize: perPage,
+            displayInfo: true,
+            displayMsg: '<%= I18n.t("approvals.count_message") %>',
+            emptyMsg: '<%= I18n.t("approvals.empty_message") %>',
+            afterPageText: '<%= I18n.t("approvals.of_page") %>',
+            beforePageText: '<%= I18n.t("approvals.page") %>'
+        }),
+        tbar: [
+              {
+                  text: '<%= I18n.t("approvals.approve") %>',
+                  tooltip: '<%= I18n.t("approvals.approve_tooltip") %>',
+                  handler: handleApproveAction,
+                  iconCls:'menu_item_approve'
+              },
+              {
+                  text: '<%= I18n.t("approvals.approve_and_find") %>',
+                  tooltip: '<%= I18n.t("approvals.approve_and_find_tooltip") %>',
+                  handler: handleApproveAndFindAction,
+                  iconCls:'menu_item_approve'
+              },
+              {
+                  text: '<%= I18n.t("approvals.reject") %>',
+                  tooltip: '<%= I18n.t("approvals.reject_tooltip") %>',
+                  handler: handleRejectAction,
+                  iconCls:'menu_item_reject'
+              },
+              {
+                  text: '<%= I18n.t("approvals.edit") %>',
+                  tooltip: '<%= I18n.t("approvals.edit_tooltip") %>',
+                  handler: handleEditAction,
+                  iconCls:'menu_item_edit'
+              }
+          ]
+    });
+
+   selModel.addListener('rowselect', onRowSelect);
+
+   editorCommentTemplate = new Ext.XTemplate('<p class="header"><%= I18n.t("approvals.editor_comment") -%>:</p>',
+      '<tpl if="editor_comment.length == 0">',
+        '<div class="editor_comment"><%= I18n.t("approvals.no_editor_comment") -%></div>',
+      '</tpl>',
+      '<tpl if="editor_comment.length &gt; 0">',
+        '<div class="editor_comment">{editor_comment}</div>',
+      '</tpl>'
+   );
+
+   editorCommentPanel = new Ext.Panel({
+     id: 'editor_comment_panel',
+     bodyStyle: 'padding: 5px',
+     html: '<p><%= I18n.t("approvals.select_a_node_up") -%></p>'
+   })
+
+   leftPanel = new Ext.Panel({
+     layout: 'border',
+     border: 'false',
+     items: [
+       Ext.apply(grid, { region: 'center', split: true }),
+       Ext.apply(editorCommentPanel, { region: 'south', height: 150 })
+     ]
+   })
+
+   rightPanel = new Ext.Panel({
+     id: 'approvals_right_panel',
+     contentEl: 'right_panel_init'
+   });
+
+   mainPanelCfg = {
+        layout:'border',
+        border: false,
+        defaults: {autoScroll: true},
+        items: [
+            Ext.apply(leftPanel, {margins: '0 5 0 0', region: 'west', split: true, width: '45%'}),
+            Ext.apply(rightPanel, {region: 'center'})
+        ]
+    }
+
+    var last_loaded_item_id = -1;
+
+    function onRowSelect (selModel, rowIndex, record) {
+      editorCommentTemplate.overwrite(editorCommentPanel.body, { editor_comment: record.get('editor_comment') });
+
+      rightPanel.load({
+        url: '/admin/nodes/'+record.id+'/audit_show',
+         params: Ext.ux.prepareParams(defaultParams, {format: 'html'}),
+         method: 'GET',
+         callback: function(options, success, response) {
+           if(!success)
+             Ext.ux.alertResponseError(response)
+           }
+          });
+      }
+
+    function handleEditAction(button, approveEvent, successCallback) {
+      var selectionCount = grid.selModel.getCount();
+
+      if (selectionCount != 1) {
+        Ext.MessageBox.alert('<%= I18n.t("approvals.message") %>','<%= I18n.t("approvals.select_exactly_one") %>');
+      } else {
+        var item = grid.selModel.getSelected();
+
+        editorCommentTemplate.overwrite(editorCommentPanel.body, { editor_comment: item.get('editor_comment') });
+
+        rightPanel.load({
+            url: '/admin/nodes/'+item.id+'/audit_edit',
+            params: Ext.ux.prepareParams(defaultParams, {format: 'html'}),
+            method: 'GET',
+            callback: function(options, success, response) {
+                if(!success)
+                    Ext.ux.alertResponseError(response)
+            }
+        });
+      }
+    }
+
+    function handleApproveAction(button, approveEvent, successCallback) {
+        var selectedRows = grid.selModel.getSelections();
+
+        if(selectedRows.length < 1)
+        {
+          Ext.MessageBox.alert('<%= I18n.t("approvals.message") %>','<%= I18n.t("approvals.select_one") %>');
+        }
+        else {
+          Ext.Msg.show({
+            prompt: true,
+            title: '<%= I18n.t("approvals.approve") -%>',
+            msg: '<%= I18n.t("approvals.approve_comment") -%>:',
+            buttons: Ext.Msg.OK,
+            minWidth: 400,
+            fn: function(btn, text) {
+              if (btn == 'ok') {
+                selectedRows.each(function(item) {
+                  var params = {
+                    _method: 'put',
+                    authenticity_token: '<%= form_authenticity_token -%>',
+                    comment: text
+                  }
+
+                  Ext.Ajax.request({
+                      waitMsg: '<%= I18n.t("approvals.approving") %>',
+                      url: '/admin/approvals/'+item.id+'/approve.xml',
+                      method: 'POST',
+                      params: Ext.urlEncode(params),
+                      callback: function(options, success, response){
+                        if(!success && response.status == 422){
+                            var responseJson = Ext.util.JSON.decode(response.responseText)
+                            Ext.Msg.alert('<%= I18n.t("approvals.error") %>', responseJson.errors )
+                        }
+                        else if(!success){
+                            Ext.ux.alertResponseError(response, '<%= I18n.t("approvals.approval_failed") %>')
+                        }
+                        else {
+                          rightPanel.body.update(
+                              "<div id=\"right_panel_init\" class=\"rightPanelDefault\">" +
+                              "<table><tr><td><%= I18n.t('approvals.nodes_approved') %></td></tr></table>" +
+                              "</div>");
+                            }
+
+                          if(successCallback) successCallback();
+                          else store.reload();
+                        }
+                  });
+                });
+              }
+            },
+            multiline: true
+          });
+        }
+    }
+
+    function handleApproveAndFindAction(button, approveEvent) {
+        findAction = function() {
+          var selectedRows = grid.selModel.getSelections();
+          if(selectedRows.length == 1)
+          {
+            window.location = '<%= admin_nodes_path %>?active_node_id='+selectedRows[0].id;
+          } else {
+            if (selectedRows.length > 1)
+            {
+              window.location ='<%= admin_nodes_path %>';
+            }
+          }
+        }
+
+        handleApproveAction(button, approveEvent, findAction);
+    }
+
+    function handleRejectAction(rejectEvent) {
+        var selectedRows = grid.selModel.getSelections();
+
+        if(selectedRows.length < 1) {
+          Ext.MessageBox.alert('<%= I18n.t("approvals.message") %>','<%= I18n.t("approvals.select_one") %>');
+        } else {
+          Ext.Msg.show({
+            prompt: true,
+            title: '<%= I18n.t("approvals.reject") -%>',
+            msg: '<%= I18n.t("approvals.reject_reason") -%>:',
+            buttons: Ext.Msg.OK,
+            minWidth: 400,
+            fn: function(btn, text) {
+                  if (btn == 'ok') {
+                    selectedRows.each(function(item) {
+                      var params = {
+                        _method: 'put',
+                        authenticity_token: '<%= form_authenticity_token -%>',
+                        reason: text
+                      }
+
+                      Ext.Ajax.request({
+                          waitMsg: '<%= I18n.t("approvals.rejecting") %>',
+                          url: '/admin/approvals/'+item.id+'/reject.xml',
+                          method: 'POST',
+                          params: Ext.urlEncode(params),
+                          callback: function(options, success, response){
+                            if(!success && response.status == 422){
+                                var responseJson = Ext.util.JSON.decode(response.responseText)
+                                Ext.Msg.alert('<%= I18n.t("approvals.error") %>', responseJson.errors )
+                            }
+                            else if(!success){
+                                Ext.ux.alertResponseError(response, '<%= I18n.t("approvals.rejection_failed") %>')
+                            }
+                            else {
+                              store.reload();
+                            }
+                          }
+                      });
+                    });
+                  }
+          },
+          multiline: true
+        });
+      }
+    }
+
+    initViewport(mainPanelCfg);
+});
+
+//]]>
+</script>

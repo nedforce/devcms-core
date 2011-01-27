@@ -1,0 +1,38 @@
+.clearfix.formFieldCt
+  %label.small{ :for => "weblog_post_title" }
+    = t 'shared.title'
+  = f.text_field :title, :class => 'textfield'
+
+.clearfix.formFieldCt
+  %label.small{ :for => "weblog_post_preamble" }
+    = t 'weblogs.preamble'
+  = f.text_area :preamble, :rows => 5, :class => 'textfield'
+
+- include_js 'tiny_mce/tiny_mce.js'
+
+.clearfix.formFieldCt
+  %label.small{ :for => "weblog_post_body_ct" }
+    = t 'weblogs.body'
+  = html_editor_tag 'weblog_post[body]', @weblog_post.body, :cols => 35, :front_end => true, :id => 'weblog_post_body', :class => 'textfield'
+
+.clearfix.formFieldCt
+  %p.clearfix
+    %label{ :for => "weblog_post_images" }
+      = t 'weblogs.images'
+
+  #weblog_post_images.clearfix
+    - unless @images.empty?
+      / existing images
+      %div
+        #images_bar.clearfix
+          = render :partial => 'image', :collection => @images, :locals => { :is_form => true }
+
+    / new images
+    #weblog_post_image_forms
+      - (WeblogPostsController::MAX_IMAGES - @images.size).times do |i|
+        %p= file_field_tag "images[#{i}][data]", :id => "image_field_#{i}", :class => 'textfield'
+
+    .clearfix.formFieldCt
+      %label.small{ :for => "weblog_post_commentable" }
+        = t 'weblogs.commentable'
+      = f.check_box :commentable

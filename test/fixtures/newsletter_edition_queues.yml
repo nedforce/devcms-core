@@ -1,0 +1,9 @@
+one:
+  user: arthur
+  newsletter_edition: devcms_newsletter_edition
+two:
+  user: roderick
+  newsletter_edition: devcms_newsletter_edition
+three:
+  user: sjoerd
+  newsletter_edition: example_newsletter_edition

@@ -1,0 +1,100 @@
+<% 
+is_header ||= false
+if is_header
+    width, height = Image::CONTENT_BOX_SIZE[:width], Image::CONTENT_BOX_SIZE[:height]
+    preview_url = content_box_header_preview_admin_image_path(image)
+else
+    width, height = 100, 100
+    preview_url = thumbnail_preview_admin_image_path(image)
+end
+%>
+<% resized_height = image.height_at_width(width) %>
+<% slider_top = resized_height - height %>
+<% vertical_offset = image.vertical_offset || slider_top / 2 %>
+<style>
+    
+    .cropper {
+        float: left;
+        position: relative;
+    }
+    
+	#image_preview_<%= image.id %> {
+	  float: left;
+	  background-repeat: no-repeat;
+	  width: <%= width %>px;
+	  background: url(<%= preview_url %>);
+	  margin-left: 5px;
+	  margin-top: -4px;
+	}
+
+	.overlay {
+	  background-color: #CCC;
+	  opacity: 0.85;
+	  filter: alpha(opacity=85);    
+	}
+
+	#overlay_top_<%= image.id %> {
+	  height: <%= vertical_offset %>px;
+	}
+
+	#overlay_center_<%= image.id %> {
+	  height: <%= height %>px;
+	  background: transparant;
+	}
+
+	#overlay_bottom_<%= image.id %> {
+	  height: <%= slider_top - vertical_offset %>px;
+	}
+
+	#slider_<%= image.id %> {
+	  margin-top: 46px;
+	  position: absolute;
+	  top: 0px;
+	  left: 0px;
+	}
+	#slider_<%= image.id %> .x-slider-thumb {
+	height: <%= height %>px;
+	width: <%= width %>px;
+	background: none;
+	cursor: move;
+	}
+
+	#slider_<%= image.id %> .x-slider-vert, #slider_<%= image.id %> .x-slider-vert div {
+	background: none;
+	}
+</style>
+<p style="margin-bottom: 10px">
+	<div id="image_preview_<%= image.id %>" class="clearfix">
+	<div class="overlay"id="overlay_top_<%= image.id %>"></div>
+	<div id="overlay_center_<%= image.id %>"></div>
+	<div class="overlay" id="overlay_bottom_<%= image.id %>"></div>
+	</div>
+	<div id="slider_<%= image.id %>"></div>
+	<%= hidden_field_tag "vertical_offset_#{image.id}", image.vertical_offset %>
+	<%= observe_field( "vertical_offset_#{image.id}",
+	      :url => admin_image_path(image),
+	      :frequency => 1,
+	      :method => :put,
+	      :with => "'image[vertical_offset]=' + encodeURIComponent($F('vertical_offset_#{image.id}'))") -%>
+</p>
+<% javascript_tag do %>
+
+  Ext.onReady(function() {
+    new Ext.Slider({
+      renderTo: 'slider_<%= image.id %>',
+      height: <%= slider_top + 13 %>,
+      vertical: true,
+      minValue: 0,
+      maxValue: <%= slider_top -%>,
+      value: <%= image.vertical_offset.nil? ? slider_top / 2 : slider_top - image.vertical_offset -%>,
+      listeners: {
+        change: function(slider, value) { 
+            $('overlay_top_<%= image.id %>').style.height = (<%= slider_top -%> - value)+'px';
+            $('overlay_bottom_<%= image.id %>').style.height = value+'px';
+            $('<%= "vertical_offset_#{image.id}" %>').value = (<%= slider_top -%> - value);
+        }
+      }
+    });
+  });
+  
+<% end %>

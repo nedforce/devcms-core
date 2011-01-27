@@ -1,0 +1,10 @@
+= error_messages_for :search_page
+
+= javascript_tag("document.getElementById('right_panel_body').scrollTop = 0;")
+
+= form.text_field :title,              :label => t('shared.title')
+= form.text_field :title_alternatives, :label => t('shared.title_alternatives')
+
+= content_box_settings_for @search_page
+
+= form.submit t('shared.save')

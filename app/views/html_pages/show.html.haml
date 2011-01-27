@@ -1,0 +1,16 @@
+.regularPage.htmlPage
+  - readspeaker do
+    = readspeaker_button :class => 'topRightReadspeaker withIcon'
+
+    %h1= h @html_page.title
+
+    = render :partial => '/shared/metadata', :locals => { :last_update_date => @html_page.updated_at }
+
+    .htmlField
+      = @html_page.body
+
+    = render_images
+    = render_attachments
+
+    .buttons.clearfix
+      = print_button

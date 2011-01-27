@@ -1,0 +1,8 @@
+<% @users.each do |user| %><%= CSV.generate_line [
+user.email_address,
+user.first_name, 
+user.surname,
+user.sex
+] + (user.newsletter_archives.collect { |newsletter_archive| newsletter_archive.title }) + (user.interests.collect { |interest| interest.title })
+%>
+<% end %>

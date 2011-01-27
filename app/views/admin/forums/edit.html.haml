@@ -1,0 +1,5 @@
+.right_panel_content
+  %h1== #{t 'forums.edit_forum'} '#{h @forum.title}'
+
+  - admin_remote_form_for @forum, :url => admin_forum_path(@forum, :format => 'html'), :update => 'right_panel_body' do |f|
+    = render :partial => 'form', :object => f

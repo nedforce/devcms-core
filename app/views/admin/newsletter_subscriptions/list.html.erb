@@ -1,0 +1,127 @@
+<div class="right_panel_content">
+  <h1><%=t 'newsletters.subscriptions' -%> '<%=h @newsletter_archive.title -%>'</h1>
+
+  <div id="newsletter_subscriptions">    
+  </div>
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+Ext.Updater.defaults.loadScripts = true;
+
+Ext.onReady(function(){
+    perPage = 20; 
+
+    // Set default parameters for ajax requests
+    defaultParams = {
+        authenticity_token: '<%= form_authenticity_token -%>',
+        format: 'xml'
+    }
+
+    Ext.QuickTips.init();
+
+// the column model has information about grid columns
+    // dataIndex maps the column to the specific data field in
+    // the data store (created below)
+    var cm = new Ext.grid.ColumnModel([{
+           id: 'id',
+           header: "<%= I18n.t('newsletters.id') %>",
+           width: 50,
+           dataIndex: 'user_id'
+        },{
+           header: "<%= I18n.t('newsletters.user') %>",           
+           dataIndex: 'user_login'          
+        },{
+           header: "<%= I18n.t('newsletters.email') %>",
+           width: 300,
+           dataIndex: 'user_email_address'          
+        }
+    ]);
+
+    // by default columns are sortable
+    cm.defaultSortable = true;
+
+    // create the Data Store
+    var store = new Ext.data.Store({
+        // load using HTTP
+        url: '/admin/newsletter_subscriptions/list/<%= @newsletter_archive.id -%>.xml',
+        remoteSort: true,
+
+        // the return will be XML, so lets set up a reader
+        reader: new Ext.data.XmlReader({
+               record: 'subscription',
+               id: 'user_id',
+               totalRecords: 'total_count'
+           }, [
+               // set up the fields mapping into the xml doc
+               'user_id', 'user_login', 'user_email_address'
+           ])
+    });
+    
+    // create the grid
+    grid = new Ext.grid.GridPanel({
+        store: store,
+        cm: cm,
+        width: '75%',
+        stripeRows: true,
+        autoHeight: true,
+        autoExpandColumn: 1,
+        selModel: new Ext.grid.RowSelectionModel({singleSelect:true}),
+        bbar: new Ext.PagingToolbar({
+                    store: store,
+                    displayInfo: true,
+                    displayMsg: '<%= I18n.t("newsletters.count_msg") %>',
+                    emptyMsg: '<%= I18n.t("newsletters.empty_msg") %>',
+                    afterPageText: '<%= I18n.t("newsletters.of_page") %>',
+                    beforePageText: '<%= I18n.t("newsletters.page") %>'
+                }),
+        tbar: [
+              {
+                  text: '<%= I18n.t("newsletters.unsubscribe_user") %>',
+                  tooltip: '<%= I18n.t("newsletters.unsubscribe_tooltip") %>',
+                  handler: handleUnsubscribeAction,
+                  iconCls:'menu_item_unsubscribe'
+              }  
+          ]
+    });
+
+   new Ext.Panel({
+        height: '100%',
+        width: '100%',
+        border: false,
+        monitorResize: true,
+        renderTo: 'newsletter_subscriptions',
+        defaults: {autoScroll: true},
+        items: [
+           grid
+        ]
+    });
+
+    function handleUnsubscribeAction(subscribeEvent) {
+        var user = grid.selModel.getSelected();
+        if (!user) Ext.MessageBox.alert('<%= I18n.t("newsletters.message") %>','<%= I18n.t("newsletters.select_one") %>');
+
+        var params = {
+            _method: 'delete',
+            authenticity_token: '<%= form_authenticity_token -%>'
+        }
+
+        Ext.Ajax.request({
+            waitMsg: '<%= I18n.t("newsletters.unsubscribing") %>',
+            url: '/admin/newsletter_subscriptions/<%= @newsletter_archive.id -%>/users/'+user.to_param+'.xml',
+            method: 'POST',          
+            params: Ext.urlEncode(params),
+            failure: function(response,options) {
+                Ext.MessageBox.alert('<%= I18n.t("newsletters.message") %>','<%= I18n.t("newsletters.unsubscription_failed") %>');
+            },
+            success: function(response,options) {
+                store.reload();
+            }
+        });
+    }
+
+    store.load();
+});
+
+//]]>
+</script>

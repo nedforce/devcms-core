@@ -1,0 +1,3 @@
+- news_items = node.content.accessible_news_items_for(current_user, :limit => node.content_box_number_of_items)
+
+= render :partial => '/news_archives/news_items_listing', :locals => { :news_items => news_items, :content => node.content }

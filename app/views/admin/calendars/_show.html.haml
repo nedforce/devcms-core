@@ -1,0 +1,47 @@
+- date = Date.parse(params[:date]) rescue Date.today
+
+#calendarMain
+  / Header contains H2, description and calendarElement
+  .header.clearfix
+    %h2= h @calendar.title
+
+    - unless @calendar.new_record?
+      .metadata
+        %p.lastUpdateDate
+          == #{t 'shared.last_updated'}: #{l @calendar.last_updated_at(current_user), :format => :long}
+
+    .headerWrapper
+      / Wraps Header and description
+      - if @calendar.description
+        .description= w @calendar.description
+
+- if @calendar_items.present?
+  / Days of a week and Calendar items for those days
+  .calendarWeek
+    - date.start_of_week.upto(date.end_of_week) do |day|
+      - @day_items = @calendar_items[day.mday]
+
+      - if @day_items.present?
+        .calendarDay
+          / A day in a week with calendar items
+          %h2= "#{day.mday} #{t('date.month_names')[day.month]}"
+          .dayName= "#{t('date.day_names')[day.wday].titleize}"
+
+          / A calendarItems for this day
+          .calendarItems
+            - @day_items.each do |day_item|
+              .calendarItem
+                .metaInfo
+                  .time
+                    = t 'calendars.from'
+                    = day_item.start_time.strftime("%H:%M")
+                    = t 'calendars.till'
+                    = day_item.end_time.strftime("%H:%M")
+
+                .title.clearfix
+                  - if day_item.is_a? Meeting
+                    = image_tag 'icons/meeting.png', :class => 'icon', :alt => h(day_item.title)
+                    = link_to_content_node h(day_item.title), day_item, {}, :class => 'meeting'
+                  - else
+                    = image_tag 'icons/calendar_item.png', :class => 'icon', :alt => h(day_item.title)
+                    = link_to_content_node h(day_item.title), day_item, {}, :class => 'event'

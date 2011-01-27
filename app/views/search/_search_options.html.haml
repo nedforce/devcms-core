@@ -1,0 +1,2 @@
+.search_options
+  = select_tag :search_scope, options_for_select(@search_scopes || [], @search_scope), :id => nil

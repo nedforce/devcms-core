@@ -1,0 +1,29 @@
+<div id="right_panel_body">
+  <%
+    link_options = { :popup_window => true }
+    link_options[:skip_link_self] = true unless @previous_url
+  %>
+  <%= bread_crumbs_for(@node, link_options) %>
+
+  <div id="tab_panel">
+    <div id="tab_current_content" class="x-hide-display">
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+//<![CDATA
+Ext.QuickTips.init();
+
+var tabs = new Ext.TabPanel({
+    activeTab: 0,
+    renderTo: 'tab_panel',
+    border: false,
+    defaults: {autoHeight: true},
+    items:[
+        {contentEl: 'tab_current_content', title: "<%= escape_javascript(@node.content.title) -%> <%= t 'nodes.edit' -%>", autoLoad: '<%= @current_url -%>' }
+    ]
+});
+
+//]]>
+</script>

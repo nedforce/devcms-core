@@ -1,0 +1,66 @@
+.regularPage.weblog
+  %h2
+    %span.prefix= t 'weblogs.weblog'
+    = h @weblog.title
+
+  - unless @weblog.new_record?
+    .metadata.clearfix
+      %p.weblogDetails
+        = "#{t 'weblogs.created_on'} #{l @weblog.created_at, :format => :long} #{t 'weblogs.by'} <span class='userLogin'>#{truncate(@weblog.user.login, :length => 12)}</span>, #{@weblog.weblog_posts.count} #{t (@weblog.weblog_posts.count == 1) ? 'weblogs.weblog_post' : 'weblogs.weblog_posts'}"
+      %p.lastUpdateDate
+        == #{t 'shared.last_updated'}: #{l @weblog.last_updated_at(current_user), :format => :long}
+
+  - if @weblog.description
+    .htmlField.weblogDescription
+      = w @weblog.description
+
+  .weblogPostsOverview.clearfix
+    .clearfix
+      %h3= t('weblogs.weblog_posts').titleize
+
+    - if @latest_weblog_posts.blank?
+      = t 'weblogs.no_weblog_posts_found'
+
+    - else
+      .clearfix.weblogPosts
+        - @latest_weblog_posts.each do |weblog_post|
+          %div{ :class => "#{cycle('oddWeblogPost', 'evenWeblogPost', :name => 'latestWeblogPosts')} clearfix" }
+            %h4= link_to(h(weblog_post.title), '#')
+
+            .metadata.clearfix
+              %p.publicationDate
+                == #{t 'shared.published'}: #{l weblog_post.publication_start_date, :format => :long}
+              %p.lastUpdateDate
+                == #{t 'shared.last_updated'}: #{l weblog_post.updated_at, :format => :long}
+
+            - if weblog_post.preamble
+              .preamble
+                = w weblog_post.preamble
+
+            .htmlField.weblogPostBody
+              - if (image_node = weblog_post.node.children.first)
+                = link_to(image_tag(content_node_path(image_node, :action => :thumbnail), :alt => h(image_node.content.title)), '#', { :rel => 'lightbox', :class => 'right' })
+              = w weblog_post.body
+
+            .clearfix.buttons
+              - news_item_button t('weblogs.show_post') do
+                = link_to_content_node t('weblogs.show_post'), weblog_post, {}, :title => h(weblog_post.title)
+
+    - if @weblog_posts_for_table.present?
+      #olderWeblogPosts
+        %h3= t 'weblogs.older_weblog_posts'
+
+        %table#items{ :cellpadding => "0", :cellspacing => "0" }
+          %thead
+            %tr
+              %th.gray{ :scope => "col" }
+                = t 'weblogs.message_title'
+              %th.right_sized.gray{ :scope => "col" }
+                = t 'weblogs.date'
+
+          %tbody
+            - @weblog_posts_for_table.each do |weblog_post|
+              %tr{ :class => cycle('alt', '', :name => 'olderWeblogPosts') }
+                %td= link_to h(weblog_post.title), '#'
+                %td.right.date
+                  = l(weblog_post.publication_date, :format => :long)

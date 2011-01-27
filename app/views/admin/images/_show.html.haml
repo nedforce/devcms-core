@@ -1,0 +1,16 @@
+.image
+  .content
+    %h2= h record.title
+
+    = image_tag preview_admin_image_path(record), :alt => h(record.title)
+    - if record.description
+      .htmlField.imageDescription= record.description
+
+  %hr/
+
+  - if params[:action] == 'show'
+    %h1 Thumbnail uitsnede (Alleen voor portret foto's!)
+
+    .cropper{ :id => "image_cropper_\#{record.id}" }
+      - if record.orientation == :vertical
+        = render :partial => 'cropper', :locals => { :image => record }

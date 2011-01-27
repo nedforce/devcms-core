@@ -1,0 +1,428 @@
+<!-- Include Grid Filter JS -->
+<%= javascript_include_tag 'ext/ux/RemoteCheckboxGroup.js','ext/ux/menu/EditableItem.js', 'ext/ux/menu/RangeMenu.js', 
+'ext/ux/grid/GridFilters.js','ext/ux/grid/filter/Filter.js', 'ext/ux/grid/filter/StringFilter.js', 
+'ext/ux/grid/filter/DateFilter.js', 'ext/ux/grid/filter/ListFilter.js', 'ext/ux/grid/filter/NumericFilter.js',
+'ext/ux/grid/filter/BooleanFilter.js', :plugin => 'devcms-core' %>
+
+<script type="text/javascript">
+//<![CDATA[
+
+Ext.onReady(function(){
+    perPage = 25
+
+    Ext.ux.menu.RangeMenu.prototype.icons = {
+          gt: '../../images/ext/ux/greater_then.png',
+          lt: '../../images/ext/ux/less_then.png',
+          eq: '../../images/ext/ux/equals.png'
+	};
+    Ext.ux.grid.filter.StringFilter.prototype.icon = '../../images/ext/ux/find.png';
+
+    Ext.QuickTips.init();
+
+    // shorthand alias
+    var fm = Ext.form;
+
+    // the column model has information about grid columns
+    // dataIndex maps the column to the specific data field in
+    // the data store (created below)
+    var cm = new Ext.grid.ColumnModel([{
+           id: 'id',
+           header: "<%= I18n.t('users.login') %>",
+           dataIndex: 'login',
+           width: 150
+        },{
+           header: "<%= I18n.t('users.first_name') %>",
+           dataIndex: 'first_name',
+           width: 100,
+           editor: new fm.TextField()
+        },{
+           header: "<%= I18n.t('users.surname') %>",
+           dataIndex: 'surname',
+           width: 100,
+           editor: new fm.TextField()
+        },{
+           header: "<%= I18n.t('users.sex') %>",
+           dataIndex: 'sex',
+           width: 80,
+           renderer: function(value, meta, record){
+                 return (value == 'm') ? '<%=I18n.t("users.male")-%>' : (value == 'f') ? '<%=I18n.t("users.female")-%>' : '';
+           },
+           editor: new fm.ComboBox({
+               editable: false,
+               mode: 'local',
+               store: new Ext.data.SimpleStore({
+                    'id': 0,
+                    fields: ['value', 'text'],
+                    data: [['m','<%=I18n.t("users.male")-%>'],['f','<%=I18n.t("users.female")-%>']]
+               }),
+               valueField: 'value',
+               displayField: 'text',
+               lazyRender: true,
+               triggerAction: 'all'
+           })
+        },{
+           header: "<%= I18n.t('users.email_address') %>",
+           dataIndex: 'email_address',
+           width: 200,
+           editor: new fm.TextField({
+               allowBlank: false
+           })
+        },{
+           header: "<%= I18n.t('users.newsletter_subscriptions') %>",
+           width: 350,
+           dataIndex: 'newsletter_archives'
+        },{
+           header: "<%= I18n.t('users.interests') %>",
+           width: 350,
+           sortable: false,
+           dataIndex: 'interests'
+        },{
+           header: "<%= I18n.t('users.created_at') %>",
+           dataIndex: 'created_at'
+        }
+    ]);
+
+    // by default columns are sortable
+    cm.defaultSortable = true;
+
+    // create the Data Store
+    var store = new Ext.data.Store({
+        // load using HTTP
+        url: 'users.xml',
+        remoteSort: true,
+
+        // the return will be XML, so lets set up a reader
+        reader: new Ext.data.XmlReader({
+               // records will have an "user" tag
+               record: 'user',
+               id: 'id',
+               totalRecords: 'total_count'
+           }, [
+               // set up the fields mapping into the xml doc
+               'login', 'first_name', 'surname', 'sex', 'created_at', 'email_address', 'newsletter_archives', 'interests'
+           ]),
+        autoLoad: {params: {start: 0, limit: perPage}}
+    });
+
+    var filters = new Ext.ux.grid.GridFilters(
+        {filters:[
+                  {type: 'string',  dataIndex: 'login'},
+                  {type: 'string',  dataIndex: 'first_name'},
+                  {type: 'string',  dataIndex: 'surname'},
+                  {type: 'string',  dataIndex: 'email_address'},
+                  {type: 'date',  dataIndex: 'created_at'},
+                  {type: 'list',dataIndex: 'sex', options: ['<%=I18n.t("users.male")-%>', '<%=I18n.t("users.female")-%>'], phpMode: false},
+		              {type: 'boolean', dataIndex: 'visible'}
+		 ]});
+
+    // create the grid
+    grid = new Ext.grid.EditorGridPanel({
+        xtype: 'editorgrid',
+        store: store,
+        cm: cm,
+        stripeRows: true,
+        autoExpandColumn: 1,
+        clicksToEdit: 2,
+        margins: '0 5 5 5',
+        selModel: new Ext.grid.RowSelectionModel({singleSelect:false}),
+        bbar: new Ext.PagingToolbar({
+            store: store,
+            pageSize: perPage,
+            displayInfo: true,
+            displayMsg: '<%= I18n.t("users.count_msg") %>',
+            emptyMsg: '<%= I18n.t("users.empty_msg") %>',
+            afterPageText: '<%= I18n.t("users.of_page") %>',
+            beforePageText: '<%= I18n.t("users.page") %>'
+        }),
+        tbar: [
+              {
+                  text: '<%= I18n.t("users.delete") %>',
+                  tooltip: '<%= I18n.t("users.del_tooltip") %>',
+                  handler: handleDelete,
+                  iconCls: 'menu_item_delete'
+              },{
+                  text: '<%= I18n.t("users.edit") %>',
+                  tooltip: '<%= I18n.t("users.edit_tooltip") %>',
+                  handler: handleExtendedEdit,
+                  iconCls: 'menu_item_edit'
+              }<% if Settler[:user_allow_export] -%>,
+              {
+                  text: '<%= I18n.t("users.export") %>',
+                  tooltip: '<%= I18n.t("users.export_tooltip") %>',
+                  handler: handleExport,
+                  iconCls: 'attachment_icon'
+              }<% end -%>
+              <% if Settler[:user_allow_invite] -%>, '->', {
+                  text: '<%= I18n.t("users.invite") %>',
+                  tooltip: '<%= I18n.t("users.invite_tooltip") %>',
+                  handler: handleInvite,
+                  iconCls: 'menu_item_create'
+              }
+              <% end %>
+              ],
+        plugins: filters,
+        listeners:{
+            'afteredit': handleEdit
+        }
+    });
+
+    function handleExtendedEdit(editEvent) {
+      var item = grid.selModel.getSelected();
+      if (item == null)
+       {
+            Ext.MessageBox.alert('<%= I18n.t("users.message") %>','<%= I18n.t("users.select_one") %>');
+       }
+      else {
+        var item = grid.selModel.getSelected();
+        wnd = new Ext.Window({
+            animateTarget: editEvent.getEl(),
+            modal: true,
+            layout: 'fit',
+            height: 375,
+            width: 385,
+            resizable: false,
+            title: '<%= I18n.t("users.edit") %>',
+            items: [{
+              xtype: 'form',
+              itemId: 'edit_user',
+              bodyStyle: 'padding:5px',
+              items: [{
+                  xtype: 'textfield',
+                  fieldLabel: '<%= I18n.t("users.login")  %>',
+                  width: 250,
+                  disabled: true,
+                  value: item.get('login')
+              },{
+                  xtype: 'textfield',
+                  fieldLabel: '<%= I18n.t("users.first_name")  %>',
+                  width: 250,
+                  name: 'user[first_name]',
+                  value: item.get('first_name')
+              },{
+                  xtype: 'textfield',
+                  fieldLabel: '<%= I18n.t("users.surname")  %>',
+                  width: 250,
+                  name: 'user[surname]',
+                  value: item.get('surname')
+              },{
+                  xtype: 'textfield',
+                  fieldLabel: '<%= I18n.t("users.email_address") %>',
+                  minLength: 2,
+                  minLengthText: '<%= I18n.t("users.email_address_cannot_be_blank") %>',
+                  width: 250,
+                  name: 'user[email_address]',
+                  value: item.get('email_address')
+              },{
+                xtype: 'radiogroup',
+                fieldLabel: '<%= I18n.t("users.sex") %>',
+                items: [
+                    {boxLabel: '<%= I18n.t("users.male") %>', name: 'user[sex]', inputValue: 'm', checked: item.get('sex') == 'm'},
+                    {boxLabel: '<%= I18n.t("users.female") %>', name: 'user[sex]', inputValue: 'f', checked: item.get('sex') == 'f'}
+                ]
+            },{
+                  xtype : 'remotecheckboxgroup',
+                  fieldLabel: '<%= I18n.t("users.newsletter_subscriptions") %>',
+                  url: '/admin/users/' + item.id + '/accessible_newsletter_archives.json',
+                  width: 250,
+                  columns: [250],
+                  cls: 'newsletter_archives_group',
+                  vertical: true,
+                  reader: new Ext.data.JsonReader(
+                  {
+                    totalProperty: 'total_count',
+                    root: 'newsletter_archives',
+                    id: 'id'
+                  }, [ 'id', 'title', 'checked' ]),
+                  cbFieldName: 'user[newsletter_archive_ids][]',
+                  cbFieldLabel: 'title',
+                  cbFieldValue: 'id',
+                  cbFieldChecked: 'checked'
+                },{
+                  xtype : 'remotecheckboxgroup',
+                  fieldLabel: '<%= I18n.t("users.interests") %>',
+                  url: '/admin/users/' + item.id + '/interests.json',
+                  width: 250,
+                  columns: [250],
+                  cls: 'interests_group',
+                  vertical: true,
+                  reader: new Ext.data.JsonReader(
+                  {
+                    totalProperty: 'total_count',
+                    root: 'interests',
+                    id: 'id'
+                  }, [ 'id', 'title', 'checked' ]),
+                  cbFieldName: 'user[interest_ids][]',
+                  cbFieldLabel: 'title',
+                  cbFieldValue: 'id',
+                  cbFieldChecked: 'checked'
+                },{
+                  xtype: 'hidden',
+                  name: 'authenticity_token',
+                  value: '<%= form_authenticity_token -%>'
+              }]
+            }],
+            buttonAlign: 'center',
+            buttons: [{
+                  xtype: 'button',
+                  text: '<%= I18n.t("users.save") %>',
+                  type: 'submit',
+                  handler: function(e){
+                      wnd.getComponent('edit_user').getForm().submit({
+                          url: 'users/' + item.id + '.json',
+                          method: 'PUT',
+                          failure: function(form,action) {
+                              Ext.MessageBox.alert('<%= I18n.t("users.error") %>',action.response.responseText);
+                          },
+                          success: function(form,action) {
+                              store.reload();
+                              wnd.close();
+                          }
+                      });
+                  }
+              },{
+                  xtype: 'button',
+                  text: '<%= I18n.t("users.cancel") %>',
+                  type: 'reset',
+                  handler: function(e){
+                      wnd.close();
+                  }
+              }]
+        });
+
+        wnd.show();
+        }
+    }
+
+    function handleDelete(e) {
+        var selectedItems = grid.selModel.getSelections();
+        if (selectedItems.length > 0)
+        {
+            Ext.MessageBox.confirm('<%= I18n.t("users.message") %>','<%= I18n.t("users.confirm_deletion") %>', deleteRecords);
+        }
+        else
+        {
+            Ext.MessageBox.alert('<%= I18n.t("users.message") %>','<%= I18n.t("users.select_one") %>');
+        }
+
+    }
+
+    function deleteRecords(button) {
+        if (button == 'yes')
+        {
+            var selectedRows = grid.selModel.getSelections();
+            selectedRows.each(function(item) {
+
+                Ext.Ajax.request({
+                    waitMsg: '<%= I18n.t("users.deleting") %>',
+                    url: 'users/' + item.id + '.json',
+                    method: 'POST',
+
+                    params: "_method=delete&authenticity_token=<%= form_authenticity_token -%>",
+                    callback: function(options, success, response){
+                      if(!success){
+                          Ext.ux.alertResponseError(response)
+                      }else{
+                          store.reload();
+                      }
+                    }
+                });
+            });
+        }
+    };
+
+    function handleExport() {
+      window.location = "<%= admin_users_path + '.csv' %>"
+    }
+
+    function handleEdit(editEvent) {
+        Ext.Ajax.request({
+            waitMsg: '<%= I18n.t("users.saving")%>',
+            url: 'users/' + editEvent.record.id + '.xml',
+            method: 'POST',
+
+            params: "_method=put&authenticity_token=<%= form_authenticity_token -%>" +
+                    "&user[" + editEvent.field + "]=" + editEvent.value,
+
+            failure: function(response,options) {
+                var iterator = document.evaluate('//error', response.responseXML, null, XPathResult.UNORDERED_NODE_ITERATOR_TYPE, null);
+                var errors = ''
+
+                try {
+                  var thisError = iterator.iterateNext();
+
+                  while (thisError) {
+                    errors += thisError.textContent + '\n';
+                    thisError = iterator.iterateNext();
+                  }
+                }
+                catch (e) {
+                  dump('Error: Document tree modified during iteration ' + e);
+                }
+
+                Ext.MessageBox.alert('<%= I18n.t("users.error")%>',errors);
+            },
+            success: function(response,options) {
+                store.commitChanges();
+            }
+        });
+    }
+
+    function handleInvite(e) {
+      wnd = new Ext.Window({
+        animateTarget: e.getEl(),
+        modal: true,
+        layout: 'fit',
+        height: 105,
+        width: 285,
+        title: '<%= I18n.t('users.invite_tooltip') %>',
+        items: [{
+          xtype: 'form',
+          itemId: 'new_invite',
+          bodyStyle: 'padding:5px',
+          items: [{
+              xtype: 'textfield',
+              fieldLabel: '<%= I18n.t("users.email_address") %>',
+              width: 150,
+              name: 'email_address'
+          },{
+              xtype: 'hidden',
+              name: 'authenticity_token',
+              value: '<%= form_authenticity_token -%>'
+          }]
+        }],
+        buttonAlign: 'center',
+        buttons: [{
+              xtype: 'button',
+              text: '<%= I18n.t("users.invite_button") %>',
+              type: 'submit',
+              handler: function(e) {
+                wnd.getComponent('new_invite').getForm().submit({
+                    url: '/admin/users/invite.json',
+                    failure: function(form,action) {
+                        Ext.MessageBox.alert('<%= I18n.t("users.error") %>', action.response.responseText);
+                    },
+                    success: function(form,action) {
+                        wnd.close();
+                        Ext.MessageBox.alert('<%= I18n.t("shared.succes") %>', '<%= I18n.t("users.invite_succes") %>');
+                    }
+                });
+             }
+          }, {
+              xtype: 'button',
+              text: '<%= I18n.t("users.cancel") %>',
+              type: 'reset',
+              handler: function(e){
+                wnd.close();
+              }
+          }]
+        });
+        
+        wnd.show();
+    }
+    
+    initViewport(grid); // render admin layout using the viewport.
+});
+
+//]]>
+</script>
+

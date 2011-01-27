@@ -1,0 +1,20 @@
+.regularPage.clearfix
+  %h2= h @social_media_links_box.title
+
+  - if @social_media_links_box.twitter_url.present?
+    %p== #{t 'social_media_links_boxes.twitter_url'}: #{h @social_media_links_box.twitter_url}
+
+  - if @social_media_links_box.hyves_url.present?
+    %p== #{t 'social_media_links_boxes.hyves_url'}: #{h @social_media_links_box.hyves_url}
+
+  - if @social_media_links_box.facebook_url.present?
+    %p== #{t 'social_media_links_boxes.facebook_url'}: #{h @social_media_links_box.facebook_url}
+
+  - if @social_media_links_box.linkedin_url.present?
+    %p== #{t 'social_media_links_boxes.linkedin_url'}: #{h @social_media_links_box.linkedin_url}
+
+  - if @social_media_links_box.youtube_url.present?
+    %p== #{t 'social_media_links_boxes.youtube_url'}: #{h @social_media_links_box.youtube_url}
+
+  - if @social_media_links_box.flickr_url.present?
+    %p== #{t 'social_media_links_boxes.flickr_url'}: #{h @social_media_links_box.flickr_url}

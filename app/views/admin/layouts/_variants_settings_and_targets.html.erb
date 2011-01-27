@@ -1,0 +1,20 @@
+<div id="variants">
+    <% 
+        options = @layout.variants
+        options.unshift ["Overerven (#{@node.inherited_layout_variant['name']})", nil] unless @node.root?
+        selected = @node.layout_variant || (@node.root? ? "default" : nil)
+    %>
+    <%= wrap_with_label(select_tag(:node_layout_variant, options_for_select(options, selected), :name => "node[layout_variant]", :disabled => !current_user.has_role?("admin")), :text => "Variant:") %>
+    <%= observe_field(:node_layout_variant, 
+        :update => :targets, 
+        :url => { :controller => :layouts, :action => :targets, :node_id => @node.id, :id => @layout.id },
+        :method => :get,
+        :with => "'variant_id=' + encodeURIComponent($F('node_layout_variant'))" ) %>
+</div>
+<div id="settings">
+    <h1>Template instellingen</h1>
+    <%= render :file => @layout.settings_partial %>
+</div>
+<div id="targets">
+    <%= render :partial => 'targets' %>
+</div>

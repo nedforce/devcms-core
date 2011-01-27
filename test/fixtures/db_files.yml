@@ -1,0 +1,14 @@
+<% include AttachmentTestHelper %>
+
+besluit_db_file:
+  loid: <%= load_file('files/020301Besluitinformatiebeheer.doc') %>
+  created_at: <%= Time.parse('2002-03-01').to_s(:db) %>
+verslag_db_file:
+  loid: <%= load_file('files/20080409VERSLAGRaadsvergadering.doc') %>
+  created_at: <%= Time.parse('2008-04-09').to_s(:db) %>
+no_extension_db_file:
+  loid: <%= load_file('files/Sloeproeien') %>
+nested_extension_db_file:
+  loid: <%= load_file('files/snippet.css.txt') %>
+hidden_db_file:
+  loid: <%= load_file('files/20080409VERSLAGRaadsvergadering.doc') %>

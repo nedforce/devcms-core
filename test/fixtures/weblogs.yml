@@ -1,0 +1,19 @@
+henk_weblog:
+  user: henk
+  title: Henk weblog
+  description: De weblog van Henk!
+
+piet_weblog:
+  user: piet
+  title: Piet weblog
+  description: De weblog van Piet!
+
+jan_weblog:
+  user: jan
+  title: Jan weblog
+  description: De weblog van Jan!
+
+klaas_weblog:
+  user: klaas
+  title: Klaas weblog
+  description: De weblog van Klaas!

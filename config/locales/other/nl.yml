@@ -1,0 +1,1118 @@
+---
+nl:
+  shared:
+    at: om
+    commentable: Reacties toestaan?
+    confirm_deletion: Bevestig verwijdering
+    created: Item opgeslagen!
+    description: Beschrijving
+    download: Download
+    edit: Bewerken
+    editor_comment: Commentaar van betreffende redacteur
+    filename: Bestandsnaam
+    last_updated: Laatst gewijzigd
+    more_activities: meer activiteiten
+    more_permits: meer bekendmakingen
+    more_products: meer producten
+    more_threads: meer discussies
+    more_weblogs: meer weblogs
+    n: Nee
+    preview: Preview
+    published: Gepubliceerd
+    read_more: lees meer
+    really_delete?: "Wilt u doorgaan met verwijderen?"
+    save: Opslaan
+    size: Grootte
+    submit: Versturen
+    succes: Succesvol
+    text: Tekst
+    title: Titel
+    title_alternatives: Alternatieve titels
+    type: Type
+    updated: Wijzigingen opgeslagen!
+    week: "Week {{week}}"
+    y: Ja
+    youtube_video: Naar een youtube filmpje
+  abbreviations:
+    abbr: Afkorting
+    abbreviation: Afkorting
+    cancel: 'Annuleren'
+    confirm_deletion: Weet u zeker dat u deze afkortingen wilt verwijderen?
+    could_not_delete: "Sorry, kan de afkortingen niet verwijderen."
+    could_not_save: "Sorry, kon het afkorting niet opslaan."
+    count_msg: "Afkortingen {0} tot {1} van {2} worden weergegeven"
+    definition: Definitie
+    del_tooltip: Klik hier om de geselecteerde afkortingen te verwijderen
+    delete: Verwijderen
+    deleting: Bezig met verwijderen
+    empty_msg: Geen afkortingen om weer te geven
+    error: Fout
+    message: Bericht
+    new: Nieuw
+    new_abbreviation: Nieuwe afkorting
+    new_tooltip: Klik hier om een nieuw afkortingen toe te voegen
+    no_abbreviations_found: Geen afkortingen gevonden.
+    of_page: "van {0}"
+    page: Pagina
+    save: 'Opslaan'
+    saving: Bezig met opslaan
+    select_one: Kies tenminste een afkorting
+  admin:
+    abbreviations_button: Afkortingen
+    approvals_button: Goedkeuringen
+    categories_button: Programma's
+    comments_button: Reacties
+    content_type_not_allowed: Het is niet mogelijk dit contenttype aan deze node toe te voegen
+    edit: Bewerken
+    rights: Rechten
+    settings_button: Instellingen
+    sitemap: Sitemap
+    succesfully_deleted: Kolomelement succesvol verwijderd.
+    synonyms_button: Synoniemen
+    users_button: Gebruikers
+  alphabetic_indices:
+    add_to: Alfabetische index toevoegen aan
+    all_pages: "Alle pagina's"
+    content_type: Zoeken in
+    edit: Bewerken van alfabetische index
+    failed: Kon alfabetische index niet opslaan.
+    saved: Alfabetische index opgeslagen!
+    with_starting_letter: met beginletter
+  application:
+    add_to_blogger: Voeg deze pagina toe aan uw blog op Blogger
+    add_to_hyves: Tip deze pagina op Hyves
+    add_to_linkedin: Deel deze pagina op LinkedIn
+    add_to_twitter: Twitter deze pagina
+    content_type_not_allowed: Content type niet toegestaan.
+    current_section: Huidige onderdeel
+    default_header_photo_alt: Titelafbeelding
+    email_page: E-mail deze pagina naar iemand
+    field_error: "Het opslaan mislukte door het volgende probleem:"
+    field_errors: "Het opslaan mislukte door de volgende problemen:"
+    invalid_auth_token: Uw cookie is niet geldig. Probeert u het nog eens.
+    move_to_parent_failure: Kon node niet verplaatsen naar de parent node. Probeert u het nog eens.
+    move_to_sibling_failure: Kon node niet verplaatsen naar de buurnode. Probeert u het nog eens.
+    next_page: Volgende
+    not_authenticated: U moet ingelogd zijn om deze pagina te kunnen bekijken.
+    not_authorized: U heeft niet voldoende rechten om deze pagina te kunnen bekijken.
+    page_not_found: "Sorry, pagina niet gevonden."
+    previous_page: Vorige
+    print: Printversie
+    print_alt: Icoon van een printer
+    print_title: Bekijk de printversie
+    save_error: Opslaan mislukt.
+    sayit: Lees voor
+    sayit_alt: Icoon van een luidspreker
+    sayit_title: Gebruik Readspeaker om de content hardop voor te lezen
+    site: Gehele site
+  approvals:
+    approval_failed: Goedkeuren mislukt
+    approve: Goedkeuren
+    approve_and_find: Goedkeuren en bekijken
+    approve_and_find_tooltip: Keur het geselecteerde item goed en spring naar dit item in de sitemap
+    approve_comment: Commentaar voor redacteur (optioneel)
+    approve_tooltip: Keur de geselecteerde items goed
+    approved: Goedgekeurd
+    approving: Bezig met goedkeuren
+    content: Inhoud
+    count_message: "Item {0} tot {1} van {2}"
+    edit: Wijzigen
+    edit_tooltip: Wijzig het geselecteerde item
+    edited_by: Bijgewerkt door
+    editor_comment: Commentaar van betreffende redacteur/gebruiker
+    empty_message: Geen items om weer te geven
+    error: Fout
+    form_load_error: Kon het formulier niet laden
+    id: Node
+    intro: "Op deze pagina kunt u content goedkeuren die door redacteuren gemaakt of gewijzigd zijn. Klik op een rij in de tabel om de wijziging te bekijken. U kunt de content vervolgens goedkeuren door op de knop 'Goedkeuren' te klikken."
+    message: Bericht
+    no_editor_comment: Geen commentaar gegeven.
+    nodes_approved: Item(s) goedgekeurd!
+    of_page: "van {0}"
+    page: Pagina
+    reject: Afkeuren
+    reject_reason: Geef een reden op waarom de content is afgekeurd (optioneel)
+    reject_tooltip: Keur de geselecteerde items af
+    rejected: Afgekeurd
+    rejecting: Bezig met afkeuren
+    rejection_failed: Afkeuren mislukt
+    select_a_node_left: Selecteer linksboven een item...
+    select_a_node_up: Selecteer hierboven een item...
+    select_exactly_one: Selecteer exact een item
+    select_one: Selecteer ten minste een item
+    status: Status
+    unapproved: Niet beoordeeld
+    unknown_user: (onbekend)
+    updated_at: Bijgewerkt op
+  attachments:
+    add: Toevoegen...
+    add_attachments_to: Bijlage(n) toevoegen aan
+    add_to: Bijlage(n) toevoegen aan
+    attachments_table: Dit is een overzicht van alle attachments behorende bij deze pagina.
+    data: Bestand
+    done: Bijlage(n) toegevoegd
+    done_btn: Klaar met uploaden
+    edit: Bewerken van bijlage
+    edit_failed: Kon bijlage niet opslaan.
+    editor_comment: Commentaar van betreffende redacteur
+    failed: Bijlage(n) opslaan niet gelukt.
+    filename: Bestandsnaam
+    no_attachments: Er zijn nog geen extra bijlage(n) toegevoegd
+    optional_filename: Bestandsnaam (optioneel)
+    saved: Bijlage(n) opgeslagen.
+    size: Grootte
+    uploaded_attachments: Toegevoegde bijlage(n)
+  calendars:
+    attachments: Bijlagen
+    add_agenda_item_to: Agendapunt toevoegen aan
+    add_calendar_item_to: Kalender item toevoegen aan
+    add_meeting_to: Vergadering toevoegen aan
+    add_to: Kalender toevoegen aan
+    agenda_item: Agendapunt
+    agenda_item_category: Categorie
+    agenda_item_failed: Kon agendapunt niet opslaan.
+    agenda_items: Agendapunten
+    all_calendar_items: Gemeentekalender
+    body: Tekst
+    calendar_failed: Kon kalender niet opslaan.
+    calendar_item_failed: Kon item niet opslaan.
+    category: Categorie
+    chairman: Voorzitter
+    combined_calendar_failed: Kon gecombineerde kalender niet opslaan.
+    date: Datum
+    days: dagen
+    duration: Tijdsaanduiding
+    save_and_continue_agenda_item: Opslaan en nog een agendapunt aanmaken
+    save_and_continue_meeting: Opslaan en nog een vergadering aanmaken
+    save_and_continue_calendar_item: Opslaan en nog een kalender item aanmaken
+    edit: Bewerken van kalender
+    edit_agenda_item: Bewerken van agendapunt
+    edit_calendar_item: Bewerken van kalender item
+    edit_meeting: Bewerken van vergadering
+    end_time: Eind
+    end_time_day: Einddatum
+    end_time_time: Eindtijd
+    every: Om de
+    existing_category: Bestaande categorie
+    explanation: De gecombineerde kalender combineert alle kalenderitems en vergaderingen uit alle andere kalenders.
+    field_civil_worker: Ambtenaar burgelijke stand
+    from: van
+    full_event: Volledig item
+    full_meeting: Volledige vergadering
+    is_meeting: Vergadering?
+    location: Locatie
+    mail: Mail dit item
+    meeting_category: Categorie
+    months: maanden
+    next_month: Volgende maand
+    new_category: Nieuwe categorie
+    no_agenda_items: Geen agendapunten gevonden.
+    no_calendar_items: Geen kalenderitems gevonden.
+    notary: Griffier
+    position: Positie
+    previous_month: Vorige maand
+    print: Print dit item
+    repeat_end: Tot
+    repeating: Herhalen?
+    saved_agenda_item: Agendapunt opgeslagen!
+    saved_calendar: Kalender opgeslagen!
+    saved_meeting: Vergadering opgeslagen!
+    saved_calendar_item: Kalender item opgeslagen!
+    saved_combined_calendar: Gecombineerde kalender opgeslagen!
+    side_box_items: Aantal items in zij-kollom weergaves
+    speaking_rights: Spreekrecht
+    speaking_rights_no: Nee
+    speaking_rights_yes: Ja
+    staff_member: Portefeuillehouder
+    start_time: Start
+    start_time_day: Startdatum
+    start_time_time: Starttijd
+    successfully_destroyed: Kalender item is succesvol verwijderd.
+    till: tot
+    time: Tijd
+    to_calendar: Naar de kalender
+    tomorrow: Morgen in de gemeente
+    unknown: Onbekend
+    weeks: weken
+    years: jaar
+  carrousels:
+    add_carrousel_to: Carrousel toevoegen aan
+    carrousel_failed: Kon carrousels niet opslaan.
+    edit_carrousel: Bewerken van carrousel
+    form_load_error: Kon het formulier niet laden
+    illegal_item: Het item dat u heeft gekozen is geen pagina of nieuwsbericht en kan dus niet toegevoegd worden aan de carrousel.
+    illegal_item_title: Item niet toegestaan
+    pages_and_news_items: "Pagina's, afbeeldingen en nieuwsberichten"
+    saved_carrousel: Carrousel opgeslagen!
+    units:
+      days: dagen
+      hours: uur
+      minutes: minuten
+      months: maanden
+  categories:
+    add_new_combination: Nieuwe categorie-combinatie aanmaken
+    add_to_favorites: Voeg categorie-combinatie toe aan uw favorieten
+    cancel: Annuleren
+    category: Categorie
+    category_name: Naam
+    choose_main_category: Kies een programma
+    confirm_deletion: Weet u zeker dat u dit project wilt verwijderen?
+    could_not_delete: "Sorry, kan het project niet verwijderen."
+    could_not_save: "Sorry, kon het project niet opslaan."
+    created_at: Aangemaakt om
+    del_tooltip: Klik hier om het geselecteerde project te verwijderen
+    delete: Verwijderen
+    delete_combination: Verwijder combinatie
+    deleting: Bezig met verwijderen
+    edit: Bewerken
+    edit_category: Project bewerken
+    edit_tooltip: Klik hier om het geselecteerde project te wijzigen
+    error: Fout
+    favorites: Uw favoriete categorie-combinaties
+    group: Programma
+    insert_combination: Voeg categorie-combinatie toe aan de content
+    item: Project
+    items: Projecten
+    keep_existing: Bewaar bestaande metadata
+    main_category: Programma
+    message: Bericht
+    name: Project
+    name_cannot_be_blank: Naam mag niet blanco zijn
+    new_category: Nieuw project
+    new_category_tooltip: Klik hier om een nieuw project aan te maken
+    new_group: Nieuw programma
+    new_group_tooltip: Klik hier om een nieuw programma aan te maken
+    no_favorites: U heeft nog geen favoriete categorie-combinaties.
+    program: Programma
+    project: Project
+    remove_from_favorites: Verwijder categorie-combinatie uit uw favorieten
+    root_category: Algemeen
+    save: Opslaan
+    select_one: Kies tenminste een project
+    settings: Categorie-instellingen
+    synonyms: Synoniemen
+    updated_at: Laatst gewijzigd
+  combined_calendars:
+    add_to: Gecombineerde kalender toevoegen aan
+    edit: Bewerken van gecombineerde kalender
+  comments:
+    cancel: 'Annuleren'
+    comment: Reactie
+    comments: Reacties
+    confirm_deletion: Weet u zeker dat u deze reacties wilt verwijderen?
+    could_not_delete: "Sorry, kan de reacties niet verwijderen."
+    could_not_save: "Sorry, kon de reactie niet opslaan."
+    count_msg: "Reacties {0} tot {1} van {2} worden weergegeven"
+    created_at: op
+    created_at_time: om
+    del_tooltip: Klik hier om de geselecteerde reacties te verwijderen
+    delete: Reactie verwijderen
+    empty_msg: Geen reacties om weer te geven
+    error: Fout
+    login: Om reacties te kunnen plaatsen dient u ingelogd te zijn.
+    message: Bericht
+    new: Reageren
+    no_comments: Er zijn (nog) geen reacties geplaatst
+    no_subject: n.v.t.
+    of_page: "van {0}"
+    page: Pagina
+    really_delete?: "Weet u zeker dat u deze reactie wilt verwijderen?"
+    save: 'Opslaan'
+    select_one: Kies tenminste 1 reactie
+    show_forum_posts: Forum reacties
+    show_forum_posts_tt: Klik hier om alle reacties op forum discussies te bekijken
+    show_weblog_comments: Weblog reacties
+    show_weblog_comments_tt: Klik hier om alle reacties op weblogs te bekijken
+    subject: Onderwerp
+    updated_at: Laatst gewijzigd
+    user: Gebruiker
+    user_name: Naam
+  contact_boxes:
+    add_to: Contactbox toevoegen aan
+    contact_information: Contactinformatie
+    default_text: Standaardtekst
+    edit: Bewerken van contactbox
+    failed: Kon contactbox niet opslaan.
+    friday_text: Tekst vr.
+    heading: Gemeente
+    monday_text: Tekst ma.
+    more_addresses: meer adressen
+    more_times: meer tijden
+    opening_hours: Openingstijden
+    prefix: Publiekszaken bezoekadres Leeuwenbrug 85 is vandaag geopend van
+    saturday_text: Tekst za.
+    saved: Contactbox opgeslagen!
+    sufix: uur
+    sunday_text: Tekst zo.
+    thursday_text: Tekst do.
+    town_hall: Plaatje van het gemeentehuis
+    tuesday_text: Tekst di.
+    wednesday_text: Tekst wo.
+  content_boxes:
+    colour: Content box kleur
+    icon: Content box icoon
+    none: Geen
+    number_of_items: Aantal items in content box
+    settings: Content box instellingen
+    title: Content box titel
+  contact_forms:
+    add_to: Contactformulier toevoegen aan
+    contact_fields: Invoervelden
+    description_after_contact_fields: Omschrijving na invoervelden
+    description_before_contact_fields: Omschrijving voor invoervelden
+    dropdown: Dropdown
+    edit: Bewerken van contactformulier
+    email_address: E-mailadres
+    new_contact_field: Nieuw invoerveld
+    no_contact_fields: Er zijn momenteel (nog) geen invoervelden.
+    saved_contact_form: Contactformulier opgeslagen!
+    send: Versturen
+    sent_successfully: Uw bericht is succesvol verzonden.
+    should_enter_obligatory_fields: U heeft niet alle verplichte velden ingevuld!
+    successful: Succesvol
+    textarea: Tekstgebied
+    textfield: Tekstveld
+    title: Titel
+  contact_form_fields:
+    contact_field: Invoerveld
+    default_value: Standaardwaarde
+    destroy_contact_form_field: Verwijderen
+    dropdown: Dropdown
+    edit: Bewerken van invoerveld
+    edit_contact_form_field: Bewerken
+    field_type: Veldtype
+    label: Label
+    new_contact_field: Nieuw invoerveld
+    obligatory: Verplicht?
+    obligatory_fields: * Deze velden zijn verplicht voor de gebruiker.
+    position: Positie
+    textarea: Tekstgebied
+    textfield: Tekstveld
+  errors:
+    go_back: Ga terug naar de
+    internal_server_error: Onverwachte fout
+    internal_server_error_occurred: Er is een onverwachte fout opgetreden. We zijn hiervan automatisch op de hoogte gesteld.
+    or_go_back: Of ga terug naar de
+    page_not_found: Pagina niet gevonden
+    page_was_not_found: De door u opgegeven pagina kon helaas niet worden gevonden.
+    search_page_in: U kunt de gewenste pagina opzoeken in de
+    use_search_field: U kunt hiervoor ook het zoekveld linksboven gebruiken.
+  feeds:
+    add_to: RSS feed toevoegen aan
+    edit: Bewerken van RSS feed
+    failed: Kon RSS feed niet opslaan.
+    full_overview: Compleet overzicht
+    last_update: Laatst geupdate
+    older_feed_items: Oudere berichten
+    saved: RSS feed opgeslagen!
+    title: Titel van het feed bericht
+    url: URL
+  forum_topics:
+    add_to: Onderwerp toevoegen aan
+    edit: Bewerken van onderwerp
+  forums:
+    add_to: Forum toevoegen aan
+    body: Tekst
+    by: door
+    close_successfull: Discussie gesloten.
+    close_unsuccessfull: Kon discussie niet sluiten!
+    closed_lock: Icoon van een gesloten slot
+    create_forum_post: Reageren
+    create_forum_thread: Discussie starten
+    created: Toegevoegd
+    created_by: Gestart door
+    created_on: Aangemaakt op
+    delete: Verwijder deze reactie
+    delete_post: Verwijder reactie
+    delete_thread: Verwijder discussie
+    edit: Wijzig deze reactie
+    edit_forum: Bewerken van forum
+    edit_post: Wijzig reactie
+    edit_thread: Wijzig discussie
+    forum_failed: Kon forum niet opslaan.
+    forum_post: reactie
+    forum_posts: reacties
+    forum_thread: Forum discussie
+    forum_threads: Discussies
+    forum_topic: Forum onderwerp
+    forum_topics: Onderwerpen
+    full_overview: Naar het forum
+    last_reply: Laatste reactie
+    lock_thread: Sluit discussie
+    name: Naam
+    new_post: Voeg reactie toe
+    new_thread: Start een nieuwe discussie
+    no_posts_found: Geen reacties gevonden.
+    no_threads_found: Geen discussies gevonden.
+    no_topics: Geen onderwerpen gevonden.
+    number_of_posts: Aantal reacties
+    number_of_threads: Aantal discussies
+    at_time: op
+    open_lock: Icoon van een open slot
+    open_successfull: Discussie heropend.
+    open_unsuccessfull: Kon discussie niet heropenen!
+    recent_threads: Recent actieve discussies.
+    saved_forum: Forum opgeslagen!
+    saved_topic: Onderwerp opgeslagen!
+    signup_required: Log in of registreer je om nieuwe discussies aan te kunnen maken!
+    signup_required_to_post: Log in of registreer je om te kunnen reageren!
+    start_post_body: Tekst
+    submit: Versturen
+    thread_locked: Deze discussie is gesloten.
+    topic_failed: Kon onderwerp niet opslaan.
+    unlock_thread: Heropen discussie
+    update_forum_post: Reactie wijzigen
+    update_forum_thread: Discussie wijzigen
+  html_pages:
+    add_images: Afbeelding(en) toevoegen aan deze HTML pagina
+    add_to: HTML pagina toevoegen aan
+    body: Tekst
+    edit: Bewerken van HTML pagina
+    failed: Kon HTML pagina niet opslaan.
+    saved: HTML pagina opgeslagen!
+  images:
+    add: Toevoegen...
+    vertical_offset: Verticale offset (px)
+    add_images_to: Afbeelding(en) toevoegen aan
+    add_to: Afbeelding(en) toevoegen aan
+    alt: ALT tekst (optioneel)
+    data: Bestand
+    description: Beschrijving (optioneel)
+    done: Afbeelding(en) toegevoegd
+    done_btn: Klaar met uploaden
+    edit: Bewerken van afbeelding
+    failed: Afbeelding(en) opslaan niet gelukt.
+    for_header: Headerfoto?
+    goto: Ga naar
+    header_image_explanation: Hieronder wordt de afbeelding getoond die gebruikt wordt voor de header van het nieuwsarchief als dit het meest recente nieuwsbericht is.
+    image: Afbeelding
+    image_of: Afbeelding van
+    is_for_header: Is headerfoto?
+    no_images: Er zijn nog geen extra afbeeldingen toegevoegd
+    saved: Afbeelding(en) opgeslagen.
+    thumbnail: Voorbeeld
+    cropped: Uitsnede
+    uploaded_images: Toegevoegde afbeelding(en)
+    url: URL (optioneel)
+    url_explanation: De afbeelding linkt naar dit adres wanneer deze geplaatst is in een zijkolom.
+  layouts:
+    administration: Websitebeheer
+    administration_alt: Icoon van een potlood dat iets bewerkt
+    administration_title: Ga naar websitebeheer
+    advanced_search: Uitgebreid zoeken
+    colofon_link: colofon
+    contact_icon_link: Icoon van een envelop
+    contact_title: Neem contact op
+    control_panel: Websitebeheer
+    email: E-mailadres
+    forgot_password: wachtwoord vergeten?
+    help_icon_link: Icoon van een vraagteken
+    help_link: hulp
+    help_title: Ga naar de helppagina
+    home_icon_link: Icoon van huis
+    home_link: home
+    home_title: Icoon van een huis
+    jump_to_content: Ga direct naar de inhoud van de pagina
+    log_out: Log uit
+    log_out_alt: Icoon van een persoon die uitlogt
+    log_out_title: Log uit
+    logged_in_as: Ingelogd als
+    login: Inloggen
+    logo_alt: Logo van de gemeente
+    logout: Uitloggen
+    lookup: Zoek op in websitebeheer
+    lookup_alt: Icoon van een oog dat iets opzoekt
+    lookup_title: Zoek de huidige node op in het websitebeheer
+    password: wachtwoord
+    print: Afdrukken
+    private_menu_header: Persoonlijk menu (ingelogd)
+    proclaimer_icon_link: Copyrightteken
+    proclaimer_link: proclaimer
+    proclaimer_title: Lees onze proclaimer
+    registration_link: registreer hier
+    remember: Onthoud
+    roles: Systeemrollen
+    rss_alt: RSS-icoon
+    rss_title: RSS-feed tonen
+    search: Zoek
+    sitemap_icon_link: Icoon van een hiërarchie
+    sitemap_link: sitemap
+    sitemap_title: Bekijk de sitemap
+    source: Bron
+    unknown: Onbekend
+    username: loginnaam
+  links:
+    add_to: Link toevoegen aan
+    drag_and_drop: Sleep een item uit de sitemap in het veld
+    edit: Bewerken van link
+    external: Externe link
+    failed: Kon link niet opslaan.
+    internal: Interne link
+    node: Node
+    node_id: Node id
+    prev_version: Vorige versie
+    saved: Link opgeslagen!
+    type: Type
+    url: URL
+  news:
+    add_images: Afbeelding(en) toevoegen aan dit nieuwsbericht
+    archive_failed: Kon nieuwsarchief niet opslaan.
+    begin_date: Publicatie begindatum
+    begin_time: Publicatie begintijd
+    comment: reactie
+    comments: reacties
+    date: Publicatiedatum
+    end_date: Publicatie einddatum
+    end_time: Publicatie eindtijd
+    full_article: Volledig artikel
+    full_overview: Compleet overzicht
+    item_failed: Kon nieuwsbericht niet opslaan.
+    mail: Mail dit artikel
+    no_news_items: Geen berichten gevonden
+    older_news_items: Oudere berichten
+    preamble: Samenvatting
+    print: Print dit artikel
+    published_end: Publicatie-einde
+    saved_archive: Nieuwsarchief opgeslagen!
+    saved_item: Nieuwsbericht opgeslagen!
+    text: Tekst
+    title: Titel van het nieuwsbericht
+  news_archives:
+    add_to: Nieuwsarchief toevoegen aan
+    edit: Bewerken van nieuwsarchief
+  news_items:
+    add_to: Nieuwsbericht toevoegen aan
+    edit: Bewerken van nieuwsbericht
+  newsletter_archives:
+    add_to: Nieuwsbrief toevoegen aan
+    edit: Bewerken van nieuwsbrief
+  newsletters:
+    add_edition_to: Nieuwseditie toevoegen aan
+    after_approval: na goedkeuring
+    archive_failed: Kon nieuwsbrief niet opslaan.
+    confirm_unsubscribe: Afmelden bevestigen
+    count_msg: "Abonnees {0} tot {1} van {2} worden weergegeven"
+    date: Datum
+    edit_edition: Bewerken van nieuwseditie
+    edition_failed: Kon nieuwseditie niet opslaan.
+    edition_title: Titel van de nieuwsbrief editie
+    email: E-mailadres
+    empty_msg: Geen abonnees om weer te geven
+    form_load_error: Kon het formulier niet laden
+    from_email_address: E-mailadres bij verzending (optioneel)
+    header: Header afbeelding
+    full_edition: Bekijk volledige editie
+    id: ID
+    illegal_item: Het item dat u heeft gekozen is geen pagina of nieuwsbericht en kan dus niet toegevoegd worden aan de nieuwsbriefeditie.
+    illegal_item_title: Item niet toegestaan
+    is_published: Deze editie is gepubliceerd.
+    is_not_published: Deze editie is nog niet gepubliceerd.
+    items: Items in deze editie
+    items_and_pages: Nieuwsberichten en pagina's
+    items_count: Aantal items
+    message: Bericht
+    newsletter_title: Titel van de nieuwsbrief
+    no_editions: Er zijn nog geen edities van deze nieuwsbrief.
+    no_items: Geen items in deze editie...
+    not_news_items: Er zijn op dit moment geen nieuwsberichten.
+    of_page: "van {0}"
+    older_newsletter_editions: Oudere edities
+    page: Pagina
+    publication_date: Publicatiedatum
+    really_unsubscribe?: "Weet u zeker dat u zich wilt afmelden van deze nieuwsbrief?"
+    register: Registreer
+    saved_archive: Nieuwsbrief opgeslagen!
+    saved_edition: Nieuwseditie opgeslagen!
+    select_one: Selecteer eerst een gebruiker
+    subscribe: Abonneren
+    subscribe_successfull: U bent succesvol geabonneerd op deze nieuwsbrief
+    subscribe_to_this_newsletter: Abonneren op deze nieuwsbrief
+    subscribe_unsuccessfull: U bent reeds geabonneerd op deze nieuwsbrief
+    subscriptions: Abonnees van nieuwsbrief
+    text: Tekst
+    time: Tijd
+    to_receive_newsletter: om deze nieuwsbrief te ontvangen.
+    type: Soort
+    unsubscribe: Afmelden
+    unsubscribe_from_this_newsletter: Afmelden van deze nieuwsbrief
+    unsubscribe_successfull: U bent succesvol afgemeld van de nieuwsbrief
+    unsubscribe_tooltip: Klik hier om de geselecteerde gebruiker af te melden
+    unsubscribe_unsuccessfull: U bent niet geabonneerd op de nieuwsbrief
+    unsubscribe_user: Geselecteerde gebruiker afmelden
+    unsubscribing: Bezig met afmelden gebruiker
+    unsubscription_failed: Afmelden van gebruiker mislukt
+    user: Gebruiker
+  news_viewers:
+    add_to: Nieuwsselectie toevoegen aan
+    edit: Bewerken van nieuwsselectie
+    edit_items: Items bewerken
+    found_news: Gevonden berichten
+    select_a_news_archive_left: Selecteer links een nieuwsarchief waar u nieuwsberichten voor wilt selecteren. U kunt ook alle nieuwsberichten <br/> van een nieuwsarchief toevoegen door het betreffende archief aan te vinken. Voor een aangevinkt archief <br/> zullen nieuwe nieuwsberichten automatisch aan de nieuwsselectie toegevoegd worden.
+    news_archives_and_items: "Nieuwsarchieven &amp; nieuwsberichten"
+    news_order: Volgorde nieuwsbericht selectie
+    news_order_description: Stel de volgorde van de berichten door deze te verslepen in het veld hieronder.
+    saved_viewer: Nieuwsselectie archief aangemaakt!
+    saving: Bezig met opslaan...
+  news_viewer_items:
+    count_message: "Item {0} tot {1} van {2}"
+    create_failed: Toevoegen nieuwsitem mislukt
+    delete_failed: Verwijderen nieuwsitem mislukt
+    empty_message: Geen items om weer te geven    
+    error: Fout
+    of_page: "van {0}"
+    page: Pagina
+  news_viewer_archives:
+    create_failed: Toevoegen nieuwsarchief mislukt
+    delete_failed: Verwijderen nieuwsarchief mislukt
+    error: Fout    
+  nodes:
+    bulk_edit: Meerdere nodes wijzigen
+    commentable: Reacties toestaan?
+    config_for: Kolommen configureren voor
+    content_copy_creation_successful: Kopie aanmaken gelukt! Versleep nu de kopie naar de gewenste plek in de boom.
+    copy_of: Deze node is een kopie van
+    draft: Draft
+    drag_items: Sleep items in de kolommen om de indeling te bepalen.
+    edit: wijzigen
+    editor_comment: Commentaar voor eindredacteur
+    failed: mislukt
+    frontpage_cant_be_hidden: Globale frontpage mag niet privé zijn.
+    frontpage_set: Globale frontpage succesvol ingesteld.
+    import: Importeren
+    inherit_or_drag_items: "Indeling wordt overgeërfd, sleep items in de kolommen om de indeling handmatig te bepalen."
+    insert_failed: "Sorry, toevoegen van element"
+    intro_1: "De sitemap representeert de structuur van de website, ofwel de samenhang van de verschillende secties, pagina's en andere typen content."
+    intro_2_admins: "U kunt de structuur wijzigen door items te slepen in de boomstructuur hieronder. Ook kunt u nieuwe content aanmaken, en bestaande content verwijderen m.b.v. het contextmenu."
+    intro_2_editors: "U kunt nieuwe content aanmaken, en bestaande content wijzigen d.m.v. het contextmenu."
+    intro_no_root: Wanneer beide kolommen leeg worden gelaten zal de weergave worden overgeërfd van het bovenliggende item
+    intro1: Sleep items om de weergave van de kolommen van de pagina
+    intro2: te configureren
+    layout_update_failed: Kon layout niet opslaan.
+    layout_update_successful: Layout succesvol opgeslagen!
+    move_failed: "Sorry, verplaatsen van element"
+    no_parent_or_sibling: Geen parent of sibling ID gegeven.
+    not_found: Node niet gevonden. Mogelijk is hij inmiddels verwijderd.
+    page_load_failed: "Sorry, de pagina kon niet worden geladen."
+    new_version: nieuwe versie
+    previous_version: vorige versie
+    diff: diff
+    rejected: Afgekeurd
+    remove_failed: "Sorry, verwijderen van element mislukt."
+    save_as_draft: Als draft opslaan
+    select_one: Selecteer links een item...
+    sitemap: Sitemap
+    status: Status
+    succesfully_destroyed: Node succesvol verwijderd.
+    succesfully_moved: Node succesvol verplaatst.
+    unapproved: Niet goedgekeurd
+  owms:
+    announcement: bekendmaking
+    annual_plan: jaarplan
+    annual_report: jaarverslag
+    legislation: regeling
+    chamber_document: kamerstuk
+    column: column
+    convenant: convenant
+    database: databank
+    form: formulier
+    guideline: richtlijn
+    leaflet: folder
+    meeting_info: vergaderinformatie
+    news_item: nieuwsbericht
+    official_publication: officiële publicatie
+    overview_page: overzichtspagina
+    permit: vergunning
+    policy_bill: beleidsnota
+    policy_info: beleidsinformatie
+    press_item: persbericht
+    product_description: productbeschrijving
+    questions: vragen
+    report: rapport
+    speech: toespraak
+    stats: statistieken
+    web_page: webpagina
+    wob_request: wob-verzoek
+  pages:
+    add_images: Afbeelding(en) toevoegen aan deze pagina
+    add_to: Pagina toevoegen aan
+    begin_date: Publicatie begindatum
+    begin_time: Publicatie begintijd
+    body: Tekst
+    edit: Bewerken van pagina
+    editor_comment: Commentaar voor eindredacteur
+    failed: Kon pagina niet opslaan.
+    not_found: Geen gerelateerde pagina's gevonden.
+    preamble: Samenvatting
+    related_content: Deel van thema
+    save_as_draft: Als draft opslaan
+    saved: Pagina opgeslagen!
+  permissions:
+    add_to: Rol toewijzen op
+    cant_destroy_from_yourself: Kan uw eigen rechten niet verwijderen.
+    confirm_deletion: Weet u zeker dat u deze rol(len) wilt verwijderen?
+    could_not_delete: "Sorry, kan de rol(len) niet verwijderen."
+    count_msg: "Rollen {0} tot {1} van {2} worden weergegeven"
+    created_at: Aangemaakt op
+    del_tooltip: Klik hier om de geselecteerde rol(len) te verwijderen
+    delete: Verwijderen
+    deleting: Bezig met verwijderen
+    empty_msg: Geen rollen om weer te geven
+    error: Fout
+    login: Inlognaam
+    item: Item
+    message: Bericht
+    of_page: "van {0}"
+    page: Pagina
+    role: Rol
+    saved: Rol is met succes opgeslagen
+    saving: Bezig met opslaan
+    select_a_user: Type een inlognaam...
+    select_one: Kies tenminste een rol
+    successfully_created: Roltoewijzing succesvol aangemaakt.
+    user: Gebruiker
+    webmaster: Webmaster
+  polls:
+    activate: Deze stelling activeren
+    add_option: Antwoordoptie toevoegen
+    add_question_to: Vraagstelling toevoegen aan
+    add_to: Poll toevoegen aan
+    already_voted: "Sorry, u heeft al eerder een stem uitgebracht."
+    answer_option: Antwoordoptie
+    caution: Let op
+    date: Datum
+    earlier_questions: Voorgaande vraagstellingen
+    edit: Bewerken van poll
+    edit_question: Bewerken van vraagstelling
+    invalid_fields: U heeft een ongeldige waarde ingevuld
+    login_link: Login om te stemmen
+    minimum_options: U dient minimaal 2 antwoordopties op te geven.
+    no_active_question: Er is momenteel geen vraagstelling actief voor deze poll.
+    no_valid_option: Kies één van de antwoordopties.
+    number_of_votes: Totaal aantal stemmen
+    option: Antwoordoptie
+    poll_failed: Kon poll niet opslaan.
+    poll_results: Poll resultaten
+    publication_date: Datum
+    question: Vraagstelling
+    question_failed: Kon vraagstelling niet opslaan.
+    question_not_active: Deze vraagstelling is niet meer actief. U kunt niet meer stemmen.
+    requires_login: U moet ingelogged zijn om te stemmen.
+    results: Resultaten
+    saved_poll: Poll opgeslagen!
+    saved_question: Vraagstelling opgeslagen!
+    time: Tijd
+    view_results: Bekijk resultaten
+    vote: Stem
+    you_voted: "U heeft gestemd, bedankt!"
+  roles:
+    admin: Webmaster
+    editor: Redacteur
+    final_editor: Eindredacteur
+    indexer: Indexer
+    private: Leesgerechtigde
+  search:
+    advanced_search: Uitgebreid zoeken
+    all_in_programme: Alles in programma
+    after: Zoek recente informatie van
+    all: Alle pagina's
+    attachments: Documenten
+    calendar_items: Agenda/kalender
+    common_pages: Algemene pagina
+    date: Datum
+    downloads: Bijlagen
+    failed: Kon zoekpagina niet opslaan.
+    for: voor
+    for_zipcode: Zoek op postcode
+    hide_advanced_options: Verberg uitgebreide zoekopties
+    in: in
+    in_category: Zoek op thema
+    in_period: Zoek in periode van/tot
+    in_programme: Zoek op programma
+    in_project: Zoek op project
+    modified_at: Laatste wijziging
+    news: Nieuws
+    news_items: Nieuws
+    no_results: Geen resultaten gevonden
+    of: van de
+    of_type: van het type
+    page: Pagina
+    path: Onderdeel
+    permits: Bekendmakingen
+    products: Producten
+    products: Producten en diensten
+    recent_month: Afgelopen maand
+    recent_week: Afgelopen week
+    recent_year: Afgelopen jaar
+    relevance: Relevantie
+    relevance: relevantie %
+    results: Resultaten
+    results_1: "<strong>1</strong> resultaat gevonden"
+    saved: Zoekpagina opgeslagen!
+    search: Zoek
+    search_in: Zoek in
+    search_results: Zoekresultaten
+    select_programme: -- selecteer programma --
+    select_project: -- selecteer project --
+    show_advanced_options: Toon uitgebreide zoekopties
+    simple_search: Simpel zoeken
+    site: Gehele site
+    sort_by: Resultaten sorteren op
+    theme: Thema
+    to_search: Zoeken
+    type: Type
+    updated_at: Laatste wijziging
+  search_pages:
+    add_to: Zoekpagina toevoegen aan
+    edit: Bewerken van zoekpagina
+  sections:
+    add_images: Afbeelding(en) toevoegen aan deze sectie
+    add_to: Sectie toevoegen aan
+    add_to_site: Site toevoegen aan
+    begin_date: Publicatie begindatum
+    begin_time: Publicatie begintijd
+    domain: Domein
+    drag_and_drop: Sleep een item uit de sitemap in het veld hieronder om een startpagina voor deze sectie in te stellen.
+    drag_and_drop_site: Sleep een item uit de sitemap in het veld hieronder om een startpagina voor deze site in te stellen.
+    edit: Bewerken van sectie
+    edit_site: Bewerken van site
+    editor_comment: Commentaar voor eindredacteur
+    failed: Kon sectie niet opslaan.
+    failed_site: Kon site niet opslaan
+    frontpage_node: Startpagina node
+    none: geen
+    not_found: Geen gerelateerde secties gevonden.
+    related_content: Deel van thema
+    saved: Sectie opgeslagen!
+    saved_site: Site opgeslagen!
+  sessions:
+    already_logged_in: U bent reeds ingelogd als
+    cant_log_out: Kan niet uitloggen. U bent niet ingelogd.
+    confirm_logout: Uitloggen bevestigen
+    forgot_password?: "Wachtwoord vergeten?"
+    log_in: Inloggen
+    logged_in_as: U bent nu ingelogd als
+    logged_out: U bent succesvol uitgelogd.
+    login: Loginnaam
+    no_email?: "Geen e-mail ontvangen?"
+    not_yet_verified: U hebt uw e-mailadres nog niet geverifieerd. Volg hiertoe de instructies in de e-mail die u hebt ontvangen.
+    password: Wachtwoord
+    really_logout?: "Wilt u echt uitloggen?"
+    remember: Onthoud mij
+    request_new_code: Stuur mij een nieuwe verificatie-e-mail
+    user_or_password_error: De loginnaam/wachtwoord combinatie is onjuist.
+  settings:
+    key: Instelling
+    alt: Omschrijving
+    value: Waarde
+    could_not_save: 'Sorry, kon de instelling niet opslaan.'
+    count_msg: 'Instellingen {0} tot {1} van {2} worden weergegeven'
+    empty_msg: Geen instellingen om weer te geven
+    error: Fout
+    message: Bericht
+    no_settings_found: Geen instellingen gevonden.
+    of_page: "van {0}"
+    page: Pagina
+    saving: Bezig met opslaan
+  share:
+    email_to_someone: 'E-mail "{{title}}" naar iemand'
+    from_email_address: Uw e-mail
+    from_name: Uw naam
+    legend_information: Vul de gegevens en een bericht in
+    message: Bericht
+    recommendation_successful: Uw e-mail is succesvol verstuurd.
+    sending_failed: Verzenden mislukt.
+    to_email_address: E-mail ontvanger
+    to_name: Naam ontvanger
+  sitemaps:
+    all_changes: Laatste wijzigingen
+    sitemap: Sitemap
+  social_media_links_boxes:
+    add_to: Social media links box toevoegen aan
+    edit: Bewerken van social media links box
+    facebook_url: Facebook URL
+    failed: Kon social media links box niet opslaan.
+    flickr_url: Flickr URL
+    hyves_url: Hyves URL
+    linkedin_url: LinkedIn URL
+    saved: Social media links box opgeslagen!
+    twitter_url: Twitter URL
+    youtube_url: YouTube URL
+  synonyms:
+    cancel: 'Annuleren'
+    confirm_deletion: Weet u zeker dat u deze synoniemen wilt verwijderen?
+    could_not_delete: "Sorry, kan de synoniemen niet verwijderen."
+    could_not_save: "Sorry, kon het synoniem niet opslaan."
+    count_msg: "Synoniemen {0} tot {1} van {2} worden weergegeven"
+    del_tooltip: Klik hier om de geselecteerde synoniemen te verwijderen
+    delete: Verwijderen
+    deleting: Bezig met verwijderen
+    empty_msg: Geen synoniemen om weer te geven
+    error: Fout
+    message: Bericht
+    name: Synoniem
+    new: Nieuw
+    new_synonym: Nieuw synoniem
+    new_tooltip: Klik hier om een nieuw synoniemen toe te voegen
+    of_page: "van {0}"
+    original: Origineel
+    page: Pagina
+    save: 'Opslaan'
+    saving: Bezig met opslaan
+    select_one: Kies tenminste een synoniem
+    synonym: Synoniem
+    weight: Gewicht
+  top_hits_pages:
+    add_to: Top 10 pagina toevoegen aan
+    edit: Bewerken van top 10 pagina
+    failed: Kon top 10 pagina niet opslaan.
+    saved: Top 10 pagina opgeslagen!
+  users:
+    invite: Uitnodigen
+    invite_tooltip: Gebruiker uitnodigen
+    invite_succes: Gebruiker uitgenodigd!
+    invite_button: Verzenden
+    already_verified: "Uw e-mailadres is al geverifieerd, u kunt inloggen met uw gebruikersnaam en wachtwoord."
+    back: Terug
+    cancel: Annuleren
+    cant_destroy_yourself: U kan uzelf niet verwijderen.
+    confirm_deletion: "Weet u zeker dat u deze gebruiker(s) wilt verwijderen? Ook de discussies, reacties en weblogs van deze gebruiker(s) zullen verwijderd worden."
+    could_not_delete: "Sorry, kon de gebruiker(s) niet verwijderen."
+    couldnt_find_user: Login naam / E-mailadres niet gevonden
+    count_msg: "Gebruikers {0} tot {1} van {2} worden weergegeven"
+    created_at: Aangemaakt op
+    del_tooltip: Klik hier om de geselecteerde gebruiker(s) te verwijderen
+    delete: Verwijderen
+    deleting: Bezig met verwijderen
+    edit: Bewerken
+    edit_tooltip: Klik hier om het gebruikersprofiel van de geselecteerde gebruiker te bewerken
+    edit_details: Gegevens wijzigen
+    edit_details_of: Profiel wijzigen van
+    email_address: E-mailadres
+    email_address_cannot_be_blank: E-mail adres mag niet blanco zijn
+    empty_msg: Geen gebruikers om weer te geven
+    error: Fout
+    export: Exporteren
+    export_tooltip: Klik hier om de gebruikerslijst op te slaan als CSV bestand
+    exporting: Bezig met het genereren van de gebruikerslijst
+    female: Vrouw
+    first_name: Voornaam
+    full_name: Naam
+    interests: Onderwerp interesses
+    joined_at: Geregistreerd op
+    last_update: Laatst bijgewerkt op
+    leave_blank_to_preserve_password: Alleen invullen als u uw wachtwoord wilt wijzigen.
+    leave_empty: Niet invullen
+    login: Loginnaam
+    login_email: Login naam / E-mailadres
+    login_info_message: Onderstaande velden zijn verplicht
+    login_information: Kies uw inloggegevens
+    male: Man
+    message: Bericht
+    new_verification_email: Vraag een nieuwe verificatie-e-mail aan
+    newsletter_subscriptions: Nieuwsbrief abonnementen
+    newsletter_title: Titel van de nieuwsbrief
+    not_public: Uw e-mailadres wordt niet aan anderen dan u getoond
+    of_page: "van {0}"
+    options: Opties
+    page: Pagina
+    password: Wachtwoord
+    password_confirmation: Bevestig wachtwoord
+    password_sent_to: Uw wachtwoord is verstuurd naar
+    privacy_explanation: Deze gegevens worden door de gemeente gebruikt om u nog beter van informatie te voorzien. Deze gegevens worden niet aan derden verstrekt.
+    profile: Gebruikersprofiel
+    profile_of: Profiel van
+    really_unsubscribe?: "Weet u zeker dat zich wilt afmelden van deze nieuwsbrief?"
+    register: Registreren
+    registration_form: Registratieformulier
+    request: Opvragen
+    request_password: Wachtwoord opvragen
+    request_password_heading: Wachtwoord opvragen
+    request_password_text: Vul hieronder uw login naam of e-mailadres in. Het wachtwoord wordt u dan per e-mail toegestuurd.
+    save: Wijzigingen opslaan
+    saving: Bezig met opslaan
+    select_interests: Selecteer onderwerpen waarin u bent interesseerd
+    select_newsletter_archives: Selecteer de nieuwsbrieven waarop u zich wilt abonneren
+    select_one: Kies tenminste een gebruiker
+    sent_verification_email: Ter verificatie is een e-mail naar uw e-mailadres verstuurd. Volg de instructies in de e-mail.
+    sex: Geslacht
+    successfully_verified: Bedankt voor het verifiëren van uw e-mailadres! U kunt nu inloggen met uw gebruikersnaam en wachtwoord.
+    surname: Achternaam
+    try_again: Het formulier is onjuist ingevoerd. Probeert u het nog eens.
+    update_successful: Uw wijzigingen zijn opgeslagen!
+    unsubscribe: Afmelden
+    user: Gebruiker
+    user_update_succesful: De gebruiker is succesvol aangepast.
+    verification_failed: Verificatie niet gelukt.
+    verification_failed_heading: Verificatie niet gelukt
+    verification_failed_text: Het is niet gelukt om uw e-mailadres te verifiëren. Controleer of u het ontvangen webadres in zijn geheel heeft gekopieerd. Vraag anders een nieuwe verificatie-e-mail aan.
+    invalid_invitation_code_or_invitation_email: Uitnodigingslink ongeldig!
+    verified?: "Geverifieerd?"
+    view_weblog: Bekijken
+    weblog: Weblog
+    weblog_title: Titel van het weblog
+    welcome: Welkom als gebruiker van deze website. Voordat u kunt inloggen dient u uw e-mailadres te verifiëren. U kunt dit doen door de instructies te volgen in de e-mail die zojuist naar u is verstuurd.
+  video:
+    enter_video_id: Vul het Youtube video ID in
+    insert_video: Video invoegen
+  weblog_archives:
+    edit: Bewerken van weblogarchief
+  weblog_posts:
+    add_to: Weblogarchief toevoegen aan
+    edit: Bewerken van bericht
+  weblogs:
+    add_images: Afbeelding(en) toevoegen aan dit bericht
+    add_post_to: Bericht toevoegen aan
+    add_to: Weblog toevoegen aan
+    archive_failed: Kon weblogarchief niet opslaan.
+    are_you_sure?: "Weet u zeker dat u het bericht wilt verwijderen?"
+    body: Tekst
+    by: door
+    commentable: Reacties toestaan?
+    create_weblog: Een eigen weblog aanmaken
+    create_weblog_post: Bericht schrijven
+    created_on: Aangemaakt op
+    date: Datum
+    delete_post: Bericht verwijderen
+    delete_weblog: Weblog verwijderen
+    edit: Bewerken van weblog
+    edit_post: Bericht wijzigen
+    edit_weblog: Weblog wijzigen
+    full_overview: Naar de weblogs
+    images: Afbeeldingen
+    last_post: Laatste bericht
+    mail: Mail deze post
+    message_title: Titel van het bericht
+    new_weblog: Nieuwe weblog aanmaken
+    new_weblog_post: Nieuw bericht schrijven
+    no_posts_found: Geen berichten gevonden.
+    no_weblog_posts_found: Geen berichten gevonden.
+    no_weblogs_found: Geen weblogs gevonden.
+    not_all_images_saved: Niet alle afbeeldingen konden opgeslagen worden.
+    number_of_posts: Aantal berichten
+    older_weblog_posts: Oudere berichten
+    owned_by: Eigenaar
+    post_failed: Kon bericht niet opslaan.
+    preamble: Samenvatting
+    published: Gepubliceerd
+    really_delete?: "Weet u zeker dat u uw weblog wilt verwijderen?"
+    really_delete_post?: "Weet u zeker dat u dit bericht wilt verwijderen?"
+    recent_posts: Meest recente berichten.
+    recent_weblogs: Recent bijgewerkte weblogs.
+    saved_archive: Weblogarchief opgeslagen!
+    saved_post: Bericht opgeslagen!
+    saved_weblog: Weblog opgeslagen!
+    show_post: Volledig bericht
+    signup_required: Log in of registreer je om nieuwe weblogs aan te kunnen maken!
+    successfully_destroyed: Uw weblog is succesvol verwijderd.
+    text: Tekst
+    time: Tijd
+    update_weblog: Uw weblog wijzigen
+    update_weblog_post: Bericht wijzigen
+    weblog: Weblog
+    weblog_already_present: U kunt maximaal één weblog aanmaken in deze sectie.
+    weblog_archive: Weblog archief
+    weblog_failed: Kon weblog niet opslaan.
+    weblog_post: bericht
+    weblog_post_title: Weblogbericht
+    weblog_posts: berichten
+    weblogs: weblogs

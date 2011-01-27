@@ -1,0 +1,43 @@
+@import "devcms_core_clearfix"
+@import "public/devcms_core_agenda_items", "public/devcms_core_attachments", "public/devcms_core_calendars", "public/devcms_core_carrousels", "public/devcms_core_combined_calendars", "public/devcms_core_comments", "public/devcms_core_contact_boxes", "public/devcms_core_contact_forms", "public/devcms_core_content_boxes", "public/devcms_core_feeds", "public/devcms_core_forums", "public/devcms_core_header_and_footer", "public/devcms_core_lightbox", "public/devcms_core_main_menu", "public/devcms_core_news", "public/devcms_core_newsletters", "public/devcms_core_pages", "public/devcms_core_polls", "public/devcms_core_readspeaker", "public/devcms_core_search", "public/devcms_core_search_pages", "public/devcms_core_sections", "public/devcms_core_social_media_links_boxes", "public/devcms_core_top_hits_pages", "public/devcms_core_users", "public/devcms_core_weblogs"
+
+body
+  background-color: white !important
+  text-align: left !important
+  color: black !important
+  font-size: 11pt !important
+
+#header
+  margin-bottom: 1cm
+
+#footer
+  border-top: 0.05cm solid #cccccc
+  margin-top: 0.5cm
+  padding-top: 0.2cm
+  font-style: italic
+  font-size: 9pt
+
+a.print
+  display: none
+
+.lastUpdateDate
+  float: left !important
+
+@media screen
+  #print_btn
+    float: right
+  div
+    &.print
+      display: none
+  body
+    margin: 5px 30px 5px 30px
+
+
+@media print
+  #print_btn
+    display: none
+  div
+    &.print
+      display: none
+  body
+    margin: 0

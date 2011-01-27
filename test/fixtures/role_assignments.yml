@@ -1,0 +1,73 @@
+admin_arthur:
+  user: arthur
+  node: root_section_node
+  name: admin
+editor:
+  user: editor
+  node: devcms_news_node
+  name: editor
+poll_editor:
+  user: editor
+  node: healthcare_poll_node
+  name: editor
+final_editor:
+  user: final_editor
+  node: economie_section_node
+  name: final_editor
+page_editor:
+  user: editor
+  node: help_page_node
+  name: editor
+page_final_editor:
+  user: final_editor
+  node: contact_page_node
+  name: final_editor
+unapproved_page_final_editor:
+  user: final_editor
+  node: unapproved_page_node
+  name: final_editor
+admin_sjoerd:
+  user: sjoerd
+  node: root_section_node
+  name: admin
+newsletter_final_editor:
+  user: final_editor
+  node: newsletter_archive_node
+  name: final_editor
+newsletter_editor:
+  user: editor
+  node: newsletter_archive_node
+  name: editor
+hidden_section_reader:
+  user: reader
+  node: hidden_section_node
+  name: read_access
+not_hidden_section_reader:
+  user: reader
+  node: not_hidden_section_node
+  name: read_access
+weblog_post_final_editor:
+  user: final_editor
+  node: henk_weblog_post_one_node
+  name: final_editor
+weblog_final_editor:
+  user: final_editor
+  node: henk_weblog_node
+  name: final_editor
+meeting_editor:
+  user: editor
+  node: meetings_calendar_meeting_one_node
+  name: editor
+meeting_final_editor:
+  user: final_editor
+  node: meetings_calendar_meeting_one_node
+  name: final_editor
+editor_on_editor_section:
+  user: editor
+  node: editor_section_node
+  name: editor
+indexer_on_root:
+  user: indexer
+  node: root_section_node
+  name: indexer
+

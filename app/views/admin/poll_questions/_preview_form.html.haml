@@ -1,0 +1,14 @@
+= form.hidden_field :question
+= form.hidden_field :publication_start_date
+= form.hidden_field :active
+
+- new_field_count = 0
+
+- @poll_question.poll_options.each do |poll_option|
+  - if poll_option.new_record?
+    = hidden_field_tag('poll_question[new_poll_option_attributes][][text]', poll_option.text, :id => "poll_question_new_poll_option_attributes_#{new_field_count}_text")
+    - new_field_count += 1
+  - else
+    = hidden_field_tag("poll_question[existing_poll_option_attributes][#{poll_option.id}][text]", poll_option.text, :id => "poll_question_existing_poll_option_attributes_#{poll_option.id}_text")
+
+= category_hidden_fields form

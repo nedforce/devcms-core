@@ -1,0 +1,23 @@
+<div style="font-family: arial, sans-serif; font-size: 12px">
+  <p>
+      Beste heer/mevrouw,
+  </p>
+  <p>
+      U ontvangt deze e-mail omdat u bent uitgenodigd om een gebruiker te worden van <%= @host %>. Om een gebruiker te worden,
+      dient u eerst een eigen account aan te maken op het volgende adres:
+      <br/><br/>
+
+      <% url = new_user_url(:invitation_email => @invitation_email,
+        :invitation_code => @invitation_code,
+        :only_path => false,
+        :protocol => (Settler[:ssl_enabled] ? 'https://' : 'http://'),
+        :host => @host) %>
+
+      <%= link_to url, url %>
+  </p>
+  <p>
+      Met vriendelijke groet,
+      <br/><br/>
+      Het <%= @host %> team
+  </p>
+</div>

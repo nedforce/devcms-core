@@ -1,0 +1,14 @@
+carrouselTimePanel = new Ext.Panel({
+  html: '<%= escape_javascript(time_select_for(@carrousel)) -%>',
+  frame: false,
+  border: false
+});
+
+carrouselFormPanel = new Ext.Panel({
+  html: '<%= escape_javascript(content_box_settings_for(@carrousel) + category_settings_for(@carrousel)) -%>',
+  frame: false,
+  border: false
+});
+
+carrouselForm.add(carrouselTimePanel);
+carrouselForm.add(carrouselFormPanel);

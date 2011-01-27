@@ -1,0 +1,80 @@
+<script type="text/javascript">
+    
+    var sorters = []
+    
+    onSubmitForm = function(e) {
+        e.stop();
+        new Ajax.Request('/admin/nodes/<%= @node.id %>/layout',{
+            parameters: Ext.ux.prepareParams(serializeSorters(),Form.serialize(e.target, true)),
+            method: 'PUT',
+            onCreate: function() {
+                $('layout_submit').disable();
+            },
+            onSuccess: function(response){
+                Ext.Msg.alert("", '<%= I18n.t("nodes.layout_update_successful") %>');
+            },
+            onFailure: function(response) {
+                Ext.ux.alertResponseError(response, '<%= I18n.t("nodes.layout_update_failed") %>');
+            },
+            onComplete:  function() { 
+                $('layout_submit').enable();
+            }
+        });
+    }
+
+    /* Define sorter event handlers */
+    validateRepresentation = function(e){
+      sortlets = e.sorter.items != null ? e.sorter.items.items : [];      
+      
+        if(e.sorter.targetable == true) {
+            // Frontpage node
+            valid = sortlets.length < 1
+        } else if(e.sortlet && e.sortlet.custom_representation  == true) {
+            valid = e.sortlet.representation == e.sorter.representation || e.sorter.target == "custom_representations"
+        } else if(e.sorter.target != 'custom_representations') {
+            node = e.data.node || e.sortlet.node;
+            valid = e.sorter.maxItems == -1 || e.sorter.maxItems >= sortlets.length+1; // Sorter should not be full
+            valid = valid && node.siteNodeId == e.sorter.node.siteNodeId; // Sortlet should be part of the same site
+            valid = valid && !(sorters.any(function(sorter){ return sorter.nodeIds().include(node.id);}) && Object.isUndefined(e.sortlet)); //Sortlet should not exist in any sorter yet, unless it is a sortlet
+            valid = valid && node.availableContentRepresentations.include(e.sorter.representation); // The content type should have a valid representation for this target
+        } else {
+            valid = false;
+        }
+        return valid;
+    }
+    
+    serializeSorters = function(form) {
+        params = {};
+        sorters.each(function(sorter){
+            params['targets[' + sorter.target+'][]'] = sorter.nodeIds();
+        });
+        return params;
+    }
+    
+    $('edit_node_<%= @node.id%>').observe("submit", onSubmitForm);
+
+</script>
+
+<div id="layout_manager_panel">
+  <div id="layout_manager_content" class="rightPanelPadding">
+    <h1>Template en layout instellingen</h1>
+    <% admin_form_for(@node, :remote => true) do |form| %>
+    <div id="layout">
+      <p>Kies een template of overerven om van de bovenliggende pagina te overerven. Na de keuze voor een template worden eventuele varianten getoont.</p>
+      <% options = @node.root? ? {} : { :include_blank => "Overerven (#{@node.inherited_layout.name})" } %>
+      <%= wrap_with_label(form.collection_select(:layout, Layout.all, :id, :name, options, {:disabled => !current_user.has_role?("admin")}), :text => "Template:") %>
+      <%= observe_field('node_layout', :update => :variants_settings_and_targets,
+            :url => { :controller => :layouts, :action => :variants_settings_and_targets, :node_id => @node.id }, 
+            :with => "'id=' + encodeURIComponent($F('node_layout'))" ) %>
+    </div>
+    <div id="variants_settings_and_targets">
+      <% if @layout.present? %> 
+        <%= render :partial => 'variants_settings_and_targets', :locals => {:form => form} %>
+      <% end %>
+    </div>
+    <%= form.submit "Layout toepassen", :id => 'layout_submit' %>
+    <% end %>
+  </div>
+</div>
+
+

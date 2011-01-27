@@ -1,0 +1,48 @@
+--- !omap
+- bewoners_forum_post_one:
+    user: henk
+    user_name: henk
+    forum_thread: bewoners_forum_thread_one
+    body: Nee
+    created_at: <%= 8.hours.ago.to_s :db %>
+- bewoners_forum_post_two:
+    user: piet
+    user_name: piet
+    forum_thread: bewoners_forum_thread_two
+    body: Ja
+    created_at: <%= 7.hours.ago.to_s :db %>
+- bewoners_forum_post_three:
+    user: jan
+    user_name: jan
+    forum_thread: bewoners_forum_thread_three
+    body: Misschien
+    created_at: <%= 6.hours.ago.to_s :db %>
+- bewoners_forum_post_four:
+    user: klaas
+    user_name: klaas
+    forum_thread: bewoners_forum_thread_four
+    body: Soms
+    created_at: <%= 5.hours.ago.to_s :db %>
+- bewoners_forum_post_five:
+    user: henk
+    user_name: henk
+    forum_thread: bewoners_forum_thread_one
+    body: Nee
+    created_at: <%= 4.hours.ago.to_s :db %>
+- bewoners_forum_post_six:
+    user_name: Sjaak zonder account
+    forum_thread: bewoners_forum_thread_one
+    body: Nee
+    created_at: <%= 3.hours.ago.to_s :db %>
+- bewoners_forum_post_seven:
+    user: normal_user
+    user_name: ik ben normaal
+    forum_thread: bewoners_forum_thread_one
+    body: Ik heb geen threads
+    created_at: <%= 2.hours.ago.to_s :db %>
+- bewoners_forum_post_eight:
+    user: normal_user
+    user_name: ik ben normaal
+    forum_thread: bewoners_forum_thread_one
+    body: Ik heb geen threads!!!
+    created_at: <%= 1.hours.ago.to_s :db %>

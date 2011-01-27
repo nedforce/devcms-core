@@ -1,0 +1,65 @@
+<% 
+  latest_news_items    ||= []
+  news_items_for_table ||= []
+  show_bread_crumbs    ||= false
+%>
+<div class="newsItems">
+  <%= content_tag(:p, t('news.no_news_items')) if news_items.empty? %>
+
+  <% latest_news_items.each do |news_item| %>
+    <% readspeaker(news_item.node.id) do |readspeaker_id| %>
+      <div class="newsItem">
+        <h2><%= link_to_content_node h(news_item.title), news_item -%></h2>
+
+        <% if show_bread_crumbs %>
+          <span class="bread_crumbs"><%= NewsArchive.human_name -%>:</span> <%= bread_crumbs_track_for(news_item.news_archive.node, :include_root => false) %>
+        <% end %>
+
+        <%= render :partial => '/shared/metadata', :locals => { :publication_date => news_item.publication_start_date, :last_update_date => news_item.updated_at } %>
+
+        <div class="content clearfix">
+          <% if (image_node = news_item.node.accessible_children.reject { |c| c.content_class != Image }.first) -%>
+            <%=
+              link_to_node(
+                image_tag(content_node_path(image_node, :action => :thumbnail), :alt => h(image_node.approved_content.title)),
+                image_node,
+                { :action => :full },
+                {
+                  :rel => "lightbox[#{news_item.node.id}]", :title => h(image_node.approved_content.title),
+                  :class => 'right'
+                }
+              )
+            %>
+          <% end -%>
+          <%= simple_format(h(news_item.preamble)) if news_item.preamble.present? -%>
+        </div>
+        <div class="buttons clearfix">
+          <% news_item_button t('news.full_article') do %>
+              <%= link_to_content_node t('news.full_article'), news_item, {}, :title => h(news_item.title) -%>
+              <% if news_item.node.comments.count > 0 -%>
+                  (<%= pluralize(news_item.node.comments.count, t('news.comment'), t('news.comments')) %>)
+              <% end -%>
+          <% end %>
+          <%= readspeaker_button(:rid => readspeaker_id, :title => h(news_item.title)) %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+
+  <% if news_items_for_table.present? %>
+    <h2><%=t 'news.older_news_items' -%></h2>
+
+    <table cellpadding="0" cellspacing="0" id="items">
+      <thead><tr><th scope="col" class="gray"><%=t 'news.title' -%></th><th class="right_sized gray"><%=t 'news.date' -%></th></tr></thead>
+      <tbody>
+        <% news_items_for_table.each_with_index do |news_item, i| %>
+        <tr <% if i.even? %>class="alt"<% end %>>
+          <td><%=link_to_content_node h(truncate(news_item.title, :length => 54)), news_item -%></td>
+          <td class="right_sized gray"><%= l(news_item.publication_start_date, :format => :long) -%></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <%= pagination_links(news_items) %>
+  <% end %>
+</div>

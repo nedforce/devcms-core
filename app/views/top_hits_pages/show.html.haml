@@ -1,0 +1,17 @@
+.regularPage
+- readspeaker do
+  = readspeaker_button :class => 'topRightReadspeaker'
+
+  %h1= h @top_hits_page.title
+
+  = content_tag(:div, w(@top_hits_page.description), :class => 'htmlField') if @top_hits_page.description.present?
+
+  - unless @top_hits.empty?
+    %ol.top_hits
+    - @top_hits.each do |content_node|
+      %li
+        = image_tag "icons/#{content_node.icon_filename}", :class => 'icon', :alt => h(content_node.title)
+        = link_to h(content_node.title), '#'
+
+  .buttons.clearfix
+    = print_button

@@ -1,0 +1,15 @@
+alt-text:
+bare: yes
+char-encoding: utf8
+clean: yes
+drop-font-tags: yes
+drop-empty-paras: yes
+drop-proprietary-attributes: yes
+enclose-block-text: yes
+enclose-text: yes
+force-output: yes
+logical-emphasis: yes
+quote-marks: yes
+output-xhtml: yes
+show-body-only: yes
+wrap: 0

@@ -1,0 +1,131 @@
+require File.dirname(__FILE__) + '/../../test_helper'
+
+class Admin::PermissionsControllerTest < ActionController::TestCase
+  self.use_transactional_fixtures = true
+
+  def test_should_get_index
+    login_as :sjoerd
+    get :index
+    assert_response :success
+  end
+
+  def test_should_create_role_assignment
+    login_as :sjoerd
+
+    assert_difference('RoleAssignment.count') do
+      create_role_assignment()
+      assert_response :success
+      assert !assigns(:role_assignment).new_record?, :message => assigns(:role_assignment).errors.full_messages.join('; ')
+    end
+  end
+
+  def test_should_destroy_role_assignment
+    login_as :sjoerd
+
+    assert_difference('RoleAssignment.count', -1) do
+      delete :destroy, :id => users(:editor).role_assignments.first.id, :format => 'json'
+      assert_response :success
+    end
+  end
+
+  def test_should_not_destroy_role_assignment_of_current_user
+    login_as :sjoerd
+
+    assert_no_difference('RoleAssignment.count') do
+      delete :destroy, :id => users(:sjoerd).role_assignments.first.id, :format => 'json'
+      assert_response :unprocessable_entity
+    end
+  end
+
+  def test_should_require_role
+    login_as :sjoerd
+
+    assert_no_difference('RoleAssignment.count') do
+      create_role_assignment({:name => nil})
+    end
+    assert_response :success
+    assert assigns(:role_assignment).new_record?
+    assert assigns(:role_assignment).errors.on(:name)
+  end
+
+  def test_should_require_valid_role
+    login_as :sjoerd
+
+    assert_no_difference('RoleAssignment.count') do
+      create_role_assignment({:name => 'geen_rol'})
+    end
+    assert_response :success
+    assert assigns(:role_assignment).new_record?
+    assert assigns(:role_assignment).errors.on(:name)
+  end
+
+    def test_should_require_user
+    login_as :sjoerd
+
+    assert_no_difference('RoleAssignment.count') do
+      create_role_assignment({:user_login => nil})
+    end
+    assert_response :success
+    assert assigns(:role_assignment).new_record?
+    assert assigns(:role_assignment).errors.on(:user)
+  end
+
+  def test_should_require_node
+    login_as :sjoerd
+
+    assert_no_difference('RoleAssignment.count') do
+      post :create, :node_id => nil, :role_assignment => { :user_login => users(:normal_user).login, :name => 'editor' }
+    end
+
+    assert_response :not_found
+  end
+
+  def test_should_require_roles
+    assert_user_can_access :arthur, [:index, :new], {:node_id => nodes(:economie_section_node).id}
+    assert_user_can_access :arthur, :create, {:node_id => nodes(:economie_section_node).id, :user_id => users(:normal_user).id, :role => 'editor'}
+    assert_user_cant_access :editor, [:new, :create, :index]
+    assert_user_cant_access :final_editor, [:new, :create, :index]
+  end
+
+  def test_should_page_for_extjs
+    login_as :sjoerd
+    post :index, :start => '2', :limit => '2', :format => 'json'
+    assert_response :success
+    assert_equal 2, assigns(:role_assignments).results.size
+  end
+
+  def test_should_sort_nodes_for_extjs
+    login_as :sjoerd
+    post :index, :sort => 'node_title', :dir => 'DESC', :format => 'json'
+    assert_response :success
+    assert_equal RoleAssignment.find(:all, :include => :node).collect{|ra| ra.node.content.content_title }.sort.last, assigns(:role_assignments).first.node.content.content_title 
+  end
+
+  def test_should_sort_users_for_extjs
+    login_as :sjoerd
+    post :index, :sort => 'user_login', :dir => 'DESC', :format => 'json'
+    assert_response :success
+    assert_equal users(:sjoerd).login, assigns(:role_assignments).results.first.user.login
+  end
+
+  def test_should_sort_role_name_for_extjs
+    login_as :sjoerd
+    post :index, :sort => 'name', :dir => 'DESC', :format => 'json'
+    assert_response :success
+    assert_equal users(:reader).login, assigns(:role_assignments).results.first.user.login
+  end
+
+  def test_should_page_and_sort_for_extjs
+    login_as :sjoerd
+    post :index, :sort => 'node_title', :dir => 'ASC', :start => '5', :limit => '2', :format => 'json'
+    assert_response :success
+    assert_equal 2, assigns(:role_assignments).size
+    assert_not_equal nodes(:contact_page_node).content.content_title, assigns(:role_assignments).last.node.content.content_title
+  end
+
+  protected
+    def create_role_assignment(options = {})
+      post :create, :node_id => nodes(:economie_section_node).id, :role_assignment => { :user_login => users(:normal_user).login, :name => 'editor' }.merge(options)
+    end
+end
+

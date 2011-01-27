@@ -1,0 +1,11 @@
+- unless commentable.comments.empty?
+  #comments.comments.clearfix
+    %h2= t 'comments.comments'
+
+    .comments_content
+      - commentable.comments.each do |comment|
+        %div{ :class => "comment clearfix#{cycle(' alt', '')}", :id => "comment" + comment.id.to_s }
+          = render :partial => '/shared/comment', :locals => { :comment => comment }
+
+#new_comment_container
+  = render :partial => '/shared/new_comment', :locals => { :commentable => commentable, :comment => commentable.comments.build }

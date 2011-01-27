@@ -1,0 +1,54 @@
+<div class="right_panel_content">
+
+    <h1><%=t 'links.add_to' -%> '<%=h @parent_node.content.content_title -%>'.</h1>
+
+    <% admin_remote_form_for :link, # Using symbol, as using the instance variable will make all fields be named 'external_link[attr]' instead of 'link[attr]'.
+      :url => admin_links_path(:format => 'html', :parent_node_id => @parent_node.id),
+      :update => 'right_panel_body' do |form| %>
+      
+        <%= error_messages_for :link %>
+  
+        <%= form.text_field   :title,                :label => t('shared.title') %>
+        <%= form.text_field   :title_alternatives,   :label => t('shared.title_alternatives') %>
+        <%= form.text_area    :description,          :label => t('shared.description'), :rows => 2 %>
+        
+        <%= form.radio_button :type, 'ExternalLink', :label => t('links.external'), :onclick => 'toggleTypeField()', :wrapper => { :id => 'external_link_wrapper' } %>
+        <%= form.radio_button :type, 'InternalLink', :label => t('links.internal'), :onclick => 'toggleTypeField()', :wrapper => { :id => 'internal_link_wrapper' } %>
+        
+        <% javascript_tag do %>
+          var fields = [Ext.get('link_url_wrapper'), Ext.get('link_linked_node_id_wrapper')]
+
+          Ext.each(fields, function(f) {
+              f.setVisibilityMode(Ext.Element.DISPLAY)
+          });
+
+          toggleTypeField = function() {
+            Ext.each(fields, function(f){
+                f.toggle()
+            });
+          }
+        <% end %>
+        
+        <!-- External link field -->
+        <%= form.text_field :url, :label => t('links.url'), :wrapper => { :style => (@link.is_a?(InternalLink) ? 'display: none' : '') } %>
+        
+        <!-- Internal link field -->
+        <% txt = "#{t 'links.node_id'}<br/><small>#{t 'links.drag_and_drop'}</small>" %>
+        <%= wrap_with_label content_tag(:div, '', :id => 'node_selector'), { :text => txt, :for => 'link_linked_node_id' }, { :id => 'link_linked_node_id_wrapper', :style => (@link.is_a?(InternalLink) ? '' : 'display: none;') } %>
+
+        <% javascript_tag do %>
+          ndf = new Ext.dvtr.NodeDropField({
+              renderTo: 'node_selector',
+              ddGroup: 'TreeAndSorterDD',
+              name: 'link[linked_node_id]',
+              id: 'link_linked_node_id'
+          });
+        <% end %>
+
+        <%= category_settings_for @link -%>
+
+        <%= form.submit t('shared.save') %>
+
+    <% end %>
+
+</div>

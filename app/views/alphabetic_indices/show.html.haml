@@ -1,0 +1,17 @@
+.regularitem.clearfix
+  %h2
+    = h @alphabetic_index.title
+    - if @letter.present?
+      == #{t 'alphabetic_indices.with_starting_letter'} '#{@letter.upcase}'
+
+  .alphabeticIndexLetterLinks.clearfix
+    - ('A'..'Z').each do |letter|
+      == #{link_to letter, letter_path(@alphabetic_index, letter)}&nbsp;
+
+  - if @items.present?
+    #overview.clearfix
+      %ul.items
+        - @items.each do |item|
+          %li
+            = link_to_content_node index_title(item, @letter), item
+            %p= item.respond_to?(:preamble) ? item.preamble : item.try(:description)

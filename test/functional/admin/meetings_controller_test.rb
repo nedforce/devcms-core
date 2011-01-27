@@ -1,0 +1,238 @@
+require File.dirname(__FILE__) + '/../../test_helper'
+
+class Admin::MeetingsControllerTest < ActionController::TestCase
+  self.use_transactional_fixtures = true
+
+  def setup
+    @meeting = events(:meetings_calendar_meeting_one)
+  end
+
+  def test_should_render_404_if_not_found
+    login_as :sjoerd
+
+    get :show, :id => -1
+    assert_response :not_found
+  end
+
+  def test_should_show_meeting
+    login_as :sjoerd
+
+    get :show, :id => @meeting
+    assert assigns(:calendar_item)
+    assert_response :success
+    assert_equal nodes(:meetings_calendar_meeting_one_node), assigns(:node)
+  end
+
+  def test_should_get_previous
+    @meeting.create_approved_version
+
+    login_as :sjoerd
+
+    get :previous, :id => @meeting
+    assert_response :success
+    assert assigns(:calendar_item)
+  end
+
+  def test_should_render_404_if_not_found
+    login_as :sjoerd
+
+    get :show, :id => -1
+    assert_response :not_found
+  end
+
+  def test_should_get_new
+    login_as :sjoerd
+
+    get :new, :parent_node_id => nodes(:events_calendar_node).id
+    assert_response :success
+    assert assigns(:calendar_item)
+  end
+
+  def test_should_get_new_with_params
+    login_as :sjoerd
+
+    get :new, :parent_node_id => nodes(:events_calendar_node).id, :calendar_item => { :title => 'foo' }
+    assert_response :success
+    assert assigns(:calendar_item)
+    assert_equal 'foo', assigns(:calendar_item).title
+  end
+
+  def test_should_create_meeting
+    login_as :sjoerd
+
+    assert_difference('Meeting.count', 1) do
+      create_meeting_request
+      assert_response :success
+      assert !assigns(:calendar_item).new_record?, assigns(:calendar_item).errors.full_messages.join('; ')
+    end
+  end
+
+  def test_should_get_valid_preview_for_create
+    login_as :sjoerd
+
+    assert_no_difference('Meeting.count') do
+      create_meeting_request({ :title => 'foobar' }, { :commit_type => 'preview' })
+      assert_response :success
+      assert assigns(:calendar_item).new_record?
+      assert_equal 'foobar', assigns(:calendar_item).title
+      assert_template 'create_preview'
+    end
+  end
+
+  def test_should_not_get_invalid_preview_for_create
+    login_as :sjoerd
+
+    assert_no_difference('Meeting.count') do
+      create_meeting_request({ :title => nil }, { :commit_type => 'preview' })
+      assert_response :success
+      assert assigns(:calendar_item).new_record?
+      assert assigns(:calendar_item).errors.on(:title)
+      assert_template 'new'
+    end
+  end
+
+  def test_should_require_title
+    login_as :sjoerd
+
+    assert_no_difference('Meeting.count') do
+      create_meeting_request(:title => nil)
+    end
+
+    assert_response :success
+    assert assigns(:calendar_item).new_record?
+    assert assigns(:calendar_item).errors.on(:title)
+  end
+
+  def test_should_get_edit
+    login_as :sjoerd
+
+    get :edit, :id => @meeting
+    assert_response :success
+    assert assigns(:calendar_item)
+  end
+
+  def test_should_get_edit_with_params
+    login_as :sjoerd
+
+    get :edit, :id => @meeting, :calendar_item => { :title => 'foo' }
+    assert_response :success
+    assert assigns(:calendar_item)
+    assert_equal 'foo', assigns(:calendar_item).title
+  end
+
+  def test_should_update_meeting
+    login_as :sjoerd
+
+    put :update, :id => @meeting, :calendar_item => { :title => 'updated title', :body => 'updated body' }
+
+    assert_response :success
+    assert_equal 'updated title', assigns(:calendar_item).title
+  end
+
+  def test_should_get_valid_preview_for_update
+    login_as :sjoerd
+
+    old_title = @meeting.title
+    put :update, :id => @meeting, :calendar_item => { :title => 'updated title' }, :commit_type => 'preview'
+
+    assert_response :success
+    assert_equal 'updated title', assigns(:calendar_item).title
+    assert_equal old_title, @meeting.reload.title
+    assert_template 'update_preview'
+  end
+
+  def test_should_not_get_invalid_preview_for_update
+    login_as :sjoerd
+
+    old_title = @meeting.title
+    put :update, :id => @meeting, :calendar_item => { :title => nil }, :commit_type => 'preview'
+
+    assert_response :success
+    assert assigns(:calendar_item).errors.on(:title)
+    assert_equal old_title, @meeting.reload.title
+    assert_template 'edit'
+  end
+
+  def test_should_not_update_meeting_with_invalid_title
+    login_as :sjoerd
+
+    old_title = @meeting.title
+    put :update, :id => @meeting, :calendar_item => { :title => nil }
+    assert_response :success
+    assert assigns(:calendar_item).errors.on(:title)
+    assert_equal old_title, @meeting.reload.title
+  end
+
+  def test_should_require_roles
+    assert_user_can_access :arthur, [:new, :create], {:parent_node_id => nodes(:events_calendar_node).id}
+    assert_user_cant_access :final_editor, [:new, :create], {:parent_node_id => nodes(:events_calendar_node).id}
+    assert_user_cant_access :editor, [:new, :create], {:parent_node_id => nodes(:events_calendar_node).id}
+    assert_user_can_access :arthur, [:update, :edit, :destroy], {:id => @meeting.id}
+  end
+
+  def test_should_delete_non_repeating_calender_item
+    login_as :sjoerd
+
+    assert_difference 'Meeting.count', -1 do
+      delete :destroy, :id => @meeting
+      assert_response :success
+    end
+  end
+
+  def test_should_delete_repeating_meeting_and_its_repetitions
+    login_as :sjoerd
+
+    now = Time.now
+
+    ci = create_repeating_meeting({
+      :start_time => now,
+      :end_time => now + 1.hours,
+      :repeating => true,
+      :repeat_interval_multiplier => 1,
+      :repeat_interval_granularity => CalendarItem::REPEAT_INTERVAL_GRANULARITIES[:days],
+      :repeat_end => (now + 1.week).to_date
+    })
+
+    created_items_count = count_number_of_created_meetings(ci.start_time.to_date, ci.repeat_end, 1.days)
+
+    assert_difference 'Meeting.count', -created_items_count do
+      delete :destroy, :id => ci
+      assert_response :success
+    end
+  end
+
+protected
+
+  def create_meeting_request(attributes = {}, options = {})
+    now = Time.now
+
+    post :create, { :parent_node_id => nodes(:events_calendar_node).id, :calendar_item => { :title => 'new title', :repeating => false, :start_time => now.strftime("%H:%M"), :date => now.strftime("%d-%m-%Y"), :end_time => (now + 1.hour).strftime("%H:%M"), :meeting_category_name => 'problem' }.merge(attributes)}.merge(options)
+  end
+
+  def create_meeting(options = {})
+    now = Time.now
+    Meeting.create({:parent => calendars(:events_calendar).node, :repeating => false, :title => "New event", :start_time => now, :end_time => now + 1.hour, :meeting_category_name => 'problem' }.merge(options))
+  end
+
+  def create_repeating_meeting(options = {})
+    create_meeting({
+      :repeating => true,
+      :repeat_interval_multiplier => 1,
+      :repeat_interval_granularity => CalendarItem::REPEAT_INTERVAL_GRANULARITIES[:days],
+      :repeat_end => 1.month.from_now.to_date
+    }.merge(options))
+  end
+
+  def count_number_of_created_meetings(start_date, end_date, span)
+    amount = 0
+    next_date = start_date
+
+    while (next_date <= end_date)
+      amount += 1
+      next_date += span
+    end
+
+    amount
+  end
+
+end

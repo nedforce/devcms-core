@@ -1,0 +1,19 @@
+bewoners_forum_thread_one:
+  user: henk
+  forum_topic: bewoners_forum_topic_wonen
+  title: Ik wil een woning kopen!
+
+bewoners_forum_thread_two:
+  user: piet
+  forum_topic: bewoners_forum_topic_wonen
+  title: Ik wil een woning verkopen!
+  
+bewoners_forum_thread_three:
+  user: jan
+  forum_topic: bewoners_forum_topic_werken
+  title: Ik wil een baan!
+  
+bewoners_forum_thread_four:
+  user: klaas
+  forum_topic: bewoners_forum_topic_werken
+  title: Ik wil ontslagen worden!

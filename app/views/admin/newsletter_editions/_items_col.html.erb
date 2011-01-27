@@ -1,0 +1,50 @@
+newsItemColPanel = new Ext.Panel({
+      width: 520,
+      title: '<%= escape_javascript I18n.t("newsletters.items_and_pages") -%>',
+      cls: 'newsItemColPanel',
+      border: true
+    })
+
+newsItemCol = new Ext.dvtr.Sorter({
+      width: 400,
+      ddGroup: 'TreeAndSorterDD',
+      items: <%= @item_sortlets.to_json -%>,
+      border: false
+  });
+
+onSortletCreate = function(e){
+    e.sortlet.showSpinner(); // Show 'loading' spinner while waiting for a server response
+    e.sortlet.load({
+            url: e.sortlet.controllerName+'/'+e.sortlet.contentNodeId,
+            params: Ext.ux.prepareParams(defaultParams, {show_actions: false, format: 'html'}),
+            method: 'GET',
+            callback: function(options, success, response) {
+                if(!success)
+                    Ext.ux.alertResponseError(response, '<%= I18n.t("newsletters.form_load_error") -%>')
+                e.sortlet.hideSpinner();
+                e.sortlet.showCollapse();
+                // Assign the ID of the news_item to the sortlet
+                e.sortlet.assignId(e.sortlet.nodeId);
+            }
+        });
+}
+
+onBeforeDrop = function(e){
+    if(e.dd.dragData.node != null)  {
+        if(e.dd.dragData.node.attributes.ownContentType == 'NewsItem' || e.dd.dragData.node.attributes.ownContentType == 'Page')
+            return true;
+        else {
+            Ext.Msg.alert("<%= I18n.t('newsletters.illegal_item_title') -%>","<%= I18n.t('newsletters.illegal_item') -%>");
+            return false;
+        }
+    }
+
+    return true;
+}
+
+newsItemCol.on('afterinserttreenode', onSortletCreate);
+newsItemCol.on('beforeDrop', onBeforeDrop);
+newsItemColPanel.add(newsItemCol);
+
+// Add the Sorter to the form
+newsletterEditionForm.add(newsItemColPanel);

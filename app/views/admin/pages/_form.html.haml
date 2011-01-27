@@ -1,0 +1,23 @@
+= error_messages_for :page
+
+= javascript_tag("document.getElementById('right_panel_body').scrollTop = 0;")
+
+= form.text_field :title,              :label => t('shared.title')
+= form.text_field :title_alternatives, :label => t('shared.title_alternatives')
+
+= form.date_field :publication_start_date_day,  :label => "#{t 'pages.begin_date'}", :value => @page.publication_start_date, :allow_empty => true
+= form.time_field :publication_start_date_time, :label => "#{t 'pages.begin_time'}", :value => @page.publication_start_date, :allow_empty => true
+
+= form.text_area   :preamble, :label => t('pages.preamble'), :rows => 5
+= form.html_editor :body,     :label => t('pages.body')
+
+- if current_user.has_role?('editor')
+  = form.html_editor :editor_comment, :label => t('pages.editor_comment'), :rows => 3
+
+= form.check_box :draft, :label => t('pages.save_as_draft'), :for_check_box => true
+
+= category_settings_for @page
+
+= commit_fields form
+
+= approval_field

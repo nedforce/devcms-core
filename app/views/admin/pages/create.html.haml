@@ -1,0 +1,8 @@
+= javascript_tag "treePanel.refreshNodesOf(#{@parent_node.id})"
+
+#rightPanelDefault.rightPanelDefault
+  %table
+    %tr
+      %td
+        %p= t 'pages.saved'
+        %p= link_to_function(t('pages.add_images'), "rightPanel.load({url: '#{new_admin_image_url}', method: 'GET', params: {parent_node_id: #{@page.node.id}}})")

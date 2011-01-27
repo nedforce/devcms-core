@@ -1,0 +1,13 @@
+%table.contact_form_field
+  %tr
+    %th= t 'contact_form_fields.position'
+    %th= t 'contact_form_fields.label'
+    %th= t 'contact_form_fields.contact_field'
+    %th
+    %th
+
+  - @contact_form.contact_form_fields.each do |contact_form_field|
+    %tr{ :id => "contact_form_field_#{contact_form_field.id}" }
+      = render :partial => '/admin/contact_form_fields/show', :locals => { :contact_form_field => contact_form_field }
+
+= t 'contact_form_fields.obligatory_fields'

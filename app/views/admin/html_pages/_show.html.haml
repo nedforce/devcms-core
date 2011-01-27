@@ -1,0 +1,13 @@
+.regularPage.htmlPage
+  %h2= h @html_page.title
+
+  - unless @html_page.new_record?
+    .metadata
+      %p.lastUpdateDate
+        == #{t 'shared.last_updated'}: #{l @html_page.updated_at, :format => :long}
+
+  .htmlField
+    = @html_page.body
+
+  = render_images
+  = render_attachments

@@ -1,0 +1,4 @@
+- content = node.content
+
+%div{ :id => "newsletter_archive_content_box_#{content.id}" }
+  = render :partial => '/newsletter_archives/content_box_content_content', :locals => { :content => content }

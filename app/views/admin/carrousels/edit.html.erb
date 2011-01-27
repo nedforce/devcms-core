@@ -1,0 +1,102 @@
+<div id="right_panel_form"></div>
+<% javascript_tag do %>
+Ext.QuickTips.init();
+
+var carrouselForm = new Ext.dvtr.ContentNodeFormPanel({
+    labelWidth: 110,
+    title: '<%=t "carrousels.edit_carrousel" -%> \'<%= escape_javascript @carrousel.title -%>\'',
+    bodyStyle: 'padding:10px',
+    labelPad: 10,
+    border: false,
+    monitorValid: true
+});
+
+carrouselForm.add({
+  id: 'carrousel_title',
+  fieldLabel: '<%=t "shared.title" -%>',
+  name: 'carrousel[title]',
+  xtype: 'textfield',
+  allowBlank: false,
+  width: 400,
+  value: '<%= escape_javascript @carrousel.title -%>'
+});
+
+<%= render :partial => 'items_col' %>
+<%= render :partial => 'form' %>
+
+carrouselForm.addButton({
+  text: '<%=t "shared.preview" -%>',
+  formBind: true,
+  handler: function() {
+    var items_array = new Array();
+    if(carrouselItemCol.items != null) carrouselItemCol.items.each(function (item, index, length) { items_array.push(item.id); });
+
+    var customParams = Ext.apply(
+    carrouselForm.getForm().getValues(),{
+      commit_type: 'preview',
+      format: 'html',
+      _method: 'put'      
+    }
+    );
+
+    if(items_array.length > 0) customParams = Ext.apply(customParams, { 'items[]': items_array });
+
+    rightPanel.load({
+      url: '<%= admin_carrousel_url(@carrousel) -%>',
+      method: 'POST',
+      params: Ext.ux.prepareParams(defaultParams, customParams),
+      callback: function(options, success, response) {
+        if (!success) {
+          Ext.ux.alertResponseError(response, '<%=t "carrousels.carrousel_failed" -%>');
+        }
+      }
+    });
+  }
+});
+
+carrouselForm.addButton({
+  text: '<%=t "shared.save" -%>',
+  formBind: true,
+  handler: function() {
+    var items_array = new Array();
+    if(carrouselItemCol.items != null) carrouselItemCol.items.each(function (item, index, length) { items_array.push(item.id); });
+
+    var customParams = Ext.apply(
+    carrouselForm.getForm().getValues(),{
+      commit_type: 'save',
+      format: 'html',
+      _method: 'put'      
+    }
+    );
+
+    if(items_array.length > 0) customParams = Ext.apply(customParams, { 'items[]': items_array });
+
+    rightPanel.load({
+      url: '<%= admin_carrousel_url(@carrousel) -%>',
+      method: 'POST',
+      params: Ext.ux.prepareParams(defaultParams, customParams),
+      callback: function(options, success, response) {
+        if (!success) {
+          Ext.ux.alertResponseError(response, '<%= t "carrousels.carrousel_failed" -%>');
+        }
+      }
+    });
+  }// end handler
+});
+
+// Show validation errors and handle marking of invalid fields.
+var errors = <%= @carrousel.errors.to_json -%>;
+if (errors.length > 0) {
+    carrouselForm.insertErrorMessages('<%= error_messages_for :carrousel %>', '<%= @carrousel.class.to_s.underscore -%>');
+}
+
+carrouselForm.render('right_panel_form');
+
+// Show the collapse button of every item
+if(carrouselItemCol.items) {
+    carrouselItemCol.items.each(function(item,index,len){
+        item.showCollapse();
+        item.toggleCollapse(true);
+    });
+}
+<% end %>

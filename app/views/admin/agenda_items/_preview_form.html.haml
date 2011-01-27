@@ -1,0 +1,15 @@
+= form.hidden_field :agenda_item_category_name
+= form.hidden_field :duration
+= form.hidden_field :chairman
+= form.hidden_field :notary
+= form.hidden_field :staff_member
+= form.hidden_field :speaking_rights
+= form.hidden_field :description
+= form.hidden_field :body
+
+- if current_user.has_role?('editor')
+  = form.hidden_field :editor_comment
+
+= category_hidden_fields form
+
+= approval_field

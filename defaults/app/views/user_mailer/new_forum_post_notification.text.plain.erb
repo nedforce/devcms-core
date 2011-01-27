@@ -1,0 +1,16 @@
+Beste <%= @user.full_name-%>,
+
+<%= "#{@post.user.full_name} (#{@post.user.login})" %> heeft de volgende reactie geplaatst in de discussie '<%= @thread.title %>':
+
+
+<%= strip_tags(@post.body) -%>
+
+
+Klik op onderstaande link om het betreffende forum te bekijken.
+
+<%= polymorphic_url([ @topic, @thread ], :host => @host) %>
+
+Met vriendelijke groet,
+
+Het <%= Settler[:host] %> team
+

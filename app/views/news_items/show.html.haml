@@ -1,0 +1,26 @@
+.newsItem.regularPage
+  - readspeaker do
+    = readspeaker_button :class => 'topRightReadspeaker'
+
+    %h1= h @news_item.title
+
+    = render :partial => '/shared/metadata', :locals => { :publication_date => @news_item.publication_start_date, :last_update_date => @news_item.updated_at }
+
+    - if @news_item.preamble.present?
+      = content_tag(:div, simple_format(white_list_preamble(@news_item.preamble)), :class => 'preamble')
+
+    = render_images
+
+    .htmlField
+      = process_video_tags(@news_item.body)
+
+    = render_attachments
+
+    .buttons.clearfix
+      = print_button
+      .social_buttons
+        = social_media_buttons(@news_item)
+
+- if @news_item.commentable?
+  #comment_container
+    = render :partial => '/shared/comments', :locals => { :commentable => @node }

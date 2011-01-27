@@ -1,0 +1,6 @@
+.attachment
+  .content
+    %h2= h record.title
+    %p
+      %a{ :href => preview_admin_attachment_path(record) }= h record.filename
+      == (#{record.size / 1024} KB)

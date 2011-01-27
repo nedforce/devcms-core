@@ -1,0 +1,48 @@
+.regularPage.weblogArchive
+  - readspeaker(@weblog_archive.node.id) do |rid|
+    %h1= h @weblog_archive.title
+
+    .htmlField.weblogArchiveDescription
+      = w @weblog_archive.description
+
+    .buttons.clearfix
+      = readspeaker_button(:rid => rid, :title => h(@weblog_archive.title))
+
+  .weblogsOverview.clearfix
+    .clearfix
+      %h2= t('weblogs.weblogs').titleize
+
+      - if logged_in? && !@weblog_archive.has_weblog_for_user?(current_user)
+        - right_new_button t('weblogs.new_weblog') do
+          = link_to t('weblogs.new_weblog'), new_weblog_archive_weblog_path(@weblog_archive)
+
+    - if @weblogs.empty?
+      %p= t 'weblogs.no_weblogs_found'
+
+    - else
+      .weblogs
+        - @weblogs.each do |weblog|
+          %div{ :class => "#{cycle('oddWeblog', 'evenWeblog')} clearfix" }
+            - readspeaker(weblog.node.id) do |rid|
+              %h3= link_to_content_node h(weblog.title), weblog, {}, :title => h(weblog.title)
+
+              .clearfix
+                .weblogDescription
+                  = truncate(strip_tags(weblog.description), :length => 110)
+                .weblogDetails
+                  %p== #{t 'weblogs.owned_by'}: <span class='userLogin'>#{truncate(weblog.user.screen_name, :length => 12)}</span>
+                  - unless weblog.weblog_posts.empty?
+                    %p== #{t 'weblogs.last_post'}: #{l weblog.last_updated_at(current_user), :format => :long}
+
+              .buttons.clearfix
+                = readspeaker_button(:rid => rid)
+
+      = pagination_links(@weblogs)
+
+    - if logged_in? && !@weblog_archive.has_weblog_for_user?(current_user) && !@weblogs.empty?
+      - right_new_button t('weblogs.new_weblog') do
+        = link_to t('weblogs.new_weblog'), new_weblog_archive_weblog_path(@weblog_archive)
+
+  - unless logged_in?
+    %p.signup
+      = t 'weblogs.signup_required'

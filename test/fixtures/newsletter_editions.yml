@@ -1,0 +1,14 @@
+devcms_newsletter_edition:
+  title: De nieuwsbrief van de maand!
+  body: Hierbij het laatste nieuws.
+  published: publishing
+
+devcms_newsletter_edition_volgend_jaar:
+  title: De nieuwsbrief van vorig jaar! woot!
+  body: Hierbij het oude nieuws.
+  published: unpublished
+
+example_newsletter_edition:
+  title: De nieuwsbrief van de maand!
+  body: Hierbij het laatste nieuws.
+  published: unpublished

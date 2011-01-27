@@ -1,0 +1,5 @@
+.right_panel_content
+  %h1== #{t 'add_to', :scope => controller.controller_name} '#{h @parent_node.content.content_title}'.
+
+  - admin_remote_form_for object, :url => url_for(:controller => controller.controller_name, :format => 'html', :parent_node_id => @parent_node.id), :update => 'right_panel_body' do |f|
+    = render :partial => 'form', :object => f

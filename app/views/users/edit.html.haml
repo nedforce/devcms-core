@@ -1,0 +1,48 @@
+%h1== #{t 'users.edit_details_of'} #{h @user.login}
+
+= error_messages_for :user
+
+- form_for @user, :url => secure_url(:url_for, { :action => 'update', :id => @user }) do |f|
+
+  .formFieldCt.clearfix
+    %label{ :for => "user_first_name" }
+      = t 'users.first_name'
+    = f.text_field :first_name, :class => 'textfield'
+
+  .formFieldCt.clearfix
+    %label{ :for => "user_surname" }
+      = t 'users.surname'
+    = f.text_field :surname, :class => 'textfield'
+
+  .formFieldCt.clearfix
+    %label= t 'users.sex'
+    .radioButton
+      = f.radio_button :sex, 'f'
+      %label{ :for => "user_sex_f" }
+        = t 'users.female'
+    .radioButton
+      = f.radio_button :sex, 'm'
+      %label{ :for => "user_sex_m" }
+        = t 'users.male'
+
+  .formFieldCt.clearfix
+    %label{ :for => "user_email_address" }
+      = t 'users.email_address'
+    = f.text_field :email_address, :class => 'textfield'
+
+  .formFieldCt.clearfix
+    %label{ :for => "user_password" }
+      = t 'users.password'
+    .left
+      = f.password_field :password, :class => 'textfield'
+      %br/
+      %small= t 'users.leave_blank_to_preserve_password'
+
+  .formFieldCt.clearfix
+    %label{ :for => "user_password_confirmation" }
+      = t 'users.password_confirmation'
+    = f.password_field :password_confirmation, :class => 'textfield'
+
+  .formButtonCt
+    = submit_tag t('users.save'), :class => 'left submit'
+    = link_to    t('users.back'), @user, :class => 'right'

@@ -1,0 +1,11 @@
+.clearfix.formFieldCt
+  %label.small
+    = t 'forums.name'
+  = @current_user.screen_name
+
+- include_js 'tiny_mce/tiny_mce.js'
+
+.clearfix.formFieldCt
+  %label.small{ :for => "forum_post_body_ct" }
+    = t 'forums.body'
+  = html_editor_tag 'forum_post[body]', @forum_post.body, :cols => 35, :front_end => true, :id => 'forum_post_body'

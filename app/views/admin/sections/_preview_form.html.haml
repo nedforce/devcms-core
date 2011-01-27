@@ -1,0 +1,16 @@
+= form.hidden_field :title
+= form.hidden_field :title_alternatives
+
+- if @section.is_a?(Site)
+  = form.hidden_field :domain
+
+= form.hidden_field :publication_start_date
+= form.hidden_field :description
+
+- if current_user.has_role?('editor')
+  = form.hidden_field :editor_comment
+
+= content_box_hidden_fields form
+= category_hidden_fields    form
+
+= approval_field

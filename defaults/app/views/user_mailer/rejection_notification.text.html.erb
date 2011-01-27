@@ -1,0 +1,24 @@
+<div style="font-family: arial, sans-serif; font-size: 12px">
+  <p>
+      Beste <%=@node.editor.full_name-%>,
+  </p>
+  <p>
+    De wijzigingen aan <a href="<%= "http://#{@host}/#{@node.url_alias}" %>"><%= "http://#{@host}/#{@node.url_alias}" %></a> die u gemaakt heeft zijn niet goedgekeurd.
+  </p>
+  <%- unless @reason.blank? -%>
+  <p>
+    De volgende reden is hiervoor opgegeven:
+  </p>
+  <p>
+    "<%= h @reason -%>"
+  </p>
+  <%- end -%>
+  <p>
+    Neem voor meer informatie contact op met <a href="mailto:<%= Settler[:mail_approvals_from_address] %>"><%= Settler[:mail_approvals_from_address] %></a>.
+  </p>
+  <p>
+      Met vriendelijke groet,
+      <br/><br/>
+      Het <%= @host %> team
+  </p>
+</div>

@@ -1,0 +1,5 @@
+De volgende velden zijn ingevuld in het <%= @title -%>:
+
+<% @entered_fields.each do |id, label, value| %>
+	<%= label -%>: <%= value -%>
+<% end %>

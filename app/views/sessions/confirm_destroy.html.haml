@@ -1,0 +1,8 @@
+%h1= t 'sessions.confirm_logout'
+
+- form_tag session_path, :method => :delete do
+  %p= t 'sessions.really_logout?'
+
+  .formButtonCt
+    = submit_tag t('shared.y'), :class => 'left submit'
+    = link_to    t('shared.n'), :back, :class => 'right'

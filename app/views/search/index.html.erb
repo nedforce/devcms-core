@@ -1,0 +1,123 @@
+<% content_for :javascript do %>
+  <%= stylesheet_link_tag 'calendar_date_select/plain.css', :plugin => 'calendar_date_select' %>
+<% end %>
+
+<% content_for :javascript do %>
+  <%= javascript_include_tag 'calendar_date_select/calendar_date_select.js', :plugin => 'calendar_date_select' %>
+  <%= javascript_include_tag 'calendar_date_select/locale/nl.js',            :plugin => 'calendar_date_select' %>
+  <%= javascript_include_tag 'calendar_date_select/format_dutch.js',         :plugin => 'calendar_date_select' %>
+  <%= javascript_include_tag 'search.js',                                    :plugin => 'devcms-core'          %>
+  <% javascript_tag do %>
+  function show_advanced_search_options() {
+    $('advanced_search').removeClassName("hidden");
+    $('top_search_button').addClassName("hidden");
+    $('show_advanced_options').addClassName("hidden");
+
+  }
+  
+  function hide_advanced_search_options() {
+    $('advanced_search').addClassName("hidden");
+    $('top_search_button').removeClassName("hidden");
+    $('show_advanced_options').removeClassName("hidden");
+  }
+  document.observe('dom:loaded', function() { 
+    $('static_programme_and_project_selector').hide();
+    $('dynamic_programme_and_project_selectors').removeClassName("hidden");
+  });
+  <% end %>
+<% end %>
+
+<div class="regularPage searchPage">
+
+<% if @query %>
+  <h1><%=t 'search.search_results' -%></h1>
+<% else %>
+  <h1><%=t 'search.to_search' -%></h1>
+<% end %>
+
+  <% form_tag search_path(params[:search_engine]), :method => :get, :class => 'clearfix', :id => 'main_search_form' do %>
+    <div id="controls" class="clearfix">
+      <%= text_field_tag(:query, @query, :class => 'query') -%>
+      <p><%=t 'search.in' -%></p>
+      <%= render :partial => 'search_options'%>
+
+      <div id="top_search_button" <%= 'class=hidden' if params[:advanced] -%>>
+        <%= submit_tag(t('search.search'), :class => 'submit') -%>
+      </div>
+
+      <div id="show_advanced_options" <%= 'class=hidden' if params[:advanced] -%>>
+        <%= link_to_function(t('search.advanced_search'), 'show_advanced_search_options()', :href => search_path(params[:search_engine], :advanced => true)) %>
+        <%= image_tag 'blue_pointer_down.png', :alt => t('search.show_advanced_options') -%>
+      </div>
+    </div>
+
+    <div id="advanced_search" <%= 'class=hidden' unless params[:advanced] -%>>
+      <div class="search_field_wrapper clearfix">
+        <div class='search_description'><%=t 'search.for_zipcode' -%>: </div>
+        <div class='search_field'><%= text_field_tag(:zipcode, params[:zipcode], :size => 6) %></div>
+      </div>
+
+      <div class="search_field_wrapper clearfix">
+        <div class='search_description'><%=t 'search.in_period' -%>: </div>
+        <div class='search_field'>
+          <%= calendar_date_select_tag 'from', @from, :popup => :force, :image => 'icons/calendar.png' %>
+          <%= calendar_date_select_tag 'to',   @to,   :popup => :force, :image => 'icons/calendar.png' %>
+        </div>
+      </div>
+
+      <div id="static_programme_and_project_selector" class="search_field_wrapper clearfix">
+        <div class='search_description'><%=t 'search.in_category' -%>: </div>
+        <div class='search_field'>
+          <% categories = Category.root_categories.map do |category|
+              children = category.children.map { |cat| [ cat.name, cat.id ] }
+               [ 
+                   category.name, 
+                   children.unshift([t('search.all_in_programme'), category.id]) 
+               ] 
+             end %>
+          <%= select_tag 'category', grouped_options_for_select(categories,  @category.present? ? @category.id : nil, t('search.select_programme')) -%>
+       </div>
+      </div>
+
+    <% unless Category.root_categories.empty? %>
+      <div id="dynamic_programme_and_project_selectors" class='hidden'>
+          <div class="search_field_wrapper clearfix">
+            <div class='search_description'><%=t 'search.in_programme' -%>: </div>
+            <div class='search_field'>
+              <%= select_tag 'programme', options_for_select(Category.root_categories.map { |category| [ category.name, category.id ] }.unshift( [ t('search.select_programme'), nil ]),  @programme.present? ? @programme.id : nil) -%>
+           </div>
+          </div>
+
+          <div id="project_selection_field">
+            <%= render :partial => 'project_select' -%>
+          </div>
+      </div>
+    <% end %>
+
+      <div class="search_field_wrapper clearfix">
+        <div class='search_description'><%= I18n.t('search.sort_by') %>: </div>
+        <div class='search_field'>
+          <%= radio_button_tag('sort', 'relevance', params[:sort] != 'date') %> <%= I18n.t('search.relevance') %>
+          <%= radio_button_tag('sort', 'date', params[:sort] == 'date') %> <%= I18n.t('search.date') %>
+        </div>
+      </div>
+
+      <div class="clearfix">
+        <div id="bottom_search_button">
+        <%= submit_tag(I18n.t('search.search'), :class => 'submit', :name => 'advanced') -%>
+        </div>
+
+        <div id="hide_advanced_options">
+          <%= link_to_function t('search.simple_search'), 'hide_advanced_search_options()', :href => search_path(params[:search_engine]) %>
+          <%= image_tag 'blue_pointer_up.png', :alt => t('search.hide_advanced_options') -%>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+<% if @query %>
+  <%= render :partial => 'results' %>
+<% end %>
+
+</div>
+

@@ -1,0 +1,57 @@
+<% 
+  latest_news_items    ||= []
+  news_items_for_table ||= []
+  show_bread_crumbs    ||= false
+%>
+<div class="newsItems">
+  <%= content_tag(:p, I18n.t('news.no_news_items')) if news_items.blank? %>
+
+  <% if news_items.present? %>
+    <% latest_news_items.each do |news_item| %>
+    <div class="newsItem">
+      <h3><%= link_to h(news_item.title), aliased_or_delegated_path(news_item.node), :target => '_blank' -%></h3>
+
+      <% if show_bread_crumbs %>
+        <span class="bread_crumbs"><%= NewsArchive.human_name %>:</span> <%= bread_crumbs_track_for(news_item.news_archive.node, :include_root => false) %>
+      <% end %> 
+      <div class="metadata clearfix">
+        <p class="publicationDate"><%=t 'shared.published' -%>: <%= l(news_item.publication_start_date, :format => :long) -%></p>
+        <p class="lastUpdateDate"><%=t 'shared.last_updated' -%>: <%= l(news_item.updated_at, :format => :long) -%></p>
+      </div>
+
+      <div class="images clearfix">
+        <% if (image_node = news_item.node.children.reject { |c| c.content_class != Image }.first) -%>
+          <%=
+            link_to(
+              image_tag(content_node_path(image_node, :action => :thumbnail), :alt => h(image_node.content.title)),
+              '#',
+              {
+                :rel => "lightbox[#{news_item.node.id}]", :title => h(image_node.content.title),
+                :class => 'right'
+              }
+            )
+          %>
+        <% end -%>
+
+        <%= simple_format(h(news_item.preamble)) if news_item.preamble.present? -%>
+      </div>
+    </div>
+    <% end %>
+
+    <% unless news_items_for_table.empty? %>
+      <h3><%=t 'news.older_news_items' -%></h3>
+
+      <table cellpadding="0" cellspacing="0" id="items">
+        <thead><tr><th scope="col" class="gray"><%=t 'news.title' -%></th><th class="right_sized gray"><%=t 'news.date' -%></th></tr></thead>
+        <tbody>
+          <% news_items_for_table.each_with_index do |news_item, i| %>
+              <tr <% if i.even? %>class="alt"<% end %>>
+                <td><%=link_to h(truncate(news_item.title, :length => 54)), '#' -%></td>
+                <td class="right_sized gray"><%= l(news_item.publication_start_date, :format => :long) -%></td>
+              </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  <% end %>
+</div>

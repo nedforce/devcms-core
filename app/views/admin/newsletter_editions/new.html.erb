@@ -1,0 +1,93 @@
+<div id="right_panel_form"></div>
+
+<script type="text/javascript">
+//<![CDATA
+Ext.QuickTips.init();
+
+var newsletterEditionForm = new Ext.dvtr.ContentNodeFormPanel({
+    labelWidth: 110,
+    title: '<%= I18n.t("newsletters.add_edition_to") -%> \'<%= escape_javascript(@parent_node.content.content_title) -%>\'',
+    bodyStyle: 'padding:10px',
+    labelPad: 10,
+    border: false,
+    monitorValid: true,
+    defaults: {
+        //msgTarget: 'side'
+    }
+});
+
+<%= render :partial => 'fields' %>
+<%= render :partial => 'items_col' %>
+
+newsletterEditionForm.addButton({
+    text: '<%= I18n.t("shared.preview") -%>',
+    formBind: true,
+    handler: function(){
+		resetTinyMCE();
+        var items_array = new Array();
+        if(newsItemCol.items != null) newsItemCol.items.each(function (item, index, length) { items_array.push(item.id); });
+
+        var customParams = Ext.apply(
+            newsletterEditionForm.getForm().getValues(),{
+                parent_node_id: <%= @parent_node.id -%>,
+                commit_type: 'preview',
+                format: 'html'
+            }
+        );
+
+        if(items_array.length > 0) customParams = Ext.apply(customParams, { 'items[]': items_array });
+
+        rightPanel.load({
+            url: '<%= admin_newsletter_editions_url -%>',
+            method: 'POST',
+            params: Ext.ux.prepareParams(defaultParams, customParams),
+            callback: function(options, success, response) {
+                if (!success) {
+                    Ext.ux.alertResponseError(response, '<%= I18n.t("newsletters.edition_failed") -%>');
+                }
+            }
+        });
+    }// end handler
+});
+
+newsletterEditionForm.addButton({
+    text: '<%= I18n.t("shared.save") -%>',
+    formBind: true,
+    handler: function(){
+		resetTinyMCE();
+        var items_array = new Array();
+        if(newsItemCol.items != null) newsItemCol.items.each(function (item, index, length) { items_array.push(item.id); });
+
+        var customParams = Ext.apply(
+            newsletterEditionForm.getForm().getValues(),{
+                parent_node_id: <%= @parent_node.id -%>,
+                commit_type: 'save',
+                format: 'html'
+            }
+        );
+
+        if(items_array.length > 0) customParams = Ext.apply(customParams, { 'items[]': items_array });
+
+        rightPanel.load({
+            url: '<%= admin_newsletter_editions_url -%>',
+            method: 'POST',
+            params: Ext.ux.prepareParams(defaultParams, customParams),
+            callback: function(options, success, response) {
+                if (!success) {
+                    Ext.ux.alertResponseError(response, '<%= I18n.t("newsletters.edition_failed") -%>');
+                }
+            }
+        });
+    }// end handler
+});
+
+// Show validation errors and handle marking of invalid fields.
+var errors = <%= @newsletter_edition.errors.to_json %>;
+if (errors.length > 0) {
+    newsletterEditionForm.insertErrorMessages('<%= error_messages_for :newsletter_edition %>', '<%= @newsletter_edition.class.to_s.underscore -%>');
+}
+
+newsletterEditionForm.render('right_panel_form');
+
+//]]>
+</script>

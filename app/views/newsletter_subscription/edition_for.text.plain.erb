@@ -1,0 +1,20 @@
+<%= @newsletter_edition.title %>
+<% @newsletter_edition.title.size.times do %>=<% end %>
+
+<%= strip_tags(@newsletter_edition.body) %>
+  
+<% for item in @newsletter_edition.items %>
+  <%= item.title %>
+  <% item.title.size.times do %>-<% end %>
+
+  <% if item.respond_to?(:preamble) && item.preamble.present? -%>
+<%= strip_tags(item.preamble) %>
+  <% else -%>
+<%= strip_tags(item.body) %>
+  <% end -%>
+
+  Volledig artikel: 
+  <<%= aliased_or_delegated_url(item.node) %>>
+  
+
+<% end %>

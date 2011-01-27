@@ -1,0 +1,79 @@
+<div id="right_panel_form"></div>
+
+<script type="text/javascript">
+//<![CDATA
+Ext.QuickTips.init();
+
+var pollQuestionForm = new Ext.dvtr.ContentNodeFormPanel({
+  labelWidth: 140,
+  title: '<%= I18n.t("polls.add_question_to") %> \'<%=h escape_javascript(@parent_node.content.content_title)-%>\'.',
+  bodyStyle: 'padding:10px',
+  labelPad: 10,
+  border: false,
+  monitorValid: true,
+  defaults: {
+    msgTarget: 'side'
+  }
+});
+
+<%= render :partial => 'fields' -%>
+
+pollQuestionForm.addButton({
+  text: '<%= I18n.t("shared.preview") %>',
+  formBind: true,
+  handler: function(){
+    var customParams = Ext.apply(
+      pollQuestionForm.getForm().getValues(), {
+        parent_node_id: <%= @parent_node.id -%>,
+        commit_type: 'preview',
+        format: 'html'
+      }
+    );
+    rightPanel.load({
+      url: '<%= admin_poll_questions_url -%>',
+      method: 'POST',
+      params: Ext.ux.prepareParams(defaultParams, customParams),
+      callback: function(options, success, response){
+        if (!success) {
+          Ext.ux.alertResponseError(response, '<%= I18n.t("polls.question_failed") %>')
+        }
+      }
+    });
+  }// end handler
+});
+
+pollQuestionForm.addButton({
+  text: '<%= I18n.t("shared.save") %>',
+  formBind: true,
+  handler: function(){
+    var customParams = Ext.apply(
+      pollQuestionForm.getForm().getValues(), {
+        parent_node_id: <%= @parent_node.id -%>,
+        commit_type: 'save',
+        format: 'html'
+      }
+    );
+    rightPanel.load({
+      url: '<%= admin_poll_questions_url -%>',
+      method: 'POST',
+      params: Ext.ux.prepareParams(defaultParams, customParams),
+      callback: function(options, success, response){
+        if (!success) {
+          Ext.ux.alertResponseError(response, '<%= I18n.t("polls.question_failed") %>')
+        }
+      }
+    });
+  }// end handler
+});
+
+// Show validation errors and handle marking of invalid fields.
+var errors = <%= @poll_question.errors.to_json %>
+
+if (errors.length > 0) {
+  pollQuestionForm.insertErrorMessages('<%= error_messages_for :poll_question %>', '<%= @poll_question.class.to_s.underscore -%>')
+}
+
+pollQuestionForm.render('right_panel_form')
+
+//]]>
+</script>

@@ -1,0 +1,38 @@
+<div class="regularPage newsletterEdition">
+<% readspeaker do %>  
+  <%= readspeaker_button :class => 'topRightReadspeaker withIcon', :title => h(@newsletter_edition.title) %>
+  <h1><%=h @newsletter_edition.title -%></h1>
+
+  <%= render :partial => '/shared/metadata', :locals => { :publication_date => @newsletter_edition.publication_start_date, :last_update_date => @newsletter_edition.updated_at } %>
+
+  <div class="htmlField clearfix">
+    <%=w @newsletter_edition.body -%>
+  </div>
+
+  <% if @newsletter_edition.approved_items.empty? %>
+    <p><%=t 'newsletters.no_items' -%></p>
+  <% else %>
+    <h2><%=t 'newsletters.items' -%></h2>
+    <table cellpadding="0" cellspacing="0" id="items">
+    <thead> 
+      <tr>
+        <th scope="col" class="gray"><%=t 'newsletters.edition_title' -%></th>
+        <th scope="col" class="right gray"><%=t 'newsletters.type' -%></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @newsletter_edition.approved_items.each_with_index do |item, i| %>
+          <tr <% if i.even? %>class="alt"<% end %>>
+            <td><%=link_to_content_node h(item.content_title), item -%></td>
+            <td class="right type"><%= item.class.human_name -%></td>
+          </tr> 
+      <% end %>
+    </tbody>
+    </table>
+  <% end %>
+
+  <div class="buttons clearfix">
+    <%= print_button %>
+  </div>
+<% end %>
+</div>

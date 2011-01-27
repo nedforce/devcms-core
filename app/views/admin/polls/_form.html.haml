@@ -1,0 +1,12 @@
+= error_messages_for :poll
+
+= javascript_tag("document.getElementById('right_panel_body').scrollTop = 0;")
+
+= form.text_field :title,              :label => t('shared.title')
+= form.text_field :title_alternatives, :label => t('shared.title_alternatives')
+= form.check_box  :requires_login,     :label => Poll.human_attribute_name(:requires_login)
+
+= content_box_settings_for @poll, false, false
+= category_settings_for    @poll
+
+= commit_fields form

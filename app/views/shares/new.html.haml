@@ -1,0 +1,42 @@
+#reg_form
+  %h1= t('share.email_to_someone', :title => h(@page.title))
+
+  = error_messages_for :share, :header_message => t('share.sending_failed')
+
+  - form_for @share, :url => shares_path, :html => { :method => :post } do |f|
+    #reg_form_user_info.clearfix
+      = hidden_field_tag :node_id, @node.id
+
+      %fieldset#reg_form_fieldset
+
+        %legend= t 'share.legend_information'
+
+        #reg_form_info_msg_wrapper.formFieldCtNoLabel
+          = t 'users.login_info_message'
+
+        .formFieldCt
+          = f.label      :from_email_address, t('share.from_email_address')
+          = f.text_field :from_email_address, :class => 'textfield'
+
+        .formFieldCt
+          = f.label      :from_name, t('share.from_name')
+          = f.text_field :from_name, :class => 'textfield'
+
+        .formFieldCt
+          = f.label      :to_email_address, t('share.to_email_address')
+          = f.text_field :to_email_address, :class => 'textfield'
+
+        .formFieldCt
+          = f.label      :to_name, t('share.to_name')
+          = f.text_field :to_name, :class => 'textfield'
+
+        .formFieldCt
+          = f.label     :message, t('share.message')
+          = f.text_area :message, :class => 'textfield'
+
+        .formFieldCt
+          %label== Captcha
+          = recaptcha_tags
+
+      .formButtonCt
+        = submit_tag t('shared.submit'), :class => 'submit'

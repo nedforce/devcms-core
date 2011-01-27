@@ -1,0 +1,32 @@
+hc_question_1_option_1:
+  text: Best wel goed
+  number_of_votes: 0
+  poll_question: hc_question_1
+hc_question_1_option_2:
+  text: Best wel slecht
+  number_of_votes: 0
+  poll_question: hc_question_1
+hc_question_1_option_3:
+  text: Perfect
+  number_of_votes: 0
+  poll_question: hc_question_1
+hc_question_1_option_4:
+  text: Niet zo goed
+  number_of_votes: 0
+  poll_question: hc_question_1
+hc_question_2_option_1:
+  text: Ja
+  number_of_votes: 20001
+  poll_question: hc_question_2
+hc_question_2_option_2:
+  text: Nee
+  number_of_votes: 12123
+  poll_question: hc_question_2
+eco_question_option_1:
+  text: ja
+  number_of_votes: 1923
+  poll_question: eco_question_1
+eco_question_option_2:
+  text: Nee
+  number_of_votes: 1213
+  poll_question: eco_question_1

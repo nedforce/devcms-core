@@ -1,0 +1,10 @@
+help_form:
+  title: Help
+  email_address: testmedewerker@nedforce.nl
+  description_before_contact_fields: Hieronder staat een helpformuliertje.
+  description_after_contact_fields: Vergeet u niet het formulier hierboven in te vullen?
+info_form:
+  title: Info
+  email_address: testmedewerker@nedforce.nl
+  description_before_contact_fields: Stel hieronder uw vraag.
+  description_after_contact_fields: Vergeet niet op de submitknop te drukken.\

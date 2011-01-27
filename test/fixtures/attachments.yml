@@ -1,0 +1,33 @@
+besluit_attachment:
+  title: 02-03-01 - Besluit informatiebeheer
+  size: 56832
+  content_type: application/msword
+  filename: 020301Besluitinformatiebeheer.doc
+  db_file: besluit_db_file
+  created_at: <%= Time.parse('2002-03-01').to_s(:db) %>
+verslag_attachment:
+  title: 2008-04-09 VERSLAG Raadsvergadering
+  size: 129536
+  content_type: application/msword
+  filename: 20080409VERSLAGRaadsvergadering.doc
+  db_file: verslag_db_file
+  created_at: <%= Time.parse('2008-04-09').to_s(:db) %>
+hidden_attachment:
+  title: 2008-04-09 VERSLAG Raadsvergadering, maar dan prive
+  size: 129536
+  content_type: application/msword
+  filename: 20080409VERSLAGRaadsvergadering.doc
+  db_file: hidden_db_file
+  created_at: <%= Time.parse('2008-04-10').to_s(:db) %>
+no_extension_attachment:
+  title: I don't have an extension
+  size: 339968
+  content_type: application/vnd.ms-powerpoint
+  filename: Sloeproeien
+  db_file: no_extension_db_file
+nested_extension_attachment:
+  title: I have nested extensions
+  size: 65
+  content_type: application/msword
+  filename: snippet.css.txt
+  db_file: nested_extension_db_file

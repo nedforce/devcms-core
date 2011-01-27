@@ -1,0 +1,14 @@
+= error_messages_for :newsletter_archive
+
+= javascript_tag("document.getElementById('right_panel_body').scrollTop = 0;")
+
+= form.text_field   :title,                                         :label => t('shared.title')
+= form.text_field   :title_alternatives,                            :label => t('shared.title_alternatives')
+= form.text_field   :from_email_address,                            :label => t('newsletters.from_email_address')
+= form.select_field :header, newsletter_archive_options_for_select, :label => t('newsletters.header')
+= form.html_editor  :description,                                   :label => t('shared.description'), :height => 100
+
+= content_box_settings_for @newsletter_archive, false, false
+= category_settings_for    @newsletter_archive
+
+= commit_fields form

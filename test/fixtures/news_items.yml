@@ -1,0 +1,12 @@
+devcms_news_item:
+  title: Lekker weer!
+  preamble: Hier is het vandaag lekker weer...
+  body: Het zonnetje schijnt en de mensen zijn tevreden.
+
+devcms_news_item_voor_vorige_maand:
+  title: Lekker weer vorige maand!
+  body: Het zonnetje scheen en de mensen waren tevreden.
+
+devcms_news_item_voor_vorig_jaar:
+  title: Lekker weer vorig jaar!
+  body: Het zonnetje zou geschenen hebben en de mensen zouden tevreden zijn geweest.

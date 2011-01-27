@@ -1,0 +1,26 @@
+<div style="font-family: arial, sans-serif; font-size: 12px">
+  <p>
+      Beste <%=@user.login-%>,
+  </p>
+  <p>
+      U ontvangt deze e-mail omdat u zich hebt aangemeld
+      als gebruiker van <%= @host %>. Alvorens u gebruik kunt maken van de
+      functionaliteit op <%= @host %>, vragen wij u dit e-mailadres te verifiëren
+      door het volgende adres te openen in uw browser:
+      <br/><br/>
+
+      <% url = verification_user_url(@user,
+        :code => @user.verification_code, 
+        :only_path => false,
+        :protocol => (Settler[:ssl_enabled] ? 'https://' : 'http://'),
+        :host => @host
+      ) %>
+
+      <%= link_to url, url %>
+  </p>
+  <p>
+      Met vriendelijke groet,
+      <br/><br/>
+      Het <%= @host %> team
+  </p>
+</div>

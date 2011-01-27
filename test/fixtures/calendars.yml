@@ -1,0 +1,11 @@
+events_calendar:
+  title: Evenementenkalender
+  description: Dit is de kalender voor evenementen in de omgeving.
+
+meetings_calendar:
+  title: Vergaderingskalender
+  description: Dit is de kalender voor vergadering van het gemeentebestuur.
+
+yet_another_calendar:
+  title: Yet another calendar
+  description: Boring!

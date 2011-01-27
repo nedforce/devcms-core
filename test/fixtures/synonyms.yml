@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+afval_vuilnis:
+  original: afval
+  name: vuilnis
+  weight: 0.25
+  node: root_section_node
+
+afval_huisvuil:
+  original: afval
+  name: huisvuil
+  weight: 0.25
+  node: sub_site_section_node

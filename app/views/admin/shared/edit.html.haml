@@ -1,0 +1,5 @@
+.right_panel_content
+  %h1== #{t 'edit', :scope => controller.controller_name} '#{h object.title}'
+
+  - admin_remote_form_for object, :url => url_for(:controller => controller.controller_name, :action => :update, :format => 'html'), :update => 'right_panel_body' do |f|
+    = render :partial => 'form', :object => f

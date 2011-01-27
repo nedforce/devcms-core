@@ -1,0 +1,11 @@
+- publication_date ||= nil
+- last_update_date ||= nil
+
+.metadata.clearfix
+  - if publication_date.present?
+    %p.publicationDate
+      == #{t 'shared.published'}: #{l publication_date, :format => :long}
+
+  - if last_update_date.present?
+    %p.lastUpdateDate
+      == #{t 'shared.last_updated'}: #{l last_update_date, :format => :long}

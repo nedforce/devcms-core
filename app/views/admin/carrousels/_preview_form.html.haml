@@ -1,0 +1,12 @@
+= form.hidden_field :title
+= form.hidden_field :display_time_in_minutes
+
+- @item_ids.each do |item_id|
+  = hidden_field_tag('items[]', item_id, :id => "items_#{item_id}")
+
+- @carrousel_items.each do |item_id, excerpt|
+  = hidden_field_tag("carrousel_items[#{item_id}]", excerpt, :id => "carrousel_items_#{item_id}")
+
+= category_hidden_fields form
+
+= approval_field

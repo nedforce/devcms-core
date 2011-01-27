@@ -1,0 +1,17 @@
+- content = node.content
+- recent_weblogs = content.find_last_updated_weblogs(current_user, node.content_box_number_of_items)
+
+- unless recent_weblogs.empty?
+  %p= t 'weblogs.recent_weblogs'
+
+  %ul
+    - recent_weblogs.each do |weblog|
+      %li.clearfix.hover
+        .date
+          = weblog.last_updated_at(current_user).to_s :short
+        .link
+          = link_to_content_node h(weblog.title), weblog
+
+  = read_more_link(content, t('shared.more_weblogs'))
+- else
+  %p= t 'weblogs.no_weblogs_found'

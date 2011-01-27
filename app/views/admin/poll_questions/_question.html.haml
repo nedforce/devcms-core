@@ -1,0 +1,19 @@
+#poll_question_main
+  .question
+    = h question.question
+
+  - form_tag '#' do
+    .answers
+      - question.poll_options.each do |o|
+        .poll_option
+          - el_id = "option_#{o.id}"
+          = radio_button_tag 'poll_option_id', o.id, false, :id => el_id
+          %label{ :for => el_id }
+            = h o.text
+
+    .button.clearfix
+      = submit_tag t('polls.vote'), :disabled => true
+
+      .view_results
+        - blue_arrow_button t('polls.view_results') do
+          = link_to t('polls.view_results'), '#'

@@ -1,0 +1,162 @@
+<script type="text/javascript">
+//<![CDATA[
+
+Ext.onReady(function(){
+    perPage = 25
+
+    Ext.QuickTips.init();
+
+    // shorthand alias
+    var fm = Ext.form;
+
+    // the column model has information about grid columns
+    // dataIndex maps the column to the specific data field in
+    // the data store (created below)
+    var cm = new Ext.grid.ColumnModel([{
+           id: 'id',
+           header: "<%= I18n.t('comments.user') %>",
+           dataIndex: 'user_name',
+           width: 120
+        },{
+           header: "<%= I18n.t('comments.subject') %>",
+           dataIndex: 'subject',
+           width: 300
+        },{
+           id: 'comment',
+           header: "<%= I18n.t('comments.comment') %>",
+           dataIndex: 'comment',
+           editor: new fm.TextField()
+        },{
+           header: "<%= I18n.t('comments.updated_at') %>",
+           dataIndex: 'updated_at',
+           width: 150
+        }
+    ]);
+
+    // by default columns are sortable
+    cm.defaultSortable = true;
+
+    // create the Data Store
+    var store = new Ext.data.Store({
+        proxy: new Ext.data.HttpProxy({
+          url: '/admin/comments.json',
+          method: 'GET'
+        }),
+
+        remoteSort: true,
+
+        reader: new Ext.data.JsonReader({
+          root: 'comments',
+          id: 'id',
+          totalProperty: 'total_count'
+        },
+          [ 'user_name', 'subject', 'comment', 'updated_at' ]
+        ),
+
+        baseParams: {comment_type: '<%= params[:comment_type] -%>'},
+        autoLoad: {params: {start: 0, limit: perPage }}
+    });
+
+    store.setDefaultSort('updated_at', 'DESC');
+
+    // create the grid
+    grid = new Ext.grid.EditorGridPanel({
+        store: store,
+        cm: cm,
+        stripeRows: true,
+        autoExpandColumn: 'comment',
+        clicksToEdit: 2,
+        margins: '0 5 5 5',
+        selModel: new Ext.grid.RowSelectionModel({singleSelect:false}),
+        //viewConfig: { autoFill: true },
+        bbar: new Ext.PagingToolbar({
+            store: store,
+            pageSize: perPage,
+            displayInfo: true,
+            displayMsg: '<%= I18n.t("comments.count_msg") %>',
+            emptyMsg: '<%= I18n.t("comments.empty_msg") %>',
+            afterPageText: '<%= I18n.t("comments.of_page") %>',
+            beforePageText: '<%= I18n.t("comments.page") %>'
+        }),
+        tbar: [
+              {
+                  text: '<%= I18n.t("comments.show_weblog_comments") %>',
+                  tooltip: '<%= I18n.t("comments.show_weblog_comments_tt") %>',
+                  handler: function(){ store.baseParams = {comment_type: 'comment' }; store.load({params: {start: 0, limit: perPage }}); },
+                  iconCls: 'weblog_post_icon'
+              },
+              {
+                  text: '<%= I18n.t("comments.show_forum_posts") %>',
+                  tooltip: '<%= I18n.t("comments.show_forum_posts_tt") %>',
+                  handler: function(){ store.baseParams = {comment_type: 'forum_post' }; store.load({params: {start: 0, limit: perPage }}); },
+                  iconCls: 'forum_post_icon'
+              },
+              {
+                  text: '<%= I18n.t("comments.delete") %>',
+                  tooltip: '<%= I18n.t("comments.del_tooltip") %>',
+                  handler: handleDelete,
+                  iconCls: 'menu_item_delete'
+              }
+          ],
+        listeners: {
+            'afteredit': handleEdit
+        }
+    });
+
+    function handleDelete(deleteEvent) {
+        var selectedItems = grid.selModel.getSelections();
+        if (selectedItems.length > 0)
+        {
+            Ext.MessageBox.confirm('<%= I18n.t("comments.message") %>','<%= I18n.t("comments.confirm_deletion") %>', deleteRecord);
+        }
+        else
+        {
+            Ext.MessageBox.alert('<%= I18n.t("comments.message") %>','<%= I18n.t("comments.select_one") %>');
+        }
+    }
+
+    function deleteRecord(button) {
+        if (button == 'yes')
+        {
+            var selectedRows = grid.selModel.getSelections();
+            selectedRows.each(function(item) {
+
+                Ext.Ajax.request({
+                    url: 'comments/' + item.id + '.json',
+                    method: 'POST',
+
+                    params: "_method=delete&authenticity_token=<%= form_authenticity_token -%>&comment_type=" + store.baseParams.comment_type,
+                    callback: function(options, success, response){
+                      if(!success){
+                          Ext.ux.alertResponseError(response)
+                      }else{
+                          store.reload();
+                      }
+                    }
+                });
+            });
+        }
+    };
+
+    function handleEdit(editEvent) {
+        Ext.Ajax.request({
+            url: 'comments/' + editEvent.record.id + '.json',
+            method: 'POST',
+
+            params: "_method=put&authenticity_token=<%= form_authenticity_token -%>&comment_type=" + store.baseParams.comment_type +
+                    "&comment[" + editEvent.field + "]=" + editEvent.value,
+
+            failure: function(response,options) {
+                Ext.MessageBox.alert('<%= I18n.t("comments.error") %>','<%= I18n.t("comments.could_not_save") %>');
+            },
+            success: function(response,options) {
+                store.commitChanges();
+            }
+        });
+    }
+
+    initViewport(grid);
+});
+
+//]]>
+</script>

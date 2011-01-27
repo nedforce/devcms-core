@@ -1,0 +1,154 @@
+settings: &settings
+  display_videos_as_images:
+    alt: Show Youtube video screenshot instead of object
+    value: true
+    editable: true
+    typecast: boolean    
+  error_page_404:
+    alt: The 404 error page (URL alias)
+    value: '404'
+    editable: true
+    validations:
+      presence: true       
+  error_page_500:
+    alt: The 500 error page (URL alias)
+    value: '500'
+    editable: true
+    validations:
+      presence: true       
+  google_analytics_key:
+    alt: Google analytics key
+    value: 'UA-xxxxxxx-x'
+    editable: true    
+    validations:
+      format: !ruby/regexp "/^(|UA-\d*-\d)$/i"        
+  host:
+    alt: The hostname of your site
+    value: 'localhost:3000'    
+    validations:
+      presence: true       
+  mail_from_address:
+    alt: The default FROM e-mail address for automatically generated e-mails
+    value: 'Your website <no-reply@localhost>'
+    editable: true
+    validations:
+      presence: true       
+  mail_approvals_from_address:
+    alt: The FROM e-mail address for approval e-mails sent to editors
+    value: 'redaction@localhost'
+    editable: true    
+    validations:
+      presence: true       
+  newsletter_archive_logo:
+    alt: 'An image to your logo, which will be used in newsletters'
+    value: 'logo.png'
+    editable: true    
+  newsletter_archive_header_default:
+    alt: The image that will be used as the default header for newsletters
+    value: 'balk_standaard.png'
+    editable: true    
+  newsletter_archive_header_prefix:
+    alt: 'The prefix for newsletter header images found in /images/newsletter/'
+    value: 'balk' 
+    editable: true
+  recaptcha_public_key:
+    alt: Recaptcha public key
+    value: 'public-key'
+    editable: true
+  recaptcha_private_key:
+    alt: Recaptcha private key
+    value: 'private-key'
+    editable: true
+  search_enabled_engines:
+    alt: Enabled search engines
+    value: ['ferret']
+  search_default_engine: 
+    alt: Default search engine
+    value: 'ferret'
+    editable: true
+    validations:
+      inclusion: [ 'ferret' , 'luminis' ]     
+  search_default_page_size:
+    alt: Default page size for search results
+    value: 5
+    editable: true
+    typecast: integer
+  search_ferret_synonym_weight:
+    alt: 'Ferret setting: weight given to synonyms'
+    value: 0.25
+    editable: true
+    typecast: float    
+  search_ferret_proximity:
+    alt: 'Ferret setting: proximity value for fuzzy search'
+    value: 0.8
+    editable: true
+    typecast: float      
+  search_luminis_connection_timeout:
+    alt: The timeout in seconds for a request sent to Luminis
+    value: 10
+    editable: true
+    typecast: integer    
+  search_luminis_crawler_ips:
+    alt: 'Luminis crawler IPs, which will be granted access to hidden nodes'
+    value: ['111.222.333.444']
+  search_luminis_solr_base_url:
+    alt: The SOLR base URL
+    value: 'http://localhost/solr/'
+    editable: true
+  search_luminis_date_boost:
+    alt: 'The date boost, defaults to 1 year (in seconds)'
+    value: <%= 1.year.to_i %>
+    editable: true   
+    typecast: integer     
+  search_luminis_title_boost:
+    alt: The boost value for the title of a page
+    value: 100
+    editable: true
+    typecast: integer    
+  search_luminis_synonyms_boost:
+    alt: The boost value for synonyms
+    value: 100
+    editable: true
+    typecast: integer    
+  site_name:
+    alt: The name of your website
+    value: 'Your Website'
+    editable: true
+    validations:
+      presence: true       
+  ssl_enabled:
+    alt: Enable SSL support
+    value: true
+    editable: true 
+    typecast: boolean         
+  user_verify:
+    alt: Verify the e-mail address of new users by sending an activation e-mail?
+    value: true
+    editable: true   
+    typecast: boolean     
+  user_invite_only: &invite_only
+    alt: Only allow new users through invitations?
+    value: false
+    editable: true
+    typecast: boolean    
+  user_allow_export:
+    alt: Support user export?
+    value: true      
+  user_allow_invite:
+    alt: Support user invites?
+    value: true
+        
+development:
+  <<: *settings
+  
+test:
+  <<: *settings
+  user_invite_only:
+    <<: *invite_only    
+    value: true    
+
+production:
+  <<: *settings
+    
+acceptance:
+  <<: *settings

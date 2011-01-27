@@ -1,0 +1,2 @@
+- content = node.content
+= link_to_unless(content.url.blank?, image_tag(aliased_or_delegated_path(node, :action => 'sidebox'), :alt => h(content.title)), h(content.url), :title => "#{t 'images.goto'} #{h content.url}", :class => 'clearfix')

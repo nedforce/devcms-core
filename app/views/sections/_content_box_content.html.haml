@@ -1,0 +1,13 @@
+- unless node.content.description.empty?
+  .description
+    = strip_tags(truncate(node.content.description, :length => 200))
+
+- children = node.accessible_content_children(:for => current_user, :limit => node.content_box_number_of_items)
+
+- unless children.empty?
+  %ul
+    - children.each do |content_node|
+      %li.hover
+        = link_to_content_node h(content_node.content_title), content_node
+
+= read_more_link(node.content)

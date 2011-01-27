@@ -1,0 +1,2 @@
+%h1= h @image.title
+= image_tag(aliased_or_delegated_path(@image.node, :action => 'full'), :alt => h(@image.title))

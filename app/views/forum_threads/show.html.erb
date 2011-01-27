@@ -1,0 +1,77 @@
+<%= bread_crumbs_for(@forum_thread.forum_topic.node, :include_root => false, :minimum_crumbs => 2) -%>
+
+<div class="regularPage forumThread">
+  <h1 <%= "class='closed'" if @forum_thread.closed? -%>><span class="prefix"><%=t 'forums.forum_thread' -%></span><%=h @forum_thread.title -%></h1>
+
+  <p class="forumThreadDetails"><%= "#{t 'forums.created_on'} #{l @forum_thread.created_at, :format => :long} #{t 'forums.by'} <span class='userLogin'>#{truncate(h(@forum_thread.user.screen_name), :length => 12)}</span>, #{@forum_thread.number_of_replies} #{t (@forum_thread.number_of_replies == 1) ? 'forums.forum_post' : 'forums.forum_posts'}" -%></p>
+
+  <div class="htmlField forumThreadBody"><%=w @forum_thread.start_post.body -%></div>
+
+  <% if logged_in? && (@forum_thread.is_owned_by_user?(current_user) || current_user.has_role?('admin')) %>
+  <div class="clearfix buttons">
+    <% edit_button t('forums.edit_thread') do %>
+      <%= link_to t('forums.edit_thread'), edit_forum_topic_forum_thread_path(@forum_topic, @forum_thread) -%>
+    <% end %>
+  <% if current_user.has_role?('admin') %>
+    <div class="locking">
+      <% if @forum_thread.closed? %>
+        <%= image_tag('icons/unlock.png', :class => 'icon', :alt => t('forums.open_lock'), :title => t('forums.unlock_thread')) -%>
+        <%= link_to t('forums.unlock_thread'), open_forum_topic_forum_thread_path(@forum_topic, @forum_thread), :method => :put, :class => 'unlock' -%>
+      <% else %>
+        <%= image_tag('icons/lock.png', :class => 'icon', :alt => t('forums.closed_lock'), :title => t('forums.lock_thread')) -%>
+        <%= link_to t('forums.lock_thread'), close_forum_topic_forum_thread_path(@forum_topic, @forum_thread), :method => :put, :class => 'lock' -%>
+      <% end %>
+    </div>
+  <% end %>
+  <% delete_button t('forums.delete_thread') do %>
+    <%= link_to t('forums.delete_thread'), forum_topic_forum_thread_path(@forum_topic, @forum_thread), :method => :delete -%>
+  <% end %>
+  </div>
+  <% end %>
+
+  <div class="forumPostsOverview clearfix">
+    <div class="clearfix">
+      <h2><%= t('forums.forum_posts').titleize -%></h2>
+      <% if logged_in? && !@forum_thread.closed? %>
+        <% right_new_button t('forums.new_post') do %>
+          <%= link_to t('forums.new_post'), new_forum_topic_forum_thread_forum_post_path(@forum_topic, @forum_thread) -%>
+        <% end %>
+      <% end %>
+    </div>
+  <% if @replies.empty? %>
+    <p><%=t 'forums.no_posts_found' -%></p>
+  <% else %>
+    <div class="forumPosts">
+    <% @replies.each do |reply| %>
+      <div class="<%= cycle('oddForumPost', 'evenForumPost') -%> clearfix" id="reply<%= reply.id.to_s -%>">
+        <p class="forumPostDetails"><span class="userLogin"><%= truncate(h(reply.user_name), :length => 12) -%></span> <%= "#{I18n.t('forums.at_time')} #{l(reply.created_at, :format => :long)}" -%></p>
+        <div class="htmlField forumPostBody"><%=w reply.body -%></div>
+
+        <% if logged_in? && (reply.is_owned_by_user?(current_user) || current_user.has_role?('admin')) %>
+          <div class="clearfix buttons">
+            <% delete_button t('forums.delete_post') do %>
+              <%= link_to t('forums.delete_post'), forum_topic_forum_thread_forum_post_path(@forum_topic, @forum_thread, reply), :method => :delete -%>
+            <% end %>
+            <% edit_button t('forums.edit_post') do %>
+              <%= link_to t('forums.edit_post'), edit_forum_topic_forum_thread_forum_post_path(@forum_topic, @forum_thread, reply) -%>
+            <% end %>
+          </div>
+        <% end %>
+
+      </div>
+    <% end %>
+    </div>
+  <% end %>
+  </div>
+  <% if logged_in? %>
+  <div class="clearfix">
+    <% unless @replies.empty? || @forum_thread.closed? %>
+      <% right_new_button do %>
+        <%= link_to t('forums.new_post'), new_forum_topic_forum_thread_forum_post_path(@forum_topic, @forum_thread) -%>
+      <% end %>
+    <% end %>
+  </div>
+  <% else %>
+  <p class="signup"><%=t 'forums.signup_required_to_post' -%></p>
+  <% end %>
+</div>

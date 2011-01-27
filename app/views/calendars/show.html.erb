@@ -1,0 +1,81 @@
+<% content_for :atom_feed do %>
+  <link rel="alternate" type="application/atom+xml" href="<%= calendars_url(:format => 'atom') -%>" title="<%=t 'calendars.all_calendar_items' -%>" />
+  <% if CombinedCalendar.count > 0 %>
+  <link rel="alternate" type="application/atom+xml" href="<%= tomorrow_combined_calendar_url(:id => CombinedCalendar.first.id, :format => 'atom') -%>" title="<%=t 'calendars.tomorrow' -%>" />
+  <% end %>
+<% end %>
+
+<div id="calendarMain">
+  <!-- Header contains H1, description and calendarElement !-->
+  <div class="header clearfix">
+  <% readspeaker do %>
+    <%= readspeaker_button(:class => 'topRightReadspeaker', :title => h(@calendar.title)) %>
+    <h1><%=h @calendar.title -%></h1>
+
+    <%= render :partial => '/shared/metadata', :locals => { :last_update_date => @calendar.last_updated_at(current_user) } %>
+
+    <div class="headerWrapper"> <!-- Wraps Header and description !-->
+      <% if @calendar.description %>
+        <div class="description"><%=w @calendar.description -%></div>
+      <% end %>
+    </div> <!-- End of HeaderWrapper !-->
+  <% end %>
+    <div class="calendarWrapper"><!-- Wraps calendarContainer and montInfo !-->
+      <div class="calendarContainer">
+        <% date = Date.parse(params[:date]) rescue Date.today %>
+        <%= render :partial => '/calendars/calendar', :locals => { :calendar => @calendar, :date => date, :mainpage => true } %>
+      </div> <!-- End of calendarContainer -->
+      <div class="monthInfo clearfix">
+        <% if @calendar.calendar_items.exists_before_date?(date, nil) %>
+          <%= link_to_content_node(image_tag('arrow_blue_reverse.png', :alt => t('calendars.previous_month'), :class => 'left'), @calendar, :date => (date << 1).start_of_month.to_s) -%>
+        <% end %>
+        <% if @calendar.calendar_items.exists_after_date?(date, nil) %>
+          <%= link_to_content_node(image_tag('arrow_blue.png', :alt => t('calendars.next_month'), :class => 'right'), @calendar, :date => (date >> 1).start_of_month.to_s)  -%>
+        <% end %>
+        <span class="monthName"><%= "#{t('date.month_names')[date.month]} #{date.year}" -%></span>
+      </div>
+    </div> <!-- End of calendarWrapper !-->
+  </div> <!-- End of header !--> 
+
+  <!-- Days of a week and Calendar items for those days !-->
+  <div class="calendarWeek">
+  <% date.start_of_week.upto(date.end_of_week) do |day| %>
+    <% @day_items = @calendar_items[day.mday] %>
+
+    <% if @day_items.present? %>
+      <div class="calendarDay"> <!-- A day in a week with calendar items !-->
+        <h2><%= "#{day.mday} #{t('date.month_names')[day.month]}" -%></h2>
+        <div class="dayName"><%= "#{t('date.day_names')[day.wday].titleize}" %></div>
+
+        <!-- A calendarItems for this day !-->
+        <div class="calendarItems">
+        <% @day_items.each do |day_item| %>
+          <% readspeaker("#{day.mday}_#{day_item.id}") do |rid| %>
+            <div class="calendarItem">
+              <div class="metaInfo">
+                <div class="time">
+                  <%=t 'calendars.from' -%> <%= day_item.start_time.strftime("%H:%M") -%>
+                  <%=t 'calendars.till' -%> <%= day_item.end_time.strftime("%H:%M")   -%>
+                </div>
+              </div> <!-- End of metaInfo !-->
+              <div class="title clearfix">
+                <% if day_item.is_a? Meeting %>
+                  <%= image_tag 'icons/meeting.png', :class => 'icon', :alt => h(day_item.title) -%>
+                  <%= link_to_content_node h(day_item.title), day_item, {}, :class => 'meeting' -%>
+                <% else %>
+                  <%= image_tag 'icons/calendar_item.png', :class => 'icon', :alt => h(day_item.title) -%>
+                  <%= link_to_content_node h(day_item.title), day_item, {}, :class => 'event' -%>
+                <% end %>
+              </div>
+              <div class="buttons clearfix">
+                <%= readspeaker_button(:rid => rid) %>
+              </div>
+            </div><!-- End of calendarItem !-->
+          <% end %>
+        <% end %>
+        </div><!-- End of calendarItems !-->
+      </div><!-- End of calendarDay !-->
+    <% end %>
+  <% end %>
+  </div>
+</div><!-- End of calendarMain !-->

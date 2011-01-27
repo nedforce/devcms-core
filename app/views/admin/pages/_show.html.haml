@@ -1,0 +1,21 @@
+.regularPage
+  %h2= h record.title
+
+  .metadata.clearfix
+    - if record.publication_start_date.present?
+      %p.publicationDate
+        == #{t 'shared.published'}: #{l record.publication_start_date, :format => :long}
+    - unless record.new_record?
+      %p.lastUpdateDate
+        == #{t 'shared.last_updated'}: #{l record.updated_at, :format => :long}
+
+  .content
+    - if record.preamble
+      = content_tag(:div, simple_format(white_list_preamble(record.preamble)), :class => 'preamble')
+
+    = render_images
+
+    .htmlField
+      = process_video_tags(record.body)
+
+    = render_attachments

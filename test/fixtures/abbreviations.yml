@@ -1,0 +1,9 @@
+wmo:
+  abbr: WMO
+  definition: Wet Maatschappelijke Ondersteuning
+  node: root_section_node
+
+pgb:
+  abbr: pgb
+  definition: persoonsgebonden budget
+  node: sub_site_section_node

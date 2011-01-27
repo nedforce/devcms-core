@@ -1,0 +1,7 @@
+- readspeaker do
+  %h1= h @poll_question.poll.title
+
+  = render :partial => 'results', :locals => { :question => @poll_question }
+
+  .buttons.clearfix
+    = readspeaker_button

@@ -1,0 +1,26 @@
+.regularPage.forum
+  %h1= h @forum.title
+
+  - if @forum.description
+    .htmlField.forumDescription
+      = w @forum.description
+
+  .forumTopicsOverview
+    %h2= t 'forums.forum_topics'
+
+    - if @forum_topics.empty?
+      %p= t 'forums.no_topics'
+
+    - else
+      .forumTopics
+        - @forum_topics.each do |forum_topic|
+          %div{ :class => "#{cycle('oddForumTopic', 'evenForumTopic')} clearfix" }
+            %h3= link_to_content_node h(forum_topic.title), forum_topic
+
+            .forumTopicDescription
+              = truncate(strip_tags(forum_topic.description), :length => 80)
+
+            .forumTopicDetails
+              %p== #{t 'forums.number_of_threads'}: #{forum_topic.forum_threads.count}
+              - unless forum_topic.forum_threads.empty? || forum_topic.last_update_date.nil?
+                %p== #{t 'forums.last_reply'}: #{l forum_topic.last_update_date, :format => :long}

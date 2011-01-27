@@ -1,0 +1,10 @@
+- unless @contact_form.deleted_contact_form_fields && @contact_form.deleted_contact_form_fields[contact_form_field.class].include?(contact_form_field.id.to_s)
+  %div{ :class => "contact_form contact_form_field row #{cycle "even", "odd"}", :id => "#{contact_form_field.class.name.tableize}_#{contact_form_field.to_param}" }
+    %h4= contact_form_field.class.localized_model_name
+
+    - contact_form_field.attributes.each_pair do |attr, value|
+      - if [:label, :obligatory, :field_type, :default_value, :position].include?(attr.to_sym)
+        %div{ :class => "#{attr}" }
+          %span.label>= contact_form_field.class.human_attribute_name(attr)
+          \:
+          \#{value}

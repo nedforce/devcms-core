@@ -1,0 +1,16 @@
+- readspeaker do
+  = readspeaker_button :class => 'topRightReadspeaker'
+
+  %h1= h @calendar_item.calendar.title
+
+  #calendarItemMain
+    %h2= h @calendar_item.title
+
+    = render :partial => 'event', :locals => { :event => @calendar_item }
+
+    .buttons.clearfix
+      = print_button
+
+- if @calendar_item.commentable?
+  #comment_container
+    = render :partial => '/shared/comments', :locals => { :commentable => @node }

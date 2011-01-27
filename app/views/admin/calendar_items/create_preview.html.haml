@@ -1,0 +1,14 @@
+= render :partial => '/admin/calendar_items/show', :locals => { :record => @calendar_item }
+
+.forms
+  - remote_form_for @calendar_item, :method => :get, :url => @calendar_item.is_a?(Meeting) ? new_admin_meeting_path(:format => 'html', :parent_node_id => @parent_node.id) : new_admin_calendar_item_path(:format => 'html', :parent_node_id => @parent_node.id), :update => 'right_panel_body' do |form|
+    = render :partial => '/admin/calendar_items/preview_form', :locals => { :form => form }
+    = form.submit t('shared.edit')
+
+  - remote_form_for @calendar_item, :url => @calendar_item.is_a?(Meeting) ? admin_meetings_path(:format => 'html', :parent_node_id => @parent_node.id) :  admin_calendar_items_path(:format => 'html', :parent_node_id => @parent_node.id), :update => 'right_panel_body' do |form|
+    = render :partial => '/admin/calendar_items/preview_form', :locals => { :form => form }
+
+    = form.submit t('shared.save')
+    = form.submit(t(@calendar_item.is_a?(Meeting) ? 'calendars.save_and_continue_meeting' : 'calendars.save_and_continue_calendar_item'), :onclick => "$('continue').setValue('true'); return true;")
+
+    = hidden_field_tag(:continue)

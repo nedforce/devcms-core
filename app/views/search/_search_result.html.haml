@@ -1,0 +1,46 @@
+- if search_result.node
+  - node = search_result.node
+  - if node.content_type == 'Product' && node.content.external_url.present?
+    - url = node.content.external_url
+  - else
+    - url = aliased_or_delegated_path(node, :type => :url)
+- else
+  - url = search_result.url
+
+.search_result
+  .clearfix.header_wrapper
+    %h2= highlighted_title_link(search_result, url)
+
+    - if search_result.tstamp
+      %span.update_date
+        == #{t 'search.modified_at'}: #{l(search_result.tstamp.to_date, :format => :long)}
+
+  .search_content
+    = highlighted_content(search_result)
+
+  .metadata
+    %table{ :cellpadding => "0", :cellspacing => "0" }
+      %tr
+        %th= t 'search.path'
+        %td{ :colspan => "3" }
+          = node ? bread_crumbs_track_for(node) : link_to(url, url)
+
+      - if node && node.last_set_category
+        %tr
+          %th= t 'search.theme'
+          %td{ :colspan => "3" }
+            = print_category(node.last_set_category)
+
+      %tr
+        %th= t 'search.type'
+        %td.type
+          = print_content_type(node.try(:content_type))
+
+        - if search_result.score.present?
+          %th= t 'search.relevance'
+          %td.relevance
+            .relevance_wrapper.clearfix
+              .container
+                .bar{ :style => "width: #{(100 * search_result.score).to_i rescue 0}px;" }
+              .percentage
+                = number_to_percentage(100 * search_result.score, :precision => 1, :separator => '.')

@@ -1,0 +1,53 @@
+<%= contact_field_num %>
+<% unless @contact_form.deleted_contact_form_fields && @contact_form.deleted_contact_form_fields.include?(contact_form_field.id.to_s) %>
+  <div class="contact_form contact_form_field row ContactFormField">
+        <div class="buttons">
+        <% if contact_form_field.new_record? %>
+          <%= link_to_function t('permits.close'), "$(this.parentNode.parentNode).remove();", :class => 'close' %>
+        <% else %>
+          <%= link_to_function t('permits.remove') do |page|
+              page << "$(this.parentNode.parentNode).hide();"
+              page << "$('delete_contact_form_field_#{contact_form_field.id}').value = '1';"
+            end %>
+        <% end %>
+        </div>
+        <%= error_messages_for contact_form_field.class.name.downcase, :object => contact_form_field %>
+  <% contact_form_field.attributes.each_pair do |attr, value| %>
+    <% if [:label, :obligatory, :field_type, :default_value, :position].include?(attr.to_sym) %>
+      <div class="<%= attr -%> ">
+        <span class="label"><%= contact_form_field.class.human_attribute_name(attr) -%></span>
+        <%=
+        html = case attr.to_sym
+        when :label
+          text_field_tag("contact_form[contact_form_fields_before_save][][#{attr}]", value)
+        when :obligatory
+          check_box_tag("contact_form[contact_form_fields_before_save][][#{attr}]", '1', value)
+        when :field_type
+          select_tag("contact_form[contact_form_fields_before_save][][#{attr}]",
+                     options_for_select({
+                      t('contact_forms.textfield') => 'textfield',
+                      t('contact_forms.textarea')  => 'textarea',
+                      t('contact_forms.dropdown')  => 'dropdown'
+                     }, value))
+        when :default_value
+          text_field_tag("contact_form[contact_form_fields_before_save][][#{attr}]", value)
+        when :position
+          text_field_tag("contact_form[contact_form_fields_before_save][][#{attr}]", value)
+        end
+        html = content_tag(:div, html, :class => 'fieldWithErrors') if contact_form_field.errors.on(attr)
+        html
+      %>
+      </div>
+    <% end %>
+  <% end %>
+  <% unless contact_form_field.new_record? %>
+    <%= hidden_field_tag("contact_form[contact_form_fields_before_save][][id]", contact_form_field.id) %>
+    <%= hidden_field_tag("contact_form[contact_form_fields_before_save][][delete]", '0', :id => "delete_contact_form_field_#{contact_form_field.id}") %>
+  <% end %>
+  </div>
+<% else %>
+  <% unless contact_form_field.new_record? %>
+    <%= hidden_field_tag("contact_form[contact_form_fields_before_save][][id]", contact_form_field.id) %>
+    <%= hidden_field_tag("contact_form[contact_form_fields_before_save][][delete]", '1', :id => "delete_contact_form_field_#{contact_form_field.id}") %>
+  <% end %>
+<% end %>

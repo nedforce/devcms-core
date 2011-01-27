@@ -1,0 +1,91 @@
+about_page:
+  title: About
+  preamble: This page was created from test fixture data.
+  body: This page was created from test fixture data.
+
+help_page:
+  title: Help
+  preamble: This page was created from test fixture data.
+  body: Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html.
+
+contact_page:
+  title: Contact Us
+  preamble: This page was created from test fixture data.
+  body: We're located at 100 fixture road.
+
+feedback_page:
+  title: Feedback
+  preamble: This page was created from test fixture data.
+  body: Please send us your feedback.
+
+unapproved_page:
+  title: Unapproved
+  preamble: This page was created from test fixture data.
+  body: I was edited by an editor
+
+rejected_page:
+  title: Rejected
+  preamble: This page was created from test fixture data.
+  body: I was rejected by a final editor, so I'm also unapproved
+
+downloads_page:
+  title: Downloads
+  preamble: This page was created from test fixture data.
+  body: I have got attachments as children
+
+hidden_page:
+  title: Private page
+  preamble: This page was created from test fixture data.
+  body: I am hidden from normal users
+
+nested_page:
+  title: Nested page
+  body: I am hidden from normal users because im in a hidden section... Search keyword koffiemokkenverzamelaar
+
+not_hidden_page:
+  title: nonPrivate page
+  preamble: This page was created from test fixture data.
+  body: I am not hidden from normal users
+
+editor_section_page:
+  title: Editor section page
+  preamble: This page was created from test fixture data.
+  body: No kidding.
+
+page_for_sorting_aaa:
+  title: aaa
+  preamble: title is aaa
+  body: it really is!
+  created_at: <%= 5.days.ago.to_s :db %>
+  
+page_for_sorting_bbb:
+  title: BBB
+  preamble: title is BBB
+  body: it really is!
+  created_at: <%= 10.days.ago.to_s :db %>
+  
+page_for_sorting_ccc:
+  title: ccc
+  preamble: title is ccc
+  body: it really is!
+  created_at: <%= Time.now.to_s :db %>
+
+no_header_image:
+  title: No header image
+  preamble: This page's node does not have a header image
+  body: No kidding.
+
+frontpage_for_section:
+  title: This is the frontpage for a section.
+  preamble: Really!
+  body: No kidding.
+
+bis_page:
+  title: Bis info page
+  preamble: bestuursinformatie
+  body: jaaaaaa!
+
+yet_another_page:
+  title: Yet
+  preamble: Another
+  body: Page

@@ -1,0 +1,23 @@
+.right_panel_content
+  %h1== #{t 'attachments.add_attachments_to'} '#{h @parent_node.content.title}'
+
+  #right_panel_form.clearfix
+    = render :partial => 'form'
+
+  / hidden iframe to enable regular posts instead of ajax posts
+  %iframe{ :name => "upload_target", :style => "height: 1px; width: 1px; border: 0px;" }
+
+  %h2= t 'attachments.uploaded_attachments'
+
+  %table#uploaded_attachments.uploaded_attachments_table
+    %thead
+      %th= t 'shared.title'
+      %th= t 'attachments.filename'
+      %th= t 'attachments.size'
+
+    %tr#no_attachments_row
+      %td{ :colspan => "3" }
+        %i= t 'attachments.no_attachments'
+
+  %div
+    = button_to_function t('attachments.done_btn'), "Ext.ux.showRightPanelMssg('#{escape_javascript(t('attachments.done'))}')"

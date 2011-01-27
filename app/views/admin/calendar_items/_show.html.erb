@@ -1,0 +1,65 @@
+<h2><%=h record.calendar.title -%></h2>
+
+<div id="calendarItemMain">
+  <h3><%=h record.title -%></h3>
+
+  <%- unless record.new_record? -%>
+  <div class="metadata">
+    <p class="lastUpdateDate"><%=t 'shared.last_updated' -%>: <%= l(record.updated_at, :format => :long) -%></p>
+  </div>
+  <%- end -%>
+
+  <div class="content">
+    <div class="details">
+      <%- if record.is_a? Meeting -%>
+        <div class="category"><%=t 'calendars.category'   -%>: <%= record.meeting_category.name -%></div>
+      <%- end -%>
+    
+      <div class="start_time"><%=t 'calendars.start_time' -%>: <%= record.start_time.strftime("%d %B %Y #{t 'shared.at'} %H:%M") -%></div>
+
+      <div class="end_time"><%=  t 'calendars.end_time'   -%>: <%= record.end_time.strftime("%d %B %Y #{t 'shared.at'} %H:%M") -%></div>
+
+      <div class="location"><%=  t 'calendars.location'   -%>: <%= record.location ? h(record.location) : t('calendars.unknown') -%></div>
+
+      <div class="dynamic_attributes">
+        <% if record.dynamic_attributes.present? %>
+          <% record.dynamic_attributes.each do |attribute, value| %>
+            <div class="<%= attribute.to_s -%>"><%= t(attribute, :scope => 'calendars') -%>: <%= value -%></div>
+          <% end %>
+        <% end %>          
+      </div>
+    </div>
+
+    <div class="htmlField body"><%=w record.body -%></div>
+
+    <% if record.is_a? Meeting -%>
+      <h4><%=t 'calendars.agenda_items' -%></h4>
+
+      <% if @children.present? %>
+      <div class="agendaItems">
+        <table cellpadding="0" cellspacing="0" class="items">
+          <thead class="ISI_IGNORE">
+            <tr>
+              <th scope="col" colspan="2"><%=t 'calendars.agenda_item' -%></th>
+              <th scope="col"><%=t 'calendars.category' -%></th>
+            </tr>
+          </thead>
+          <tbody>
+          <% @children.each_with_index do |agenda_item, i| %>
+            <tr class="<%= cycle('alt', '') -%>">
+              <td class="ISI_IGNORE width_20"><%= i+1 -%>.</td>
+              <td><%= link_to h(agenda_item.description), '#' -%></td>
+              <td><%= h(agenda_item.agenda_item_category.name) if agenda_item.agenda_item_category -%></td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+      <% else %>
+      <p><%=t 'calendars.no_agenda_items' -%></p>
+      <% end %>
+    <% else %>
+      <%= render_images_and_attachments -%>
+    <% end %>
+  </div>
+</div>

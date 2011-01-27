@@ -1,0 +1,21 @@
+.page.regularPage
+  - readspeaker do
+    = readspeaker_button :class => 'topRightReadspeaker'
+
+    %h1= h @page.title
+
+    = render :partial => '/shared/metadata', :locals => { :publication_date => @page.publication_start_date, :last_update_date => @page.updated_at }
+
+    = content_tag(:div, simple_format(white_list_preamble(@page.preamble)), :class => 'preamble') if @page.preamble
+
+    = render_images
+
+    .htmlField
+      = process_video_tags(@page.body)
+
+    = render_attachments
+
+    .buttons.clearfix
+      = print_button
+      .social_buttons
+        = social_media_buttons(@page)

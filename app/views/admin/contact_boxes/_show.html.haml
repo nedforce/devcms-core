@@ -1,0 +1,16 @@
+.contact_information
+  %h2= t 'contact_boxes.heading'
+
+  .wrapper.clearfix
+    .text
+      = w record.contact_information
+
+    = link_to t('contact_boxes.more_addresses'), '/contact', :class => 'read_more_link'
+
+
+.opening_hours
+  %h2= t 'contact_boxes.opening_hours'
+
+  .wrapper.clearfix
+    = w text_for_today(record)
+    = link_to t('contact_boxes.more_times'), '/contact', :class => 'read_more_link'

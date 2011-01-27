@@ -1,0 +1,10 @@
+.poll_results
+  - question.poll_options.each do |o|
+    %div
+      .text
+        == #{h o.text} <span class='smaller_font'>(#{number_to_percentage(o.percentage_of_votes, :precision => 1)})</span>
+      .bar
+        %img{ :src => "/images/poll_result_sidebox.gif", :width => "#{number_to_percentage(o.percentage_of_votes, :precision => 0)}", :alt => "resultaat percentage" }
+
+  %p.number_of_votes
+    == #{t 'polls.number_of_votes'}: #{question.number_of_votes}

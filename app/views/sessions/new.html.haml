@@ -1,0 +1,21 @@
+- form_tag secure_url(:session_url) do
+  .loginCt
+    .formFieldCt.clearfix
+      %label{ :class => "user", :for => "login" }
+        = t 'sessions.login'
+      = text_field_tag 'login', params[:login], :class => 'textfield', :id => nil
+
+    .formFieldCt.clearfix
+      %label{ :class => "user", :for => "password" }
+        = t 'sessions.password'
+      = password_field_tag 'password', params[:password], :class => 'textfield'
+
+    %div
+      = check_box_tag 'remember_me', params[:password]
+      %label{ :for => "remember_me" }
+        = t 'sessions.remember'
+
+    .formButtonCt
+      = submit_tag t('sessions.log_in'), :class => 'submit left'
+      %span.right
+        = link_to t('sessions.forgot_password?'), request_password_users_path

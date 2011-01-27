@@ -1,0 +1,10 @@
+= render :partial => 'show', :locals => { :record => @agenda_item }
+
+.forms
+  - remote_form_for @agenda_item, :method => :get, :url => edit_admin_agenda_item_path(@agenda_item, :format => 'html'), :update => 'right_panel_body' do |form|
+    = render :partial => 'preview_form', :locals => { :form => form }
+    = form.submit t('shared.edit')
+
+  - remote_form_for @agenda_item, :url => admin_agenda_item_path(@agenda_item, :format => 'html'), :update => 'right_panel_body' do |form|
+    = render :partial => 'preview_form', :locals => { :form => form }
+    = form.submit t('shared.save')

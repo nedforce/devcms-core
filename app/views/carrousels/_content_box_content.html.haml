@@ -1,0 +1,6 @@
+- content        = node.content
+- carrousel_item = content.current_item
+
+- if carrousel_item
+  .carrousel_item.clearfix
+    = render :partial => '/carrousels/carrousel_item', :object => carrousel_item

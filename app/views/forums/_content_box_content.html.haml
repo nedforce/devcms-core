@@ -1,0 +1,18 @@
+- content        = node.content
+- recent_threads = content.find_last_updated_forum_threads
+
+- if recent_threads.empty?
+  %p= t 'forums.no_threads_found'
+
+- else
+  %p= t 'forums.recent_threads'
+
+  %ul
+    - recent_threads.each do |thread|
+      %li.clearfix
+        .date
+          = thread.last_update_date.to_s(:short)
+        .link
+          = link_to h(thread.title), forum_topic_forum_thread_path(thread.forum_topic, thread)
+
+  = read_more_link(content, t('shared.more_threads'))

@@ -1,0 +1,48 @@
+{
+ 'responseHeader'=>{
+  'status'=>0,
+  'QTime'=>824,
+  'params'=>{
+	'indent'=>'on',
+	'start'=>'0',
+	'q'=>'aalvisserij',
+	'wt'=>'ruby',
+	'rows'=>'10',
+	'version'=>'2.2'}},
+ 'response'=>{'numFound'=>3,'start'=>0,'maxScore'=>0.0056423964,'docs'=>[
+	{
+	 'url'=>'http://overheidsloket.overheid.nl/index.php?p=product&product_id=901863',
+	 'content'=>'| Overheidsloket - Producten Sitenavigatie Overheidsloket Menu Aalvisserij, vangstregistratie Acties Contact Formulieren Wet- en regelgeving Aalvisserij, vangstregistratie Beschrijving Aalvissers moeten wekelijks opgave doen van hun aalvangsten. Hierdoor kan een goed inzicht gekregen worden in de aalvangst per regio. De registratieplicht geldt alleen voor aalvissers die werken met de volgende vistuigen: aaldogger; aalfuik; aalhoekwant; aalkistje; aalzegen; ankerkuil; electrovisapparaat; visfuik. Ook moet u elk jaar in de maand december opgeven hoeveel en welke vistuigen u gebruikt. Voorwaarden U hoeft geen opgave te doen in de periode dat u niet aan het werk bent. Aanpak U rapporteert elke week voor dinsdag 24.00 uur de hoeveelheid gevangen aal bij het LNV-loket.',
+	 'title'=>[
+	  'Aalvisserij, vangstregistratie',
+	  'Lees verder',
+	  'Overheid.nl | Overheidsloket - Producten'],
+	 'score'=>0.0056423964},
+	{
+	 'publicatieDatum'=>'2009-07-14T14:03:15Z',
+	 'url'=>'http://www.deventer.nl/product_catalogues/120/products?letter=A&selection=letter',
+	 'content'=>'Producten in \'Digitaal loket\' met beginletter \'A\' Producten van andere overheden Producten in \'Digitaal loket\' met beginletter \'A\' Aansprakelijk stellen van de gemeente Heeft u schade opgelopen door gebreken aan  verplaatste aantallen te meten, daarvan aantekening te houden en van de gegevens opgave te doen. Lees verder Aangehouden schepen en havenstaatcontrole, publicatieoverzicht De minister van Verkeer en Waterstaat zorgt ervoor dat ten minste elke   gebleven. Als dat het geval is, moet de gemeente de schade vergoeden. Lees verder Adoptie Wilt u een kind adopteren? U n     inkomsten cultuurinstellingen, subsidie (matchingsregeling) Culturele instellingen kunnen een aanvulling op eigen inkomen krijgen. Alle inkomsten, die boven het gemiddelde van de afgelopen vier jaar liggen, worden verdubbeld. Denk bijvoorbeeld aan inkomsten van publiek, het VSBfonds en sponsors. De overheid wil zo stimuleren uw eigen inkomsten te vergroten.',
+	 'title'=>[
+	  'Producten in \'Digitaal loket\' met beginletter \'A\''],
+	 'score'=>7.148937E-4},
+	{
+	 'publicatieDatum'=>'2009-07-14T14:03:15Z',
+	 'url'=>'http://www.deventer.nl/product_catalogues/120/products?selection=category&selection_id=351',
+	 'content'=>'Producten in \'Digitaal loket\' met thema: Voorschriften en reglementen Producten van andere overheden Gemeente Deventer Openingstijden Digitaal loket Producten en Diensten De vraag is ... Producten in \'Digitaal loket\' met thema: Voorschriften en reglementen Producten van andere overheden Aalvisserij, vangstregistratie Aalvissers moeten wekelijks opgave doen van hun aalvangsten. Hierdoor kan een goed inzicht gekregen worden in de aalvangst per regio. De  gelijkstroom een spanningsverschil wordt opgewekt. Een dergelijke vergunning wordt slechts verleend door de minister  waterdier vertoont verschijnselen van een dierziekte. Er kan redelijkerwijs worden aangenomen dat een waterdier in de gelegenheid is geweest om te worden besmet met een dierziekte. Een waterdier is besmet met een ziekte. Er is sprake van een verhoogde sterfte onder aquacultuurdieren. Lees verder Digitaal loket Afspraak maken met publiekszaken Paspoort Verhuizing en emigratie Rijbewijs Koopzondagen Bouwvergunning Huwelijk Bevolkingsadministratie (gba), uittreksel Parkeervergunning Onroerende zaak, waardebepaling meer producten',
+	 'title'=>[
+	  'Voorschriften en reglementen'],
+	 'score'=>1.0908412E-7}]
+ },
+ 'highlighting'=>{
+  'http://overheidsloket.overheid.nl/index.php?p=product&product_id=901863'=>{
+	'title'=>['<em>Aalvisserij</em>, vangstregistratie'],
+	'url'=>['http://overheidsloket.overheid.nl/index.php?p=product&product_id=901863'],
+	'content'=>[' <em>Aalvisserij</em>, vangstregistratie Acties Contact Formulieren Wet- en regelgeving']},
+  'http://www.deventer.nl/product_catalogues/120/products?letter=A&selection=letter'=>{
+	'title'=>['Producten in \'Digitaal loket\' met beginletter \'A\''],
+	'url'=>['http://www.deventer.nl/product_catalogues/120/products?letter=A&selection=letter'],
+	'content'=>['. Lees verder Producten van andere overheden <em>Aalvisserij</em>, vangstregistratie']},
+  'http://www.deventer.nl/product_catalogues/120/products?selection=category&selection_id=351'=>{
+	'title'=>['Voorschriften en reglementen'],
+	'url'=>['http://www.deventer.nl/product_catalogues/120/products?selection=category&selection_id=351'],
+	'content'=>[' van andere overheden <em>Aalvisserij</em>, vangstregistratie Aalvissers moeten wekelijks opgave doen van hun aalvangsten']}}}

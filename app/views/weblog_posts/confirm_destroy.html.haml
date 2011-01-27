@@ -1,0 +1,8 @@
+%h1= t 'shared.confirm_deletion'
+
+- form_tag [@node.content.weblog.weblog_archive, @node.content.weblog, @node.content], :method => :delete do
+  %p= t 'weblogs.really_delete_post?'
+
+  .formButtonCt
+    = submit_tag t('shared.y'), :class => 'left submit'
+    = link_to    t('shared.n'), :back, :class => 'right'

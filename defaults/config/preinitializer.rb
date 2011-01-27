@@ -1,0 +1,1 @@
+Dir["#{RAILS_ROOT}/vendor/plugins/*/vendor/plugins/*/**/tasks/**/*.rake"].sort.each { |ext| load ext } if defined?(Rake)

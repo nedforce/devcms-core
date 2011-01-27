@@ -1,0 +1,10 @@
+agenda_item_one:
+  description: Opening en vaststellen agenda   
+agenda_item_two:
+  agenda_item_category: hamerstukken
+  description: Iets spannends
+  body: Geen grappen!
+agenda_item_three:
+  agenda_item_category: stukken_ter_kennisname
+  description: Iets saais
+  body: Gaap

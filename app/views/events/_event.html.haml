@@ -1,0 +1,51 @@
+= render :partial => '/shared/metadata', :locals => { :last_update_date => event.updated_at }
+
+.details
+  - if event.is_a? Meeting
+    .category
+      == #{t 'calendars.category'}: #{event.meeting_category.name}
+
+  .start_time
+    == #{t 'calendars.start_time'}: #{l event.start_time, :format => "%d %B %Y #{t 'shared.at'} %H:%M"}
+
+  .end_time
+    == #{t 'calendars.end_time'}: #{l event.end_time, :format => "%d %B %Y #{t 'shared.at'} %H:%M"}
+
+  .location
+    == #{t 'calendars.location'}: #{event.location.present? ? h(event.location) : t('calendars.unknown')}
+
+  .dynamic_attributes
+    - if event.dynamic_attributes.present?
+      - event.dynamic_attributes.each do |attribute, value|
+        %div{ :class => attribute.to_s }
+          == #{t attribute, :scope => 'calendars'}: #{value}
+
+.htmlField.body
+  = process_video_tags(event.body)
+
+- if event.is_a? Meeting
+  %h3= t 'calendars.agenda_items'
+  - agenda_items = event.agenda_items.find_accessible(:all, :for => current_user)
+  - unless agenda_items.empty?
+    .agendaItems
+      %table.items{ :cellpadding => "0", :cellspacing => "0" }
+        %thead.ISI_IGNORE
+          %tr
+            %th.spacer{ :scope => "col" }
+            %th{ :scope => "col" }
+              = t 'calendars.agenda_item'
+            %th{ :scope => "col" }
+              = t 'calendars.category'
+        %tbody
+          - agenda_items.each_with_index do |agenda_item, i|
+            %tr{ :class => cycle('alt', '') }
+              %td.ISI_IGNORE.position
+                = i+1
+                \.
+              %td.gray= link_to_content_node h(agenda_item.description), agenda_item
+              %td.gray= h(agenda_item.agenda_item_category.name) if agenda_item.agenda_item_category
+  - else
+    %p= t 'calendars.no_agenda_items'
+
+- else
+  = render_images_and_attachments

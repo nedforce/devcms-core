@@ -1,0 +1,8 @@
+- content = node.content
+%p
+  %a{ :href => attachment_path(content) }
+    = attachment_icon(content)
+  == &nbsp;
+  %a{ :href => attachment_path(content) }
+    = h content.title
+  == (#{content.size / 1024} KB)

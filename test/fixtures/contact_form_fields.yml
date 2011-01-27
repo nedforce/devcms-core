@@ -1,0 +1,31 @@
+name:
+  label: Naam
+  field_type: textfield
+  position: 1
+  obligatory: true
+  contact_form: help_form
+email_address:
+  label: E-mailadres
+  field_type: textfield
+  position: 2
+  obligatory: true
+  contact_form: help_form
+phone_number:
+  label: Telefoonnummer
+  field_type: textfield
+  position: 3
+  obligatory: false
+  default_value: +31(0)6
+  contact_form: help_form
+question:
+  label: Question
+  field_type: textarea
+  position: 4
+  obligatory: true
+  contact_form: help_form
+info:
+  label: Info
+  field_type: textarea
+  position: 1
+  obligatory: true
+  contact_form: info_form

@@ -1,0 +1,7 @@
+- options = [[ 'Standaard (blauw)', 'default' ]]
+- unless @node.root?
+  - parent_color = options.select {|opt| opt.last == @node.parent.own_or_inherited_layout_configuration['template_color']}
+  - parent_color = (parent_color.empty? ? options : parent_color).first.first
+  - options.unshift([ "Overerven (#{parent_color})", nil ])
+- selected = @node.layout_configuration.present? ? @node.layout_configuration['template_color'] : nil
+= wrap_with_label(select_tag(:color, options_for_select(options, selected), :name => "node[layout_configuration][template_color]"), :text => "Kleur:")
