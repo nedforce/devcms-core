@@ -29,11 +29,19 @@ class Admin::HtmlPagesController < Admin::AdminController
   # * GET /admin/html_pages/new
   def new
     @html_page = HtmlPage.new(params[:html_page])
+
+    respond_to do |format|
+      format.html { render :template => 'admin/shared/new', :locals => { :object => @html_page }}
+    end
   end
 
   # * GET /admin/html_pages/:id/edit
   def edit
     @html_page.attributes = params[:html_page]
+
+    respond_to do |format|
+      format.html { render :template => 'admin/shared/edit', :locals => { :object => @html_page }}
+    end
   end
 
   # * POST /admin/html_pages

@@ -12,6 +12,7 @@ module Acts #:nodoc:
       :allowed_roles_for_destroy => %w( admin editor final_editor ),
       :available_content_representations => [],
       :show_in_menu => true,
+      :has_default_representation => true,
       :copyable => true,
       :has_own_feed => false,
       :children_can_be_sorted => true,

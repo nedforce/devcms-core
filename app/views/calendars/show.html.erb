@@ -1,7 +1,7 @@
 <% content_for :atom_feed do %>
-  <link rel="alternate" type="application/atom+xml" href="<%= calendars_url(:format => 'atom') -%>" title="<%=t 'calendars.all_calendar_items' -%>" />
   <% if CombinedCalendar.count > 0 %>
-  <link rel="alternate" type="application/atom+xml" href="<%= tomorrow_combined_calendar_url(:id => CombinedCalendar.first.id, :format => 'atom') -%>" title="<%=t 'calendars.tomorrow' -%>" />
+    <link rel="alternate" type="application/atom+xml" href="<%= calendars_url(:format => 'atom') -%>" title="<%=t 'calendars.all_calendar_items' -%>" />
+    <link rel="alternate" type="application/atom+xml" href="<%= tomorrow_combined_calendar_url(:id => CombinedCalendar.first.id, :format => 'atom') -%>" title="<%=t 'calendars.tomorrow' -%>" />
   <% end %>
 <% end %>
 

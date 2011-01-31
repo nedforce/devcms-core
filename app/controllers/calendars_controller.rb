@@ -8,7 +8,14 @@ class CalendarsController < ApplicationController
   # * GET /calendars.atom
   def index
     respond_to do |format|
-      format.atom { redirect_to :controller => :combined_calendars, :action => :show, :id => CombinedCalendar.first.id, :format => :atom }
+      format.atom {
+        combined_calendar = CombinedCalendar.first
+        if combined_calendar.blank?
+          raise ActiveRecord::RecordNotFound
+        else
+          redirect_to :controller => :combined_calendars, :action => :show, :id => combined_calendar.id, :format => :atom
+        end
+      }
     end
   end
   

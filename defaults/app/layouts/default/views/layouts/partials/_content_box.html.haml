@@ -6,9 +6,11 @@
         .corner_overlay.transparent
         - unless content.is_a?(Poll) || content.is_a?(NewsletterArchive) || node.content_box_icon.blank?
           = image_tag "icons/content_box_#{node.content_box_icon}.png", :class => 'icon_overlay transparent', :alt => content_box_icon_alt_for(node)
-        - unless sidebox_title.blank?
+        - if sidebox_title.prensent?
           %h2= sidebox_title
-        - else
+        - elsif node.content_type_configuration[:has_default_representation]
           %h2= link_to_content_node content_box_title_for(node), content
+        - else
+          %h2= content_box_title_for(node)
     .content.hoverable
       = render :partial => "/#{node.content_type.tableize}/#{partial}", :locals => { :node => node, :parent => parent }
