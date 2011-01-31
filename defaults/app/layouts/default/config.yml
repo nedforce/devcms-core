@@ -10,7 +10,7 @@ custom_representations:
     name: Gerelateerde content
     representation: content_box
     content_partial: related_content
-column_defaults:
+target_defaults:
   primary_column:
     representation: content_box
     height: 360

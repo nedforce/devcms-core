@@ -12,7 +12,7 @@ class Layout
 
   def variants
     self.config.collect do |variant, config|
-      [config["name"], variant] unless ['extends', "column_defaults"].include?(variant) || !config
+      [config["name"], variant] unless ['extends', "target_defaults"].include?(variant) || !config
     end.compact
   end
 
@@ -21,7 +21,7 @@ class Layout
     if var
       var[:id]=id
       # Set column defaults
-      self.config["column_defaults"].each do |col, conf|
+      self.config["target_defaults"].each do |col, conf|
         if var.has_key?(col)
           var[col] = conf.dup.merge(var[col]||{})
         end
