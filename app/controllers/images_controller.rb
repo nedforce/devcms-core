@@ -16,7 +16,7 @@ class ImagesController < ApplicationController
   end
 
   def header
-    @image.resize!(:size => '726x135', :crop => true, :upsample => true, :quality => 90)
+    @image.resize!(:size => "#{Image::HEADER_IMAGE_SIZE[:width]}x#{Image::HEADER_IMAGE_SIZE[:height]}", :crop => true, :upsample => true, :quality => 90)
     render_image
   end
 

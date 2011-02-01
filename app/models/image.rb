@@ -27,6 +27,7 @@
 class Image < FlexImage::Model
 
   CONTENT_BOX_SIZE = { :height => 93, :width => 230 }
+  HEADER_IMAGE_SIZE = { :height => 192, :width => 998 }
 
   # An +Image+ can be a carrousel item
   has_many :carrousel_items, :as => :item, :dependent => :destroy  
