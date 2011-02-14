@@ -1,4 +1,4 @@
-= javascript_tag("document.getElementById('right_panel_body').scrollTop = 0;")
+= javascript_tag("document.getElementById('right_panel_body').scrollTop = 0; new Ajax.Autocompleter('category_auto', 'autocomplete', '#{ajax_admin_attachments_path}', {frequency: 0.5, paramName: 'query'});")
 
 - admin_form_for(:attachment, @attachment, :url => { :action => 'create', :format => 'js' }, :html => { :multipart => true, :target => 'upload_target' }) do |f|
   = error_messages_for :attachment
@@ -13,5 +13,9 @@
   = hidden_field_tag :parent_node_id, params[:parent_node_id]
 
   = category_settings_for @attachment
+  
+  = f.text_field :category, :label => t('attachments.attachment_category'), :id => "category_auto"
+  
+  #autocomplete
 
   = f.submit t('attachments.add')

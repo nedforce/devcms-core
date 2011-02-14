@@ -42,4 +42,20 @@ module LayoutHelper
              }
     end
   end
+  
+  def link_toggable_section(dom_id, link_id)
+    link_to_function(image_tag("../javascripts/ext/resources/images/default/tree/elbow-plus-nl.gif", :align => "absmiddle", :plugin => "devcms-core"), nil, :id => link_id) do |page|
+      page.visual_effect :toggle_slide, dom_id
+    end
+  end
+  
+  def unemptynize(string, default)
+    if string
+      string.empty? ? default : string
+    else
+      default
+    end
+  end
+    
 end
+

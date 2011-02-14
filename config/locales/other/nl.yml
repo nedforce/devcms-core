@@ -162,6 +162,8 @@ nl:
     saved: Bijlage(n) opgeslagen.
     size: Grootte
     uploaded_attachments: Toegevoegde bijlage(n)
+    attachment_category: Bijlagecategorie
+    uncategorized: Ongecategoriseerd
   calendars:
     attachments: Bijlagen
     add_agenda_item_to: Agendapunt toevoegen aan
