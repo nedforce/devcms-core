@@ -252,7 +252,7 @@ module ApplicationHelper
     random_image = (node || current_site).random_header_image(current_user)
     if random_image.nil?
       header_title = t('application.default_header_photo_alt')
-      image_tag    = image_tag("/images/header_background_default.jpg", :alt => header_title, :title => header_title)
+      image_tag    = image_tag("/images/default_header_photo.jpg", :alt => header_title, :title => header_title)
     else
       header_title = random_image.title
       image_tag    = image_tag header_image_path(random_image), :alt => random_image.alt, :title => random_image.title

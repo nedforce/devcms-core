@@ -1,55 +1,31 @@
 %p.attachmentsTableExplanation= t 'attachments.attachments_table'
 
 %table.attachmentsTable{ :width => "100%" }
-  - if attachments.group_by(&:category).count == 1 && attachments.count <= 10
-    %thead
-      %tr
-        %th{ :scope => "col" }= t 'shared.title'
-        %th{ :scope => "col" }= t 'shared.type'
-        %th{ :scope => "col" }= t 'shared.size'
-        %th{ :scope => "col" }= t 'shared.download'
-    %tbody
-      - attachments.each do |attachment|
+  - attachments.group_by(&:category).tap do |grouped_attachments|
+    - if grouped_attachments.keys.size == 1 && attachments.size <= 10
+      %thead
         %tr
-          %td= h attachment.title
-          %td== #{attachment_icon(attachment)}&nbsp;#{attachment.extension}
-          %td== #{number_with_precision(attachment.size.to_f / 1024, :precision => 1)} KB
-          %td= link_to_content_node t('shared.download'), attachment, {}, :title => h(attachment.title)
-  - elsif params[:layout] == "print"
-    - attachments.group_by(&:category).sort.each do |cat, attachs|
-      - if attachments.group_by(&:category).count == 1
-        - catstring = unemptynize(cat, I18n.t('attachments.uploaded_attachments')).to_s
-      - else
-        - catstring = unemptynize(cat, I18n.t('attachments.uncategorized')).to_s
-      %tr
-        %th== #{catstring}
-      %tr
-        %td
-          %table.attachmentsTable{ :style => "margin-left: 0; width: 100%" }
-            %thead
-              %tr
-                %th{ :scope => "col", :style => "width: 70%" }= t 'shared.title'
-                %th{ :scope => "col", :style => "width: 10%" }= t 'shared.type'
-                %th{ :scope => "col", :style => "width: 10%" }= t 'shared.size'
-                %th{ :scope => "col", :style => "width: 10%" }= t 'shared.download'
-            %tbody
-              - attachs.each do |attachment|
-                %tr
-                  %td{ :style => "width: 70%" }= h attachment.title
-                  %td{ :style => "width: 10%" }== #{attachment_icon(attachment)}&nbsp;#{attachment.extension}
-                  %td{ :style => "width: 10%" }== #{number_with_precision(attachment.size.to_f / 1024, :precision => 1)} KB
-                  %td{ :style => "width: 10%" }= link_to_content_node t('shared.download'), attachment, {}, :title => h(attachment.title)
-  - else
-    - attachments.group_by(&:category).sort.each do |cat, attachs|
-      - if attachments.group_by(&:category).count == 1
-        - catstring = unemptynize(cat, I18n.t('attachments.uploaded_attachments')).to_s
-      - else
-        - catstring = unemptynize(cat, I18n.t('attachments.uncategorized')).to_s
-      %tr
-        %th== #{link_toggable_section("app_#{catstring}", "link_#{catstring}")} #{catstring}
-      %tr
-        %td
-          %div{ :id => "app_#{catstring}", :style => "display: none" }
+          %th{ :scope => "col" }= t 'shared.title'
+          %th{ :scope => "col" }= t 'shared.type'
+          %th{ :scope => "col" }= t 'shared.size'
+          %th{ :scope => "col" }= t 'shared.download'
+      %tbody
+        - attachments.each do |attachment|
+          %tr
+            %td= h attachment.title
+            %td== #{attachment_icon(attachment)}&nbsp;#{attachment.extension}
+            %td== #{number_with_precision(attachment.size.to_f / 1024, :precision => 1)} KB
+            %td= link_to_content_node t('shared.download'), attachment, {}, :title => h(attachment.title)
+    - elsif params[:layout] == "print"
+      - grouped_attachments.sort.each do |cat, attachs|
+        - if grouped_attachments.size == 1
+          - catstring = unemptynize(cat, I18n.t('attachments.uploaded_attachments')).to_s
+        - else
+          - catstring = unemptynize(cat, I18n.t('attachments.uncategorized')).to_s
+        %tr
+          %th== #{catstring}
+        %tr
+          %td
             %table.attachmentsTable{ :style => "margin-left: 0; width: 100%" }
               %thead
                 %tr
@@ -64,3 +40,28 @@
                     %td{ :style => "width: 10%" }== #{attachment_icon(attachment)}&nbsp;#{attachment.extension}
                     %td{ :style => "width: 10%" }== #{number_with_precision(attachment.size.to_f / 1024, :precision => 1)} KB
                     %td{ :style => "width: 10%" }= link_to_content_node t('shared.download'), attachment, {}, :title => h(attachment.title)
+    - else
+      - grouped_attachments.sort.each do |cat, attachs|
+        - if grouped_attachments.size == 1
+          - catstring = unemptynize(cat, I18n.t('attachments.uploaded_attachments')).to_s
+        - else
+          - catstring = unemptynize(cat, I18n.t('attachments.uncategorized')).to_s
+        %tr
+          %th== #{link_toggable_section("app_#{catstring}", "link_#{catstring}")} #{catstring}
+        %tr
+          %td
+            %div{ :id => "app_#{catstring}", :style => "display: none" }
+              %table.attachmentsTable{ :style => "margin-left: 0; width: 100%" }
+                %thead
+                  %tr
+                    %th{ :scope => "col", :style => "width: 70%" }= t 'shared.title'
+                    %th{ :scope => "col", :style => "width: 10%" }= t 'shared.type'
+                    %th{ :scope => "col", :style => "width: 10%" }= t 'shared.size'
+                    %th{ :scope => "col", :style => "width: 10%" }= t 'shared.download'
+                %tbody
+                  - attachs.each do |attachment|
+                    %tr
+                      %td{ :style => "width: 70%" }= h attachment.title
+                      %td{ :style => "width: 10%" }== #{attachment_icon(attachment)}&nbsp;#{attachment.extension}
+                      %td{ :style => "width: 10%" }== #{number_with_precision(attachment.size.to_f / 1024, :precision => 1)} KB
+                      %td{ :style => "width: 10%" }= link_to_content_node t('shared.download'), attachment, {}, :title => h(attachment.title)
