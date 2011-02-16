@@ -46,6 +46,11 @@ module LayoutHelper
   def link_toggable_section(dom_id, link_id)
     link_to_function(image_tag("../javascripts/ext/resources/images/default/tree/elbow-plus-nl.gif", :align => "absmiddle", :plugin => "devcms-core"), nil, :id => link_id) do |page|
       page.visual_effect :toggle_slide, dom_id
+      page << "if($('#{dom_id}').visible()) {"
+        page.replace_html(link_id, image_tag("../javascripts/ext/resources/images/default/tree/elbow-plus-nl.gif", :align => "absmiddle", :plugin => "devcms-core"))
+      page << "} else {"
+        page.replace_html(link_id, image_tag("../javascripts/ext/resources/images/default/tree/elbow-minus-nl.gif", :align => "absmiddle", :plugin => "devcms-core"))
+      page << "}"
     end
   end
   
