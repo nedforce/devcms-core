@@ -30,7 +30,7 @@ module SearchHelper
   def print_category(category)
     default_options = {
      :advanced      => true,
-     :query         => "*",
+     :query         => "",
      :search_engine => params[:search_engine]
     }
     default_options[:programme] = category.parent ? category.parent_id : category.id
