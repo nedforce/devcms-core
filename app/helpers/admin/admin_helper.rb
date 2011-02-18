@@ -74,7 +74,9 @@ module Admin::AdminHelper
   end
 
   def content_box_settings_for(content, show_number_of_items_field = true, show_icon_field = true)
-    render :partial => 'admin/shared/content_box_fields', :locals => { :content => content, :show_number_of_items_field => show_number_of_items_field, :show_icon_field => show_icon_field }
+    if Node.content_type_configuration(content.class.name)[:available_content_representations].include?('content_box')
+      render :partial => 'admin/shared/content_box_fields', :locals => { :content => content, :show_number_of_items_field => show_number_of_items_field, :show_icon_field => show_icon_field }
+    end
   end
 
   def content_box_hidden_fields(form)
@@ -97,14 +99,47 @@ module Admin::AdminHelper
     ].join("\n")
   end
 
-  def commit_fields(form)
-    hidden_field_tag(:commit_type) +
-    form.submit(I18n.t('shared.preview'), :onclick => "$('commit_type').setValue('preview'); return true;") +
-    form.submit(I18n.t('shared.save'),    :onclick => "$('commit_type').setValue('save'); return true;")
+  def commit_fields(form, continue = false)
+    html =  hidden_field_tag(:commit_type)
+    html << form.submit(I18n.t('shared.preview'), :onclick => "$('commit_type').setValue('preview'); return true;")
+    html << form.submit(I18n.t('shared.save'),    :onclick => "$('commit_type').setValue('save'); return true;")
+    
+    if continue
+      html << form.submit(I18n.t('shared.save_and_continue'), :onclick => "$('commit_type').setValue('save'); $('continue').setValue('true'); return true;")
+      html << hidden_field_tag(:continue)
+    end
+    
+    return html
+  end
+  
+  def default_fields_before_form(form)
+    form.text_field(:title, :label => t('shared.title')) +
+    form.text_field(:title_alternatives, :label => t('shared.title_alternatives'))
+  end
+    
+  def default_fields_after_form(form)
+    ""
+  end
+  
+  def default_preview_fields(form)
+    form.hidden_field(:title) +
+    form.hidden_field(:title_alternatives) +
+    form.hidden_field(:publication_start_date) +
+    form.hidden_field(:publication_end_date)
   end
 
-  def approval_field
-    hidden_field_tag(:for_approval, true) if @for_approval
+  def approval_fields(form)
+    if form.object.class.respond_to?(:requires_editor_approval)
+      hidden_field_tag(:for_approval, true) if @for_approval
+      form.html_editor(:editor_comment, :label => t('pages.editor_comment'), :rows => 3) if current_user.has_role?('editor')
+    end
+  end
+  
+  def approval_hidden_fields(form)
+    if form.object.class.respond_to?(:requires_editor_approval)
+      hidden_field_tag(:for_approval, true) if @for_approval
+      form.hidden_field :editor_comment if current_user.has_role?('editor')
+    end
   end
 
   def create_message

@@ -53,7 +53,7 @@ class Admin::PollQuestionsController < Admin::AdminController
 
     respond_to do |format|
      if @commit_type == 'preview' && @poll_question.valid?
-        format.html { render :template => 'admin/shared/create_preview', :locals => { :object => @poll_question }, :layout => 'admin/admin_preview' }
+        format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @poll_question }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @poll_question, :status => :created, :location => @poll_question }
       elsif @commit_type == 'save' && @poll_question.save
         format.html { render :template => 'admin/shared/create' }
@@ -75,7 +75,7 @@ class Admin::PollQuestionsController < Admin::AdminController
 
     respond_to do |format|
       if @commit_type == 'preview' && @poll_question.valid?
-        format.html { render :template => 'admin/shared/update_preview', :locals => { :object => @poll_question }, :layout => 'admin/admin_preview' }
+        format.html { render :template => 'admin/shared/update_preview', :locals => { :record => @poll_question }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @poll_question, :status => :created, :location => @poll_question }
       elsif @commit_type == 'save' && @poll_question.save
         format.html {

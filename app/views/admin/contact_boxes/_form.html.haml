@@ -1,15 +1,5 @@
-= error_messages_for :contact_box
-
-= javascript_tag("document.getElementById('right_panel_body').scrollTop = 0;")
-
-= form.text_field  :title,               :label => t('shared.title')
-= form.text_field  :title_alternatives,  :label => t('shared.title_alternatives')
 = form.html_editor :contact_information, :label => t('contact_boxes.contact_information'), :skip_insert_video => true
 = form.html_editor :default_text,        :label => t('contact_boxes.default_text'),        :skip_insert_video => true
 
 - [ :monday_text, :tuesday_text, :wednesday_text, :thursday_text, :friday_text, :saturday_text, :sunday_text ].each do |field|
   = form.html_editor field, :label => t(field, :scope => :contact_boxes), :skip_insert_video => true
-
-= category_settings_for @contact_box
-
-= form.submit t('shared.save')

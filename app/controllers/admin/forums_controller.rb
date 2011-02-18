@@ -30,7 +30,7 @@ class Admin::ForumsController < Admin::AdminController
     @forum = Forum.new(params[:forum])
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :object => @forum }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @forum }}
     end
   end
 
@@ -47,13 +47,13 @@ class Admin::ForumsController < Admin::AdminController
 
     respond_to do |format|
       if @commit_type == 'preview' && @forum.valid?
-        format.html { render :template => 'admin/shared/create_preview', :locals => { :object => @forum }, :layout => 'admin/admin_preview' }
+        format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @forum }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @forum, :status => :created, :location => @forum }
       elsif @commit_type == 'save' && @forum.save
         format.html { render :template => 'admin/shared/create' }
         format.xml  { render :xml => @forum, :status => :created, :location => @forum }
       else
-        format.html { render :template => 'admin/shared/new', :locals => { :object => @forum }, :status => :unprocessable_entity }
+        format.html { render :template => 'admin/shared/new', :locals => { :record => @forum }, :status => :unprocessable_entity }
         format.xml  { render :xml => @forum.errors, :status => :unprocessable_entity }
       end
     end
@@ -68,14 +68,14 @@ class Admin::ForumsController < Admin::AdminController
       if @commit_type == 'preview' && @forum.valid?
         format.html {
           find_forum_topics
-          render :template => 'admin/shared/update_preview', :locals => { :object => @forum }, :layout => 'admin/admin_preview'
+          render :template => 'admin/shared/update_preview', :locals => { :record => @forum }, :layout => 'admin/admin_preview'
         }
         format.xml  { render :xml => @forum, :status => :created, :location => @forum }
       elsif @commit_type == 'save' && @forum.save
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else
-        format.html { render :action => :edit }
+        format.html { render :action => :edit, :status => :unprocessable_entity }
         format.xml  { render :xml => @forum.errors, :status => :unprocessable_entity }
       end
     end

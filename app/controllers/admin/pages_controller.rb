@@ -40,7 +40,7 @@ class Admin::PagesController < Admin::AdminController
     @page = Page.new(params[:page])
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :object => @page }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @page }}
     end
   end
   
@@ -49,7 +49,7 @@ class Admin::PagesController < Admin::AdminController
     @page.attributes = params[:page]
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :object => @page }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @page }}
     end
   end
 
@@ -61,13 +61,13 @@ class Admin::PagesController < Admin::AdminController
 
     respond_to do |format|
       if @commit_type == 'preview' && @page.valid?
-        format.html { render :action => 'create_preview', :layout => 'admin/admin_preview' }
+        format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @page }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @page, :status => :created, :location => @page }
       elsif @commit_type == 'save' && @page.save_for_user(current_user)
         format.html # create.html.erb
         format.xml  { head :ok }
       else
-        format.html { render :template => 'admin/shared/new', :locals => { :object => @page }, :status => :unprocessable_entity }
+        format.html { render :template => 'admin/shared/new', :locals => { :record => @page }, :status => :unprocessable_entity }
         format.xml  { render :xml => @page.errors, :status => :unprocessable_entity }
       end
     end
@@ -82,14 +82,14 @@ class Admin::PagesController < Admin::AdminController
       if @commit_type == 'preview' && @page.valid?
         format.html do
           find_images_and_attachments
-          render :action => 'update_preview', :layout => 'admin/admin_preview'
+          render :template => 'admin/shared/update_preview', :locals => { :record => @page }, :layout => 'admin/admin_preview'
         end
         format.xml  { render :xml => @page, :status => :created, :location => @page }
       elsif @commit_type == 'save' && @page.save_for_user(current_user, @for_approval)
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else
-        format.html { render :template => 'admin/shared/edit', :locals => { :object => @page }, :status => :unprocessable_entity }
+        format.html { render :template => 'admin/shared/edit', :locals => { :record => @page }, :status => :unprocessable_entity }
         format.xml  { render :xml => @page.errors, :status => :unprocessable_entity }
       end
     end

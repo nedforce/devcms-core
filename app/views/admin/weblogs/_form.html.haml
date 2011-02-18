@@ -1,12 +1,1 @@
-= error_messages_for :weblog
-
-= javascript_tag("document.getElementById('right_panel_body').scrollTop = 0;")
-
-= form.text_field  :title,              :label => t('shared.title')
-= form.text_field  :title_alternatives, :label => t('shared.title_alternatives')
-= form.html_editor :description,        :label => t('shared.description'), :height => 100
-
-= content_box_settings_for @weblog
-= category_settings_for    @weblog
-
-= commit_fields form
+= form.html_editor :description, :label => t('shared.description'), :height => 100

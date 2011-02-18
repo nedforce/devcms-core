@@ -1,0 +1,46 @@
+#existing_agenda_item_category_wrapper.formFieldCt.clearfix{:style => ('display:none;' if (@categories.blank? || (record.agenda_item_category && record.agenda_item_category.new_record?)))}
+  %label :for => "agenda_item_category_select"
+    =t 'calendars.agenda_item_category'
+  = select_tag "agenda_item_category_select", options_from_collection_for_select_with_blank_option(@categories, 'name', 'name', record.agenda_item_category_name), :onclick => 'setAgendaItemCategoryName()', :id => 'agenda_item_category_select'
+  = link_to_function t('calendars.new_category'), "toggleNewAgendaItemCategoryField()"
+
+#new_agenda_item_category_wrapper.formFieldCt.clearfix{:style => ('display:none;' unless (@categories.blank? || (record.agenda_item_category && record.agenda_item_category.new_record?)))}
+  %label :for => "agenda_item_category_name"
+    =t 'calendars.agenda_item_category'
+  = text_field_tag 'agenda_item[agenda_item_category_name]', record.agenda_item_category_name, :class => 'admin_form_text_field', :id => 'agenda_item_category_name'
+  = link_to_function t('calendars.existing_category'), "toggleExistingAgendaItemCategoryField()" if @categories.present?
+
+:javascript
+  var existingAgendaItemCategoryFieldWrapper = Ext.get('existing_agenda_item_category_wrapper');
+  var newAgendaItemCategoryFieldWrapper = Ext.get('new_agenda_item_category_wrapper');
+  var agendaItemCategoryNameField = Ext.getDom('agenda_item_category_name')
+  var oldSelectedAgendaItemCategory = agendaItemCategoryNameField.value
+
+  existingAgendaItemCategoryFieldWrapper.setVisibilityMode(Ext.Element.DISPLAY);
+  newAgendaItemCategoryFieldWrapper.setVisibilityMode(Ext.Element.DISPLAY);
+
+  toggleExistingAgendaItemCategoryField = function() {
+    newAgendaItemCategoryFieldWrapper.toggle();
+    agendaItemCategoryNameField.value = oldSelectedAgendaItemCategory;
+    existingAgendaItemCategoryFieldWrapper.toggle();
+  }
+
+  toggleNewAgendaItemCategoryField = function() {
+    existingAgendaItemCategoryFieldWrapper.toggle();
+    oldSelectedAgendaItemCategory = agendaItemCategoryNameField.value
+    agendaItemCategoryNameField.value = "";
+    newAgendaItemCategoryFieldWrapper.toggle();
+  }
+
+  setAgendaItemCategoryName = function() {
+    agendaItemCategoryNameField.value = Ext.getDom('agenda_item_category_select').value;
+  }
+
+= form.text_field   :duration,                                 :label => t('calendars.duration') 
+= form.text_field   :chairman,                                 :label => t('calendars.chairman') 
+= form.text_field   :notary,                                   :label => t('calendars.notary') 
+= form.text_field   :staff_member,                             :label => t('calendars.staff_member') 
+= form.select_field :speaking_rights, @speaking_right_options, :label => t('calendars.speaking_rights') 
+
+= form.text_field   :description,                              :label => t('shared.description') 
+= form.html_editor  :body,                                     :label => t('calendars.body'), :heading => 'h3' 

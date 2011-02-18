@@ -7,7 +7,7 @@ class AlphabeticIndicesControllerTest < ActionController::TestCase
     get :show, :id => alphabetic_indices(:root_alphabetic_index)
     assert_response :success
     assert assigns(:alphabetic_index)
-    assert assigns(:pages)
+    assert assigns(:items)
     assert_equal nodes(:root_alphabetic_index_node), assigns(:node)
   end
 
@@ -15,7 +15,7 @@ class AlphabeticIndicesControllerTest < ActionController::TestCase
     get :letter, :id => alphabetic_indices(:root_alphabetic_index), :letter => 'A'
     assert_response :success
     assert assigns(:alphabetic_index)
-    assert assigns(:pages)
+    assert assigns(:items)
     assert assigns(:letter)
     assert_equal nodes(:root_alphabetic_index_node), assigns(:node)
   end

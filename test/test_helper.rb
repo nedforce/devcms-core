@@ -66,7 +66,7 @@ class ActiveSupport::TestCase
   include RoleRequirementTestHelper
   
   # Validates all controller and integration test requests if set to true:
-  ApplicationController.validate_all = true
+  ApplicationController.validate_all = false
   # What html validators to use, options: :w3c, :tidy, :xmllint
   ApplicationController.validators = [ :w3c ]
   # Check all redirects

@@ -26,7 +26,7 @@ class Admin::ContactFormsController < Admin::AdminController
     @contact_form = ContactForm.new(params[:contact_form])
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :object => @contact_form }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @contact_form }}
     end
   end
 
@@ -35,7 +35,7 @@ class Admin::ContactFormsController < Admin::AdminController
     @contact_form.attributes = params[:contact_form]
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :object => @contact_form }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @contact_form }}
     end
   end
 
@@ -47,13 +47,13 @@ class Admin::ContactFormsController < Admin::AdminController
 
     respond_to do |format|
       if @commit_type == 'preview' && @contact_form.valid?
-        format.html { render :template => 'admin/shared/create_preview', :locals => { :object => @contact_form }, :layout => 'admin/admin_preview' }
+        format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @contact_form }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @contact_form, :status => :created, :location => @contact_form }
       elsif @commit_type == 'save' && @contact_form.save
         format.html { render :template => 'admin/shared/create' }
         format.xml  { render :xml => @contact_form, :status => :created, :location => @contact_form }
       else
-        format.html { render :template => 'admin/shared/new', :locals => { :object => @contact_form }, :status => :unprocessable_entity }
+        format.html { render :template => 'admin/shared/new', :locals => { :record => @contact_form }, :status => :unprocessable_entity }
         format.xml  { render :xml => @contact_form.errors, :status => :unprocessable_entity }
       end
     end
@@ -66,13 +66,13 @@ class Admin::ContactFormsController < Admin::AdminController
 
     respond_to do |format|
       if @commit_type == 'preview' && @contact_form.valid?
-        format.html { render :template => 'admin/shared/update_preview', :locals => { :object => @contact_form }, :layout => 'admin/admin_preview' }
+        format.html { render :template => 'admin/shared/update_preview', :locals => { :record => @contact_form }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @contact_form, :status => :created, :location => @contact_form }
       elsif @commit_type == 'save' && @contact_form.save
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else
-        format.html { render :template => 'admin/shared/edit', :locals => { :object => @contact_form }, :status => :unprocessable_entity }
+        format.html { render :template => 'admin/shared/edit', :locals => { :record => @contact_form }, :status => :unprocessable_entity }
         format.xml  { render :xml => @contact_form.errors, :status => :unprocessable_entity }
       end
     end

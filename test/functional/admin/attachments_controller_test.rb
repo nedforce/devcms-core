@@ -52,7 +52,7 @@ class Admin::AttachmentsControllerTest < ActionController::TestCase
     login_as :sjoerd
     assert_no_difference('Attachment.count') do
       create_attachment(:title => nil)
-      assert_response :success
+      assert_response :unprocessable_entity
       assert assigns(:attachment).errors.on(:title)
     end   
   end
@@ -94,7 +94,7 @@ class Admin::AttachmentsControllerTest < ActionController::TestCase
   def test_should_not_update_image
     login_as :sjoerd
     put :update, :id => attachments(:besluit_attachment).id, :attachment => { :title => nil }
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:attachment).errors.on(:title)
   end
   
@@ -109,6 +109,6 @@ class Admin::AttachmentsControllerTest < ActionController::TestCase
   
   protected
     def create_attachment(attributes = {}, options = {})
-      post :create, {:parent_node_id => nodes(:about_page_node).id, :attachment => { :title => 'An Image', :uploaded_data => fixture_file_upload("files/test.jpg", 'image/jpeg', true) }.merge(attributes)}.merge(options)
+      post :create, {:parent_node_id => nodes(:about_page_node).id, :attachment => { :title => 'An Image', :category => "Bestanden", :uploaded_data => fixture_file_upload("files/test.jpg", 'image/jpeg', true) }.merge(attributes)}.merge(options)
     end
 end

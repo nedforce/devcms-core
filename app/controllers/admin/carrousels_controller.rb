@@ -61,14 +61,14 @@ class Admin::CarrouselsController < Admin::AdminController
 
     respond_to do |format|
       if @commit_type == 'preview' && @carrousel.valid?
-        format.html { render :action => 'create_preview', :layout => 'admin/admin_preview' }
+        format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @carrousel }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @carrousel, :status => :created, :location => @carrousel }
       elsif @commit_type == 'save' && @carrousel.save    
         format.html { render :template => 'admin/shared/create' }
         format.xml  { render :xml => @carrousel, :status => :created, :location => @carrousel }
       else
         @item_sortlets = item_sortlet_hash_for_ids(@item_ids, @carrousel_items)
-        format.html { render :action => :new }
+        format.html { render :action => :new, :status => :unprocessable_entity }
         format.xml  { render :xml => @carrousel.errors.to_xml, :status => :unprocessable_entity }
       end
     end
@@ -82,7 +82,7 @@ class Admin::CarrouselsController < Admin::AdminController
 
     respond_to do |format|
       if @commit_type == 'preview' && @carrousel.valid?
-        format.html { render :action => 'update_preview', :layout => 'admin/admin_preview' }
+        format.html { render :template => 'admin/shared/update_preview', :locals => { :record => @carrousel }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @carrousel, :status => :created, :location => @carrousel }
       elsif @commit_type == 'save' && @carrousel.save
         format.html {
@@ -92,7 +92,7 @@ class Admin::CarrouselsController < Admin::AdminController
         format.xml  { head :ok }
       else
         @item_sortlets = item_sortlet_hash_for_ids(@item_ids)
-        format.html { render :action => :edit }
+        format.html { render :action => :edit, :status => :unprocessable_entity }
         format.xml  { render :xml => @carrousel.errors, :status => :unprocessable_entity }
       end
     end

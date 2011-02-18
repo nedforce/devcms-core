@@ -65,7 +65,7 @@ class Admin::WeblogPostsControllerTest < ActionController::TestCase
     old_title = weblog_post.title
     put :update, :id => weblog_post, :weblog_post => { :title => nil, :body => 'updated body' }, :commit_type => 'preview'
 
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:weblog_post).errors.on(:title)
     assert_equal old_title, weblog_post.reload.title
     assert_template 'edit'
@@ -75,7 +75,7 @@ class Admin::WeblogPostsControllerTest < ActionController::TestCase
     login_as :sjoerd
     
     put :update, :id => weblog_posts(:henk_weblog_post_one), :weblog_post => { :title => nil }
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:weblog_post).errors.on(:title)
   end
 

@@ -85,7 +85,7 @@ class Admin::SectionsControllerTest < ActionController::TestCase
 
     assert_no_difference('Section.count') do
       create_section({ :title => nil }, { :commit_type => 'preview' })
-      assert_response :success
+      assert_response :unprocessable_entity
       assert assigns(:section).new_record?
       assert assigns(:section).errors.on(:title)
       assert_template 'new'
@@ -93,13 +93,13 @@ class Admin::SectionsControllerTest < ActionController::TestCase
 
   end
   
-  def test_should_require_title
+  def test_should_not_create_section
     login_as :sjoerd
     
     assert_no_difference('Section.count') do
       create_section({:title => nil})
     end
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:section).new_record?
     assert assigns(:section).errors.on(:title)
   end
@@ -149,7 +149,7 @@ class Admin::SectionsControllerTest < ActionController::TestCase
     section = sections(:economie_section)
     old_title = section.title
     put :update, :id => section.id, :section => {:title => nil, :description => 'updated_body'}, :commit_type => 'preview'
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:section).errors.on(:title)
     assert_equal old_title, section.reload.title
     assert_template 'edit'
@@ -159,7 +159,7 @@ class Admin::SectionsControllerTest < ActionController::TestCase
     login_as :sjoerd
 
     put :update, :id => sections(:economie_section).id, :section => {:title => nil}
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:section).errors.on(:title)
   end
 

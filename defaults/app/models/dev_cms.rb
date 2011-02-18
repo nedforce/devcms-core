@@ -46,7 +46,7 @@ class DevCMS
     end
     
     def core_root
-      File.join(Rails.root, 'vendor', 'plugins', 'devcms-core')
+      DevCMSCore.root
     end    
   end
 end

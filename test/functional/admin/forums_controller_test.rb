@@ -63,7 +63,7 @@ class Admin::ForumsControllerTest < ActionController::TestCase
 
     assert_no_difference('Forum.count') do
       create_forum({ :title => nil }, { :commit_type => 'preview' })
-      assert_response :success
+      assert_response :unprocessable_entity
       assert assigns(:forum).new_record?
       assert assigns(:forum).errors.on(:title)
       assert_template 'new'
@@ -128,7 +128,7 @@ class Admin::ForumsControllerTest < ActionController::TestCase
     old_title = forum.title
     put :update, :id => forum, :forum => { :title => nil, :description => 'updated_body'}, :commit_type => 'preview'
 
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:forum).errors.on(:title)
     assert_equal old_title, forum.reload.title
     assert_template 'edit'
@@ -138,7 +138,7 @@ class Admin::ForumsControllerTest < ActionController::TestCase
     login_as :sjoerd
 
     put :update, :id => forums(:bewoners_forum).id, :forum => {:title => nil}
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:forum).errors.on(:title)
   end
 

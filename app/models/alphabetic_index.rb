@@ -21,7 +21,7 @@ class AlphabeticIndex < ActiveRecord::Base
     :copyable => false
   })
 
-  ALLOWED_CONTENT_TYPES = %w( Page ResearchReport Product)
+  ALLOWED_CONTENT_TYPES = %w( Page ResearchReport Product )
 
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of  :title, :content_type

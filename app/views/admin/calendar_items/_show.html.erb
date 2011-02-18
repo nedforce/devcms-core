@@ -19,7 +19,7 @@
 
       <div class="end_time"><%=  t 'calendars.end_time'   -%>: <%= record.end_time.strftime("%d %B %Y #{t 'shared.at'} %H:%M") -%></div>
 
-      <div class="location"><%=  t 'calendars.location'   -%>: <%= record.location ? h(record.location) : t('calendars.unknown') -%></div>
+      <div class="location_description"><%=  t 'calendars.location_description'   -%>: <%= record.location_description ? h(record.location_description) : t('calendars.unknown') -%></div>
 
       <div class="dynamic_attributes">
         <% if record.dynamic_attributes.present? %>

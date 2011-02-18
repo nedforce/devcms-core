@@ -114,7 +114,7 @@ class Admin::ImagesControllerTest < ActionController::TestCase
     login_as :sjoerd
 
     put :update, :id => images(:test_image).id, :image => {:title => nil}
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:image).errors.on(:title)
   end
 

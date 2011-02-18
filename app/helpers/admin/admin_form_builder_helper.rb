@@ -20,6 +20,7 @@ module Admin::AdminFormBuilderHelper
 
         options.update(:before => 'resetTinyMCE()')
         options.update(:failure => "Ext.ux.alertResponseError(request)")
+        options.update(422 => "")
 
         args = (args << options)
         send(:#{fh}, name, *args, &block)

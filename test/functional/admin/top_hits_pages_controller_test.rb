@@ -67,7 +67,7 @@ class Admin::TopHitsPagesControllerTest < ActionController::TestCase
 
     assert_no_difference('TopHitsPage.count') do
       create_top_hits_page({ :title => nil }, { :commit_type => 'preview' })
-      assert_response :success
+      assert_response :unprocessable_entity
       assert assigns(:top_hits_page).new_record?
       assert assigns(:top_hits_page).errors.on(:title)
       assert_template 'new'
@@ -81,7 +81,7 @@ class Admin::TopHitsPagesControllerTest < ActionController::TestCase
       create_top_hits_page({:title => nil})
     end
 
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:top_hits_page).new_record?
     assert assigns(:top_hits_page).errors.on(:title)
   end
@@ -130,7 +130,7 @@ class Admin::TopHitsPagesControllerTest < ActionController::TestCase
     top_hits_page = top_hits_pages(:top_ten_page)
     old_title = top_hits_page.title
     put :update, :id => top_hits_page.id, :top_hits_page => { :title => nil }, :commit_type => 'preview'
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:top_hits_page).errors.on(:title)
     assert_equal old_title, top_hits_page.reload.title
     assert_template 'edit'
@@ -140,7 +140,7 @@ class Admin::TopHitsPagesControllerTest < ActionController::TestCase
     login_as :sjoerd
 
     put :update, :id => top_hits_pages(:top_ten_page).id, :top_hits_page => { :title => nil }
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:top_hits_page).errors.on(:title)
   end
 

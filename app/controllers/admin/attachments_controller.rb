@@ -84,11 +84,11 @@ class Admin::AttachmentsController < Admin::AdminController
           end
         end
       else
-        format.html { render :action => :new }
+        format.html { render :action => :new, :status => :unprocessable_entity }
         format.xml  { render :xml => @attachment.errors, :status => :unprocessable_entity }
         format.js do
           responds_to_parent do
-            render :update do |page|
+            render :update, :status => :unprocessable_entity do |page|
               # rerender form with error messages:
               page.replace_html('right_panel_form', :partial => 'form')
             end
@@ -106,7 +106,7 @@ class Admin::AttachmentsController < Admin::AdminController
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else
-        format.html { render :action => :edit }
+        format.html { render :action => :edit, :status => :unprocessable_entity }
         format.xml  { render :xml => @attachment.errors, :status => :unprocessable_entity }
       end
     end

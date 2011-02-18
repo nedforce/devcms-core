@@ -92,22 +92,22 @@ module TreeDelegation
 
     # Find the first sibling to the left
     def left_sibling
-      higher_item
+      previous_item
     end
 
     # Find the first sibling to the right
     def right_sibling
-      lower_item
+      next_item
     end
 
     # Shorthand method for finding the left sibling and moving to the left of it.
     def move_left
-      move_higher
+      move_up!
     end
 
     # Shorthand method for finding the right sibling and moving to the right of it.
     def move_right
-      move_lower
+      move_down!
     end
 
     # Move the node to the left of another node (you can pass id only)

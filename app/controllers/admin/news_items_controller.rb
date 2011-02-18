@@ -46,7 +46,7 @@ class Admin::NewsItemsController < Admin::AdminController
     @news_item = @news_archive.news_items.build(params[:news_item])
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :object => @news_item }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @news_item }}
     end
   end
 
@@ -55,7 +55,7 @@ class Admin::NewsItemsController < Admin::AdminController
     @news_item.attributes = params[:news_item]
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :object => @news_item }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @news_item }}
     end
   end
 
@@ -67,13 +67,13 @@ class Admin::NewsItemsController < Admin::AdminController
 
     respond_to do |format|
       if @commit_type == 'preview' && @news_item.valid?
-        format.html { render :action => 'create_preview', :layout => 'admin/admin_preview' }
+        format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @news_item }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @news_item, :status => :created, :location => @news_item }
       elsif @commit_type == 'save' && @news_item.save_for_user(current_user)
         format.html # create.html.erb
         format.xml  { render :xml => @news_item, :status => :created, :location => @news_item }
       else
-        format.html { render :template => 'admin/shared/new', :locals => { :object => @news_item }, :status => :unprocessable_entity }
+        format.html { render :template => 'admin/shared/new', :locals => { :record => @news_item }, :status => :unprocessable_entity }
         format.xml  { render :xml => @news_item.errors, :status => :unprocessable_entity }
       end
     end
@@ -88,7 +88,7 @@ class Admin::NewsItemsController < Admin::AdminController
       if @commit_type == 'preview' && @news_item.valid?
         format.html do
           find_images_and_attachments
-          render :action => 'update_preview', :layout => 'admin/admin_preview'
+          render :template => 'admin/shared/update_preview', :locals => { :record => @news_item }, :layout => 'admin/admin_preview'
         end
         format.xml  { render :xml => @news_item, :status => :created, :location => @news_item }
       elsif @commit_type == 'save' && @news_item.save_for_user(current_user, @for_approval)
@@ -98,7 +98,7 @@ class Admin::NewsItemsController < Admin::AdminController
         }
         format.xml  { head :ok }
       else
-        format.html { render :template => 'admin/shared/edit', :locals => { :object => @news_item }, :status => :unprocessable_entity }
+        format.html { render :template => 'admin/shared/edit', :locals => { :record => @news_item }, :status => :unprocessable_entity }
         format.xml  { render :xml => @news_item.errors, :status => :unprocessable_entity }
       end
     end

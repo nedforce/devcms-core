@@ -1,10 +1,20 @@
-= render :partial => 'show'
+= render :partial => 'show', :locals => {:record => record}
 
 .forms
-  - remote_form_for object, :method => :get, :url => url_for(:controller => controller.controller_name, :action => :new, :format => 'html', :parent_node_id => @parent_node.id), :update => 'right_panel_body' do |form|
-    = render :partial => 'preview_form', :locals => { :form => form }
+  - remote_form_for record, :method => :get, :url => url_for(:controller => controller.controller_name, :action => :new, :format => 'html', :parent_node_id => @parent_node.id), :update => 'right_panel_body' do |form|
+    = default_preview_fields form
+    = render :partial => 'preview_form', :locals => { :form => form, :record => record }
+    = category_hidden_fields form
+    = content_box_hidden_fields form
+    = approval_hidden_fields form
+
     = form.submit t('shared.edit')
 
-  - remote_form_for object, :url => url_for(:controller => controller.controller_name, :format => 'html', :parent_node_id => @parent_node.id), :update => 'right_panel_body' do |form|
-    = render :partial => 'preview_form', :locals => { :form => form }
+  - remote_form_for record, :url => url_for(:controller => controller.controller_name, :format => 'html', :parent_node_id => @parent_node.id), :update => 'right_panel_body' do |form|
+    = default_preview_fields form
+    = render :partial => 'preview_form', :locals => { :form => form, :record => record }
+    = category_hidden_fields form
+    = content_box_hidden_fields form
+    = approval_hidden_fields form
+
     = form.submit t('shared.save')

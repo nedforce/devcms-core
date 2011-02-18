@@ -66,7 +66,7 @@ class Admin::CarrouselsControllerTest < ActionController::TestCase
 
     assert_no_difference('Carrousel.count') do
       create_carrousel({ :title => nil }, { :commit_type => 'preview' })
-      assert_response :success
+      assert_response :unprocessable_entity
       assert assigns(:carrousel).new_record?
       assert assigns(:carrousel).errors.on(:title)
       assert_template 'new'
@@ -80,7 +80,7 @@ class Admin::CarrouselsControllerTest < ActionController::TestCase
       create_carrousel(:title => nil)
     end
     
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:carrousel).new_record?
     assert assigns(:carrousel).errors.on(:title)
   end
@@ -129,7 +129,7 @@ class Admin::CarrouselsControllerTest < ActionController::TestCase
     old_title = @carrousel.title
     put :update, :id => @carrousel.id, :carrousel => { :title => nil }, :commit_type => 'preview'
 
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:carrousel).errors.on(:title)
     assert_equal old_title, @carrousel.reload.title
     assert_template 'edit'
@@ -139,7 +139,7 @@ class Admin::CarrouselsControllerTest < ActionController::TestCase
     login_as :sjoerd
     
     put :update, :id => @carrousel.id, :carrousel => { :title => nil }
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:carrousel).errors.on(:title)
   end
   
@@ -204,8 +204,7 @@ protected
       :items => [ nodes(:help_page_node).id ], 
       :carrousel_items => { nodes(:help_page_node).id => 'Help page' } 
     }.merge(options)
-
-    assert_response :success   
+    
     assigns(:carrousel)
   end
 end

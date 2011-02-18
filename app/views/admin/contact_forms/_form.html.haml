@@ -1,12 +1,3 @@
-= error_messages_for :contact_form
-
-= javascript_tag("document.getElementById('right_panel_body').scrollTop = 0;")
-
 = form.text_field  :email_address,                     :label => t('contact_forms.email_address')
-= form.text_field  :title,                             :label => t('contact_forms.title')
 = form.html_editor :description_before_contact_fields, :label => t('contact_forms.description_before_contact_fields'), :height => 50
 = form.html_editor :description_after_contact_fields,  :label => t('contact_forms.description_after_contact_fields'),  :height => 50
-
-= category_settings_for @contact_form
-
-= commit_fields form

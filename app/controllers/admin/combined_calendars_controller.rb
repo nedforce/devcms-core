@@ -32,7 +32,7 @@ class Admin::CombinedCalendarsController < Admin::AdminController
     @combined_calendar = CombinedCalendar.new(params[:combined_calendar])
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :object => @combined_calendar }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @combined_calendar }}
     end
   end
   
@@ -41,7 +41,7 @@ class Admin::CombinedCalendarsController < Admin::AdminController
     @combined_calendar.attributes = params[:combined_calendar]
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :object => @combined_calendar }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @combined_calendar }}
     end
   end
   
@@ -60,7 +60,7 @@ class Admin::CombinedCalendarsController < Admin::AdminController
         format.html { render :template => 'admin/shared/create' }
         format.xml  { render :xml => @combined_calendar, :status => :created, :location => @combined_calendar }
       else
-        format.html { render :template => 'admin/shared/new', :locals => { :object => @combined_calendar }, :status => :unprocessable_entity }
+        format.html { render :template => 'admin/shared/new', :locals => { :record => @combined_calendar }, :status => :unprocessable_entity }
         format.xml  { render :xml => @combined_calendar.errors, :status => :unprocessable_entity }
       end
     end
@@ -83,7 +83,7 @@ class Admin::CombinedCalendarsController < Admin::AdminController
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else
-        format.html { render :template => 'admin/shared/edit', :locals => { :object => @combined_calendar }, :status => :unprocessable_entity }
+        format.html { render :template => 'admin/shared/edit', :locals => { :record => @combined_calendar }, :status => :unprocessable_entity }
         format.xml  { render :xml => @combined_calendar.errors, :status => :unprocessable_entity }
       end
     end

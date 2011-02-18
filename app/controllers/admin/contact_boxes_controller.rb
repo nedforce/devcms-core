@@ -26,14 +26,14 @@ class Admin::ContactBoxesController < Admin::AdminController
     @contact_box = ContactBox.new(params[:contact_box])
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :object => @contact_box }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @contact_box }}
     end
   end
 
   # * GET /admin/contact_boxes/:id/edit
   def edit
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :object => @contact_box }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @contact_box }}
     end
   end
 
@@ -48,7 +48,7 @@ class Admin::ContactBoxesController < Admin::AdminController
         format.html { render :template => 'admin/shared/create' }
         format.xml  { head :ok }
       else
-        format.html { render :template => 'admin/shared/new', :locals => { :object => @contact_box }, :status => :unprocessable_entity }
+        format.html { render :template => 'admin/shared/new', :locals => { :record => @contact_box }, :status => :unprocessable_entity }
         format.xml  { render :xml => @contact_box.errors, :status => :unprocessable_entity }
       end
     end
@@ -62,7 +62,7 @@ class Admin::ContactBoxesController < Admin::AdminController
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else
-        format.html { render :template => 'admin/shared/edit', :locals => { :object => @contact_box }, :status => :unprocessable_entity }
+        format.html { render :template => 'admin/shared/edit', :locals => { :record => @contact_box }, :status => :unprocessable_entity }
         format.xml  { render :xml => @contact_box.errors, :status => :unprocessable_entity }
       end
     end

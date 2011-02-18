@@ -23,11 +23,11 @@ class Admin::BackendControllerTest < Test::Unit::TestCase
     assert_template 'search'
     assert_nil assigns(:results)
 
-    post :search, :query => 'title'
+    post :search, 'title'
     assert_template 'search'
     assert_equal 1, assigns(:results).size
     
-    post :search, :query => 'monkey'
+    post :search, 'monkey'
     assert_template 'search'
     assert assigns(:results).empty?
  

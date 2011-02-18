@@ -30,7 +30,7 @@ class Admin::TopHitsPagesController < Admin::AdminController
     @top_hits_page = TopHitsPage.new(params[:top_hits_page])
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :object => @top_hits_page }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @top_hits_page }}
     end
   end
 
@@ -39,7 +39,7 @@ class Admin::TopHitsPagesController < Admin::AdminController
     @top_hits_page.attributes = params[:top_hits_page]
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :object => @top_hits_page }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @top_hits_page }}
     end
   end
 
@@ -53,13 +53,13 @@ class Admin::TopHitsPagesController < Admin::AdminController
       if @commit_type == 'preview' && @top_hits_page.valid?
         find_top_hits
 
-        format.html { render :template => 'admin/shared/create_preview', :locals => { :object => @top_hits_page }, :layout => 'admin/admin_preview' }
+        format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @top_hits_page }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @top_hits_page, :status => :created, :location => @top_hits_page }
       elsif @commit_type == 'save' && @top_hits_page.save
         format.html { render :template => 'admin/shared/create' }
         format.xml  { head :ok }
       else
-        format.html { render :template => 'admin/shared/new', :locals => { :object => @top_hits_page }, :status => :unprocessable_entity }
+        format.html { render :template => 'admin/shared/new', :locals => { :record => @top_hits_page }, :status => :unprocessable_entity }
         format.xml  { render :xml => @top_hits_page.errors, :status => :unprocessable_entity }
       end
     end
@@ -74,13 +74,13 @@ class Admin::TopHitsPagesController < Admin::AdminController
       if @commit_type == 'preview' && @top_hits_page.valid?
         find_top_hits
 
-        format.html { render :template => 'admin/shared/update_preview', :locals => { :object => @top_hits_page }, :layout => 'admin/admin_preview' }
+        format.html { render :template => 'admin/shared/update_preview', :locals => { :record => @top_hits_page }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @top_hits_page, :status => :created, :location => @top_hits_page }
       elsif @commit_type == 'save' && @top_hits_page.save
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else
-        format.html { render :template => 'admin/shared/edit', :locals => { :object => @top_hits_page }, :status => :unprocessable_entity }
+        format.html { render :template => 'admin/shared/edit', :locals => { :record => @top_hits_page }, :status => :unprocessable_entity }
         format.xml  { render :xml => @top_hits_page.errors, :status => :unprocessable_entity }
       end
     end

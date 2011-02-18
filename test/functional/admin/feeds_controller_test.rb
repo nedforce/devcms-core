@@ -23,8 +23,8 @@ class Admin::FeedsControllerTest < ActionController::TestCase
 
     assert_difference('Feed.count') do
       create_feed
-      assert_response :success
       assert !assigns(:feed).new_record?, :message => assigns(:feed).errors.full_messages.join('; ')
+      assert_response :success
     end
   end
 
@@ -84,6 +84,6 @@ class Admin::FeedsControllerTest < ActionController::TestCase
   protected
 
   def create_feed(attributes = {}, options = {})
-    post :create, { :parent_node_id => nodes(:root_section_node).id, :feed => { :url => "http://office.nedforce.nl/dummy.rss" }.merge(attributes)}.merge(options)
+    post :create, { :parent_node_id => nodes(:root_section_node).id, :feed => { :url => "http://www.nedforce.nl/blog.rss" }.merge(attributes)}.merge(options)
   end
 end

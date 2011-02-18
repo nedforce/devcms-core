@@ -88,7 +88,7 @@ class Admin::WeblogsController < Admin::AdminController
     @weblog.attributes = params[:weblog]
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :object => @weblog }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @weblog }}
     end
   end
 
@@ -101,7 +101,7 @@ class Admin::WeblogsController < Admin::AdminController
       if @commit_type == 'preview' && @weblog.valid?
         format.html {
           find_weblog_posts
-          render :template => 'admin/shared/update_preview', :locals => { :object => @weblog }, :layout => 'admin/admin_preview'
+          render :template => 'admin/shared/update_preview', :locals => { :record => @weblog }, :layout => 'admin/admin_preview'
         }
         format.xml  { render :xml => @weblog, :status => :created, :location => @weblog }
       elsif @commit_type == 'save' && @weblog.save
@@ -111,7 +111,7 @@ class Admin::WeblogsController < Admin::AdminController
         }
         format.xml  { head :ok }
       else
-        format.html { render :template => 'admin/shared/edit', :locals => { :object => @weblog }, :status => :unprocessable_entity }
+        format.html { render :template => 'admin/shared/edit', :locals => { :record => @weblog }, :status => :unprocessable_entity }
         format.xml  { render :xml => @weblog.errors, :status => :unprocessable_entity }
       end
     end

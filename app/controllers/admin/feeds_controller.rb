@@ -26,21 +26,21 @@ class Admin::FeedsController < Admin::AdminController
     @feed = Feed.new
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :object => @feed }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @feed }}
     end
   end
 
   # * GET /admin/feeds/:id/edit
   def edit
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :object => @feed }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @feed }}
     end
   end
 
   # * POST /admin/feeds
   # * POST /admin/feeds.xml
   def create
-    @feed        = Feed.new(params[:feed])
+    @feed = Feed.new(params[:feed])
     @feed.parent = @parent_node
 
     respond_to do |format|
@@ -48,7 +48,7 @@ class Admin::FeedsController < Admin::AdminController
         format.html { render :template => 'admin/shared/create' }
         format.xml  { render :xml => @feed, :status => :created, :location => @feed }
       else
-        format.html { render :template => 'admin/shared/new', :locals => { :object => @feed }, :status => :unprocessable_entity }
+        format.html { render :template => 'admin/shared/new', :locals => { :record => @feed }, :status => :unprocessable_entity }
         format.xml  { render :xml => @feed.errors, :status => :unprocessable_entity }
       end
     end
@@ -63,7 +63,7 @@ class Admin::FeedsController < Admin::AdminController
         format.xml  { head :ok }
       else
         @feed.reload # to retrieve the old title
-        format.html { render :template => 'admin/shared/edit', :locals => { :object => @feed }, :status => :unprocessable_entity }
+        format.html { render :template => 'admin/shared/edit', :locals => { :record => @feed }, :status => :unprocessable_entity }
         format.xml  { render :xml => @feed.errors, :status => :unprocessable_entity }
       end
     end

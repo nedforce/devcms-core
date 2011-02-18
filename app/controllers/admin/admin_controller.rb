@@ -10,6 +10,9 @@ class Admin::AdminController < ApplicationController
   # Override non-JS DELETE hyprlinks fallback for admin pages.
   skip_before_filter :confirm_destroy
 
+  # Don't set search scopes in backend
+  skip_before_filter :set_search_scopes
+
   # Require the user to be logged in for all actions.
   before_filter :login_required
 
@@ -142,13 +145,21 @@ protected
   end
 
   def parse_start_and_end_times
-    params[:calendar_item][:start_time] = Time.parse(params[:calendar_item].delete(:start_time)) rescue nil
-    params[:calendar_item][:end_time]   = Time.parse(params[:calendar_item].delete(:end_time))   rescue nil
-    params[:calendar_item][:date]       = Date.parse(params[:calendar_item].delete(:date))       rescue nil
+    type = case
+    when params[:calendar_item].present?
+      :calendar_item
+    when params[:meeting].present?
+      :meeting
+    end
+    if type.present?
+      params[type][:start_time] = Time.parse(params[type].delete(:start_time)) rescue nil if params[type][:start_time].present?
+      params[type][:end_time]   = Time.parse(params[type].delete(:end_time))   rescue nil if params[type][:end_time].present?  
+      params[type][:date]       = Date.parse(params[type].delete(:date))       rescue nil if params[type][:date].present?
+    end
   end
 
   def find_children
-    @children = @calendar_item.accessible_children_for(current_user)
+    @children = (@calendar_item || @meeting).accessible_children_for(current_user)
     find_images_and_attachments
   end
 

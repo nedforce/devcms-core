@@ -28,65 +28,63 @@ class Admin::MeetingsController < Admin::AdminController
   # * GET /admin/meetings/:id.xml
   def show
     respond_to do |format|
-      format.html { render :partial => '/admin/calendar_items/show', :locals => { :record => @calendar_item }, :layout => 'admin/admin_show' }
-      format.xml  { render :xml => @calendar_item }
+      format.html { render :partial => '/admin/meetings/show', :locals => { :record => @meeting }, :layout => 'admin/admin_show' }
+      format.xml  { render :xml => @meeting }
     end
   end 
 
   # * GET /admin/meetings/:id/previous
   # * GET /admin/meetings/:id/previous.xml
   def previous
-    @calendar_item = @calendar_item.previous_version
+    @meeting = @meeting.previous_version
     show
   end
 
   # * GET /admin/meetings/new
   def new
-    @repeat_interval_multipliers   = CalendarItem.repeat_interval_multipliers
-    @repeat_interval_granularities = CalendarItem.repeat_interval_granularities
-    @calendar_item                 = Meeting.new(params[:calendar_item] || {})
+    @meeting                 = Meeting.new(params[:meeting] || {})
 
-    render :template => '/admin/calendar_items/new'
+    respond_to do |format|
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @meeting }}
+    end
   end
   
   # * GET /admin/meetings/:id/edit
   def edit
-    @calendar_item.attributes = params[:calendar_item]
-    render :template => '/admin/calendar_items/edit'
+    @meeting.attributes = params[:meeting]
+    respond_to do |format|
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @meeting }}
+    end
   end
 
   # * POST /admin/meetings
   # * POST /admin/meetings.xml
   def create
-    @calendar_item        = Meeting.new(params[:calendar_item])
-    @calendar_item.parent = @parent_node
+    @meeting        = Meeting.new(params[:meeting])
+    @meeting.parent = @parent_node
 
     respond_to do |format|
-      if @commit_type == 'preview' && @calendar_item.valid?
-        format.html { render :template => '/admin/calendar_items/create_preview', :layout => 'admin/admin_preview' }
-        format.xml  { render :xml => @calendar_item, :status => :created, :location => @calendar_item }
-      elsif @commit_type == 'save' && @calendar_item.save_for_user(current_user)
+      if @commit_type == 'preview' && @meeting.valid?
+        format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @meeting }, :layout => 'admin/admin_preview' }
+        format.xml  { render :xml => @meeting, :status => :created, :location => @meeting }
+      elsif @commit_type == 'save' && @meeting.save_for_user(current_user)
         format.html do
           if params[:continue].present?
-            @repeat_interval_multipliers   = CalendarItem.repeat_interval_multipliers
-            @repeat_interval_granularities = CalendarItem.repeat_interval_granularities
             find_meeting_categories
 
-            @calendar_item = Meeting.new
-            render :template => '/admin/calendar_items/new'
+            @meeting = Meeting.new
+            render :template => 'admin/shared/new', :locals => { :record => @meeting }, :status => :success
           else
             render :template => 'admin/shared/create'
           end
         end
-        format.xml  { render :xml => @calendar_item, :status => :created, :location => @calendar_item }
+        format.xml  { render :xml => @meeting, :status => :created, :location => @meeting }
       else
         format.html do 
           find_meeting_categories
-          @repeat_interval_multipliers   = CalendarItem.repeat_interval_multipliers
-          @repeat_interval_granularities = CalendarItem.repeat_interval_granularities
-          render :template => '/admin/calendar_items/new'
+          render :template => 'admin/shared/new', :locals => { :record => @meeting }, :status => :unprocessable_entity
         end
-        format.xml  { render :xml => @calendar_item.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @meeting.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -94,31 +92,31 @@ class Admin::MeetingsController < Admin::AdminController
   # * PUT /admin/meetings/:id
   # * PUT /admin/meetings/publication_date1.xml
   def update
-    @calendar_item.attributes = params[:calendar_item]
+    @meeting.attributes = params[:meeting]
 
     respond_to do |format|
-      if @commit_type == 'preview' && @calendar_item.valid?
+      if @commit_type == 'preview' && @meeting.valid?
         format.html do
           find_children
-          render :template => '/admin/calendar_items/update_preview', :layout => 'admin/admin_preview'
+          render :template => 'admin/shared/update_preview', :locals => { :record => @meeting }, :layout => 'admin/admin_preview'
         end
-        format.xml  { render :xml => @calendar_item, :status => :created, :location => @calendar_item }
-      elsif @commit_type == 'save' && @calendar_item.save_for_user(current_user, @for_approval)
+        format.xml  { render :xml => @meeting, :status => :created, :location => @meeting }
+      elsif @commit_type == 'save' && @meeting.save_for_user(current_user, @for_approval)
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else
         format.html do 
           find_meeting_categories
-          render :template => '/admin/calendar_items/edit'
+          render :template => 'admin/shared/edit', :locals => { :record => @meeting }, :status => :unprocessable_entity
         end
-        format.xml  { render :xml => @calendar_item.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @meeting.errors, :status => :unprocessable_entity }
       end
     end
   end
 
   # DELETE /admin/meetings/:id
   def destroy
-    CalendarItem.destroy_calendar_item(@calendar_item)
+    CalendarItem.destroy_calendar_item(@meeting)
 
     respond_to do |format|
       format.xml  { head :ok }
@@ -135,7 +133,7 @@ protected
 
   # Finds the +Meeting+ object corresponding to the passed in +id+ parameter.
   def find_meeting
-    @calendar_item = Meeting.find(params[:id], :include => :node)
+    @meeting = Meeting.find(params[:id], :include => :node)
   end
 
   # Finds all MeetingCategory objects.

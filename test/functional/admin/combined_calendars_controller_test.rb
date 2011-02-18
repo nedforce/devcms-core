@@ -63,7 +63,7 @@ class Admin::CombinedCalendarsControllerTest < ActionController::TestCase
 
     assert_no_difference('CombinedCalendar.count') do
       create_combined_calendar({ :title => nil }, { :commit_type => 'preview' })
-      assert_response :success
+      assert_response :unprocessable_entity
       assert assigns(:combined_calendar).new_record?
       assert assigns(:combined_calendar).errors.on(:title)
       assert_template 'new'
@@ -77,7 +77,7 @@ class Admin::CombinedCalendarsControllerTest < ActionController::TestCase
       create_combined_calendar({:title => nil})
     end
     
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:combined_calendar).new_record?
     assert assigns(:combined_calendar).errors.on(:title)
   end
@@ -128,7 +128,7 @@ class Admin::CombinedCalendarsControllerTest < ActionController::TestCase
     old_title = combined_calendar.title
     put :update, :id => combined_calendar, :combined_calendar => { :title => nil }, :commit_type => 'preview'
 
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:combined_calendar).errors.on(:title)
     assert_equal old_title, combined_calendar.reload.title
     assert_template 'edit'
@@ -138,7 +138,7 @@ class Admin::CombinedCalendarsControllerTest < ActionController::TestCase
     login_as :sjoerd
     
     put :update, :id => combined_calendars(:combined_calendar).id, :combined_calendar => {:title => nil}
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:combined_calendar).errors.on(:title)
   end
   

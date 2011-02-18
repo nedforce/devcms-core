@@ -32,7 +32,7 @@ class Admin::WeblogPostsController < Admin::AdminController
     @weblog_post.attributes = params[:weblog_post]
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :object => @weblog_post }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @weblog_post }}
     end
   end
 
@@ -46,7 +46,7 @@ class Admin::WeblogPostsController < Admin::AdminController
         format.html {
           find_images_and_attachments
           find_content
-          render :template => 'admin/shared/update_preview', :locals => { :object => @weblog_post }, :layout => 'admin/admin_preview'
+          render :template => 'admin/shared/update_preview', :locals => { :record => @weblog_post }, :layout => 'admin/admin_preview'
         }
         format.xml  { render :xml => @weblog_post, :status => :created, :location => @weblog_post }
       elsif @commit_type == 'save' && @weblog_post.save
@@ -56,7 +56,7 @@ class Admin::WeblogPostsController < Admin::AdminController
         }
         format.xml  { head :ok }
       else
-        format.html { render :template => 'admin/shared/edit', :locals => { :object => @weblog_post }, :status => :unprocessable_entity }
+        format.html { render :template => 'admin/shared/edit', :locals => { :record => @weblog_post }, :status => :unprocessable_entity }
         format.xml  { render :xml => @weblog_post.errors, :status => :unprocessable_entity }
       end
     end

@@ -1,10 +1,1 @@
-= error_messages_for :feed
-
-= javascript_tag("document.getElementById('right_panel_body').scrollTop = 0;")
-
 = form.text_field :url,                :label => t('feeds.url')
-= form.text_field :title,              :label => t('shared.title')
-= form.text_field :title_alternatives, :label => t('shared.title_alternatives')
-
-= content_box_settings_for @feed
-= category_settings_for    @feed

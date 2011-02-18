@@ -40,12 +40,18 @@ class Admin::SectionsController < Admin::AdminController
   # * GET /admin/sections/new
   def new
     @section = Section.new(params[:section])
+    respond_to do |format|
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @section }}
+    end
   end
 
   # * GET /admin/sections/:id/edit
   def edit
     @show_frontpage_control = can_set_frontpage?
     @section.attributes     = params[:section]
+    respond_to do |format|
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @section }}
+    end
   end
 
   # * POST /admin/sections
@@ -56,13 +62,13 @@ class Admin::SectionsController < Admin::AdminController
 
     respond_to do |format|
       if @commit_type == 'preview' && @section.valid?
-        format.html { render :action => 'create_preview', :layout => 'admin/admin_preview' }
+        format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @section }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @section, :status => :created, :location => @section }
       elsif @commit_type == 'save' && @section.save_for_user(current_user)
         format.html { render :template => 'admin/shared/create' }
         format.xml  { render :xml => @section, :status => :created, :location => @section }
       else
-        format.html { render :action => :new }
+        format.html { render :template => 'admin/shared/new', :locals => { :record => @section }, :status => :unprocessable_entity }
         format.xml  { render :xml => @section.errors, :status => :unprocessable_entity }
       end
     end
@@ -80,14 +86,14 @@ class Admin::SectionsController < Admin::AdminController
         format.html do
           find_images_and_attachments
           find_children
-          render :action => 'update_preview', :layout => 'admin/admin_preview'
+          render :template => 'admin/shared/update_preview', :locals => { :record => @section }, :layout => 'admin/admin_preview'
         end
         format.xml  { render :xml => @section, :status => :created, :location => @section }
       elsif @commit_type == 'save' && @section.save_for_user(current_user, @for_approval)
         format.html # update.html.erb
         format.xml  { head :ok }
       else
-        format.html { render :action => :edit }
+        format.html { render :template => 'admin/shared/edit', :locals => { :record => @section }, :status => :unprocessable_entity }
         format.xml  { render :xml => @section.errors, :status => :unprocessable_entity }
       end
     end

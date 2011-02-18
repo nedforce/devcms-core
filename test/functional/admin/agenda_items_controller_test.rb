@@ -64,7 +64,7 @@ class Admin::AgendaItemsControllerTest < ActionController::TestCase
 
     assert_no_difference('AgendaItem.count') do
       create_agenda_item({ :description => nil }, { :commit_type => 'preview' })
-      assert_response :success
+      assert_response :unprocessable_entity
       assert assigns(:agenda_item).new_record?
       assert assigns(:agenda_item).errors.on(:description)
       assert_template 'new'
@@ -78,7 +78,7 @@ class Admin::AgendaItemsControllerTest < ActionController::TestCase
       create_agenda_item(:description => nil)
     end
     
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:agenda_item).new_record?
     assert assigns(:agenda_item).errors.on(:description)
   end
@@ -129,7 +129,7 @@ class Admin::AgendaItemsControllerTest < ActionController::TestCase
     old_description = agenda_item.description
     put :update, :id => agenda_item, :agenda_item => { :description => nil }, :commit_type => 'preview'
 
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:agenda_item).errors.on(:description)
     assert_equal old_description, agenda_item.reload.description
     assert_template 'edit'
@@ -139,7 +139,7 @@ class Admin::AgendaItemsControllerTest < ActionController::TestCase
     login_as :sjoerd
     
     put :update, :id => agenda_items(:agenda_item_one).id, :agenda_item => { :description => nil }
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:agenda_item).errors.on(:description)
   end
   

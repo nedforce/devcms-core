@@ -3,7 +3,7 @@
 <div class="regularPage forumThread">
   <h1 <%= "class='closed'" if @forum_thread.closed? -%>><span class="prefix"><%=t 'forums.forum_thread' -%></span><%=h @forum_thread.title -%></h1>
 
-  <p class="forumThreadDetails"><%= "#{t 'forums.created_on'} #{l @forum_thread.created_at, :format => :long} #{t 'forums.by'} <span class='userLogin'>#{truncate(h(@forum_thread.user.screen_name), :length => 12)}</span>, #{@forum_thread.number_of_replies} #{t (@forum_thread.number_of_replies == 1) ? 'forums.forum_post' : 'forums.forum_posts'}" -%></p>
+  <p class="forumThreadDetails"><%= "#{t 'forums.created_on'} #{l @forum_thread.created_at, :format => :long} #{t 'forums.by'} <span class='userLogin'>#{truncate(h(@forum_thread.user.screen_name), :length => 12)}</span>, #{@forum_thread.number_of_replies} #{t((@forum_thread.number_of_replies == 1) ? 'forums.forum_post' : 'forums.forum_posts')}" -%></p>
 
   <div class="htmlField forumThreadBody"><%=w @forum_thread.start_post.body -%></div>
 

@@ -57,7 +57,7 @@ class Admin::LinksController < Admin::AdminController
         format.html { render :template => 'admin/shared/create' }
         format.xml  { render :xml => @link, :status => :created, :location => @link }
       else
-        format.html { render :action => :new }
+        format.html { render :action => :new, :status => :unprocessable_entity }
         format.xml  { render :xml => @link.errors, :status => :unprocessable_entity }
       end
     end
@@ -71,7 +71,7 @@ class Admin::LinksController < Admin::AdminController
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else
-        format.html { render :action => :edit }
+        format.html { render :action => :edit, :status => :unprocessable_entity }
         format.xml  { render :xml => @link.errors, :status => :unprocessable_entity }
       end
     end

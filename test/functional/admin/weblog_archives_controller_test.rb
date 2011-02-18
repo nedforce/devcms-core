@@ -124,7 +124,7 @@ class Admin::WeblogArchivesControllerTest < ActionController::TestCase
 
     assert_no_difference('WeblogArchive.count') do
       create_weblog_archive({ :title => nil }, { :commit_type => 'preview' })
-      assert_response :success
+      assert_response :unprocessable_entity
       assert assigns(:weblog_archive).new_record?
       assert assigns(:weblog_archive).errors.on(:title)
       assert_template 'new'
@@ -138,7 +138,7 @@ class Admin::WeblogArchivesControllerTest < ActionController::TestCase
       create_weblog_archive(:title => nil)
     end
 
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:weblog_archive).new_record?
     assert assigns(:weblog_archive).errors.on(:title)
   end
@@ -189,7 +189,7 @@ class Admin::WeblogArchivesControllerTest < ActionController::TestCase
     old_title = weblog_archive.title
     put :update, :id => weblog_archive, :weblog_archive => { :title => nil, :description => 'updated_body'}, :commit_type => 'preview'
 
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:weblog_archive).errors.on(:title)
     assert_equal old_title, weblog_archive.reload.title
     assert_template 'edit'
@@ -199,7 +199,7 @@ class Admin::WeblogArchivesControllerTest < ActionController::TestCase
     login_as :sjoerd
 
     put :update, :id => weblog_archives(:devcms_weblog_archive).id, :weblog_archive => {:title => nil}
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:weblog_archive).errors.on(:title)
   end
 

@@ -38,7 +38,7 @@ class Admin::AbbreviationsControllerTest < ActionController::TestCase
     assert_no_difference('Abbreviation.count') do
       create_abbreviation(:abbr => nil)
     end
-    assert_response :internal_server_error
+    assert_response :unprocessable_entity
     assert assigns(:abbreviation).new_record?
   end
 
@@ -48,7 +48,7 @@ class Admin::AbbreviationsControllerTest < ActionController::TestCase
     assert_no_difference('Abbreviation.count') do
       create_abbreviation(:definition => nil)
     end
-    assert_response :internal_server_error
+    assert_response :unprocessable_entity
     assert assigns(:abbreviation).new_record?
   end
 

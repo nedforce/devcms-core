@@ -16,7 +16,7 @@ class Admin::AlphabeticIndicesController < Admin::AdminController
   # * GET /alphabetic_indices/:id.xml
   def show
     respond_to do |format|
-      format.html { render :partial => :show, :layout => 'admin/admin_show' }
+      format.html { render :partial => 'show', :layout => 'admin/admin_show' }
       format.xml  { render :xml => @alphabetic_index }
     end
   end
@@ -26,7 +26,7 @@ class Admin::AlphabeticIndicesController < Admin::AdminController
     @alphabetic_index = AlphabeticIndex.new(params[:alphabetic_index])
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :object => @alphabetic_index }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @alphabetic_index }}
     end
   end
 
@@ -35,7 +35,7 @@ class Admin::AlphabeticIndicesController < Admin::AdminController
     @alphabetic_index.attributes = params[:alphabetic_index]
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :object => @alphabetic_index }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @alphabetic_index }}
     end
   end
 
@@ -50,7 +50,7 @@ class Admin::AlphabeticIndicesController < Admin::AdminController
         format.html { render :template => 'admin/shared/create' }
         format.xml  { head :ok }
       else
-        format.html { render :template => 'admin/shared/new', :locals => { :object => @alphabetic_index }, :status => :unprocessable_entity }
+        format.html { render :template => 'admin/shared/new', :locals => { :record => @alphabetic_index }, :status => :unprocessable_entity }
         format.xml  { render :xml => @alphabetic_index.errors, :status => :unprocessable_entity }
       end
     end
@@ -66,7 +66,7 @@ class Admin::AlphabeticIndicesController < Admin::AdminController
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else
-        format.html { render :template => 'admin/shared/edit', :locals => { :object => @alphabetic_index }, :status => :unprocessable_entity }
+        format.html { render :template => 'admin/shared/edit', :locals => { :record => @alphabetic_index }, :status => :unprocessable_entity }
         format.xml  { render :xml => @alphabetic_index.errors, :status => :unprocessable_entity }
       end
     end

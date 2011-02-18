@@ -1,3 +1,3 @@
 %ul
   - node.categories.each do |category|
-    %li= link_to category.to_label, search_path(:query => ' ', :advanced => 1, :programme => (category.is_root_category? ? category.id : category.parent_id), :project => (category.is_root_category? ? nil : category.id))
+    %li= link_to category.to_label, search_path(' ', :advanced => 1, :programme => (category.is_root_category? ? category.id : category.parent_id), :project => (category.is_root_category? ? nil : category.id))

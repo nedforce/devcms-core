@@ -202,7 +202,7 @@ nl:
     full_event: Volledig item
     full_meeting: Volledige vergadering
     is_meeting: Vergadering?
-    location: Locatie
+    location_description: Locatie
     mail: Mail dit item
     meeting_category: Categorie
     months: maanden

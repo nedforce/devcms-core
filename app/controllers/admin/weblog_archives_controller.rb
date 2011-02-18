@@ -85,7 +85,7 @@ class Admin::WeblogArchivesController < Admin::AdminController
     @weblog_archive = WeblogArchive.new(params[:weblog_archive])
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :object => @weblog_archive }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @weblog_archive }}
     end
   end
 
@@ -94,7 +94,7 @@ class Admin::WeblogArchivesController < Admin::AdminController
     @weblog_archive.attributes = params[:weblog_archive]
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :object => @weblog_archive }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @weblog_archive }}
     end
   end
 
@@ -106,13 +106,13 @@ class Admin::WeblogArchivesController < Admin::AdminController
 
     respond_to do |format|
       if @commit_type == 'preview' && @weblog_archive.valid?
-        format.html { render :template => 'admin/shared/create_preview', :locals => { :object => @weblog_archive }, :layout => 'admin/admin_preview' }
+        format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @weblog_archive }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @weblog_archive, :status => :created, :location => @weblog_archive }
       elsif @commit_type == 'save' && @weblog_archive.save
         format.html { render :template => 'admin/shared/create' }
         format.xml  { render :xml => @weblog_archive, :status => :created, :location => @weblog_archive }
       else
-        format.html { render :template => 'admin/shared/new', :locals => { :object => @weblog_archive }, :status => :unprocessable_entity }
+        format.html { render :template => 'admin/shared/new', :locals => { :record => @weblog_archive }, :status => :unprocessable_entity }
         format.xml  { render :xml => @weblog_archive.errors, :status => :unprocessable_entity }
       end
     end
@@ -127,14 +127,14 @@ class Admin::WeblogArchivesController < Admin::AdminController
       if @commit_type == 'preview' && @weblog_archive.valid?
         format.html {
           find_weblogs
-          render :template => 'admin/shared/update_preview', :locals => { :object => @weblog_archive }, :layout => 'admin/admin_preview'
+          render :template => 'admin/shared/update_preview', :locals => { :record => @weblog_archive }, :layout => 'admin/admin_preview'
         }
         format.xml  { render :xml => @weblog_archive, :status => :created, :location => @weblog_archive }
       elsif @commit_type == 'save' && @weblog_archive.save
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else
-        format.html { render :template => 'admin/shared/edit', :locals => { :object => @weblog_archive }, :status => :unprocessable_entity }
+        format.html { render :template => 'admin/shared/edit', :locals => { :record => @weblog_archive }, :status => :unprocessable_entity }
         format.xml  { render :xml => @weblog_archive.errors, :status => :unprocessable_entity }
       end
     end

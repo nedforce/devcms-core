@@ -32,7 +32,7 @@ class CarrouselsControllerTest < ActionController::TestCase
     
     get :show, :id => @carrousel.id
     assert_response :success
-    assert_not_nil assigns(:carrousel).last_cycled
+    assert_not_nil assigns(:carrousel).reload.last_cycled
     assert_equal item1.item, assigns(:carrousel_item).item  
 
     @carrousel.update_attribute(:last_cycled, 4.hours.ago)    

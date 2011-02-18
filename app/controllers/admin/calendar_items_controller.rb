@@ -40,14 +40,18 @@ class Admin::CalendarItemsController < Admin::AdminController
 
   # * GET /admin/calendar_items/new
   def new
-    @repeat_interval_multipliers   = CalendarItem.repeat_interval_multipliers
-    @repeat_interval_granularities = CalendarItem.repeat_interval_granularities
     @calendar_item                 = CalendarItem.new(params[:calendar_item] || {})
+    respond_to do |format|
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @calendar_item }}
+    end
   end
 
   # * GET /admin/calendar_items/:id/edit
   def edit
     @calendar_item.attributes = params[:calendar_item]
+    respond_to do |format|
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @calendar_item }}
+    end
   end
 
   # * POST /admin/calendar_items
@@ -58,16 +62,13 @@ class Admin::CalendarItemsController < Admin::AdminController
 
     respond_to do |format|
       if @commit_type == 'preview' && @calendar_item.valid?
-        format.html { render :action => 'create_preview', :layout => 'admin/admin_preview' }
+        format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @calendar_item }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @calendar_item, :status => :created, :location => @calendar_item }
       elsif @commit_type == 'save' && @calendar_item.save_for_user(current_user)
         format.html do
           if params[:continue].present?
-            @repeat_interval_multipliers   = CalendarItem.repeat_interval_multipliers
-            @repeat_interval_granularities = CalendarItem.repeat_interval_granularities
             @calendar_item                 = CalendarItem.new
-
-            render :action => :new
+            render :template => 'admin/shared/new', :locals => { :record => @calendar_item }, :status => :success
           else
             render :template => 'admin/shared/create'
           end
@@ -75,9 +76,7 @@ class Admin::CalendarItemsController < Admin::AdminController
         format.xml  { render :xml => @calendar_item, :status => :created, :location => @calendar_item }
       else
         format.html do 
-          @repeat_interval_multipliers   = CalendarItem.repeat_interval_multipliers
-          @repeat_interval_granularities = CalendarItem.repeat_interval_granularities
-          render :action => :new
+          render :template => 'admin/shared/new', :locals => { :record => @calendar_item }, :status => :unprocessable_entity
         end
         format.xml  { render :xml => @calendar_item.errors, :status => :unprocessable_entity }
       end
@@ -93,7 +92,7 @@ class Admin::CalendarItemsController < Admin::AdminController
       if @commit_type == 'preview' && @calendar_item.valid?
         format.html do
           find_children
-          render :action => 'update_preview', :layout => 'admin/admin_preview'
+          render :template => 'admin/shared/update_preview', :locals => { :record => @calendar_item }, :layout => 'admin/admin_preview'
         end
         format.xml  { render :xml => @calendar_item, :status => :created, :location => @calendar_item }
       elsif @commit_type == 'save' && @calendar_item.save_for_user(current_user, @for_approval)
@@ -103,7 +102,7 @@ class Admin::CalendarItemsController < Admin::AdminController
         }
         format.xml  { head :ok }
       else
-        format.html { render :action => :edit }
+        format.html { render :template => 'admin/shared/edit', :locals => { :record => @calendar_item }, :status => :unprocessable_entity }
         format.xml  { render :xml => @calendar_item.errors, :status => :unprocessable_entity }
       end
     end

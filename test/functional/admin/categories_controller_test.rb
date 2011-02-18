@@ -80,7 +80,7 @@ class Admin::CategoriesControllerTest < ActionController::TestCase
     assert_no_difference('Category.count') do
       post :create, :category => { :name => nil }
     end
-    assert_response :internal_server_error
+    assert_response :unprocessable_entity
     assert assigns(:category).new_record?
   end
 

@@ -99,7 +99,7 @@ class Admin::NewsletterArchivesControllerTest < ActionController::TestCase
 
     assert_no_difference('NewsletterArchive.count') do
       create_newsletter_archive({ :title => nil }, { :commit_type => 'preview' })
-      assert_response :success
+      assert_response :unprocessable_entity
       assert assigns(:newsletter_archive).new_record?
       assert assigns(:newsletter_archive).errors.on(:title)
       assert_template 'new'
@@ -112,7 +112,7 @@ class Admin::NewsletterArchivesControllerTest < ActionController::TestCase
     assert_no_difference('NewsletterArchive.count') do
       create_newsletter_archive({:title => nil})
     end
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:newsletter_archive).new_record?
     assert assigns(:newsletter_archive).errors.on(:title)
   end
@@ -163,7 +163,7 @@ class Admin::NewsletterArchivesControllerTest < ActionController::TestCase
     old_title = newsletter_archive.title
     put :update, :id => newsletter_archive, :newsletter_archive => { :title => nil }, :commit_type => 'preview'
 
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:newsletter_archive).errors.on(:title)
     assert_equal old_title, newsletter_archive.reload.title
     assert_template 'edit'
@@ -173,7 +173,7 @@ class Admin::NewsletterArchivesControllerTest < ActionController::TestCase
     login_as :sjoerd
 
     put :update, :id => newsletter_archives(:devcms_newsletter_archive).id, :newsletter_archive => {:title => nil}
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:newsletter_archive).errors.on(:title)
   end
 

@@ -123,7 +123,7 @@ module Acts #:nodoc:
         instance_variable_set("@#{self.class.singular_name}", self.class.content_class_name.constantize.new(params[self.class.singular_name.to_sym]))
 
         respond_to do |format|
-          format.html { render :template => 'admin/shared/new', :locals => { :object => record }}
+          format.html { render :template => 'admin/shared/new', :locals => { :record => record }}
         end
       end
 
@@ -135,13 +135,13 @@ module Acts #:nodoc:
 
         respond_to do |format|
           if @commit_type == 'preview' && record.valid?
-            format.html { render :template => 'admin/shared/create_preview', :locals => { :object => record }, :layout => 'admin/admin_preview' }
+            format.html { render :template => 'admin/shared/create_preview', :locals => { :record => record }, :layout => 'admin/admin_preview' }
             format.xml  { render :xml => record, :status => :created, :location => record }
           elsif @commit_type == 'save' && record.save
             format.html { render :template => 'admin/shared/create' }
             format.xml  { render :xml => record, :status => :created, :location => record }
           else
-            format.html { render :template => 'admin/shared/new', :locals => { :object => record }, :status => :unprocessable_entity }
+            format.html { render :template => 'admin/shared/new', :locals => { :record => record }, :status => :unprocessable_entity }
             format.xml  { render :xml => record.errors, :status => :unprocessable_entity }
           end
         end
@@ -153,7 +153,7 @@ module Acts #:nodoc:
         record.attributes = params[self.class.singular_name.to_sym]
 
         respond_to do |format|
-          format.html { render :template => 'admin/shared/edit', :locals => { :object => record }}
+          format.html { render :template => 'admin/shared/edit', :locals => { :record => record }}
         end
       end
 
@@ -162,13 +162,13 @@ module Acts #:nodoc:
 
         respond_to do |format|
           if @commit_type == 'preview' && record.valid?
-            format.html { render :template => 'admin/shared/update_preview', :locals => { :object => record }, :layout => 'admin/admin_preview' }
+            format.html { render :template => 'admin/shared/update_preview', :locals => { :record => record }, :layout => 'admin/admin_preview' }
             format.xml  { render :xml => record, :status => :created, :location => record }
           elsif @commit_type == 'save' && record.save
             format.html { render :template => 'admin/shared/update' }
             format.xml  { head :ok }
           else
-            format.html { render :template => 'admin/shared/edit', :locals => { :object => record }, :status => :unprocessable_entity }
+            format.html { render :template => 'admin/shared/edit', :locals => { :record => record }, :status => :unprocessable_entity }
             format.xml  { render :xml => record.errors, :status => :unprocessable_entity }
           end
         end

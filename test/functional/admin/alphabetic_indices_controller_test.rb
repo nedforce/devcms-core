@@ -10,7 +10,7 @@ class Admin::AlphabeticIndicesControllerTest < ActionController::TestCase
   def test_should_get_show
     login_as :sjoerd
 
-    get :show, :id => @alphabetic_index
+    get :show, :id => @alphabetic_index.id
     assert_response :success
     assert assigns(:alphabetic_index)
   end
@@ -56,7 +56,7 @@ class Admin::AlphabeticIndicesControllerTest < ActionController::TestCase
       create_alphabetic_index({:title => nil})
     end
 
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:alphabetic_index).new_record?
     assert assigns(:alphabetic_index).errors.on(:title)
   end
@@ -91,7 +91,7 @@ class Admin::AlphabeticIndicesControllerTest < ActionController::TestCase
     login_as :sjoerd
 
     put :update, :id => alphabetic_indices(:subsection_alphabetic_index).id, :alphabetic_index => { :title => nil }
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:alphabetic_index).errors.on(:title)
   end
 

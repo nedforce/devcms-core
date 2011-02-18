@@ -4,7 +4,7 @@ events_calendar_item_one:
   type: CalendarItem
   title: Kermis
   body: Kermis, hoezee!
-  location: Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch
+  location_description: Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch
   start_time: <%= now.to_s(:db) %>
   end_time: <%= (now + 1.hour).to_s(:db) %>
 
@@ -12,7 +12,7 @@ events_calendar_item_two:
   type: CalendarItem
   title: Boedelmarkt
   body: Gaaf!
-  location: Acapulco
+  location_description: Acapulco
   start_time: <%= (now - 1.month).to_s(:db) %>
   end_time: <%= (now - 1.month + 1.hour).to_s(:db) %>
 
@@ -20,7 +20,7 @@ events_calendar_item_three:
   type: CalendarItem
   title: Vuurwerk
   body: Pas op je vingers!
-  location: Sint Annaparochie
+  location_description: Sint Annaparochie
   start_time: <%= (now - 1.year).to_s(:db) %>
   end_time: <%= (now - 1.year + 1.hour).to_s(:db) %>
 
@@ -28,7 +28,7 @@ events_calendar_item_four:
   type: CalendarItem
   title: Zwemmen
   body: Lekker fris!
-  location: Moskou
+  location_description: Moskou
   start_time: <%= (now + 1.day).to_s(:db) %>
   end_time: <%= (now + 1.day + 1.hour).to_s(:db) %>
 
@@ -37,7 +37,7 @@ meetings_calendar_meeting_one:
   meeting_category: gemeenteraad_meetings
   title: Belangrijke vergadering van de gemeenteraad!
   body: Iedereen moet aanwezig zijn!
-  location: Timboektoe
+  location_description: Timboektoe
   start_time: <%= (now + 1.day).to_s(:db) %>
   end_time: <%= (now + 1.day + 1.hour).to_s(:db) %>
 
@@ -46,7 +46,7 @@ meetings_calendar_meeting_two:
   meeting_category: adviescommissie_meetings
   title: Belangrijke vergadering van de adviescommissie!
   body: Niemand mag aanwezig zijn!
-  location: Verweggistan
+  location_description: Verweggistan
   start_time: <%= (now + 2.days).to_s(:db) %>
   end_time: <%= (now + 2.days + 2.hours).to_s(:db) %>
 
@@ -55,7 +55,7 @@ meetings_calendar_meeting_three:
   meeting_category: adviescommissie_meetings
   title: Belangrijke vergadering van de adviescommissie!
   body: Niemand mag aanwezig zijn!
-  location: Verweggistan
+  location_description: Verweggistan
   start_time: <%= (now + 3.days).to_s(:db) %>
   end_time: <%= (now + 3.days + 3.hours).to_s(:db) %>
 
@@ -64,7 +64,7 @@ meetings_calendar_meeting_four:
   meeting_category: adviescommissie_meetings
   title: Belangrijke vergadering van de adviescommissie!
   body: Niemand mag aanwezig zijn!
-  location: Verweggistan
+  location_description: Verweggistan
   start_time: <%= (now + 4.days).to_s(:db) %>
   end_time: <%= (now + 4.days + 4.hours).to_s(:db) %>
 
@@ -72,7 +72,7 @@ unapproved_calendar_item:
   type: CalendarItem
   title: Zwemmen 2
   body: Lekker fris!
-  location: Moskou
+  location_description: Moskou
   start_time: <%= (now + 1.day).to_s(:db) %>
   end_time: <%= (now + 1.day + 1.hour).to_s(:db) %>
 
@@ -81,6 +81,6 @@ unapproved_meeting:
   meeting_category: gemeenteraad_meetings
   title: Belangrijke vergadering van de gemeenteraad!
   body: Iedereen moet aanwezig zijn!
-  location: Timboektoe
+  location_description: Timboektoe
   start_time: <%= (now + 1.day).to_s(:db) %>
   end_time: <%= (now + 1.day + 1.hour).to_s(:db) %>

@@ -144,6 +144,10 @@ module EditorApprovalRequirement
         end
       end
     end
+    
+    def requires_editor_approval?
+      true
+    end
   end
 end
 

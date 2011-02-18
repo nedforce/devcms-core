@@ -1,6 +1,0 @@
-.right_panel_content
-  %h1== #{t @calendar_item.is_a?(Meeting) ? 'calendars.edit_meeting' : 'calendars.edit_calendar_item'} '#{h @calendar_item.title}'
-
-  - admin_remote_form_for :calendar_item, @calendar_item, :url => @calendar_item.is_a?(Meeting) ? admin_meeting_path(@calendar_item, :format => 'html') : admin_calendar_item_path(@calendar_item, :format => 'html'), :method => :put, :update => 'right_panel_body' do |f|
-    = error_messages_for :calendar_item
-    = render :partial => '/admin/calendar_items/form', :object => f

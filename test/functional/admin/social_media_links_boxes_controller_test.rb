@@ -68,7 +68,7 @@ class Admin::SocialMediaLinksBoxesControllerTest < ActionController::TestCase
 
     assert_no_difference('SocialMediaLinksBox.count') do
       create_social_media_links_box({ :title => nil }, { :commit_type => 'preview' })
-      assert_response :success
+      assert_response :unprocessable_entity
       assert assigns(:social_media_links_box).new_record?
       assert assigns(:social_media_links_box).errors.on(:title)
       assert_template 'new'
@@ -82,7 +82,7 @@ class Admin::SocialMediaLinksBoxesControllerTest < ActionController::TestCase
     assert_no_difference('SocialMediaLinksBox.count') do
       create_social_media_links_box({:title => nil})
     end
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:social_media_links_box).new_record?
     assert assigns(:social_media_links_box).errors.on(:title)
   end
@@ -132,7 +132,7 @@ class Admin::SocialMediaLinksBoxesControllerTest < ActionController::TestCase
     smlb = @social_media_links_box
     old_title = smlb.title
     put :update, :id => smlb.id, :social_media_links_box => {:title => nil, :twitter_url => 'http://www.twitter.com/nedforce'}, :commit_type => 'preview'
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:social_media_links_box).errors.on(:title)
     assert_equal old_title, smlb.reload.title
     assert_template 'edit'
@@ -142,7 +142,7 @@ class Admin::SocialMediaLinksBoxesControllerTest < ActionController::TestCase
     login_as :sjoerd
 
     put :update, :id => @social_media_links_box.id, :social_media_links_box => {:title => nil}
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:social_media_links_box).errors.on(:title)
   end
 

@@ -10,7 +10,7 @@
 # * +calendar+ - The calendar this item belongs to
 # * +title+ - The title of the event.
 # * +body+ - The description of the event.
-# * +location+ - The location of the event.
+# * +location_description+ - The location_description of the event.
 # * +start_time+ - The start time of the event.
 # * +end_time+ - The end time of the event.
 # * +repeat_identifier+ - Calendar item this item is a repetition of
@@ -133,9 +133,9 @@ class CalendarItem < Event
     @repeat_interval_multiplier = value.to_i if value.is_a?(Integer) || value =~ %r(\A\d+\Z)
   end
 
-  # Returns the body and location as the tokens for indexing.
+  # Returns the body and location_description as the tokens for indexing.
   def content_tokens
-    [ body, location ].compact.join(' ')
+    [ body, location_description ].compact.join(' ')
   end
 
 protected
@@ -203,7 +203,7 @@ protected
     {
       :title    => self.title,
       :body     => self.body,
-      :location => self.location
+      :location_description => self.location_description
     }
   end
 end

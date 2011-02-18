@@ -41,6 +41,10 @@ class Admin::AgendaItemsController < Admin::AdminController
     find_agenda_item_categories
     build_speaking_right_options
     @agenda_item = @meeting.agenda_items.build(params[:agenda_item])
+    
+    respond_to do |format|
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @agenda_item }}
+    end
   end
 
   # * GET /admin/agenda_items/:id/edit
@@ -48,6 +52,10 @@ class Admin::AgendaItemsController < Admin::AdminController
     find_agenda_item_categories
     build_speaking_right_options
     @agenda_item.attributes = params[:agenda_item]
+    
+    respond_to do |format|
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @agenda_item }}
+    end
   end
 
   # * POST /admin/agenda_items
@@ -58,7 +66,7 @@ class Admin::AgendaItemsController < Admin::AdminController
 
     respond_to do |format|
       if @commit_type == 'preview' && @agenda_item.valid?
-        format.html { render :action => 'create_preview', :layout => 'admin/admin_preview' }
+        format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @agenda_item }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @agenda_item, :status => :created, :location => @agenda_item }
       elsif @commit_type == 'save' && @agenda_item.save_for_user(current_user)
         format.html do
@@ -66,7 +74,7 @@ class Admin::AgendaItemsController < Admin::AdminController
             find_agenda_item_categories
             build_speaking_right_options
             @agenda_item = @meeting.agenda_items.build
-            render :action => :new
+            render :template => 'admin/shared/new', :locals => { :record => @agenda_item }, :status => :success
           else
             render :template => 'admin/shared/create'
           end
@@ -76,7 +84,7 @@ class Admin::AgendaItemsController < Admin::AdminController
         format.html do 
           find_agenda_item_categories
           build_speaking_right_options
-          render :action => :new
+          render :template => 'admin/shared/new', :locals => { :record => @agenda_item }, :status => :unprocessable_entity
         end
         format.xml  { render :xml => @agenda_item.errors, :status => :unprocessable_entity }
       end
@@ -92,17 +100,17 @@ class Admin::AgendaItemsController < Admin::AdminController
       if @commit_type == 'preview' && @agenda_item.valid?
         format.html do
           find_images_and_attachments
-          render :action => 'update_preview', :layout => 'admin/admin_preview'
+          render :template => 'admin/shared/update_preview', :locals => { :record => @agenda_item }, :layout => 'admin/admin_preview'
         end
         format.xml  { render :xml => @agenda_item, :status => :created, :location => @agenda_item }
       elsif @commit_type == 'save' && @agenda_item.save_for_user(current_user, @for_approval)
-        format.html # update.html.erb
+        format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else
         format.html do 
           find_agenda_item_categories
           build_speaking_right_options
-          render :action => :edit
+          render :template => 'admin/shared/edit', :locals => { :record => @agenda_item }, :status => :unprocessable_entity
         end
         format.xml  { render :xml => @agenda_item.errors, :status => :unprocessable_entity }
       end

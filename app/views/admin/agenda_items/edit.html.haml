@@ -1,5 +1,0 @@
-.right_panel_content
-  %h1== #{t 'calendars.edit_agenda_item'} '#{h @agenda_item.description}'
-
-  - admin_remote_form_for @agenda_item, :url => admin_agenda_item_path(@agenda_item, :format => 'html'), :update => 'right_panel_body' do |f|
-    = render :partial => 'form', :object => f

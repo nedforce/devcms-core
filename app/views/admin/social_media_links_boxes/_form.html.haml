@@ -1,18 +1,6 @@
-= error_messages_for :social_media_links_box
-
-= javascript_tag("document.getElementById('right_panel_body').scrollTop = 0;")
-
-= form.text_field :title,              :label => t('shared.title')
-= form.text_field :title_alternatives, :label => t('shared.title_alternatives')
-
 = form.text_field :twitter_url,        :label => t('social_media_links_boxes.twitter_url')
 = form.text_field :hyves_url,          :label => t('social_media_links_boxes.hyves_url')
 = form.text_field :facebook_url,       :label => t('social_media_links_boxes.facebook_url')
 = form.text_field :linkedin_url,       :label => t('social_media_links_boxes.linkedin_url')
 = form.text_field :youtube_url,        :label => t('social_media_links_boxes.youtube_url')
 = form.text_field :flickr_url,         :label => t('social_media_links_boxes.flickr_url')
-
-= content_box_settings_for @social_media_links_box, false
-= category_settings_for    @social_media_links_box
-
-= commit_fields form

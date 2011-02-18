@@ -31,7 +31,7 @@ class Admin::PollsController < Admin::AdminController
     @poll = Poll.new(params[:poll])
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :object => @poll }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @poll }}
     end
   end
 
@@ -40,7 +40,7 @@ class Admin::PollsController < Admin::AdminController
     @poll.attributes = params[:poll]
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :object => @poll }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @poll }}
     end
   end
 
@@ -52,13 +52,13 @@ class Admin::PollsController < Admin::AdminController
 
     respond_to do |format|
       if @commit_type == 'preview' && @poll.valid?
-        format.html { render :template => 'admin/shared/create_preview', :locals => { :object => @poll }, :layout => 'admin/admin_preview' }
+        format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @poll }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @poll, :status => :created, :location => @poll }
       elsif @commit_type == 'save' && @poll.save
         format.html { render :template => 'admin/shared/create' }
         format.xml  { render :xml => @poll, :status => :created, :location => @poll }
       else
-        format.html { render :template => 'admin/shared/new', :locals => { :object => @poll }, :status => :unprocessable_entity }
+        format.html { render :template => 'admin/shared/new', :locals => { :record => @poll }, :status => :unprocessable_entity }
         format.xml  { render :xml => @poll.errors, :status => :unprocessable_entity }
       end
     end
@@ -73,14 +73,14 @@ class Admin::PollsController < Admin::AdminController
       if @commit_type == 'preview' && @poll.valid?
         format.html {
           find_poll_questions
-          render :template => 'admin/shared/update_preview', :locals => { :object => @poll }, :layout => 'admin/admin_preview'
+          render :template => 'admin/shared/update_preview', :locals => { :record => @poll }, :layout => 'admin/admin_preview'
         }
         format.xml  { render :xml => @poll, :status => :created, :location => @poll }
       elsif @commit_type == 'save' && @poll.save
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else
-        format.html { render :template => 'admin/shared/edit', :locals => { :object => @poll }, :status => :unprocessable_entity }
+        format.html { render :template => 'admin/shared/edit', :locals => { :record => @poll }, :status => :unprocessable_entity }
         format.xml  { render :xml => @poll.errors, :status => :unprocessable_entity }
       end
     end

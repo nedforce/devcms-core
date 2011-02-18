@@ -38,7 +38,7 @@ class Admin::SynonymsControllerTest < ActionController::TestCase
     assert_no_difference('Synonym.count') do
       create_synonym(:original => nil)
     end
-    assert_response :internal_server_error
+    assert_response :unprocessable_entity
     assert assigns(:synonym).new_record?
   end
 
@@ -48,7 +48,7 @@ class Admin::SynonymsControllerTest < ActionController::TestCase
     assert_no_difference('Synonym.count') do
       create_synonym(:name => nil)
     end
-    assert_response :internal_server_error
+    assert_response :unprocessable_entity
     assert assigns(:synonym).new_record?
   end
 
@@ -58,7 +58,7 @@ class Admin::SynonymsControllerTest < ActionController::TestCase
     assert_no_difference('Synonym.count') do
       create_synonym(:weight => nil)
     end
-    assert_response :internal_server_error
+    assert_response :unprocessable_entity
     assert assigns(:synonym).new_record?
   end
 

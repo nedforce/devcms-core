@@ -66,7 +66,7 @@ class Admin::HtmlPagesControllerTest < ActionController::TestCase
 
     assert_no_difference('HtmlPage.count') do
       create_html_page({ :title => nil }, { :commit_type => 'preview' })
-      assert_response :success
+      assert_response :unprocessable_entity
       assert assigns(:html_page).new_record?
       assert assigns(:html_page).errors.on(:title)
       assert_template 'new'
@@ -79,7 +79,7 @@ class Admin::HtmlPagesControllerTest < ActionController::TestCase
     assert_no_difference('HtmlPage.count') do
       create_html_page({:title => nil})
     end
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:html_page).new_record?
     assert assigns(:html_page).errors.on(:title)
   end
@@ -128,18 +128,10 @@ class Admin::HtmlPagesControllerTest < ActionController::TestCase
     html_page = @html_page
     old_title = html_page.title
     put :update, :id => html_page.id, :html_page => {:title => nil, :body => 'updated_body'}, :commit_type => 'preview'
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:html_page).errors.on(:title)
     assert_equal old_title, html_page.reload.title
     assert_template 'edit'
-  end
-
-  def test_should_not_update_html_page
-    login_as :arthur
-
-    put :update, :id => @html_page, :html_page => {:title => nil}
-    assert_response :success
-    assert assigns(:html_page).errors.on(:title)
   end
 
   def test_should_require_roles

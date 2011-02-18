@@ -93,7 +93,7 @@ class Admin::CalendarsController < Admin::AdminController
     @calendar = Calendar.new(params[:calendar])
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :object => @calendar }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @calendar }}
     end
   end
 
@@ -102,7 +102,7 @@ class Admin::CalendarsController < Admin::AdminController
     @calendar.attributes = params[:calendar]
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :object => @calendar }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @calendar }}
     end
   end
 
@@ -114,13 +114,13 @@ class Admin::CalendarsController < Admin::AdminController
 
     respond_to do |format|
       if @commit_type == 'preview' && @calendar.valid?
-        format.html { render :template => 'admin/shared/create_preview', :locals => { :object => @calendar }, :layout => 'admin/admin_preview' }
+        format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @calendar }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @calendar, :status => :created, :location => @calendar }
       elsif @commit_type == 'save' && @calendar.save
         format.html { render :template => 'admin/shared/create' }
         format.xml  { render :xml => @calendar, :status => :created, :location => @calendar }
       else
-        format.html { render :template => 'admin/shared/new', :locals => { :object => @calendar }, :status => :unprocessable_entity }
+        format.html { render :template => 'admin/shared/new', :locals => { :record => @calendar }, :status => :unprocessable_entity }
         format.xml  { render :xml => @calendar.errors, :status => :unprocessable_entity }
       end
     end
@@ -135,14 +135,14 @@ class Admin::CalendarsController < Admin::AdminController
       if @commit_type == 'preview' && @calendar.valid?
         format.html {
           find_calendar_items
-          render :template => 'admin/shared/update_preview', :locals => { :object => @calendar }, :layout => 'admin/admin_preview'
+          render :template => 'admin/shared/update_preview', :locals => { :record => @calendar }, :layout => 'admin/admin_preview'
         }
         format.xml  { render :xml => @calendar, :status => :created, :location => @calendar }
       elsif @commit_type == 'save' && @calendar.save
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else
-        format.html { render :template => 'admin/shared/edit', :locals => { :object => @calendar }, :status => :unprocessable_entity }
+        format.html { render :template => 'admin/shared/edit', :locals => { :record => @calendar }, :status => :unprocessable_entity }
         format.xml  { render :xml => @calendar.errors, :status => :unprocessable_entity }
       end
     end

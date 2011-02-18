@@ -29,7 +29,7 @@ class Admin::NewsViewersController < Admin::AdminController
     @news_viewer = NewsViewer.new(params[:news_viewer])
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :object => @news_viewer }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @news_viewer }}
     end
   end
 
@@ -38,7 +38,7 @@ class Admin::NewsViewersController < Admin::AdminController
     @news_viewer.attributes = params[:news_viewer]
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :object => @news_viewer }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @news_viewer }}
     end
   end
   
@@ -54,13 +54,13 @@ class Admin::NewsViewersController < Admin::AdminController
 
     respond_to do |format|
       if @commit_type == 'preview' && @news_viewer.valid?
-        format.html { render :template => 'admin/shared/create_preview', :locals => { :object => @news_viewer }, :layout => 'admin/admin_preview' }
+        format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @news_viewer }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @news_viewer, :status => :created, :location => @news_viewer }
       elsif @commit_type == 'save' && @news_viewer.save
         format.html { render :template => 'admin/shared/create' }
         format.xml  { render :xml => @news_viewer, :status => :created, :location => @news_viewer }
       else
-        format.html { render :template => 'admin/shared/new', :locals => { :object => @news_viewer }, :status => :unprocessable_entity }
+        format.html { render :template => 'admin/shared/new', :locals => { :record => @news_viewer }, :status => :unprocessable_entity }
         format.xml  { render :xml => @news_viewer.errors, :status => :unprocessable_entity }
       end
     end
@@ -73,13 +73,13 @@ class Admin::NewsViewersController < Admin::AdminController
 
     respond_to do |format|
       if @commit_type == 'preview' && @news_viewer.valid?
-        format.html { render :template => 'admin/shared/update_preview', :locals => { :object => @news_viewer }, :layout => 'admin/admin_preview' }
+        format.html { render :template => 'admin/shared/update_preview', :locals => { :record => @news_viewer }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @news_viewer, :status => :created, :location => @news_viewer }
       elsif @commit_type == 'save' && @news_viewer.save
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else
-        format.html { render :template => 'admin/shared/edit', :locals => { :object => @news_viewer }, :status => :unprocessable_entity }
+        format.html { render :template => 'admin/shared/edit', :locals => { :record => @news_viewer }, :status => :unprocessable_entity }
         format.xml  { render :xml => @news_viewer.errors, :status => :unprocessable_entity }
       end
     end

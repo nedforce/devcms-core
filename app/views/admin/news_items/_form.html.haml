@@ -1,9 +1,3 @@
-= error_messages_for :news_item
-
-= javascript_tag("document.getElementById('right_panel_body').scrollTop = 0;")
-
-= form.text_field  :title,                       :label => t('shared.title')
-= form.text_field  :title_alternatives,          :label => t('shared.title_alternatives')
 = form.date_field  :publication_start_date_day,  :label => "#{t 'news.begin_date'}", :value => @news_item.publication_start_date, :allow_empty => true
 = form.time_field  :publication_start_date_time, :label => "#{t 'news.begin_time'}", :value => @news_item.publication_start_date, :allow_empty => true
 = form.date_field  :publication_end_date_day,    :label => "#{t 'news.end_date'}",   :value => @news_item.publication_end_date,   :allow_empty => true
@@ -11,12 +5,3 @@
 = form.text_area   :preamble,                    :label => t('news.preamble'),       :rows => 5
 = form.html_editor :body,                        :label => t('news.text')
 = form.check_box   :commentable,                 :label => t('shared.commentable')
-
-- if current_user.has_role?('editor')
-  = form.html_editor :editor_comment, :label => t('shared.editor_comment'), :rows => 3
-
-= category_settings_for @news_item
-
-= commit_fields form
-
-= approval_field

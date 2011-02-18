@@ -68,7 +68,7 @@ class Admin::LinksControllerTest < ActionController::TestCase
       create_link()
     end
     
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:link).new_record?
     assert assigns(:link).errors.on_base
   end
@@ -80,7 +80,7 @@ class Admin::LinksControllerTest < ActionController::TestCase
       create_link(:url => nil, :type => 'ExternalLink')
     end
     
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:link).new_record?
     assert assigns(:link).errors.on(:url)
   end
@@ -92,7 +92,7 @@ class Admin::LinksControllerTest < ActionController::TestCase
       create_link(:linked_node_id => nil, :type => 'InternalLink')
     end
     
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:link).new_record?
     assert assigns(:link).errors.on(:linked_node)
   end
@@ -118,7 +118,7 @@ class Admin::LinksControllerTest < ActionController::TestCase
     login_as :sjoerd
     
     put :update, :id => links(:internal_link).id, :link => { :linked_node_id => nil }
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:link).errors.on(:linked_node)
   end
 

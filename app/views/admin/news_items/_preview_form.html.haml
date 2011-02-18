@@ -1,14 +1,5 @@
-= form.hidden_field :title
-= form.hidden_field :title_alternatives
 = form.hidden_field :publication_start_date
 = form.hidden_field :publication_end_date
 = form.hidden_field :preamble
 = form.hidden_field :body
 = form.hidden_field :commentable
-
-- if current_user.has_role?('editor')
-  = form.hidden_field :editor_comment
-
-= category_hidden_fields form
-
-= approval_field

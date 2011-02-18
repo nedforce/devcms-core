@@ -53,7 +53,7 @@ class Admin::SearchPagesControllerTest < ActionController::TestCase
       create_search_page(:title => nil)
     end
 
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:search_page).new_record?
     assert assigns(:search_page).errors.on(:title)
   end
@@ -88,7 +88,7 @@ class Admin::SearchPagesControllerTest < ActionController::TestCase
     login_as :sjoerd
 
     put :update, :id => search_pages(:standard_search_page).id, :search_page => {:title => nil}
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:search_page).errors.on(:title)
   end
 

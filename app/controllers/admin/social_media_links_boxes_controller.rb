@@ -28,7 +28,7 @@ class Admin::SocialMediaLinksBoxesController < Admin::AdminController
     @social_media_links_box = SocialMediaLinksBox.new(params[:social_media_links_box])
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :object => @social_media_links_box }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @social_media_links_box }}
     end
   end
 
@@ -37,7 +37,7 @@ class Admin::SocialMediaLinksBoxesController < Admin::AdminController
     @social_media_links_box.attributes = params[:social_media_links_box]
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :object => @social_media_links_box }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @social_media_links_box }}
     end
   end
 
@@ -49,13 +49,13 @@ class Admin::SocialMediaLinksBoxesController < Admin::AdminController
 
     respond_to do |format|
       if @commit_type == 'preview' && @social_media_links_box.valid?
-        format.html { render :template => 'admin/shared/create_preview', :locals => { :object => @social_media_links_box }, :layout => 'admin/admin_preview' }
+        format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @social_media_links_box }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @social_media_links_box, :status => :created, :location => @social_media_links_box }
       elsif @commit_type == 'save' && @social_media_links_box.save
         format.html { render :template => 'admin/shared/create' }
         format.xml  { head :ok }
       else
-        format.html { render :template => 'admin/shared/new', :locals => { :object => @social_media_links_box }, :status => :unprocessable_entity }
+        format.html { render :template => 'admin/shared/new', :locals => { :record => @social_media_links_box }, :status => :unprocessable_entity }
         format.xml  { render :xml => @social_media_links_box.errors, :status => :unprocessable_entity }
       end
     end
@@ -68,13 +68,13 @@ class Admin::SocialMediaLinksBoxesController < Admin::AdminController
 
     respond_to do |format|
       if @commit_type == 'preview' && @social_media_links_box.valid?
-        format.html { render :template => 'admin/shared/update_preview', :locals => { :object => @social_media_links_box }, :layout => 'admin/admin_preview' }
+        format.html { render :template => 'admin/shared/update_preview', :locals => { :record => @social_media_links_box }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @social_media_links_box, :status => :created, :location => @social_media_links_box }
       elsif @commit_type == 'save' && @social_media_links_box.save
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else
-        format.html { render :template => 'admin/shared/edit', :locals => { :object => @social_media_links_box }, :status => :unprocessable_entity }
+        format.html { render :template => 'admin/shared/edit', :locals => { :record => @social_media_links_box }, :status => :unprocessable_entity }
         format.xml  { render :xml => @social_media_links_box.errors, :status => :unprocessable_entity }
       end
     end

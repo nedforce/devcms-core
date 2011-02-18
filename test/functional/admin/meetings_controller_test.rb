@@ -18,7 +18,7 @@ class Admin::MeetingsControllerTest < ActionController::TestCase
     login_as :sjoerd
 
     get :show, :id => @meeting
-    assert assigns(:calendar_item)
+    assert assigns(:meeting)
     assert_response :success
     assert_equal nodes(:meetings_calendar_meeting_one_node), assigns(:node)
   end
@@ -30,7 +30,7 @@ class Admin::MeetingsControllerTest < ActionController::TestCase
 
     get :previous, :id => @meeting
     assert_response :success
-    assert assigns(:calendar_item)
+    assert assigns(:meeting)
   end
 
   def test_should_render_404_if_not_found
@@ -45,16 +45,16 @@ class Admin::MeetingsControllerTest < ActionController::TestCase
 
     get :new, :parent_node_id => nodes(:events_calendar_node).id
     assert_response :success
-    assert assigns(:calendar_item)
+    assert assigns(:meeting)
   end
 
   def test_should_get_new_with_params
     login_as :sjoerd
 
-    get :new, :parent_node_id => nodes(:events_calendar_node).id, :calendar_item => { :title => 'foo' }
+    get :new, :parent_node_id => nodes(:events_calendar_node).id, :meeting => { :title => 'foo' }
     assert_response :success
-    assert assigns(:calendar_item)
-    assert_equal 'foo', assigns(:calendar_item).title
+    assert assigns(:meeting)
+    assert_equal 'foo', assigns(:meeting).title
   end
 
   def test_should_create_meeting
@@ -63,7 +63,7 @@ class Admin::MeetingsControllerTest < ActionController::TestCase
     assert_difference('Meeting.count', 1) do
       create_meeting_request
       assert_response :success
-      assert !assigns(:calendar_item).new_record?, assigns(:calendar_item).errors.full_messages.join('; ')
+      assert !assigns(:meeting).new_record?, assigns(:meeting).errors.full_messages.join('; ')
     end
   end
 
@@ -73,8 +73,8 @@ class Admin::MeetingsControllerTest < ActionController::TestCase
     assert_no_difference('Meeting.count') do
       create_meeting_request({ :title => 'foobar' }, { :commit_type => 'preview' })
       assert_response :success
-      assert assigns(:calendar_item).new_record?
-      assert_equal 'foobar', assigns(:calendar_item).title
+      assert assigns(:meeting).new_record?
+      assert_equal 'foobar', assigns(:meeting).title
       assert_template 'create_preview'
     end
   end
@@ -84,9 +84,9 @@ class Admin::MeetingsControllerTest < ActionController::TestCase
 
     assert_no_difference('Meeting.count') do
       create_meeting_request({ :title => nil }, { :commit_type => 'preview' })
-      assert_response :success
-      assert assigns(:calendar_item).new_record?
-      assert assigns(:calendar_item).errors.on(:title)
+      assert_response :unprocessable_entity
+      assert assigns(:meeting).new_record?
+      assert assigns(:meeting).errors.on(:title)
       assert_template 'new'
     end
   end
@@ -98,9 +98,9 @@ class Admin::MeetingsControllerTest < ActionController::TestCase
       create_meeting_request(:title => nil)
     end
 
-    assert_response :success
-    assert assigns(:calendar_item).new_record?
-    assert assigns(:calendar_item).errors.on(:title)
+    assert_response :unprocessable_entity
+    assert assigns(:meeting).new_record?
+    assert assigns(:meeting).errors.on(:title)
   end
 
   def test_should_get_edit
@@ -108,35 +108,35 @@ class Admin::MeetingsControllerTest < ActionController::TestCase
 
     get :edit, :id => @meeting
     assert_response :success
-    assert assigns(:calendar_item)
+    assert assigns(:meeting)
   end
 
   def test_should_get_edit_with_params
     login_as :sjoerd
 
-    get :edit, :id => @meeting, :calendar_item => { :title => 'foo' }
+    get :edit, :id => @meeting, :meeting => { :title => 'foo' }
     assert_response :success
-    assert assigns(:calendar_item)
-    assert_equal 'foo', assigns(:calendar_item).title
+    assert assigns(:meeting)
+    assert_equal 'foo', assigns(:meeting).title
   end
 
   def test_should_update_meeting
     login_as :sjoerd
 
-    put :update, :id => @meeting, :calendar_item => { :title => 'updated title', :body => 'updated body' }
+    put :update, :id => @meeting, :meeting => { :title => 'updated title', :body => 'updated body' }
 
     assert_response :success
-    assert_equal 'updated title', assigns(:calendar_item).title
+    assert_equal 'updated title', assigns(:meeting).title
   end
 
   def test_should_get_valid_preview_for_update
     login_as :sjoerd
 
     old_title = @meeting.title
-    put :update, :id => @meeting, :calendar_item => { :title => 'updated title' }, :commit_type => 'preview'
+    put :update, :id => @meeting, :meeting => { :title => 'updated title' }, :commit_type => 'preview'
 
     assert_response :success
-    assert_equal 'updated title', assigns(:calendar_item).title
+    assert_equal 'updated title', assigns(:meeting).title
     assert_equal old_title, @meeting.reload.title
     assert_template 'update_preview'
   end
@@ -145,10 +145,10 @@ class Admin::MeetingsControllerTest < ActionController::TestCase
     login_as :sjoerd
 
     old_title = @meeting.title
-    put :update, :id => @meeting, :calendar_item => { :title => nil }, :commit_type => 'preview'
+    put :update, :id => @meeting, :meeting => { :title => nil }, :commit_type => 'preview'
 
-    assert_response :success
-    assert assigns(:calendar_item).errors.on(:title)
+    assert_response :unprocessable_entity
+    assert assigns(:meeting).errors.on(:title)
     assert_equal old_title, @meeting.reload.title
     assert_template 'edit'
   end
@@ -157,9 +157,9 @@ class Admin::MeetingsControllerTest < ActionController::TestCase
     login_as :sjoerd
 
     old_title = @meeting.title
-    put :update, :id => @meeting, :calendar_item => { :title => nil }
-    assert_response :success
-    assert assigns(:calendar_item).errors.on(:title)
+    put :update, :id => @meeting, :meeting => { :title => nil }
+    assert_response :unprocessable_entity
+    assert assigns(:meeting).errors.on(:title)
     assert_equal old_title, @meeting.reload.title
   end
 
@@ -206,7 +206,7 @@ protected
   def create_meeting_request(attributes = {}, options = {})
     now = Time.now
 
-    post :create, { :parent_node_id => nodes(:events_calendar_node).id, :calendar_item => { :title => 'new title', :repeating => false, :start_time => now.strftime("%H:%M"), :date => now.strftime("%d-%m-%Y"), :end_time => (now + 1.hour).strftime("%H:%M"), :meeting_category_name => 'problem' }.merge(attributes)}.merge(options)
+    post :create, { :parent_node_id => nodes(:events_calendar_node).id, :meeting => { :title => 'new title', :repeating => false, :start_time => now.strftime("%H:%M"), :date => now.strftime("%d-%m-%Y"), :end_time => (now + 1.hour).strftime("%H:%M"), :meeting_category_name => 'problem' }.merge(attributes)}.merge(options)
   end
 
   def create_meeting(options = {})

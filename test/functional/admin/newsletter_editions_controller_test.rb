@@ -64,7 +64,7 @@ class Admin::NewsletterEditionsControllerTest < ActionController::TestCase
 
     assert_no_difference('NewsletterEdition.count') do
       create_newsletter_edition({ :title => nil }, { :commit_type => 'preview' })
-      assert_response :success
+      assert_response :unprocessable_entity
       assert assigns(:newsletter_edition).new_record?
       assert assigns(:newsletter_edition).errors.on(:title)
       assert_template 'new'
@@ -78,7 +78,7 @@ class Admin::NewsletterEditionsControllerTest < ActionController::TestCase
       create_newsletter_edition(:title => nil)
     end
     
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:newsletter_edition).new_record?
     assert assigns(:newsletter_edition).errors.on(:title)
   end
@@ -129,7 +129,7 @@ class Admin::NewsletterEditionsControllerTest < ActionController::TestCase
     old_title = newsletter_edition.title
     put :update, :id => newsletter_edition, :newsletter_edition => { :title => nil }, :commit_type => 'preview'
 
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:newsletter_edition).errors.on(:title)
     assert_equal old_title, newsletter_edition.reload.title
     assert_template 'edit'
@@ -139,7 +139,7 @@ class Admin::NewsletterEditionsControllerTest < ActionController::TestCase
     login_as :sjoerd
     
     put :update, :id => newsletter_editions(:devcms_newsletter_edition), :newsletter_edition => { :title => nil }
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:newsletter_edition).errors.on(:title)
   end
   

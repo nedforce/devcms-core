@@ -84,7 +84,7 @@ class Admin::CalendarItemsControllerTest < ActionController::TestCase
 
     assert_no_difference('CalendarItem.count') do
       create_calendar_item_request({ :title => nil }, { :commit_type => 'preview' })
-      assert_response :success
+      assert_response :unprocessable_entity
       assert assigns(:calendar_item).new_record?
       assert assigns(:calendar_item).errors.on(:title)
       assert_template 'new'
@@ -98,7 +98,7 @@ class Admin::CalendarItemsControllerTest < ActionController::TestCase
       create_calendar_item_request(:title => nil)
     end
     
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:calendar_item).new_record?
     assert assigns(:calendar_item).errors.on(:title)
   end
@@ -149,7 +149,7 @@ class Admin::CalendarItemsControllerTest < ActionController::TestCase
     old_title = calendar_item.title
     put :update, :id => calendar_item, :calendar_item => { :title => nil }, :commit_type => 'preview'
 
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:calendar_item).errors.on(:title)
     assert_equal old_title, calendar_item.reload.title
     assert_template 'edit'
@@ -160,7 +160,7 @@ class Admin::CalendarItemsControllerTest < ActionController::TestCase
     
     old_title = events(:events_calendar_item_one).title
     put :update, :id => events(:events_calendar_item_one).id, :calendar_item => { :title => nil }
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:calendar_item).errors.on(:title)
     assert_equal old_title, events(:events_calendar_item_one).reload.title
   end
@@ -215,7 +215,7 @@ protected
 
   def create_calendar_item(options = {})
     now = Time.now
-    CalendarItem.create({:parent => calendars(:events_calendar).node, :repeating => false, :title => "New event", :start_time => now, :end_time => now + 1.hour }.merge(options))
+    CalendarItem.create({:parent => calendars(:events_calendar).node, :repeating => false, :title => "New event", :date=> now, :start_time => now, :end_time => (now + 1.hour) }.merge(options))
   end
 
   def create_repeating_calendar_item(options = {})

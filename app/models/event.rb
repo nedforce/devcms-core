@@ -9,7 +9,7 @@
 #
 # * +title+ - The title of the event.
 # * +body+ - The body containing more information on the event.
-# * +location+ - The location of the event.
+# * +location_description+ - The location of the event.
 # * +start_time+ - The start time of the event.
 # * +end_time+ - The end time of the event.
 # * +type+ - The type of the event.

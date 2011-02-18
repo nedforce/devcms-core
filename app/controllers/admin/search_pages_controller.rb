@@ -24,7 +24,7 @@ class Admin::SearchPagesController < Admin::AdminController
     @search_page = SearchPage.new(params[:search_page])
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :object => @search_page }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @search_page }}
     end
   end
 
@@ -33,7 +33,7 @@ class Admin::SearchPagesController < Admin::AdminController
     @search_page.attributes = params[:search_page]
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :object => @search_page }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @search_page }}
     end
   end
 
@@ -48,7 +48,7 @@ class Admin::SearchPagesController < Admin::AdminController
         format.html { render :template => 'admin/shared/create' }
         format.xml  { render :xml => @search_page, :status => :created, :location => @search_page }
       else
-        format.html { render :template => 'admin/shared/new', :locals => { :object => @search_page }, :status => :unprocessable_entity }
+        format.html { render :template => 'admin/shared/new', :locals => { :record => @search_page }, :status => :unprocessable_entity }
         format.xml  { render :xml => @search_page.errors.full_messages.join(' '), :status => :unprocessable_entity }
       end
     end
@@ -64,7 +64,7 @@ class Admin::SearchPagesController < Admin::AdminController
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else
-        format.html { render :template => 'admin/shared/edit', :locals => { :object => @search_page }, :status => :unprocessable_entity }
+        format.html { render :template => 'admin/shared/edit', :locals => { :record => @search_page }, :status => :unprocessable_entity }
         format.xml  { render :xml => @search_page.errors.full_messages.join(' '), :status => :unprocessable_entity }
       end
     end
