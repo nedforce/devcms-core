@@ -15,7 +15,7 @@ class RenameMinutesToSecondsInCarrousel < ActiveRecord::Migration
     say_with_time "Updating times" do
       carrousels = Carrousel.find(:all)
       carrousels.each do |c|
-        c.update_attribute(:display_time_in_seconds, (c.display_time_in_seconds / 60).to_i)
+        c.update_attribute(:display_time_in_minutes, (c.display_time_in_minutes / 60).to_i)
         say "#{c.title} updated!", true
       end
     end
