@@ -69,13 +69,13 @@ class CarrouselTest < ActiveSupport::TestCase
   end
   
   def test_should_set_default_display_time
-    assert_equal 0, @carrousel.display_time_in_minutes
-    assert_equal [0,'minutes'], @carrousel.display_time
+    assert_equal 0, @carrousel.display_time_in_seconds
+    assert_equal [0,'seconds'], @carrousel.display_time
   end
   
-  def test_should_set_display_time_in_minutes
+  def test_should_set_display_time_in_seconds
     carrousel = create_carrousel(:display_time => [5, 'hours'])
-    assert_equal 300, carrousel.display_time_in_minutes
+    assert_equal 300*60, carrousel.display_time_in_seconds
   end
   
   def test_should_cycle_current_item

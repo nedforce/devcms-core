@@ -5,7 +5,7 @@
 # Attributes
 # 
 # * +title+ - The title of the carrousel.
-# * +display_time_in_minutes+ - The display time in minutes of a carrousel item.
+# * +display_time_in_seconds+ - The display time in seconds of a carrousel item.
 # * +current_carrousel_item_id+ - The item that is currently being shown
 # * +last_cycled+ - The last time the item was cycled
 #
@@ -18,7 +18,15 @@
 #  * A Carrousel only accepts +CarrouselItem+ child nodes.
 #
 class Carrousel < ActiveRecord::Base
-  ALLOWED_TIME_UNITS = [ 'minutes', 'hours', 'days', 'months' ]
+  ALLOWED_TIME_UNITS = ['seconds', 'minutes', 'hours', 'days', 'months' ]
+  
+  ANIMATION_NONE = 0
+  ANIMATION_FADE_IN = 1
+  ANIMATION_SLIDE = 2
+  ANIMATION_DIA = 3
+  ANIMATION_SPRING = 4
+  ALLOWED_ANIMATION_TYPES = [0,1,2,3,4]
+  ANIMATION_NAMES = {0 => "None", 1 => "Fade", 2 => "Slide", 3 => "Dia", 4 => "Spring"}
   
   # Adds content node functionality to news archives.
   acts_as_content_node({
@@ -38,8 +46,13 @@ class Carrousel < ActiveRecord::Base
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of     :title
   validates_length_of       :title, :in => 2..255,    :allow_blank => true
-  validates_numericality_of :display_time_in_minutes, :allow_blank => true, :integer_only => true, :greater_than_or_equal_to => 0
-
+  validates_numericality_of :display_time_in_seconds, :allow_blank => true, :integer_only => true, :greater_than_or_equal_to => 0
+  validates_numericality_of :animation, :integer_only => true, :greater_than_or_equal_to => 0
+  
+  def animation
+    super.to_i
+  end
+  
   # Finds the current carrousel item and cycles it is necessary.
   def find_current_carrousel_item
     fetch_or_cycle_current_carrousel_item
@@ -87,9 +100,10 @@ class Carrousel < ActiveRecord::Base
     (current_item.try(:item) || self).title
   end
   
+  
   # Determine whether to show the content box header
   def show_content_box_header
-    current_item.present? ? !current_item.item.is_a?(Image) : true
+    false
   end
   
   # Alternative text for tree nodes.
@@ -103,28 +117,30 @@ class Carrousel < ActiveRecord::Base
   end
   
   # Get display time in minutes
-  def display_time_in_minutes
-    read_attribute(:display_time_in_minutes) || 0
+  def display_time_in_seconds
+    read_attribute(:display_time_in_seconds) || 0
   end  
   
   # Set display time
   def display_time=(time)
     return unless time.is_a?(Array) and time.size == 2
     value = time[0].to_i; unit = time[1]
-    self.display_time_in_minutes = ALLOWED_TIME_UNITS.include?(unit) ? value.send(unit)/60 : 0
+    self.display_time_in_seconds = ALLOWED_TIME_UNITS.include?(unit) ? value.send(unit) : 0
   end
   
   # Get human display time
   def display_time
     case
-    when display_time_in_minutes < 60
-      [display_time_in_minutes,              'minutes']
-    when display_time_in_minutes < (60*24)
-      [display_time_in_minutes/60,           'hours']
-    when display_time_in_minutes < (30*(60*24))
-      [display_time_in_minutes/(60*24),      'days']
+    when display_time_in_seconds < 60
+      [display_time_in_seconds,              'seconds']
+    when display_time_in_seconds < 60*60
+      [display_time_in_seconds/60,            'minutes']
+    when display_time_in_seconds < (60*60*24)
+      [display_time_in_seconds/(60*60),           'hours']
+    when display_time_in_seconds < (30*(60*60*24))
+      [display_time_in_seconds/(60*60*24),      'days']
     else 
-      [display_time_in_minutes/(30*(60*24)), 'months']
+      [display_time_in_seconds/(30*(60*60*24)), 'months']
     end    
   end
   
@@ -138,7 +154,7 @@ private
           connection.update("UPDATE carrousels SET last_cycled = '#{Time.now.to_formatted_s(:db)}', current_carrousel_item_id = #{self.carrousel_items.first.id} WHERE id = #{self.id}")
         end
         self.current_carrousel_item = self.carrousel_items.first
-      elsif (last_cycled + display_time_in_minutes.minutes) <= Time.now
+      elsif (last_cycled + display_time_in_seconds.seconds) <= Time.now
         current_item_index = carrousel_items.index(current_carrousel_item)
         self.current_carrousel_item = carrousel_items.at( (current_item_index+1)%carrousel_items.size )
         Node.without_search_reindex do # No update of the search index is necessary.

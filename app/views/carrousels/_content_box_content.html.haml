@@ -1,6 +1,27 @@
 - content        = node.content
 - carrousel_item = content.current_item
-
-- if carrousel_item
-  .carrousel_item.clearfix
-    = render :partial => '/carrousels/carrousel_item', :object => carrousel_item
+- frequency    = content.display_time_in_seconds > 0 ? content.display_time_in_seconds.to_s : '0.4'
+- if content.animation == Carrousel::ANIMATION_NONE || !content.animation.present?
+  - carrousel_item = content.current_item
+  - if carrousel_item
+    .carrousel_item.clearfix
+      = render :partial => '/carrousels/carrousel_item', :object => carrousel_item, :locals => { :content => content, :node => node }
+- else
+  - #<a href="javascript:" class="carousel-control" rel="prev">Previous slide</a>
+  - #<a href="javascript:" class="carousel-control" rel="next">Next slide</a>
+  #carousel-wrapper
+    #carousel-content
+      - content.carrousel_items.each do |carrousel_item|
+        .slide
+          = render :partial => '/carrousels/carrousel_item', :object => carrousel_item, :locals => { :content => content, :node => node }
+      - if content.animation == Carrousel::ANIMATION_SLIDE || content.animation == Carrousel::ANIMATION_DIA || content.animation == Carrousel::ANIMATION_SPRING
+        .slide
+          = render :partial => '/carrousels/carrousel_item', :object =>  content.carrousel_items.first, :locals => { :content => content, :node => node }
+  - if content.animation == Carrousel::ANIMATION_FADE_IN
+    = javascript_tag "new Carousel('carousel-wrapper', $$('#carousel-content .slide'), $$('a.carousel-control', 'a.carousel-jumper'), {auto:true, duration:1, frequency:#{frequency}, effect:'fade'});"
+  - elsif content.animation == Carrousel::ANIMATION_DIA
+    = javascript_tag "new Carousel('carousel-wrapper', $$('#carousel-content .slide'), $$('a.carousel-control', 'a.carousel-jumper'), {auto:true, duration:1, frequency:#{frequency}, circular:true});"
+  - elsif content.animation == Carrousel::ANIMATION_SPRING
+    = javascript_tag "new Carousel('carousel-wrapper', $$('#carousel-content .slide'), $$('a.carousel-control', 'a.carousel-jumper'), {auto:true, transition:'spring', duration:2, frequency:#{frequency}, circular:true});"
+  - elsif content.animation == Carrousel::ANIMATION_SLIDE
+    = javascript_tag "new Carousel('carousel-wrapper', $$('#carousel-content .slide'), $$('a.carousel-control', 'a.carousel-jumper'), {auto:true, transition:'linear', duration:#{frequency}, frequency:#{frequency}, circular:true});"

@@ -22,6 +22,7 @@ class Admin::CarrouselsController < Admin::AdminController
   # * GET /admin/carrousels/:id
   # * GET /admin/carrousels/:id.xml
   def show
+    @animation = Carrousel::ANIMATION_NAMES[@carrousel.animation]
     respond_to do |format|
       format.html { render :partial => 'show', :locals => { :record => @carrousel }, :layout => 'admin/admin_show' }
       format.xml  { render :xml => @carrousel }

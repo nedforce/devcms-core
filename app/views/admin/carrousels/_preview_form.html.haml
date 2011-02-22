@@ -1,5 +1,5 @@
 = form.hidden_field :title
-= form.hidden_field :display_time_in_minutes
+= form.hidden_field :display_time_in_seconds
 
 - @item_ids.each do |item_id|
   = hidden_field_tag('items[]', item_id, :id => "items_#{item_id}")

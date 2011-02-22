@@ -251,6 +251,7 @@ nl:
       hours: uur
       minutes: minuten
       months: maanden
+      seconds: seconden
   categories:
     add_new_combination: Nieuwe categorie-combinatie aanmaken
     add_to_favorites: Voeg categorie-combinatie toe aan uw favorieten

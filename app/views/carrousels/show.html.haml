@@ -1,6 +1,5 @@
 .carrousel
   %h1= h @carrousel.title
-
   - if @carrousel_item
     - readspeaker(@carrousel.node.id) do |readspeaker_id|
       = readspeaker_button :class => 'topRightReadspeaker'

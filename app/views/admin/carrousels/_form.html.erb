@@ -4,6 +4,12 @@ carrouselTimePanel = new Ext.Panel({
   border: false
 });
 
+carrouselAnimationPanel = new Ext.Panel({
+  html: '<%= escape_javascript(animation_select_for(@carrousel)) -%>',
+  frame: false,
+  border: false
+});
+
 carrouselFormPanel = new Ext.Panel({
   html: '<%= escape_javascript(content_box_settings_for(@carrousel) + category_settings_for(@carrousel)) -%>',
   frame: false,
@@ -11,4 +17,5 @@ carrouselFormPanel = new Ext.Panel({
 });
 
 carrouselForm.add(carrouselTimePanel);
+carrouselForm.add(carrouselAnimationPanel);
 carrouselForm.add(carrouselFormPanel);

@@ -10,8 +10,8 @@ class Admin::CarrouselsControllerTest < ActionController::TestCase
   def test_should_create_carrousel
     login_as :sjoerd
     assert !@carrousel.new_record?
-    assert_equal [0,'minutes'], @carrousel.display_time
-    assert_equal 0, @carrousel.display_time_in_minutes    
+    assert_equal [0,'seconds'], @carrousel.display_time
+    assert_equal 0, @carrousel.display_time_in_seconds    
   end  
   
   def test_should_show_approved_carrousel
@@ -154,18 +154,18 @@ class Admin::CarrouselsControllerTest < ActionController::TestCase
     assert_response :success    
     assert_equal 3, assigns(:carrousel).items.size
     assert_equal [5,'hours'], assigns(:carrousel).display_time
-    assert_equal 300, assigns(:carrousel).display_time_in_minutes
+    assert_equal 18000, assigns(:carrousel).display_time_in_seconds
     assert_equal 'Help page', assigns(:carrousel).carrousel_items.first.excerpt
   end  
   
-  def test_should_create_carrousel_with_display_time_in_minutes
+  def test_should_create_carrousel_with_display_time_in_seconds
     login_as :sjoerd
     
-    post :create, :parent_node_id => nodes(:root_section_node), :carrousel => { :title => 'updated title', :display_time_in_minutes => 300 }
+    post :create, :parent_node_id => nodes(:root_section_node), :carrousel => { :title => 'updated title', :display_time_in_seconds => 300 }
 
     assert_response :success    
-    assert_equal 300, assigns(:carrousel).display_time_in_minutes
-    assert_equal [5,'hours'], assigns(:carrousel).display_time
+    assert_equal 300, assigns(:carrousel).display_time_in_seconds
+    assert_equal [5,'minutes'], assigns(:carrousel).display_time
   end   
   
   def test_should_add_items_and_display_time_to_carrousel
@@ -179,7 +179,7 @@ class Admin::CarrouselsControllerTest < ActionController::TestCase
     assert_equal 'updated title', assigns(:carrousel).title
     assert_equal 3, assigns(:carrousel).items.size
     assert_equal [2,'days'], assigns(:carrousel).display_time   
-    assert_equal 60*24*2, assigns(:carrousel).display_time_in_minutes     
+    assert_equal 60*60*24*2, assigns(:carrousel).display_time_in_seconds     
     assigns(:carrousel).carrousel_items.each{|ci| assert_nil ci.excerpt }
   end
   
