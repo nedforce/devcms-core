@@ -84,12 +84,22 @@ class Admin::ImagesController < Admin::AdminController
           responds_to_parent do
             render :update do |page|
               page << "if(Ext.get('no_images_row')) Ext.get('no_images_row').remove();"
-              page.insert_html(:bottom, "uploaded_images", "<tr id=\"uploaded_image_#{@image.id}\">
-                <td>#{h(@image.title)}</td>
-                <td>#{image_tag(thumbnail_admin_image_path(@image), :alt => h(@image.alt))}</td>
-                <td>#{check_box_tag("image_is_for_header_#{@image.id}", "1", @image.is_for_header?, :onchange => "this.disable();" + remote_function(:url => admin_image_path(@image), :method => :put, :complete => "$('image_is_for_header_#{@image.id}').enable();", :with => "'image[is_for_header]='+$F('image_is_for_header_#{@image.id}')")+"; return false;")}</td>
-                <td><div id='image_cropper_#{@image.id}'></div> </td>
-              </tr>")
+              
+              if current_user.has_role?('admin')
+                page.insert_html(:bottom, "uploaded_images", "<tr id=\"uploaded_image_#{@image.id}\">
+                  <td>#{h(@image.title)}</td>
+                  <td>#{image_tag(thumbnail_admin_image_path(@image), :alt => h(@image.alt))}</td>
+                  <td>#{check_box_tag("image_is_for_header_#{@image.id}", "1", @image.is_for_header?, :onchange => "this.disable();" + remote_function(:url => admin_image_path(@image), :method => :put, :complete => "$('image_is_for_header_#{@image.id}').enable();", :with => "'image[is_for_header]='+$F('image_is_for_header_#{@image.id}')")+"; return false;")}</td>
+                  <td><div id='image_cropper_#{@image.id}'></div> </td>
+                </tr>")
+              else
+                page.insert_html(:bottom, "uploaded_images", "<tr id=\"uploaded_image_#{@image.id}\">
+                  <td>#{h(@image.title)}</td>
+                  <td>#{image_tag(thumbnail_admin_image_path(@image), :alt => h(@image.alt))}</td>
+                  <td><div id='image_cropper_#{@image.id}'></div> </td>
+                </tr>")           
+              end
+              
               page.call("treePanel.refreshNodesOf", @parent_node.id)
               page.replace_html("image_cropper_#{@image.id}", :partial => 'cropper', :locals => { :image => @image }) if @image.orientation == :vertical
               @image = Image.new # To reset fields
