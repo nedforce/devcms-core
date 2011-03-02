@@ -101,6 +101,7 @@ class Admin::ImagesController < Admin::AdminController
               end
               
               page.call("treePanel.refreshNodesOf", @parent_node.id)
+              page << "tinyMCE.execCommand('mceRemoveControl', false, 'image_#{:editor_comment}')" # Destroy tinyMCE before rendering new empty form
               page.replace_html("image_cropper_#{@image.id}", :partial => 'cropper', :locals => { :image => @image }) if @image.orientation == :vertical
               @image = Image.new # To reset fields
               page.replace_html("right_panel_form", :partial => 'form')
