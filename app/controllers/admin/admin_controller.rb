@@ -121,7 +121,7 @@ protected
     @actions = []
 
     unless params[:show_actions] && params[:show_actions] == 'false'
-      @actions << { :url => { :action => :edit }, :text => I18n.t('admin.edit'), :method => :get } if current_user.has_any_role?
+      @actions << { :url => { :action => :edit }, :text => I18n.t('admin.edit'), :method => :get } if @node.present? && current_user.role_on(@node).present?
     end
   end
 
