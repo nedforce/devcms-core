@@ -237,6 +237,8 @@ nl:
     unknown: Onbekend
     weeks: weken
     years: jaar
+  calendar_items:
+    add_too: Item toevoegen aan
   carrousels:
     add_carrousel_to: Carrousel toevoegen aan
     carrousel_failed: Kon carrousels niet opslaan.
@@ -557,6 +559,8 @@ nl:
     saved: Link opgeslagen!
     type: Type
     url: URL
+  meetings:
+    add_to: Vergadering toevoegen aan
   news:
     add_images: Afbeelding(en) toevoegen aan dit nieuwsbericht
     archive_failed: Kon nieuwsarchief niet opslaan.
@@ -929,6 +933,8 @@ nl:
   sitemaps:
     all_changes: Laatste wijzigingen
     sitemap: Sitemap
+  sites:
+    add_to: Site toevoegen aan
   social_media_links_boxes:
     add_to: Social media links box toevoegen aan
     edit: Bewerken van social media links box
