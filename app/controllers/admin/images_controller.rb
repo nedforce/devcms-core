@@ -51,7 +51,7 @@ class Admin::ImagesController < Admin::AdminController
   end
   
   def content_box_header_preview
-    @image.resize!(:size => '230x', :upsample => true, :quality => 80)
+    @image.resize!(:size => "#{Image::CONTENT_BOX_SIZE[:width]}x", :upsample => true, :quality => 80)
     render_image
   end
 
