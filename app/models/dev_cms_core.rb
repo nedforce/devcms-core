@@ -13,4 +13,8 @@ class DevCMSCore
     @@modules.include?(moduleName)
   end
   
+  def self.registered_modules
+    @@modules
+  end
+  
 end
