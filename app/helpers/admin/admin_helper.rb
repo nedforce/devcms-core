@@ -80,7 +80,9 @@ module Admin::AdminHelper
   end
 
   def content_box_hidden_fields(form)
-    render :partial => 'admin/shared/content_box_hidden_fields', :locals => { :form => form }
+    if Node.content_type_configuration(form.object.class.name)[:available_content_representations].include?('content_box')
+      render :partial => 'admin/shared/content_box_hidden_fields', :locals => { :form => form }
+    end
   end
 
   def category_settings_for(content)
