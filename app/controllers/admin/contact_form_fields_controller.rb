@@ -11,7 +11,9 @@ class Admin::ContactFormFieldsController < Admin::AdminController
   before_filter :set_field_types,         :only => [ :new, :edit ]
 
   before_filter :set_commit_type,         :only => [ :create, :update ]
-
+  
+  skip_before_filter :find_node, :only => [:edit, :update]
+  
   layout false
 
   # * GET /admin/contact_forms/:contact_form_id/contact_form_fields/:id
