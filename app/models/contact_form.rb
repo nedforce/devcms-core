@@ -11,6 +11,7 @@
 # * +email_adress+ - The email address to which contact requests are send; typically an email address of an editor or administrator.
 # * +description_before_contact_fields+ - The description of the contact form (printed before the actual contact fields).
 # * +description_after_contact_fields+ - The description of the contact form (printed after the actual contact fields).
+# * +send_method+ - The way of storing/sending the email. See constants
 #
 # Preconditions
 #
@@ -19,10 +20,15 @@
 # * Requires +email_address+ to be a valid email address.
 #
 class ContactForm < ActiveRecord::Base
+  # Constants for different sendmethods. Used in the send_method column in the table
+  SEND_METHOD_MAIL = 0;
+  SEND_METHOD_DATABASE = 1;
+  
   acts_as_content_node
 
   # A +ContactForm+ has many +ContactFormField+ objects.
   has_many :contact_form_fields, :dependent => :destroy
+  has_many :responses, :dependent => :destroy
 
   # Ensure the +ContactFormFields+ are valid, build on creation of the +ContactForm+,
   # and updated and deleted when necessary.

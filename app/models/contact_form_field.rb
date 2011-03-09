@@ -24,6 +24,8 @@
 class ContactFormField < ActiveRecord::Base
   # A +ContactFormField+ belongs to a +ContactForm+.
   belongs_to :contact_form
+  
+  has_many :response_fields
 
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of     :label, :field_type, :position
