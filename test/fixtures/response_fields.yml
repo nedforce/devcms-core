@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  response_id: 1
+  contact_form_field_id: 1
+  value: MyText
+
+two:
+  response_id: 1
+  contact_form_field_id: 1
+  value: MyText

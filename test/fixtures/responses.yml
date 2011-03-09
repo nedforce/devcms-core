@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  contact_form_id: 1
+  ip: MyString
+  time: 2011-03-09 14:52:30
+
+two:
+  contact_form_id: 1
+  ip: MyString
+  time: 2011-03-09 14:52:30
