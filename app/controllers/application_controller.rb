@@ -6,7 +6,8 @@ class ApplicationController < ActionController::Base
   include ExceptionNotifiable
   include RoleRequirementSystem
   include SslRequirement
-
+  
+  
   self.mod_porter_secret = "h6UGA7Hn9N4D8Jsu2SbX"
 
   # Attempt to login the user from a cookie, if it's set.

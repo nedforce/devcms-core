@@ -177,7 +177,7 @@ module CalendarDateSelect::FormHelpers
       # if we are forcing the popup, automatically set the readonly property on the input control.
       if javascript_options[:popup].to_s == "force"
         javascript_options[:popup] = "'force'"
-        options[:readonly] = true
+        #options[:readonly] = true
       end
 
       if (vdc=javascript_options.delete(:valid_date_check))
