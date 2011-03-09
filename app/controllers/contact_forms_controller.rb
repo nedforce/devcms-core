@@ -20,10 +20,22 @@ class ContactFormsController < ApplicationController
   def send_message
     @contact_form_field = params[:contact_form_field]
     get_entered_fields
-
     respond_to do |format|
       if entered_all_obligatory_fields?(@contact_form_field)
-        ContactFormMailer.deliver_message(@contact_form, @entered_fields)
+        # Check for send method
+        if @contact_form.send_method == ContactForm::SEND_METHOD_DATABASE
+          # Store response to database
+          # Create a new response object
+          response = Response.create!(:contact_form => @contact_form, :ip => request.remote_ip, :time => Time.now)
+          response.save
+          # Create response_field objects
+          @entered_fields.each do |field|
+            ResponseField.create!(:response => response, :contact_form_field_id => field[0], :value => field[2])
+          end
+        else
+          # Send response over e-mail
+          ContactFormMailer.deliver_message(@contact_form, @entered_fields)
+        end
         format.html # send_message.html.erb
       else
         @obligatory_error = true

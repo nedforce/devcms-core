@@ -3,6 +3,7 @@ help_form:
   email_address: testmedewerker@nedforce.nl
   description_before_contact_fields: Hieronder staat een helpformuliertje.
   description_after_contact_fields: Vergeet u niet het formulier hierboven in te vullen?
+  send_method: 1 # Database field
 info_form:
   title: Info
   email_address: testmedewerker@nedforce.nl
