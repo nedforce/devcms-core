@@ -90,7 +90,12 @@ ActionController::Routing::Routes.draw do |map|
                   :year       => /\d{4}/,
                   :month      => /\d{1,2}/,
                   :parent_id  => /\d+/
-
+    admin.connect 'nodes/:parent_id/:year',
+                  :controller => :nodes,
+                  :action     => :bulk_destroy,
+                  :year       => /\d{4}/,
+                  :parent_id  => /\d+/
+    
     admin.resources :html_pages, :except => [ :index, :destroy ]
     admin.resources :top_hits_pages, :except => [ :index, :destroy ]
     admin.resources :pages, :except => [ :index, :destroy ], :member => { :previous => :get }

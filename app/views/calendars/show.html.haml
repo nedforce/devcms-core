@@ -1,0 +1,80 @@
+- content_for :atom_feed do
+  %link{ :href => calendars_url(:format => 'atom'), :rel => "alternate", :title => t('calendars.all_calendar_items'), :type => "application/atom+xml" }/
+  %link{ :href => tomorrow_combined_calendar_url(:id => CombinedCalendar.first.id, :format => 'atom'), :rel => "alternate", :title => t('calendars.tomorrow'), :type => "application/atom+xml" }/
+
+#calendarMain
+  / Header contains H1, description and calendarElement !
+  .header.clearfix
+    - readspeaker do
+      = readspeaker_button(:class => 'topRightReadspeaker', :title => h(@calendar.title))
+
+      %h1= h @calendar.title
+
+      .metadata
+        %p.lastUpdateDate
+          == #{t 'shared.last_updated'}: #{l(@calendar.last_updated_at(current_user), :format => :long)}
+
+      .headerWrapper
+        / Wraps Header and description !
+        - if @calendar.description
+          .description
+            = w @calendar.description
+
+    .calendarWrapper
+      / Wraps calendarContainer and montInfo !
+      .calendarContainer
+        - date = Date.parse(params[:date]) rescue Date.today
+        = render :partial => '/calendars/calendar', :locals => { :calendar => @calendar, :date => date, :mainpage => true }
+
+      .monthInfo.clearfix
+        - if @calendar.calendar_items.exists_before_date?(date, nil)
+          = link_to_content_node(image_tag('arrow_blue_reverse.png', :alt => t('calendars.previous_month'), :class => 'left'),  @calendar, :date => (date << 1).start_of_month.to_s)
+        - if @calendar.calendar_items.exists_after_date?(date, nil)
+          = link_to_content_node(image_tag('arrow_blue.png',         :alt => t('calendars.next_month'),     :class => 'right'), @calendar, :date => (date >> 1).start_of_month.to_s)
+        %span.monthName= "#{t("date.month_names")[date.month]} #{date.year}"
+
+
+  - if logged_in?
+    .buttons.clearfix
+      - new_button t('calendars.new_calendar_item') do
+        = link_to t('calendars.new_calendar_item'), new_calendar_event_path(@calendar)
+
+  / Days of a week and Calendar items for those days !
+  .calendarWeek
+    - date.start_of_week.upto(date.end_of_week) do |day|
+      - @day_items = @calendar_items[day.mday]
+
+      - if @day_items.present? && day <= date.end_of_month
+        .calendarDay
+          / A day in a week with calendar items !
+          %h2= "#{day.mday} #{t("date.month_names")[day.month]}"
+
+          .dayName= "#{t("date.day_names")[day.wday].titleize}"
+
+          / A calendarItems for this day !
+          .calendarItems
+            - @day_items.each do |day_item|
+              - readspeaker("#{day.mday}_#{day_item.id}") do |rid|
+                .calendarItem
+                  .metaInfo
+                    .time
+                      = t 'calendars.from'
+                      = day_item.start_time.strftime("%H:%M")
+                      = t 'calendars.till'
+                      = day_item.end_time.strftime("%H:%M")
+
+                  .title.clearfix
+                    - if day_item.is_a?(Meeting)
+                      = image_tag 'icons/meeting.png', :class => 'icon', :alt => h(day_item.title)
+                      = link_to_content_node h(day_item.title), day_item, {}, :class => 'meeting'
+                    - else
+                      = image_tag 'icons/calendar_item.png', :class => 'icon', :alt => h(day_item.title)
+                      = link_to_content_node h(day_item.title), day_item, {}, :class => 'event'
+
+                  .buttons.clearfix
+                    = readspeaker_button(:rid => rid)
+
+  - if logged_in? && @day_items.present?
+    .buttons.clearfix
+      - new_button t('calendars.new_calendar_item') do
+        = link_to t('calendars.new_calendar_item'), new_calendar_event_path(@calendar)

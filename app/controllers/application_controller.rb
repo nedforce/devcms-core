@@ -390,7 +390,7 @@ protected
   end
 
   def parse_date(field)
-    model = controller_name.classify.constantize.table_name.singularize.to_sym
+    model = controller_name.classify.tableize.singularize.to_sym
     if params[model]
       date = params[model].delete("#{field}_day")
       time = params[model].delete("#{field}_time")

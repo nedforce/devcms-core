@@ -10,7 +10,7 @@ class Admin::SitesController < Admin::AdminController
 
   # Parse the publication start date for the +create+ and +update+ actions.
   before_filter :parse_publication_start_date, :only => [ :create, :update ]
-
+  
   before_filter :find_images_and_attachments,  :only => [ :show, :previous ]
 
   before_filter :find_children,                :only => [ :show, :previous ]

@@ -13,4 +13,4 @@
 
     .cropper{ :id => "image_cropper_\#{record.id}" }
       - if record.orientation == :vertical
-        = render :partial => 'cropper', :locals => { :image => record }
+        = render :partial => 'cropper', :locals => { :image => record, :is_header => record.node.parent.content_type == "NewsItem" }

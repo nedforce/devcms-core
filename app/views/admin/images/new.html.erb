@@ -19,24 +19,25 @@
 				<% if current_user.has_role?('admin') %><th><%=t 'images.for_header' -%></th><% end %>
 				<th><%=t 'images.cropped' -%></th>
 			</thead>
+			<tbody>
 		    <% if @sibling_images.empty? %>
-		      <tr id="no_images_row"><td colspan="4"><i><%=t 'images.no_images' -%></i></td></tr>
+		      <tr id="no_images_row"><td colspan="<%= current_user.has_role?('admin') ? '4' : '3' %>"><i><%=t 'images.no_images' -%></i></td></tr>
 		    <% else %>
 		      <% @sibling_images.each_with_index do |image, i| %>
 		      	<% unless !current_user.has_role?('admin') && image.is_for_header? %>
 		          <tr id="image_<%= image.id -%>">
-		          <td><%= h(image.title) %></td>
-		          <td><%= image_tag(thumbnail_admin_image_path(image), :alt => h(image.alt)) %></td>
-		         	<% if current_user.has_role?('admin') %>
-			  	    <td>
-		            <%= check_box_tag("image_is_for_header_#{image.id}", '1', image.is_for_header?,
-		                  :onchange => "this.disable();" +
-		                  remote_function(:url => admin_image_path(image), :method => :put, :complete => "$('image_is_for_header_#{image.id}').enable();", :with => "'image[is_for_header]='+$F('image_is_for_header_#{image.id}')")+
-		                  "; return false;")
-		            %>
+  		          <td><%= h(image.title) %></td>
+  		          <td><%= image_tag(thumbnail_admin_image_path(image), :alt => h(image.alt)) %></td>
+  		         	<% if current_user.has_role?('admin') %>
+  			  	    <td>
+  		            <%= check_box_tag("image_is_for_header_#{image.id}", '1', image.is_for_header?,
+  		                  :onchange => "this.disable();" +
+  		                  remote_function(:url => admin_image_path(image), :method => :put, :complete => "$('image_is_for_header_#{image.id}').enable();", :with => "'image[is_for_header]='+$F('image_is_for_header_#{image.id}')")+
+  		                  "; return false;")
+  		            %>
+		            </td>
 		            <% end %>
-		          </td>
-		          <td>
+		            <td>
 		              <div id="image_cropper_<%= image.id -%>" class="cropper">
 		              <% is_header = (i==0 && @parent_node.content_type == 'NewsItem') %>
                   	  <% if image.orientation == :vertical || is_header %>
@@ -44,8 +45,8 @@
                   	  <% end %>
                   	  </div>
 	              </td>
-		  	  	<% end %>
-		        </tr>
+		          </tr>
+		        <% end %>
 		      <% end %>
 		    <% end %>
 		  </table>

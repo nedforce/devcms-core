@@ -20,7 +20,7 @@
 
   <div id="new_meeting_category_wrapper" class="formFieldCt clearfix" <%= "style='display:none;'" unless @categories.empty? || record.meeting_category.try(:new_record?) -%>>
     <label for="meeting_category_name"><%=t 'calendars.meeting_category' -%></label>
-    <%= text_field_tag 'calendar_item[meeting_category_name]', record.meeting_category_name || (@categories.any? ? @categories.first.name : nil), :class => 'admin_form_text_field', :id => 'meeting_category_name' -%>
+    <%= text_field_tag 'meeting[meeting_category_name]', record.meeting_category_name || (@categories.any? ? @categories.first.name : nil), :class => 'admin_form_text_field', :id => 'meeting_category_name' -%>
     <%= link_to_function t('calendars.existing_category'), "toggleExistingMeetingCategoryField()" unless @categories.empty? -%>
   </div>
 </div>
