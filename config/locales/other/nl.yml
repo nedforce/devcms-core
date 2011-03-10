@@ -70,6 +70,8 @@ nl:
     succesfully_deleted: Kolomelement succesvol verwijderd.
     synonyms_button: Synoniemen
     users_button: Gebruikers
+  agenda_items:
+    add_to: Item toevoegen aan
   alphabetic_indices:
     add_to: Alfabetische index toevoegen aan
     all_pages: "Alle pagina's"
@@ -238,7 +240,7 @@ nl:
     weeks: weken
     years: jaar
   calendar_items:
-    add_too: Item toevoegen aan
+    add_to: Item toevoegen aan
   carrousels:
     add_carrousel_to: Carrousel toevoegen aan
     carrousel_failed: Kon carrousels niet opslaan.

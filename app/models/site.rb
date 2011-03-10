@@ -34,7 +34,7 @@ class Site < Section
   validates_format_of     :domain, :allow_blank => true, :with => VALID_DOMAIN_REGEXP
   validates_uniqueness_of :domain, :allow_blank => true
   
-  validates_format_of :analytics_code, :allow_blank => true, :with => /^(|UA-\d*-\d)$/i
+  validates_format_of :analytics_code, :allow_blank => true, :with => /^(|UA-\d*-\d*)$/i
 
   validate :ensure_parent_is_root
 

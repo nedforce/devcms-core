@@ -123,7 +123,7 @@ module Admin::AdminHelper
   
   def default_fields_before_form(form)
     form.text_field(:title, :label => t('shared.title')) +
-    form.text_field(:title_alternatives, :label => t('shared.title_alternatives'))
+    form.text_field(:title_alternatives, :label => t('shared.title_alternatives')) unless form.object.respond_to?(:title)
   end
     
   def default_fields_after_form(form)
@@ -131,10 +131,11 @@ module Admin::AdminHelper
   end
   
   def default_preview_fields(form)
-    form.hidden_field(:title) +
-    form.hidden_field(:title_alternatives) +
-    form.hidden_field(:publication_start_date) +
+    fields  = form.hidden_field(:publication_start_date) +
     form.hidden_field(:publication_end_date)
+    fields << form.hidden_field(:title) +
+    form.hidden_field(:title_alternatives) unless form.object.respond_to?(:title)
+    return fields
   end
 
   def approval_fields(form)
