@@ -90,7 +90,7 @@ class Admin::SitesController < Admin::AdminController
         end
         format.xml  { render :xml => @site, :status => :created, :location => @site }
       elsif @commit_type == 'save' && @site.save_for_user(current_user, @for_approval)
-        format.html { render :template => '/admin/sites/update' }
+        format.html { render :template => '/admin/shared/update' }
         format.xml  { head :ok }
       else
         format.html { render :template => 'admin/shared/edit', :locals => { :record => @site }, :status => :unprocessable_entity }
