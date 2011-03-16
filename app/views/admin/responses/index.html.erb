@@ -73,7 +73,8 @@ Ext.onReady(function() {
     id: 'ResponsesEditorGrid',
     store: ds,
     cm: cm,
-    selMode: new Ext.grid.RowSelectionModel({singleSelect:false}),
+    stripeRows: true,
+    selModel: new Ext.grid.RowSelectionModel({singleSelect:false}),
     clicksToEdit: 2,
     viewConfig: {forceFit: true},
     bbar: new Ext.PagingToolbar({
