@@ -8,7 +8,7 @@ xml.results do
         xml.created_at(response.created_at.strftime("%d-%m-%Y %H:%M"))
         xml.fields {
           response.response_fields.each do |response_field|
-              xml.tag!("field_#{response_field.contact_form_field.id}", response_field.value, :label => response_field.contact_form_field.label)
+              xml.tag!("field_#{response_field.contact_form_field.id}", html_escape(response_field.value), :label => response_field.contact_form_field.label)
           end
         }
       end
