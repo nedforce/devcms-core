@@ -1,3 +1,4 @@
+= form.select_field :send_method, {t('contact_forms.send_method_mail') => ContactForm::SEND_METHOD_MAIL, t('contact_forms.send_method_database') => ContactForm::SEND_METHOD_DATABASE}, :label => t('contact_forms.send_method')
 = form.text_field  :email_address,                     :label => t('contact_forms.email_address')
 = form.html_editor :description_before_contact_fields, :label => t('contact_forms.description_before_contact_fields'), :height => 50
 = form.html_editor :description_after_contact_fields,  :label => t('contact_forms.description_after_contact_fields'),  :height => 50

@@ -364,16 +364,34 @@ nl:
     title: Content box titel
   contact_forms:
     add_to: Contactformulier toevoegen aan
+    confirm_deletion: Weet u zeker dat u deze inzendingen wilt verwijderen?
     contact_fields: Invoervelden
+    count_msg: "Inzendingen {0} tot {1} van de {2} worden weergegeven"
+    del_tooltip: Klik hier om de geselecteerde inzending(en) te verwijderen
+    delete: Verwijderen
+    deleting: Bezig met verwijderen
     description_after_contact_fields: Omschrijving na invoervelden
     description_before_contact_fields: Omschrijving voor invoervelden
     dropdown: Dropdown
     edit: Bewerken van contactformulier
     email_address: E-mailadres
+    empty_msg: Er zijn geen inzendingen om weer te geven
+    error: Fout
+    export: Exporteren
+    export_tooltip: Klik hier om de inzendingen als CSV op te slaan
+    message: Bericht
     new_contact_field: Nieuw invoerveld
     no_contact_fields: Er zijn momenteel (nog) geen invoervelden.
+    of_page: "van {0}"
+    page: Pagina
+    responses: Inzendingen
     saved_contact_form: Contactformulier opgeslagen!
+    saving: Bezig met opslaan
+    select_one: Kies tenminste een inzending
     send: Versturen
+    send_method: Methode van verzending
+    send_method_mail: E-mail
+    send_method_database: Database
     sent_successfully: Uw bericht is succesvol verzonden.
     should_enter_obligatory_fields: U heeft niet alle verplichte velden ingevuld!
     successful: Succesvol

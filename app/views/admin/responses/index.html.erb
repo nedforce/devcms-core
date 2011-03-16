@@ -1,0 +1,178 @@
+<% javascript_tag do %>
+Ext.onReady(function() {
+  Ext.QuickTips.init();
+  
+  var ds = new Ext.data.Store( {
+    remoteSort: true,
+    proxy: new Ext.data.HttpProxy({
+      url: 'contact_forms/<%= @contact_form.id %>/responses.xml',
+      method: 'GET'
+    }),
+    reader: new Ext.data.XmlReader({
+      record: 'response',
+      id: 'id',
+      totalRecords: 'total_count'
+    }, [
+      'id',
+      'ip',
+      'created_at',
+<% @contact_form.contact_form_fields.each do |contact_form_field| -%>
+      'field_<%= contact_form_field.id %>',
+<% end -%>
+    ]),
+    autoLoad: {params: {start: 0, limit: 25}}
+  });
+  
+  var cm = new Ext.grid.ColumnModel(
+    [{
+      header: '#',
+      dataIndex: 'id'
+    },{
+      header: 'IP-adres',
+      dataIndex: 'ip'
+    },{
+      header: 'Gemaakt op',
+      dataIndex: 'created_at'
+    },
+<% @contact_form.contact_form_fields.each do |contact_form_field| -%>
+    {
+      header: '<%= contact_form_field.label %>',
+      dataIndex: 'field_<%= contact_form_field.id %>',
+<% if contact_form_field.field_type == 'textfield' -%>
+      editor: new Ext.form.TextField()
+<% elsif contact_form_field.field_type == 'textarea' -%>
+      editor: new Ext.form.TextArea()
+<% elsif contact_form_field.field_type == 'dropdown' -%>
+      editor: new Ext.form.ComboBox({
+           editable: false,
+           mode: 'local',
+           store: new Ext.data.SimpleStore({
+                'id': 0,
+                fields: ['text'],
+                data: [
+<% contact_form_field.default_value.split(',').each do |option| -%>
+                  ['<%= option %>'],
+<% end -%>
+                ]
+           }),
+           valueField: 'text',
+           displayField: 'text',
+           lazyRender: true,
+           triggerAction: 'all'
+       })
+<% end -%>
+    },
+<% end -%>
+    ]
+  );
+  
+  cm.defaultSortable = true;
+  
+  var grid = new Ext.grid.EditorGridPanel({
+    title: 'Inzendingen voor <%= @contact_form.title %>',
+    id: 'ResponsesEditorGrid',
+    store: ds,
+    cm: cm,
+    selMode: new Ext.grid.RowSelectionModel({singleSelect:false}),
+    clicksToEdit: 2,
+    viewConfig: {forceFit: true},
+    bbar: new Ext.PagingToolbar({
+      store: ds,
+      pageSize: 25,
+      displayInfo: true,
+      displayMsg: '<%= I18n.t("contact_forms.count_msg") %>',
+      emptyMsg: '<%= I18n.t("contact_forms.empty_msg") %>',
+      afterPageText: '<%= I18n.t("contact_forms.of_page") %>',
+      beforePageText: '<%= I18n.t("contact_forms.page") %>'
+    }),
+    tbar:
+      [{
+        text: '<%= I18n.t("contact_forms.delete") %>',
+        tooltip: '<%= I18n.t("contact_forms.del_tooltip") %>',
+        handler: handleDelete,
+        iconCls: 'menu_item_delete'
+      },{
+        text: '<%= I18n.t("contact_forms.export") %>',
+        tooltip: '<%= I18n.t("contact_forms.export_tooltip") %>',
+        iconCls: 'attachment_icon'
+      }],
+    listeners: {'afteredit': handleEdit}
+  });
+  
+  var panel = new Ext.Panel({
+    applyTo: 'right_panel_body',
+    layout: 'fit',
+    items: grid
+  });
+
+  function handleDelete(e) {
+    var selectedItems = grid.selModel.getSelections();
+    if (selectedItems.length > 0)
+    {
+        Ext.MessageBox.confirm('<%= I18n.t("contact_forms.message") %>','<%= I18n.t("contact_forms.confirm_deletion") %>', deleteRecords);
+    }
+    else
+    {
+        Ext.MessageBox.alert('<%= I18n.t("contact_forms.message") %>','<%= I18n.t("contact_forms.select_one") %>');
+    }
+  }
+
+  function deleteRecords(button) {
+    if (button == 'yes')
+    {
+      var selectedRows = grid.selModel.getSelections();
+      selectedRows.each(function(item) {
+        Ext.Ajax.request({
+          waitMsg: '<%= I18n.t("contact_forms.deleting") %>',
+          url: 'contact_forms/<%= @contact_form.id %>/responses/'+item.id+'.json',
+          method: 'POST',
+
+          params: "_method=delete&authenticity_token=<%= form_authenticity_token -%>",
+          callback: function(options, success, response){
+            if(!success){
+                Ext.ux.alertResponseError(response)
+            }else{
+                ds.reload();
+            }
+          }
+        });
+      });
+    }
+  }
+  
+  function handleEdit(editEvent) {
+      Ext.Ajax.request({
+          waitMsg: '<%= I18n.t("contact_forms.saving")%>',
+          url: 'contact_forms/<%= @contact_form.id %>/responses/' + editEvent.record.id + '.xml',
+          method: 'POST',
+
+          params: "_method=put&authenticity_token=<%= form_authenticity_token -%>" +
+                  "&response_field[value]=" + editEvent.value +"&contact_form_field_id=" + 
+                  editEvent.field.split("_")[1] + "&response_id=" + editEvent.record.id,
+
+          failure: function(response,options) {
+              var iterator = document.evaluate('//error', response.responseXML, null, XPathResult.UNORDERED_NODE_ITERATOR_TYPE, null);
+              var errors = ''
+
+              try {
+                var thisError = iterator.iterateNext();
+
+                while (thisError) {
+                  errors += thisError.textContent + '\n';
+                  thisError = iterator.iterateNext();
+                }
+              }
+              catch (e) {
+                dump('Error: Document tree modified during iteration ' + e);
+              }
+
+              Ext.MessageBox.alert('<%= I18n.t("contact_forms.error")%>',errors);
+          },
+          success: function(response,options) {
+              ds.commitChanges();
+          }
+      });
+  }
+
+});
+<% end %>

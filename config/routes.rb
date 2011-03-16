@@ -110,6 +110,7 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :meetings, :except => :index, :member => { :previous => :get }
     admin.resources :contact_forms do |contact_form|
       contact_form.resources :contact_form_fields
+      contact_form.resources :responses, :only => [ :index, :update, :destroy ]
     end
     admin.resources :links, :except => [ :index, :destroy ], :member => { :previous => :get }
     admin.resources :images, :except => [ :index, :destroy ], :member => { :previous => :get, :preview => :get, :thumbnail => :get, :thumbnail_preview => :get, :content_box_header_preview => :get }
