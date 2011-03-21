@@ -17,7 +17,7 @@
             %td= h attachment.title
             %td== #{attachment_icon(attachment)}&nbsp;#{attachment.extension}
             %td== #{number_with_precision(attachment.size.to_f / 1024, :precision => 1)} KB
-            %td= link_to_content_node t('shared.download'), attachment, {}, :title => h(attachment.title)
+            %td= link_to_content_node t('shared.download'), attachment, {:format => attachment.extension}, :title => h(attachment.title)
     - elsif params[:layout] == "print"
       - grouped_attachments.sort.each do |cat, attachs|
         - if grouped_attachments.size == 1
@@ -66,4 +66,4 @@
                       %td{ :class => "attWideColumn" }= h attachment.title
                       %td== #{attachment_icon(attachment)}&nbsp;#{attachment.extension}
                       %td== #{number_with_precision(attachment.size.to_f / 1024, :precision => 1)} KB
-                      %td= link_to_content_node t('shared.download'), attachment, {}, :title => h(attachment.title)
+                      %td= link_to_content_node t('shared.download'), attachment, {:format => attachment.extension}, :title => h(attachment.title)

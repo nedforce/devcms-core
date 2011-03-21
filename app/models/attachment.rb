@@ -85,6 +85,10 @@ class Attachment < ActiveRecord::Base
   def self.owms_type
     I18n.t('owms.official_publication')
   end
+  
+  def path_for_url_alias(node)
+    self.basename.gsub(/[^a-z0-9\-_]/i, '-')
+  end
 
   protected
     
@@ -92,8 +96,9 @@ class Attachment < ActiveRecord::Base
   def clean_filename
     if self.filename
       cleaned_filename = cleaned_basename = self.basename.gsub(/[^a-z0-9\-_]/i, '-')
-      cleaned_filename = "#{cleaned_basename}.#{self.extension}" if self.extension
+      cleaned_filename = "#{cleaned_basename}.#{self.extension.downcase}" if self.extension
       self.filename    = cleaned_filename
     end
   end
+  
 end
