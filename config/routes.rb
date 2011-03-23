@@ -16,7 +16,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :calendars, :only => [ :index, :show ], :member => { :tomorrow => :get }
   map.resources :combined_calendars, :member => { :tomorrow => :get }
   map.resources :events, :only => :show
-  map.resources :contact_forms, :member => { :send_message => :post }
+  map.resources :contact_forms, :member => { :send_message => :post, :import_csv => :post, :upload_csv => :get, :export_csv => :get }
   map.resources :top_hits_pages, :only => :show
   map.resources :html_pages, :only => :show
   map.resources :pages, :only => :show

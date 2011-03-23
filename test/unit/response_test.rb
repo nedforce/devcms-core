@@ -16,6 +16,7 @@ class ResponseTest < ActiveSupport::TestCase
   end
   
   
+  
   protected
 
   def create_response(options = {})

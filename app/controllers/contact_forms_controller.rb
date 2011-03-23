@@ -15,22 +15,24 @@ class ContactFormsController < ApplicationController
       format.html # show.html.erb
     end
   end
-
+  
   # * POST /contact_forms/:id/send_message
   def send_message
     @contact_form_field = params[:contact_form_field]
+    
     get_entered_fields
     respond_to do |format|
       if entered_all_obligatory_fields?(@contact_form_field)
+       
         # Check for send method
         if @contact_form.send_method == ContactForm::SEND_METHOD_DATABASE
           # Store response to database
           # Create a new response object
-          response = Response.create!(:contact_form => @contact_form, :ip => request.remote_ip, :time => Time.now)
-          response.save
+          @response_row = Response.create!(:contact_form => @contact_form, :ip => request.remote_ip, :time => Time.now)
+          @response_row.save
           # Create response_field objects
           @entered_fields.each do |field|
-            ResponseField.create!(:response => response, :contact_form_field_id => field[0], :value => field[2])
+            ResponseField.create!(:response => @response_row, :contact_form_field_id => field[0], :value => field[2])
           end
         else
           # Send response over e-mail
@@ -59,15 +61,18 @@ class ContactFormsController < ApplicationController
   # Check the fields entered by the user to only use fields that are actually
   # +ContactFormField+ objects, as we do not want the user to add different input data.
   def get_entered_fields
-    @entered_fields = []
-    if !@contact_form_field.blank?
-      @contact_form_fields.each do |field|
-        if !@contact_form_field["#{field.id}"].blank?
-          @entered_fields << [ field.id, field.label, @contact_form_field["#{field.id}"] ]
-        end
+    @entered_fields = get_used_fields_only(@contact_form_field)
+    @entered_fields
+  end
+  
+  def get_used_fields_only(contact_fields)
+    used_fields = []
+    @contact_form_fields.each do |field|
+      if !contact_fields["#{field.id}"].blank?
+        used_fields << [ field.id, field.label, contact_fields["#{field.id}"] ]
       end
     end
-    @entered_fields
+    used_fields
   end
 
   # Check whether all obligatory fields are entered.

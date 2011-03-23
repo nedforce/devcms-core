@@ -6,16 +6,110 @@ class Admin::ContactFormsController < Admin::AdminController
   prepend_before_filter :find_parent_node, :only => [:new, :create ]
 
   # The +show+, +edit+ and +update+ actions need a +ContactForm+ object to act upon.
-  before_filter :find_contact_form,        :only => [ :show, :edit, :update ]
+  before_filter :find_contact_form,        :only => [ :show, :edit, :update, :import_csv, :export_csv, :upload_csv ]
 
   before_filter :set_commit_type,          :only => [ :create, :update ]
 
   layout false
+  
+  
+  
+  
+    # [ ] TODO: Form maken waarmee je file kunt uploaden
+  def upload_csv
+    # Determine the required order of files for the uploaded csv
+    fields = []
+    ContactFormField.all(:order => "position asc", :conditions => {:contact_form_id => @contact_form.id}).each do |field|
+        fields << field.label
+    end
+    @csv_headers = fields.join(',');
+    fields = nil
+    # Headers op deze manier, daarop matchen
+    
+  end
+  # [ ] TODO: functie maken csv import
+  # [X] TODO: routes ook fixen
+  # [ ] TODO: faster_csv gem
+  # [ ] TODO: bedenken hoe je kunt kijken welk veld wat is
+  def import_csv
+    csv_data = params[:csv_file].read
+    headers_ok = false
+    headers = []
+    FasterCSV.parse(csv_data) do |row|
+      if(headers_ok)
+        # [ ] TODO: kijken of dit goed gaat, row debuggen
+        response_row = Response.create!(:contact_form => @contact_form, :ip => 'CSV-Import', :time => Time.now)
+        response_row.save
+        # Create response_field objects
+        i = 0
+        row.each do |field|
+          ResponseField.create!(:response => response_row, :contact_form_field_id => headers[i], :value => field)
+          i += 1
+        end
+      else
+        field_labels = []
+        fields = {}
+        ContactFormField.all(:order => "position asc", :conditions => {:contact_form_id => @contact_form.id}).each do |field|
+          fields[field.id] = field.label
+        end
+        andarr = (row & field_labels)
+        if(andarr.length == field_labels.length)
+          headers_ok = true
+          
+          fields.each do |field|
+            row.each do |column|
+              if row == field
+                headers << fields.key(field)
+              end
+            end
+          end
+        else
+          break
+        end
+        #TODO: Ongevoelig voor volgorde maken
+      end
+    end
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  def export_csv(delimiter = ';')
+    # TODO: meegeven aan fasterCSV
+    
+    csv_string = FasterCSV.generate do |csv|
+      header_fields = []
+      ContactFormField.all(:order => "position asc", :conditions => {:contact_form_id => @contact_form.id}).each do |field|
+        header_fields << field.label
+      end
+      csv << header_fields
+      @contact_form.responses.each do |resp|
+        row_fields = []
+        response_fields = ContactFormField.all(
+          :select => 'value, response_id, contact_form_id, label', 
+          :order => "position asc", 
+          :conditions => {:contact_form_id => @contact_form.id}, 
+          :joins => ("LEFT JOIN response_fields ON (response_fields.contact_form_field_id = contact_form_fields.id 
+            AND response_fields.response_id = #{resp.id.to_s})")
+        ).each do |field|
+          if field.value.blank?
+            row_fields << ""
+          else
+            row_fields << field.value
+          end
+        end
+        csv << row_fields
+      end
+    end
+    # Send data as an csv file to the client
+    send_data csv_string, :type => 'text/csv; charset=iso-8859-1; header=present',
+       :disposition => "attachment; filename=users.csv"
+  end
+  
 
   # * GET /admin/contact_forms/:id
   # * GET /admin/contact_forms/:id.xml
   def show
-    @actions << { :url => { :action => :index, :controller => :responses, :contact_form_id => @contact_form.id }, :text => t('contact_forms.responses'), :method => :get }
     respond_to do |format|
       format.html { render :partial => 'show', :layout => 'admin/admin_show' }
       format.xml  { render :xml => @contact_form }
@@ -80,9 +174,30 @@ class Admin::ContactFormsController < Admin::AdminController
   end
 
   protected
+  
+  def get_used_fields_only(contact_fields)
+    used_fields = []
+    @contact_form_fields.each do |field|
+      if !contact_fields[field.id].blank?
+        used_fields << [ field.id, field.label, contact_fields[field.id] ]
+      end
+    end
+    used_fields
+  end 
+   # Check whether all obligatory fields are entered.
+  # Returns +true+ if this is the case, +false+ otherwise.
+  def entered_all_obligatory_fields?(array)
+    @contact_form.obligatory_field_ids.each do |field_id|
+      if array[field_id].blank?
+        return false
+      end
+    end
+    return true
+  end
 
   # Finds the +ContactForm+ object corresponding to the passed +id+ parameter.
   def find_contact_form
     @contact_form = ContactForm.find(params[:id], :include => :contact_form_fields)
+    @contact_form_fields = @contact_form.contact_form_fields
   end
 end

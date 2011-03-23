@@ -19,7 +19,7 @@ class ContactBoxesControllerTest < ActionController::TestCase
     get :show, :id => -1
     assert_response :not_found
   end
-
+  
   protected
 
   def create_contact_box(options = {})
@@ -29,4 +29,6 @@ class ContactBoxesControllerTest < ActionController::TestCase
       :default_text => 'Standaardtekst'
     }.merge(options))
   end
+  
+  
 end
