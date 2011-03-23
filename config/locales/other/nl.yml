@@ -377,8 +377,10 @@ nl:
     email_address: E-mailadres
     empty_msg: Er zijn geen inzendingen om weer te geven
     error: Fout
-    export: Exporteren
-    export_tooltip: Klik hier om de inzendingen als CSV op te slaan
+    export_csv: Exporteren als CSV
+    export_csv_tooltip: Klik hier om de inzendingen als CSV op te slaan
+    export_xls: Exporteren als Excel
+    export_xls_tooltip: Klik hier om de inzendingen als een Excel-bestand op te slaan
     message: Bericht
     new_contact_field: Nieuw invoerveld
     no_contact_fields: Er zijn momenteel (nog) geen invoervelden.

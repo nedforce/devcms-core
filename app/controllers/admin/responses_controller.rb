@@ -20,6 +20,7 @@ class Admin::ResponsesController < Admin::AdminController
     respond_to do |format|
       format.html #show.html.erb
       format.xml  #show.xml.builder
+      format.csv
     end
   end
 

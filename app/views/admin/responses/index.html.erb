@@ -5,7 +5,7 @@ Ext.onReady(function() {
   var ds = new Ext.data.Store( {
     remoteSort: true,
     proxy: new Ext.data.HttpProxy({
-      url: 'contact_forms/<%= @contact_form.id %>/responses.xml',
+      url: '<%= admin_contact_form_url(@contact_form) %>/responses.xml',
       method: 'GET'
     }),
     reader: new Ext.data.XmlReader({
@@ -93,8 +93,14 @@ Ext.onReady(function() {
         handler: handleDelete,
         iconCls: 'menu_item_delete'
       },{
-        text: '<%= I18n.t("contact_forms.export") %>',
-        tooltip: '<%= I18n.t("contact_forms.export_tooltip") %>',
+        text: '<%= I18n.t("contact_forms.export_csv") %>',
+        tooltip: '<%= I18n.t("contact_forms.export_csv_tooltip") %>',
+        handler: handleCSVExport,
+        iconCls: 'attachment_icon'
+      },{
+        text: '<%= I18n.t("contact_forms.export_xls") %>',
+        tooltip: '<%= I18n.t("contact_forms.export_xls_tooltip") %>',
+        handler: handleXLSExport,
         iconCls: 'attachment_icon'
       }],
     listeners: {'afteredit': handleEdit}
@@ -173,6 +179,14 @@ Ext.onReady(function() {
               ds.commitChanges();
           }
       });
+  }
+
+  function handleCSVExport(e) {
+    window.location = "<%= admin_contact_form_url(@contact_form) %>/responses.csv";
+  }
+  
+  function handleXLSExport(e) {
+    window.location = "<%= admin_contact_form_url(@contact_form) %>/responses.xls"
   }
 
 });

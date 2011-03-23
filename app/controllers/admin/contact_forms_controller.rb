@@ -6,7 +6,7 @@ class Admin::ContactFormsController < Admin::AdminController
   prepend_before_filter :find_parent_node, :only => [:new, :create ]
 
   # The +show+, +edit+ and +update+ actions need a +ContactForm+ object to act upon.
-  before_filter :find_contact_form,        :only => [ :show, :edit, :update, :import_csv, :export_csv, :upload_csv ]
+  before_filter :find_contact_form,        :only => [ :show, :edit, :update, :import_csv, :upload_csv ]
 
   before_filter :set_commit_type,          :only => [ :create, :update ]
 
@@ -73,39 +73,6 @@ class Admin::ContactFormsController < Admin::AdminController
       format.html
     end
   end
-
-  def export_csv(delimiter = ';')
-    # TODO: meegeven aan fasterCSV
-    
-    csv_string = FasterCSV.generate do |csv|
-      header_fields = []
-      ContactFormField.all(:order => "position asc", :conditions => {:contact_form_id => @contact_form.id}).each do |field|
-        header_fields << field.label
-      end
-      csv << header_fields
-      @contact_form.responses.each do |resp|
-        row_fields = []
-        response_fields = ContactFormField.all(
-          :select => 'value, response_id, contact_form_id, label', 
-          :order => "position asc", 
-          :conditions => {:contact_form_id => @contact_form.id}, 
-          :joins => ("LEFT JOIN response_fields ON (response_fields.contact_form_field_id = contact_form_fields.id 
-            AND response_fields.response_id = #{resp.id.to_s})")
-        ).each do |field|
-          if field.value.blank?
-            row_fields << ""
-          else
-            row_fields << field.value
-          end
-        end
-        csv << row_fields
-      end
-    end
-    # Send data as an csv file to the client
-    send_data csv_string, :type => 'text/csv; charset=iso-8859-1; header=present',
-       :disposition => "attachment; filename=users.csv"
-  end
-  
 
   # * GET /admin/contact_forms/:id
   # * GET /admin/contact_forms/:id.xml
