@@ -110,6 +110,7 @@ class Admin::ContactFormsController < Admin::AdminController
   # * GET /admin/contact_forms/:id
   # * GET /admin/contact_forms/:id.xml
   def show
+    @actions << { :url => { :action => :index, :controller => :responses, :contact_form_id => @contact_form.id }, :text => t('contact_forms.responses'), :method => :get }
     respond_to do |format|
       format.html { render :partial => 'show', :layout => 'admin/admin_show' }
       format.xml  { render :xml => @contact_form }
