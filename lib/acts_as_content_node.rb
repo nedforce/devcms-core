@@ -140,7 +140,7 @@ module Acts #:nodoc:
         alias_method :original_node=, :node=
         private :original_node=
 
-        attr_accessor :parent, :external_id
+        attr_accessor :parent
         
         def has_parent(type, options = {})
           class_name = (options.delete(:class_name) || type.to_s.classify)          
@@ -370,7 +370,6 @@ module Acts #:nodoc:
             
             node.title_alternative_list = @title_alternatives unless @title_alternatives.nil?
             
-            node.external_id = self.external_id if self.external_id.present?
             node.parent = self.parent if self.parent.present?
           end
 
