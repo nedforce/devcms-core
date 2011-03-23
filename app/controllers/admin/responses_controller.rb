@@ -14,13 +14,19 @@ class Admin::ResponsesController < Admin::AdminController
   # * GET /admin/contact_forms/:contact_form_id/responses
   # * GET /admin/contact_forms/:contact_form_id/responses.xml
   # * GET /admin/contact_forms/:contact_form_id/responses.csv
+  # * GET /admin/contact_forms/:contact_form_id/responses.xls
   def index
-    @responses = Response.all(:order => "#{@sort_field} #{@sort_direction}", :page => { :size => @page_limit, :current => @current_page }, :conditions => ["contact_form_id = ?", params[:contact_form_id].to_i])
+    if params[:type] == 'xml'
+      @responses = Response.all(:order => "#{@sort_field} #{@sort_direction}", :page => { :size => @page_limit, :current => @current_page }, :conditions => ["contact_form_id = ?", params[:contact_form_id].to_i])
+    else
+      @responses = @contact_form.responses
+    end
     
     respond_to do |format|
-      format.html #show.html.erb
-      format.xml  #show.xml.builder
-      format.csv
+      format.html #index.html.erb
+      format.xml  #index.xml.builder
+      format.csv  #index.csv.erb
+      format.xls  #index.xls.erb
     end
   end
 

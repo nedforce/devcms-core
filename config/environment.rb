@@ -26,3 +26,4 @@ config.gem 'settler',               :version => '~> 1.2.0'
 config.gem 'shuber-sortable',       :version => "~> 1.0.6", :lib => 'sortable',       :source => "http://gems.github.com"
 config.gem 'tidy',                  :version => '1.1.2'
 config.gem 'whenever',              :version => '>= 0.5.0'
+config.gem 'spreadsheet',           :version => '0.6.5.2'
