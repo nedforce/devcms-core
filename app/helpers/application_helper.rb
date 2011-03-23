@@ -300,6 +300,10 @@ module ApplicationHelper
     link_to_content_node text, content, {}, :class => 'read_more_link'
   end
 
+  def new_button(title = nil, &block)
+    concat(content_tag(:div, :class => 'new') { image_tag('icons/add.png', :class => 'icon', :alt => 'Icoon van een plusteken', :title => title) + capture(&block) })
+  end
+
   protected
 
     # Returns the HTML for a main menu item.
