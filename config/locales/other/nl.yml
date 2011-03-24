@@ -937,6 +937,8 @@ nl:
     sitemap: Sitemap
   sites:
     add_to: Site toevoegen aan
+    analytics_code: Google analytics code (UA-1234567-89)
+    edit: Bewerken van site
   social_media_links_boxes:
     add_to: Social media links box toevoegen aan
     edit: Bewerken van social media links box
