@@ -35,11 +35,6 @@
         %span.monthName= "#{t("date.month_names")[date.month]} #{date.year}"
 
 
-  - if logged_in?
-    .buttons.clearfix
-      - new_button t('calendars.new_calendar_item') do
-        = link_to t('calendars.new_calendar_item'), new_calendar_event_path(@calendar)
-
   / Days of a week and Calendar items for those days !
   .calendarWeek
     - date.start_of_week.upto(date.end_of_week) do |day|
@@ -74,8 +69,3 @@
 
                   .buttons.clearfix
                     = readspeaker_button(:rid => rid)
-
-  - if logged_in? && @day_items.present?
-    .buttons.clearfix
-      - new_button t('calendars.new_calendar_item') do
-        = link_to t('calendars.new_calendar_item'), new_calendar_event_path(@calendar)
