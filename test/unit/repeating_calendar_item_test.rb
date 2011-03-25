@@ -331,7 +331,7 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
         assert ci.valid?
 
         ## Retrieve all calendar ites with ci's repeat_identifier, these are the original calendar item (ci) and the copies
-        created_calendar_items = CalendarItem.find(:all,
+        created_calendar_items = CalendarItem.all(
           :order => 'start_time DESC',
           :conditions => { :repeat_identifier => ci.repeat_identifier }
         )
@@ -382,5 +382,4 @@ protected
 
     amount
   end
-
 end

@@ -50,8 +50,8 @@ class FindAccessibleTest < ActiveSupport::TestCase
   end
 
   def test_find_all_accessible_for_user
-    assert Page.find(:all).reject{|page| page.node.is_hidden? || page.approved_version.nil? }.set_equals?(Page.find_accessible(:all, :for => users(:normal_user)))
-    assert Page.find(:all).reject{|page| page.approved_version.nil? }.set_equals?(Page.find_accessible(:all, :for => @arthur))
+    assert Page.all.reject{|page| page.node.is_hidden? || page.approved_version.nil? }.set_equals?(Page.find_accessible(:all, :for => users(:normal_user)))
+    assert Page.all.reject{|page| page.approved_version.nil? }.set_equals?(Page.find_accessible(:all, :for => @arthur))
   end
 
   def test_find_accessible_in_association
@@ -64,8 +64,8 @@ class FindAccessibleTest < ActiveSupport::TestCase
   end
 
   def test_find_approved_versions
-    page = create_page(:body => "Version 1")
-    page.body = "Version 2"
+    page = create_page(:body => 'Version 1')
+    page.body = 'Version 2'
     page.save_for_user(users(:editor))
 
     result = Page.find_accessible(:all, :approved_content => true, :page => {})
@@ -79,8 +79,8 @@ class FindAccessibleTest < ActiveSupport::TestCase
   def test_should_find_accessible_on_node
     hidden_node = nodes(:hidden_section_node)
     nested_node = nodes(:nested_page_node)
-    arthur = @arthur
-    reader = users(:reader)
+    arthur      = @arthur
+    reader      = users(:reader)
     normal_user = users(:normal_user)
 
     #default by id
@@ -100,16 +100,16 @@ class FindAccessibleTest < ActiveSupport::TestCase
       Node.find_accessible(nested_node.id, :for => normal_user)
     end
     #all
-    assert_equal Node.find(:all).reject{|node| node.is_hidden? || node.approved_content(:allow_nil => true).nil? || !node.published? }.size,
+    assert_equal Node.all.reject{ |node| node.is_hidden? || node.approved_content(:allow_nil => true).nil? || !node.published? }.size,
                   Node.find_accessible(:all).size
-    assert_equal Node.find(:all).reject{|node| node.approved_content(:allow_nil => true).nil? }.size,
+    assert_equal Node.all.reject{ |node| node.approved_content(:allow_nil => true).nil? }.size,
                   Node.find_accessible(:all, :for => arthur).size
-    assert_equal Node.find(:all).reject{|node| (node.is_hidden? && reader.role_on(node).nil?) || node.approved_content(:allow_nil => true).nil? }.size,
+    assert_equal Node.all.reject{ |node| (node.is_hidden? && reader.role_on(node).nil?) || node.approved_content(:allow_nil => true).nil? }.size,
                   Node.find_accessible(:all, :for => arthur).size
     #extra condition
-    assert Node.find_accessible(:all, :for => arthur, :conditions => {:content_type => "image"}).all?{ |node| node.content === Image }
+    assert Node.find_accessible(:all, :for => arthur, :conditions => { :content_type => 'image' }).all?{ |node| node.content === Image }
   end
-  
+
   def test_should_not_find_inaccessible_nodes
     p = create_page
     p.node.update_attribute :hidden, true
@@ -120,8 +120,9 @@ class FindAccessibleTest < ActiveSupport::TestCase
   end
 
   protected
+
   def build_page(options = {})
-    Page.new({ :title => "Page title", :preamble => "Ambule", :body => "Page body" }.merge(options))
+    Page.new({ :title => 'Page title', :preamble => 'Ambule', :body => 'Page body' }.merge(options))
   end
 
   def create_page(options = {})

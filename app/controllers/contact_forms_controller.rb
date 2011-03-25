@@ -41,16 +41,18 @@ class ContactFormsController < ApplicationController
 
   # Find the +ContactFormField+ objects related to the +ContactForm+.
   def find_contact_form_fields
-    @contact_form_fields = @contact_form.contact_form_fields.find(:all, :order => :position)
+    @contact_form_fields = @contact_form.contact_form_fields.all(:order => :position)
   end
 
   # Check the fields entered by the user to only use fields that are actually
   # +ContactFormField+ objects, as we do not want the user to add different input data.
   def get_entered_fields
     @entered_fields = []
-    @contact_form_fields.each do |field|
-      if !@contact_form_field["#{field.id}"].blank?
-        @entered_fields << [ field.id, field.label, @contact_form_field["#{field.id}"] ]
+    if !@contact_form_field.blank?
+      @contact_form_fields.each do |field|
+        if !@contact_form_field["#{field.id}"].blank?
+          @entered_fields << [ field.id, field.label, @contact_form_field["#{field.id}"] ]
+        end
       end
     end
     @entered_fields

@@ -74,7 +74,7 @@ class RepeatingMeetingTest < ActiveSupport::TestCase
         assert m.valid?
 
         ## Retrieve all calendar ites with m's repeat_identifier, these are the original calendar item (m) and the copies
-        created_meetings = Meeting.find(:all,
+        created_meetings = Meeting.all(
           :order => 'start_time DESC',
           :conditions => { :repeat_identifier => m.repeat_identifier }
         )

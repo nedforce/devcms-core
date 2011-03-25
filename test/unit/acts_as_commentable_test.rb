@@ -4,10 +4,10 @@ class ActsAsCommentableTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
   
   def setup    
-    @arthur = users(:arthur)
-    @news_item = news_items(:devcms_news_item).node
+    @arthur      = users(:arthur)
+    @news_item   = news_items(:devcms_news_item).node
     @weblog_post = weblog_posts(:henk_weblog_post_one).node
-    @event = events(:events_calendar_item_one).node
+    @event       = events(:events_calendar_item_one).node
   end
   
   def test_should_add_comments    
@@ -26,7 +26,7 @@ class ActsAsCommentableTest < ActiveSupport::TestCase
     assert_equal 1, @event.comments.size
     assert_equal @event, comment.commentable
     
-    assert_equal 3, Comment.find(:all, :conditions => { :user_id => @arthur.id }).size
+    assert_equal 3, Comment.all(:conditions => { :user_id => @arthur.id }).size
   end
   
   def test_should_require_user_or_user_name
@@ -44,7 +44,8 @@ class ActsAsCommentableTest < ActiveSupport::TestCase
   end
     
   protected
-    def new_comment(options = {})
-      Comment.new({ :user => @arthur, :comment => "I don't like it!" }.merge(options))
-    end
+
+  def new_comment(options = {})
+    Comment.new({ :user => @arthur, :comment => "I don't like it!" }.merge(options))
+  end
 end

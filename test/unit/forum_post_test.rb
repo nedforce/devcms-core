@@ -5,8 +5,8 @@ class ForumPostTest < ActiveSupport::TestCase
 
   def setup
     @bewoners_forum_thread_one = forum_threads(:bewoners_forum_thread_one)
-    @bewoners_forum_post_one = forum_posts(:bewoners_forum_post_one)
-    @jan = users(:jan)
+    @bewoners_forum_post_one   = forum_posts(:bewoners_forum_post_one)
+    @jan                       = users(:jan)
   end
 
   def test_should_create_forum_post
@@ -86,9 +86,9 @@ class ForumPostTest < ActiveSupport::TestCase
   end
 
   def test_is_owned_by_user?
-    users = User.find(:all)
+    users = User.all
 
-    ForumPost.find(:all).each do |forum_post|
+    ForumPost.all.each do |forum_post|
       users.each do |user|
         if user == forum_post.user
           assert forum_post.is_owned_by_user?(user)
@@ -100,7 +100,7 @@ class ForumPostTest < ActiveSupport::TestCase
   end
 
   def test_is_start_post?
-    forum_threads = ForumThread.find :all
+    forum_threads = ForumThread.all
 
     forum_threads.each do |thread|
       assert thread.start_post.is_start_post?
@@ -117,7 +117,7 @@ class ForumPostTest < ActiveSupport::TestCase
     assert_equal 1, ActionMailer::Base.deliveries.size
     email = ActionMailer::Base.deliveries.first
     assert email.to.include?(@bewoners_forum_thread_one.user.email_address)
-    assert email.subject.include?("Nieuwe reactie op forum")
+    assert email.subject.include?('Nieuwe reactie op forum')
     assert email.body.include?('Enjoy!')
     assert email.body.include?(@jan.full_name)
   end
@@ -137,14 +137,14 @@ class ForumPostTest < ActiveSupport::TestCase
   def test_should_return_editable_comments
     assert_equal ForumPost.replies, ForumPost.editable_comments_for(users(:arthur))
 
-    editable_forum_post = create_forum_post(:user => users(:final_editor))
+    editable_forum_post     = create_forum_post(:user => users(:final_editor))
     non_editable_forum_post = create_forum_post(:forum_thread => forum_threads(:bewoners_forum_thread_three))
 
     editable_forum_posts = ForumPost.editable_comments_for(users(:final_editor))
     assert editable_forum_posts.include?(editable_forum_post)
     assert !editable_forum_posts.include?(non_editable_forum_post)
 
-    editable_forum_post = create_forum_post(:user => users(:editor))
+    editable_forum_post  = create_forum_post(:user => users(:editor))
     editable_forum_posts = ForumPost.editable_comments_for(users(:editor))
 
     assert editable_forum_posts.include?(editable_forum_post)
@@ -157,4 +157,3 @@ protected
     ForumPost.create({ :forum_thread => @bewoners_forum_thread_one, :user => @jan, :body => "Enjoy!" }.merge(options))
   end
 end
-

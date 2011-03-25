@@ -51,7 +51,7 @@ class ForumTopic < ActiveRecord::Base
     #
     # Reply (2010.07.20 RvdH): Add a field to ForumTopic that keeps the last created_at of a child?
     # Or use the updated_at field of ForumTopic?
-    self.forum_threads.find(:all,
+    self.forum_threads.all(
       {
         :select => 'forum_threads.id, forum_threads.title, forum_threads.user_id, MAX(forum_posts.created_at) AS last_update_date', 
         :joins  => :forum_posts,

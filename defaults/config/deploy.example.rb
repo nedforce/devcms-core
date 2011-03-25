@@ -54,7 +54,7 @@ namespace :deploy do
   #   Rebuilds the Node index for Ferret.
   # DESC
   # task :rebuild_index, :roles => :app do
-  #   run "echo \"Node.find(:all).each { |n| n.ferret_update } ; quit\" | #{current_path}/script/console production"
+  #   run "echo \"Node.all.each { |n| n.ferret_update } ; quit\" | #{current_path}/script/console production"
   # end
   desc "Create asset packages for production" 
    task :update_assets, :roles => [:web] do

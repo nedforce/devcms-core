@@ -42,7 +42,7 @@ class Forum < ActiveRecord::Base
     return [] if limit <= 0
     # Custom SQL query to minimize performance hit
     # TODO: Not too keen on the INNER JOINs here, any way to avoid these? DB caching of created_at?
-    ForumThread.find(:all,
+    ForumThread.all(
       {
         :select     => 'forum_threads.id, forum_threads.title, forum_threads.forum_topic_id, MAX(forum_posts.created_at) AS last_update_date', 
         :from       => '(forum_threads ',

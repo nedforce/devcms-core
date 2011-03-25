@@ -16,8 +16,8 @@ class Admin::CategoriesController < Admin::AdminController
     respond_to do |format|
       format.html { render :layout => 'admin' }
       format.json do
-        @categories = Category.find(:all)
-        categories = @categories.collect do |category|
+        @categories = Category.all
+        categories  = @categories.collect do |category|
           {
             :id         => category.id,
             :table_name => (category.is_root_category? ? "#{I18n.t('categories.root_category')}" : category.name),

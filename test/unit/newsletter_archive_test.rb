@@ -46,7 +46,7 @@ class NewsletterArchiveTest < ActiveSupport::TestCase
   
   def test_should_update_newsletter_archive
     assert_no_difference 'NewsletterArchive.count' do
-      @devcms_newsletter_archive.title = 'New title'
+      @devcms_newsletter_archive.title       = 'New title'
       @devcms_newsletter_archive.description = 'New description'
       assert @devcms_newsletter_archive.send(:save)
     end
@@ -59,9 +59,9 @@ class NewsletterArchiveTest < ActiveSupport::TestCase
   end
   
   def test_has_subscription_for?
-    users = User.find(:all)
+    users = User.all
     
-    NewsletterArchive.find(:all).each do |newsletter_archive|
+    NewsletterArchive.all.each do |newsletter_archive|
       users.each do |user|
         if newsletter_archive.users.include?(user)
           assert newsletter_archive.has_subscription_for?(user)
@@ -150,9 +150,9 @@ class NewsletterArchiveTest < ActiveSupport::TestCase
     assert_equal nle2.reload.publication_start_date, nla.last_updated_at(users(:arthur))
     assert_equal nle1.reload.publication_start_date.to_s, nla.last_updated_at(users(:editor)).to_s
   end
-  
+
 protected
-  
+
   def create_newsletter_archive(options = {})
     NewsletterArchive.create({:parent => nodes(:root_section_node), :title => "Good news, everyone!", :description => "I'm sending you all on a highly controversial mission." }.merge(options))
   end
