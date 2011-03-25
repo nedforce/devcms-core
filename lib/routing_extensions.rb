@@ -13,13 +13,13 @@ module RoutingExtensions
     end
 
     def extract_request_environment_with_domain_extraction(request)
-      parts = request.host.split(".")
-      parts.shift if parts.first == "www"
-      extract_request_environment_without_domain_extraction(request).merge({ :domain => parts.join(".") })
+      parts = request.host.split('.')
+      parts.shift if parts.first == 'www'
+      extract_request_environment_without_domain_extraction(request).merge({ :domain => parts.join('.') })
     end
-    
+
     def recognize_path_with_delegation_or_url_aliasing(path, environment = {})
-      if site = Site.find_by_domain(environment[:domain] || "").node
+      if site = Site.find_by_domain(environment[:domain] || '').node
         params = recognize_path_without_delegation_or_url_aliasing(path, environment)
         params.update(:site_node_id => site.id )
         case params[:controller]
@@ -27,34 +27,39 @@ module RoutingExtensions
           node = site
         when '_delegated' then
           node_id = params.delete(:id).to_i
-          node = site.subtree.find(node_id)
+          node    = site.subtree.find(node_id)
         when '_aliased' then
           url_alias = params.delete(:id)
           unless node = site.subtree.find_by_url_alias(url_alias)
-            parts = url_alias.split("/")
+            parts           = url_alias.split('/')
             params[:action] = parts.pop
-            url_alias = parts.join("/")
-            node = site.subtree.find_by_url_alias(url_alias)
+            url_alias       = parts.join('/')
+            node            = site.subtree.find_by_url_alias(url_alias)
           end
         else
           no_node_required = true
         end
-        
+
         unless no_node_required
           if node.present?
             node = update_to_referenced_node(node)
-            params.update(:controller => node.content_type.tableize, :id => node.content_id, :node_id => node.id)
+            controller = node.content_type.tableize
+            if "#{controller}_controller".camelize.constantize
+              params.update(:controller => controller, :id => node.content_id, :node_id => node.id)
+            else
+              raise ActionController::RoutingError, "No route matches #{path.inspect} with #{environment.inspect}"
+            end
           else
             raise ActionController::RoutingError, "No route matches #{path.inspect} with #{environment.inspect}"
           end
         end
-        
+
         return params
       else
-        raise ActionController::RoutingError, "No site found"
+        raise ActionController::RoutingError, 'No site found'
       end
     end
-    
+
     def update_to_referenced_node(node)
       case node.content_type
       when 'ContentCopy' then
@@ -68,4 +73,3 @@ module RoutingExtensions
     end
   end
 end
-
