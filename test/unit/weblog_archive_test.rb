@@ -2,17 +2,17 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class WeblogArchiveTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
-  
+
   def setup
     @devcms_weblog_archive = weblog_archives(:devcms_weblog_archive)
   end
-  
+
   def test_should_create_weblog_archive
     assert_difference 'WeblogArchive.count' do
       create_weblog_archive
     end
   end
-   
+
   def test_should_require_title
     assert_no_difference 'WeblogArchive.count' do
       weblog_archive = create_weblog_archive(:title => nil)
@@ -73,10 +73,10 @@ class WeblogArchiveTest < ActiveSupport::TestCase
       assert_equal 0, offset % default_offset
     end
   end
-  
+
   def test_parse_offset
     default_offset = WeblogArchive::DEFAULT_OFFSET
-    
+
     (-(3 * default_offset)..(3 * default_offset)).to_a.each do |offset|
       if offset < 0
         assert_equal 0, WeblogArchive.parse_offset(offset)
@@ -86,14 +86,14 @@ class WeblogArchiveTest < ActiveSupport::TestCase
       end
     end
   end
-  
+
   def test_has_weblog_for_user?
-    @weblog = @devcms_weblog_archive.weblogs.find :first
+    @weblog = @devcms_weblog_archive.weblogs.first
     assert @devcms_weblog_archive.has_weblog_for_user?(@weblog.user)
     @weblog.destroy
     assert !@devcms_weblog_archive.reload.has_weblog_for_user?(@weblog.user)
   end
-  
+
   def test_find_last_updated_weblogs
     user = users(:arthur)
 
@@ -102,7 +102,7 @@ class WeblogArchiveTest < ActiveSupport::TestCase
         weblog.weblog_posts.create!(:parent => weblog.node, :body => 'foobar', :title => 'bar', :publication_start_date => Time.now + i.hours)
       end
     end
-    
+
     [ -1, 0, 2, 4 ].each do |limit|
       found_weblogs = @devcms_weblog_archive.find_last_updated_weblogs(user, limit)
 
@@ -110,9 +110,9 @@ class WeblogArchiveTest < ActiveSupport::TestCase
         assert found_weblogs.empty?
       else
         assert found_weblogs.size <= limit
-        
+
         i = 0;
-    
+
         while i < (found_weblogs.size - 1)
           assert found_weblogs[i].last_updated_at(user) >= found_weblogs[i + 1].last_updated_at(user)
           i = i + 1
@@ -120,11 +120,10 @@ class WeblogArchiveTest < ActiveSupport::TestCase
       end
     end
   end
-  
+
 protected
-  
+
   def create_weblog_archive(options = {})
-    WeblogArchive.create({:parent => nodes(:root_section_node), :title => "DevCMS weblogs, the best there are!", :description => "Enjoy!"}.merge(options))
+    WeblogArchive.create({:parent => nodes(:root_section_node), :title => 'DevCMS weblogs, the best there are!', :description => 'Enjoy!'}.merge(options))
   end
-  
 end
