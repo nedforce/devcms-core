@@ -44,11 +44,7 @@ module RoutingExtensions
           if node.present?
             node = update_to_referenced_node(node)
             controller = node.content_type.tableize
-            if "#{controller}_controller".camelize.constantize
-              params.update(:controller => controller, :id => node.content_id, :node_id => node.id)
-            else
-              raise ActionController::RoutingError, "No route matches #{path.inspect} with #{environment.inspect}"
-            end
+            params.update(:controller => controller, :id => node.content_id, :node_id => node.id)
           else
             raise ActionController::RoutingError, "No route matches #{path.inspect} with #{environment.inspect}"
           end
