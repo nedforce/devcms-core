@@ -6,3 +6,4 @@
 
 Mime::Type.register "image/jpeg", :jpeg
 Mime::Type.register_alias "image/jpeg", :jpg
+Mime::Type.register "application/vnd.ms-excel", :xls
