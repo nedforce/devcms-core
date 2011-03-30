@@ -3,7 +3,7 @@
 class Admin::ResponsesController < Admin::AdminController
 
   # The +show+, +edit+, +update+ and +responses+ actions need a +ContactForm+ object to act upon.
-  before_filter :find_contact_form,       :only => [ :index ]
+  before_filter :find_contact_form,       :only => [ :index, :upload_csv, :import_csv ]
   before_filter :set_paging,              :only => [ :index ]
   before_filter :set_sorting,             :only => [ :index ]
   
@@ -53,6 +53,72 @@ class Admin::ResponsesController < Admin::AdminController
       @response.destroy
       format.html { redirect_to admin_responses_path }
       format.json { head :ok }
+    end
+  end
+  
+    # [ ] TODO: Form maken waarmee je file kunt uploaden
+  def upload_csv
+    # Determine the required order of files for the uploaded csv
+    fields = []
+    ContactFormField.all(:order => "position asc", :conditions => {:contact_form_id => @contact_form.id}).each do |field|
+        fields << field.label
+    end
+    @csv_headers = fields.join(',');
+    fields = nil
+    # Headers op deze manier, daarop matchen
+  end
+
+  def import_csv
+    csv_data = params[:response][:uploaded_data].read
+    headers_ok = false
+    headers = []
+    FasterCSV.parse(csv_data) do |row|
+      if(headers_ok)
+        # [ ] TODO: kijken of dit goed gaat, row debuggen
+        response_row = Response.create!(:contact_form => @contact_form, :ip => 'CSV-Import', :time => Time.now)
+        response_row.save
+        # Create response_field objects
+        i = 0
+        row.each do |field|
+          ResponseField.create!(:response => response_row, :contact_form_field_id => headers[i], :value => field)
+          i += 1
+        end
+      else
+        field_labels = []
+        fields = {}
+        ContactFormField.all(:order => "position asc", :conditions => {:contact_form_id => @contact_form.id}).each do |field|
+          fields[field.id] = field.label
+          field_labels << field.label
+        end
+        andarr = (row & field_labels)
+        if(andarr.length == field_labels.length)
+          headers_ok = true
+          row.each do |column|
+            fields.each do |field|
+              if column == field[1]
+                headers << field[0]
+              end
+            end
+          end
+        else
+          break
+        end
+      end
+    end
+    respond_to do |format|
+      format.js do
+        responds_to_parent do
+          if headers_ok
+            render :update do |page|
+              page << "Ext.ux.showRightPanelMssg('#{escape_javascript(t('responses.done'))}')"
+            end
+          else
+            render :update, :status => :unprocessable_entity do |page|
+              page << "Ext.ux.showRightPanelMssg('#{escape_javascript(t('responses.failed'))}')"
+            end
+          end
+        end
+      end
     end
   end
   
