@@ -17,7 +17,7 @@ Ext.onReady(function() {
       'ip',
       'created_at',
 <% @contact_form.contact_form_fields.each do |contact_form_field| -%>
-      'field_<%= contact_form_field.id %>',
+<%= contact_form_field == @contact_form.contact_form_fields.last ? "'field_#{contact_form_field.id}'" : "'field_#{contact_form_field.id}'," %>
 <% end -%>
     ]),
     autoLoad: {params: {start: 0, limit: 25}}
@@ -48,10 +48,10 @@ Ext.onReady(function() {
            mode: 'local',
            store: new Ext.data.SimpleStore({
                 'id': 0,
-                fields: ['text'],
+                fields: 'text',
                 data: [
 <% contact_form_field.default_value.split(',').each do |option| -%>
-                  ['<%= option %>'],
+<%= option == contact_form_field.default_value.split(',').last ? "'#{option}'" : "'#{option}'," %>
 <% end -%>
                 ]
            }),
@@ -61,7 +61,7 @@ Ext.onReady(function() {
            triggerAction: 'all'
        })
 <% end -%>
-    },
+<%= contact_form_field == @contact_form.contact_form_fields.last ? "}" : "}," %>
 <% end -%>
     ]
   );
@@ -107,10 +107,11 @@ Ext.onReady(function() {
   });
   
   var panel = new Ext.Panel({
-    applyTo: 'right_panel_body',
     layout: 'fit',
     items: grid
   });
+  
+  panel.applyToMarkup('right_panel_body');
 
   function handleDelete(e) {
     var selectedItems = grid.selModel.getSelections();
