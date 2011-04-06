@@ -42,6 +42,8 @@
     .buttons.clearfix
       - edit_button t('users.edit_details') do
         = link_to t('users.edit_details'), secure_url(:url_for, { :action => 'edit', :id => @user })
+      - delete_button t('users.delete_user') do
+        = link_to t('users.delete_user'), secure_url(:url_for, { :action => 'confirm_destroy', :id => @user })
 
   - unless @user.weblogs.empty?
     #weblogs

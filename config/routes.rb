@@ -24,7 +24,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :sections, :only => :show
   map.resources :polls, :only => :show
   map.resources :poll_questions, :only => :show, :member => { :vote => :put, :results => :get }
-  map.resources :users, :except => [ :index, :destroy ], :member => { :send_verification_email => :get, :verification => :get, :profile => :get }, :collection => { :send_password => :put, :request_password => :get }
+  map.resources :users, :except => :index, :member => { :send_verification_email => :get, :verification => :get, :profile => :get, :confirm_destroy => :get }, :collection => { :send_password => :put, :request_password => :get }
   map.resources :images, :only => :show, :member => { :thumbnail => :get, :sidebox => :get, :full => :get, :content_box_header => :get, :header => :get, :private_thumbnail => :get, :private_sidebox => :get, :private_full => :get, :private_content_box_header => :get, :private_header => :get }
   map.resources :weblog_posts, :except => :index
   map.resources :weblogs, :except => :index, :member => { :destroy => :any } # JS fallback; See ApplicationController for more info.

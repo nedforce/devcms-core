@@ -6,7 +6,7 @@ class UsersController < ApplicationController
   skip_before_filter :find_node  
     
   # SSL encryption is required for these actions:
-  ssl_required :new, :create, :verification, :edit, :update
+  ssl_required :new, :create, :verification, :edit, :update, :confirm_destroy, :destroy
   
   # SSL encryption is optional for the #show action.
   ssl_allowed :show
@@ -16,8 +16,8 @@ class UsersController < ApplicationController
   before_filter :find_user, :only => [:send_verification_email, :verification]
   
   # Only allow updates and views for the owner of a user record.
-  before_filter :login_required, :set_user, :only => [:edit, :update, :show, :profile]
-  before_filter :set_user, :only => [:edit, :update, :show]
+  before_filter :login_required, :set_user, :only => [:edit, :update, :show, :profile, :destroy, :confirm_destroy]
+  before_filter :set_user, :only => [:edit, :update, :show, :destroy, :confirm_destroy]
   
   before_filter :get_newsletters, :only => [:new, :create, :show, :profile]
   before_filter :get_interests, :only => [:new, :create, :show, :profile]
@@ -101,6 +101,31 @@ class UsersController < ApplicationController
           render :action => 'edit'
         end
         format.xml { render :xml => @user.errors, :status => :unprocessable_entity }
+      end
+    end
+  end
+  
+  # Shows a user deletion confirmation form
+  #
+  # * GET /users/1/confirm_destroy
+  def confirm_destroy; end
+  
+  # Deletes an user.
+  #
+  # * DELETE /users/1
+  def destroy
+    respond_to do |format|
+      if @user == User.authenticate(@user.login, params[:user][:password])
+        format.html do
+          @user.destroy
+          flash[:notice] = I18n.t('users.deleted')
+          redirect_to root_path
+        end
+      else
+        format.html do
+          flash[:notice] = I18n.t('users.wrong_password')
+          redirect_to confirm_destroy_user_path(@user)
+        end
       end
     end
   end

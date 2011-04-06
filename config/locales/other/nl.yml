@@ -1017,13 +1017,17 @@ nl:
     cancel: Annuleren
     cant_destroy_yourself: U kan uzelf niet verwijderen.
     confirm_deletion: "Weet u zeker dat u deze gebruiker(s) wilt verwijderen? Ook de discussies, reacties en weblogs van deze gebruiker(s) zullen verwijderd worden."
+    confirm_user_deletion: "Weet u zeker dat u uw profiel wilt verwijderen? Ook de uw discussies, reacties en weblogs zullen verwijderd worden. Bevestig het verwijderen met uw wachtwoord."
     could_not_delete: "Sorry, kon de gebruiker(s) niet verwijderen."
     couldnt_find_user: Login naam / E-mailadres niet gevonden
     count_msg: "Gebruikers {0} tot {1} van {2} worden weergegeven"
     created_at: Aangemaakt op
     del_tooltip: Klik hier om de geselecteerde gebruiker(s) te verwijderen
     delete: Verwijderen
+    deleted: "Uw account is succesvol verwijderd."
+    delete_user: Profiel verwijderen
     deleting: Bezig met verwijderen
+    deletion_of: Profiel verwijderen van
     edit: Bewerken
     edit_tooltip: Klik hier om het gebruikersprofiel van de geselecteerde gebruiker te bewerken
     edit_details: Gegevens wijzigen
@@ -1092,6 +1096,7 @@ nl:
     weblog: Weblog
     weblog_title: Titel van het weblog
     welcome: Welkom als gebruiker van deze website. Voordat u kunt inloggen dient u uw e-mailadres te verifiëren. U kunt dit doen door de instructies te volgen in de e-mail die zojuist naar u is verstuurd.
+    wrong_password: Verkeerd wachtwoord ingevoerd.
   video:
     enter_video_id: Vul het Youtube video ID in
     insert_video: Video invoegen
