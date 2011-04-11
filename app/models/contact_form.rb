@@ -8,7 +8,7 @@
 # Attributes
 # 
 # * +title+ - The title of the contact form.
-# * +email_adress+ - The email address to which contact requests are send; typically an email address of an editor or administrator.
+# * +email_address+ - The email address to which contact requests are send; typically an email address of an editor or administrator.
 # * +description_before_contact_fields+ - The description of the contact form (printed before the actual contact fields).
 # * +description_after_contact_fields+ - The description of the contact form (printed after the actual contact fields).
 # * +send_method+ - The way of storing/sending the email. See constants
