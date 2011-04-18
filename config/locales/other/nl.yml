@@ -1038,6 +1038,8 @@ nl:
     error: Fout
     export: Exporteren
     export_tooltip: Klik hier om de gebruikerslijst op te slaan als CSV bestand
+    export_newsletter_counts: Exporteer nieuwsbrief abonnementen
+    export_newsletter_counts_tooltip: Klik hier om het aantal abonnementen per nieuwsbrief als een CSV bestand op te slaan
     exporting: Bezig met het genereren van de gebruikerslijst
     female: Vrouw
     first_name: Voornaam

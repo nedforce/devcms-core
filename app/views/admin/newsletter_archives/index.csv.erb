@@ -1,0 +1,5 @@
+<% @newsletters.each do |newsletter| %><%= CSV.generate_line [
+newsletter.title,
+newsletter.users.count
+] %>
+<% end %>
