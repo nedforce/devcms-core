@@ -9,3 +9,6 @@ I18n.default_locale = :nl
 ActiveSupport::CoreExtensions::Date::Conversions::DATE_FORMATS.merge!({
   :long => "%e %B %Y"
 })
+
+# Ensure application translations have precedence
+I18n.load_path = I18n.load_path.reverse

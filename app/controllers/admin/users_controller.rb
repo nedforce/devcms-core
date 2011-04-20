@@ -133,7 +133,7 @@ class Admin::UsersController < Admin::AdminController
       if User.send_invitation_email!(params[:email_address])
         format.json { render :json => { :success => 'true' } }
       else
-        format.json { render :json => { :errors => lc(:invalid_email_address) }.to_json, :status => :unprocessable_entity }
+        format.json { render :json => { :errors => t('users.invalid_email_address') }.to_json, :status => :unprocessable_entity }
       end
     end
   end

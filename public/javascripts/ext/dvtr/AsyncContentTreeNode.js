@@ -257,6 +257,7 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode,{
     onEdit: function(){
         rightPanel.load({
             url: this.attributes.controllerName+'/'+this.attributes.contentNodeId+'/edit',
+            scripts: true,
             params: Ext.ux.prepareParams(defaultParams, {parent_node_id: this.attributes.parentNodeId, format: 'html'}),
             method: 'GET',
             callback: function(options, success, response) {

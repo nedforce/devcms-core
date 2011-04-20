@@ -105,6 +105,9 @@ nl:
         obligatory: Verplicht
         position: Positie
       course:
+        course_root_data: Cursus stamgegevens
+        course_organization: Cursus organisatie
+        course_data: Cursus data
         contact_email_address: E-mailadres contactpersoon
         contact_name: Naam contactpersoon
         contact_phone_number: Telefoonnummer contactpersoon

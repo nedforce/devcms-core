@@ -11,8 +11,11 @@ class MigrateLayoutSettings < ActiveRecord::Migration
   class Template < ActiveRecord::Base
     has_many :nodes
   end
+  
+  ContentRepresentation.send(:attr_accessor, :custom_type)
       
-  def self.up    
+  def self.up
+    
     Node.all(:conditions => "nodes.layout IS NOT NULL OR nodes.layout_variant IS NOT NULL OR nodes.layout_configuration IS NOT NULL").each do |node|
       node.reset_layout
     end
