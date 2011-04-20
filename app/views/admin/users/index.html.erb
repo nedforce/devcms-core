@@ -145,13 +145,19 @@ Ext.onReady(function(){
                   tooltip: '<%= I18n.t("users.edit_tooltip") %>',
                   handler: handleExtendedEdit,
                   iconCls: 'menu_item_edit'
-              }<% if Settler[:user_allow_export] -%>,
+              },<% if Settler[:user_allow_export] -%>
               {
                   text: '<%= I18n.t("users.export") %>',
                   tooltip: '<%= I18n.t("users.export_tooltip") %>',
                   handler: handleExport,
                   iconCls: 'attachment_icon'
-              }<% end -%>
+              },<% end -%>
+              {
+                  text: '<%= I18n.t("users.export_newsletter_counts") %>',
+                  tooltip: '<%= I18n.t("users.export_newsletter_counts_tooltip") %>',
+                  handler: handleNewsletterExport,
+                  iconCls: 'attachment_icon'
+              }
               <% if Settler[:user_allow_invite] -%>, '->', {
                   text: '<%= I18n.t("users.invite") %>',
                   tooltip: '<%= I18n.t("users.invite_tooltip") %>',
@@ -332,6 +338,10 @@ Ext.onReady(function(){
 
     function handleExport() {
       window.location = "<%= admin_users_path + '.csv' %>"
+    }
+    
+    function handleNewsletterExport() {
+      window.location = "<%= admin_newsletter_archives_path + '.csv' %>"
     }
 
     function handleEdit(editEvent) {

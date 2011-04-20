@@ -1,0 +1,33 @@
+= javascript_tag("document.observe('dom:loaded', function() { $$('div.initialHidden').invoke('hide'); });");
+
+%p.attachmentsTableExplanation= t 'attachments.attachments_table'
+
+%table.attachmentsTable
+  - attachments.group_by(&:category).tap do |grouped_attachments|
+    - if grouped_attachments.keys.size == 1 && attachments.size <= 10
+      = render :partial => '/shared/attachments_table', :locals => {:attachments => attachments}
+    - elsif params[:layout] == "print"
+      - grouped_attachments.sort.each do |cat, attachs|
+        - if grouped_attachments.size == 1
+          - catstring = unemptynize(cat, I18n.t('attachments.uploaded_attachments')).to_s
+        - else
+          - catstring = unemptynize(cat, I18n.t('attachments.uncategorized')).to_s
+        %tr
+          %th== #{catstring}
+        %tr
+          %td
+            %table.attachmentsCategoryTable
+              = render :partial => '/shared/attachments_table', :locals => {:attachments => attachments}
+    - else
+      - grouped_attachments.sort.each do |cat, attachments|
+        - if grouped_attachments.size == 1
+          - catstring = unemptynize(cat, I18n.t('attachments.uploaded_attachments')).to_s
+        - else
+          - catstring = unemptynize(cat, I18n.t('attachments.uncategorized')).to_s
+        %tr
+          %th== #{link_toggable_section("app_#{catstring}", "link_#{catstring}")} #{catstring}
+        %tr
+          %td
+            %div{ :id => "app_#{catstring}", :class => "initialHidden" }
+              %table.attachmentsCategoryTable
+                = render :partial => '/shared/attachments_table', :locals => {:attachments => attachments}

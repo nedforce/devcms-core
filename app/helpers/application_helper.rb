@@ -369,7 +369,7 @@ module ApplicationHelper
     end
 
     def render_attachments
-      render(:partial => 'shared/attachments_table', :locals => { :attachments => @attachment_content_nodes, :rel => @node.id }) unless @attachment_content_nodes.nil? || @attachment_content_nodes.empty?
+      render(:partial => 'shared/attachments', :locals => { :attachments => @attachment_content_nodes, :rel => @node.id }) unless @attachment_content_nodes.nil? || @attachment_content_nodes.empty?
     end
 
     # Override +error_messages_for+ to override default header message. For some reason the localization

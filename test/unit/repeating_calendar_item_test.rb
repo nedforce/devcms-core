@@ -281,42 +281,42 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
       :repeat_interval_granularity => CalendarItem::REPEAT_INTERVAL_GRANULARITIES[:days],
       :repeat_end => (start_time + 1.week).to_date,
       :title => 'Foo1',
-      :location => 'Foo1',
+      :location_description => 'Foo1',
       :body => 'Foo1'
     }, {
       :repeat_interval_multiplier => 3,
       :repeat_interval_granularity => CalendarItem::REPEAT_INTERVAL_GRANULARITIES[:days],
       :repeat_end => (start_time + 2.weeks).to_date,
       :title => 'Foo2',
-      :location => 'Foo2',
+      :location_description => 'Foo2',
       :body => 'Foo2'
     }, {
       :repeat_interval_multiplier => 1,
       :repeat_interval_granularity => CalendarItem::REPEAT_INTERVAL_GRANULARITIES[:weeks],
       :repeat_end => (start_time + 2.month).to_date,
       :title => 'Foo3',
-      :location => 'Foo3',
+      :location_description => 'Foo3',
       :body => 'Foo3'
     }, {
       :repeat_interval_multiplier => 3,
       :repeat_interval_granularity => CalendarItem::REPEAT_INTERVAL_GRANULARITIES[:weeks],
       :repeat_end => (start_time + 7.months).to_date,
       :title => 'Foo4',
-      :location => 'Foo4',
+      :location_description => 'Foo4',
       :body => 'Foo4'
     }, {
       :repeat_interval_multiplier => 2,
       :repeat_interval_granularity => CalendarItem::REPEAT_INTERVAL_GRANULARITIES[:months],
       :repeat_end => (start_time + 1.year).to_date,
       :title => 'Foo5',
-      :location => 'Foo5',
+      :location_description => 'Foo5',
       :body => 'Foo5'
     }, {
       :repeat_interval_multiplier => 5,
       :repeat_interval_granularity => CalendarItem::REPEAT_INTERVAL_GRANULARITIES[:months],
       :repeat_end => (start_time + 3.years).to_date,
       :title => 'Foo6',
-      :location => 'Foo6',
+      :location_description => 'Foo6',
       :body => 'Foo6'
     } ]
 
@@ -340,8 +340,8 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
         assert_equal difference, created_calendar_items.size
 
         # Check if all calendar items have the same values for the given attributes
-        [ :title, :location, :body ].each do |attribute|
-          assert_equal created_calendar_items.map(&attribute).uniq.size, 1
+        [ :title, :location_description, :body ].each do |attribute|
+          assert_equal 1, created_calendar_items.map(&attribute).uniq.size, "Expected all attributes to be equal for #{created_calendar_items.pretty_inspect}"
         end
 
         ## Check if the calendar items have 'span' intervals
