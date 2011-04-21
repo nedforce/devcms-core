@@ -40,7 +40,8 @@ class Admin::CalendarItemsController < Admin::AdminController
 
   # * GET /admin/calendar_items/new
   def new
-    @calendar_item                 = CalendarItem.new(params[:calendar_item] || {})
+    @calendar_item = CalendarItem.new(params[:calendar_item] || {})
+
     respond_to do |format|
       format.html { render :template => 'admin/shared/new', :locals => { :record => @calendar_item }}
     end
@@ -49,6 +50,7 @@ class Admin::CalendarItemsController < Admin::AdminController
   # * GET /admin/calendar_items/:id/edit
   def edit
     @calendar_item.attributes = params[:calendar_item]
+
     respond_to do |format|
       format.html { render :template => 'admin/shared/edit', :locals => { :record => @calendar_item }}
     end
