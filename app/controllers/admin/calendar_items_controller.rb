@@ -40,7 +40,8 @@ class Admin::CalendarItemsController < Admin::AdminController
 
   # * GET /admin/calendar_items/new
   def new
-    @calendar_item                 = CalendarItem.new(params[:calendar_item] || {})
+    @calendar_item = CalendarItem.new(params[:calendar_item] || {})
+
     respond_to do |format|
       format.html { render :template => 'admin/shared/new', :locals => { :record => @calendar_item }}
     end
@@ -49,6 +50,7 @@ class Admin::CalendarItemsController < Admin::AdminController
   # * GET /admin/calendar_items/:id/edit
   def edit
     @calendar_item.attributes = params[:calendar_item]
+
     respond_to do |format|
       format.html { render :template => 'admin/shared/edit', :locals => { :record => @calendar_item }}
     end
@@ -67,7 +69,7 @@ class Admin::CalendarItemsController < Admin::AdminController
       elsif @commit_type == 'save' && @calendar_item.save_for_user(current_user)
         format.html do
           if params[:continue].present?
-            @calendar_item                 = CalendarItem.new
+            @calendar_item = CalendarItem.new
             render :template => 'admin/shared/new', :locals => { :record => @calendar_item }, :status => :success
           else
             render :template => 'admin/shared/create'
@@ -75,9 +77,7 @@ class Admin::CalendarItemsController < Admin::AdminController
         end
         format.xml  { render :xml => @calendar_item, :status => :created, :location => @calendar_item }
       else
-        format.html do 
-          render :template => 'admin/shared/new', :locals => { :record => @calendar_item }, :status => :unprocessable_entity
-        end
+        format.html { render :template => 'admin/shared/new', :locals => { :record => @calendar_item }, :status => :unprocessable_entity }
         format.xml  { render :xml => @calendar_item.errors, :status => :unprocessable_entity }
       end
     end
