@@ -161,4 +161,15 @@ ActionController::Routing::Routes.draw do |map|
   # Delegation route, should be defined after the more specific routes
   map.connect '/content/:id.:format', :controller => '_delegated', :action => 'show'
   map.delegated '/content/:id/:action', :controller => '_delegated', :action => 'show'
+  
+  # Default routes
+  map.connect '/:controller/:action'
+  map.connect '/:controller/:action/:id'
+  map.connect '/:controller/:action/:id.:format'
+
+  # URL aliasing route, should be defined last. Case-insensitive regexp using //i does not work!
+  # Sync ID requirements to node.rb!
+  map.connect '/:id.:format', :controller => '_aliased', :action => 'show', :requirements => { :id => /[a-zA-Z0-9_\-]((\/)?[a-zA-Z0-9_\-])*/ }
+  map.aliased '/:id/:action', :controller => '_aliased', :action => 'show', :requirements => { :id => /[a-zA-Z0-9_\-]((\/)?[a-zA-Z0-9_\-])*/ }
+  
 end
