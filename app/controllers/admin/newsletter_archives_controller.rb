@@ -17,6 +17,8 @@ class Admin::NewsletterArchivesController < Admin::AdminController
         @newsletters = NewsletterArchive.all
         render :action => :index, :layout => false
       end
+      # Default to index method from ActsAsArchiveController module
+      format.any { super }
     end
   end
 
