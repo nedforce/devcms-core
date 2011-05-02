@@ -9,27 +9,26 @@ class AttachmentsController < ApplicationController
   # given, then redirect to the correct filename for caching purposes.
   def show
     if DevCMS.search_configuration[:luminis].try(:has_key?, :luminis_crawler_ips) and DevCMS.search_configuration[:luminis][:luminis_crawler_ips].include?(request.remote_ip)
-      render :template => 'show.html'
+      render :template => 'show.html.haml'
     else
       # Upload file to user
       upload_file(@attachment.node.is_hidden? ? 'private': 'public')
     end
   end
 
-protected
+  protected
 
-    def upload_file(cache_control="public")
-      headers['Cache-Control'] = cache_control # this can be cached by proxy servers
-      send_file(@attachment.create_temp_file, 
-                :type => @attachment.content_type, 
-                :filename => @attachment.filename, 
-                :length => @attachment.size, 
-                :disposition => 'attachment', 
-                :stream => true)
-    end
+  def upload_file(cache_control = 'public')
+    headers['Cache-Control'] = cache_control # This can be cached by proxy servers
+    send_file(@attachment.create_temp_file, 
+              :type        => @attachment.content_type, 
+              :filename    => @attachment.filename, 
+              :length      => @attachment.size, 
+              :disposition => 'attachment', 
+              :stream      => true)
+  end
 
-    def find_attachment
-      @attachment = @node.approved_content
-    end
+  def find_attachment
+    @attachment = @node.approved_content
+  end
 end
-
