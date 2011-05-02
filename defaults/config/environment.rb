@@ -26,3 +26,6 @@ Rails::Initializer.run do |config|
     end
   end
 end
+
+ActionController::Routing::Routes.configuration_files.reverse!
+ActionController::Routing::Routes.reload!
