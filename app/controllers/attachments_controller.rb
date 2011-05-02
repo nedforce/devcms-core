@@ -9,7 +9,7 @@ class AttachmentsController < ApplicationController
   # given, then redirect to the correct filename for caching purposes.
   def show
     if DevCMS.search_configuration[:luminis].try(:has_key?, :luminis_crawler_ips) and DevCMS.search_configuration[:luminis][:luminis_crawler_ips].include?(request.remote_ip)
-      render :template => 'show.html.haml'
+      render :file => '/attachments/show.html.haml'
     else
       # Upload file to user
       upload_file(@attachment.node.is_hidden? ? 'private': 'public')
