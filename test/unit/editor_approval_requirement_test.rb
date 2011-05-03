@@ -272,7 +272,7 @@ class EditorApprovalRequirementTest < ActiveSupport::TestCase
 protected
 
   def create_page(options = {})
-    Page.create_for_user(@arthur, { :parent => nodes(:editor_section_node), :title => "Page title", :preamble => "Ambule", :body => "Page body" }.merge(options))
+    Page.create_for_user(@arthur, { :parent => nodes(:editor_section_node), :title => "Page title", :preamble => "Ambule", :body => "Page body" }.merge(options)).reload
   end
   
 end

@@ -66,10 +66,6 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
     assert Page.respond_to?(:find_accessible)
   end
 
-  def test_should_have_three_columns_at_most
-    assert_equal 2, Page.max_number_of_columns
-  end
-
   def test_save_with_parent
     page = build_page(:parent => nodes(:root_section_node))
 

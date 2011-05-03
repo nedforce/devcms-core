@@ -106,6 +106,13 @@ module Acts #:nodoc:
         #attr_accessor :skip_before_destroy_ancestors
 
         delegate :update_search_index, :to => :node
+        delegate_accessor_to_node :commentable,
+                                  :content_box_title, :content_box_icon, :content_box_colour, :content_box_number_of_items,
+                                  :categories, :category_attributes, :category_ids, :keep_existing_categories,
+                                  :parent,
+                                  :publication_start_date, :publication_end_date,
+                                  :responsible_user, :responsible_user_id,
+                                  :title_alternative_list, :title_alternatives
 
         validate  :ensure_publication_start_date_is_present_when_publication_end_date_is_present,
                   :ensure_publication_end_date_after_publication_start_date,
@@ -116,6 +123,7 @@ module Acts #:nodoc:
         validates_inclusion_of :content_box_colour, :in => DevCMS.content_box_colours, :allow_blank => true
         validates_inclusion_of :content_box_icon, :in => DevCMS.content_box_icons, :allow_blank => true
 
+        validate :valid_responsible_user_role
         validate :validate_parent
 
         self.extend FindAccessible::ClassMethods
@@ -128,20 +136,15 @@ module Acts #:nodoc:
         before_validation_on_create :set_publication_start_date_to_current_time_if_blank
 
         # Copies the virtual attributes over to the associated node
-        after_update :update_associated_node_attributes
+        # after_update :update_associated_node_attributes
 
         # Ferret AR hooks
         after_save :update_search_index, :touch_node
-
-        # Associate a +Node+ instance and copy the virtual attributes over
-        after_create :associate_node
           
         # A private copy of the original node setter that is used for overloading node=
         alias_method :original_node=, :node=
         private :original_node=
-
-        attr_accessor :parent
-        
+              
         def has_parent(type, options = {})
           class_name = (options.delete(:class_name) || type.to_s.classify)          
           define_method(type){ (parent || node.try(:parent)).present? ? class_name.constantize.first(:include => :node, :conditions => ['nodes.id = ?', parent || node.try(:parent) ]) : nil }
@@ -175,11 +178,16 @@ module Acts #:nodoc:
           # read-only once it has been set. Once set, this method will
           # essentially disappear by throwing a +NoMethodError+ exception.
           def node=(node)
-            if self.node.nil?
-              self.original_node = node
+            if self.original_node.nil?
+              original_node = node
             else
               raise NoMethodError
             end
+          end
+          
+          alias_method :original_node, :node
+          def node
+            self.original_node || self.build_node(:content => self)
           end
 
           # Returns this content node's title or a substitute.
@@ -218,77 +226,8 @@ module Acts #:nodoc:
             "#{self.class.to_s.underscore}.png"
           end
 
-          ### DEFAULT CONTENT NODE PROPERTIES
-
-          # Returns the maximum number of sidebox (content box) columns that are allowed for this content type.
-          def self.max_number_of_columns
-            2
-          end
-
-          # Define virtual setters for content node forms
-          attr_writer :commentable, :content_box_title, :content_box_icon, :content_box_colour, :content_box_number_of_items,
-                      :category_ids, :category_attributes, :title_alternatives
-
-          attr_reader :keep_existing_categories, :category_attributes
-
-          def publication_start_date=(value)
-            @publication_start_date = value.is_a?(String) ? value.to_time(:local) : value.to_time rescue nil
-          end
-
-          def publication_end_date=(value)
-            @publication_end_date = value.is_a?(String) ? value.to_time(:local) : value.to_time rescue nil
-          end
-
-          def content_box_number_of_items=(value)
-            @content_box_number_of_items = value.to_i unless value.nil?
-          end
-
-          def commentable
-            @commentable || (self.node.nil? ? false : self.node.commentable)
-          end
-
           def commentable?
             !!commentable
-          end
-          
-          def show_content_box_header
-            Node.content_type_configuration(self.class.to_s)[:show_content_box_header]
-          end
-                  
-          def publication_start_date
-            @publication_start_date || (self.node.nil? ? nil : self.node.publication_start_date)
-          end
-
-          def publication_end_date
-            @publication_end_date || (self.node.nil? ? nil : self.node.publication_end_date)
-          end
-
-          def content_box_title
-            @content_box_title || (self.node.nil? ? nil : self.node.content_box_title)
-          end
-
-          def content_box_icon
-            @content_box_icon || (self.node.nil? ? nil : self.node.content_box_icon)
-          end
-
-          def content_box_colour
-            @content_box_colour || (self.node.nil? ? nil : self.node.content_box_colour)
-          end
-
-          def content_box_number_of_items
-            @content_box_number_of_items || (self.node.nil? ? nil : self.node.content_box_number_of_items)
-          end
-
-          def category_ids
-            (@category_ids || (self.node.nil? ? [] : self.node.category_ids)).uniq
-          end
-
-          def categories
-            category_ids.reject(&:blank?).map { |id| Category.find(id) }
-          end
-
-          def keep_existing_categories=(value)
-            @keep_existing_categories = value == '1' || value == true ? true : false
           end
 
           def own_content_class
@@ -298,13 +237,13 @@ module Acts #:nodoc:
           # General method for finding content children that will be
           # shown to a user. Used by Node.previous_diffed to find
           # children of approvable content. Should be overridden.
-          def accessible_children_for(user, exclude_content_types = [])
-            []
-          end
+          # def accessible_children_for(user, exclude_content_types = [])
+          #         []
+          #       end
           
-          def title_alternatives
-            self.node.try(:title_alternative_list)
-          end
+          # def title_alternatives
+          #   self.node.try(:title_alternative_list)
+          # end
 
         private
 
@@ -337,47 +276,16 @@ module Acts #:nodoc:
             node.update_attribute(:updated_at, Time.current)
           end
 
-          # Associates a new +Node+ with this page.
-          #
-          # This is a private method. RDoc may incorrectly display it as a
-          # public method due to shortcomings in its parser.
-          def associate_node
-            unless self.node              
-              new_node = Node.new(:content => self)
-              set_virtual_node_attributes(new_node)
-
-              # We have to disable ferret before saving, otherwise the callbacks don't function correctly
-              # The new node is indexed in the +save_with_node+ method.
-              new_node.disable_search_reindex_until_saved
-              self.node = new_node
-            end
-          end
-
-          def update_associated_node_attributes
-            set_virtual_node_attributes(self.node)
-            self.node.save(false)
-          end
-
-          def set_virtual_node_attributes(node)
-            [ :commentable, :publication_start_date, :publication_end_date,
-              :content_box_title, :content_box_icon, :content_box_colour, 
-              :content_box_number_of_items, :category_attributes
-            ].each do |attr|
-              node.send("#{attr}=", self.send(attr))
-            end
-
-            node.set_categories(self.category_ids, self.keep_existing_categories)
-            
-            node.title_alternative_list = @title_alternatives unless @title_alternatives.nil?
-            
-            node.parent = self.parent if self.parent.present?
-          end
-
           def self.valid_parent_class?(klass)
             Node.content_type_configuration(klass.to_s)[:allowed_child_content_types].any? do |content_type|
               class_exists?(content_type) ? (self <= content_type.constantize) : false
             end
           end
+          
+          def valid_responsible_user_role
+            errors.add_to_base(I18n.t('acts_as_content_node.responsible_user_requires_role')) unless node.responsible_user.blank? || node.responsible_user.has_role_on?(['admin', 'editor', 'final_editor'], node)
+          end
+          
 
           def validate_parent
             if self.parent
@@ -388,6 +296,12 @@ module Acts #:nodoc:
               errors.add_to_base(I18n.t('acts_as_content_node.could_not_create_content')) if self.new_record?
             end
           end
+        end
+      end
+      
+      def delegate_accessor_to_node(*methods)
+        methods.each do |m|
+          delegate m, "#{m}=", :to => :node
         end
       end
     end

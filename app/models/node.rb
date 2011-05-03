@@ -98,6 +98,7 @@ class Node < ActiveRecord::Base
   belongs_to :content, :polymorphic => true
   belongs_to :template
   belongs_to :editor, :class_name => 'User', :foreign_key => 'edited_by'
+  belongs_to :responsible_user, :class_name => 'User'
 
   has_many :links,            :dependent => :destroy, :class_name => 'InternalLink', :foreign_key => :linked_node_id
   has_many :copies,           :dependent => :destroy, :class_name => 'ContentCopy',  :foreign_key => :copied_node_id
@@ -127,7 +128,7 @@ class Node < ActiveRecord::Base
 
   validates_inclusion_of :commentable,       :in => [ false, true ], :allow_nil => true
   validates_inclusion_of :hide_right_column, :in => [ false, true ], :allow_nil => true
-
+  
   # Set an URL alias if none has been specified on create.
   before_create :set_url_alias
 
@@ -766,15 +767,17 @@ class Node < ActiveRecord::Base
     false
   end
 
-  def set_categories(category_ids, keep_existing = true)
-    category_ids = category_ids.reject(&:blank?).map(&:to_i)
+  attr_accessor :keep_existing_categories
+  alias_method :original_category_ids=, :category_ids=
+  def category_ids=(new_category_ids)
+    new_category_ids = new_category_ids.reject(&:blank?).map(&:to_i)
 
-    return if category_ids.empty?
-
-    if keep_existing
-      self.categories << (category_ids - self.category_ids).map { |id| Category.first(:conditions => {:id => id}) }.compact
+    return if new_category_ids.empty?  
+    
+    if keep_existing_categories
+      self.original_category_ids = (new_category_ids + category_ids).uniq
     else
-      self.category_ids = category_ids.uniq
+      self.original_category_ids = new_category_ids.uniq
     end
   end
   
@@ -956,7 +959,7 @@ protected
 
     content_date
   end
-
+  
   def save_category_attributes
     if self.category_attributes.present?
       self.category_attributes.each do |id, attrs|

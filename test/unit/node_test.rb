@@ -81,7 +81,7 @@ class NodeTest < ActiveSupport::TestCase
   end
 
   def test_url_alias_for_child_node_should_contain_escaped_url_alias_for_parent_node
-    wa = WeblogArchive.create(:parent => @root_node, :title => 'weblogs', :description => 'weblogs')
+    wa = WeblogArchive.create(:parent => @root_node, :title => 'weblogs', :description => 'weblogs').reload
     parent_node_alias = wa.node.url_alias
     assert parent_node_alias =~ /\Aweblogs-(\d)+\Z/
     w = wa.weblogs.create(:parent => wa.node, :user => @arthur, :title => 'foobar', :description => 'foobar')
@@ -354,7 +354,7 @@ class NodeTest < ActiveSupport::TestCase
      page = Page.create!(:parent => section.node, :title => 'baz', :body => "Page body")
      Attachment.create!(:parent => page.node, :title => 'Park Zandweerd Matrix plannen', :category => "none", :uploaded_data => fixture_file_upload("files/ParkZandweerdMatrixplannen.doc", 'application/msword'))
      
-     assert page.node.reload.destroy # the tree calls destroy on node, not on content!
+     assert page.reload.node.reload.destroy # the tree calls destroy on node, not on content!
      assert_equal 0, section.node.children.count
    end
 
@@ -468,7 +468,7 @@ class NodeTest < ActiveSupport::TestCase
        assert_equal publication_start_date.to_date, item.node.determine_content_date(today.to_date)
        new_publication_start_date = 4.days.from_now
        item.__send__(:update_attributes, :publication_start_date => new_publication_start_date)
-       assert_equal new_publication_start_date.to_date, item.node.reload.determine_content_date(today.to_date)
+       assert_equal new_publication_start_date.to_date, item.reload.node.reload.determine_content_date(today.to_date)
      end
    end
 
@@ -477,12 +477,14 @@ class NodeTest < ActiveSupport::TestCase
      start_time = Time.local(2010, 1, 1, 20 )
      end_time   = Time.local(2010, 1, 1, 21 )
 
-     [ create_calendar_item(:start_time => start_time, :end_time => end_time),
-       create_meeting(:start_time => start_time, :end_time => end_time)].each do |item|
+     [ 
+       create_calendar_item(:start_time => start_time, :end_time => end_time), 
+       create_meeting(:start_time => start_time, :end_time => end_time)
+     ].each do |item|
        assert_equal end_time.to_date, item.node.determine_content_date(today.to_date)
        new_end_time = Time.local(2010, 1, 2, 2 )
        item.update_attribute(:end_time, new_end_time)
-       assert_equal new_end_time.to_date, item.node.reload.determine_content_date(today.to_date)
+       assert_equal new_end_time.to_date, item.reload.node.reload.determine_content_date(today.to_date)
      end
    end
 
@@ -496,7 +498,7 @@ class NodeTest < ActiveSupport::TestCase
        assert_equal start_time.to_date, item.node.determine_content_date(today.to_date)
        new_start_time = 4.days.from_now
        item.update_attribute(:start_time, new_start_time)
-       assert_equal new_start_time.to_date, item.node.reload.determine_content_date(today.to_date)
+       assert_equal new_start_time.to_date, item.reload.node.reload.determine_content_date(today.to_date)
      end
    end
 
@@ -541,7 +543,7 @@ class NodeTest < ActiveSupport::TestCase
    def test_changes_should_not_include_unpublished_new_items
      size = nodes(:devcms_news_node).last_changes(:all).size
      create_news_item(:publication_start_date => 2.days.ago, :publication_end_date => 1.day.from_now, :title => "Beschikbaar")
-     create_news_item(:publication_start_date => 2.days.from_now, :title => "Nog niet beschikbaar")
+     create_news_item(:publication_start_date => 2.days.from_now, :publication_end_date => 3.day.from_now , :title => "Nog niet beschikbaar")
      create_news_item(:publication_start_date => 2.days.ago, :publication_end_date => 1.day.ago, :title => "Niet meer beschikbaar")
      changes = nodes(:devcms_news_node).last_changes(:all)
      assert_equal size+1, changes.size
@@ -657,8 +659,9 @@ class NodeTest < ActiveSupport::TestCase
 
     category1 = Category.create(:name => 'Categorie 1')
     category2 = Category.create(:name => 'Categorie 2')
-
-    n.set_categories([ category1.id, category2.id ], true)
+    
+    n.keep_existing_categories = true
+    n.category_ids=([ category1.id, category2.id ])
 
     assert n.categories.include?(category1)
     assert n.categories.include?(category2)
@@ -666,7 +669,7 @@ class NodeTest < ActiveSupport::TestCase
     category3 = Category.create(:name => 'Categorie 3')
     category4 = Category.create(:name => 'Categorie 4')
 
-    n.set_categories([ category2.id, category3.id, category4.id ], true)
+    n.category_ids=([ category2.id, category3.id, category4.id ])
 
     assert n.categories.include?(category1)
     assert n.categories.include?(category2)
@@ -679,16 +682,18 @@ class NodeTest < ActiveSupport::TestCase
 
     category1 = Category.create(:name => 'Categorie 1')
     category2 = Category.create(:name => 'Categorie 2')
-
-    n.set_categories([ category1.id, category2.id ], true)
+    
+    n.keep_existing_categories = true
+    n.category_ids=([ category1.id, category2.id ])
 
     assert n.categories.include?(category1)
     assert n.categories.include?(category2)
 
     category3 = Category.create(:name => 'Categorie 3')
     category4 = Category.create(:name => 'Categorie 4')
-
-    n.set_categories([ category2.id, category3.id, category4.id ], false)
+    
+    n.keep_existing_categories = false
+    n.category_ids=([ category2.id, category3.id, category4.id ])
 
     assert n.categories.include?(category2)
     assert n.categories.include?(category3)
@@ -721,7 +726,7 @@ class NodeTest < ActiveSupport::TestCase
     category1 = Category.create(:name => 'Categorie 1')
     category2 = Category.create(:name => 'Categorie 2')
 
-    n.set_categories([ category1.id, category2.id ])
+    n.category_ids=([ category1.id, category2.id ])
 
     n.update_attributes(:category_attributes => {
       category1.id => { :synonyms => 'Categorie 1' },
@@ -754,31 +759,31 @@ protected
   end
 
   def create_news_item(options = {})
-    NewsItem.create_for_user(@arthur, { :parent => nodes(:devcms_news_node), :title => "Slecht weer!", :body => "Het zonnetje schijnt niet en de mensen zijn ontevreden.", :publication_start_date => 1.day.ago, :publication_end_date => 1.day.from_now }.merge(options))
+    NewsItem.create_for_user(@arthur, { :parent => nodes(:devcms_news_node), :title => "Slecht weer!", :body => "Het zonnetje schijnt niet en de mensen zijn ontevreden.", :publication_start_date => 1.day.ago, :publication_end_date => 1.day.from_now }.merge(options)).reload
   end
 
   def create_newsletter_edition(options = {})
-    NewsletterEdition.create({ :parent => nodes(:newsletter_archive_node), :title => "Het maandelijkse nieuws!", :body => "O o o wat is het weer een fijne maand geweest.", :publication_start_date => 1.hour.from_now }.merge(options))
+    NewsletterEdition.create({ :parent => nodes(:newsletter_archive_node), :title => "Het maandelijkse nieuws!", :body => "O o o wat is het weer een fijne maand geweest.", :publication_start_date => 1.hour.from_now }.merge(options)).reload
   end
 
   def create_calendar_item(options = {})
-    CalendarItem.create({ :parent => nodes(:meetings_calendar_node), :repeating => false, :title => "New event", :start_time => Time.now, :end_time => 1.hour.from_now }.merge(options))
+    CalendarItem.create({ :parent => nodes(:meetings_calendar_node), :repeating => false, :title => "New event", :start_time => Time.now, :end_time => 1.hour.from_now }.merge(options)).reload
   end
 
   def create_meeting(options = {})
-    Meeting.create({ :parent => nodes(:meetings_calendar_node), :repeating => false, :meeting_category => meeting_categories(:gemeenteraad_meetings), :title => "New meeting", :start_time => Time.now, :end_time => 1.hour.from_now }.merge(options))
+    Meeting.create({ :parent => nodes(:meetings_calendar_node), :repeating => false, :meeting_category => meeting_categories(:gemeenteraad_meetings), :title => "New meeting", :start_time => Time.now, :end_time => 1.hour.from_now }.merge(options)).reload
   end
 
   def create_page(options = {})
-    Page.create_for_user(@arthur, { :parent => nodes(:root_section_node), :title => 'foo', :preamble => 'xuu', :body => 'bar' }.merge(options))
+    Page.create_for_user(@arthur, { :parent => nodes(:root_section_node), :title => 'foo', :preamble => 'xuu', :body => 'bar' }.merge(options)).reload
   end
 
   def create_section(options={})
-    Section.create({ :parent => nodes(:root_section_node), :title => 'new section', :description => 'new description for section.' }.merge(options))
+    Section.create({ :parent => nodes(:root_section_node), :title => 'new section', :description => 'new description for section.' }.merge(options)).reload
   end
 
   def create_editor_content_node(options = {})
-    Page.create_for_user(users(:editor), { :parent => nodes(:editor_section_node), :title => 'foo', :preamble => 'xuu', :body => 'bar' }.merge(options))
+    Page.create_for_user(users(:editor), { :parent => nodes(:editor_section_node), :title => 'foo', :preamble => 'xuu', :body => 'bar' }.merge(options)).reload
   end
 
 end

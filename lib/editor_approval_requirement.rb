@@ -97,6 +97,8 @@ module EditorApprovalRequirement
         # If +rescue_exceptions+ is true (the default), any thrown +ActiveRecord::ActiveRecordError+ exceptions on save
         def self.create_for_user(user, attributes)
           new_object = self.new(attributes)
+          new_object.responsible_user = user if user.has_role_on?(['editor'], new_object.parent)
+          new_object.responsible_user = user if new_object.responsible_user.blank? && user.has_role_on?(['final_editor'], new_object.parent)
           new_object.save_for_user(user)
           new_object
         end
