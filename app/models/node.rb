@@ -626,20 +626,22 @@ class Node < ActiveRecord::Base
       # Filter on actual content
       conditions = Node.merge_conditions(conditions, "nodes.content_type IN ('Page', 'Section', 'NewsItem')")
       # Scope on descendants
-      desc_conds = self.descendant_conditions
+      desc_conds    = self.descendant_conditions
       desc_conds[0] = "(#{desc_conds.first})" # Ensure the conditions are evaluated in the right order.
-      conditions = Node.merge_conditions(conditions, desc_conds)
-      if self.root?  # Exclude other sites if this is the root node
-        sql = []
+      conditions    = Node.merge_conditions(conditions, desc_conds)
+      if self.root? # Exclude other sites if this is the root node
+        sql    = []
         values = []
-        Site.all(:include => :node, :conditions => ["nodes.id != ?", self.id]).each do |site| 
+        Site.all(:include => :node, :conditions => ["nodes.id != ?", self.id]).each do |site|
           site_conds = site.node.descendant_conditions
-          sql << site_conds.shift
-          sql << "nodes.id = ?"
-          values += site_conds
-          values << site.node.id
+          sql       << site_conds.shift
+          sql       << "nodes.id = ?"
+          values    += site_conds
+          values    << site.node.id
         end
-        conditions =  Node.merge_conditions(conditions, ["NOT (#{sql.join(' OR ')})"] + values) 
+        if sql.present?
+          conditions = Node.merge_conditions(conditions, ["NOT (#{sql.join(' OR ')})"] + values)
+        end
       end
       conditions << Node.send(:sanitize_sql, [" OR nodes.id = ?", self.id]) # Include self
     elsif on == :self
@@ -648,8 +650,8 @@ class Node < ActiveRecord::Base
     end
 
     defaults = {
-        :joins => "LEFT JOIN versions ON versionable_id = nodes.content_id AND versionable_type = nodes.content_type",
-        :order => 'COALESCE(versions.created_at, nodes.updated_at) DESC'
+      :joins => "LEFT JOIN versions ON versionable_id = nodes.content_id AND versionable_type = nodes.content_type",
+      :order => 'COALESCE(versions.created_at, nodes.updated_at) DESC'
     }
 
     options[:conditions] = conditions
