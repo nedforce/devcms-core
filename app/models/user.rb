@@ -330,6 +330,10 @@ class User < ActiveRecord::Base
   def remove_category_from_favorites(category)
     self.categories.delete(category) if self.categories.include?(category)
   end
+  
+  def to_s
+    full_name.empty? ? login : "#{full_name} (#{login})"
+  end
 
   protected
 

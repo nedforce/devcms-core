@@ -47,7 +47,6 @@ class Admin::TopHitsPagesControllerTest < ActionController::TestCase
       assert_response :success
       assert !assigns(:top_hits_page).new_record?, :message => assigns(:top_hits_page).errors.full_messages.join('; ')
     end
-
   end
 
   def test_should_get_valid_preview_for_create

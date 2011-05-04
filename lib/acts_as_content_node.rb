@@ -135,9 +135,6 @@ module Acts #:nodoc:
         # Sets the publication_start_date to the current time if none is specified
         before_validation_on_create :set_publication_start_date_to_current_time_if_blank
 
-        # Copies the virtual attributes over to the associated node
-        # after_update :update_associated_node_attributes
-
         # Ferret AR hooks
         after_save :update_search_index, :touch_node
           
@@ -234,16 +231,15 @@ module Acts #:nodoc:
             (self.class == ContentCopy) ? self.copied_content_class : self.class
           end
           
-          # General method for finding content children that will be
-          # shown to a user. Used by Node.previous_diffed to find
-          # children of approvable content. Should be overridden.
-          # def accessible_children_for(user, exclude_content_types = [])
-          #         []
-          #       end
+          def show_content_box_header
+            Node.content_type_configuration(self.class.to_s)[:show_content_box_header]
+          end
           
-          # def title_alternatives
-          #   self.node.try(:title_alternative_list)
-          # end
+          unless respond_to? :accessible_children_for
+            def accessible_children_for *args
+              []
+            end
+          end
 
         private
 

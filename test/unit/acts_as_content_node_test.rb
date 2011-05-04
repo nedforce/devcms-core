@@ -342,10 +342,6 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
     assert_equal 'Categorie 2', category2.reload.synonyms
   end
   
-  def test_should_return_accessible_children
-    assert_equal [], @about_page.accessible_children_for(@arthur)
-  end
-
 protected
 
   def build_page(options = {})

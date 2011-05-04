@@ -34,6 +34,9 @@ nl:
     week: "Week {{week}}"
     y: Ja
     youtube_video: Naar een youtube filmpje
+    responsible_user: Verantwoordelijke redacteur
+    current_responsible_user: Ingestelde verantwoordelijke redacteur
+    new_responsible_user: Nieuwe verantwoordelijke redacteur
   abbreviations:
     abbr: Afkorting
     abbreviation: Afkorting
@@ -843,6 +846,8 @@ nl:
     failed: CSV niet geimporteerd! De headers zijn onjuist.
     import_csv_to: CSV importeren naar
     explanation: "Voor een succesvolle import moet de eerste regel van het csv file de volgende items(headers) hebben (volgorde maakt niet uit):"
+  responsible_user:
+    settings: Verantwoordelijke redacteur instellingen
   roles:
     admin: Webmaster
     editor: Redacteur

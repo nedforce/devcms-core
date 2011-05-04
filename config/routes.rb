@@ -66,7 +66,7 @@ ActionController::Routing::Routes.draw do |map|
                     :collection => { :categories => :get, :root_categories => :get },
                     :member => { :add_to_favorites => :put, :remove_from_favorites => :put, :category_options => :get, :synonyms => :get }
     admin.resources :comments, :only => [ :index, :update, :destroy ]
-    admin.resources :users, :member => { :accessible_newsletter_archives => :get, :interests => :get }, :collection => { :invite => :post }
+    admin.resources :users, :member => { :accessible_newsletter_archives => :get, :interests => :get }, :collection => { :invite => :post, :privileged => :get }
     admin.resources :nodes, :only => [ :index, :update, :destroy ],
                             :member => {
                               :move => :put,

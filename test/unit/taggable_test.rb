@@ -13,7 +13,7 @@ class TaggableTest < ActiveSupport::TestCase
   def test_content_should_defer_title_alternative_tagging_to_node
     section = sections(:root_section)
     assert_difference('Tagging.count', 2) do
-      section.update_attributes(:title_alternatives => 'koffie, thee')
+      section.update_attributes(:title_alternative_list => 'koffie, thee')
     end
     assert_equal 'thee', section.node.title_alternative_list.last.to_s
     assert_equal 'koffie, thee', section.node.title_alternative_list.to_s
@@ -24,7 +24,7 @@ class TaggableTest < ActiveSupport::TestCase
     assert_difference('Tagging.count', 1) do
       node.update_attributes(:title_alternative_list => 'tagje2')
     end
-    assert_equal 'tagje2', sections(:root_section).title_alternatives.first
+    assert_equal 'tagje2', sections(:root_section).title_alternative_list.first
   end
   
   def test_should_update_tags

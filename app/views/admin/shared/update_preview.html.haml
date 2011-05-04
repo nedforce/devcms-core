@@ -16,6 +16,7 @@
     = category_hidden_fields form
     = content_box_hidden_fields form
     = approval_hidden_fields form
-
+    = render :partial => 'admin/shared/responsible_user_hidden_fields', :locals => {:form => form}
+    
     = form.submit t('shared.save')
 

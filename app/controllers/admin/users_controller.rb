@@ -1,14 +1,15 @@
 # This administrative controller is used to manage the website users. It is
 # set up to communicate with ExtJS components using XML.
 class Admin::UsersController < Admin::AdminController
-  before_filter :find_user, :except => [ :index, :create, :invite ]
+  before_filter :find_user, :except => [ :index, :create, :invite, :privileged ]
   before_filter :set_paging,  :only => [ :index, :create ]
   before_filter :set_sorting, :only => [ :index, :create ]
 
   skip_before_filter :set_actions
   skip_before_filter :find_node    
 
-  require_role 'admin'
+  require_role 'admin', :except => :privileged
+  require_role ['admin', 'final_editor', 'editor'], :only => :privileged
 
   # * GET /admin/users
   # * GET /admin/users.xml
@@ -43,6 +44,17 @@ class Admin::UsersController < Admin::AdminController
         general_newsletter_archive = NewsletterArchive.first
         @users = general_newsletter_archive.present? ? general_newsletter_archive.users.all(:include => :interests) : []
         render :action => :index, :layout => false
+      end
+    end
+  end
+  
+  # * GET /admin/users/privileged.json
+  def privileged
+    respond_to do |format|
+      format.json do
+        node = Node.find(params[:node])
+        users = User.all(:select => 'users.login, users.id', :include => :role_assignments, :conditions => ["users.login LIKE ? AND role_assignments.node_id IN (?) AND role_assignments.name in (?)", "#{params[:query]}%", node.path_ids, ['editor', 'final_editor']] )
+        render :json => { :users => users }.to_json, :status => :ok
       end
     end
   end
