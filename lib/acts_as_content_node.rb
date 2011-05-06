@@ -184,7 +184,11 @@ module Acts #:nodoc:
           
           alias_method :original_node, :node
           def node
-            self.original_node || self.build_node(:content => self)
+            if new_record? && self.original_node.blank?
+              self.build_node(:content => self)
+            else
+              self.original_node
+            end
           end
 
           # Returns this content node's title or a substitute.
