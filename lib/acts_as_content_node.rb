@@ -140,7 +140,6 @@ module Acts #:nodoc:
           
         # A private copy of the original node setter that is used for overloading node=
         alias_method :original_node=, :node=
-        private :original_node=
               
         def has_parent(type, options = {})
           class_name = (options.delete(:class_name) || type.to_s.classify)          
@@ -184,10 +183,10 @@ module Acts #:nodoc:
           
           alias_method :original_node, :node
           def node
-            if new_record? && self.original_node.blank?
+            if new_record? && original_node.blank?
               self.build_node(:content => self)
             else
-              self.original_node
+              original_node
             end
           end
 

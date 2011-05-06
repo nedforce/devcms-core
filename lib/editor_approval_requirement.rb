@@ -117,8 +117,8 @@ module EditorApprovalRequirement
 
         def previous_version
           if versioned?
-            model      = self.versions.current.model
-            model.node = self.node
+            model = self.versions.current.model
+            model.original_node = self.node
             model
           else
             nil
