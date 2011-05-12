@@ -37,6 +37,7 @@ nl:
     responsible_user: Verantwoordelijke redacteur
     current_responsible_user: Ingestelde verantwoordelijke redacteur
     new_responsible_user: Nieuwe verantwoordelijke redacteur
+    expires_on: Vervaldatum
   abbreviations:
     abbr: Afkorting
     abbreviation: Afkorting
@@ -710,6 +711,8 @@ nl:
     drag_items: Sleep items in de kolommen om de indeling te bepalen.
     edit: wijzigen
     editor_comment: Commentaar voor eindredacteur
+    expires_on_out_of_range: Ongeldige vervaldatum, kies een datum tussen nu en het standaard maximum.
+    expires_on_required: Vervaldatum is verplicht voor deze content.
     failed: mislukt
     frontpage_cant_be_hidden: Globale frontpage mag niet privé zijn.
     frontpage_set: Globale frontpage succesvol ingesteld.

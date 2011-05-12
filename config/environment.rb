@@ -2,6 +2,7 @@
 
 config.plugin_paths += Dir["#{File.dirname(__FILE__)}/../vendor/plugins"]
 config.i18n.load_path += Dir[File.join(File.dirname(__FILE__), 'locales', '**', '*.{rb,yml}')]
+config.load_paths += %W(#{RAILS_ROOT}/app/models/node)
 
 if PLATFORM =~ /mswin/
   config.gem 'ferret',              :version => '0.11.5'

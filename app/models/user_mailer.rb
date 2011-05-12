@@ -1,5 +1,8 @@
 class UserMailer < ActionMailer::Base
-
+  
+  add_template_helper(ActionView::Helpers::UrlHelper)
+  add_template_helper(ActionView::Helpers::RoutingHelpers)
+  
   def verification_email(user, options = {})
     set_defaults(user, options)
     @subject      = "Welkom bij #{Settler[:host]}. Verifieer uw e-mailadres!"

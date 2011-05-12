@@ -23,7 +23,9 @@ class Page < ActiveRecord::Base
   # Adds content node functionality to pages.
   acts_as_content_node({
     :allowed_child_content_types => %w( Attachment Image ),
-    :has_own_content_box => true
+    :has_own_content_box => true,
+    :expirable => true,
+    :expiration_required => true
   })
 
   # This content type needs approval when created or altered by an editor.

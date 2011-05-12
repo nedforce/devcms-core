@@ -1,36 +1,45 @@
 #responsible_user_settings.clearfix
   - field_set_tag t('responsible_user.settings') do
     - fields_for content do |f|
-      = wrap_with_label(content_tag(:div, '', :id => 'responsible_user_ct'), { :text => t('shared.responsible_user'), :for => 'responsible_user_field' })
-      :javascript
-        var userStore = new Ext.data.Store({
-          proxy: new Ext.data.HttpProxy({
-            url: '#{privileged_admin_users_path(:node => content.node, :format => 'json')}',
-            method: 'GET'
-          }),
-          reader: new Ext.data.JsonReader({
-            root: 'users',      
-            id: 'id'
-          }, [ 'login', 'id' ])
-        });
+      - if current_user.has_role_on?(['final_editor', 'admin'], content.node)
+        = wrap_with_label(content_tag(:div, '', :id => 'responsible_user_ct'), { :text => t('shared.responsible_user'), :for => 'responsible_user_field' })
+        :javascript
+          var userStore = new Ext.data.Store({
+            proxy: new Ext.data.HttpProxy({
+              url: '#{privileged_admin_users_path(:node => content.node, :format => 'json')}',
+              method: 'GET'
+            }),
+            reader: new Ext.data.JsonReader({
+              root: 'users',      
+              id: 'id'
+            }, [ 'login', 'id' ])
+          });
 
-        new Ext.form.ComboBox({
-          id: 'responsible_user_combo',
-          name: '#{f.object_name}[responsible_user_login]',
-          hiddenName: '#{f.object_name}[responsible_user_id]',
-          store: userStore,
-          valueField: 'id',
-          displayField: 'login',
-          value: '#{content.responsible_user.try(:login)}',
-          hiddenValue: '#{content.responsible_user_id}',
-          typeAhead: true,
-          hideTrigger: true,
-          mode: 'remote',
-          minChars: 2,
-          triggerAction: 'all',
-          emptyText: '#{I18n.t('permissions.select_a_user')}',
-          selectOnFocus: true,
-          width: 200,
-          renderTo: 'responsible_user_ct',
-          forceSelection: true
-        });
+          new Ext.form.ComboBox({
+            id: 'responsible_user_combo',
+            name: '#{f.object_name}[responsible_user_login]',
+            hiddenName: '#{f.object_name}[responsible_user_id]',
+            store: userStore,
+            valueField: 'id',
+            displayField: 'login',
+            value: '#{content.responsible_user.try(:login)}',
+            hiddenValue: '#{content.responsible_user_id}',
+            typeAhead: true,
+            hideTrigger: true,
+            mode: 'remote',
+            minChars: 2,
+            triggerAction: 'all',
+            emptyText: '#{I18n.t('permissions.select_a_user')}',
+            selectOnFocus: true,
+            width: 200,
+            renderTo: 'responsible_user_ct',
+            forceSelection: true
+          });
+      - if content.expirable?
+        - if params[f.object_name] && params[f.object_name][:expires_on]
+          - expire_on_value =  params[f.object_name][:expires_on]
+        - elsif content.expiration_required?
+          - expire_on_value = Settler[:default_expiration_time].days.from_now
+        - else
+          - expire_on_value = content.expires_on
+        = wrap_with_label(admin_date_field_tag("#{f.object_name}[expires_on]", expire_on_value), { :text => t('shared.expires_on'), :for => "#{f.object_name}_expires_on" })

@@ -58,6 +58,7 @@ require 'iconv'
 # * +content_box_icon+ - The icon of the content box representation of this node.
 # * +content_box_colour+ - The colour of the content box representation of this node.
 # * +content_box_number_of_items+ - The number of items of the content box representation of this node.
+# * +exprires_on+ - The date after which this node should no longer be considered up-to-date.
 #
 # Preconditions
 #
@@ -75,6 +76,9 @@ require 'iconv'
 #
 class Node < ActiveRecord::Base
   include ERB::Util # Provides html_escape()
+  
+  # Load expriation functionality
+  include Node::Expiration
 
   self.extend FindAccessible::ClassMethods
 
@@ -327,6 +331,10 @@ class Node < ActiveRecord::Base
     @content_types_configuration ||= {}
     name = type.is_a?(String) ? type : type.name
     @content_types_configuration[name] = configuration.merge(DevCMS.content_types_configuration[name] || {})
+  end
+  
+  def self.content_types_configuration
+    @content_types_configuration
   end
   
   def self.content_type_configuration(class_name)

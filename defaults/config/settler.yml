@@ -15,7 +15,14 @@ settings: &settings
     value: '500'
     editable: true
     validations:
-      presence: true       
+      presence: true
+  default_expiration_time:
+    alt: Standaard levensduur voor vaste content in dagen. Tevens het minimum.
+    value: 28
+    editable: true
+    validations:
+      presence: true
+    typecast: integer
   google_analytics_key:
     alt: Google analytics key
     value: 'UA-xxxxxxx-x'

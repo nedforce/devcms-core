@@ -39,10 +39,12 @@ module ApplicationHelper
   # :suffix: A tree that follows the node, e.g. a category of a product catalogue
   def bread_crumbs_track_for(node, options = {})
     options = { :minimum_crumbs => 1, :separator => ' &gt; ', :include_root => true }.merge(options)
-
+    
+    host = options.delete :host
+    
     crumb_track = String.new
     crumb_nodes = node.self_and_ancestors
-    crumb_nodes.shift unless current_site.root?
+    crumb_nodes.shift unless node.containing_site.root?
     crumb_nodes.shift unless options[:include_root]
 
     # move in a suffix, if any

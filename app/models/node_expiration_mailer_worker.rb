@@ -1,32 +1,42 @@
-class NodeExpirationNotifierWorker
-  # Returns the used logger.
-  def logger
-    RAILS_DEFAULT_LOGGER
-  end
+class NodeExpirationMailerWorker
   
-  # Sends emails to all the authors that are responsible for at least one expired node
-  def notifyAllAuthors
-    logger.info "Finding authors that are responsible for expired content..."
-    getResponsibleAuthors.each do |author|
-      nodes = getExpiredNodesForAuthor
-      sendNotification(author,nodes)
+  class << self
+    # Returns the used logger.
+    def logger
+      RAILS_DEFAULT_LOGGER
+    end
+  
+    def notify_authors
+      logger.info "Notifying responsible authors of expired content..."
+      Node.expired.all.group_by(&:responsible_user).each do |author, nodes|
+        logger.debug "Notifying #{author.login} of #{nodes.size} expired nodes."
+        send_author_notification(author, nodes) if nodes.present?
+      end
+    end
+    
+    def notify_final_editors
+      logger.info "Notifying responsible final editors of expired content..."
+      User.final_editors.each do |user|
+        nodes = user.assigned_nodes.collect { |node| node.self_and_descendants.expired(1.week.ago) }.flatten.compact
+        logger.debug "Notifying #{user.login} of #{nodes.size} expired nodes."
+        send_final_editor_notification(user, nodes) if nodes.present?
+      end
+    end
+  
+    def send_author_notification(author,nodes)
+      begin
+        NodeExpirationMailer.deliver_author_notification(author,nodes)
+      rescue Exception => exception
+        BackgroundNotifier.deliver_exception_notification(exception, "Notifying authors of expired content.", author)
+      end
+    end
+    
+    def send_final_editor_notification(final_editor,nodes)
+      begin
+        NodeExpirationMailer.deliver_final_editor_notification(final_editor,nodes)
+      rescue Exception => exception
+        BackgroundNotifier.deliver_exception_notification(exception, "Notifying final editor of expired content.", final_editor)
+      end
     end
   end
-  
-  # Send a NodeExpirationNotifier mail to author with a list of all the nodes
-  def sendNotification(author,nodes)
-    logger.info "Sending a notification..."
-    NodeExpirationNotifier.sendNotification(author,nodes)
-  end
-  
-  # Finds all the authors that are responsible for at least one expired node
-  def getResponsibleAuthors
-  end
-  
-  
-  # Finds all the nodes that have an expiration time and a responsible author
-  def getExpiredNodesForAuthor
-    
-  end
-  
 end

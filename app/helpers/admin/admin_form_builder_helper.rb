@@ -58,7 +58,7 @@ module Admin::AdminFormBuilderHelper
     id      = options[:id] || name_to_id(name)
     html    = content_tag(:div, String.new, :id => "#{id}_ct")
     value ||= Time.now unless options[:allow_empty] # default to current date
-    value   = value.strftime("%d-%m-%Y") unless value.blank? # format for Ext component
+    value   = value.strftime("%d-%m-%Y") unless value.blank? || value.is_a?(String) # format for Ext component
     js = javascript_tag <<-JS
       new Ext.form.DateField({
           id: '#{id}',

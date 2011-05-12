@@ -67,7 +67,7 @@ class User < ActiveRecord::Base
   attr_accessor :password
 
   # A +User+ can have multiple nodes which he has edited
-  has_many :nodes
+  has_many :nodes, :foreign_key => :editor_by
 
   # A +User+ can have multiple comments
   has_many :comments, :dependent => :nullify
@@ -77,6 +77,9 @@ class User < ActiveRecord::Base
 
   # A +User+ has many +RoleAssignment+ objects (i.e., roles).
   has_many :role_assignments, :dependent => :destroy
+  
+  # A +User+ has many nodes it has a role assigned on
+  has_many :assigned_nodes, :through => :role_assignments, :source => :node
 
   # A +User+ has and belongs to many +NewsletterArchive+ objects (i.e., subscriptions to newsletters).
   has_and_belongs_to_many :newsletter_archives
@@ -93,6 +96,10 @@ class User < ActiveRecord::Base
   
   has_many :user_categories, :dependent => :destroy
   has_many :categories,      :through => :user_categories
+  
+  named_scope :admins, :include => :role_assignments, :conditions => "role_assignments.name = 'admin'"
+  named_scope :final_editors, :include => :role_assignments, :conditions => "role_assignments.name = 'final_editor'"
+  named_scope :editors, :include => :role_assignments, :conditions => "role_assignments.name = 'editor'"
 
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of     :password,                :if => :password_required?

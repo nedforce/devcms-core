@@ -22,7 +22,9 @@ module Acts #:nodoc:
       :show_content_box_header => true,
       :has_import => false,
       :has_sync => false,
-      :has_edit_items => false
+      :has_edit_items => false,
+      :expirable => false,
+      :expiration_required => false
     }
 
     # This act provides objects with the behavior to function as content nodes.
@@ -105,13 +107,13 @@ module Acts #:nodoc:
         # successfully renumber the tree when destroying a nested subtree.
         #attr_accessor :skip_before_destroy_ancestors
 
-        delegate :update_search_index, :to => :node
+        delegate :update_search_index, :expirable?, :expiration_required?, :expired?, :to => :node
         delegate_accessor_to_node :commentable,
                                   :content_box_title, :content_box_icon, :content_box_colour, :content_box_number_of_items,
                                   :categories, :category_attributes, :category_ids, :keep_existing_categories,
                                   :parent,
                                   :publication_start_date, :publication_end_date,
-                                  :responsible_user, :responsible_user_id,
+                                  :responsible_user, :responsible_user_id, :expires_on,
                                   :title_alternative_list, :title_alternatives
 
         validate  :ensure_publication_start_date_is_present_when_publication_end_date_is_present,
@@ -122,9 +124,14 @@ module Acts #:nodoc:
         validates_length_of :content_box_title, :in => 2..255, :allow_blank => true
         validates_inclusion_of :content_box_colour, :in => DevCMS.content_box_colours, :allow_blank => true
         validates_inclusion_of :content_box_icon, :in => DevCMS.content_box_icons, :allow_blank => true
+        
+        validates_presence_of :expires_on, :if => :expiration_required?, :message => I18n.t("nodes.expires_on_required")
+        validates_inclusion_of :expires_on, :in => Date.today..(Date.today + Settler[:default_expiration_time].days), :allow_blank? => :no_expiration_required?, :if => :expirable?, :message => I18n.t("nodes.expires_on_out_of_range")
+        
 
         validate :valid_responsible_user_role
         validate :validate_parent
+
 
         self.extend FindAccessible::ClassMethods
 
