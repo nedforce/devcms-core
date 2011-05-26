@@ -294,9 +294,6 @@ module Acts #:nodoc:
           
           def expires_on_valid?
             if expirable? && !(expires_on.blank? && expiration_required?)
-              pp "==================================="
-              pp expires_on
-              pp expires_on.class
               errors.add_to_base(I18n.t("nodes.expires_on_out_of_range")) unless (Date.today..(Date.today + Settler[:default_expiration_time].days)).include?(expires_on)
             end
           end
