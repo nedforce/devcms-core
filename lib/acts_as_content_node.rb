@@ -114,7 +114,7 @@ module Acts #:nodoc:
                                   :parent,
                                   :publication_start_date, :publication_end_date,
                                   :responsible_user, :responsible_user_id, :expires_on,
-                                  :title_alternative_list, :title_alternatives
+                                  :title_alternative_list, :title_alternatives  
 
         validate  :ensure_publication_start_date_is_present_when_publication_end_date_is_present,
                   :ensure_publication_end_date_after_publication_start_date,
@@ -126,7 +126,7 @@ module Acts #:nodoc:
         validates_inclusion_of :content_box_icon, :in => DevCMS.content_box_icons, :allow_blank => true
         
         validates_presence_of :expires_on, :if => :expiration_required?, :message => I18n.t("nodes.expires_on_required")
-        validates_inclusion_of :expires_on, :in => Date.today..(Date.today + Settler[:default_expiration_time].days), :allow_blank? => :no_expiration_required?, :if => :expirable?, :message => I18n.t("nodes.expires_on_out_of_range")
+        validate :expires_on_valid?
         
 
         validate :valid_responsible_user_role
@@ -292,6 +292,14 @@ module Acts #:nodoc:
             errors.add_to_base(I18n.t('acts_as_content_node.responsible_user_requires_role')) unless node.responsible_user.blank? || node.responsible_user.has_role_on?(['admin', 'editor', 'final_editor'], node)
           end
           
+          def expires_on_valid?
+            if expirable? && !(expires_on.blank? && expiration_required?)
+              pp "==================================="
+              pp expires_on
+              pp expires_on.class
+              errors.add_to_base(I18n.t("nodes.expires_on_out_of_range")) unless (Date.today..(Date.today + Settler[:default_expiration_time].days)).include?(expires_on)
+            end
+          end
 
           def validate_parent
             if self.parent
