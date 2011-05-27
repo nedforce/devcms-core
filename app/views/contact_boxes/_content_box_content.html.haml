@@ -1,18 +1,24 @@
 - content = node.content
 
-.contact_information
-  %h2= t 'contact_boxes.heading'
+- header_image = Image.find_accessible(:first, :for => current_user, :include => :node, :conditions => ["nodes.ancestry = :contact_box_ancestry", { :contact_box_ancestry => node.child_ancestry }])
 
-  .wrapper.clearfix
-    .text
-      = w content.contact_information
+- if header_image.present?
+  = image_tag(sidebox_image_path(header_image), :alt => h(header_image.title), :class => 'content_box_header')
+- else
+  = image_tag 'contact_box_header.png', :alt => t('contact_boxes.town_hall')
 
-    = link_to t('contact_boxes.more_addresses'), '/contact', :class => 'read_more_link'
+.contact_wrapper
+  .contact_information
+    .wrapper.clearfix
+      .text
+        = w content.contact_information
+
+      = link_to t('contact_boxes.more_addresses'), '/contact', :class => 'read_more_link'
 
 
-.opening_hours
-  %h2= t 'contact_boxes.opening_hours'
+  .opening_hours
+    %h2= t 'contact_boxes.opening_hours'
 
-  .wrapper.clearfix
-    = w text_for_today(content)
-    = link_to t('contact_boxes.more_times'), '/contact', :class => 'read_more_link'
+    .wrapper.clearfix
+      = w text_for_today(content)
+      = link_to t('contact_boxes.more_times'), '/contact', :class => 'read_more_link'
