@@ -25,7 +25,7 @@ class Page < ActiveRecord::Base
     :allowed_child_content_types => %w( Attachment Image ),
     :has_own_content_box => true,
     :expirable => true,
-    :expiration_required => true
+    :expiration_required => false
   })
 
   # This content type needs approval when created or altered by an editor.

@@ -14,8 +14,40 @@
               id: 'id'
             }, [ 'login', 'id' ])
           });
+          
+          MyCombo = function(config) {
+          	MyCombo.superclass.constructor.call(this, config);
+          };
+          Ext.extend(MyCombo, Ext.form.ComboBox, {
+          	listAlignOffsets: [0, 0],
+          	// private
+              restrictHeight : function(){
+                  this.innerList.dom.style.height = '';
+                  var inner = this.innerList.dom;
+                  var h = Math.max(inner.clientHeight, inner.offsetHeight, inner.scrollHeight);
+                  this.innerList.setHeight(h < this.maxHeight ? 'auto' : this.maxHeight);
+                  this.list.beginUpdate();
+                  this.list.setHeight(this.innerList.getHeight()+this.list.getFrameWidth('tb')+(this.resizable?this.handleHeight:0)+this.assetHeight);
+                  this.list.alignTo(this.el, this.listAlign, this.listAlignOffsets);
+                  this.list.endUpdate();
+              },
+              /**
+               * Expands the dropdown list if it is currently hidden. Fires the 'expand' event on completion.
+               */
+              expand : function(){
+                  if(this.isExpanded() || !this.hasFocus){
+                      return;
+                  }
+                  this.list.alignTo(this.el, this.listAlign, this.listAlignOffsets);
+                  this.list.show();
+                  Ext.get(document).on('mousedown', this.collapseIf, this);
+                  this.fireEvent('expand', this);
+              }
 
-          new Ext.form.ComboBox({
+          });
+          
+
+          new MyCombo({
             id: 'responsible_user_combo',
             name: '#{f.object_name}[responsible_user_login]',
             hiddenName: '#{f.object_name}[responsible_user_id]',
@@ -28,10 +60,13 @@
             hideTrigger: true,
             mode: 'remote',
             minChars: 2,
+            listAlign: 'tl-bl',
+            listAlignOffsets: [0,0],
             triggerAction: 'all',
             emptyText: '#{I18n.t('permissions.select_a_user')}',
             selectOnFocus: true,
             width: 200,
+            listWidth: 200,
             renderTo: 'responsible_user_ct',
             forceSelection: true
           });
