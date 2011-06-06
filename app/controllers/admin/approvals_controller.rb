@@ -34,9 +34,12 @@ class Admin::ApprovalsController < Admin::AdminController
     @node = Node.find(params[:id])
     respond_to do |format|
       if @node.approvable?
-        @node.content.save_for_user(current_user)
-        UserMailer.deliver_approval_notification(@current_user, @node, params[:comment], :host => request.host)
-        format.xml { head :ok }
+        if @node.content.save_for_user(current_user)
+          UserMailer.deliver_approval_notification(@current_user, @node, params[:comment], :host => request.host)
+          format.xml { head :ok }
+        else
+          format.xml { head :internal_server_error }
+        end
       else 
         format.xml { head :unprocessable_entity }
       end
@@ -49,9 +52,14 @@ class Admin::ApprovalsController < Admin::AdminController
     @node = Node.find(params[:id])
     respond_to do |format|
       if @node.approvable?
-        @node.reject! if !@node.approved?
-        UserMailer.deliver_rejection_notification(@current_user, @node, params[:reason], :host => request.host)
-        format.xml { head :ok }
+        if !@node.approved?
+          if @node.reject! === true
+            UserMailer.deliver_rejection_notification(@current_user, @node, params[:reason], :host => request.host)
+            format.xml { head :ok }
+          else
+            format.xml { head :internal_server_error }
+          end
+        end
       else 
         format.xml { head :unprocessable_entity }
       end
