@@ -9,7 +9,6 @@ module Node::Expiration
     }
     if SETTLER_LOADED
       base.validates_presence_of :expires_on, :if => :expiration_required?
-      base.validates_inclusion_of :expires_on, :in => Date.today..(Date.today + Settler[:default_expiration_time].days), :allow_blank? => :no_expiration_required?, :if => :expirable?
     end
     
     base.before_validation :set_default_expires_on, :if => :expiration_required?

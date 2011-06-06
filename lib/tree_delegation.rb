@@ -145,7 +145,7 @@ module TreeDelegation
           move_to_bottom!
         end
       else
-        raise ActiveRecord::ActiveRecordError, "Move failed"
+        raise ActiveRecord::ActiveRecordError, "Move failed: #{self.errors.full_messages.pretty_inspect}"
       end
     end
     
