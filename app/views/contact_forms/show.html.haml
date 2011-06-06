@@ -22,6 +22,8 @@
             = text_field_tag "contact_form_field_#{contact_form_field.id}", value, :name => "contact_form_field[#{contact_form_field.id}]", :class => 'contact_field'
           - elsif contact_form_field.field_type == 'dropdown'
             = select_tag "contact_form_field_#{contact_form_field.id}", options_for_select(contact_form_field.default_value.split(','), match ? match[2] : ''), :name => "contact_form_field[#{contact_form_field.id}]", :class => 'contact_field'
+          - elsif contact_form_field.field_type == 'multiselect'
+            = select_tag "contact_form_field_#{contact_form_field.id}", options_for_select(contact_form_field.default_value.split(','), match ? match[2] : ''), :name => "contact_form_field[#{contact_form_field.id}][]", :class => 'contact_field', :multiple => true
         %td.obligatory
           = contact_form_field.obligatory? ? '*' : ''
 

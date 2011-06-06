@@ -148,7 +148,8 @@ class Admin::ContactFormFieldsController < Admin::AdminController
     @field_types = [
       [ I18n.t('contact_form_fields.textfield'), 'textfield' ],
       [ I18n.t('contact_form_fields.textarea'), 'textarea' ],
-      [ I18n.t('contact_form_fields.dropdown'), 'dropdown' ]
+      [ I18n.t('contact_form_fields.dropdown'), 'dropdown' ],
+      [ I18n.t('contact_form_fields.multiselect'), 'multiselect' ]
     ]
   end
 end

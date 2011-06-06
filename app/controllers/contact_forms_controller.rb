@@ -69,9 +69,15 @@ class ContactFormsController < ApplicationController
     used_fields = []
     @contact_form_fields.each do |field|
       if !contact_fields["#{field.id}"].blank?
-        used_fields << [ field.id, field.label, contact_fields["#{field.id}"] ]
+        if field.field_type == 'multiselect'
+          value = contact_fields["#{field.id}"].join(';')
+        else
+          value = contact_fields["#{field.id}"]
+        end
+        used_fields << [ field.id, field.label, value ]
       end
     end
+    
     used_fields
   end
 

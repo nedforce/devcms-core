@@ -412,6 +412,7 @@ nl:
     default_value: Standaardwaarde
     destroy_contact_form_field: Verwijderen
     dropdown: Dropdown
+    multiselect: Multiselect
     edit: Bewerken van invoerveld
     edit_contact_form_field: Bewerken
     field_type: Veldtype

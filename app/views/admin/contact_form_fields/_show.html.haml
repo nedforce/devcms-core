@@ -8,6 +8,8 @@
     = text_area_tag contact_form_field.id, contact_form_field.default_value, :readonly => true, :rows => 7, :class => 'contact_field'
   - elsif contact_form_field.field_type == 'dropdown'
     = select_tag contact_form_field.id, options_for_select(contact_form_field.default_value.split(',')), :class => 'contact_field'
+  - elsif contact_form_field.field_type == 'multiselect'
+    = select_tag contact_form_field.id, options_for_select(contact_form_field.default_value.split(',')), :class => 'contact_field', :multiple => true
 
 %td.obligatory= contact_form_field.obligatory? ? '*' : ''
 

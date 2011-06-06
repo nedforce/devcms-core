@@ -42,6 +42,8 @@ Ext.onReady(function() {
       editor: new Ext.form.TextField()
 <% elsif contact_form_field.field_type == 'textarea' -%>
       editor: new Ext.form.TextArea()
+<% elsif contact_form_field.field_type == 'multiselect' -%>
+      editor: new Ext.form.TextField()
 <% elsif contact_form_field.field_type == 'dropdown' -%>
       editor: new Ext.form.ComboBox({
            editable: false,

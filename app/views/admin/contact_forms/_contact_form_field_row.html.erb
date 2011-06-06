@@ -27,7 +27,8 @@
                      options_for_select({
                       t('contact_forms.textfield') => 'textfield',
                       t('contact_forms.textarea')  => 'textarea',
-                      t('contact_forms.dropdown')  => 'dropdown'
+                      t('contact_forms.dropdown')  => 'dropdown',
+                      t('contact_forms.multiselect')  => 'multiselect'
                      }, value))
         when :default_value
           text_field_tag("contact_form[contact_form_fields_before_save][][#{attr}]", value)
