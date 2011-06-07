@@ -29,31 +29,6 @@ module LayoutHelper
     end
   end
   
-  #hier render partial uit product catalogues
-  def render_product_catalogue_populair_box
-    content = ProductCatalogue.first
-    node = content.node
-    render :partial => '/layouts/partials/content_box', :locals => {
-      :node => node, 
-      :partial => 'populair_box',
-      :parent            => node,
-      :sidebox_title     => content.title,
-      :content_box_color => node.own_or_inherited_layout_configuration['template_color']
-    }
-  end
-  
-  def render_product_catalogue_theme_box
-    content = ProductCatalogue.first
-    node = content.node
-    render :partial => '/layouts/partials/content_box', :locals => {
-      :node => node, 
-      :partial => 'theme_box',
-      :parent            => node,
-      :sidebox_title     => content.title,
-      :content_box_color => node.own_or_inherited_layout_configuration['template_color']
-    }
-  end
-  
   def render_related_content
     if @node && @node.content_type_configuration[:has_own_content_box] && !((@node.content_type == 'Page' || @node.content_type == 'Section') && @node.categories.empty?)
       custom_partial = @node.own_or_inherited_layout.custom_representations["related_content"]["content_partial"] || 'related_content'
