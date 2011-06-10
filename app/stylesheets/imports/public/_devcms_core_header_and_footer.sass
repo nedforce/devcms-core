@@ -68,7 +68,7 @@
 
 /* Main header (Main menu, search)
 
-#header
+#header, #big_header
   height: 200px
   position: relative
   z-index: 10
@@ -85,6 +85,19 @@
     top: 0
     left: 0
 
+#big_header
+  height: 230px
+#main_menu_and_meta_links
+  clear: both
+  .meta_links
+    width: 150px
+    float: left
+    z-index: 40
+    padding-top: 8px
+    margin-left: 35px
+  #main_menu
+    width: 780px
+    float: left
 #meta_links_and_search
   float: left
   padding: 35px 27px 0px
@@ -152,7 +165,21 @@
       left: 0
       width: 100%
       height: 159px
-
+#big_header
+  .big_header_photo
+    height: 190px
+    overflow: hidden
+    position: relative
+  .overlay
+    background-position: 87px right
+    background-repeat: no-repeat
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 190px
+  background-position: 87px right
+  background-repeat: no-repeat
 /**
  * Footer styles
 

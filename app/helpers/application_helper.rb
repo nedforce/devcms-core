@@ -250,7 +250,7 @@ module ApplicationHelper
     white_list(str, :tags => ['span'], :attributes => ['lang', 'xml:lang'], :override_defaults => true)
   end
 
-  def header_image(node = nil)
+  def header_image(node = nil,big_header = false)
     random_image = (node || current_site).random_header_image(current_user)
     if random_image.nil?
       header_title = t('application.default_header_photo_alt')
@@ -258,8 +258,13 @@ module ApplicationHelper
       image_tag    = image_tag("/images/default_header_photo.jpg", :alt => header_title, :title => header_title)
     else
       header_title = random_image.title
-      image_url    = header_image_path(random_image)
-      image_tag    = image_tag header_image_path(random_image), :alt => random_image.alt, :title => random_image.title
+      if(big_header)
+        image_tag    = image_tag big_header_image_path(random_image), :alt => random_image.alt, :title => random_image.title 
+        image_url    = big_header_image_path(random_image)
+      else
+        image_tag    = image_tag header_image_path(random_image), :alt => random_image.alt, :title => random_image.title
+        image_url    = header_image_path(random_image)
+      end
     end
 
     return { :title => header_title, :image_tag => image_tag, :url => image_url }

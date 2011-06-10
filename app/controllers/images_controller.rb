@@ -19,6 +19,11 @@ class ImagesController < ApplicationController
     @image.resize!(:size => "#{Image::HEADER_IMAGE_SIZE[:width]}x#{Image::HEADER_IMAGE_SIZE[:height]}", :crop => true, :upsample => true, :quality => 90)
     render_image
   end
+  
+  def big_header
+    @image.resize!(:size => "#{Image::HEADER_BIG_IMAGE_SIZE[:width]}x#{Image::HEADER_BIG_IMAGE_SIZE[:height]}", :crop => true, :upsample => true, :quality => 90)
+    render_image
+  end
 
   def content_box_header
     @image.resize!(:size => "#{Image::CONTENT_BOX_SIZE[:width]}x#{Image::CONTENT_BOX_SIZE[:height]}", :vertical_offset => @image.vertical_offset, :crop => true, :upsample => true, :quality => 80)
