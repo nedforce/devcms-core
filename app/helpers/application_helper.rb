@@ -272,7 +272,7 @@ module ApplicationHelper
   
   def header_slideshow(node, big_header = false)
     available_header_images_nodes = node.present? ? node.header_images(current_user) : []
-    available_header_images_nodes << header_image(node)[:url] if available_header_images_nodes.empty?
+    available_header_images_nodes << header_image(node, big_header)[:url] if available_header_images_nodes.empty?
     
     available_header_images = available_header_images_nodes.map do |header_image|
       if header_image.is_a?(String)
