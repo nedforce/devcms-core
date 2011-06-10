@@ -12,6 +12,7 @@ javascripts:
   - fontresize
   - default
   - carousel
+  - slideshow
 - application:
   - i18n  
 - admin:

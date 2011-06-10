@@ -1,0 +1,9 @@
+<div id="header-slideshow">
+  <% headers.each do |header_image| %>
+    <% if header_image.is_a?(String) %>
+        <%= header_image %>
+    <% else %>
+        <%= image_tag header_image_path(header_image), :id => "ss-image-#{header_image.id}", :alt => header_image.alt, :title => header_image.title %>
+    <% end %>
+  <% end%>
+</div>
