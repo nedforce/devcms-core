@@ -263,10 +263,29 @@ module ApplicationHelper
     return { :title => header_title, :image_tag => image_tag }
   end
   
-  def header_slideshow(node)
-    available_header_images = node.present? ? node.header_images(current_user) : []
-    available_header_images << header_image(node)[:image_tag] if available_header_images.size < 1
-    render :partial => '/layouts/partials/header_slideshow', :locals => { :headers => available_header_images }
+  def header_slideshow(node, big_header = false)
+    available_header_images_nodes = node.present? ? node.header_images(current_user) : []
+    available_header_images_nodes << header_image(node)[:image_tag] if available_header_images_nodes.size < 1
+    
+    available_header_images = available_header_images_nodes.map do |header_image|
+      if header_image.is_a?(String)
+        {
+          :url => header_image,
+          :id => nil,
+          :alt => nil,
+          :title => nil
+        }
+      else
+        {
+          :url => big_header ? big_header_image_path(header_image) : header_image_path(header_image),
+          :id => "ss-image-#{header_image.id}",
+          :alt => header_image.alt,
+          :title => header_image.title
+        }
+      end
+    end
+    
+    render :partial => '/layouts/partials/header_slideshow', :locals => { :available_header_images => available_header_images }
   end
   
   def image_url(source)

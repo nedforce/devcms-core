@@ -1,9 +1,18 @@
+<% content_for :javascript do %>
+  <% javascript_tag do %>
+    document.observe('dom:loaded', function() {
+      var slides = <%= available_header_images.to_json %>;
+      headerSlideShow = new SlideShow(slides, {
+        fadeDuration: 3000,
+        displayDuration: 6000,
+  			fadeOutStartToFadeInStartDelay: 1500
+      });
+      headerSlideShow.start();
+    });
+  <% end %>
+<% end %>
+
 <div id="header-slideshow">
-  <% headers.each do |header_image| %>
-    <% if header_image.is_a?(String) %>
-        <%= header_image %>
-    <% else %>
-        <%= image_tag header_image_path(header_image), :id => "ss-image-#{header_image.id}", :alt => header_image.alt, :title => header_image.title %>
-    <% end %>
-  <% end%>
+  <% header_image = available_header_images.first %>
+  <%= image_tag header_image[:url], :id => header_image[:id], :title => header_image[:title] %>
 </div>
