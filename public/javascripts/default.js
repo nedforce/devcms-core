@@ -6,7 +6,6 @@ document.observe('dom:loaded', function() {
   ajaxifyPollSideBoxElements();
   ajaxifyNewsletterArchiveSideBoxElements();
   showFontResizeBox();
-	initSlideshow();
 });
 
 function javascriptifyLogoutLinks() {
