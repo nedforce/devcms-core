@@ -27,7 +27,7 @@ class Section < ActiveRecord::Base
   acts_as_content_node({
     :allowed_child_content_types => %w(
       AlphabeticIndex Attachment Calendar Carrousel CombinedCalendar ContactBox ContactForm Feed Forum
-      HtmlPage Image LegislationArchive InternalLink ExternalLink NewsArchive NewsletterArchive NewsViewer
+      HtmlPage Image LinksBox LegislationArchive InternalLink ExternalLink NewsArchive NewsletterArchive NewsViewer
       Page PermitArchive PermitViewer Poll ProductCatalogue SearchPage Section SocialMediaLinksBox TopHitsPage WeblogArchive
     ),
     :allowed_roles_for_create  => %w( admin final_editor ),

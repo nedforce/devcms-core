@@ -589,6 +589,11 @@ nl:
     saved: Link opgeslagen!
     type: Type
     url: URL
+  links_boxes:
+    add_to: Links box toevoegen aan
+    edit: Bewerken van links box
+    goto_site: Ga naar de site
+    read_more: meer websites
   meetings:
     add_to: Vergadering toevoegen aan
   news:

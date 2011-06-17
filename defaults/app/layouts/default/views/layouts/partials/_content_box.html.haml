@@ -1,5 +1,5 @@
 - content = node.content
-%div{:class => "content_box #{node.content_type.underscore}_content_box"}
+%div{:class => "content_box #{node.content_class.name.underscore}_content_box"}
   %div{:class => "content_box_wrapper #{node.content_box_colour || content_box_color || 'default'}"}
     - if content.show_content_box_header
       .header

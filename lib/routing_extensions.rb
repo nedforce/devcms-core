@@ -43,7 +43,7 @@ module RoutingExtensions
         unless no_node_required
           if node.present?
             node = update_to_referenced_node(node)
-            controller = node.content_type.tableize
+            controller = node.content_class.name.tableize
 
             begin
               "#{controller}_controller".camelize.constantize
