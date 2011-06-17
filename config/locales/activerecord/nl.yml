@@ -169,6 +169,8 @@ nl:
       news_viewer:
         title: Titel
         description: Beschrijving
+      node:
+        expires_on: Vervaldatum
       page:
         body: Tekst
         preamble: Samenvatting

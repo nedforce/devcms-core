@@ -775,7 +775,7 @@ protected
   end
 
   def create_page(options = {})
-    Page.create_for_user(@arthur, { :parent => nodes(:root_section_node), :title => 'foo', :preamble => 'xuu', :body => 'bar' }.merge(options)).reload
+    Page.create_for_user(@arthur, { :parent => nodes(:root_section_node), :title => 'foo', :preamble => 'xuu', :body => 'bar', :expires_on => 1.day.from_now.to_date }.merge(options)).reload
   end
 
   def create_section(options={})
@@ -783,7 +783,7 @@ protected
   end
 
   def create_editor_content_node(options = {})
-    Page.create_for_user(users(:editor), { :parent => nodes(:editor_section_node), :title => 'foo', :preamble => 'xuu', :body => 'bar' }.merge(options)).reload
+    Page.create_for_user(users(:editor), { :parent => nodes(:editor_section_node), :title => 'foo', :preamble => 'xuu', :body => 'bar', :expires_on => 1.day.from_now.to_date }.merge(options)).reload
   end
 
 end

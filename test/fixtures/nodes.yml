@@ -15,6 +15,7 @@
     url_alias: help
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 1
 
 - contact_page_node:
@@ -22,6 +23,7 @@
     ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 2
 
 - feedback_page_node:
@@ -30,6 +32,7 @@
     ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 3
 
 - devcms_news_node:
@@ -110,6 +113,7 @@
     url_alias: about
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 6
 
 - test_image_node:
@@ -139,6 +143,7 @@
     ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 9
 
 - rejected_page_node:
@@ -147,6 +152,7 @@
     ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 10
 
 - newsletter_archive_node:
@@ -274,6 +280,7 @@
     ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 15
 
 - besluit_attachment_node:
@@ -301,12 +308,14 @@
     hidden: true
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :hidden_section_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 1
 
 - nested_page_node:
     content: nested_page (Page)
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :hidden_section_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 1
 
 - not_hidden_section_node:
@@ -320,6 +329,7 @@
     content: not_hidden_page (Page)
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :not_hidden_section_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 1
 
 - hidden_image_node:
@@ -443,6 +453,7 @@
     content: editor_section_page (Page)
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :editor_section_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 1
 
 - test_image_copy_node:
@@ -478,6 +489,7 @@
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :node_for_sorting) %>
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 1
 
 - aaa_node:
@@ -485,6 +497,7 @@
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :node_for_sorting) %>
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 2
 
 - bbb_node:
@@ -492,6 +505,7 @@
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :node_for_sorting) %>
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 3
 
 - combined_calendar_node:
@@ -506,6 +520,7 @@
     ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 29
 
 - section_with_frontpage_node:
@@ -520,6 +535,7 @@
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :section_with_frontpage_node) %>
     show_in_menu: false
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 1
 
 - bis_section_node:
@@ -535,6 +551,7 @@
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :section_with_frontpage_node, :bis_section_node) %>
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 1
 
 - about_html_page_node:
@@ -641,6 +658,7 @@
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :sub_site_section_node) %>
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 1
 
 - subsection_alphabetic_index_node:

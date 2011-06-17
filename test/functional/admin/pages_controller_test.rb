@@ -206,6 +206,6 @@ protected
 
   def create_page(attributes = {}, options = {})
     publication_start_date = attributes.delete(:publication_start_date) || Time.now
-    post :create, { :parent_node_id => nodes(:root_section_node).id, :page => { :title => 'new title', :preamble => 'new preamble', :body => 'Lorem ipsum', :publication_start_date_day => publication_start_date.strftime("%d-%m-%Y"), :publication_start_date_time => publication_start_date.strftime("%H:%M") }.merge(attributes) }.merge(options)
+    post :create, { :parent_node_id => nodes(:root_section_node).id, :page => { :title => 'new title', :preamble => 'new preamble', :body => 'Lorem ipsum', :publication_start_date_day => publication_start_date.strftime("%d-%m-%Y"), :publication_start_date_time => publication_start_date.strftime("%H:%M"), :expires_on => (publication_start_date + 1.day).to_date }.merge(attributes) }.merge(options)
   end
 end
