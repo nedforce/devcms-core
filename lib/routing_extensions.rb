@@ -44,11 +44,24 @@ module RoutingExtensions
           if node.present?
             node = update_to_referenced_node(node)
             controller = node.content_class.name.tableize
+            @first_try = true
 
             begin
-              "#{controller}_controller".camelize.constantize
+              # First try with the own controller. If that
+              # fails, try with the parent class' controller.
+              if @first_try
+                "#{controller}_controller".camelize.constantize
+              else
+                controller = node.content_type.tableize
+                "#{controller}_controller".camelize.constantize
+              end
             rescue
-              raise ActionController::RoutingError, "No route matches #{path.inspect} with #{environment.inspect}"
+              if @first_try
+                @first_try = false
+                retry
+              else
+                raise ActionController::RoutingError, "No route matches #{path.inspect} with #{environment.inspect}"
+              end
             end
 
             params.update(:controller => controller, :id => node.content_id, :node_id => node.id)
