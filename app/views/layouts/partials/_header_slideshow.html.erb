@@ -5,9 +5,11 @@
       headerSlideShow = new SlideShow(slides, {
         fadeDuration: 3000,
         displayDuration: 6000,
-  			fadeOutStartToFadeInStartDelay: 1500
+        fadeOutStartToFadeInStartDelay: 0
       });
-      headerSlideShow.start();
+      if(slides.size() > 1) {
+        headerSlideShow.start();
+      };
     });
   <% end %>
 <% end %>
