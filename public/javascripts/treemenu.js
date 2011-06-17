@@ -18,8 +18,8 @@ function javascriptifyTreeMenus() {
 }
 
 function toggleTreeItem(treemenu,treeitem) {
-	plus = treeitem.firstDescendant();
-	if(plus.innerHTML == '-') {
+	plus = treeitem.firstDescendant().firstDescendant().firstDescendant().firstDescendant().firstDescendant();
+	if(plus.hasClassName('tree_minus')) {
 		collapse = true;
 	} else {
 		collapse = false;
@@ -28,16 +28,16 @@ function toggleTreeItem(treemenu,treeitem) {
 		item.setStyle({'display':'none'});
 	});
 	treemenu.getElementsBySelector('.tree_plus').each(function(item) {
-		item.update('+');
+		item.removeClassName('tree_minus');
 	});
 	
 	if(!collapse) {
-		plus.update('-');
+		plus.addClassName('tree_minus')
 		treeitem.getElementsBySelector('.branch').each(function(item) {
 			item.setStyle({'display':'block'});
 		});
 	} else {
-		plus.update('+');
+		plus.removeClassName('tree_minus')
 		treeitem.getElementsBySelector('.branch').each(function(item) {
 			item.setStyle({'display':'none'});
 		});
