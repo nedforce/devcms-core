@@ -1,0 +1,17 @@
+= javascript_tag("document.observe('dom:loaded', function() { $$('div.initialHidden').invoke('hide'); });");
+- content    = node.content
+- links      = node.accessible_content_children(:for => current_user, :limit => node.content_box_number_of_items, :exclude_content_type => "Image")
+
+- unless links.empty?
+  - header_image = Image.find_accessible(:first, :for => current_user, :include => :node, :conditions => ["nodes.ancestry = :links_box_ancestry", {:links_box_ancestry => node.child_ancestry }])
+  = image_tag(content_box_header_image_path(header_image), :alt => h(header_image.title), :class => 'content_box_header')
+  
+  %ul
+    - links.each do |link|
+      %li
+        = text_link_toggable_section("link_#{link.id}", "toggle_link_#{link.id}", link.content_title)
+        %div.initialHidden{ :id => "link_#{link.id}" }
+          = link.description
+          = link_to_content_node t('links_boxes.goto_site'), link
+
+= read_more_link(content, t('links_boxes.read_more'))

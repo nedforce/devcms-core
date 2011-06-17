@@ -28,6 +28,7 @@ nl:
       html_page: HTML pagina
       image: Afbeelding
       internal_link: Interne link
+      links_box: Links box
       meeting: Vergadering
       meeting_category: Categorie
       news_archive: Nieuwsarchief
@@ -146,6 +147,8 @@ nl:
         title: Titel
       internal_link:
         linked_node: Gelinkte node
+      links_box:
+        title: Titel
       meeting:
         end_time: Eindtijd
         meeting_category: Categorie

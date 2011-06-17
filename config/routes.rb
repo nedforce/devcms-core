@@ -54,6 +54,7 @@ ActionController::Routing::Routes.draw do |map|
   map.letter '/alphabetic_indices/:id/:letter.:format', :controller => :alphabetic_indices, :action => :letter
 
   map.resources :social_media_links_boxes, :only => :show
+  map.resources :links_boxes, :only => :show
 
   map.namespace(:admin) do |admin|
     admin.resources :alphabetic_indices, :except => [ :index, :destroy ]
@@ -138,6 +139,7 @@ ActionController::Routing::Routes.draw do |map|
     end
     admin.resources :carrousels, :except => [ :index, :destroy ]
     admin.resources :settings, :only => [ :index, :update ]
+    admin.resources :links_boxes, :except => [ :index, :destroy ]
   end
 
   map.connect '/admin', :controller => 'admin/nodes'
