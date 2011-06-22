@@ -77,7 +77,7 @@ require 'iconv'
 class Node < ActiveRecord::Base
   include ERB::Util # Provides html_escape()
   
-  # Load expriation functionality
+  # Load expiration functionality
   include Node::Expiration
 
   self.extend FindAccessible::ClassMethods

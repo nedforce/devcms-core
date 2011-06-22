@@ -94,7 +94,7 @@ namespace :db do
         inhabitants_section.node.update_attribute(:show_in_menu, true)
 
         5.times do
-          page = Page.create!(:parent =>inhabitants_section.node, :title => Faker::Lorem.sentence[0..12], :preamble => Faker::Lorem.paragraph, :body => Faker::Lorem.paragraph)
+          page = Page.create!(:parent =>inhabitants_section.node, :title => Faker::Lorem.sentence[0..12], :preamble => Faker::Lorem.paragraph, :body => Faker::Lorem.paragraph, :expires_on => Settler[:default_expiration_time].days.from_now.to_s)
           page.node.update_attribute(:show_in_menu, true)
         end
 
@@ -115,7 +115,7 @@ namespace :db do
         business_section.node.update_attribute(:show_in_menu, true)
 
         5.times do
-          page = Page.create!(:parent =>business_section.node, :title => Faker::Lorem.sentence[0..12], :preamble => Faker::Lorem.paragraph, :body => Faker::Lorem.paragraph)
+          page = Page.create!(:parent =>business_section.node, :title => Faker::Lorem.sentence[0..12], :preamble => Faker::Lorem.paragraph, :body => Faker::Lorem.paragraph, :expires_on => Settler[:default_expiration_time].days.from_now.to_s)
           page.node.update_attribute(:show_in_menu, true)
         end
 
@@ -123,14 +123,14 @@ namespace :db do
         business_districts_section.node.update_attribute(:show_in_menu, true)
 
         3.times do
-          page = Page.create!(:parent =>business_districts_section.node, :title => Faker::Lorem.sentence[0..12], :preamble => Faker::Lorem.paragraph, :body => Faker::Lorem.paragraph)
+          page = Page.create!(:parent =>business_districts_section.node, :title => Faker::Lorem.sentence[0..12], :preamble => Faker::Lorem.paragraph, :body => Faker::Lorem.paragraph, :expires_on => Settler[:default_expiration_time].days.from_now.to_s)
           page.node.update_attribute(:show_in_menu, true)
         end
 
-        page = Page.create!(:parent =>root_section.node, :title => 'Gemeenteraad', :preamble => Faker::Lorem.paragraph, :body => Faker::Lorem.paragraph)
+        page = Page.create!(:parent =>root_section.node, :title => 'Gemeenteraad', :preamble => Faker::Lorem.paragraph, :body => Faker::Lorem.paragraph, :expires_on => Settler[:default_expiration_time].days.from_now.to_s)
         page.node.update_attribute(:show_in_menu, true)
 
-        page = Page.create!(:parent =>root_section.node, :title => 'Stadhuis', :preamble => Faker::Lorem.paragraph, :body => Faker::Lorem.paragraph)
+        page = Page.create!(:parent =>root_section.node, :title => 'Stadhuis', :preamble => Faker::Lorem.paragraph, :body => Faker::Lorem.paragraph, :expires_on => Settler[:default_expiration_time].days.from_now.to_s)
         page.node.update_attribute(:show_in_menu, true)
       end
     end

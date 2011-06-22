@@ -88,7 +88,7 @@ module Acts #:nodoc:
       
       def acts_as_content_node(configuration = {})
         
-        raise "Invalid content configuration, hash expexted" unless configuration.is_a?(Hash)
+        raise "Invalid content configuration, hash expected" unless configuration.is_a?(Hash)
         configuration.keys.each do |key|
           raise "Invalid content configuration options, unknown key: :#{key}" unless DEFAULT_CONTENT_TYPE_CONFIGURATION.keys.include?(key.to_sym)
         end
