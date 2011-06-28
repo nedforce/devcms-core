@@ -230,6 +230,10 @@ nl:
               end_time_not_after_start_time: moet na starttijd zijn.
             repeat_end:
               repeat_end_should_be_in_the_future: Einddatum van herhaling moet in de toekomst zijn.
+        carrousel:
+          attributes:
+            base:
+              too_many_carrousel_items: Er mogen maximaal 9 items toegevoegd worden aan een carrousel.
         category:
           attributes:
             base:

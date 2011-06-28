@@ -49,11 +49,13 @@ class Carrousel < ActiveRecord::Base
   validates_numericality_of :display_time_in_seconds, :allow_blank => true, :integer_only => true, :greater_than_or_equal_to => 0
   validates_numericality_of :animation, :integer_only => true, :greater_than_or_equal_to => 0
   
+  validate :number_of_carrousel_items_less_than_ten
+  
   def animation
     super.to_i
   end
   
-  # Finds the current carrousel item and cycles it is necessary.
+  # Finds sthe current carrousel item and cycles it is necessary.
   def find_current_carrousel_item
     fetch_or_cycle_current_carrousel_item
   end
@@ -164,4 +166,9 @@ private
       self.current_carrousel_item
     end
   end
+  
+  def number_of_carrousel_items_less_than_ten
+    errors.add_to_base(:too_many_carrousel_items) if self.carrousel_items.size > 9
+  end
+  
 end

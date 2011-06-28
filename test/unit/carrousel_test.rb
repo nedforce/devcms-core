@@ -56,6 +56,24 @@ class CarrouselTest < ActiveSupport::TestCase
     assert_nil @carrousel.carrousel_items.last.excerpt    
   end
   
+  def test_should_allow_no_more_than_nine_carrousel_items
+    @carrousel.associate_items([ 
+      nodes(:help_page_node).id, 
+      nodes(:about_page_node).id,
+      nodes(:contact_page_node).id,
+      nodes(:feedback_page_node).id,
+      nodes(:downloads_page_node).id,
+      nodes(:editor_section_page_node).id,
+      nodes(:ccc_node).id,
+      nodes(:aaa_node).id,
+      nodes(:devcms_news_item_node).id, 
+      nodes(:devcms_news_item_voor_vorige_maand_node).id
+    ])
+    
+    assert !@carrousel.save
+    assert @carrousel.errors.on_base
+  end
+  
   def test_should_select_one_current_item
     @carrousel.associate_items([ nodes(:help_page_node).id, nodes(:devcms_news_item_node).id, nodes(:devcms_news_item_voor_vorige_maand_node).id], { nodes(:help_page_node).id => 'Help pagina', nodes(:devcms_news_item_node).id => 'Nieuws node' })
     assert @carrousel.save
