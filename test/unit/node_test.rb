@@ -63,83 +63,6 @@ class NodeTest < ActiveSupport::TestCase
     end
   end
 
-  def test_should_create_url_alias_for_non_unique_titled_node
-    cn = create_page
-    assert_equal 'foo', cn.node.url_alias
-    cn2 = create_page
-    assert_equal 'foo-1', cn2.node.url_alias
-  end
-
-  def test_should_create_url_alias_for_frontpage_child
-    ni = NewsItem.create({:parent => nodes(:devcms_news_node), :title => 'foo', :preamble => 'xuu', :body => 'bar', :publication_start_date => '2008-05-20 12:00' })
-    assert_equal '2008/5/20/foo', ni.node.url_alias
-  end
-
-  def test_should_remove_trailing_slashes_from_url_aliases
-    p = Page.create({:parent => nodes(:root_section_node), :title => 'foo/', :preamble => 'xuu', :body => 'bar', :publication_start_date => '2008-05-20 12:00' })
-    assert_equal 'foo', p.node.url_alias
-  end
-
-  def test_url_alias_for_child_node_should_contain_escaped_url_alias_for_parent_node
-    wa = WeblogArchive.create(:parent => @root_node, :title => 'weblogs', :description => 'weblogs').reload
-    parent_node_alias = wa.node.url_alias
-    assert parent_node_alias =~ /\Aweblogs-(\d)+\Z/
-    w = wa.weblogs.create(:parent => wa.node, :user => @arthur, :title => 'foobar', :description => 'foobar')
-    assert_equal "#{parent_node_alias}/foobar", w.node.url_alias
-  end
-
-  def test_should_require_unique_url_alias
-    cn = create_page
-    old_url_alias = cn.node.url_alias
-    cn.node.send(:update_attributes, :url_alias => @about_page_node.url_alias)
-    assert_equal old_url_alias, cn.node.reload.url_alias
-  end
-
-  def test_url_alias_length_restrictions
-    cn = create_page
-    cn.node.send(:update_attributes, :url_alias => ("a"))
-    assert cn.node.errors.on(:url_alias)
-    assert !cn.node.valid?
-    cn.node.send(:update_attributes, :url_alias => ("a" * 2))
-    assert !cn.node.errors.on(:url_alias)
-    assert cn.node.valid?
-    cn.node.send(:update_attributes, :url_alias => ("a" * Node::MAXIMUM_URL_ALIAS_LENGTH))
-    assert !cn.node.errors.on(:url_alias)
-    assert cn.node.valid?
-    cn.node.send(:update_attributes, :url_alias => ("a" * (Node::MAXIMUM_URL_ALIAS_LENGTH + 1)))
-    assert cn.node.errors.on(:url_alias)
-    assert !cn.node.valid?
-  end
-
-  def test_should_require_valid_url_alias
-    [ '', '  ', '/a', '-//a', 'a//', 'asd#das', 'dasdadas adsdas', '&asdas', 'weblogs' ].each do |url_alias|
-      cn = create_page
-      old_url_alias = cn.node.url_alias
-      assert_equal old_url_alias, cn.node.reload.url_alias
-    end
-  end
-
-  def test_should_create_valid_url_alias
-    ni = NewsItem.create(:parent => nodes(:devcms_news_node), :title => ' ¡Çest bón die "nieuwe" pagina/pagina\'s! voor (slechts?) € 5,00 ', :body => 'quux').node
-    assert ni.url_alias # would be nil if invalid
-  end
-
-  def test_should_move_to_child
-    n = create_page.node
-    assert_equal(@root_node, n.parent)
-    assert_equal 'foo', n.url_alias
-    n.move_to_child_of @economie_section_node
-    assert_equal 'economie/foo', n.url_alias
-  end
-
-  def test_should_not_update_custom_url_alias
-    n = create_page.node
-    n.url_alias = "custom-alias"
-    assert n.send(:save)
-    n.move_to_child_of @economie_section_node
-    assert_equal "custom-alias", n.url_alias
-  end
-
   def test_should_raise_on_move_to_sibling_of_root
     assert_raises ActiveRecord::ActiveRecordError do
       @about_page_node.move_to_left_of @root_node
@@ -216,8 +139,8 @@ class NodeTest < ActiveSupport::TestCase
      section       = Section.create(:parent => @root_node,    :title => 'section to destroy')
      child_section = Section.create(:parent => section.node , :title => 'inner section')
 
-     Page.create(:parent => child_section.node , :title => 'tmp page 1', :preamble => 'help',     :body => 'help')
-     Page.create(:parent => child_section.node , :title => 'tmp page 2', :preamble => 'feedback', :body => 'feedback')
+     Page.create(:parent => child_section.node , :title => 'tmp page 1', :preamble => 'help',     :body => 'help', :expires_on => 1.day.from_now.to_date)
+     Page.create(:parent => child_section.node , :title => 'tmp page 2', :preamble => 'feedback', :body => 'feedback', :expires_on => 1.day.from_now.to_date)
 
      # assert Node.valid?, "Invalid tree structure after adding test nodes."
 
@@ -351,7 +274,7 @@ class NodeTest < ActiveSupport::TestCase
 
    def test_should_destroy_descendants_correctly
      section = Section.create!(:parent => @economie_section_node, :title => 'foo', :description => 'bar')
-     page = Page.create!(:parent => section.node, :title => 'baz', :body => "Page body")
+     page = Page.create!(:parent => section.node, :title => 'baz', :body => "Page body", :expires_onw => 1.day.from_now.to_date)
      Attachment.create!(:parent => page.node, :title => 'Park Zandweerd Matrix plannen', :category => "none", :uploaded_data => fixture_file_upload("files/ParkZandweerdMatrixplannen.doc", 'application/msword'))
      
      assert page.reload.node.reload.destroy # the tree calls destroy on node, not on content!

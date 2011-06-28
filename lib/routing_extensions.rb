@@ -30,11 +30,11 @@ module RoutingExtensions
           node    = site.subtree.find(node_id)
         when '_aliased' then
           url_alias = params.delete(:id)
-          unless node = site.subtree.find_by_url_alias(url_alias)
+          unless node = site.subtree.first(:conditions => [ 'url_alias = ? OR custom_url_alias = ?', url_alias, url_alias ])
             parts           = url_alias.split('/')
             params[:action] = parts.pop
             url_alias       = parts.join('/')
-            node            = site.subtree.find_by_url_alias(url_alias)
+            node            = site.subtree.first(:conditions => [ 'url_alias = ? OR custom_url_alias = ?', url_alias, url_alias ])
           end
         else
           no_node_required = true

@@ -281,6 +281,9 @@ nl:
             url_alias:
               invalid: "kan alleen letters, cijfers en '-' bevatten."
               reserved_url_alias: bevat gereserveerde woorden.
+            custom_url_alias:
+              invalid: "kan alleen letters, cijfers en '-' bevatten."
+              reserved_url_alias: bevat gereserveerde woorden.
         role_assignment:
           attributes:
             base:

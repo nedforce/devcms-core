@@ -89,12 +89,13 @@ class Node < ActiveRecord::Base
 
   INDEX_DATETIME_FORMAT = "%Y%m%d%H%M"
 
-  # Must be larger than 6 and smaller than 2048
   MAXIMUM_URL_ALIAS_LENGTH = 255
+  MAXIMUM_CURSTOM_URL_SUFFIX_LENGTH = 50
 
   VALID_URL_ALIAS_FORMAT = /\A[a-z0-9_\-]((\/)?[a-z0-9_\-])*\Z/i
+  VALID_CUSTOM_URL_SUFFIX_FORMAT = /\A\/?[a-z0-9_\-]+\Z/i
 
-  attr_protected :hits
+  attr_protected :hits, :url_alias, :custom_url_alias
 
   has_many :node_categories, :dependent => :destroy
   has_many :categories, :through => :node_categories
@@ -118,23 +119,39 @@ class Node < ActiveRecord::Base
   # See the preconditions overview for an explanation of these validations.
   validate :should_not_be_directly_instantiated
   validate :should_not_have_reserved_url_alias
+  validate :should_not_have_reserved_custom_url_alias
   validates_presence_of   :content
   validates_uniqueness_of :content_id, :scope => :content_type
   validate :should_not_hide_global_frontpage
 
   # Validate url_alias. Sync regexp to routes.rb!
-  validates_format_of :url_alias, :with => VALID_URL_ALIAS_FORMAT, :if => Proc.new{|node| !node.url_alias.nil? }
+  validates_format_of :url_alias, :with => VALID_URL_ALIAS_FORMAT, :allow_nil => true
   validates_length_of :url_alias, :in => (2..MAXIMUM_URL_ALIAS_LENGTH), :allow_nil => true
+  
+  # Validate custom_url_alias. Sync regexp to routes.rb!
+  validates_format_of :custom_url_alias, :with => VALID_URL_ALIAS_FORMAT, :allow_nil => true
+  validates_length_of :custom_url_alias, :in => (2..MAXIMUM_URL_ALIAS_LENGTH), :allow_nil => true
+  
+  # Validate custom URL suffix.
+  validates_format_of :custom_url_suffix, :with => VALID_CUSTOM_URL_SUFFIX_FORMAT, :allow_nil => true
+  validates_length_of :custom_url_suffix, :in => (2..MAXIMUM_CURSTOM_URL_SUFFIX_LENGTH), :allow_nil => true
 
   # Do not run uniqueness validation if url_alias length exceeds MAXIMUM_URL_ALIAS_LENGTH, as this will cause
   # an ActiveRecord::StatementInvalid exception being thrown
-  validates_uniqueness_of :url_alias, :allow_nil => true, :unless => Proc.new {|node| node.url_alias.nil? || node.url_alias.length > MAXIMUM_URL_ALIAS_LENGTH }
+  validates_uniqueness_of :url_alias, :allow_nil => true, :unless => Proc.new { |node| node.url_alias.present? && node.url_alias.length > MAXIMUM_URL_ALIAS_LENGTH }
+  
+  # Do not run uniqueness validation if url_alias length exceeds MAXIMUM_URL_ALIAS_LENGTH, as this will cause
+  # an ActiveRecord::StatementInvalid exception being thrown
+  validates_uniqueness_of :custom_url_alias, :allow_nil => true, :unless => Proc.new { |node| node.custom_url_alias.present? && node.custom_url_alias.length > MAXIMUM_URL_ALIAS_LENGTH }
 
   validates_inclusion_of :commentable,       :in => [ false, true ], :allow_nil => true
   validates_inclusion_of :hide_right_column, :in => [ false, true ], :allow_nil => true
   
-  # Set an URL alias if none has been specified on create.
+  # Set an URL alias
   before_create :set_url_alias
+  
+  # Set a custom URL alias
+  before_update :set_custom_url_alias
 
   # Prevents the root +Node+ from being destroyed.
   before_destroy :prevent_root_destruction
@@ -222,13 +239,14 @@ class Node < ActiveRecord::Base
 
   alias_method_chain :approve!, :reindexing_and_versioning
 
-  def move_to_with_reindexing_and_update_url_alias(*args)
-    has_custom_url = (self.url_alias != self.generate_url_alias)
-    self.move_to_without_reindexing_and_update_url_alias(*args)
-    self.update_attribute(:url_alias, self.generate_unique_url_alias) unless has_custom_url
+  def move_to_with_reindexing_and_update_url_aliases(*args)
+    self.move_to_without_reindexing_and_update_url_aliases(*args)
+    self.update_attribute(:url_alias, self.generate_unique_url_alias)
+    self.update_attribute(:custom_url_alias, self.generate_unique_custom_url_alias) if self.custom_url_suffix.present?
     self.reindex_self_and_children
   end
-  alias_method_chain :move_to, :reindexing_and_update_url_alias
+  
+  alias_method_chain :move_to, :reindexing_and_update_url_aliases
 
   # A proxy method for accessing the SanitizeHelper through the Helper class.
   def help
@@ -388,6 +406,9 @@ class Node < ActiveRecord::Base
       :allowEdit                       => content_type_configuration[:allowed_roles_for_update].include?(role_name),
       :controllerName                  => "/admin/#{content_type_configuration[:controller_name] || self.content_class.table_name}",
       :parentNodeId                    => self.parent_id,
+      :parentURLAlias                  => self.parent_url_alias,
+      :customURLSuffix                 => self.custom_url_suffix.present? ? self.custom_url_suffix : nil,
+      :customURLAlias                  => self.custom_url_alias.present? ? self.custom_url_alias : nil,
       :contentNodeId                   => self.content_id,
       :siteNodeId                      => self.containing_site.id,
       :userRole                        => role ? role_name : nil,
@@ -406,7 +427,6 @@ class Node < ActiveRecord::Base
       :hasPrivateAncestor              => self.has_hidden_ancestor?,
       :allowUrlAliasSetting            => user_is_final_editor || user_is_admin,
       :allowContentCopyCreation        => !self.root? && content_type_configuration[:copyable],
-      :urlAlias                        => self.url_alias.present? ? self.url_alias : nil,
       :isRoot                          => self.root?,
       :treeLoaderName                  => content_type_configuration[:tree_loader_name],
       :allowLayoutConfig               => user_is_admin || user_is_final_editor,
@@ -571,23 +591,42 @@ class Node < ActiveRecord::Base
   # Generates an URL alias based on the ancestors of this node and a path
   # specified by its content node.
   def generate_url_alias
-    url_alias = ''
+    generated_url_alias = ""
 
     # build parent "breadcrumb"
-    if self.parent && !self.parent.is_global_frontpage? && !self.parent.root?
-      url_alias << "#{parent.generate_unique_url_alias}/"
+    if parent_url_alias
+      generated_url_alias << "#{parent_url_alias}/"
     end
 
     # Use the URL alias path of the approved content if available.
     # Otherwise use the URL alias path of the unapproved content if this is
     # a preview.
     begin
-      url_alias << clean_for_url(self.approved_content.path_for_url_alias(self))
+      generated_url_alias << clean_for_url(self.approved_content.path_for_url_alias(self))
     rescue
-      url_alias << clean_for_url(self.content.path_for_url_alias(self))
+      generated_url_alias << clean_for_url(self.content.path_for_url_alias(self))
     end
 
-    return url_alias
+    generated_url_alias
+  end
+  
+  # Generates a custom URL alias based on the ancestors of this node and a path
+  # specified by its content node.
+  def generate_custom_url_alias
+    generated_custom_url_alias = ""
+
+    # build parent "breadcrumb"
+    if !self.custom_url_suffix.starts_with?('/') && parent_url_alias
+      generated_custom_url_alias << "#{parent_url_alias}/"
+    end
+    
+    generated_custom_url_alias << clean_for_url(self.custom_url_suffix.starts_with?('/') ? self.custom_url_suffix[1..-1] : self.custom_url_suffix)
+
+    generated_custom_url_alias
+  end
+  
+  def parent_url_alias
+    parent.url_alias if self.parent && !self.parent.is_global_frontpage? && !self.parent.root?
   end
 
   # Returns the global frontpage node.
@@ -910,12 +949,25 @@ protected
   def set_url_alias(force = false)
     self.url_alias = generate_unique_url_alias if self.url_alias.blank? || force
   end
+  
+  def set_custom_url_alias
+    self.custom_url_alias = (self.custom_url_suffix.present? ? self.generate_unique_custom_url_alias : nil) if custom_url_suffix_changed?
+  end
 
   def generate_unique_url_alias
-    # rotate to find a unique alias
-    temp_url_alias = generated_url_alias = self.generate_url_alias[0..(MAXIMUM_URL_ALIAS_LENGTH - 6)]
+    uniqify_url_alias(self.generate_url_alias[0..(MAXIMUM_URL_ALIAS_LENGTH - 6)])
+  end
+  
+  def generate_unique_custom_url_alias
+    uniqify_url_alias(self.generate_custom_url_alias[0..(MAXIMUM_URL_ALIAS_LENGTH - 6)])
+  end
+  
+  def uniqify_url_alias(generated_url_alias)
+    temp_url_alias = generated_url_alias
+    
     i = 0
-    while Node.first(:conditions => [ "id <> ? AND url_alias = ?", (self.id || 0), temp_url_alias ]) || self.class.url_alias_reserved?(temp_url_alias)
+    
+    while Node.first(:conditions => [ "id <> ? AND (url_alias = ? OR custom_url_alias = ?)", (self.id || 0), temp_url_alias, temp_url_alias ]) || self.class.url_alias_reserved?(temp_url_alias)
       i += 1
       temp_url_alias = "#{generated_url_alias}-#{i}"
     end
@@ -927,10 +979,15 @@ protected
   def should_not_have_reserved_url_alias
     errors.add(:url_alias, :reserved_url_alias) if self.class.url_alias_reserved?(self.url_alias)
   end
+  
+  # Prevents saving this node when the URL alias contains reserved words.
+  def should_not_have_reserved_custom_url_alias
+    errors.add(:url_alias, :reserved_custom_url_alias) if self.class.url_alias_reserved?(self.custom_url_alias)
+  end
 
   # Returns if the specified URL alias has been reserved.
-  def self.url_alias_reserved?(url_alias)
-    return false if url_alias.blank?
+  def self.url_alias_reserved?(alias_to_check)
+    return false if alias_to_check.blank?
 
     rs = ActionController::Routing::Routes
     begin
@@ -938,7 +995,7 @@ protected
       # a node_id. This indicates that it's a "true" route and not another
       # URL alias, which should be covered by validates_uniqueness_of.
       # This situation occurs when updating a node.
-      path = rs.recognize_path "/#{url_alias}"
+      path = rs.recognize_path "/#{alias_to_check}"
       return !path.has_key?(:node_id)
     rescue Exception => e
       return false

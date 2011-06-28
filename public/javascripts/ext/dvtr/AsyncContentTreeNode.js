@@ -39,7 +39,9 @@ Ext.dvtr.AsyncContentTreeNode = function(config) {
        this.isGlobalFrontpage = config.isGlobalFrontpage;
        this.containsGlobalFrontpage = config.containsGlobalFrontpage;
        this.userRole = config.userRole;
-       this.urlAlias = config.urlAlias;
+			 this.parentURLAlias = config.parentURLAlias;
+			 this.customURLAlias = config.customURLAlias;
+       this.customURLSuffix = config.customURLSuffix;
        this.noChildNodes = config.noChildNodes;
        this.numberChildren = config.numberChildren;
        this.isPrivate = config.isPrivate;
@@ -484,33 +486,56 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode,{
     },
 
     onSetUrlAlias: function(item){
-        var promptText = I18n.t('url_alias_prompt', 'nodes');
-        if(this.urlAlias) {
-            promptText += '<br/>' + I18n.t('url_alias_prompt_current', 'nodes') + ' <i>'+ this.urlAlias +'</i>.';
+        var promptText = I18n.t('url_alias_prompt_1', 'nodes') + ' ' + I18n.t('url_alias_host', 'nodes');
+
+				if (this.parentURLAlias) {
+					promptText += this.parentURLAlias + '/<i>test</i>.'
+				} else {
+					promptText += '<i>test</i>.'
+				}
+
+				promptText += '<br/><br/>' + I18n.t('url_alias_prompt_2', 'nodes') + ' (' + I18n.t('url_alias_host', 'nodes') + ') ' + I18n.t('url_alias_prompt_3', 'nodes');
+				promptText += ' ' + I18n.t('url_alias_host', 'nodes') + '<i>test</i>.' + '<br/>'
+				
+        if (this.customURLSuffix) {
+            promptText += '<br/>' + I18n.t('url_alias_prompt_current', 'nodes') + ' <i>'+ this.customURLSuffix +'</i>.';
         }
 
-        Ext.Msg.prompt('Webadres', promptText, function(btn, text){
-            if (btn == 'ok'){
-               Ext.Ajax.request({
-                   url: '/admin/nodes/'+this.id,
-                   method: 'POST', // overridden with delete by the _method parameter
-                   params: Ext.ux.prepareParams(defaultParams, {_method: 'put', 'node[url_alias]': text}),
-                   scope: this,
-                   success: function(){
-                      this.urlAlias = text;
-                      //Ext.Msg.alert('Succes', 'Webadres instellen gelukt!');
-                   },
-                   failure: function(response, options){
-                      if(response.status == 422){ // unprocessable entity
-                        var responseJson = Ext.util.JSON.decode(response.responseText);
-                        Ext.Msg.alert('Error', responseJson.errors[0]);
-                      }else{ // unhandled error statuses
-                        Ext.ux.alertResponseError(response, I18n.t('url_alias_failed', 'nodes'));
-                      }
-                   }
-                });
-            }
-        }, this); // End Ext.Msg.prompt
+				if (this.customURLAlias) {
+					promptText += '<br/>' + I18n.t('url_alias_prompt_current_2', 'nodes') + ' <i>'+ I18n.t('url_alias_host', 'nodes') + this.customURLAlias +'</i>.<br/>';
+				}
+
+        Ext.Msg.show({
+						title: 'Webadres', 
+						msg: promptText,
+						scope: this,
+						prompt: true,
+						width: 600,
+						cls: 'url_alias_textbox',
+						buttons: Ext.MessageBox.OKCANCEL,
+						fn: function(btn, text){
+            	if (btn == 'ok'){
+	               Ext.Ajax.request({
+	                   url: '/admin/nodes/' + this.id,
+	                   method: 'POST', // overridden with delete by the _method parameter
+	                   params: Ext.ux.prepareParams(defaultParams, {_method: 'put', 'node[custom_url_suffix]': text}),
+	                   scope: this,
+	                   success: function(){
+	                      this.urlAlias = text;
+	                      //Ext.Msg.alert('Succes', 'Webadres instellen gelukt!');
+	                   },
+	                   failure: function(response, options){
+	                      if(response.status == 422){ // unprocessable entity
+	                        var responseJson = Ext.util.JSON.decode(response.responseText);
+	                        Ext.Msg.alert('Error', responseJson.errors[0]);
+	                      }else{ // unhandled error statuses
+	                        Ext.ux.alertResponseError(response, I18n.t('url_alias_failed', 'nodes'));
+	                      }
+	                   }
+	                });
+	            }
+					}
+        }); // End Ext.Msg.prompt
     },
 
     onAssignRole: function(){
