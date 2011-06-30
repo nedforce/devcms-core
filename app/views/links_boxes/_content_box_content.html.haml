@@ -1,4 +1,3 @@
-= javascript_tag("document.observe('dom:loaded', function() { $$('div.initialHidden').invoke('hide'); });");
 - content    = node.content
 - links      = node.accessible_content_children(:for => current_user, :limit => node.content_box_number_of_items, :exclude_content_type => "Image")
 
@@ -10,7 +9,7 @@
     - links.each do |link|
       %li
         = text_link_toggable_section("link_#{link.id}", "toggle_link_#{link.id}", link.content_title)
-        %div.initialHidden{ :id => "link_#{link.id}" }
+        %div{ :id => "link_#{link.id}", :style => 'display: none;' }
           = link.description
           = link_to_content_node t('links_boxes.goto_site'), link
 
