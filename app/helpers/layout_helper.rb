@@ -56,7 +56,7 @@ module LayoutHelper
   
   def text_link_toggable_section(dom_id, link_id, title)
     link_to_function(truncate(h(title), :length => 60), nil, :id => link_id) do |page|
-      page.visual_effect :toggle_slide, dom_id
+      page.visual_effect :toggle_appear, dom_id, :duration => '0.5'
       page << "if($('#{dom_id}').visible()) {"
       page.call 'Element.addClassName', link_id, 'plus_icon'
       page.call 'Element.removeClassName', link_id, 'minus_icon'
