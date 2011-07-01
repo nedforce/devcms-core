@@ -9,7 +9,7 @@
         <%= error_messages_for :link %>
   
         <%= form.text_field   :title,                :label => t('shared.title') %>
-        <%= form.text_field   :title_alternatives,   :label => t('shared.title_alternatives') %>
+        <%= form.text_field   :title_alternative_list, :label => t('shared.title_alternatives') %>
         <%= form.text_area    :description,          :label => t('shared.description'), :rows => 2 %>
         
         <%= form.radio_button :type, 'ExternalLink', :label => t('links.external'), :onclick => 'toggleTypeField()', :wrapper => { :id => 'external_link_wrapper' } %>
