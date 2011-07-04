@@ -284,7 +284,7 @@ module ApplicationHelper
         }
       else
         {
-          :url => big_header ? big_header_image_path(header_image) : header_image_path(header_image),
+          :url => big_header ? big_header_image_path(header_image, :format => :jpg) : header_image_path(header_image, :format => :jpg),
           :id => "ss-image-#{header_image.id}",
           :alt => header_image.alt,
           :title => header_image.title

@@ -4,7 +4,7 @@
   - admin_remote_form_for @image, :url => admin_image_path(@image, :format => 'html'), :update => 'right_panel_body' do |f|
     = error_messages_for :image
 
-    = wrap_with_label image_tag(thumbnail_admin_image_path(@image), :alt => h(@image.title)), :text => t('images.image'), :for => "image_#{@image.id}"
+    = wrap_with_label image_tag(thumbnail_admin_image_path(@image, :format => :jpg), :alt => h(@image.title)), :text => t('images.image'), :for => "image_#{@image.id}"
 
     = f.text_field :title,           :label => t('shared.title')
     = f.text_field :alt,             :label => t('images.alt')

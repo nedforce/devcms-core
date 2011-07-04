@@ -2,10 +2,10 @@
 is_header ||= false
 if is_header
     width, height = Image::CONTENT_BOX_SIZE[:width], Image::CONTENT_BOX_SIZE[:height]
-    preview_url = content_box_header_preview_admin_image_path(image)
+    preview_url = content_box_header_preview_admin_image_path(image, :format => :jpg)
 else
     width, height = 100, 100
-    preview_url = thumbnail_preview_admin_image_path(image)
+    preview_url = thumbnail_preview_admin_image_path(image, :format => :jpg)
 end
 %>
 <% resized_height = image.height_at_width(width) %>
@@ -72,7 +72,7 @@ end
 	<div id="slider_<%= image.id %>"></div>
 	<%= hidden_field_tag "vertical_offset_#{image.id}", image.vertical_offset %>
 	<%= observe_field( "vertical_offset_#{image.id}",
-	      :url => admin_image_path(image),
+	      :url => admin_image_path(image, :format => :jpg),
 	      :frequency => 1,
 	      :method => :put,
 	      :with => "'image[vertical_offset]=' + encodeURIComponent($F('vertical_offset_#{image.id}'))") -%>

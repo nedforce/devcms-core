@@ -8,7 +8,7 @@ class ImagesController < ApplicationController
   layout false
 
   #set caching
-  caches_page :full, :sidebox, :header
+  caches_page :full, :sidebox, :header, :thumbnail, :content_box_header, :big_header
 
   def full
     @image.resize!(:size => '800x500', :quality => 90)

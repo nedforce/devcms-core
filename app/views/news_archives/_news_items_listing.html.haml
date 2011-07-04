@@ -3,7 +3,7 @@
   - header_image = Image.find_accessible(:first, :for => current_user, :include => :node, :conditions => ["nodes.ancestry = :latest_news_ancestry", { :latest_news_ancestry => first_item.node.child_ancestry }])
 
   - if header_image
-    = image_tag(content_box_header_image_path(header_image), :alt => h(header_image.title), :class => 'content_box_header')
+    = image_tag(content_box_header_image_path(header_image, :format => :jpg), :alt => h(header_image.title), :class => 'content_box_header')
 
   .firstNewsItem
     %h2= link_to_content_node first_item.content_title, first_item

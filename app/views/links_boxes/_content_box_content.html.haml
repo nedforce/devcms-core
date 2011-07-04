@@ -4,7 +4,7 @@
 - unless links.empty?
   - header_image = Image.find_accessible(:first, :for => current_user, :include => :node, :conditions => ["nodes.ancestry = :links_box_ancestry", {:links_box_ancestry => node.child_ancestry }])
   - if header_image.present?
-    = image_tag(content_box_header_image_path(header_image), :alt => h(header_image.title), :class => 'content_box_header')
+    = image_tag(content_box_header_image_path(header_image, :format => :jpg), :alt => h(header_image.title), :class => 'content_box_header')
   
   %ul
     - links.each do |link|
