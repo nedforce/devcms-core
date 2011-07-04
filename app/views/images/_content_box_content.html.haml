@@ -1,5 +1,5 @@
 - content = node.content
 - if content.url.present?
-  = link_to(image_tag(aliased_or_delegated_path(node, :action => 'sidebox'), :alt => h(content.title)), h(content.url), :title => "#{t 'images.goto'} #{h content.url}", :class => 'clearfix')
+  = link_to(image_tag(sidebox_image_path(content, :format => :jpg), :alt => h(content.title)), h(content.url), :title => "#{t 'images.goto'} #{h content.url}", :class => 'clearfix')
 - else
-  = link_to_node(image_tag(content_node_path(node, :action => :sidebox), :alt => h(content.alt)), node,{ :action => :full },{ :rel => "lightbox['sidebox']", :title => "#{h content.title} - #{h content.description}" })
+  = link_to_node(image_tag(sidebox_image_path(content, :format => :jpg), :alt => h(content.alt)), node,{ :action => :full },{ :rel => "lightbox['sidebox']", :title => "#{h content.title} - #{h content.description}" })
