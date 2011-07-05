@@ -42,6 +42,7 @@ Ext.dvtr.AsyncContentTreeNode = function(config) {
 			 this.parentURLAlias = config.parentURLAlias;
 			 this.customURLAlias = config.customURLAlias;
        this.customURLSuffix = config.customURLSuffix;
+			 this.URLAlias = config.URLAlias;
        this.noChildNodes = config.noChildNodes;
        this.numberChildren = config.numberChildren;
        this.isPrivate = config.isPrivate;
@@ -497,13 +498,17 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode,{
 				promptText += '<br/><br/>' + I18n.t('url_alias_prompt_2', 'nodes') + ' (' + I18n.t('url_alias_host', 'nodes') + ') ' + I18n.t('url_alias_prompt_3', 'nodes');
 				promptText += ' ' + I18n.t('url_alias_host', 'nodes') + '<i>test</i>.' + '<br/>'
 				
+				promptText += '<br/>' + I18n.t('url_alias_prompt_current_1', 'nodes') + ' <i>'+ I18n.t('url_alias_host', 'nodes') + this.URLAlias +'</i>.<br/>';
+				
         if (this.customURLSuffix) {
-            promptText += '<br/>' + I18n.t('url_alias_prompt_current', 'nodes') + ' <i>'+ this.customURLSuffix +'</i>.';
+          promptText += '<br/>' + I18n.t('url_alias_prompt_current_2', 'nodes') + ' <i>'+ this.customURLSuffix +'</i>.<br/>';
         }
 
 				if (this.customURLAlias) {
-					promptText += '<br/>' + I18n.t('url_alias_prompt_current_2', 'nodes') + ' <i>'+ I18n.t('url_alias_host', 'nodes') + this.customURLAlias +'</i>.<br/>';
+					promptText += '<br/>' + I18n.t('url_alias_prompt_current_3', 'nodes') + ' <i>'+ I18n.t('url_alias_host', 'nodes') + this.customURLAlias +'</i>.<br/>';
 				}
+				
+				promptText += '<br/><br/>' + I18n.t('custom_url_suffix', 'nodes') + ':';
 
         Ext.Msg.show({
 						title: 'Webadres', 

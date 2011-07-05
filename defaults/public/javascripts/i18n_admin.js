@@ -23,11 +23,13 @@ I18n.locale['nl'] = {
 		sync: 'Synchronisatie',
 		url_alias_failed: 'Sorry, achtervoegsel instellen niet gelukt.',
 		url_alias_host: 'http://localhost/',
-		url_alias_prompt_1: 'Vul een nieuw webadres achtervoegsel in voor dit item. Dit achtervoegsel wordt dan vervolgens achter het webadres van het bovenliggende element (indien aanwezig) geplakt om een extra webadres voor dit item te maken. Stel dat u als achtervoegsel \'test\' invult, dan wordt de complete URL voor dit item:',
+		url_alias_prompt_1: 'In dit scherm kunt u een webadres achtervoegsel voor dit item instellen. Dit achtervoegsel wordt dan vervolgens achter het webadres van het bovenliggende element (indien aanwezig) geplakt om een extra webadres voor dit item te maken. Stel dat u als achtervoegsel \'test\' invult, dan wordt de complete URL voor dit item:',
 		url_alias_prompt_2: 'Het is ook mogelijk om in plaats van een achtervoegsel direct een volledig webadres voor dit item in te vullen. Dit webadres wordt dan direct achter de domeinnaam van deze site',
 		url_alias_prompt_3: 'geplakt om een extra webadres voor dit item te maken. Dit doet u door het achtervoegsel met een \'/\' te laten beginnen. Stel dat u als achtervoegsel \'/test\' invult, dan wordt het complete webadres voor dit item:',
-		url_alias_prompt_current: 'Huidig webadres achtervoegsel:',
-		url_alias_prompt_current_2: 'Huidige volledige extra webadres:'
+		url_alias_prompt_current_1: 'Elk item heeft ook een standaard webadres, dat automatisch gegenereerd wordt aan de hand van de titel van het item en zijn plaats in de boom. Voor dit item is het standaard webadres:',
+		url_alias_prompt_current_2: 'Huidig webadres achtervoegsel:',
+		url_alias_prompt_current_3: 'Huidige volledige extra webadres:',
+		custom_url_suffix: 'Nieuw webadres achtervoegsel'
 	},
 	abbreviations: {
 		show: 'Afkortingen'

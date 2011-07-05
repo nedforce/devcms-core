@@ -141,6 +141,8 @@ module Acts #:nodoc:
 
         # Sets the publication_start_date to the current time if none is specified
         before_validation_on_create :set_publication_start_date_to_current_time_if_blank
+        
+        before_update :update_url_alias_if_title_changed
 
         # Ferret AR hooks
         after_save :update_search_index, :touch_node
@@ -295,6 +297,14 @@ module Acts #:nodoc:
           def expires_on_valid?
             if expirable? && expires_on.present?
               errors.add_to_base(I18n.t("nodes.expires_on_out_of_range")) unless (Date.today..(Date.today + Settler[:default_expiration_time].days)).include?(expires_on)
+            end
+          end
+          
+          def update_url_alias_if_title_changed
+            if self.respond_to?(:title) && self.title_changed?
+              # Necessary to make set_url_alias use the current title stored in memory (not yet in the DB!)
+              node.content = self
+              node.set_url_alias(true)
             end
           end
 

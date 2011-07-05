@@ -38,6 +38,22 @@ class NodeURLAliasTestTransactional < ActiveSupport::TestCase
     assert_equal 'foo-1', cn2.node.url_alias
   end
   
+  def test_should_change_url_alias_when_title_changes
+    cn = create_page
+    assert_equal 'foo', cn.node.url_alias
+    cn.update_attributes(:title => 'foobar')
+    assert_equal 'foobar', cn.node.url_alias
+  end
+  
+  def test_should_change_url_alias_when_title_changes_for_non_unique_title
+    cn = create_page
+    assert_equal 'foo', cn.node.url_alias
+    cn2 = create_page :title => 'bar'
+    assert_equal 'bar', cn2.node.url_alias
+    cn2.update_attributes(:title => 'foo')
+    assert_equal 'foo-1', cn2.node.url_alias
+  end
+  
   def test_should_always_generate_unique_custom_url_alias
     cn = create_page
     cn.node.update_attributes(:custom_url_suffix => 'test')

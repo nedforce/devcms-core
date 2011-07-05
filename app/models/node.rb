@@ -346,6 +346,7 @@ class Node < ActiveRecord::Base
       :parentURLAlias                  => self.parent_url_alias,
       :customURLSuffix                 => self.custom_url_suffix.present? ? self.custom_url_suffix : nil,
       :customURLAlias                  => self.custom_url_alias.present? ? self.custom_url_alias : nil,
+      :URLAlias                        => self.url_alias.present? ? self.url_alias : nil,
       :contentNodeId                   => self.content_id,
       :siteNodeId                      => self.containing_site.id,
       :userRole                        => role ? role_name : nil,
