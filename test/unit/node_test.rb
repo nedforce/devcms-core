@@ -274,7 +274,7 @@ class NodeTest < ActiveSupport::TestCase
 
    def test_should_destroy_descendants_correctly
      section = Section.create!(:parent => @economie_section_node, :title => 'foo', :description => 'bar')
-     page = Page.create!(:parent => section.node, :title => 'baz', :body => "Page body", :expires_onw => 1.day.from_now.to_date)
+     page = Page.create!(:parent => section.node, :title => 'baz', :body => "Page body", :expires_on => 1.day.from_now.to_date)
      Attachment.create!(:parent => page.node, :title => 'Park Zandweerd Matrix plannen', :category => "none", :uploaded_data => fixture_file_upload("files/ParkZandweerdMatrixplannen.doc", 'application/msword'))
      
      assert page.reload.node.reload.destroy # the tree calls destroy on node, not on content!

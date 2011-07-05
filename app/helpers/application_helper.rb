@@ -259,11 +259,11 @@ module ApplicationHelper
     else
       header_title = random_image.title
       if(big_header)
-        image_tag    = image_tag big_header_image_path(random_image), :alt => random_image.alt, :title => random_image.title 
-        image_url    = big_header_image_path(random_image)
+        image_tag    = image_tag big_header_image_path(random_image, :format => :jpg), :alt => random_image.alt, :title => random_image.title 
+        image_url    = big_header_image_path(random_image, :format => :jpg)
       else
-        image_tag    = image_tag header_image_path(random_image), :alt => random_image.alt, :title => random_image.title
-        image_url    = header_image_path(random_image)
+        image_tag    = image_tag header_image_path(random_image, :format => :jpg), :alt => random_image.alt, :title => random_image.title
+        image_url    = header_image_path(random_image, :format => :jpg)
       end
     end
 

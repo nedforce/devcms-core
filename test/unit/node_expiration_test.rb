@@ -11,6 +11,7 @@ class NodeExpirationTestTransactional < ActiveSupport::TestCase
   def test_should_set_expires_on_to_default
     node = create_page.node
     assert node.expirable?
+    assert node.expiration_required?
     assert_not_nil node.expires_on
     assert_equal Settler[:default_expiration_time], (node.expires_on - Date.today).to_i
   end

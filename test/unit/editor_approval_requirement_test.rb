@@ -14,7 +14,7 @@ class EditorApprovalRequirementTest < ActiveSupport::TestCase
   end
   
   def test_save_for_user_for_editor_on_new_node_created_by_editor
-    page = Page.new(:title => "Page title", :preamble => "Ambule", :body => "Version 1", :parent => @editor_section_node, :expires => 1.day.from_now.to_date)
+    page = Page.new(:title => "Page title", :preamble => "Ambule", :body => "Version 1", :parent => @editor_section_node, :expires_on => 1.day.from_now.to_date)
     
     assert_difference('Page.count', 1) do
       assert page.save_for_user(@editor)
@@ -59,7 +59,7 @@ class EditorApprovalRequirementTest < ActiveSupport::TestCase
   end
 
   def test_save_for_user_for_admin_on_new_node_created_by_editor_without_skip_approval
-    page = Page.new(:title => "Page title", :preamble => "Ambule", :body => "Version 1", :parent => @editor_section_node, :expires => 1.day.from_now.to_date)
+    page = Page.new(:title => "Page title", :preamble => "Ambule", :body => "Version 1", :parent => @editor_section_node, :expires_on => 1.day.from_now.to_date)
 
     assert_difference('Page.count', 1) do
       assert page.save_for_user(@editor)
@@ -82,7 +82,7 @@ class EditorApprovalRequirementTest < ActiveSupport::TestCase
   end
 
   def test_save_for_user_for_admin_on_new_node_created_by_editor_with_skip_approval
-    page = Page.new(:title => "Page title", :preamble => "Ambule", :body => "Version 1", :parent => @editor_section_node, :expires => 1.day.from_now.to_date)
+    page = Page.new(:title => "Page title", :preamble => "Ambule", :body => "Version 1", :parent => @editor_section_node, :expires_on => 1.day.from_now.to_date)
 
     assert_difference('Page.count', 1) do
       assert page.save_for_user(@editor)
@@ -151,7 +151,7 @@ class EditorApprovalRequirementTest < ActiveSupport::TestCase
   end
 
   def test_save_for_user_for_admin_on_new_node_created_by_admin
-    page = Page.new(:title => "Page title", :preamble => "Ambule", :body => "Version 1", :parent => @editor_section_node, :expires => 1.day.from_now.to_date)
+    page = Page.new(:title => "Page title", :preamble => "Ambule", :body => "Version 1", :parent => @editor_section_node, :expires_on => 1.day.from_now.to_date)
 
     assert_difference('Page.count', 1) do
       assert page.save_for_user(@arthur)
@@ -240,7 +240,7 @@ class EditorApprovalRequirementTest < ActiveSupport::TestCase
   end
 
   def test_should_show_previous_version_when_drafted
-    page = Page.create_for_user(@arthur, {:parent => nodes(:editor_section_node), :title => "Page title", :preamble => "Ambule", :body => "Page body" , :expires => 1.day.from_now.to_date})
+    page = Page.create_for_user(@arthur, {:parent => nodes(:editor_section_node), :title => "Page title", :preamble => "Ambule", :body => "Page body" , :expires_on => 1.day.from_now.to_date})
 
     page.update_attributes_for_user(users(:editor), :title => 'bar', :draft => "1") # Update page as editor. No version is saved.
     assert page.node.drafted?

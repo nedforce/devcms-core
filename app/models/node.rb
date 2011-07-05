@@ -75,11 +75,26 @@ require 'iconv'
 # * The content node will be destroyed before this node is.
 #
 class Node < ActiveRecord::Base
+  # Delegate tree calls to use Ancestry. Ensure this is added *after* other before/after filters.
+  include TreeDelegation
+  
   include ERB::Util # Provides html_escape()
   
   # Load expiration functionality
   include Node::Expiration
-
+  
+  # Load layout & template functionality
+  include Node::Layouting
+  
+  # It seems serialize has broken...
+  def layout_configuration
+    self.attributes["layout_configuration"] || {}
+  end
+    
+  # Load Url Aliasing functionality
+  include Node::UrlAliasing
+  alias_method_chain :move_to, :update_url_aliases
+  
   self.extend FindAccessible::ClassMethods
 
   if SETTLER_LOADED && DevCMS.search_configuration[:enabled_search_engines].include?('ferret')
@@ -89,70 +104,30 @@ class Node < ActiveRecord::Base
 
   INDEX_DATETIME_FORMAT = "%Y%m%d%H%M"
 
-  MAXIMUM_URL_ALIAS_LENGTH = 255
-  MAXIMUM_CURSTOM_URL_SUFFIX_LENGTH = 50
-
-  VALID_URL_ALIAS_FORMAT = /\A[a-z0-9_\-]((\/)?[a-z0-9_\-])*\Z/i
-  VALID_CUSTOM_URL_SUFFIX_FORMAT = /\A\/?[a-z0-9_\-]+\Z/i
-
-  attr_protected :hits, :url_alias, :custom_url_alias
+  attr_protected :hits
 
   has_many :node_categories, :dependent => :destroy
   has_many :categories, :through => :node_categories
 
   belongs_to :content, :polymorphic => true
-  belongs_to :template
   belongs_to :editor, :class_name => 'User', :foreign_key => 'edited_by'
   belongs_to :responsible_user, :class_name => 'User'
 
   has_many :links,            :dependent => :destroy, :class_name => 'InternalLink', :foreign_key => :linked_node_id
   has_many :copies,           :dependent => :destroy, :class_name => 'ContentCopy',  :foreign_key => :copied_node_id
   has_many :role_assignments, :dependent => :destroy
-  has_many :sections,                                                                :foreign_key => :frontpage_node_id
-  
-  has_many :content_representations, :dependent => :destroy, :foreign_key => :parent_id, :order => :position
-  has_many :representations,         :dependent => :destroy, :class_name => 'ContentRepresentation', :foreign_key => :content_id
 
   has_many :abbreviations, :dependent => :destroy
   has_many :synonyms,      :dependent => :destroy
 
   # See the preconditions overview for an explanation of these validations.
   validate :should_not_be_directly_instantiated
-  validate :should_not_have_reserved_url_alias
-  validate :should_not_have_reserved_custom_url_alias
   validates_presence_of   :content
   validates_uniqueness_of :content_id, :scope => :content_type
-  validate :should_not_hide_global_frontpage
-
-  # Validate url_alias. Sync regexp to routes.rb!
-  validates_format_of :url_alias, :with => VALID_URL_ALIAS_FORMAT, :allow_nil => true
-  validates_length_of :url_alias, :in => (2..MAXIMUM_URL_ALIAS_LENGTH), :allow_nil => true
-  
-  # Validate custom_url_alias. Sync regexp to routes.rb!
-  validates_format_of :custom_url_alias, :with => VALID_URL_ALIAS_FORMAT, :allow_nil => true
-  validates_length_of :custom_url_alias, :in => (2..MAXIMUM_URL_ALIAS_LENGTH), :allow_nil => true
-  
-  # Validate custom URL suffix.
-  validates_format_of :custom_url_suffix, :with => VALID_CUSTOM_URL_SUFFIX_FORMAT, :allow_nil => true
-  validates_length_of :custom_url_suffix, :in => (2..MAXIMUM_CURSTOM_URL_SUFFIX_LENGTH), :allow_nil => true
-
-  # Do not run uniqueness validation if url_alias length exceeds MAXIMUM_URL_ALIAS_LENGTH, as this will cause
-  # an ActiveRecord::StatementInvalid exception being thrown
-  validates_uniqueness_of :url_alias, :allow_nil => true, :unless => Proc.new { |node| node.url_alias.present? && node.url_alias.length > MAXIMUM_URL_ALIAS_LENGTH }
-  
-  # Do not run uniqueness validation if url_alias length exceeds MAXIMUM_URL_ALIAS_LENGTH, as this will cause
-  # an ActiveRecord::StatementInvalid exception being thrown
-  validates_uniqueness_of :custom_url_alias, :allow_nil => true, :unless => Proc.new { |node| node.custom_url_alias.present? && node.custom_url_alias.length > MAXIMUM_URL_ALIAS_LENGTH }
 
   validates_inclusion_of :commentable,       :in => [ false, true ], :allow_nil => true
   validates_inclusion_of :hide_right_column, :in => [ false, true ], :allow_nil => true
   
-  # Set an URL alias
-  before_create :set_url_alias
-  
-  # Set a custom URL alias
-  before_update :set_custom_url_alias
-
   # Prevents the root +Node+ from being destroyed.
   before_destroy :prevent_root_destruction
 
@@ -170,11 +145,6 @@ class Node < ActiveRecord::Base
   after_save :save_category_attributes
 
   attr_accessor :category_attributes
-  
-  serialize :layout_configuration
-  
-  # Delegate tree calls to use Ancestry. Ensure this is added *after* other before/after filters.
-  include TreeDelegation
   
   # Nodes are taggable with alterative titles
   acts_as_taggable_on :title_alternatives
@@ -239,14 +209,12 @@ class Node < ActiveRecord::Base
 
   alias_method_chain :approve!, :reindexing_and_versioning
 
-  def move_to_with_reindexing_and_update_url_aliases(*args)
-    self.move_to_without_reindexing_and_update_url_aliases(*args)
-    self.update_attribute(:url_alias, self.generate_unique_url_alias)
-    self.update_attribute(:custom_url_alias, self.generate_unique_custom_url_alias) if self.custom_url_suffix.present?
+  def move_to_with_reindexing(*args)
+    self.move_to_without_reindexing(*args)
     self.reindex_self_and_children
   end
   
-  alias_method_chain :move_to, :reindexing_and_update_url_aliases
+  alias_method_chain :move_to, :reindexing
 
   # A proxy method for accessing the SanitizeHelper through the Helper class.
   def help
@@ -306,37 +274,6 @@ class Node < ActiveRecord::Base
     end
   end
   
-  # The inherited layout.
-  def own_or_inherited_layout
-    Layout.find(self.layout) || self.inherited_layout
-  end
-  
-  def inherited_layout
-    if self.parent
-      return self.parent.own_or_inherited_layout
-    else
-      raise "node has no parent to inherit layout from"
-    end
-  end
-  
-  def own_or_inherited_layout_variant
-    if self.layout_variant.present?
-      self.own_or_inherited_layout.find_variant(self.layout_variant)
-    else 
-      self.inherited_layout_variant
-    end
-  end
-  
-  # Find the inherited layout, fall back to default if it is not inheritable
-  def inherited_layout_variant
-    if self.parent
-      var = self.parent.own_or_inherited_layout_variant
-      return var['inheritable'] ? var : own_or_inherited_layout.find_variant('default')
-    else
-      raise "node has no parent to inherit layout from"
-    end
-  end
-
   def self.content_to_hide_from_menu
     @content_to_hide_from_menu ||= @content_types_configuration.select do |content_type, configuration|
       !configuration[:show_in_menu]
@@ -478,19 +415,6 @@ class Node < ActiveRecord::Base
     end
   end
   
-  # Retrieve content representations for a given target and user (optional)
-  # Can inherit from parent node (defaults to true)
-  def find_content_representations(target, user = nil, inherit = true)
-    # Do not inherit if this node is a Site node, as this is undesirable
-    conditions = {}
-    conditions.update(:target => target) if target
-    if !self.content_representations.exists?(conditions) && inherit && self.parent && !(self.content_type == 'Section' && self.content.type == 'Site' )
-      return self.parent.find_content_representations(target, user, inherit) 
-    else
-      return self.content_representations.all(:conditions => conditions).select {|element| element.content.blank? || element.content.visible_for_user?(user) }
-    end
-  end
-
   # Returns true if this node should be hidden from the menu, false otherwise.
   def hidden_from_menu?
     !self.content_type_configuration[:show_in_menu] || !self.show_in_menu || self.is_hidden?
@@ -546,21 +470,6 @@ class Node < ActiveRecord::Base
     ["nodes.ancestry like ? or nodes.ancestry = ?", "#{child_ancestry}/%", child_ancestry]
   end  
 
-  # Find header image(s) for this node, either those set on this node or on one of its parents.
-  def header_images(current_user = nil)
-    images = Image.find_accessible(:all, :for => nil, :include => :node, :conditions => ["images.is_for_header = :true AND nodes.ancestry = :parent", {:true => true, :parent => self.child_ancestry }])
-    if images.empty? && !self.root?
-      images = self.parent.header_images
-    end
-    return images
-  end
-
-  # Returns a random header image for this node.
-  def random_header_image(current_user = nil)
-    all_images   = self.header_images(current_user)
-    random_image = all_images[rand(all_images.size)]
-  end
-
   # Returns the latest approved content for this node. If nothing has been
   # approved yet, then raise an ActiveRecord::RecordNotFound exception to
   # render a 404. You can suppress the exception by setting :allow_nil => true
@@ -586,68 +495,6 @@ class Node < ActiveRecord::Base
     else
       self.wait_for_approval!
     end
-  end
-
-  # Generates an URL alias based on the ancestors of this node and a path
-  # specified by its content node.
-  def generate_url_alias
-    generated_url_alias = ""
-
-    # build parent "breadcrumb"
-    if parent_url_alias
-      generated_url_alias << "#{parent_url_alias}/"
-    end
-
-    # Use the URL alias path of the approved content if available.
-    # Otherwise use the URL alias path of the unapproved content if this is
-    # a preview.
-    begin
-      generated_url_alias << clean_for_url(self.approved_content.path_for_url_alias(self))
-    rescue
-      generated_url_alias << clean_for_url(self.content.path_for_url_alias(self))
-    end
-
-    generated_url_alias
-  end
-  
-  # Generates a custom URL alias based on the ancestors of this node and a path
-  # specified by its content node.
-  def generate_custom_url_alias
-    generated_custom_url_alias = ""
-
-    # build parent "breadcrumb"
-    if !self.custom_url_suffix.starts_with?('/') && parent_url_alias
-      generated_custom_url_alias << "#{parent_url_alias}/"
-    end
-    
-    generated_custom_url_alias << clean_for_url(self.custom_url_suffix.starts_with?('/') ? self.custom_url_suffix[1..-1] : self.custom_url_suffix)
-
-    generated_custom_url_alias
-  end
-  
-  def parent_url_alias
-    parent.url_alias if self.parent && !self.parent.is_global_frontpage? && !self.parent.root?
-  end
-
-  # Returns the global frontpage node.
-  def self.global_frontpage
-    root = Node.root
-    root.content.has_frontpage? ? root.content.frontpage_node : root
-  end
-
-  # Returns true if this node is a frontpage, false otherwise.
-  def is_frontpage?
-    !self.sections.empty?
-  end
-
-  # Returns true if this node is the global front page, false otherwise.
-  def is_global_frontpage?
-    self == Node.global_frontpage
-  end
-
-  # Returns true if this node is an ancestor of the global frontpage node.
-  def contains_global_frontpage?
-    Node.global_frontpage.is_descendant_of?(self)
   end
 
   # Increments the hits counter without updating the updated_at value.
@@ -834,75 +681,6 @@ class Node < ActiveRecord::Base
     @last_set_category ||= self.node_categories.first(:order => 'created_at DESC').try(:category)
   end
   
-  # Remove all layout elements and settings for this node
-  def reset_layout
-    content_representations.clear
-    update_attributes(:layout => nil, :layout_configuration => nil, :layout_variant => nil)
-  end
-  
-  # Update and save the layout condiguration given as node attributes
-  # TODO: Refactor to use setters and a writer for the representations
-  def update_layout(layout_config = {})
-    without_search_reindex do
-      # Find the layout and variant used to set the representations
-      layout  = Layout.find(layout_config[:node][:layout]) || self.inherited_layout
-      variant = layout.find_variant(layout_config[:node][:layout_variant]) || self.inherited_layout_variant
-
-      # Remove any moved or removed representations
-      layout_config[:targets].each do |target, content_ids|
-        content_ids = content_ids.select { |cid| cid.present? }
-        # Destroy removed representations
-        if content_ids.empty?
-          self.content_representations.all(:conditions => ["content_representations.target = ? ", target]).each {|cr| cr.destroy }
-        else
-          custom_types = content_ids.select { |ci| ci.to_i.to_s != ci }
-          content_ids  = content_ids.select { |ci| ci.to_i.to_s == ci }
-          self.content_representations.all(:conditions => ["target = :target AND ((content_id IS NOT NULL AND ((:content_ids) IS NULL OR content_id NOT IN (:content_ids))) OR (custom_type IS NOT NULL AND ((:custom_types) IS NULL OR custom_type NOT IN (:custom_types))))", {:target => target, :content_ids => content_ids, :custom_types => custom_types}]).each {|cr| cr.destroy }
-        end
-      end
-
-      # Move or create representations for each target
-      layout_config[:targets].each do |target, content_ids|
-        content_ids = content_ids.select { |cid| cid.present? }          
-        if variant[target]["main_content"] && self.content_type == 'Section'
-          content.update_attribute(:frontpage_node_id, content_ids.first)
-        else
-          content_ids.each_with_index do |content_id, i|
-            # Check wether this is a custom rep. or a normal content representation and handle accordingly
-            if content_id.to_i.to_s != content_id
-              representation = self.content_representations.first(:conditions => ["content_representations.target = ? AND content_representations.custom_type = ?", target, content_id])
-              if representation.present?
-                representation.update_attributes!(:position => i+1)
-              else
-                self.content_representations.create!(:custom_type => content_id, :target => target, :position => i+1)
-              end
-            else
-              representation = self.content_representations.first(:conditions => ["content_representations.target = ? AND content_representations.content_id = ?", target, content_id])
-              if representation.present?
-                representation.update_attributes!(:position => i+1)
-              else
-                self.content_representations.create!(:content => Node.find(content_id), :target => target, :position => i+1)
-              end
-            end
-          end
-        end
-      end
-      
-        p "\n----------\n p" +  layout_config[:node][:layout_configuration].to_s + "\n ------------- \n"
-      # Delete any empty settings from the configuration and save everything
-      layout_config[:node][:layout_configuration].delete_if {|k,v| v.blank? } unless layout_config[:node][:layout_configuration].blank?
-      update_attributes(layout_config[:node])
-      return false
-    end
-  end
-  
-  # Merges parent layout config with own layout config
-  def own_or_inherited_layout_configuration
-    config = parent.own_or_inherited_layout_configuration unless self.root? || self.content_class == Site
-    config ||= {}
-    config.merge(self.layout_configuration || {})
-  end
-  
   # Override ancestry setter to correctly check wether the sortable scope is changed. This will prevent subtree repositioning issues.
   def ancestry=(value)
     sortable_scope_changes << :ancestry unless sortable_scope_changes.include?(:ancestry) || new_record? || (send(:ancestry).present? && value.to_s.split("/").last == send(:ancestry).to_s.split("/").last) || !self.class.sortable_lists.any? { |list_name, configuration| configuration[:scope].include?(:ancestry) }
@@ -938,68 +716,6 @@ protected
   # Prevents the root +Node+ from being destroyed.
   def prevent_root_destruction
     raise ActiveRecord::ActiveRecordError, I18n.t('activerecord.errors.models.node.attributes.base.cant_remove_root') if self.root?
-  end
-
-  # Prevents a +Node+ from being hidden if it is, or contains the +global+ frontpage.
-  def should_not_hide_global_frontpage
-    errors.add_to_base(:cant_hide_frontpage) if self.hidden && (self.is_global_frontpage? || self.contains_global_frontpage?)
-  end
-
-  # Sets an URL alias if none has been specified on create.
-  def set_url_alias(force = false)
-    self.url_alias = generate_unique_url_alias if self.url_alias.blank? || force
-  end
-  
-  def set_custom_url_alias
-    self.custom_url_alias = (self.custom_url_suffix.present? ? self.generate_unique_custom_url_alias : nil) if custom_url_suffix_changed?
-  end
-
-  def generate_unique_url_alias
-    uniqify_url_alias(self.generate_url_alias[0..(MAXIMUM_URL_ALIAS_LENGTH - 6)])
-  end
-  
-  def generate_unique_custom_url_alias
-    uniqify_url_alias(self.generate_custom_url_alias[0..(MAXIMUM_URL_ALIAS_LENGTH - 6)])
-  end
-  
-  def uniqify_url_alias(generated_url_alias)
-    temp_url_alias = generated_url_alias
-    
-    i = 0
-    
-    while Node.first(:conditions => [ "id <> ? AND (url_alias = ? OR custom_url_alias = ?)", (self.id || 0), temp_url_alias, temp_url_alias ]) || self.class.url_alias_reserved?(temp_url_alias)
-      i += 1
-      temp_url_alias = "#{generated_url_alias}-#{i}"
-    end
-
-    temp_url_alias
-  end
-  
-  # Prevents saving this node when the URL alias contains reserved words.
-  def should_not_have_reserved_url_alias
-    errors.add(:url_alias, :reserved_url_alias) if self.class.url_alias_reserved?(self.url_alias)
-  end
-  
-  # Prevents saving this node when the URL alias contains reserved words.
-  def should_not_have_reserved_custom_url_alias
-    errors.add(:url_alias, :reserved_custom_url_alias) if self.class.url_alias_reserved?(self.custom_url_alias)
-  end
-
-  # Returns if the specified URL alias has been reserved.
-  def self.url_alias_reserved?(alias_to_check)
-    return false if alias_to_check.blank?
-
-    rs = ActionController::Routing::Routes
-    begin
-      # Return true if we can recognize the path, but only if it doesn't contain
-      # a node_id. This indicates that it's a "true" route and not another
-      # URL alias, which should be covered by validates_uniqueness_of.
-      # This situation occurs when updating a node.
-      path = rs.recognize_path "/#{alias_to_check}"
-      return !path.has_key?(:node_id)
-    rescue Exception => e
-      return false
-    end
   end
 
   # Determines the "content date" of the content
