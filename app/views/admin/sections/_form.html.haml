@@ -14,8 +14,9 @@
     ndf = new Ext.dvtr.NodeDropField({
       renderTo: 'node_selector',
       ddGroup: 'TreeAndSorterDD',
-      name: 'section[frontpage_node_id]',
+      name: '#{record.is_a?(Site) ? 'site' : 'section'}[frontpage_node_id]',
       value: '#{record.frontpage_node_id || String.new}',
       text: '#{escape_javascript(record.frontpage_node.content.tree_text) rescue String.new}',
-      id: 'section_frontpage_node_id'
+      id: '#{record.is_a?(Site) ? 'site' : 'section'}_frontpage_node_id',
+      width: 60
     });
