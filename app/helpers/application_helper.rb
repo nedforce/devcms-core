@@ -341,15 +341,16 @@ module ApplicationHelper
     def create_main_menu_item(item)
       node     = item.node
       children = node.accessible_content_children(:for_menu => true, :order => :position)
+      active = (@node && @node.path_ids.include?(item.node.id))? " active": ""
 
       if node.leaf? || children.empty?
-        content_tag(:li, create_menu_link(item, :class => 'main_menu_link'), :class => node.own_or_inherited_layout_configuration['template_color'])
+        content_tag(:li, create_menu_link(item, :class => 'main_menu_link'), :class => node.own_or_inherited_layout_configuration['template_color'] + active)
       else
         link             = create_menu_link(item, :class => 'main_menu_link')
         sub_menu_items   = children.map { |sub_item| content_tag(:li, create_menu_link(sub_item, :class => 'sub_menu_link')) }
         sub_menu         = content_tag(:ul,  sub_menu_items, :class => 'sub_menu')
         sub_menu_wrapper = content_tag(:div, sub_menu,       :class => 'sub_menu_wrapper')
-        content_tag(:li, link + sub_menu_wrapper, :class => "#{node.own_or_inherited_layout_configuration['template_color']} hover")
+        content_tag(:li, link + sub_menu_wrapper, :class => "#{node.own_or_inherited_layout_configuration['template_color']} hover " + active)
       end
     end
 
