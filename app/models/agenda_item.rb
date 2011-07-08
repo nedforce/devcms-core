@@ -76,6 +76,10 @@ class AgendaItem < ActiveRecord::Base
   def title
     self.description
   end
+  
+  def title_changed?
+    self.description_changed?
+  end
 
 protected
 

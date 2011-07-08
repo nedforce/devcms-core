@@ -34,6 +34,10 @@ class CarrouselItem < ActiveRecord::Base
   def title
     approved_item.title
   end
+  
+  def title_changed?
+    approved_item.title_changed?
+  end
 
   # Returns the item itself if the associated item is an Image, else the first Image child element of the content node (if any).
   def image(for_user = nil)
