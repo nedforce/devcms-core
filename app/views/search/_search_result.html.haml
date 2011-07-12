@@ -2,6 +2,7 @@
   - node = search_result.node
   - if node.content_type == 'Product' && node.content.external_url.present?
     - url = node.content.external_url
+    - search_result.highlighted_title = "#{search_result.highlighted_title} (Landelijk)"
   - else
     - url = aliased_or_delegated_path(node, :type => :url)
 - else
