@@ -33,7 +33,7 @@
 #
 class Attachment < ActiveRecord::Base
   acts_as_content_node({
-    :show_in_menu => false,
+    :show_in_menu            => false,
     :show_content_box_header => false
   })
 
