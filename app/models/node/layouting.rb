@@ -15,7 +15,6 @@ module Node::Layouting
   end
   
   def layout_configuration
-    puts "tievus bend"
     self.attributes["layout_configuration"] || {}
   end
   
