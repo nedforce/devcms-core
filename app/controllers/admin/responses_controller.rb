@@ -69,7 +69,12 @@ class Admin::ResponsesController < Admin::AdminController
   end
 
   def import_csv
-    csv_data = params[:response][:uploaded_data].read
+    if params[:response][:uploaded_data].class == ModPorter::UploadedFile
+      csv_data = params[:response][:uploaded_data].to_tempfile.read
+    else
+      csv_data = params[:response][:uploaded_data].read
+    end
+    
     headers_ok = false
     headers = []
     FasterCSV.parse(csv_data) do |row|
