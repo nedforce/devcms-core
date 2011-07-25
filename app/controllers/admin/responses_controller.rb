@@ -69,7 +69,7 @@ class Admin::ResponsesController < Admin::AdminController
   end
 
   def import_csv
-    if params[:response][:uploaded_data].class == ModPorter::UploadedFile
+    if params[:response][:uploaded_data].class.name == "ModPorter::UploadedFile"
       csv_data = params[:response][:uploaded_data].to_tempfile.read
     else
       csv_data = params[:response][:uploaded_data].read
