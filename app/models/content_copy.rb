@@ -46,6 +46,10 @@ class ContentCopy < ActiveRecord::Base
     self.copied_node.content.title
   end
   
+  def title_changed?
+    self.copied_node.content.title_changed?
+  end
+  
   # Returns the CSS class name to be used for icons in tree view.
   def tree_icon_class
     self.copied_node.content_type.underscore + "_icon"

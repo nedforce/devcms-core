@@ -101,6 +101,10 @@ class PollQuestion < ActiveRecord::Base
     content_title
   end
   
+  def title_changed?
+    self.question_changed?
+  end
+  
   def has_vote_from?(user)
     user.present? && user_votes.exists?(:user_id => user.id)
   end

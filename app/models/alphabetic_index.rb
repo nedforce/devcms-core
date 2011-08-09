@@ -25,7 +25,7 @@ class AlphabeticIndex < ActiveRecord::Base
 
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of  :title, :content_type
-  validates_length_of    :title, :in => 2..255, :allow_blank => true
+  validates_length_of    :title,        :in => 2..255, :allow_blank => true
   validates_inclusion_of :content_type, :in => ALLOWED_CONTENT_TYPES
 
   # Returns an alphabetic list of all the descendant Items of type ContentType of the parent.

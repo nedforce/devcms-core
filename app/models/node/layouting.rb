@@ -15,7 +15,6 @@ module Node::Layouting
   end
   
   def layout_configuration
-    puts "tievus bend"
     self.attributes["layout_configuration"] || {}
   end
   
@@ -104,7 +103,6 @@ module Node::Layouting
         end
       end
       
-      #  p "\n----------\n p" +  layout_config[:node][:layout_configuration].to_s + "\n ------------- \n"
       # Delete any empty settings from the configuration and save everything
       layout_config[:node][:layout_configuration].delete_if {|k,v| v.blank? } unless layout_config[:node][:layout_configuration].blank?
       update_attributes(layout_config[:node])
