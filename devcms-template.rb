@@ -6,7 +6,7 @@ plugin 'engines', :git => 'git://github.com/lazyatom/engines.git'
 
 # Add the devcms submodule
 git :submodule => 'add git://github.com/nedforce/devcms-core.git vendor/plugins/devcms-core'
-run 'cd vendor/plugins/devcms-core; git checkout 1.0.1'
+run 'cd vendor/plugins/devcms-core;'
 
 # Install devcms
 rake('devcms:install')
