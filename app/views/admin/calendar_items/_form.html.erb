@@ -59,7 +59,7 @@
 <%= form.time_field  :start_time,  :label => t('calendars.start_time_time'), :value => record.start_time || now %>
 <%= form.time_field  :end_time,    :label => t('calendars.end_time_time'),   :value => record.end_time   || now + 1.hour %>
 
-<%= form.text_field  :location_description,    :label => t('calendars.location_description') %>
+<%= form.text_field  :location,    :label => t('calendars.location_description') %>
 <%= form.html_editor :body,        :label => t('calendars.body'), :height => 100, :heading => 'h3' %>
 
 <%= form.check_box   :commentable, :label => t('shared.commentable') -%>
