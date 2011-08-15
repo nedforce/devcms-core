@@ -596,6 +596,7 @@ nl:
     read_more: meer websites
   meetings:
     add_to: Vergadering toevoegen aan
+    edit: Bewerken van vergadering
   news:
     add_images: Afbeelding(en) toevoegen aan dit nieuwsbericht
     archive_failed: Kon nieuwsarchief niet opslaan.
