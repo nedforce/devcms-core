@@ -17,7 +17,7 @@
 # * Requires the uniqueness of +item+ for the associated carrousel.
 #
 class CarrouselItem < ActiveRecord::Base
-  has_one :active_carrousel, :class_name => 'Carrousel', :foreign_key => :current_carrousel_item_id
+  has_one :active_carrousel, :class_name => 'Carrousel', :foreign_key => :current_carrousel_item_id, :dependent => :nullify
   
   belongs_to :carrousel
   belongs_to :item, :polymorphic => true
