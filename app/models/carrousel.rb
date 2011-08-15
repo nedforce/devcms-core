@@ -41,7 +41,7 @@ class Carrousel < ActiveRecord::Base
   belongs_to :current_carrousel_item, :class_name => 'CarrouselItem', :dependent => :destroy
   
   # A +Carrousel+ has many +CarrouselItem+ objects and many items through +CarrouselItem+.
-  has_many :carrousel_items, :dependent => :destroy, :autosave => true
+  has_many :carrousel_items, :autosave => true
   
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of     :title
