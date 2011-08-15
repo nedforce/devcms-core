@@ -38,7 +38,7 @@ class Carrousel < ActiveRecord::Base
     :available_content_representations => ['content_box']
   })
   
-  belongs_to :current_carrousel_item, :class_name => 'CarrouselItem', :dependent => :destroy
+  belongs_to :current_carrousel_item, :class_name => 'CarrouselItem'
   
   # A +Carrousel+ has many +CarrouselItem+ objects and many items through +CarrouselItem+.
   has_many :carrousel_items, :dependent => :destroy, :autosave => true
