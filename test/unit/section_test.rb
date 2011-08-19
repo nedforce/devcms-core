@@ -141,6 +141,6 @@ protected
   end
 
   def create_page(parent, options = {})
-    Page.create({ :parent => parent.node, :title => "Page title", :preamble => "Ambule", :body => "Page body" }.merge(options)).reload
+    Page.create({ :parent => parent.node, :title => "Page title", :preamble => "Ambule", :body => "Page body", :expires_on => 1.day.from_now.to_date }.merge(options)).reload
   end
 end

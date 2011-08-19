@@ -122,7 +122,7 @@ class FindAccessibleTest < ActiveSupport::TestCase
   protected
 
   def build_page(options = {})
-    Page.new({ :title => 'Page title', :preamble => 'Ambule', :body => 'Page body' }.merge(options))
+    Page.new({ :title => 'Page title', :preamble => 'Ambule', :body => 'Page body', :expires_on => 1.day.from_now.to_date }.merge(options))
   end
 
   def create_page(options = {})

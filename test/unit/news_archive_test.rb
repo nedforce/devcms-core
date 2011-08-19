@@ -141,6 +141,8 @@ class NewsArchiveTest < ActiveSupport::TestCase
 
     ni2 = create_news_item na, :publication_start_date => 1.day.ago
     ni2.node.update_attribute(:hidden, true)
+    
+    na.news_items
 
     assert_equal ni2.reload.publication_start_date, na.last_updated_at(users(:arthur))
     assert_equal ni1.reload.publication_start_date, na.last_updated_at(users(:editor))

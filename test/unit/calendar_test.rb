@@ -123,6 +123,8 @@ class CalendarTest < ActiveSupport::TestCase
     ci2 = create_calendar_item :calendar => c, :publication_start_date => 1.day.ago
     ci2.update_attribute(:created_at, 1.day.ago)
     ci2.node.update_attribute(:hidden, true)
+    
+    c.calendar_items
 
     assert_equal ci2.reload.created_at, c.last_updated_at(users(:arthur))
     assert_equal ci1.reload.created_at, c.last_updated_at(users(:editor))

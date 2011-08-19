@@ -31,7 +31,7 @@ nl:
     title_alternatives: Alternatieve titels
     type: Type
     updated: Wijzigingen opgeslagen!
-    week: "Week {{week}}"
+    week: "Week %{week}"
     y: Ja
     youtube_video: Naar een youtube filmpje
     responsible_user: Verantwoordelijke redacteur
@@ -968,7 +968,7 @@ nl:
     page: Pagina
     saving: Bezig met opslaan
   share:
-    email_to_someone: 'E-mail "{{title}}" naar iemand'
+    email_to_someone: 'E-mail "%{title}" naar iemand'
     from_email_address: Uw e-mail
     from_name: Uw naam
     legend_information: Vul de gegevens en een bericht in

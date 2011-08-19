@@ -74,13 +74,13 @@ class WeblogPostTest < ActiveSupport::TestCase
   def test_url_alias_for_news_item_with_publication_start_date
     start_date = 2.days.ago
     wp = create_weblog_post(:publication_start_date => start_date)
-    assert_equal "gemeente-weblogs/henk-weblog/#{start_date.year}/#{start_date.month}/#{start_date.day}/some-interesting-title", wp.reload.node.reload.url_alias
+    assert_equal "#{start_date.year}/#{start_date.month}/#{start_date.day}/some-interesting-title", wp.reload.node.reload.url_alias
   end
 
   def test_url_alias_for_news_item_without_specified_publication_start_date
     wp = create_weblog_post
     created_at = wp.created_at
-    assert_equal "gemeente-weblogs/henk-weblog/#{created_at.year}/#{created_at.month}/#{created_at.day}/some-interesting-title", wp.reload.node.reload.url_alias
+    assert_equal "#{created_at.year}/#{created_at.month}/#{created_at.day}/some-interesting-title", wp.reload.node.reload.url_alias
   end
 
   def test_tree_text_for_news_item_with_publication_start_date

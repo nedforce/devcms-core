@@ -1,9 +1,14 @@
 require File.dirname(__FILE__) + '/../test_helper'
+require 'fakeweb'
 
 class FeedTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
     
   def setup
+    FakeWeb.register_uri(:get, "http://office.nedforce.nl/correct.rss", :body => get_file_as_string('files/nedforce_feed.xml'))
+    FakeWeb.register_uri(:get, "http://office.nedforce.nl/wrong.rss", :body => 'this is a not a valid feed')
+    FakeWeb.register_uri(:get, "http://office.nedforce.nl/empty.rss", :body => nil)
+    
     @feed = feeds(:nedforce_feed)
     @feed.send(:save!) # Retrieves the XML content from the location specified by +url+
   end
@@ -24,13 +29,13 @@ class FeedTest < ActiveSupport::TestCase
   
   def test_should_require_valid_feed
     assert_no_difference 'Feed.count' do
-      feed = create_feed(:url => "http://office.nedforce.nl/robots.txt")
+      feed = create_feed(:url => "http://office.nedforce.nl/wrong.rss")
       assert feed.errors.on(:url)
     end
   end
   
   def test_should_only_update_with_valid_feed
-    @feed.send(:update_attributes, :url => "http://office.nedforce.nl/new_url")
+    @feed.send(:update_attributes, :url => "http://office.nedforce.nl/empty.rss")
     current_feed = @feed.reload
     assert_equal feeds(:nedforce_feed).url, current_feed.url
     assert_not_nil current_feed.parsed_feed
@@ -65,17 +70,10 @@ class FeedTest < ActiveSupport::TestCase
     assert_equal feed.title, "Test!!"
   end
   
-  def test_should_cached_parsed_broken_feed
-    feed = create_feed(:url => "http://office.nedforce.nl/dummy2.rss")
-    assert_nothing_raised do
-      2.times { feed.entries } # second time hits the cache
-    end
-  end
-  
 protected
 
   def create_feed(options = {})
-    Feed.create({:parent => nodes(:root_section_node), :url => "http://office.nedforce.nl/dummy.rss" }.merge(options))
+    Feed.create({:parent => nodes(:root_section_node), :url => "http://office.nedforce.nl/correct.rss" }.merge(options))
   end
   
 end

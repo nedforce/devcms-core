@@ -84,13 +84,13 @@ class NewsletterEditionTest < ActiveSupport::TestCase
   def test_url_alias_for_news_item_with_publication_start_date
     start_date = 2.days.ago
     ne = create_newsletter_edition(:publication_start_date => start_date)
-    assert_equal "gemeente-nieuwsbrief/#{start_date.year}/#{start_date.month}/#{start_date.day}/het-maandelijkse-nieuws-uit-nederland", ne.node.url_alias
+    assert_equal "#{start_date.year}/#{start_date.month}/#{start_date.day}/het-maandelijkse-nieuws-uit-nederland", ne.node.url_alias
   end
 
   def test_url_alias_for_news_item_without_specified_publication_start_date
     ne = create_newsletter_edition
     created_at = ne.created_at
-    assert_equal "gemeente-nieuwsbrief/#{created_at.year}/#{created_at.month}/#{created_at.day}/het-maandelijkse-nieuws-uit-nederland", ne.node.url_alias
+    assert_equal "#{created_at.year}/#{created_at.month}/#{created_at.day}/het-maandelijkse-nieuws-uit-nederland", ne.node.url_alias
   end
 
   def test_tree_text_for_news_item_with_publication_start_date

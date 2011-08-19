@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class NodeExpirationTestTransactional < ActiveSupport::TestCase
+class NodeExpirationTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = false
   
   def test_expirable_content_types
@@ -12,6 +12,7 @@ class NodeExpirationTestTransactional < ActiveSupport::TestCase
     node = create_page.node
     assert node.expirable?
     assert node.expiration_required?
+    node.save
     assert_not_nil node.expires_on
     assert_equal Settler[:default_expiration_time], (node.expires_on - Date.today).to_i
   end
