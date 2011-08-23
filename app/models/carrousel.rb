@@ -80,7 +80,8 @@ class Carrousel < ActiveRecord::Base
   # in the carrousel
   def associate_items(items, excerpts = {})
     # Use delete_all instead of destroy_all (quicker)
-    carrousel_items.delete_all
+    # But don't use it because it violates a notnull constraint in our DB...
+    carrousel_items.destroy_all
 
     # Add the items
     if items
