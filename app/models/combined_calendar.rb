@@ -27,9 +27,10 @@ class CombinedCalendar < ActiveRecord::Base
   validates_presence_of :title
   validates_length_of   :title, :in => 2..255, :allow_blank => true
   
-  
   def calendar_items
-    Event.in_calendar.scoped(:include => :node, :conditions => self.node.containing_site.descendant_conditions)
+    Event.in_calendar.scoped(:include => :node, :conditions => self.node.containing_site.descendant_conditions, :order => 'start_time DESC') do
+      include CalendarItemsAssociationExtensions
+    end
   end
     
   # Returns the last update date, as seen from the perspective of the given +user+.
