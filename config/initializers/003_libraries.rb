@@ -8,6 +8,7 @@ require 'array_extensions'
 require 'acts_as_commentable'
 require 'caching_extensions'
 require 'form_tag_helper_style_fix'
+require 'association_preload_fix'
 require 'acts_as_archive_controller'
 require 'searcher'
 require 'recaptcha'
@@ -17,6 +18,8 @@ ActiveRecord::Base.send(:include, Acts::ContentNode)
 
 # Extend ActiveRecord::Base with the +acts_as_archive+ functionality.
 ActiveRecord::Base.send(:include, Acts::Archive)
+
+ActiveRecord::Base.send(:extend, AssociationPreloadFix)
 
 # Extend ActionView::Base and ActionController::Base to include the +ActionView::Helpers::RoutingHelpers+.
 ActionView::Base.send(:include, ActionView::Helpers::RoutingHelpers)

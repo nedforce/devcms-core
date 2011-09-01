@@ -89,9 +89,7 @@ protected
   end
 
   def create_page(options = {})
-    Page.create({:parent => @root_node, :title => "Page title", :preamble => "Ambule", :body => "Page body"
-      #, :expires_on => 1.day.from_now.to_date 
-      }.merge(options))
+    Page.create({:parent => @root_node, :title => "Page title", :preamble => "Ambule", :body => "Page body", :expires_on => 1.day.from_now.to_date }.merge(options))
   end
 
   def create_excluded_content_types
