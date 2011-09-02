@@ -299,17 +299,17 @@ protected
     respond_to do |f|
       f.html do
         # Re-raise exception to provide developer with stack trace for debugging purposes.
-        if Rails.env.development?
+        #if Rails.env.development?
           raise exception
-        else # in production *and* test (test should simulate production so we can test production behaviour)
-          set_search_scopes
-          if (error_500_url_alias = Settler[:error_page_500]).present? && @node = Node.find_by_url_alias(error_500_url_alias)
-            @page = @node.approved_content
-            render :template => 'pages/show', :status => :internal_server_error
-          else
-            render :template => "errors/500", :status => :internal_server_error
-          end
-        end
+        # else # in production *and* test (test should simulate production so we can test production behaviour)
+        #           set_search_scopes
+        #           if (error_500_url_alias = Settler[:error_page_500]).present? && @node = Node.find_by_url_alias(error_500_url_alias)
+        #             @page = @node.approved_content
+        #             render :template => 'pages/show', :status => :internal_server_error
+        #           else
+        #             render :template => "errors/500", :status => :internal_server_error
+        #           end
+        #         end
       end
       f.xml  { render :xml  => error.to_xml,  :status => :internal_server_error }
       f.json { render :json => error.to_json, :status => :internal_server_error }
