@@ -19,11 +19,7 @@ protected
   
   # Finds the +NewsItem+ object corresponding to the passed in +id+ parameter.
   def find_news_item
-    @news_item = NewsItem.find_accessible(
-                              @node.content_id, 
-                              :include => [ :node, { :node => :comments } ],
-                              :for => current_user
-                            )
+    @news_item = @node.content
   end
   
 end

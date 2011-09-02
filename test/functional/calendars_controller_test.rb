@@ -24,9 +24,4 @@ class CalendarsControllerTest < ActionController::TestCase
     get :tomorrow, :id => calendars(:events_calendar).id, :format => 'atom'
     assert_response :success
   end
-  
-  def test_should_render_404_if_not_found
-    get :show, :id => -1
-    assert_response :not_found
-  end
 end

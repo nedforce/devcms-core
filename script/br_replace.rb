@@ -31,13 +31,12 @@ CONTENT_TYPES_TO_FIX.each do |content_class_name, attributes|
     conditions = [ condition_strings.join(' OR '), condition_args ].flatten
     
     ActiveRecord::Base.transaction do
-      instances_to_fix = class_exists?(content_class_name) ? content_class.constantize.find(:all, :conditions => conditions) : []
+      instances_to_fix = content_class.constantize.find(:all, :conditions => conditions)
       
       puts "Found #{instances_to_fix.size} instances to fix..."
       
       instances_to_fix.each do |instance|
         value = instance.send(attr)
-        p instance.id
         
         # Field contains a p, so we replace the br tag by a pair of p tags
         if value =~ P_TAG_REGEXP

@@ -23,7 +23,7 @@
 #  * A +WeblogPost+ can only be inserted into +Weblog+ nodes.
 #
 class WeblogPost < ActiveRecord::Base
-  # Adds content node functionality to news items.
+  # Adds content node functionality to weblog posts.
   acts_as_content_node({
     :allowed_child_content_types => %w( Image ),
     :allowed_roles_for_create  => [],

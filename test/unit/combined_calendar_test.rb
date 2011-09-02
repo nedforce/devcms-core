@@ -43,7 +43,7 @@ class CombinedCalendarTest < ActiveSupport::TestCase
   end
   
   def test_combined_calendar_should_contain_all_existing_calendar_items
-    assert_equal Event.count, @combined_calendar.calendar_items.count
+    assert_equal Event.accessible.count, @combined_calendar.calendar_items.count
   end
   
   def test_should_destroy_combined_calendar
@@ -61,25 +61,10 @@ class CombinedCalendarTest < ActiveSupport::TestCase
   def test_last_updated_at_should_return_updated_at_when_no_accessible_calendar_items_are_found
     CalendarItem.delete_all
     c = create_combined_calendar
-    assert_equal c.updated_at, c.last_updated_at(users(:arthur))
+    assert_equal c.updated_at, c.last_updated_at
     ci = create_calendar_item calendars(:events_calendar)
     ci.node.update_attribute(:hidden, true)
-    assert_equal c.updated_at.to_s, c.last_updated_at(users(:editor)).to_s
-  end
-
-  def test_last_updated_at_should_return_created_at_of_last_created_accessible_calendar_item
-    CalendarItem.delete_all
-    c = create_combined_calendar
-
-    ci1 = create_calendar_item calendars(:events_calendar), :publication_start_date => 1.day.ago
-    ci1.update_attribute(:created_at, 2.days.ago)
-
-    ci2 = create_calendar_item calendars(:events_calendar), :publication_start_date => 1.day.ago
-    ci2.update_attribute(:created_at, 1.day.ago)
-    ci2.node.update_attribute(:hidden, true)
-    
-    assert_equal ci2.reload.created_at.to_s, c.reload.last_updated_at(users(:arthur)).to_s
-    assert_equal ci1.reload.created_at.to_s, c.reload.last_updated_at(users(:editor)).to_s
+    assert_equal c.updated_at, c.last_updated_at
   end
 
 protected

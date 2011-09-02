@@ -98,6 +98,6 @@ protected
 
   def find_calendar_items
     @date           = Date.today
-    @calendar_items = @combined_calendar.calendar_items.find_all_for_month_of(Date.today, current_user).group_by { |ci| ci.start_time.mday }
+    @calendar_items = @combined_calendar.calendar_items.find_all_for_month_of(Date.today).group_by { |ci| ci.start_time.mday }
   end  
 end

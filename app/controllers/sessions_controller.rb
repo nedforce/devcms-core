@@ -5,8 +5,6 @@
 # and the +destroy+ action logs the user out.
 
 class SessionsController < ApplicationController
-
-  skip_before_filter :find_node 
   
   # Makes sure that users that are already logged in
   # can't request the login form, or login again.
@@ -31,7 +29,7 @@ class SessionsController < ApplicationController
       end
 
       flash[:notice] = "#{I18n.t('sessions.logged_in_as')} '#{self.current_user.login}'."
-      redirect_back_or_default(user_path(current_user), false)
+      redirect_back_or_default(profile_path, false)
     elsif @user && !@user.verified?
       flash.now[:notice] = I18n.t('sessions.not_yet_verified') + " "+I18n.t('sessions.no_email?') + " <a href = \"#{send_verification_email_user_path(@user)}\">#{I18n.t('sessions.request_new_code')}</a>"
       render :action => 'new'

@@ -23,7 +23,7 @@ protected
   end
 
   def find_weblogs
-    @weblogs = @weblog_archive.weblogs.find_accessible(:all, :for => current_user, :page => {:current => params[:page]})
+    @weblogs = @weblog_archive.weblogs.accessible.all(:page => {:current => params[:page]})
   end
   
 end

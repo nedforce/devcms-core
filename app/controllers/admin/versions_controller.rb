@@ -1,4 +1,4 @@
-# This controller is used to approve or reject content created or changed by editors.
+# This controller is used to approve or reject versions created or changed by editors.
 # Only final_editors and admins can approve content
 
 class Admin::VersionsController < Admin::AdminController
@@ -6,12 +6,15 @@ class Admin::VersionsController < Admin::AdminController
   # Require users to have at least one of the roles +admin+ or +final_editor+.
   require_role [ 'admin', 'final_editor' ], :any_node => true
 
-  before_filter :find_versions, :only => [ :index, :approve, :reject ]
-  before_filter :find_version, :only => [ :approve, :reject ]
-  before_filter :set_paging
-  
   skip_before_filter :find_node  
+  
   skip_before_filter :set_actions
+
+  before_filter :find_versions, :only => [ :index, :approve, :reject ]
+  
+  before_filter :find_version, :only => [ :approve, :reject ]
+  
+  before_filter :set_paging
   
   # * GET /versions
   # * GET /versions.xml
@@ -55,13 +58,6 @@ class Admin::VersionsController < Admin::AdminController
     end
   end
   
-  # This method does not actually implement a create action. It serves to
-  # satisfy the ExtJS PagingToolbar, which sends its current page using the
-  # POST method. This is delegated to the index method.
-  def create
-    index
-  end
-  
   protected
   
     def find_versions
@@ -69,6 +65,6 @@ class Admin::VersionsController < Admin::AdminController
     end
   
     def find_version
-      @version = Version.unapproved.find(params[:id], :conditions => [ 'id in (?)', @versions.map(&:id) ])
+      @version = Version.unapproved.find(params[:id], :conditions => [ 'id in (?)', @versions.map { |v| v.id } ])
     end
 end

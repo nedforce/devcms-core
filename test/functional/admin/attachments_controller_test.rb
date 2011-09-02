@@ -24,14 +24,6 @@ class Admin::AttachmentsControllerTest < ActionController::TestCase
     assert_response :success
     assert assigns(:attachment)
   end
-
-  
-  def test_should_render_404_if_not_found
-    login_as :sjoerd
-        
-    get :show, :id => -1
-    assert_response :not_found
-  end
   
   def test_should_get_new
     login_as :sjoerd
@@ -75,13 +67,18 @@ class Admin::AttachmentsControllerTest < ActionController::TestCase
     assert assigns(:attachment)
   end
   
-  def test_should_get_preview
+  def test_should_get_redirect_for_preview
     login_as :sjoerd
     besluit = attachments(:besluit_attachment)
     get :preview, :id => besluit.id
     assert_response :redirect
+  end
+  
+  def test_should_get_preview
+    login_as :sjoerd
+    besluit = attachments(:besluit_attachment)
+    get :preview, :id => besluit.id, :basename => besluit.basename, :baseformat => besluit.extension
     assert assigns(:attachment)
-    get :preview, :id => besluit.id, :basename => besluit.basename, :format => besluit.extension
     assert_response :success
   end
   
@@ -98,15 +95,6 @@ class Admin::AttachmentsControllerTest < ActionController::TestCase
     put :update, :id => attachments(:besluit_attachment).id, :attachment => { :title => nil }
     assert_response :unprocessable_entity
     assert assigns(:attachment).errors.on(:title)
-  end
-  
-  def test_should_require_roles
-    assert_user_can_access :arthur, [:new, :create], {:parent_node_id => nodes(:about_page_node).id}
-    assert_user_can_access :arthur, [:update, :edit], {:id => attachments(:besluit_attachment).id}
-    assert_user_cant_access :editor, [:new, :create], {:parent_node_id => nodes(:about_page_node).id}
-    assert_user_cant_access :editor, [:update, :edit], {:id => attachments(:besluit_attachment).id}
-    assert_user_cant_access :normal_user, [:new, :create], {:parent_node_id => nodes(:about_page_node).id}
-    assert_user_cant_access :normal_user, [:update, :edit], {:id => attachments(:besluit_attachment).id}
   end
   
   protected

@@ -62,14 +62,6 @@ class Admin::SynonymsControllerTest < ActionController::TestCase
     assert assigns(:synonym).new_record?
   end
 
-  def test_should_require_roles
-    assert_user_can_access  :arthur,        :index,                     { :node_id => @root.id }
-    assert_user_can_access  :arthur,        :create,                    { :node_id => @root.id, :synonym => { :original => 'werthers', :name => 'echte', :weight => '0.25' }}
-    assert_user_can_access  :arthur,        :destroy,                   { :node_id => @root.id, :id => synonyms(:afval_vuilnis).id }
-    assert_user_cant_access :editor,       [:create, :index, :destroy], { :node_id => @root.id }
-    assert_user_cant_access :final_editor, [:create, :index, :destroy], { :node_id => @root.id }
-  end
-
   protected
 
   def create_synonym(options = {})

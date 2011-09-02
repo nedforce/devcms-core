@@ -1,31 +1,31 @@
 - content = node.content
+- active_question = content.active_question
 
 %div{ :id => "poll_content_box_#{content.id}" }
-  - if content.active_question
+  - if active_question.present?
     %p.question
-      = h content.active_question.question
+      = h active_question.question
 
     %div{ :id => "poll_content_box_content_#{content.id}" }
-      - if already_voted_for?(content.active_question)
-        = render :partial => '/poll_questions/results_side_box', :locals => { :question => content.active_question }
-
+      - if already_voted_for?(active_question)
+        - cache(:content_type => content.class.name, :content_id => content.id, :controller => '/nodes', :action => :content_box, :type => :results, :expires_in => 15.minutes) do
+          = render :partial => '/poll_questions/results_side_box', :locals => { :question => active_question }
       - else
-        / Voting options
-        - form_tag vote_poll_question_url(content.active_question), :method => :put, :id => "poll_content_box_form_#{content.id}", :class => 'poll_content_box_form' do
-          - content.active_question.poll_options.each do |o|
-            .option.transparent
-              = radio_button_tag 'poll_option_id', o.id, false, :id => "sb_poll_option_#{o.id}", :disabled => !poll_enabled?(content)
-              %label{ :for => "sb_poll_option_#{o.id}" }
-                = h o.text
+        - form_tag vote_poll_question_url(active_question), :method => :put, :id => "poll_content_box_form_#{content.id}", :class => 'poll_content_box_form' do
+          - cache(:content_type => content.class.name, :content_id => content.id, :controller => '/nodes', :action => :content_box, :type => :options, :last_updated_at => content.last_updated_at) do
+            - active_question.poll_options.each do |o|
+              .option.transparent
+                = radio_button_tag 'poll_option_id', o.id, false, :id => "sb_poll_option_#{o.id}", :disabled => !poll_enabled?(content)
+                %label{ :for => "sb_poll_option_#{o.id}" }
+                  = h o.text
 
           .buttons.clearfix
-            - unless poll_enabled?(content)
+            - if !poll_enabled?(content)
               = link_to t('polls.login_link'), login_path, :class => 'results_link login_link'
-
             - else
               = submit_tag t('polls.vote'), :class => 'submit_orange vote_button'
               - arrow_block_button t('polls.view_results'), :class => 'results' do
-                = link_to t('polls.results'), results_poll_question_url(content.active_question), :class => 'results_link', :id => "poll_results_link_#{content.id}"
+                = link_to t('polls.results'), results_poll_question_url(active_question), :class => 'results_link', :id => "poll_results_link_#{content.id}"
 
   - else
     %p.not_active= t 'polls.no_active_question'

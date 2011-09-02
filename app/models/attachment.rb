@@ -55,7 +55,7 @@ class Attachment < ActiveRecord::Base
   validates_associated    :db_file
 
   # Clean the +filename+.
-  before_validation :clean_filename
+  before_validation :clean_filename, :set_category_to_empty_string_if_nil
 
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of :title
@@ -98,7 +98,7 @@ class Attachment < ActiveRecord::Base
     txt
   end
 
-  protected
+protected
     
   # Clean up the +filename+ for storage.
   def clean_filename
@@ -107,6 +107,10 @@ class Attachment < ActiveRecord::Base
       cleaned_filename = "#{cleaned_basename}.#{self.extension.downcase}" if self.extension
       self.filename    = cleaned_filename
     end
+  end
+  
+  def set_category_to_empty_string_if_nil
+    self.category = "" if self.category.nil?
   end
   
 end

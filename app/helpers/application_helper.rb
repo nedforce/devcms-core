@@ -47,7 +47,8 @@ module ApplicationHelper
     crumb_nodes.shift unless node.containing_site.root?
     crumb_nodes.shift unless options[:include_root]
     # Remove frontpage node to prevent semingly double crumbs
-    crumb_nodes.pop if crumb_nodes[-2] && crumb_nodes[-2].content_type == "Section" && crumb_nodes[-2].content.frontpage_node == crumb_nodes.last
+    frontpage_candidate = crumb_nodes[-2]
+    crumb_nodes.pop if frontpage_candidate && frontpage_candidate.content_type == "Section" && frontpage_candidate.content.frontpage_node == crumb_nodes.last
     
     # move in a suffix, if any
     # Warning: some 'ad-hoc' solutions for supporting subcatergories in opus PDCs. Do _not_ port to treehouse
@@ -67,6 +68,7 @@ module ApplicationHelper
         crumb_track << (crumb_track.blank? ? '' : options[:separator])
 
         n = nil
+        
         if node.class == Node
           n = node.content
         else
@@ -100,35 +102,28 @@ module ApplicationHelper
 
   # Returns the html for the double-level main menu.
   def create_main_menu
-    main_menu_items = current_site.accessible_content_children(:for_menu => true, :order => :position)
-
-    if main_menu_items.any?
-      content_tag(:ul, main_menu_items.map { |item| create_main_menu_item(item) }.join("\n"), :id => 'main_menu', :class => 'clearfix')
+    top_level_main_menu_items = current_site.closure_for(current_site.descendants(:to_depth => 2).accessible.public.shown_in_menu.all(:order => 'nodes.position ASC')).values.first
+    
+    if top_level_main_menu_items.any?
+      content_tag(:ul, top_level_main_menu_items.map { |item, sub_items| create_main_menu_item(item, sub_items.keys) }.join("\n"), :id => 'main_menu', :class => 'clearfix')
     else
-      '&nbsp;' # No menu if no first level items
+      '&nbsp;' # No menu if no top level main menu items
     end
   end
 
   # Returns the HTML for the multi-level sub menu.
-  def create_sub_menu
-    self_and_ancestors_except_root = @node.self_and_ancestors[1..-1]
-    top_ancestor                   = self_and_ancestors_except_root.first
-    top_sub_menu_items             = top_ancestor.accessible_content_children(:for_menu => true, :order => :position)
+  def create_sub_menu(self_and_ancestor_ids, top_sub_menu_items)
+    sub_menu_content = top_sub_menu_items.map do |item|
+      create_sub_menu_item(item, self_and_ancestor_ids[1..-1], :class => 'top_level')
+    end.join("\n")
 
-    if top_sub_menu_items.any?
-      sub_menu_content = top_sub_menu_items.map do |item|
-        create_sub_menu_item(item, self_and_ancestors_except_root, :class => 'top_level')
-      end.join("\n")
-
-      menu = content_tag(:ul, sub_menu_content, :id => 'sub_menu')
-      render :partial => '/layouts/partials/sub_menu', :locals => { :node => top_ancestor, :menu => menu }
-    end
+    content_tag(:ul, sub_menu_content, :id => 'sub_menu')
   end
 
   # Returns the HTML for the footer menu links.
   def create_footer_menu_links
-    current_site.accessible_content_children(:for_menu => true, :order => :position).map do |item|
-      link_to_content_node(h(item.content_title.downcase), item)
+    current_site.children.accessible.public.shown_in_menu.all(:order => 'nodes.position ASC').map do |node|
+      link_to_node(h(node.content_title.downcase), node)
     end.join(' | ')
   end
 
@@ -194,7 +189,7 @@ module ApplicationHelper
 
       content_tag(:div, :class => 'readspeaker_button') do
         (image_tag('icons/sayit.png', :class => 'icon', :alt => t('application.sayit_alt'), :title => t('application.sayit_title')) +
-        (link_to(t('application.sayit'), readspeaker_url, { :class => link_class }.merge(options))) unless @node && (@node.is_hidden? || !@node.publishable?))
+        (link_to(t('application.sayit'), readspeaker_url, { :class => link_class }.merge(options))) unless @node && (@node.hidden? || @node.private? || !@node.publishable?))
       end
     end
   end
@@ -242,16 +237,13 @@ module ApplicationHelper
     RailsTidy.tidy_factory.clean(str)
   end
 
-  def should_cache?(content_item)
-    !logged_in? || !content_item.is_hidden? || current_user.role_on(content_item.node).nil?
-  end
-
   def white_list_preamble(str)
     white_list(str, :tags => ['span'], :attributes => ['lang', 'xml:lang'], :override_defaults => true)
   end
 
   def header_image(node = nil,big_header = false)
-    random_image = (node || current_site).random_header_image(current_user)
+    random_image = (node || current_site).random_header_image
+    
     if random_image.nil?
       header_title = t('application.default_header_photo_alt')
       image_url    = "/images/default_header_photo.jpg"
@@ -271,7 +263,7 @@ module ApplicationHelper
   end
   
   def header_slideshow(node, big_header = false)
-    available_header_images_nodes = node.present? ? node.header_images(current_user) : []
+    available_header_images_nodes = node.present? ? node.header_images : []
     available_header_images_nodes << header_image(node, big_header)[:url] if available_header_images_nodes.empty?
     
     available_header_images = available_header_images_nodes.map do |header_image|
@@ -338,45 +330,44 @@ module ApplicationHelper
     # Returns the HTML for a main menu item.
     #
     # *arguments*
-    # +item+ - The content node to create a main menu item for.
-    def create_main_menu_item(item)
-      node     = item.node
-      children = node.accessible_content_children(:for_menu => true, :order => :position)
-      active   = (@node && @node.path_ids.include?(item.node.id)) ? 'active' : ''
+    # +node+ - The node to create a main menu item for.
+    def create_main_menu_item(node, children)
+      #active = (@node && @node.path_ids.include?(node.id)) ? 'active' : ''
 
-      if node.leaf? || children.empty?
-        content_tag(:li, create_menu_link(item, :class => 'main_menu_link'), :class => "#{node.own_or_inherited_layout_configuration['template_color']} #{active}")
+      if children.empty?
+        content_tag(:li, create_menu_link(node, :class => 'main_menu_link'), :class => "#{node.own_or_inherited_layout_configuration['template_color']}")
       else
-        link             = create_menu_link(item, :class => 'main_menu_link')
-        sub_menu_items   = children.map { |sub_item| content_tag(:li, create_menu_link(sub_item, :class => 'sub_menu_link')) }
+        link             = create_menu_link(node, :class => 'main_menu_link')
+        sub_menu_items   = children.map { |child| content_tag(:li, create_menu_link(child, :class => 'sub_menu_link')) }
         sub_menu         = content_tag(:ul,  sub_menu_items, :class => 'sub_menu')
         sub_menu_wrapper = content_tag(:div, sub_menu,       :class => 'sub_menu_wrapper')
-        content_tag(:li, link + sub_menu_wrapper, :class => "#{node.own_or_inherited_layout_configuration['template_color']} hover #{active}")
+        content_tag(:li, link + sub_menu_wrapper, :class => "#{node.own_or_inherited_layout_configuration['template_color']} hover")
       end
     end
 
     # Returns the HTML for a sub menu item.
     #
     # *arguments*
-    # +item+ - The content node to create a sub menu item for.
-    # +self_and_ancestors_except_root+ - The list of nodes that are ancestors of (except the root node) or equal to the node
+    # +node+ - The node to create a sub menu item for.
+    # +self_and_ancestors_except_root_ids+ - The list of ids of nodes that are ancestors of (except the root node) or equal to the node
     # for which the submenu is being built.
     # +options+ - Additional HTML attributes to be set on the sub menu item.
-    def create_sub_menu_item(item, self_and_ancestors_except_root, options = {})
-      sub_menu_items  = item.node.accessible_content_children(:for_menu => true, :order => :position)
+    def create_sub_menu_item(node, self_and_ancestors_except_root_ids, options = {})
+      sub_menu_items = node.children.accessible.public.shown_in_menu
+      has_sub_menu_items = sub_menu_items.any?
 
-      options[:class] = options[:class] ? "#{options[:class]} parent" : "parent" if sub_menu_items.any?
+      options[:class] = options[:class] ? "#{options[:class]} parent" : "parent" if has_sub_menu_items
 
-      unless self_and_ancestors_except_root.include?(item.node)
-        content_tag(:li, create_menu_link(item, :class => 'sub_menu_link'), options)
+      unless self_and_ancestors_except_root_ids.include?(node.id)
+        content_tag(:li, create_menu_link(node, :class => 'sub_menu_link'), options)
       else
         classes = %w( sub_menu_link expanded )
-        classes << 'current' if item.node == @node
+        classes << 'current' if node == @node
 
-        content = create_menu_link(item, :class => classes.join(' '))
+        content = create_menu_link(node, :class => classes.join(' '))
 
-        unless sub_menu_items.empty?
-          content += content_tag(:ul, sub_menu_items.map { |item| create_sub_menu_item(item, self_and_ancestors_except_root) }.join("\n"))
+        if has_sub_menu_items
+          content += content_tag(:ul, sub_menu_items.all(:order => 'position').map { |item| create_sub_menu_item(item, self_and_ancestors_except_root_ids) }.join("\n"))
         end
 
         options[:class] = options[:class] ? "#{options[:class]} expanded" : "expanded" 
@@ -385,8 +376,8 @@ module ApplicationHelper
       end
     end
 
-    def create_menu_link(item, opts = {})
-      link_to_content_node(h(item.content_title), item, {}, { :title => h(item.content_title) }.merge(opts))
+    def create_menu_link(node, opts = {})
+      link_to_node(h(node.content_title), node, {}, { :title => h(node.content_title) }.merge(opts))
     end
 
     # Returns the HTML for any children belonging to this node.

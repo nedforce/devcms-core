@@ -28,15 +28,27 @@ class CombinedCalendar < ActiveRecord::Base
   validates_length_of   :title, :in => 2..255, :allow_blank => true
   
   def calendar_items
-    Event.in_calendar.scoped(:include => :node, :conditions => self.node.containing_site.descendant_conditions, :order => 'start_time DESC') do
+    return @calendar_items_scope if @calendar_items_scope
+
+    containing_site = self.node.containing_site
+
+    # Exclude other sites
+    nodes_to_exclude = containing_site.descendants.with_content_type('Site')
+    
+    # Exclude private sections
+    nodes_to_exclude += containing_site.descendants.sections.private
+
+    # Scope within all accessible calendars
+    accessible_calendar_node_child_ancestries = containing_site.descendants.accessible.exclude_subtrees_of(nodes_to_exclude).with_content_type('Calendar').all.map { |n| n.child_ancestry }
+    
+    @calendar_items_scope = Event.scoped(:include => :node, :conditions => { 'nodes.ancestry' => accessible_calendar_node_child_ancestries }, :order => 'start_time DESC') do
       include CalendarItemsAssociationExtensions
     end
   end
     
-  # Returns the last update date, as seen from the perspective of the given +user+.
-  def last_updated_at(user)
-    ci = self.calendar_items.find_accessible(:first, :select => 'events.created_at', :order => 'events.created_at DESC', :for => user)
-    ci ? ci.created_at : self.updated_at
+  # Returns the last update date
+  def last_updated_at
+    [ self.calendar_items.accessible.maximum('nodes.created_at'), self.updated_at ].compact.max
   end
 
   # Returns the description as the token for indexing.

@@ -1,8 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class NodeURLAliasTestTransactional < ActiveSupport::TestCase
-  self.use_transactional_fixtures = false
-  
+class NodeURLAliasTest < ActiveSupport::TestCase
   def setup
     @arthur = users(:arthur)
     @root_node = nodes(:root_section_node)
@@ -178,7 +176,7 @@ class NodeURLAliasTestTransactional < ActiveSupport::TestCase
 protected
 
   def create_page(options = {})
-    Page.create({ :user => @arthur, :parent => nodes(:root_section_node), :title => 'foo', :preamble => 'xuu', :body => 'bar', :expires_on => 1.day.from_now.to_date }.merge(options)).reload
+    Page.create({ :user => @arthur, :parent => nodes(:root_section_node), :title => 'foo', :preamble => 'xuu', :body => 'bar' }.merge(options)).reload
   end
 
 end

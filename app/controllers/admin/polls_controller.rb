@@ -95,6 +95,6 @@ protected
 
   def find_poll_questions
     @question          = @poll.active_question
-    @earlier_questions = @poll.poll_questions.find_accessible(:all, :order => 'poll_questions.created_at DESC', :for => current_user) - [@question]
+    @earlier_questions = @poll.poll_questions.accessible.all(:order => 'poll_questions.created_at DESC') - [@question]
   end
 end

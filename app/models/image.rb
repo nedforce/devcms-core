@@ -26,6 +26,8 @@
 #
 class Image < FlexImage::Model
 
+  DEFAULT_COLUMNS_TO_EXCLUDE_FROM_SELECT = %w( data )
+
   CONTENT_BOX_SIZE      = { :height =>  93, :width => 230 }
   HEADER_IMAGE_SIZE     = { :height => 135, :width => 726 }
   HEADER_BIG_IMAGE_SIZE = { :height => 190, :width => 980 }
@@ -43,7 +45,7 @@ class Image < FlexImage::Model
     :show_in_menu => false,
     :show_content_box_header => false
   }, {
-      :exclude => [ :id, :created_at, :updated_at, :data ]
+    :exclude => [ :id, :created_at, :updated_at, :data ]
   })
 
   # This content type needs approval when created or altered by an editor.
@@ -61,6 +63,14 @@ class Image < FlexImage::Model
   validates_length_of       :alt,   :in => 0..255
   validates_format_of       :url, :with => /(^$)|(^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(([0-9]{1,5})?\/.*)?$)/ix, :allow_blank => true
   validates_numericality_of :vertical_offset, :only_integer => true, :allow_blank => true, :greater_than_or_equal => 0 
+
+  default_scope :select => (self.column_names - DEFAULT_COLUMNS_TO_EXCLUDE_FROM_SELECT).map { |column| "#{self.table_name}.#{column}" }.join(', ')
+  
+  named_scope :select_all_columns, :select => self.column_names.map { |column| "#{self.table_name}.#{column}" }.join(', ')
+  
+  # Override default accessible scope to join with nodes rather than preload them, ensuring the default scope
+  # will be applied.
+  named_scope :accessible, lambda { { :joins => :node }.merge(Node.accessible.current_scoped_methods[:find]) }
 
   # Return generated alt if attribute isn't set.
   def alt
@@ -92,7 +102,7 @@ class Image < FlexImage::Model
     return (h * width) / w
   end
 
-  protected
+protected
 
   # Prepends 'http://' to +url+ if it is not present.
   def prepend_http_to_url 

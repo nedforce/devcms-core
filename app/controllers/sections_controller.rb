@@ -23,7 +23,7 @@ protected
   end
 
   def find_children
-    @children = @node.accessible_content_children(:for => current_user, :exclude_content_type => %w( Image Attachment SearchPage) )
+    @children = @node.children.accessible.public.exclude_content_types(%w( Image Attachment SearchPage Site )).include_content.all.map { |n| n.content }
   end
 
 end

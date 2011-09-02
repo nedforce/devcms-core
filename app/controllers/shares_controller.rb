@@ -1,5 +1,4 @@
 class SharesController < ApplicationController
-  before_filter :find_node, :only => [ :new, :create ]
   before_filter :find_page, :only => [ :new, :create ]
 
   def new

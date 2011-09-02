@@ -20,7 +20,7 @@ class CarrouselItemTest < ActiveSupport::TestCase
   end
 
   def test_should_return_approved_content
-    assert_equal pages(:about_page), @carrousel_item.approved_item
+    assert_equal pages(:about_page), @carrousel_item.item
   end
   
   def test_should_return_title

@@ -32,20 +32,6 @@ class Admin::PagesControllerTest < ActionController::TestCase
     assert assigns(:page)
   end
 
-  def test_should_render_404_if_not_found
-    login_as :sjoerd
-
-    get :show, :id => -1
-    assert_response :not_found
-  end
-
-  def test_should_render_404_if_hidden_for_user
-    login_as :editor
-
-    get :show, :id => pages(:hidden_page).id
-    assert_response :not_found
-  end
-
   def test_should_get_new
     login_as :sjoerd
 
@@ -166,19 +152,6 @@ class Admin::PagesControllerTest < ActionController::TestCase
     assert assigns(:page).errors.on(:title)
   end
 
-  def test_should_require_roles
-    assert_user_can_access  :arthur,       [ :new, :create ], { :parent_node_id => nodes(:root_section_node).id }
-    assert_user_can_access  :final_editor, [ :new, :create ], { :parent_node_id => nodes(:economie_section_node).id }
-    assert_user_cant_access :editor,       [ :new, :create ], { :parent_node_id => nodes(:root_section_node).id }
-    assert_user_cant_access :final_editor, [ :new, :create ], { :parent_node_id => nodes(:root_section_node).id }
-
-    assert_user_can_access  :arthur,       [ :update, :edit ], { :id => pages(:about_page).id }
-    assert_user_can_access  :editor,       [ :update, :edit ], { :id => pages(:help_page).id }
-    assert_user_can_access  :final_editor, [ :update, :edit ], { :id => pages(:contact_page).id }
-    assert_user_cant_access :editor,       [ :update, :edit ], { :id => pages(:about_page).id }
-    assert_user_cant_access :final_editor, [ :update, :edit ], { :id => pages(:about_page).id }
-  end
-
   def test_should_set_publication_start_date_on_create
     login_as :sjoerd
 
@@ -206,6 +179,6 @@ protected
 
   def create_page(attributes = {}, options = {})
     publication_start_date = attributes.delete(:publication_start_date) || Time.now
-    post :create, { :parent_node_id => nodes(:root_section_node).id, :page => { :title => 'new title', :preamble => 'new preamble', :body => 'Lorem ipsum', :publication_start_date_day => publication_start_date.strftime("%d-%m-%Y"), :publication_start_date_time => publication_start_date.strftime("%H:%M"), :expires_on => (publication_start_date + 1.day).to_date }.merge(attributes) }.merge(options)
+    post :create, { :parent_node_id => nodes(:root_section_node).id, :page => { :title => 'new title', :preamble => 'new preamble', :body => 'Lorem ipsum', :publication_start_date_day => publication_start_date.strftime("%d-%m-%Y"), :publication_start_date_time => publication_start_date.strftime("%H:%M") }.merge(attributes) }.merge(options)
   end
 end

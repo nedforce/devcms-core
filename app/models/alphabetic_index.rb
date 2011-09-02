@@ -36,9 +36,10 @@ class AlphabeticIndex < ActiveRecord::Base
       else
         klass = Page
       end
+      
       conditions = node.parent.descendant_conditions
       conditions = ["(#{conditions.shift})" + " AND (UPPER(#{klass.table_name}.title) LIKE UPPER(?) OR (taggings.context = 'title_alternatives' AND UPPER(tags.name) LIKE UPPER(?)))", conditions, "#{letter}%", "#{letter}%"].flatten
-      klass.find_accessible(:all, { :include => { :node => :base_tags }, :order => "CASE WHEN UPPER(#{klass.table_name}.title) LIKE UPPER('#{letter}%') THEN UPPER(#{klass.table_name}.title) ELSE UPPER(tags.name) END", :conditions => conditions }.merge(options))
+      klass.accessible.all({ :include => { :node => :base_tags }, :order => "CASE WHEN UPPER(#{klass.table_name}.title) LIKE UPPER('#{letter}%') THEN UPPER(#{klass.table_name}.title) ELSE UPPER(tags.name) END", :conditions => conditions }.merge(options))
     end
   end
 end

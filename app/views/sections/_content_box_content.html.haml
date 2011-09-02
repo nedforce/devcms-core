@@ -1,13 +1,14 @@
-- unless node.content.description.empty?
+- content = node.content
+- unless content.description.empty?
   .description
-    = strip_tags(truncate(node.content.description, :length => 200))
+    = strip_tags(truncate(content.description, :length => 200))
 
-- children = node.accessible_content_children(:for => current_user, :limit => node.content_box_number_of_items)
+- children = node.children.accessible.public.exclude_content_types(%w( Image Attachment SearchPage Site )).all(:limit => node.content_box_number_of_items)
 
 - unless children.empty?
   %ul
-    - children.each do |content_node|
+    - children.each do |child|
       %li.hover
-        = link_to_content_node h(content_node.content_title), content_node
+        = link_to_node h(child.content_title), child
 
-= read_more_link(node.content)
+= read_more_link(content)

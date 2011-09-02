@@ -13,16 +13,11 @@ class CarrouselsControllerTest < ActionController::TestCase
     assert assigns(:carrousel)
     assert_equal @carrousel.node, assigns(:node)
   end
- 
-  def test_should_render_404_if_not_found
-    get :show, :id => -1
-    assert_response :not_found
-  end
   
   def test_should_not_show_unpublished_carrousel
     carroussel = create_carrousel :publication_start_date => 1.day.from_now
     get :show, :id => carroussel.id
-    assert_response :not_found
+    assert_redirected_to :controller => :errors, :action => :error_404
   end
   
   def test_should_cycle_carrousel_items

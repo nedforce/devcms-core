@@ -38,11 +38,15 @@ class Poll < ActiveRecord::Base
 
   # Returns the active +PollQuestion+ of this +Poll+ if one exists, returns +nil+ otherwise.
   def active_question
-    self.poll_questions.find_accessible(:first, :conditions => { :active => true }) rescue nil
+    self.poll_questions.accessible.first(:conditions => { :active => true })
   end
 
   # Returns the image file name to be used for icons on the front end website.
   def icon_filename
     'poll_question.png'
+  end
+  
+  def last_updated_at
+    [ self.updated_at, self.active_question.try(:updated_at) ].compact.max
   end
 end

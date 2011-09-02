@@ -1,7 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class PollQuestionTest < ActiveSupport::TestCase
-  self.use_transactional_fixtures = true
    
   def test_should_create_poll_question
     assert_difference 'PollQuestion.count', 1 do
@@ -187,8 +186,8 @@ class PollQuestionTest < ActiveSupport::TestCase
     assert_not_nil PollQuestion.human_name 
   end
 
-  def test_should_not_return_news_item_children_for_menu
-    assert poll_questions(:hc_question_1).node.accessible_children(:for_menu => true).empty?
+  def test_should_not_return_poll_question_children_for_menu
+    assert poll_questions(:hc_question_1).node.children.accessible.shown_in_menu.empty?
   end
   
   def test_should_have_a_title

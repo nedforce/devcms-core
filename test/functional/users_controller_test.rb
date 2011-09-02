@@ -21,8 +21,7 @@ class UsersControllerTest < ActionController::TestCase
   def test_should_not_get_show_logged_in_as_different_user
     login_as :arthur
     get :show, :id => users(:sjoerd).login
-    assert_response :not_found
-    assert_nil assigns(:user)
+    assert_redirected_to :controller => :errors, :action => :error_404
   end
   
   def test_should_get_show_logged_in_as_owner
@@ -170,7 +169,7 @@ class UsersControllerTest < ActionController::TestCase
   def test_should_require_owner_on_edit
     login_as :arthur
     get :edit, :id => users(:sjoerd).login
-    assert_response :not_found
+    assert_redirected_to :controller => :errors, :action => :error_404
   end
   
   def test_should_update_user
@@ -197,7 +196,7 @@ class UsersControllerTest < ActionController::TestCase
   def test_update_should_require_owner
     login_as :arthur
     put :update, :id => users(:sjoerd).login, :user => {:email_address => 'sjoerd@nedforce.nl'}
-    assert_response :not_found
+    assert_redirected_to :controller => :errors, :action => :error_404
   end
   
   def test_should_verify_user
@@ -239,10 +238,10 @@ class UsersControllerTest < ActionController::TestCase
   def test_should_reset_and_send_password_by_login
     assert_difference 'ActionMailer::Base.deliveries.size', 1 do
       prev_pw_hash = users(:sjoerd).password_hash
-      get :send_password, :login_email => users(:sjoerd).login
+      put :send_password, :login_email => users(:sjoerd).login
+      assert_response :redirect
       assert_equal users(:sjoerd), assigns(:user)
       assert_not_equal prev_pw_hash, assigns(:user).reload.password_hash
-      assert_response :redirect
       assert flash.has_key?(:notice), "Flash wasn't set."
     end
   end
@@ -250,10 +249,10 @@ class UsersControllerTest < ActionController::TestCase
   def test_should_reset_and_send_password_by_email_address
     assert_difference 'ActionMailer::Base.deliveries.size', 1 do
       prev_pw_hash = users(:sjoerd).password_hash
-      get :send_password, :login_email => users(:sjoerd).email_address
+      put :send_password, :login_email => users(:sjoerd).email_address
+      assert_response :redirect
       assert_equal users(:sjoerd), assigns(:user)
       assert_not_equal prev_pw_hash, assigns(:user).reload.password_hash
-      assert_response :redirect
       assert flash.has_key?(:notice), "Flash wasn't set."
     end
   end

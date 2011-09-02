@@ -25,20 +25,6 @@ class Admin::SectionsControllerTest < ActionController::TestCase
     assert assigns(:section)
   end
   
-  def test_should_render_404_if_not_found
-    login_as :sjoerd
-        
-    get :show, :id => -1
-    assert_response :not_found
-  end
-  
-  def test_should_render_404_if_hidden_for_user
-    login_as :editor
-        
-    get :show, :id => sections(:hidden_section).id
-    assert_response :not_found
-  end
-  
   def test_should_get_new
     login_as :sjoerd
     
@@ -139,7 +125,6 @@ class Admin::SectionsControllerTest < ActionController::TestCase
     assert_response :success
     assert_equal 'updated title', assigns(:section).title
     assert_equal old_title, section.reload.title
-    puts assigns(:section).errors.full_messages
     assert_template 'update_preview'
   end
 
@@ -161,19 +146,6 @@ class Admin::SectionsControllerTest < ActionController::TestCase
     put :update, :id => sections(:economie_section).id, :section => {:title => nil}
     assert_response :unprocessable_entity
     assert assigns(:section).errors.on(:title)
-  end
-
-  def test_should_require_roles
-    assert_user_can_access  :arthur,       [:new, :create], {:parent_node_id => nodes(:root_section_node).id}
-    assert_user_can_access  :final_editor, [:new, :create], {:parent_node_id => nodes(:economie_section_node).id}
-    assert_user_cant_access :editor,       [:new, :create], {:parent_node_id => nodes(:root_section_node).id}
-    assert_user_can_access  :editor,       [:new, :create], {:parent_node_id => nodes(:editor_section_node).id}
-    assert_user_cant_access :final_editor, [:new, :create], {:parent_node_id => nodes(:root_section_node).id}
-
-    assert_user_can_access  :arthur,       [:update], {:id => sections(:root_section).id}
-    assert_user_can_access  :final_editor, [:update], {:id => sections(:economie_section).id}
-    assert_user_can_access  :editor,       [:update], {:id => sections(:editor_section).id}
-    assert_user_cant_access :editor,       [:update], {:id => sections(:economie_section).id}
   end
 
   def test_should_not_show_frontpage_controls_to_editors

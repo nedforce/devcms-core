@@ -188,6 +188,8 @@ nl:
         title: Titel
       section:
         title: Titel
+        domain: Domein
+        original_domain: Domein
       setting:
         key: Instelling
         alt: Omschrijving
@@ -271,7 +273,7 @@ nl:
         link:
           attributes:
             base:
-              not_direct: "Links kunnen niet direct worden geïnstantieerd."
+              not_direct: "Links kunnen niet direct worden geinstantieerd."
         meeting:
           attributes:
             meeting_category:
@@ -279,9 +281,14 @@ nl:
         node:
           attributes:
             base:
-              cant_hide_frontpage: Frontpage kan niet verborgen worden.
+              cant_hide_frontpage: Frontpage kan niet privé of verborgen gemaakt worden.
               cant_remove_root: Kan root node niet verwijderen.
-              not_directly: "Nodes kunnen niet direct worden geïnstantieerd."
+              can_only_set_accessibility_on_sections: Alleen secties kunnen privé gemaakt worden.
+              cant_make_node_public_when_it_has_a_private_ancestor: "Secties kunnen niet publiekelijk gemaakt worden als er een bovenliggende privé-sectie is."
+              cant_make_node_visible_when_it_has_a_hidden_ancestor: "Nodes kunnen niet zichtbaar gemaakt worden als er een bovenliggende verborgen node is."
+              set_visibility_failed: Kon de zichtbaarheid van de node niet wijzigen.
+              set_accessibility_failed: Kon de toegankelijkheid van de node niet wijzigen.
+              not_directly: "Nodes kunnen niet direct worden geinstantieerd."
             url_alias:
               invalid: "kan alleen letters, cijfers en '-' bevatten."
               reserved_url_alias: bevat gereserveerde woorden.
@@ -313,6 +320,8 @@ nl:
             content:
               should_be_in_same_site: moet zich in dezelfde site bevinden als de content box zelf.
               not_allowed_as: is niet toegestaan als content box content.
+              should_not_be_hidden: moet zichtbaar zijn.
+              should_not_be_private: moet zich in dezelfde prive-sectie bevinden als de content box zelf.
         site:
           attributes:
             base:

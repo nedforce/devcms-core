@@ -21,6 +21,7 @@ module I18n
     raise args.first 
   end 
 end 
+
 I18n.exception_handler = :just_raise
 
 # Truncate all tables first

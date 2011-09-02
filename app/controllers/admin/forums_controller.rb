@@ -89,6 +89,6 @@ protected
   end
 
   def find_forum_topics
-    @forum_topics = @forum.forum_topics.find_accessible(:all, :for => current_user)
+    @forum_topics = @forum.forum_topics.accessible.all
   end
 end

@@ -60,9 +60,8 @@ class NewsViewerTest < ActiveSupport::TestCase
     @news_viewer.news_viewer_items.create(:news_item => n3, :position => 2)
     @news_viewer.news_viewer_items.create(:news_item => n4, :position => 3)       
 
-    @news_viewer.accessible_news_items_for(users(:arthur)).each{|ni| assert ni.publication_start_date >= 2.weeks.ago.beginning_of_day }
-    assert_equal [n1, n2], @news_viewer.accessible_news_items_for(users(:arthur))
-    assert_equal [n1], @news_viewer.accessible_news_items_for(users(:reader))
+    @news_viewer.accessible_news_items.each{|ni| assert ni.publication_start_date >= 2.weeks.ago.beginning_of_day }
+    assert_equal [n1], @news_viewer.accessible_news_items
   end  
   
   def test_should_order_by_position
@@ -72,12 +71,12 @@ class NewsViewerTest < ActiveSupport::TestCase
     nvi1 = @news_viewer.news_viewer_items.create(:news_item => n1, :position => 0)
     nvi2 = @news_viewer.news_viewer_items.create(:news_item => n2, :position => 1)    
     
-    assert_equal [n1, n2], @news_viewer.accessible_news_items_for(users(:arthur))
+    assert_equal [n1, n2], @news_viewer.accessible_news_items
     
     nvi1.update_attribute(:position, 1)
     nvi2.update_attribute(:position, 0)    
     
-    assert_equal [n2, n1], @news_viewer.accessible_news_items_for(users(:arthur))  
+    assert_equal [n2, n1], @news_viewer.accessible_news_items
   end
   
   def test_should_order_by_date
@@ -87,35 +86,22 @@ class NewsViewerTest < ActiveSupport::TestCase
     @news_viewer.news_items << n1
     @news_viewer.news_items << n2
     
-    assert_equal [n1, n2], @news_viewer.accessible_news_items_for(users(:arthur))
+    assert_equal [n1, n2], @news_viewer.accessible_news_items
     
     n1.update_attribute(:publication_start_date, 2.days.ago)
     n2.update_attribute(:publication_start_date, 1.day.ago)    
     
-    assert_equal [n2, n1], @news_viewer.accessible_news_items_for(users(:arthur))      
+    assert_equal [n2, n1], @news_viewer.accessible_news_items
   end  
   
   def test_last_updated_at_should_return_updated_at_when_no_accessible_news_items_are_found
-    assert_equal @news_viewer.updated_at, @news_viewer.last_updated_at(users(:arthur))
+    assert_equal @news_viewer.updated_at, @news_viewer.last_updated_at
     ni = create_news_item
     @news_viewer.news_items << ni
     ni.node.update_attribute(:hidden, true)
     
-    assert_equal @news_viewer.updated_at, @news_viewer.last_updated_at(users(:editor))
+    assert_equal @news_viewer.updated_at, @news_viewer.last_updated_at
   end
-
-  def test_last_updated_at_should_return_publication_date_of_last_published_accessible_news_item
-    ni1 = create_news_item :publication_start_date => 2.days.ago
-
-    ni2 = create_news_item :publication_start_date => 1.day.ago
-    ni2.node.update_attribute(:hidden, true)
-
-    @news_viewer.news_items << ni1
-    @news_viewer.news_items << ni2
-
-    assert_equal ni2.publication_start_date.to_s, @news_viewer.last_updated_at(users(:arthur)).to_s
-    assert_equal ni1.publication_start_date.to_s, @news_viewer.last_updated_at(users(:editor)).to_s
-  end  
   
   def test_should_destroy_associated_viewer_items_on_destroy
     5.times{ @news_viewer.news_items << create_news_item }

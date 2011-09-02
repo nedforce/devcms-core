@@ -22,14 +22,6 @@ class Admin::CarrouselsControllerTest < ActionController::TestCase
     assert_response :success
     assert assigns(:carrousel)
     assert_equal @carrousel.node, assigns(:node)
-    
-  end
- 
-  def test_should_render_404_if_not_found
-    login_as :sjoerd
-        
-    get :show, :id => -1
-    assert_response :not_found
   end
   
   def test_should_get_new
@@ -104,7 +96,7 @@ class Admin::CarrouselsControllerTest < ActionController::TestCase
   
   def test_should_update_carrousel
     login_as :sjoerd
-    
+        
     put :update, :id => @carrousel.id, :carrousel => { :title => 'updated title' }
     
     assert_response :success
@@ -183,15 +175,6 @@ class Admin::CarrouselsControllerTest < ActionController::TestCase
     assigns(:carrousel).carrousel_items.each{|ci| assert_nil ci.excerpt }
   end
   
-  def test_should_not_require_roles
-    assert_user_can_access :arthur, [:new, :create], {:parent_node_id => nodes(:root_section_node).id}
-    assert_user_cant_access :final_editor, [:new, :create], {:parent_node_id => nodes(:root_section_node).id}    
-    assert_user_can_access :arthur, [:update, :edit], {:id => @carrousel.id}
-    assert_user_cant_access :final_editor, [:update, :edit], {:id => @carrousel.id}
-    assert_user_cant_access :editor, [:new, :create], {:parent_node_id => nodes(:root_section_node).id}
-    assert_user_cant_access :editor, [:update, :edit], {:id => @carrousel.id}
-  end
-
 protected
   
   def create_carrousel(attributes = {}, options = {})

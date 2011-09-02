@@ -1,7 +1,4 @@
-class SitemapsController < ApplicationController
-
-  skip_before_filter :find_node 
-  
+class SitemapsController < ApplicationController   
   before_filter :set_node_to_root, :only => :changes
 
   # Shows the sitemap.
@@ -18,7 +15,6 @@ class SitemapsController < ApplicationController
   # * GET /sitemap/changes
   def changes
     raise ActionController::UnknownAction if params[:interval].blank?
-    
     @changes = Node.all(:conditions => ["updated_at > ?", Time.now - params[:interval].to_i])
     
     respond_to do |format|
@@ -26,7 +22,7 @@ class SitemapsController < ApplicationController
     end
   end
   
-  protected
+protected
 
   def set_node_to_root
     @node = current_site

@@ -20,6 +20,7 @@
 #  * A +Page+ can be inserted into nodes of any accepting type.
 #
 class Page < ActiveRecord::Base
+  
   # Adds content node functionality to pages.
   acts_as_content_node({
     :allowed_child_content_types => %w( Attachment Image ),

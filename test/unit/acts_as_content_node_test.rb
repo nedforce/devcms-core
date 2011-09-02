@@ -28,13 +28,13 @@ class ActsAsContentNodeTestTransactional < ActiveSupport::TestCase
    
   def test_create_with_parent_should_fail_for_invalid_parent
     assert_no_difference 'Page.count' do
-      page = Page.create(:parent => nodes(:henk_weblog_post_one_node), :title => "Page title", :preamble => "Ambule", :body => "Page body")
+      page = Page.create(:parent => nodes(:henk_weblog_post_one_node), :title => "Page title", :preamble => "Ambule", :body => "Page body", :expires_on => 1.day.from_now.to_date)
       assert page.errors.on_base
     end
 
     assert_no_difference 'Page.count' do
       assert_raise ActiveRecord::RecordNotSaved do
-        Page.create!(:parent => nodes(:henk_weblog_post_one_node), :title => "Page title", :preamble => "Ambule", :body => "Page body")
+        page = Page.create!(:parent => nodes(:henk_weblog_post_one_node), :title => "Page title", :preamble => "Ambule", :body => "Page body", :expires_on => 1.day.from_now.to_date)
       end
     end
   end
@@ -60,10 +60,6 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
     @about_page = pages(:about_page)
     @arthur = users(:arthur)
     @reader = users(:reader)
-  end
-
-  def test_should_respond_to_find_accessible
-    assert Page.respond_to?(:find_accessible)
   end
 
   def test_save_with_parent
@@ -116,13 +112,10 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
   
   def test_find_accessible_should_only_find_published_content_nodes
     # Published content nodes
-    [ [ nil, nil ], [ 1.day.ago, nil ], [ 1.day.ago, 1.day.from_now ] ].map do | start_date, end_date |
+    [ [ 1.day.ago, 1.day.from_now ] ].map do | start_date, end_date |
       page = create_page
-      node = page.node
-      node.update_attribute(:publication_start_date, start_date)
-      node.update_attribute(:publication_end_date, end_date)
-      assert !node.new_record?
-      assert_equal page, Page.find_accessible(page.id)
+      page.update_attributes(:publication_start_date => start_date, :publication_end_date => end_date)
+      assert_equal page, Page.accessible.find(page.id)
     end
 
     # Unpublished content nodes
@@ -134,7 +127,7 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
       assert !node.new_record?
 
       assert_raise ActiveRecord::RecordNotFound do
-        Page.find_accessible page.id
+        Page.accessible.find page.id
       end
     end
   end
@@ -345,7 +338,7 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
 protected
 
   def build_page(options = {})
-    Page.new({ :parent => nodes(:root_section_node), :title => "Page title", :preamble => "Ambule", :body => "Page body", :expires_on => 1.day.from_now.to_date }.merge(options))
+    Page.new({ :parent => nodes(:root_section_node), :title => "Page title", :preamble => "Ambule", :body => "Page body" }.merge(options))
   end
 
   def create_page(options = {})

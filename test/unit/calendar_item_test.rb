@@ -82,7 +82,7 @@ class CalendarItemTest < ActiveSupport::TestCase
   end
 
   def test_should_not_return_calendar_item_children_for_menu
-    assert @events_calendar.node.accessible_children(:for_menu => true).empty?
+    assert @events_calendar.node.children.accessible.shown_in_menu.empty?
   end
   
   def test_should_set_or_update_dynamic_attributes

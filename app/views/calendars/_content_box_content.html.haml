@@ -1,6 +1,6 @@
 - content        = node.content
 - limit          = node.content_box_number_of_items || 10
-- calendar_items = content.calendar_items.current_and_future_for(current_user, Time.now, limit)
+- calendar_items = content.calendar_items.current_and_future(Time.now, limit)
 
 - unless calendar_items.empty?
   %ul

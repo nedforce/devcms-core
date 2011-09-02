@@ -1,7 +1,6 @@
-- cache(:updated_at => Node.maximum('updated_at').to_i) do
-  - content_for :atom_feed do
-    %link{ :rel => "alternate", :type => "application/atom+xml", :href => "#{@rss_feed_url}", :title => "#{t 'sitemaps.all_changes'}" }
+- content_for :atom_feed do
+  %link{ :rel => "alternate", :type => "application/atom+xml", :href => "#{@rss_feed_url}", :title => "#{t 'sitemaps.all_changes'}" }
 
-  .regularPage.siteMap
-    %h1= t 'sitemaps.sitemap'
-    = create_sitemap
+.regularPage.siteMap
+  %h1= t 'sitemaps.sitemap'
+  = create_sitemap

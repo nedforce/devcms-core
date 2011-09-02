@@ -3,13 +3,6 @@ require File.dirname(__FILE__) + '/../../test_helper'
 class Admin::WeblogsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
   
-  def test_should_render_404_if_not_found
-    login_as :sjoerd
-        
-    get :show, :id => -1
-    assert_response :not_found
-  end
-  
   def test_should_show_weblog
     login_as :sjoerd    
     
@@ -103,12 +96,6 @@ class Admin::WeblogsControllerTest < ActionController::TestCase
     put :update, :id => weblogs(:henk_weblog).id, :weblog => {:title => nil}
     assert_response :unprocessable_entity
     assert assigns(:weblog).errors.on(:title)
-  end
-
-  def test_should_require_roles
-    assert_user_can_access :arthur, [:update, :edit], {:id => weblogs(:henk_weblog).id}
-    assert_user_can_access :final_editor, [:update, :edit], { :id => weblogs(:henk_weblog).id}
-    assert_user_cant_access :editor, [:update, :edit], {:id => weblogs(:henk_weblog).id}
   end
  
 end

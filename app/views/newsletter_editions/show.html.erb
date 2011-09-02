@@ -9,7 +9,7 @@
     <%=w @newsletter_edition.body -%>
   </div>
 
-  <% if @newsletter_edition.approved_items.empty? %>
+  <% if @newsletter_edition.items.empty? %>
     <p><%=t 'newsletters.no_items' -%></p>
   <% else %>
     <h2><%=t 'newsletters.items' -%></h2>
@@ -21,7 +21,7 @@
       </tr>
     </thead>
     <tbody>
-      <% @newsletter_edition.approved_items.each_with_index do |item, i| %>
+      <% @newsletter_edition.items.each_with_index do |item, i| %>
           <tr <% if i.even? %>class="alt"<% end %>>
             <td><%=link_to_content_node h(item.content_title), item -%></td>
             <td class="right type"><%= item.class.human_name -%></td>

@@ -7,13 +7,6 @@ class Admin::NewsViewersControllerTest < ActionController::TestCase
     @news_viewer = create_news_viewer
   end
 
-  def test_should_render_404_if_not_found
-    login_as :sjoerd
-
-    get :show, :id => -1
-    assert_response :not_found
-  end
-
   def test_should_show_news_viewer
     login_as :sjoerd
 
@@ -144,16 +137,6 @@ class Admin::NewsViewersControllerTest < ActionController::TestCase
     put :update, :id => @news_viewer.id, :news_viewer => { :title => nil }
     assert_response :unprocessable_entity
     assert assigns(:news_viewer).errors.on(:title)
-  end
-
-  def test_should_require_roles
-    assert_user_can_access  :arthur,       [ :new, :create ],  { :parent_node_id => nodes(:root_section_node).id }
-    assert_user_can_access  :final_editor, [ :new, :create ],  { :parent_node_id => nodes(:economie_section_node).id }
-    assert_user_cant_access :editor,       [ :new, :create ],  { :parent_node_id => nodes(:root_section_node).id }
-
-    assert_user_can_access  :arthur,       [ :update, :edit ], { :id => @news_viewer.id}
-    assert_user_can_access  :final_editor, [ :update, :edit ], { :id => @news_viewer.id}
-    assert_user_cant_access :editor,       [ :update, :edit ], { :id => @news_viewer.id}
   end
 
 protected

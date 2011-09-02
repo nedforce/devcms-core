@@ -47,8 +47,8 @@ class Feed < ActiveRecord::Base
 
   # Returns the title.
   def title
-    title = super
-    title.blank? ? (parsed_feed ? parsed_feed.title : 'Feed') : title
+    value = self.read_attribute(:title)
+    value.blank? ? (parsed_feed ? parsed_feed.title : 'Feed') : value
   end
 
   # Returns the entries of the parsed feed.
@@ -110,16 +110,3 @@ class Feed < ActiveRecord::Base
     errors.add(:url, :invalid_feed) unless self.url.blank? || parsed_feed
   end
 end
-
-# == Schema Information
-#
-# Table name: feeds
-#
-#  id                 :integer         not null, primary key
-#  url                :string(255)     not null
-#  created_at         :datetime
-#  updated_at         :datetime
-#  title              :string(255)
-#  cached_parsed_feed :text
-#  xml                :binary
-#

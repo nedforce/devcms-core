@@ -33,7 +33,7 @@ class Admin::AttachmentsController < Admin::AdminController
       upload_file
     else
       if @attachment.extension
-        redirect_to url_for(:id => @attachment.id, :action => :preview, :basename => @attachment.basename, :format => @attachment.extension)
+        redirect_to url_for(:id => @attachment.id, :action => :preview, :basename => @attachment.basename, :baseformat => @attachment.extension)
       else
         redirect_to url_for(:id => @attachment.id, :action => :preview, :basename => @attachment.basename)
       end
@@ -121,7 +121,7 @@ class Admin::AttachmentsController < Admin::AdminController
     end
 
     def upload_file
-      if @attachment.filename == "#{params[:basename]}.#{params[:format]}" || @attachment.filename == params[:basename]
+      if @attachment.filename == "#{params[:basename]}.#{params[:baseformat]}" || @attachment.filename == params[:basename]
         send_file(@attachment.create_temp_file, 
                   :type        => @attachment.content_type, 
                   :filename    => @attachment.filename, 

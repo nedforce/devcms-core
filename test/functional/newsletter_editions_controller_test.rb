@@ -9,15 +9,10 @@ class NewsletterEditionsControllerTest < ActionController::TestCase
     assert assigns(:newsletter_edition)
     assert_equal nodes(:newsletter_edition_node), assigns(:node)
   end
- 
-  def test_should_render_404_if_not_found
-    get :show, :id => -1
-    assert_response :not_found
-  end
   
   def test_should_not_show_unpublished_newsletter_edition
     get :show, :id => newsletter_editions(:example_newsletter_edition).id
-    assert_response :not_found
+    assert_redirected_to :controller => :errors, :action => :error_404
   end
   
 end

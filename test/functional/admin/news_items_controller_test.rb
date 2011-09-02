@@ -24,13 +24,6 @@ class Admin::NewsItemsControllerTest < ActionController::TestCase
     get :previous, :id => @news_item
     assert_response :success
     assert assigns(:news_item)
-  end
-
-  def test_should_render_404_if_not_found
-    login_as :sjoerd
-        
-    get :show, :id => -1
-    assert_response :not_found
   end  
   
   def test_should_get_new
@@ -152,17 +145,6 @@ class Admin::NewsItemsControllerTest < ActionController::TestCase
     put :update, :id => news_items(:devcms_news_item).id, :news_item => { :title => nil }
     assert_response :unprocessable_entity
     assert assigns(:news_item).errors.on(:title)
-  end
-  
-  def test_should_require_roles
-    #final editor has nog access since he has no rights on the archive!
-    assert_user_can_access  :arthur,       [ :new, :create ],  { :parent_node_id => nodes(:devcms_news_node).id }
-    assert_user_cant_access :final_editor, [ :new, :create ],  { :parent_node_id => nodes(:devcms_news_node).id }
-    assert_user_can_access  :editor,       [ :new, :create ],  { :parent_node_id => nodes(:devcms_news_node).id }
-
-    assert_user_can_access  :arthur,       [ :update, :edit ], { :id => news_items(:devcms_news_item).id }
-    assert_user_cant_access :final_editor, [ :update, :edit ], { :id => news_items(:devcms_news_item).id }
-    assert_user_can_access  :editor,       [ :update, :edit ], { :id => news_items(:devcms_news_item).id }
   end
 
   def test_should_set_publication_start_date_on_create

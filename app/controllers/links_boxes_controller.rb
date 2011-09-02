@@ -22,7 +22,7 @@ protected
   end
 
   def find_children
-    @children = @node.accessible_content_children(:for => current_user, :exclude_content_type => %w( Image ) )
+    @children = @node.children.accessible.public.exclude_content_types('Image').all
   end
 
 end

@@ -18,7 +18,7 @@
         <%= render :partial => '/shared/metadata', :locals => { :publication_date => news_item.publication_start_date, :last_update_date => news_item.updated_at } %>
 
         <div class="content clearfix">
-          <% if (image_node = news_item.node.accessible_children.reject { |c| c.content_class != Image }.first) -%>
+          <% if (image_node = news_item.node.children.accessible.with_content_type('Image').first) -%>
             <%=
               link_to_node(
                 image_tag(content_node_path(image_node, :action => :thumbnail), :alt => h(image_node.content.title)),

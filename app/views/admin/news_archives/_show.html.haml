@@ -4,7 +4,7 @@
   - unless @news_archive.new_record?
     .metadata
       %p.lastUpdateDate
-        == #{t 'shared.last_updated'}: #{l @news_archive.last_updated_at(current_user), :format => :long}
+        == #{t 'shared.last_updated'}: #{l @news_archive.last_updated_at, :format => :long}
 
   - if @news_archive.description.present?
     .htmlField.newsArchiveDescription

@@ -13,9 +13,4 @@ class LinksControllerTest < ActionController::TestCase
     assert_redirected_to links(:external_link).url
   end
   
-  def test_should_render_404_if_not_found
-    get :show, :id => -1
-    assert_response :not_found
-  end
-  
 end

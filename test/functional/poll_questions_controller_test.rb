@@ -3,11 +3,6 @@ require File.dirname(__FILE__) + '/../test_helper'
 class PollQuestionsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
-  def test_should_render_404_if_not_found
-    get :show, :id => -1
-    assert_response :not_found
-  end
-
   def test_should_get_show
     q = poll_questions(:hc_question_1)
     get :show, :id => q.id

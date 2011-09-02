@@ -1,6 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
 
-  map.resource :session, :only => [ :new, :create, :destroy ]
+  map.resource :session, :only => [ :new, :create, :destroy ], :collection => { :destroy => :any }
 
   map.resources :nodes, :member => { :changes => :get, :all_changes => :get }  do |node|
     node.resources :comments, :only => [ :create, :destroy ], :member => { :destroy => :any }
@@ -60,8 +60,8 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :alphabetic_indices, :except => [ :index, :destroy ]
     admin.resources :attachments, :except => [ :index, :destroy ], :member => { :previous => :get, :preview => :get }, :collection => { :ajax => :any }
     admin.resources :social_media_links_boxes, :except => [ :index, :destroy ]
-    admin.resources :versions, :only => [ :index, :create ], :member => { :approve => :put, :reject => :put }
-    admin.resources :permissions, :only => [ :index, :new, :create, :destroy ]
+    admin.resources :versions, :only => :index, :member => { :approve => :put, :reject => :put }
+    admin.resources :role_assignments, :only => [ :index, :new, :create, :destroy ]
     admin.resources :categories,
                     :only => [ :index, :create, :update, :destroy ],
                     :collection => { :categories => :get, :root_categories => :get },
@@ -70,6 +70,8 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :users, :member => { :accessible_newsletter_archives => :get, :interests => :get }, :collection => { :invite => :post, :privileged => :get }
     admin.resources :nodes, :only => [ :index, :update, :destroy ],
                             :member => {
+                              :set_visibility => :put,
+                              :set_accessibility => :put,
                               :move => :put,
                               :make_global_frontpage => :put,
                               :audit_show => :get,
@@ -85,6 +87,7 @@ ActionController::Routing::Routes.draw do |map|
       nodes.resource :layout, :only => [:edit, :update]
       nodes.resources :layouts, :only => [], :member => { :settings_variants_and_targets => :get,  :targets => :get }
     end
+    
     admin.connect 'nodes/:parent_id/:year/:month',
                   :controller => :nodes,
                   :action     => :bulk_destroy,
@@ -143,7 +146,8 @@ ActionController::Routing::Routes.draw do |map|
   end
 
   map.connect '/admin', :controller => 'admin/nodes'
-  map.connect '/admin/final_editor', :controller => 'admin/approvals'
+  map.connect '/admin/final_editor', :controller => 'admin/versions'
+  map.connect '/admin/versions.:format', :controller => 'admin/versions', :action => :index, :conditions => { :method => :post }
 
   map.connect '/attachments/:id/:basename', :controller => 'attachments', :action => 'show'
   map.connect '/attachments/:action/:id/:basename', :controller => 'attachments'
@@ -156,6 +160,9 @@ ActionController::Routing::Routes.draw do |map|
   map.search '/search/:search_engine', :controller => 'search', :action => 'index', :search_engine => ''
   map.profile '/profile', :controller => 'users', :action => 'profile'
   map.synonyms '/synonyms.txt', :controller => :application, :action => :synonyms, :format => :txt
+  
+  map.error_404 '/404', :controller => :errors, :action => :error_404
+  map.error_500 '/500', :controller => :errors, :action => :error_500
 
   # Dynamic root route
   map.root :controller => '_delegated_root', :action => 'show'

@@ -722,7 +722,7 @@ nl:
     expires_on_out_of_range: Ongeldige vervaldatum, kies een datum tussen nu en %{date}.
     expires_on_required: Vervaldatum is verplicht voor deze content.
     failed: mislukt
-    frontpage_cant_be_hidden: Globale frontpage mag niet privé zijn.
+    frontpage_cant_be_hidden: Globale frontpage mag niet verborgen of privé zijn en moet gepubliceerd zijn.
     frontpage_set: Globale frontpage succesvol ingesteld.
     import: Importeren
     inherit_or_drag_items: "Indeling wordt overgeërfd, sleep items in de kolommen om de indeling handmatig te bepalen."

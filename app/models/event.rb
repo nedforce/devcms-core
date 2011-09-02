@@ -37,15 +37,10 @@ class Event < ActiveRecord::Base
   validates_length_of   :title, :in => 2..255, :allow_blank => true
   
   before_validation :set_start_and_end_time, :if => :start_time
-
-  named_scope :in_calendar, lambda{ { :include => :node, :conditions => ["nodes.ancestry IN (?)", Calendar.all.collect {|c| "#{c.node.child_ancestry}" }], :extend => CalendarItemsAssociationExtensions } }
   
   composed_of :date, :class_name => 'Date', :mapping => [ :to_date ], :allow_nil => true
   
-  def calendar
-    parent = (self.node || self).parent
-    parent.content if parent
-  end
+  has_parent :calendar
   
   # Returns a URL alias for a given +node+.
   def path_for_url_alias(node)

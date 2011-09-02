@@ -95,6 +95,6 @@ class PollQuestionsController < ApplicationController
   protected
 
   def find_poll_question
-    @poll_question = PollQuestion.find_accessible(params[:id], :include => :poll_options, :for => current_user)
+    @poll_question = @node.content
   end
 end

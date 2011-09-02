@@ -100,7 +100,7 @@ protected
   end
 
   def find_children
-    @children = @site.accessible_children_for(current_user)
+    @children = @node.children.accessible.public.exclude_content_types(%w( Image Attachment SearchPage Site )).include_content.all.map { |n| n.content }
   end
 
   def can_set_frontpage?

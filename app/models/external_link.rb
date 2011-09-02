@@ -29,7 +29,7 @@ class ExternalLink < Link
 
   # Overrides the +content_title+ method of the +acts_as_content_node+ mixin.
   def content_title
-    self.title || self.url
+    self.title.blank? ? self.url : self.title
   end
 
   # Overwrite the default. In case the title is blank, strip the 'http://' part from the url.

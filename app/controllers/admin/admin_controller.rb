@@ -2,17 +2,25 @@
 # controllers. It is intended as an abstract class for other admin controllers
 # to inherit.
 class Admin::AdminController < ApplicationController
-  
-  # Try retrieve the +Node+ object for the current request.
-  # This needs to be done before any authorisation attempts, a +Node+ might be needed.
-  before_filter :find_node, :only => [:show, :edit, :update, :previous]
 
   # Override non-JS DELETE hyprlinks fallback for admin pages.
   skip_before_filter :confirm_destroy
 
+  skip_before_filter :find_context_node
+
   # Don't set search scopes in backend
   skip_before_filter :set_search_scopes
-
+  
+  skip_before_filter :set_private_menu
+  
+  skip_before_filter :find_accessible_content_children_for_menu
+  
+  skip_before_filter :set_page_title
+  
+  skip_before_filter :set_rss_feed_url
+  
+  skip_before_filter :check_authorization
+  
   # Require the user to be logged in for all actions.
   before_filter :login_required
 
@@ -24,35 +32,40 @@ class Admin::AdminController < ApplicationController
 
   before_filter :set_for_approval,          :only => [ :edit, :update ]
 
-  before_filter :parse_category_parameters, :only => [:create, :update, :bulk_update ]
-
+  before_filter :parse_category_parameters, :only => [ :create, :update, :bulk_update ]
+  
   # Skip the filter that increments the hits for nodes
   skip_after_filter :increment_hits
-
-  # Expire the main menu fragment cache.
-  after_filter :expire_changes_cache
   
   # Politely ask browsers to not cache anything in the admin namespace..
   before_filter :set_cache_buster
-  
-  layout :layout?
-  
-  helper Admin::PermitsHelper, Admin::NewsletterArchiveHelper, Admin::AgendaItemsHelper, Admin::AdminHelper, Admin::AdminFormBuilderHelper, Admin::CategoriesHelper, Admin::DiffHelper
 
+  layout :layout?
+
+  helper Admin::PermitsHelper, Admin::NewsletterArchiveHelper, Admin::AgendaItemsHelper, Admin::AdminHelper, Admin::AdminFormBuilderHelper, Admin::CategoriesHelper, Admin::DiffHelper
+  
+  cache_sweeper :node_sweeper, :only => [ :create, :update, :destroy, :approve, :set_visibility, :set_accessibility, :move, :bulk_update, :bulk_destroy, :sort_children ]
+  
 protected
+
   def set_cache_buster
     response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
     response.headers["Pragma"] = "no-cache"
     response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
   end
 
-  def expire_changes_cache
-    expire_page("/sitemap/changes.atom") unless request.get?
+  def find_node
+    @node ||= Node.find(params[:node_id]) if params[:node_id]
   end
-
-  # TODO: filter on user
-  def find_available_templates_for(user)
-    Template.all(:order => :title)
+  
+  # Finds the Node object corresponding to the passed in +parent_node_id+ parameter.
+  def find_parent_node
+    @parent_node ||= Node.find(params[:parent_node_id]) if params[:parent_node_id]
+  end
+  
+  def find_children
+    @children = (@calendar_item || @meeting).node.children.accessible.exclude_content_types(%w( Image Attachment ContentCopy )).include_content.map { |n| n.content }
+    find_images_and_attachments
   end
 
   # Don't render the response in a layout for XHR requests
@@ -153,22 +166,17 @@ protected
   end
 
   def parse_start_and_end_times
-    type = case
-    when params[:calendar_item].present?
+    type = if params.has_key?(:calendar_item)
       :calendar_item
-    when params[:meeting].present?
+    elsif params.has_key?(:meeting)
       :meeting
     end
+    
     if type.present?
       params[type][:start_time] = Time.parse(params[type].delete(:start_time)) rescue nil if params[type][:start_time].present?
       params[type][:end_time]   = Time.parse(params[type].delete(:end_time))   rescue nil if params[type][:end_time].present?  
       params[type][:date]       = Date.parse(params[type].delete(:date))       rescue nil if params[type][:date].present?
     end
-  end
-
-  def find_children
-    @children = (@calendar_item || @meeting).accessible_children_for(current_user)
-    find_images_and_attachments
   end
 
   def item_sortlet_hash_for_ids(sortlet_item_ids)

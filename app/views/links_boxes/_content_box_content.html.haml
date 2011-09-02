@@ -1,8 +1,9 @@
 - content    = node.content
-- links      = node.accessible_content_children(:for => current_user, :limit => node.content_box_number_of_items, :exclude_content_type => "Image")
+- links      = node.children.accessible.exclude_content_types('Image').include_content.all(:limit => node.content_box_number_of_items).map { |n| n.content }
 
-- unless links.empty?
-  - header_image = Image.find_accessible(:first, :for => current_user, :include => :node, :conditions => ["nodes.ancestry = :links_box_ancestry", {:links_box_ancestry => node.child_ancestry }])
+- unless links.empty?  
+  - header_image = node.children.with_content_type('Image').include_content.first.try(:content)
+  
   - if header_image.present?
     = image_tag(content_box_header_image_path(header_image, :format => :jpg), :alt => h(header_image.title), :class => 'content_box_header')
   

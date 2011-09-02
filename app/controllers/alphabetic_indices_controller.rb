@@ -27,7 +27,7 @@ class AlphabeticIndicesController < ApplicationController
 
   # Finds the +AlphabeticIndex+ object corresponding to the passed in +id+ parameter.
   def find_alphabetic_index
-    @alphabetic_index = AlphabeticIndex.find_accessible(params[:id], :for => current_user)
+    @alphabetic_index = AlphabeticIndex.accessible.find(params[:id])
   end
 
   def find_pages

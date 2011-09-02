@@ -71,7 +71,7 @@ module Acts #:nodoc:
 
         date_field_model_name = self.acts_as_archive_configuration[:date_field_model_name]
         
-        self.acts_as_archive_items.find_each do |item|
+        self.acts_as_archive_items.all.each do |item|
           year = item.send(date_field_model_name).year
           @years << year unless @years.include?(year)
         end
@@ -87,7 +87,7 @@ module Acts #:nodoc:
 
         date_field_model_name = self.acts_as_archive_configuration[:date_field_model_name]
         
-        self.acts_as_archive_items.find_each do |item|
+        self.acts_as_archive_items.all.each do |item|
           year = item.send(date_field_model_name).to_date.cwyear
           @years << year unless @years.include?(year)
         end
@@ -108,7 +108,7 @@ module Acts #:nodoc:
         options.update(self.acts_as_archive_configuration[:sql_options]) if self.acts_as_archive_configuration[:sql_options]
 
         # TODO: optimize this query
-        self.acts_as_archive_items.find_each(options) do |item|
+        self.acts_as_archive_items.all(options).each do |item|
           month = item.send(date_field_model_name).month
           @months << month unless @months.include?(month)
         end
@@ -131,7 +131,7 @@ module Acts #:nodoc:
         options.update(self.acts_as_archive_configuration[:sql_options]) if self.acts_as_archive_configuration[:sql_options]
 
         # TODO: optimize this query
-        self.acts_as_archive_items.find_each(options) do |item|
+        self.acts_as_archive_items.all(options).each do |item|
           week = item.send(date_field_model_name).to_date.cweek
           @weeks << week unless @weeks.include?(week)
         end

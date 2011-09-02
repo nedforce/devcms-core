@@ -3,12 +3,6 @@ require File.dirname(__FILE__) + '/../test_helper'
 class AttachmentsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
   
-  def test_should_render_404_for_private_attachment
-    @hidden_attachment = attachments(:hidden_attachment)
-    get :show, :id => @hidden_attachment.id
-    assert_response :not_found
-  end
-  
   def test_should_get_download_for_public_attachment
     @besluit_attachment = attachments(:besluit_attachment)
     get :show, :id => @besluit_attachment.id, :basename => @besluit_attachment.basename, :format => @besluit_attachment.extension
@@ -17,12 +11,6 @@ class AttachmentsControllerTest < ActionController::TestCase
     assert_equal @besluit_attachment.size.to_s, @response.headers['Content-Length']
     assert_equal "attachment; filename=\"#{@besluit_attachment.filename}\"", @response.headers['Content-Disposition']
     assert_equal 'public', @response.headers['Cache-Control']
-  end
-  
-  def test_should_not_get_download_for_private_attachment_for_non_user
-    @hidden_attachment = attachments(:hidden_attachment)
-    get :private, :id => @hidden_attachment.id, :basename => @hidden_attachment.basename, :format => @hidden_attachment.extension
-    assert_response :not_found
   end
   
   def test_should_get_download_without_extension

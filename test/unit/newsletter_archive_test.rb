@@ -126,29 +126,12 @@ class NewsletterArchiveTest < ActiveSupport::TestCase
 
   def test_last_updated_at_should_return_updated_at_when_no_accessible_newsletter_editions_are_found
     nla = create_newsletter_archive
-    assert_equal nla.updated_at, nla.last_updated_at(users(:arthur))
+    assert_equal nla.updated_at, nla.last_updated_at
     nle1 = create_newsletter_edition nla, :published => 'published'
     nle1.node.update_attribute(:hidden, true)
-    assert_equal nla.updated_at, nla.last_updated_at(users(:editor))
+    assert_equal nla.updated_at, nla.last_updated_at
     nle2 = create_newsletter_edition nla, :publication_start_date => 1.day.from_now, :published => 'unpublished'
-    assert_equal nla.updated_at, nla.last_updated_at(users(:editor))
-  end
-
-  def test_last_updated_at_should_return_publication_start_date_of_last_published_accessible_newsletter_edition
-    nla = create_newsletter_archive
-
-    nle1 = create_newsletter_edition(nla, :title => 'visible: 2 days ago, published', :publication_start_date => 2.days.ago)
-    nle1.update_attribute :published, 'published'
-
-    nle2 = create_newsletter_edition(nla, :title => 'hidden: 1 day ago, published', :publication_start_date => 1.day.ago)
-    nle2.update_attribute :published, 'published'
-    nle2.node.update_attribute(:hidden, true)
-
-    nle3 = create_newsletter_edition(nla, :title => 'visible: 1 day ago, unpublished', :publication_start_date => 1.day.from_now)
-    nle3.update_attribute :published, 'unpublished'
-    
-    assert_equal nle2.reload.publication_start_date, nla.last_updated_at(users(:arthur))
-    assert_equal nle1.reload.publication_start_date.to_s, nla.last_updated_at(users(:editor)).to_s
+    assert_equal nla.updated_at, nla.last_updated_at
   end
 
 protected

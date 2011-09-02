@@ -46,7 +46,7 @@ class Admin::CategoriesControllerTest < ActionController::TestCase
     login_as :sjoerd
 
     assert_no_difference 'Category.count' do
-      post :update, :id => @category.id, :category => { :name => 'Test category' }
+      put :update, :id => @category.id, :category => { :name => 'Test category' }
       assert_response :success
       assert !assigns(:category).new_record?, :message => assigns(:category).errors.full_messages.join('; ')
     end
@@ -59,7 +59,8 @@ class Admin::CategoriesControllerTest < ActionController::TestCase
     @category.update_attribute(:parent, parent)
 
     assert @category.parent
-    post :update, :id => @category.id, :category => { :name => 'Test category', :parent_id => '' }
+        
+    put :update, :id => @category.id, :category => { :name => 'Test category', :parent_id => '' }
 
     assert_response :success
     assert_equal 'Test category', assigns(:category).name
@@ -133,27 +134,6 @@ class Admin::CategoriesControllerTest < ActionController::TestCase
     assert_response :success
 
     assert !user.categories.include?(category)
-  end
-
-  def test_should_require_roles
-    assert_user_can_access  :arthur,       :index
-    assert_user_can_access  :arthur,       :create,                                        { :category => { :name => 'Another category' }}
-    assert_user_can_access  :arthur,       :update,              { :id => Category.first.id, :category => { :name => 'Another category' }}
-    assert_user_can_access  :arthur,       :destroy,               :id => Category.first.id
-    assert_user_cant_access :editor,       [ :create, :update, :index, :destroy ]
-    assert_user_cant_access :final_editor, [ :create, :update, :index, :destroy ]
-    assert_user_can_access  :arthur,       :category_options,      :id => Category.first.id
-    assert_user_can_access  :arthur,       :synonyms,              :id => Category.first.id
-    assert_user_can_access  :arthur,       :add_to_favorites,      :id => Category.first.id
-    assert_user_can_access  :arthur,       :remove_from_favorites, :id => Category.first.id
-    assert_user_can_access  :editor,       :category_options,      :id => Category.first.id
-    assert_user_can_access  :editor,       :synonyms,              :id => Category.first.id
-    assert_user_can_access  :editor,       :add_to_favorites,      :id => Category.first.id
-    assert_user_can_access  :editor,       :remove_from_favorites, :id => Category.first.id
-    assert_user_can_access  :final_editor, :category_options,      :id => Category.first.id
-    assert_user_can_access  :final_editor, :synonyms,              :id => Category.first.id
-    assert_user_can_access  :final_editor, :add_to_favorites,      :id => Category.first.id
-    assert_user_can_access  :final_editor, :remove_from_favorites, :id => Category.first.id
   end
 
   protected

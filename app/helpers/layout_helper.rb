@@ -3,8 +3,8 @@ module LayoutHelper
     partials        = ''
     node            = (@node || current_site)
     partial         = '/layouts/partials/' + node.own_or_inherited_layout_variant[target]['representation']
-    inhertiable     = node.own_or_inherited_layout_variant[target]['inheritable'].nil? || node.own_or_inherited_layout_variant[target]['inheritable']
-    representations = node.find_content_representations(target, current_user, inhertiable)
+    inheritable     = node.own_or_inherited_layout_variant[target]['inheritable'].nil? || node.own_or_inherited_layout_variant[target]['inheritable']
+    representations = node.find_content_representations(target, inheritable)
 
     representations.each do |element|
       if element.custom_type.present?
@@ -18,8 +18,8 @@ module LayoutHelper
   end
 
   def render_sub_menu
-    unless @node.nil? || @node.root?
-      create_sub_menu
+    unless @node.blank? || @node.root?
+      render :partial => '/layouts/partials/sub_menu'
     end
   end
 
@@ -30,7 +30,7 @@ module LayoutHelper
   end
   
   def render_related_content
-    if @node && @node.content_type_configuration[:has_own_content_box] && !((@node.content_type == 'Page' || @node.content_type == 'Section') && @node.categories.empty?)
+    if @node && @node.content_type_configuration[:has_own_content_box] && !((@node.content_class == Page || @node.content_class <= Section) && @node.categories.empty?)
       custom_partial = @node.own_or_inherited_layout.custom_representations["related_content"]["content_partial"] || 'related_content'
       render :partial => '/layouts/partials/content_box',
              :locals  => {

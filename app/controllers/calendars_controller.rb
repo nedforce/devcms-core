@@ -23,7 +23,7 @@ class CalendarsController < ApplicationController
   def tomorrow
     tomorrow        = Date.tomorrow
     conditions      = [ '(start_time BETWEEN :start_time AND :end_time) OR (end_time BETWEEN :start_time AND :end_time)', { :start_time => tomorrow.beginning_of_day, :end_time => tomorrow.end_of_day } ]
-    @calendar_items = @calendar.calendar_items.find_accessible(:all, :include => :node, :conditions => conditions, :order => 'start_time', :for => current_user)
+    @calendar_items = @calendar.calendar_items.accessible.all(:include => :node, :conditions => conditions, :order => 'start_time')
     @feed_title     = I18n.t('calendars.tomorrow')
 
     respond_to do |format|
@@ -40,10 +40,10 @@ class CalendarsController < ApplicationController
         @date = Date.parse(params[:date]) rescue Date.today
         @date = Date.today if !@date.valid_gregorian_date?
 
-        @calendar_items = @calendar.calendar_items.find_all_for_month_of(@date, current_user).group_by {|ci| ci.start_time.mday }
+        @calendar_items = @calendar.calendar_items.find_all_for_month_of(@date).group_by {|ci| ci.start_time.mday }
       end
       format.atom do
-        @calendar_items = @calendar.calendar_items.find_accessible(:all, :include => :node, :order => 'start_time', :for => current_user, :conditions => ['nodes.ancestry = ? ', @calendar.node.child_ancestry])
+        @calendar_items = @calendar.calendar_items.accessible.all(:include => :node, :order => 'start_time', :conditions => ['nodes.ancestry = ? ', @calendar.node.child_ancestry])
         render :layout => false
       end
       format.xml { render :xml => @calendar }

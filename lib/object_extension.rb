@@ -1,9 +1,9 @@
 class Object
-  def type
-    return self.class
+  
+  # SHAME!
+  def to_bool
+    ActiveRecord::ConnectionAdapters::Column.value_to_boolean(self)
   end
   
-  # def to_bool
-  #   !(/^(1|t|true)$/i =~ self.to_s).nil?
-  # end
+  alias_method :to_boolean, :to_bool
 end

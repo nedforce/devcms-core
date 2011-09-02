@@ -36,28 +36,21 @@ class NewsletterEdition < ActiveRecord::Base
   has_parent :newsletter_archive
 
   # A +NewsletterEdition+ has many +NewsletterEditionItem+ objects and many items through +NewsletterEditionItem+.
-  has_many :newsletter_edition_items,  :dependent => :destroy, :extend => FindAccessible::AssociationExtension
-  has_many :newsletter_edition_queues, :dependent => :destroy, :extend => FindAccessible::AssociationExtension
+  has_many :newsletter_edition_items,  :dependent => :destroy
+  has_many :newsletter_edition_queues, :dependent => :destroy
 
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of :title, :body, :newsletter_archive
   validates_length_of   :title, :in => 2..255, :allow_blank => true
 
   # Retrieves the items belonging to this newsletter edition in correct order.
-  # TODO: Tests
   def items
-    self.newsletter_edition_items.all(:order => "position ASC").collect{ |ed_item| ed_item.item}
+    self.newsletter_edition_items.all(:order => "position ASC").map { |ed_item| ed_item.item}
   end
 
   # Returns the number of items belonging to this newsletter edition.
   def items_count
     self.newsletter_edition_items.count
-  end
-
-  # Retrieves the approved items belonging to this newsletter edition in correct order.
-  # TODO: Tests
-  def approved_items
-    self.items.map { |item| item.node.content }
   end
   
   # Adds items to a +NewsletterEdition+, which must be a +Page+ or a +NewsItem+. Old associations are removed first.

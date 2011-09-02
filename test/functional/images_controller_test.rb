@@ -41,19 +41,4 @@ class ImagesControllerTest < ActionController::TestCase
     assert assigns(:image)
   end
   
-  def test_should_render_404_if_not_found
-    get :show, :id => -1
-    assert_response :not_found
-  end
-  
-  def test_should_render_404_for_invalid_id
-    get :show, :id => "icon_minus", :format => 'gif'
-    assert_response :not_found
-  end
-  
-  def test_should_render_404_for_invalid_action
-    get :index, :format => 'jpg'
-    assert_response :not_found
-  end  
-  
 end

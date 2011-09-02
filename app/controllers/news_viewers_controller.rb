@@ -28,7 +28,7 @@ protected
 
   # Finds recent news items.
   def find_recent_news_items
-    @news_items = @news_viewer.accessible_news_items_for(current_user, { :page => { :size => 25, :current => params[:page] }})
+    @news_items = @news_viewer.accessible_news_items({ :page => { :size => 25, :current => params[:page] }})
     @latest_news_items = []
     @news_items_for_table = @news_items.to_a
 

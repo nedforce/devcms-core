@@ -16,9 +16,4 @@ class EventsControllerTest < ActionController::TestCase
     assert assigns(:calendar_item)
     assert_equal nodes(:meetings_calendar_meeting_one_node), assigns(:node)
   end
- 
-  def test_should_render_404_if_not_found
-    get :show, :id => -1
-    assert_response :not_found
-  end
 end

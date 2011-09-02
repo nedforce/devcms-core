@@ -34,7 +34,7 @@
                                   :format            => :js,
                                   :id                => @weblog_post.id, 
                                   :image_id          => image.id, 
-                                  :weblog_archive_id => @weblog_archive.id,
+                                  :weblog_archive_id => @weblog_post.weblog.weblog_archive.id,
                                   :weblog_id         => @weblog.id}))  %>"
          );
       <% end %>

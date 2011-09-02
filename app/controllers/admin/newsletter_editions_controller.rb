@@ -27,7 +27,7 @@ class Admin::NewsletterEditionsController < Admin::AdminController
   # * GET /admin/newsletter_editions/:id
   # * GET /admin/newsletter_editions/:id.xml
   def show
-    @approved_content_items = @newsletter_edition.approved_items
+    @approved_content_items = @newsletter_edition.items
 
     respond_to do |format|
       format.html { render :partial => 'show', :locals => { :record => @newsletter_edition }, :layout => 'admin/admin_show' }

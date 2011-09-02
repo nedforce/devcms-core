@@ -33,12 +33,6 @@ class Admin::UsersControllerTest < ActionController::TestCase
     assert_equal User.find(arthur.id).first_name, new_name
   end
 
-  def test_should_not_xml_update_nonexistent_user
-    login_as :sjoerd
-    put :update, :id => -1, :format => 'xml'
-    assert_response :not_found
-  end
-
   def test_should_not_xml_update_illegal_email_address
     login_as :sjoerd
     arthur = users(:arthur)
@@ -56,12 +50,6 @@ class Admin::UsersControllerTest < ActionController::TestCase
     assert_equal User.find(arthur.id).first_name, new_name
   end
 
-  def test_should_not_json_update_nonexistent_user
-    login_as :sjoerd
-    put :update, :id => -1, :format => 'json'
-    assert_response :not_found
-  end
-
   def test_should_json_destroy_user
     login_as :sjoerd
     delete :destroy, :id => users(:arthur).id, :format => 'json'
@@ -72,12 +60,6 @@ class Admin::UsersControllerTest < ActionController::TestCase
     login_as :sjoerd
     delete :destroy, :id => users(:sjoerd).id, :format => 'json'
     assert_response :unprocessable_entity
-  end
-
-  def test_should_not_xml_destroy_nonexistent_user
-    login_as :sjoerd
-    delete :destroy, :id => -1, :format => 'xml'
-    assert_response :not_found
   end
 
   def test_should_json_get_newsletter_archives_for_user
@@ -94,7 +76,7 @@ class Admin::UsersControllerTest < ActionController::TestCase
 
   def test_should_page_for_extjs
     login_as :sjoerd
-    post :index, :start => '2', :limit => '2', :format => 'xml'
+    get :index, :start => '2', :limit => '2', :format => 'xml'
     assert_response :success
     assert_equal 2, assigns(:users).results.size
     assert_tag :tag => 'users'
@@ -102,21 +84,21 @@ class Admin::UsersControllerTest < ActionController::TestCase
 
   def test_should_sort_for_extjs
     login_as :sjoerd
-    post :index, :sort => 'email_address', :dir => 'DESC', :format => 'xml'
+    get :index, :sort => 'email_address', :dir => 'DESC', :format => 'xml'
     assert_response :success
     assert_equal users(:gerjan).email_address, assigns(:users).results.first.email_address
   end
 
   def test_should_sort_newsletter_archives_for_extjs
     login_as :sjoerd
-    post :index, :sort => 'newsletter_archives', :dir => 'DESC', :format => 'xml'
+    get :index, :sort => 'newsletter_archives', :dir => 'DESC', :format => 'xml'
     assert_response :success
     assert_equal users(:sjoerd).email_address, assigns(:users).first.email_address
   end
 
   def test_should_page_and_sort_for_extjs
     login_as :sjoerd
-    post :index, :sort => 'email_address', :dir => 'DESC', :start => '2', :limit => '2', :format => 'xml'
+    get :index, :sort => 'email_address', :dir => 'DESC', :start => '2', :limit => '2', :format => 'xml'
     assert_response :success
     assert_equal 2, assigns(:users).results.size
     assert_not_equal users(:gerjan).email_address, assigns(:users).results.first.email_address
@@ -124,7 +106,7 @@ class Admin::UsersControllerTest < ActionController::TestCase
 
   def test_should_filter_for_extjs
     login_as :sjoerd
-    post :index, :filter => { 0 => { :data => { :type => 'string', :value => 'a' }, :field => 'login' } }, :format => 'xml'
+    get :index, :filter => { 0 => { :data => { :type => 'string', :value => 'a' }, :field => 'login' } }, :format => 'xml'
 
     assert_response :success
     assert_equal 1, assigns(:users).results.size
@@ -143,16 +125,6 @@ class Admin::UsersControllerTest < ActionController::TestCase
     email = ActionMailer::Base.deliveries.first
     
     assert email.to.include?('test@test.nl')
-  end
-
-  def test_should_require_roles
-    assert_user_can_access :arthur, [ :update, :destroy ], {:id => users(:arthur).id }
-    assert_user_cant_access :editor, [ :update, :destroy ], {:id => users(:arthur).id }
-    assert_user_cant_access :final_editor, [ :update, :destroy ], {:id => users(:arthur).id }
-    
-    assert_user_can_access :arthur, [ :index, :create, :invite ]
-    assert_user_cant_access :editor, [ :index, :create, :invite ]
-    assert_user_cant_access :final_editor, [ :index, :create, :invite ]
   end
 
 end

@@ -7,27 +7,66 @@ class ApplicationController < ActionController::Base
   include RoleRequirementSystem
   include SslRequirement
   
-  
   self.mod_porter_secret = "h6UGA7Hn9N4D8Jsu2SbX"
+  
+  protect_from_forgery
+  
+  # Ensures the values for the +password+ and +password_confirmation+
+  # attributes of users are not logged, for security reasons.
+  filter_parameter_logging :password
+  
+  # Catch all exceptions (except 404 errors, which are handled below) to render
+  # a custom 500 page. Also makes sure a notification mail is sent.
+  # 404 exceptions are handled below.
+  rescue_from Exception, :with => :handle_500
+
+  # Catches all 404 errors to render a 404 page.
+  # Note that this rescue_from statement has precedence over the one above.
+  # UnknownAction and RecordNotFound exceptions are given a special treatment, so you don't have to worry about
+  # catching them in the +find_[resource]+ methods throughout all controllers.
+  rescue_from ActionController::RoutingError, ActionController::UnknownController, ActionController::UnknownAction, ActiveRecord::RecordNotFound, :with => :handle_404
+  
+  # Try retrieve the +Node+ object for the current request.
+  # This needs to be done before any authorization attempts, a +Node+ might be needed.
+  before_filter :find_node
+  
+  before_filter :find_context_node
 
   # Attempt to login the user from a cookie, if it's set.
   before_filter :login_from_cookie
 
   before_filter :login_as_admin_on_local_request_to_changes, :only => :all_changes
-
-  # Try retrieve the +Node+ object for the current request.
-  # This needs to be done before any authorisation attempts, a +Node+ might be needed.
-  before_filter :find_node, :except => [:index, :new, :synonyms, :create]
   
-  before_filter :set_page_title
+  # Performs the actual authorization procedure
+  before_filter :check_authorization
 
   # Set the private menu items for the side box.
   before_filter :set_private_menu
+
+  # Find the children for the current node
+  before_filter :find_accessible_children_for_menus
   
   # Set the search options for the search field.
   before_filter :set_search_scopes
+  
+  before_filter :set_page_title
+  
+  before_filter :confirm_destroy, :only => :destroy
 
+  # Set the rss feed url if needed
+  before_filter :set_rss_feed_url, :only => :show
 
+  # Increment the number of hits for the accessed node, if a node was accessed
+  after_filter :increment_hits, :only => :show
+
+  # Set the layout based on its position in the tree.
+  layout :set_layout
+  
+  # Include all helpers, all the time.
+  helper VideoHelper, SitemapsHelper, SearchHelper, PollQuestionsHelper, OwmsMetadataHelper, HtmlEditorHelper, ContactBoxesHelper, CalendarsHelper, AttachmentsHelper, ApplicationHelper, TextHelper, LayoutHelper
+
+  helper_method :secure_url, :current_site
+  
   # Renders confirm_destroy.html.erb if destroy is requested using GET.
   # Hyperlinks with <tt>:method => :delete</tt> will perform a GET request if
   # the browser is not JS enabled.
@@ -38,40 +77,6 @@ class ApplicationController < ActionController::Base
   # Also remember to add <tt>:member => {:destroy => :any}</tt> to the resource mapping
   # in routes.rb.
   verify :method => [ :get, :delete ], :only => :destroy
-  before_filter :confirm_destroy, :only => :destroy
-
-  # Include all helpers, all the time.
-  helper VideoHelper, SitemapsHelper, SearchHelper, PollQuestionsHelper, OwmsMetadataHelper, HtmlEditorHelper, ContactBoxesHelper, CalendarsHelper, AttachmentsHelper, ApplicationHelper, TextHelper, LayoutHelper
-
-  helper_method :secure_url, :current_site
-
-  # Ensures the values for the +password+ and +password_confirmation+
-  # attributes of users are not logged, for security reasons.
-  filter_parameter_logging :password
-
-  # Set the rss feed url if needed
-  before_filter :set_rss_feed_url, :only => :show
-
-  # Increment the number of hits for the accessed node, if a node was accessed
-  after_filter :increment_hits, :only => :show
-
-  protect_from_forgery
-
-  # Set the layout based on its position in the tree.
-  layout :set_layout
-
-  # Catch all exceptions (except 404 errors, which are handled below) to render
-  # a custom 500 page. Also makes sure a notification mail is sent.
-  # 404 exceptions are handled below.
-  rescue_from(Exception, :with => :handle_500) unless Rails.env.development?
-
-  # Catches all 404 errors to render a 404 page.
-  # Note that this rescue_from statement has precedence over the one above.
-  # UnknownAction and RecordNotFound exceptions are given a special treatment, so you don't have to worry about
-  # catching them in the +find_[resource]+ methods throughout all controllers.
-  rescue_from(ActionController::RoutingError, ActionController::UnknownController,
-                ActionController::UnknownAction, ActiveRecord::RecordNotFound,
-                :with => :handle_404) unless Rails.env.development?
 
   # Called when we need to include hidden nodes on local requests
   # Before filter sets current user to admin on local requests to this method
@@ -80,16 +85,15 @@ class ApplicationController < ActionController::Base
   end
 
   def changes
-    if !@node.nil? && @node.content_class != Feed && params[:format] == 'atom'
+    if @node.present? && @node.content_class != Feed && params[:format] == 'atom'
       if @node.has_changed_feed
         @nodes = @node.last_changes(:self)
       elsif @node.content_class <= Section
-        options       = { :limit => 50 }
-        options[:for] = current_user if logged_in?
-        @nodes = @node.last_changes(:all, options)[0..24]
+        @nodes = @node.last_changes(:all, { :limit => 25 })
       else
         raise ActionController::UnknownAction
       end
+      
       respond_to do |format|
         format.atom { render :template => '/shared/changes', :layout => false }
       end
@@ -108,22 +112,103 @@ class ApplicationController < ActionController::Base
     synonyms = synonyms.collect { |key, set| set.uniq.join(", ") }
     send_data synonyms.join("\n"), :filename => 'synonyms.txt', :type => 'text/plain', :disposition => 'attachment'
   end
+  
 protected
+
+  # Renders a custom 404 page.
+  def handle_404(exception)
+    if Rails.env.development?
+      raise exception
+    elsif controller_name == "errors"
+      render :text => 'Internal server error.'
+    else
+      respond_to do |f|
+        f.html do 
+          if request.xhr?
+            render :json => { :error => I18n.t('application.page_not_found') }.to_json, :status => 404
+          else
+            redirect_to error_404_path
+          end
+        end
+        f.xml  { head 404 }
+        f.json { render :json => { :error => I18n.t('application.page_not_found')}.to_json, :status => 404 }
+        f.js   { head 404 }
+        f.atom { head 404 }
+        f.all  { render :nothing => true, :status => :not_found }
+      end
+    end
+  end
+
+  # Renders a custom 500 page. Also makes sure a notification mail is sent.
+  def handle_500(exception)
+    if Rails.env.development?
+      raise exception
+    elsif controller_name == "errors"
+      render :text => 'Internal server error.'
+    else
+      send_exception_notification(exception)
+      error = {:error => "#{exception} (#{exception.class})", :backtrace => exception.backtrace.join('\n')}
+  
+      respond_to do |f|
+        f.html do
+          if request.xhr?
+            render :json => error.to_json, :status => :internal_server_error
+          else
+            redirect_to error_500_path
+          end
+        end
+        f.xml  { render :xml  => error.to_xml,  :status => :internal_server_error }
+        f.json { render :json => error.to_json, :status => :internal_server_error }
+        f.js   { render :json => error.to_json, :status => :internal_server_error }
+        f.atom { render :xml  => error.to_xml,  :status => :internal_server_error, :layout => false }
+        f.all  { render :nothing => true,       :status => :internal_server_error }
+      end
+    end
+  end
 
   # Used to scope the content (menu's etc) to the current site node
   def current_site
-    return @current_site if @current_site
-
-    @current_site = if params[:site_node_id].present?
-      Node.find(params[:site_node_id])
+    @current_site ||= Node.with_content_type('Site').find_by_id(params[:site_id]) || raise(ActionController::RoutingError, "No root site found!")
+  end
+  
+  # Used to find the operated node (if present and accessible)
+  def find_node
+    @node = current_site.self_and_descendants.accessible.include_content.find(params[:node_id]) if params[:node_id]
+  end
+  
+  # Used to find the context node (for authorization purposes)
+  def find_context_node
+    if @node.present?
+      if @node.content_class <= Section
+        @context_node = @node
+      else
+        @context_node = @node.self_and_ancestors.sections.include_content.last
+      end
     else
-      parts = request.host.split(".")
-      parts.shift if parts.first == "www"
-      Site.find_by_domain(parts.join('.')).node || Node.root
+      resource_type = params[:controller].classify.constantize rescue nil
+      
+      if resource_type
+        parent_resource_type = resource_type.parent_type rescue nil
+        
+        # Nested controller access
+        if parent_resource_type
+          name = parent_resource_type.name
+          node = current_site.self_and_descendants.accessible.with_content_type(name).include_content.first(:conditions => { :content_id => params["#{name.underscore}_id"] })
+          @context_node = node.self_and_ancestors.sections.last if node
+        else
+          @context_node = current_site
+        end
+      else
+        @context_node = current_site
+      end
     end
-    raise(ActionController::RoutingError, "No root site found!") unless @current_site
-
-    @current_site
+    
+    raise(ActionController::RoutingError, 'No context node found!') unless @context_node
+  end
+  
+  # Performs authorization
+  def check_authorization
+    raise ActiveRecord::RecordNotFound.new('Access denied') unless @context_node.accessible_for_user?(current_user)
   end
 
   # Increases the number of hits for the currently accessed node, if a node is accessed.
@@ -151,10 +236,12 @@ protected
       return "plain"
     else
       node = @node
+      
       unless node
         node                = current_site
         node.layout_variant = 'default'
       end        
+      
       @layout_configuration = node.own_or_inherited_layout_configuration
       layout                = node.own_or_inherited_layout
       variant               = node.own_or_inherited_layout_variant
@@ -175,60 +262,24 @@ protected
     (params && params[:layout] == 'plain') ? { :layout => 'plain' } : {}
   end
 
-  def find_node
-    begin
-      if params[:node_id] # set by the routing extension
-        @node = admin_section? ? Node.find(params[:node_id]) : @node = current_site.self_and_descendants.find_accessible(params[:node_id], :for => current_user)
-      else
-        # Try to find out based on the controller name.
-        model = controller_name.sub(/_controller\z/, '').classify.constantize.base_class rescue nil
-        if model && params.has_key?(:id)
-          if model.respond_to?(:is_content_node?) && model.is_content_node?
-            @node = case
-              when admin_section?
-                Node.first(:conditions => { :content_id => params[:id], :content_type => model.name })
-              else
-                current_site.self_and_descendants.find_accessible(:first, :conditions => { :content_id => params[:id], :content_type => model.name }, :for => current_user)
-              end
-          elsif model.name == Node.name
-            @node = admin_section? ? Node.find(params[:id]) : current_site.self_and_descendants.find_accessible(params[:id], :for => current_user)
-          end
-        end
-      end
-      raise ActiveRecord::RecordNotFound unless @node
-    rescue ActiveRecord::StatementInvalid
-      # Malformed id, throw +ActiveRecord::RecordNotFound+ to trigger a 404.
-      raise ActiveRecord::RecordNotFound
-    end
-  end
-
   # Returns true if we are generating an admin section, false otherwise.
   def admin_section?
-    controller_path =~ /\Aadmin\//
-  end
-
-  # Finds the Node object corresponding to the passed in +parent_node_id+ parameter.
-  # This method is only used for node creation.
-  def find_parent_node
-    @parent_node = Node.find(params[:parent_node_id])
+    params[:controller].starts_with?('admin')
   end
 
   # Find the Attachment and Image children belonging to the current Node instance.
   def find_images_and_attachments
-    # Make a best-effort attempt to discover the node if it hasn't been set yet.
-    @node ||= find_node
-    @image_content_nodes, @attachment_content_nodes = [], []
-    if @node
-      options  = { :conditions => { :content_type => %w( Image Attachment ContentCopy ) }, :for => current_user }
-      children = @node.accessible_content_children(options)
-      children.each do |child|
-        child = child.copied_node.content if child.is_a?(ContentCopy)
-        
-        if child.class == Image
-          @image_content_nodes << child unless child.is_for_header?
-        elsif child.class == Attachment
-          @attachment_content_nodes << child
-        end
+    @image_content_nodes = Image.accessible.all(:conditions => { :is_for_header => false, 'nodes.ancestry' => @node.child_ancestry })
+    @attachment_content_nodes = []
+    
+    @node.children.accessible.with_content_type(%w( Attachment ContentCopy )).include_content.all.each do |child_node|
+      child = child_node.content
+      child = child.copied_node.content if child.is_a?(ContentCopy)
+      
+      if child.is_a?(Image) && !child.is_for_header?
+        @image_content_nodes << child
+      elsif child.is_a?(Attachment)
+        @attachment_content_nodes << child
       end
     end
   end
@@ -266,59 +317,6 @@ protected
     render :action => 'confirm_destroy' if request.get?
   end
 
-  # Renders a custom 404 page.
-  def handle_404
-    respond_to do |f|
-      f.html do
-        if request.xhr?
-          render :json => { :error => I18n.t('application.page_not_found') }.to_json, :status => 404
-        else
-          set_search_scopes
-          if (error_404_url_alias = Settler[:error_page_404]).present? && @node = Node.find_by_url_alias(error_404_url_alias)
-            @page = @node.content
-            render :template => 'pages/show', :status => :not_found
-          else
-            @page_title = "----#{I18n.t('application.page_not_found')}---"
-            render :template => "errors/404", :status => :not_found
-          end
-        end
-      end
-      f.xml  { head 404 }
-      f.json { render :json => { :error => I18n.t('application.page_not_found')}.to_json, :status => 404 }
-      f.js   { head 404 }
-      f.atom { head 404 }
-      f.all  { render :nothing => true, :status => :not_found }
-    end
-  end
-
-  # Renders a custom 500 page. Also makes sure a notification mail is sent.
-  def handle_500(exception)
-    send_exception_notification(exception) unless Rails.env.development?
-    error = {:error => "#{exception} (#{exception.class})", :backtrace => exception.backtrace.join('\n')}
-
-    respond_to do |f|
-      f.html do
-        # Re-raise exception to provide developer with stack trace for debugging purposes.
-        if Rails.env.development?
-          raise exception
-        else # in production *and* test (test should simulate production so we can test production behaviour)
-          set_search_scopes
-          if (error_500_url_alias = Settler[:error_page_500]).present? && @node = Node.find_by_url_alias(error_500_url_alias)
-            @page = @node.content
-            render :template => 'pages/show', :status => :internal_server_error
-          else
-            render :template => "errors/500", :status => :internal_server_error
-          end
-        end
-      end
-      f.xml  { render :xml  => error.to_xml,  :status => :internal_server_error }
-      f.json { render :json => error.to_json, :status => :internal_server_error }
-      f.js   { render :json => error.to_json, :status => :internal_server_error }
-      f.atom { render :xml  => error.to_xml,  :status => :internal_server_error, :layout => false }
-      f.all  { render :nothing => true,       :status => :internal_server_error }
-    end
-  end
-
   # Delivers the exception notification email.
   def send_exception_notification(exception)
     deliverer = self.class.exception_data
@@ -333,16 +331,24 @@ protected
   end
 
   def set_private_menu
-    @private_menu_items = []
     if logged_in?
-      @private_menu_items += [["Profielpagina", profile_path]]
-      @private_menu_items += Node.find_accessible(:all, :for => current_user, :conditions => {"nodes.hidden" => true}, :order => :position)
+      @private_menu_items = find_accessible_private_items_for(current_user)
+      @private_menu_items.unshift([["Profielpagina", profile_path]])
+    else
+      @private_menu_items = []
+    end
+  end
+  
+  def find_accessible_private_items_for(user)
+    role_assignments = user.role_assignments.all
+    
+    Node.accessible.private.sections.all(:order => :position).select do |node|
+      role_assignments.any? { |ra| node.self_and_ancestor_ids.include?(ra.node_id) }
     end
   end
 
   def set_page_title
-    # rather safe than sorry -> rescue nil in case we don't have a node
-    @page_title ||= @node.content.content_title rescue nil
+    @page_title ||= @node ? @node.content_title : nil
   end
 
   # Returns true if the current user has a particular role on a given node, false otherwise.
@@ -391,6 +397,7 @@ protected
 
   def parse_date(field)
     model = controller_name.classify.tableize.singularize.to_sym
+    
     if params[model]
       date = params[model].delete("#{field}_day")
       time = params[model].delete("#{field}_time")
@@ -421,6 +428,10 @@ protected
   def set_extra_search_scopes
     @search_scopes << SEARCH_SCOPE_SEPARATOR
 
-    @search_scopes += current_site.accessible_children(:for_menu => true).map { |n| [ n.content.title, "node_#{n.id}" ]}
+    @search_scopes += @accessible_children_for_menu.map { |c| [ c.title, "node_#{c.id}" ]}
+  end
+  
+  def find_accessible_children_for_menus
+    @accessible_children_for_menu = current_site.children.accessible.public.shown_in_menu.all(:order => 'nodes.position ASC')
   end
 end

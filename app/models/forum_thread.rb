@@ -42,6 +42,10 @@ class ForumThread < ActiveRecord::Base
   validates_length_of       :title, :in => 2..255, :allow_blank => true
   validates_numericality_of :forum_topic_id, :user_id
   
+  def self.parent_type
+    ForumTopic
+  end
+  
   # Returns true if this +ForumThread+ is started by the given +User+, else false.
   def is_owned_by_user?(user)
     self.user == user

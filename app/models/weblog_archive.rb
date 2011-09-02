@@ -32,7 +32,7 @@ class WeblogArchive < ActiveRecord::Base
   })
 
   # A +WeblogArchive+ can have many +Weblog+ children.
-  has_children :weblogs, :order => 'title'
+  has_children :weblogs, :order => 'weblogs.title'
 
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of :title
@@ -70,7 +70,7 @@ class WeblogArchive < ActiveRecord::Base
   # total number of weblogs being 57, the 41st and 57th weblogs will be returned.
   def find_first_and_last_weblog_for_offset(offset)
     first  = self.weblogs.first(:offset => offset, :limit => DEFAULT_OFFSET)
-    second = self.weblogs.first(:offset => offset, :limit => DEFAULT_OFFSET, :order => 'title DESC')
+    second = self.weblogs.first(:offset => offset, :limit => DEFAULT_OFFSET, :order => 'weblogs.title DESC')
 
     [ first, second ]
   end
@@ -92,11 +92,10 @@ class WeblogArchive < ActiveRecord::Base
   end
 
   # Finds the +limit+ last updated +Weblog+ children.
-  # TODO: this query is slow because it instantiates all weblogs. Should be replaced by a faster custom SQL query, if possible.
-  def find_last_updated_weblogs(user, limit)
-    limit ||= 5
+  def find_last_updated_weblogs(limit = 5)
     return [] if limit <= 0
-    self.weblogs.find_accessible(:all, :for => user).sort { |a, b| b.last_updated_at(user) <=> a.last_updated_at(user) }[0.. (limit - 1)]
+    
+    self.weblogs.accessible.all.sort { |a, b| b.last_updated_at <=> a.last_updated_at }[0.. (limit - 1)]
   end
 
   # Returns the description as the token for indexing.

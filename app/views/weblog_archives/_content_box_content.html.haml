@@ -8,7 +8,7 @@
     - recent_weblogs.each do |weblog|
       %li.clearfix.hover
         .date
-          = weblog.last_updated_at(current_user).to_s :short
+          = weblog.last_updated_at.to_s :short
         .link
           = link_to_content_node h(weblog.title), weblog
 

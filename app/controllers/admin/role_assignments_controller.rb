@@ -1,10 +1,7 @@
-# This administrative controller is used to manage user permissions.
-class Admin::PermissionsController < Admin::AdminController
-  before_filter :find_node,   :only => [ :new, :create ]
+# This administrative controller is used to manage role assignments (permissions).
+class Admin::RoleAssignmentsController < Admin::AdminController
   before_filter :set_paging,  :only => [ :index, :create ]
   before_filter :set_sorting, :only => [ :index, :create ]
-  
-  skip_before_filter :set_actions  
   
   require_role 'admin'
   
@@ -51,6 +48,7 @@ class Admin::PermissionsController < Admin::AdminController
   # * POST /admin/permissions.xml
   def create
     respond_to do |format|
+      
       @user            = User.find_by_login(params[:role_assignment][:user_login])
       @role_assignment = RoleAssignment.new(:user => @user, :node_id => params[:node_id], :name => params[:role_assignment][:name])
 

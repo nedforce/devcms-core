@@ -66,7 +66,7 @@ class ImageTest < ActiveSupport::TestCase
   end
   
   def test_should_not_return_image_children_for_menu
-    assert nodes(:about_page_node).accessible_children(:for_menu => true).empty?
+    assert nodes(:about_page_node).children.accessible.shown_in_menu.empty?
   end
    
 protected

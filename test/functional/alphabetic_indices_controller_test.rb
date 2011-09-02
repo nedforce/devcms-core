@@ -19,9 +19,4 @@ class AlphabeticIndicesControllerTest < ActionController::TestCase
     assert assigns(:letter)
     assert_equal nodes(:root_alphabetic_index_node), assigns(:node)
   end
-
-  def test_should_render_404_if_not_found
-    get :show, :id => -1
-    assert_response :not_found
-  end
 end

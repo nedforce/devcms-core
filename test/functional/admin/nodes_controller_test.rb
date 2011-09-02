@@ -24,12 +24,6 @@ class Admin::NodesControllerTest < ActionController::TestCase
     assert_equal Node.root.children, assigns(:nodes)
   end
 
-  def test_index_should_return_404
-    login_as :sjoerd
-    get :index, :node => -1, :format => 'json'
-    assert_response :missing
-  end
-
   def test_should_insert_node_into_parent
     login_as :sjoerd
     s = nodes(:not_hidden_section_node)
@@ -50,12 +44,6 @@ class Admin::NodesControllerTest < ActionController::TestCase
     login_as :sjoerd
     xhr :put, :move, :id => Node.root.id, :parent => Node.root.id
     assert_response :error
-  end
-
-  def test_move_should_return_404
-    login_as :sjoerd
-    xhr :put, :move, :id => -1, :parent => Node.root.id
-    assert_response :missing
   end
 
   def test_move_should_require_parent_or_sibling_id
@@ -132,13 +120,6 @@ class Admin::NodesControllerTest < ActionController::TestCase
     assert assigns(:nodes).include?(nodes(:economie_section_node))
   end
 
-  def test_should_not_get_bulk_edit_for_invalid_node_id
-    login_as :arthur
-
-    get :bulk_edit, :ids => [ nodes(:root_section_node).id, nodes(:economie_section_node).id, -1 ]
-    assert_response :not_found
-  end
-
   def test_should_bulk_update_nodes
     login_as :arthur
 
@@ -171,30 +152,6 @@ class Admin::NodesControllerTest < ActionController::TestCase
 
     put :bulk_update, :ids => [ node1.id, node2.id ], :category_ids => [ category1.id, category2.id ]
     assert_template 'edit'
-  end
-
-  def test_should_require_roles
-    assert_user_can_access :arthur, :index
-    assert_user_can_access :editor, :index
-    assert_user_can_access :final_editor, :index
-    assert_user_cant_access :normal_user, :index
-    assert_user_can_access :arthur, [:update, :destroy, :make_global_frontpage], {:id => nodes(:root_section_node).id}
-    assert_user_can_access :arthur, [:update, :destroy, :make_global_frontpage], {:id => nodes(:economie_section_node).id}
-    assert_user_can_access :final_editor, [:update, :destroy], {:id => nodes(:economie_section_node).id}
-    assert_user_can_access :final_editor, [:update, :destroy], {:id => nodes(:economie_section_node).id}
-    assert_user_cant_access :editor, :update, {:id => nodes(:root_section_node).id}
-    assert_user_can_access :editor, :destroy, {:id => nodes(:devcms_news_node).id}
-    assert_user_cant_access :editor, :destroy, {:id => nodes(:economie_section_node).id}
-    assert_user_can_access :editor, :destroy, {:id => nodes(:editor_section_node).id}
-    assert_user_can_access :editor, :update, {:id => nodes(:devcms_news_node).id}
-    assert_user_can_access :arthur, :bulk_edit, { :ids => [ nodes(:devcms_news_node).id ] }
-    assert_user_can_access :arthur, :bulk_edit, { :ids => [ nodes(:devcms_news_node).id, nodes(:root_section_node).id ] }
-    assert_user_can_access :arthur, :bulk_update, { :ids => [ nodes(:devcms_news_node).id ] }
-    assert_user_can_access :arthur, :bulk_update, { :ids => [ nodes(:devcms_news_node).id, nodes(:root_section_node).id ] }
-    assert_user_can_access :editor, :bulk_edit, { :ids => [ nodes(:devcms_news_node).id ] }
-    assert_user_cant_access :editor, :bulk_edit, { :ids => [ nodes(:devcms_news_node).id, nodes(:root_section_node).id ] }
-    assert_user_can_access :editor, :bulk_update, { :ids => [ nodes(:devcms_news_node).id ] }
-    assert_user_cant_access :editor, :bulk_update, { :ids => [ nodes(:devcms_news_node).id, nodes(:root_section_node).id ] }
   end
 
 end

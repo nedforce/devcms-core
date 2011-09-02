@@ -106,9 +106,9 @@ module Node::Layouting
       end
       
       # Delete any empty settings from the configuration and save everything
-      layout_config[:node][:layout_configuration].delete_if {|k,v| v.blank? } unless layout_config[:node][:layout_configuration].blank?
+      layout_config[:node][:layout_configuration].delete_if { |k,v| v.blank? } unless layout_config[:node][:layout_configuration].blank?
       update_attributes(layout_config[:node])
-      return false
+      false
     end
   end
   
@@ -120,37 +120,39 @@ module Node::Layouting
   end
   
   
-  # Retrieve content representations for a given target and user (optional)
+  # Retrieve content representations for a given target
   # Can inherit from parent node (defaults to true)
-  def find_content_representations(target, user = nil, inherit = true)
+  def find_content_representations(target, inherit = true)
     # Do not inherit if this node is a Site node, as this is undesirable
     conditions = {}
     conditions.update(:target => target) if target
-    if !self.content_representations.exists?(conditions) && inherit && self.parent && !(self.content_type == 'Section' && self.content.type == 'Site' )
-      return self.parent.find_content_representations(target, user, inherit) 
+    
+    if !self.content_representations.exists?(conditions) && inherit && self.parent && self.content_class != Site
+      self.parent.find_content_representations(target, inherit) 
     else
-      return self.content_representations.all(:conditions => conditions).select {|element| element.content.blank? || element.content.visible_for_user?(user) }
+      self.content_representations.all(:conditions => conditions, :include => :content)
     end
   end
   
   # Find header image(s) for this node, either those set on this node or on one of its parents.
-  def header_images(current_user = nil)
-    images = Image.find_accessible(:all, :for => nil, :include => :node, :conditions => ["images.is_for_header = :true AND nodes.ancestry = :parent", {:true => true, :parent => self.child_ancestry }])
+  def header_images
+    images = Image.accessible.all(:conditions => { :is_for_header => true, 'nodes.ancestry' => self.child_ancestry })
+    
     if images.empty? && !self.root?
       images = self.parent.header_images
     end
-    return images
+    
+    images
   end
 
   # Returns a random header image for this node.
-  def random_header_image(current_user = nil)
-    all_images   = self.header_images(current_user)
-    random_image = all_images[rand(all_images.size)]
+  def random_header_image
+    self.header_images.sample
   end
   
   # Returns true if this node is a frontpage, false otherwise.
   def is_frontpage?
-    !self.sections.empty?
+    self.sections.any?
   end
 
   # Returns true if this node is the global front page, false otherwise.
@@ -163,10 +165,11 @@ module Node::Layouting
     Node.global_frontpage.is_descendant_of?(self)
   end
   
-  protected
+protected
+
   # Prevents a +Node+ from being hidden if it is, or contains the +global+ frontpage.
   def should_not_hide_global_frontpage
-    errors.add_to_base(:cant_hide_frontpage) if self.hidden && (self.is_global_frontpage? || self.contains_global_frontpage?)
+    errors.add_to_base(:cant_hide_frontpage) if (self.private? || self.hidden?) && (self.is_global_frontpage? || self.contains_global_frontpage?)
   end
   
   def set_default_layout
@@ -177,7 +180,6 @@ module Node::Layouting
     end
   end
 
-  # 
   module ClassMethods  
     # Class methods
     # Returns the global frontpage node.

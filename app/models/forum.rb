@@ -30,7 +30,7 @@ class Forum < ActiveRecord::Base
   })
       
   # A +Forum+ can have many +ForumTopic+ children.
-  has_children :forum_topics, :order => 'title'
+  has_children :forum_topics, :order => 'forum_topics.title'
     
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of   :title
@@ -44,13 +44,13 @@ class Forum < ActiveRecord::Base
     # TODO: Not too keen on the INNER JOINs here, any way to avoid these? DB caching of created_at?
     ForumThread.all(
       {
-        :select     => 'forum_threads.id, forum_threads.title, forum_threads.forum_topic_id, MAX(forum_posts.created_at) AS last_update_date', 
+        :select     => 'forum_threads.id, forum_threads.title, forum_threads.forum_topic_id, MAX(forum_posts.created_at) AS forum_threads_last_update_date', 
         :from       => '(forum_threads ',
         :joins      => 'INNER JOIN forum_topics ON forum_threads.forum_topic_id = forum_topics.id) INNER JOIN forum_posts ON forum_posts.forum_thread_id = forum_threads.id',
         :conditions => { :forum_topic_id => forum_topics },
         :group      => 'forum_threads.id, forum_threads.title, forum_threads.forum_topic_id', 
         :limit      => limit,
-        :order      => 'last_update_date DESC'
+        :order      => 'forum_threads_last_update_date DESC'
       }.merge(args)
     )
   end

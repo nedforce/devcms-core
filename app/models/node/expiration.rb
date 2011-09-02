@@ -14,6 +14,8 @@ module Node::Expiration
     
     base.before_validation :set_default_expires_on, :if => :expiration_required?
     
+    base.validates :expires_on_valid?
+    
     base.extend(ClassMethods)
   end
   
@@ -35,6 +37,14 @@ module Node::Expiration
   
   def set_default_expires_on
     self.expires_on ||= Date.today + Settler[:default_expiration_time].days
+  end
+  
+  def expires_on_valid?
+    if expirable? && expires_on.present?
+      unless (Date.today..(Date.today + Settler[:default_expiration_time].days)).include?(expires_on)
+        errors.add_to_base(I18n.t('nodes.expires_on_out_of_range', :date => I18n.l(Date.today + Settler[:default_expiration_time])))
+      end
+    end
   end
   
   module ClassMethods  

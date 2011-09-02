@@ -1,8 +1,10 @@
-- cache(:action => "top_hits_for_node_with_id_#{node.id}") do
-  - top_hits = node.content.find_top_hits(node.content_box_number_of_items)
+- content = node.content
+
+- cache(:content_type => content.class.name, :content_id => content.id, :controller => '/nodes', :action => :content_box, :expires_in => 30.minutes) do
+  - top_hits = content.find_top_hits(:limit => node.content_box_number_of_items, :include_content => false)
 
   - unless top_hits.empty?
     %ul
-      - top_hits.each do |content_node|
+      - top_hits.each do |top_hit|
         %li.hover
-          = link_to_content_node h(content_node.content_title), content_node
+          = link_to_node h(top_hit.content_title), top_hit

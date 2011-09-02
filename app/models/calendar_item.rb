@@ -55,6 +55,8 @@ class CalendarItem < Event
      :copyable => false,
      :controller_name => 'calendar_items'
    })
+   
+  needs_editor_approval
 
   # Create repeating calendar items if necessary.
   after_create :create_repeating_calendar_items
@@ -99,13 +101,13 @@ class CalendarItem < Event
   end
 
   # Destroy calendar item and all of its repetitions
-  def self.destroy_calendar_item(calender_item)
-    if calender_item.has_repetitions?
-      CalendarItem.find_each(:conditions => { :repeat_identifier => calender_item.repeat_identifier }) do |repetition|
+  def self.destroy_calendar_item(calendar_item)
+    if calendar_item.has_repetitions?
+      CalendarItem.all(:conditions => { :repeat_identifier => calendar_item.repeat_identifier }).each do |repetition|
         repetition.destroy
       end
     else
-      calender_item.destroy
+      calendar_item.destroy
     end
   end
 
@@ -114,15 +116,9 @@ class CalendarItem < Event
     @repeat_end = Date.parse(value.to_s) if value.present?
   end
 
-  # TODO: Refactor the method below; it is totally unmaintainable in its current form.
-  #
   # Flag is repetitions of this calendar item should be created
   def repeating=(value)
-    @repeating = if value.is_a?(TrueClass) || value.is_a?(FalseClass) 
-      value
-    else
-      value != "0" && value != "false"
-    end if value.is_a?(TrueClass) || value.is_a?(FalseClass) || (value.is_a?(String) && value.present?)
+    @repeating = (value.present? || value.is_a?(FalseClass)) ? value.to_bool : nil
   end
 
   # Set repeat interval granularity (day, week, month)

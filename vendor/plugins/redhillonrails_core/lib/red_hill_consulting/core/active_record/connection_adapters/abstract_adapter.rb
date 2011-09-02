@@ -30,13 +30,13 @@ module RedHillConsulting::Core::ActiveRecord::ConnectionAdapters
     end
 
     def add_foreign_key(table_name, column_names, references_table_name, references_column_names, options = {})
-      return unless Rails.env.production?
+      return if Rails.env.test?
       foreign_key = ForeignKeyDefinition.new(options[:name], table_name, column_names, ActiveRecord::Migrator.proper_table_name(references_table_name), references_column_names, options[:on_update], options[:on_delete], options[:deferrable])
       execute "ALTER TABLE #{table_name} ADD #{foreign_key}"
     end
 
     def remove_foreign_key(table_name, foreign_key_name)
-      return unless Rails.env.production?
+      return if Rails.env.test?
       execute "ALTER TABLE #{table_name} DROP CONSTRAINT #{foreign_key_name}"
     end
 

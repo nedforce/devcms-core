@@ -66,7 +66,7 @@ module WhiteListHelper
     
     #block ||= lambda { |node, bad| white_listed_bad_tags.include?(bad) ? nil : (node.is_a?(HTML::Tag) ? "" : node.to_s) }
     block ||= lambda { |node, bad| white_listed_bad_tags.include?(bad) ? nil : node.to_s.gsub(/</, '&lt;') }
-    returning [] do |new_text|
+    [].tap do |new_text|
       tokenizer = HTML::Tokenizer.new(html)
       bad       = nil
       while token = tokenizer.next

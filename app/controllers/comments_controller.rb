@@ -2,19 +2,19 @@
 # the application relating to +Comment+ objects.
 class CommentsController < ApplicationController
 
-  before_filter :find_node,    :only => :create
   before_filter :find_comment, :only => :destroy
 
   # Only admins and final editors are allowed to delete comments
   require_role [ 'admin', 'final_editor' ], :only => :destroy
 
-  # * POST /nodes/:id/comments
-  # * POST /nodes/:id/comments.xml
+  # * POST /nodes/1/comments
+  # * POST /nodes/1/comments.xml
   def create
     if @node.commentable?
       @comment = @node.comments.build(params[:comment])
-      # TODO: Current user weer toevoegen
+      
       @comment.user = current_user if logged_in?
+      
       respond_to do |format|
         if @comment.save
           format.html { redirect_to @node.content }
@@ -41,8 +41,8 @@ class CommentsController < ApplicationController
     end
   end
 
-  # * DELETE /nodes/:id/comments
-  # * DELETE /nodes/:id/comments.xml
+  # * DELETE /nodes/1/comments/1
+  # * DELETE /nodes/1/comments/1.xml
   def destroy    
     @comment.destroy
 
@@ -54,7 +54,7 @@ class CommentsController < ApplicationController
 
 protected
 
-  def find_comment 
+  def find_comment
     @comment = @node.comments.find(params[:id])
   end
 

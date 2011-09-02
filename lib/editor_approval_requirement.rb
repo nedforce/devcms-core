@@ -10,7 +10,7 @@ module EditorApprovalRequirement
 
   module ClassMethods
 
-    def needs_editor_approval(options = {})
+    def needs_editor_approval
       attr_accessor :editor_comment
       
       self.class_eval do
@@ -19,7 +19,7 @@ module EditorApprovalRequirement
         end
         
         def save(*args)
-          options = args.extract_options!
+          options = args.extract_options! || {}
           user = options.delete(:user)
           
           user_is_editor = user.present? && !user.has_role_on?(['admin', 'final_editor'], node.new_record? ? node.parent : node)
@@ -27,7 +27,11 @@ module EditorApprovalRequirement
           approval_required = options[:approval_required].blank? ? false : options[:approval_required]
     
           extra_version_attributes = { :status => Version::STATUSES[self.draft? ? :drafted : :unapproved], :editor => user }
-          extra_version_attributes.update(:editor_comment => self.editor_comment) unless self.editor_comment.blank?
+
+          if user_is_editor
+            extra_version_attributes.update(:editor => user)
+            extra_version_attributes.update(:editor_comment => self.editor_comment)
+          end          
           
           self.with_versioning(self.draft? || user_is_editor || approval_required, extra_version_attributes) do
             self.original_save(*args)
@@ -37,8 +41,8 @@ module EditorApprovalRequirement
         def save!(*args)
           self.save(*args) || raise(ActiveRecord::RecordNotSaved)
         end        
-
-        def self.create(attributes = nil, &block)
+        
+        def self.create(attributes = {}, &block)
           if attributes.is_a?(Array)
             super(attributes, &block)
           else
@@ -57,12 +61,22 @@ module EditorApprovalRequirement
           end
         end
         
-        def self.create!(attributes = nil, &block)
-          record = self.create(attributes, &block)
-          if record.new_record?
-            raise(ActiveRecord::RecordNotSaved)
+        def self.create!(attributes = {}, &block)
+          if attributes.is_a?(Array)
+            super(attributes, &block)
           else
-            record
+            user = attributes.delete(:user)
+            parent = attributes[:parent]
+
+            if user && parent && user.has_role_on?('editor', parent)
+              attributes[:responsible_user] = user
+            end
+            
+            approval_required = attributes.delete(:approval_required)
+            object = new(attributes)
+            yield(object) if block_given?
+            object.save!(:user => user, :approval_required => approval_required)
+            object
           end
         end
         

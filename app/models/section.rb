@@ -60,14 +60,9 @@ class Section < ActiveRecord::Base
   # Ensures the +frontpage_node+ is no +Section+ with a frontpage node.
   validate_on_update :frontpage_node_is_no_section_with_frontpage_node
 
-  # Returns the last update date, as seen from the perspective of the given +user+.
-  def last_updated_at(user)
-    conditions = [ "NOT nodes.content_type IN (?)", [ 'Image', 'Attachment' ] ]
-    descendant_conditions = self.node.descendant_conditions
-    conditions.first << " AND " << descendant_conditions.shift
-    conditions.concat(descendant_conditions)
-    child = Node.find_accessible(:first, :for => user, :select => 'nodes.updated_at', :order => 'nodes.updated_at DESC', :conditions => conditions)
-    child ? child.updated_at : self.updated_at
+  # Returns the last update date
+  def last_updated_at
+    [ self.node.children.accessible.exclude_content_types(%w( Image Attachment Site )).maximum('nodes.updated_at'), self.updated_at ].compact.max
   end
 
   # Returns the maximum number of sidebox (content box) columns that are allowed for this content type.
@@ -95,18 +90,12 @@ class Section < ActiveRecord::Base
     self.update_attributes(:frontpage_node => node)
   end
 
-  # Returns the children content nodes of this section for the given +user+.
-  # By default images and attachments are excluded.
-  def accessible_children_for(user, exclude_content_types = ['Image','Attachment']) 
-    self.node.accessible_content_children(:for => user, :exclude_content_type => exclude_content_types)
-  end  
-
   # Returns the OWMS type.
   def self.owms_type
     I18n.t('owms.overview_page')
   end
 
-  protected
+protected
 
   # Ensures +frontpage_node+ should be nil if the +Section+ object has a frontpage.
   def frontpage_node_is_nil

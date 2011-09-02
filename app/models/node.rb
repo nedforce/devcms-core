@@ -75,13 +75,23 @@ require 'iconv'
 # * The content node will be destroyed before this node is.
 #
 class Node < ActiveRecord::Base
+  # Allows content types to register themselves
+  acts_as_content_type_registry
+  
+  # A node is commentable
+  acts_as_commentable
+  
+  # Nodes are taggable with alterative titles
+  acts_as_taggable_on :title_alternatives
+  
   # Prevents the root +Node+ from being destroyed.
   before_destroy :prevent_root_destruction
   
   # Delegate tree calls to use Ancestry. Ensure this is added *after* other before/after filters.
   include TreeDelegation
   
-  include ERB::Util # Provides html_escape()
+  # Load visibility & accessibility functionality
+  include Node::VisibilityAndAccessibility
   
   # Load expiration functionality
   include Node::Expiration
@@ -96,9 +106,8 @@ class Node < ActiveRecord::Base
     
   # Load Url Aliasing functionality
   include Node::UrlAliasing
-  alias_method_chain :move_to, :update_url_aliases
   
-  self.extend FindAccessible::ClassMethods
+  alias_method_chain :move_to, :update_url_aliases
 
   if SETTLER_LOADED && DevCMS.search_configuration[:enabled_search_engines].include?('ferret')
     self.extend Search::Modules::Ferret::FerretNodeExtension
@@ -123,29 +132,85 @@ class Node < ActiveRecord::Base
   has_many :synonyms,      :dependent => :destroy
 
   # See the preconditions overview for an explanation of these validations.
-  validate :should_not_be_directly_instantiated
-  validates_presence_of   :content
+  validates_presence_of   :content, :sub_content_type, :publication_start_date
+  validates_presence_of   :expires_on, :if => :expiration_required?, :message => I18n.t("nodes.expires_on_required")
+  
   validates_uniqueness_of :content_id, :scope => :content_type
 
+  validates_inclusion_of :publishable,       :in => [ false, true ], :allow_nil => false
+  
   validates_inclusion_of :commentable,       :in => [ false, true ], :allow_nil => true
   validates_inclusion_of :hide_right_column, :in => [ false, true ], :allow_nil => true
+  
+  validates_inclusion_of :content_box_colour, :in => DevCMS.content_box_colours, :allow_blank => true
+  validates_inclusion_of :content_box_icon, :in => DevCMS.content_box_icons, :allow_blank => true
+  
+  validates_length_of    :content_box_title, :in => 2..255, :allow_blank => true
+  
+  validate  :ensure_publication_start_date_is_present_when_publication_end_date_is_present,
+            :ensure_publication_end_date_after_publication_start_date,
+            :ensure_content_box_number_of_items_should_be_greater_than_two,
+            :ensure_expires_on_valid,
+            :ensure_valid_responsible_user_role
 
   # A private copy of the original destroy method that is used for overloading.
   alias_method :original_destroy, :destroy
 
-  # After update to hidden reindex all children
-  before_update { |node| @hidden_changed = node.hidden_changed?; @publishable_changed = node.publishable_changed?; true }
-  after_update { |node| node.reindex_self_and_children if @hidden_changed || @publishable_changed; true }
+  before_validation :set_publication_start_date_to_current_time_if_blank
+
+  before_validation_on_create :set_sub_content_type
+
+  # After update to private or hidden or publishable reindex all children
+  before_update do |node| 
+    @private_changed = node.private_changed?
+    @hidden_changed = node.hidden_changed? 
+    @publishable_changed = node.publishable_changed? 
+    true
+  end
+  
+  after_update { |node| node.reindex_self_and_children if @private_changed || @hidden_changed || @publishable_changed; true }
 
   after_save :save_category_attributes
 
   attr_accessor :category_attributes
   
-  # A node is commentable
-  acts_as_commentable
+  attr_protected :publishable
   
-  # Nodes are taggable with alterative titles
-  acts_as_taggable_on :title_alternatives
+  named_scope :exclude_subtrees_of, (lambda do |nodes_to_exclude|
+    Node.exclude_subtrees_conditions_for(nodes_to_exclude)
+  end)
+  
+  named_scope :shown_in_menu, (lambda do
+    if Node.content_to_hide_from_menu.present?
+      { :conditions => [ 'nodes.show_in_menu = true AND nodes.sub_content_type NOT IN (?)', Node.content_to_hide_from_menu ] }
+    else
+      { :conditions => { 'nodes.show_in_menu' => true }}
+    end
+  end)
+  
+  named_scope :with_content_type, (lambda do |content_types_to_include|
+    content_types_to_include = Array(content_types_to_include)
+    
+    if content_types_to_include.present?
+      { :conditions => [ 'nodes.sub_content_type IN (?)', content_types_to_include ] }
+    else
+      { :conditions => {} }
+    end
+  end)
+
+  named_scope :exclude_content_types, (lambda do |content_types_to_exclude|
+    content_types_to_exclude = Array(content_types_to_exclude)
+    
+    if content_types_to_exclude.present?
+      { :conditions => [ 'nodes.sub_content_type NOT IN (?)', content_types_to_exclude ] }
+    else
+      { :conditions => {} }
+    end
+  end)
+  
+  named_scope :sections, { :conditions => [ 'nodes.sub_content_type IN (?)', %w( Section Site ) ] }
+  
+  named_scope :include_content, { :include => :content }
 
   def move_to_with_reindexing(*args)
     self.move_to_without_reindexing(*args)
@@ -208,34 +273,17 @@ class Node < ActiveRecord::Base
       end
       destroyed_content.nil? ? nil : self
     else
-      without_search_reindex { self.original_destroy } # Disable ferret updates (ferret_destroy is executed anyway)
+      # Disable ferret updates (ferret_destroy is executed anyway)
+      without_search_reindex do 
+        self.original_destroy
+      end
     end
   end
   
   def self.content_to_hide_from_menu
-    @content_to_hide_from_menu ||= @content_types_configuration.select do |content_type, configuration|
+    @content_to_hide_from_menu ||= self.content_types_configuration.select do |content_type, configuration|
       !configuration[:show_in_menu]
     end.map(&:first)
-  end
-  
-  # Content type configuration concerns
-  # Register ContentType and fonfiguration, merge with overrides in DevCMS if they exist
-  def self.register_content_type(type, configuration)
-    @content_types_configuration ||= {}
-    name = type.is_a?(String) ? type : type.name
-    @content_types_configuration[name] = configuration.merge(DevCMS.content_types_configuration[name] || {})
-  end
-  
-  def self.content_types_configuration
-    @content_types_configuration
-  end
-  
-  def self.content_type_configuration(class_name)
-    class_exists?(class_name, :constantize => true) ? @content_types_configuration[class_name] : {}
-  end
-  
-  def content_type_configuration 
-    Node.content_type_configuration(self.content_class.to_s)
   end
 
   # Returns a hash representing this node's config properties for an Ext.dvtr.AsyncTreeNode javascript object.
@@ -262,14 +310,15 @@ class Node < ActiveRecord::Base
       :allowDrag     => (user_is_final_editor or user_is_admin or user_is_editor),
       :allowChildren => (user_is_final_editor or user_is_admin),
       :expanded      => active_node && active_node.ancestry.present? ? active_node.ancestry.starts_with?(self.child_ancestry) : false,
-      # Admins can't create weblogs or weblog posts through the admin interface
-      :creatableChildContentTypes => self.content_type_configuration[:allowed_child_content_types].inject([]) do |array, content_type|
-        child_content_type_configuration = Node.content_type_configuration(content_type)
+      :creatableChildContentTypes => self.content_type_configuration[:allowed_child_content_types].inject([]) do |array, child_content_type|        
+        child_content_type_configuration = Node.content_type_configuration(child_content_type)
+        
+        klass = child_content_type.constantize
 
-        if (klass = class_exists?(content_type, :constantize => true)) && child_content_type_configuration[:enabled] && child_content_type_configuration[:allowed_roles_for_create].include?(role_name)
+        if child_content_type_configuration[:enabled] && child_content_type_configuration[:allowed_roles_for_create].include?(role_name)
           array << {
             :text           => klass.human_name,
-            :modelName      => content_type,
+            :modelName      => child_content_type,
             :controllerName => "/admin/#{child_content_type_configuration[:controller_name] || klass.table_name}"
           } unless self.content_class == Site && klass == Site && !self.root? # Prevent nesting of sites deeper than 1
         end
@@ -287,6 +336,7 @@ class Node < ActiveRecord::Base
       :URLAlias                        => self.url_alias.present? ? self.url_alias : nil,
       :contentNodeId                   => self.content_id,
       :siteNodeId                      => self.containing_site.id,
+      :topLevelPrivateAncestorId       => self.top_level_private_ancestor.try(:id),
       :userRole                        => role ? role_name : nil,
       :undeletable                     => self.root? || !content_type_configuration[:allowed_roles_for_destroy].include?(role_name) || (!user_is_admin && self.content_class == Image && self.content.is_for_header?),
       :allowGlobalFrontpageSetting     => user_is_admin,
@@ -295,12 +345,15 @@ class Node < ActiveRecord::Base
       :isGlobalFrontpage               => self.is_global_frontpage?,
       :isRepeatingCalendarItem         => self.content_class <= CalendarItem && self.content.has_repetitions?,
       :containsGlobalFrontpage         => self.contains_global_frontpage?,
-      :allowTogglePrivate              => user_is_final_editor || user_is_admin,
-      :isPrivate                       => self.hidden?,
+      :allowTogglePrivate              => self.content_class <= Section && user_is_admin,
+      :allowToggleHidden               => user_is_final_editor || user_is_admin,
+      :isHidden                        => self.hidden?,
+      :isPrivate                       => self.private?,
       :showInMenu                      => self.show_in_menu,
       :hasChangedFeed                  => self.has_changed_feed,
       :allowToggleChangedFeed          => content_type_configuration[:has_own_feed] || [ Feed, Section, Site ].include?(self.content_class),
-      :hasPrivateAncestor              => self.has_hidden_ancestor?,
+      :hasPrivateAncestor              => self.has_private_ancestor?,
+      :hasHiddenAncestor               => self.has_hidden_ancestor?,
       :allowUrlAliasSetting            => user_is_final_editor || user_is_admin,
       :allowContentCopyCreation        => !self.root? && content_type_configuration[:copyable],
       :isRoot                          => self.root?,
@@ -327,7 +380,7 @@ class Node < ActiveRecord::Base
 
   # Returns the text that should be displayed in the node tree
   def tree_text
-    tree_text = html_escape(self.content.current_version.tree_text(self))
+    tree_text = ERB::Util.html_escape(self.content.current_version.tree_text(self))
 
     latest_version = self.content.versions.current
 
@@ -350,21 +403,14 @@ class Node < ActiveRecord::Base
 
   # Returns the site that directly contains this node as a descendant
   def containing_site
-    @containing_site ||= if self.depth > 0 && self.self_and_ancestors[1].content.is_a?(Site)
-      self.self_and_ancestors[1]
-    else
+    return @containing_site if @containing_site
+    
+    @containing_site = if self.depth.zero?
       Node.root
+    else
+      node = Node.find(self.path_ids[1], :include => :content) rescue nil
+      node && node.content.is_a?(Site) ? node : Node.root
     end
-  end
-  
-  # Returns true if this node should be hidden from the menu, false otherwise.
-  def hidden_from_menu?
-    !self.content_type_configuration[:show_in_menu] || !self.show_in_menu || self.is_hidden?
-  end
-
-  # Returns true if this node should be visible to the given +user+, false otherwise.
-  def visible_for_user?(user = nil)
-    (user.is_a?(User) && user.has_role_on?(RoleAssignment::ALL_ROLES, self)) || !self.is_hidden?
   end
 
   # Returns true if this node is published, false otherwise.
@@ -373,53 +419,16 @@ class Node < ActiveRecord::Base
     
     self.publication_start_date <= now && (self.publication_end_date.blank? || self.publication_end_date >= now)
   end
-
-  # Returns true if this node is accessible for the given +user+, false otherwise.
-  def is_accessible_for?(user = nil)
-    Node.find_accessible(:first, :for => user, :conditions => ['nodes.id = ?', self.id]) == self
-  end
-
-  # Returns the children nodes of this node that are accessible, for the given +options+.
-  def accessible_children(options = {})
-    sql_where      = "nodes.ancestry = ?"
-    for_menu       = options.delete(:for_menu)
-    excluded_types = [options.delete(:exclude_content_type)].flatten.compact
-    sql_where << " AND NOT nodes.content_type IN (?)" if for_menu.present? || excluded_types.present?
-    conditions     = nil
-    arguments      = [ self.child_ancestry ]
-
-    if for_menu
-      sql_where << " AND nodes.show_in_menu = ?"
-      arguments << (Node.content_to_hide_from_menu + excluded_types).uniq
-      arguments << true
-      conditions = [ sql_where ] + arguments
-    else
-      arguments << excluded_types unless excluded_types.blank?
-      conditions = [ sql_where ] + arguments
-    end
-
-    conditions = Node.merge_conditions(conditions, options[:conditions]) if options[:conditions]
-    
-    Node.find_accessible(:all, options.merge({:conditions => conditions, :parent => self}))
-  end
-
-  # Returns the children content nodes of this node that are accessible, for the given +options+.
-  def accessible_content_children(options = {})
-    accessible_children(options).map(&:content)
-  end
   
-  # Override to return the descendant ancestry with table name prepended
-  def descendant_conditions
-    ["nodes.ancestry like ? or nodes.ancestry = ?", "#{child_ancestry}/%", child_ancestry]
-  end  
+  def visible?
+    !self.hidden? && !self.private? && self.publishable?
+  end
 
   # Increments the hits counter without updating the updated_at value.
   # This implementation does not affect the +updated_at+ field.
   def increment_hits!
     Node.without_search_reindex do # No update of the search index is necessary.
-      # +increment!(:hits)+ first reads from the db, and then updates allowing for
-      # stale number of hits on concurrent executions. Using a single SQL statement instead:
-      connection.update("UPDATE nodes SET hits = hits + 1 WHERE id = #{self.id}")
+      Node.increment_counter :hits, self.id
     end
   end
 
@@ -430,43 +439,18 @@ class Node < ActiveRecord::Base
     end
   end
 
-  def last_changes(on, options = {})
-    conditions = options.delete(:conditions) || ""
-    
+  def last_changes(on, conditions = {})
     if on == :all
-      # Filter on actual content
-      conditions = Node.merge_conditions(conditions, "nodes.content_type IN ('Page', 'Section', 'NewsItem')")
-      # Scope on descendants
-      desc_conds    = self.descendant_conditions
-      desc_conds[0] = "(#{desc_conds.first})" # Ensure the conditions are evaluated in the right order.
-      conditions    = Node.merge_conditions(conditions, desc_conds)
-      if self.root? # Exclude other sites if this is the root node
-        sql    = []
-        values = []
-        Site.all(:include => :node, :conditions => ["nodes.id != ?", self.id]).each do |site|
-          site_conds = site.node.descendant_conditions
-          sql       << site_conds.shift
-          sql       << "nodes.id = ?"
-          values    += site_conds
-          values    << site.node.id
-        end
-        if sql.present?
-          conditions = Node.merge_conditions(conditions, ["NOT (#{sql.join(' OR ')})"] + values)
-        end
-      end
-      conditions << Node.send(:sanitize_sql, [" OR nodes.id = ?", self.id]) # Include self
+      # Exclude other sites
+      nodes_to_exclude = self.descendants.with_content_type('Site')
+
+      # Exclude private sections
+      nodes_to_exclude += self.descendants.sections.private
+        
+      self.self_and_descendants.accessible.exclude_subtrees_of(nodes_to_exclude).with_content_type(%w( Page Section NewsItem )).include_content.all({ :order => 'updated_at DESC' }.merge(conditions))
     elsif on == :self
-      conditions = Node.merge_conditions(conditions, ["nodes.id = ?", self.id])
-      options[:parent] = self
+      self.self_and_descendants(:to_depth => 0).accessible.public.exclude_content_types('Site').include_content.all({ :order => 'updated_at DESC' }.merge(conditions))
     end
-
-    defaults = {
-      :joins => "LEFT JOIN versions ON versionable_id = nodes.content_id AND versionable_type = nodes.content_type",
-      :order => 'COALESCE(versions.created_at, nodes.updated_at) DESC'
-    }
-
-    options[:conditions] = conditions
-    results = Node.find_accessible(:all, options.merge(defaults))
   end
 
   def reindex_self_and_children
@@ -531,7 +515,7 @@ class Node < ActiveRecord::Base
     sorted_children.reverse! if options[:order] == 'desc'
 
     without_search_reindex do
-      self.reorder_children(sorted_children.map {|child| child.id })
+      self.reorder_children(sorted_children.map { |child| child.id })
     end
   end
 
@@ -546,27 +530,40 @@ class Node < ActiveRecord::Base
       else content_type.constantize
     end
   end
+  
+  # This method is used to cache the titles of content nodes, so we don't have to query separately for them
+  def content_title
+    if %w( ExternalLink InternalLink Feed ContentCopy ).include?(self.sub_content_type)
+      self.content.content_title
+    else
+      self.title.blank? ? self.content.content_title : self.title
+    end
+  end
 
   def self.root
     Node.roots.first || raise(ActiveRecord::RecordNotFound, "No root node found!")
   end
 
   def self.find_related_nodes(node, options = {})
-    Node.find_accessible(:all,
-        :conditions => [ 'node_categories.category_id in (?) AND nodes.id <> ?', node.category_ids, node.id ],
-        :include    => :node_categories,
-        :parent     => options[:top_node],
-        :for        => options[:for],
-        :limit      => options[:limit] || 5
-      )
+    conditions = {
+      :conditions => [ 'node_categories.category_id in (?) AND nodes.id <> ?', node.category_ids, node.id ],
+      :include    => :node_categories,
+      :limit      => options[:limit] || 5
+    }
+    
+    if options[:top_node]
+      options[:top_node].children.accessible.public.all(conditions)
+    else
+      Node.accessible.public.all(conditions)
+    end
   end
 
-  def self.bulk_update(user, nodes, attributes)
-    transaction do
+  def self.bulk_update(nodes, attributes, user = nil)
+    Node.transaction do
       nodes.each do |node|
         content = node.content
 
-        if content.class.requires_editor_approval?
+        if content.class.requires_editor_approval? && user.present?
           content.update_attributes!(attributes.merge(:user => user))
         else
           content.update_attributes!(attributes)
@@ -612,24 +609,6 @@ protected
     move_to_without_validity_check_and_alias_update(target, :swap, transact)
   end
 
-  # Cleans a URL by stripping any whitespace characters, transliterating any
-  # special characters, replacing illegal characters by hyphens and converting
-  # the entire URL to downcase.
-  def clean_for_url(url)
-    result = Iconv.iconv('ascii//ignore//translit', 'utf-8', help.strip_tags(url.strip)).join.downcase.gsub(/[^\/a-z0-9]/,'-').gsub(/-{2,}/,'-').gsub(/\/$/, "")
-    
-    # remove any leading and trailing hyphens, also when directly after a slash
-    result = $1 while result =~ /\A-(.*)/
-    result = $1 while result =~ /(.*)-\z/
-    result.gsub!(/\/-/, '/')
-    return result
-  end
-
-  # Prevents a +Node+ from being directly instantiated.
-  def should_not_be_directly_instantiated
-    errors.add_to_base(:not_directly) unless content && !content.new_record?
-  end
-
   # Prevents the root +Node+ from being destroyed.
   def prevent_root_destruction
     raise ActiveRecord::ActiveRecordError, I18n.t('activerecord.errors.models.node.attributes.base.cant_remove_root') if self.root?
@@ -668,35 +647,48 @@ protected
       end
     end
   end
-end
+  
+  def set_sub_content_type
+    if self.content
+      self.sub_content_type = self.content.class.name
+    end
+  end
+  
+  # Sets the publication_end_date to current time if none is specified
+  def set_publication_start_date_to_current_time_if_blank
+    self.publication_start_date = Time.now unless self.publication_start_date
+  end
 
-# == Schema Information
-#
-# Table name: nodes
-#
-#  id                          :integer         not null, primary key
-#  content_type                :string(255)     not null
-#  content_id                  :integer         not null
-#  created_at                  :datetime
-#  updated_at                  :datetime
-#  hidden                      :boolean         default(FALSE)
-#  url_alias                   :string(255)
-#  status                      :string(255)     default("approved")
-#  edited_by                   :integer
-#  show_in_menu                :boolean         default(FALSE), not null
-#  commentable                 :boolean         default(FALSE)
-#  external_id                 :string(255)
-#  has_changed_feed            :boolean         default(FALSE)
-#  hide_right_column           :boolean         default(FALSE)
-#  editor_comment              :text
-#  hits                        :integer         default(0), not null
-#  publication_start_date      :datetime
-#  publication_end_date        :datetime
-#  columns_mode                :boolean         default(FALSE)
-#  content_box_title           :string(255)
-#  content_box_icon            :string(255)
-#  content_box_colour          :string(255)
-#  content_box_number_of_items :integer
-#  ancestry                    :string(255)
-#  position                    :integer
-#
+private
+
+  # Validation methods
+  
+  def ensure_publication_start_date_is_present_when_publication_end_date_is_present
+    if self.publication_end_date
+      self.errors.add_to_base(I18n.t('acts_as_content_node.publication_start_date_should_be_present')) unless self.publication_start_date
+    end
+  end
+
+  def ensure_publication_end_date_after_publication_start_date
+    if self.publication_start_date && self.publication_end_date
+      self.errors.add_to_base(I18n.t('acts_as_content_node.publication_end_date_should_be_after_publication_start_date')) if self.publication_start_date >= self.publication_end_date
+    end
+  end
+
+  def ensure_content_box_number_of_items_should_be_greater_than_two
+    if self.content_box_number_of_items
+      self.errors.add_to_base(I18n.t('acts_as_content_node.content_box_number_of_items_should_be_greater_than_two')) if self.content_box_number_of_items.to_i <= 2
+    end
+  end
+  
+  def ensure_valid_responsible_user_role
+    errors.add_to_base(I18n.t('acts_as_content_node.responsible_user_requires_role')) unless self.responsible_user.blank? || self.responsible_user.has_role_on?(['admin', 'editor', 'final_editor'], self)
+  end
+  
+  def ensure_expires_on_valid
+    if expirable? && expires_on.present?
+      errors.add_to_base(I18n.t("nodes.expires_on_out_of_range")) unless (Date.today..(Date.today + Settler[:default_expiration_time].days)).include?(expires_on)
+    end
+  end
+  
+end

@@ -67,7 +67,7 @@ module Acts #:nodoc:
       # * The +node+ will be destroyed after this content node has been.
       #
       # <b>Configuration</b>
-      # Allowed configuration adn defaults, can be overridden from application
+      # Allowed configuration and defaults, can be overridden from application
       # * +:enabled+  => true
       # * +:allowed_child_content_types+ => []
       # * +:allowed_roles_for_update+ => %w( admin editor final_editor )
@@ -105,69 +105,48 @@ module Acts #:nodoc:
         
         simply_versioned versioning_configuration
         
-        # node_id not validated here, because it will be set properly after create.
-        has_one :node, :as => :content
+        has_one :node, :as => :content, :autosave => true
 
-        named_scope :with_node,   lambda{|node| { } }
-        named_scope :with_parent, lambda{|node, options| options.merge({:include => :node, :conditions => ['nodes.ancestry = ?', node.child_ancestry ] }) }
-  
-        # If set to true, then the content node will be instructed to keep
-        # from calling the destroy_ancestors callback. This is necessary to
-        # successfully renumber the tree when destroying a nested subtree.
-        #attr_accessor :skip_before_destroy_ancestors
+        named_scope :with_parent, lambda { |node, options| options.merge({:include => :node, :conditions => [ 'nodes.ancestry = ?', node.child_ancestry ] }) }
+        named_scope :accessible,  lambda { { :include => :node }.merge(Node.accessible.current_scoped_methods[:find]) }
 
-        delegate :update_search_index, :expirable?, :expiration_required?, :expired?, :to => :node
-        delegate_accessor_to_node :commentable,
-                                  :content_box_title, :content_box_icon, :content_box_colour, :content_box_number_of_items,
-                                  :categories, :category_attributes, :category_ids, :keep_existing_categories,
-                                  :parent,
-                                  :publication_start_date, :publication_end_date,
-                                  :responsible_user, :responsible_user_id, :expires_on,
-                                  :title_alternative_list, :title_alternatives  
+        validates_presence_of :node
 
-        validate  :ensure_publication_start_date_is_present_when_publication_end_date_is_present,
-                  :ensure_publication_end_date_after_publication_start_date,
-                  :ensure_content_box_number_of_items_should_be_greater_than_two
-
-        validates_presence_of  :publication_start_date
-        validates_length_of    :content_box_title,  :in => 2..255,                     :allow_blank => true
-        validates_inclusion_of :content_box_colour, :in => DevCMS.content_box_colours, :allow_blank => true
-        validates_inclusion_of :content_box_icon,   :in => DevCMS.content_box_icons,   :allow_blank => true
-
-        validates_presence_of :expires_on, :if => :expiration_required?, :message => I18n.t("nodes.expires_on_required")
-        validate :expires_on_valid?
-
-
-        validate :valid_responsible_user_role
-        validate :validate_parent
-
-
-        self.extend FindAccessible::ClassMethods
+        validate :ensure_node_is_valid
 
         before_destroy do |content|
           content.node.destroy(:destroy_content_node => false)
         end
-
-        # Sets the publication_start_date to the current time if none is specified
-        before_validation_on_create :set_publication_start_date_to_current_time_if_blank
         
-        before_update :update_url_alias_if_title_changed
+        before_update :update_url_alias_if_title_changed, :touch_node
 
-        # Ferret AR hooks
-        after_save :update_search_index, :touch_node
-          
-        # A private copy of the original node setter that is used for overloading node=
-        alias_method :original_node=, :node=
+        after_save :update_search_index
+        
+        delegate :update_search_index, :expirable?, :expiration_required?, :expired?, :to => :node
+        
+        delegate_accessor :commentable,
+                          :content_box_title, :content_box_icon, :content_box_colour, :content_box_number_of_items,
+                          :categories, :category_attributes, :category_ids, :keep_existing_categories,
+                          :parent,
+                          :publication_start_date, :publication_end_date,
+                          :responsible_user, :responsible_user_id, :expires_on,
+                          :title_alternative_list, :title_alternatives, :to => :node
               
         def has_parent(type, options = {})
-          class_name = (options.delete(:class_name) || type.to_s.classify)          
-          define_method(type){ (parent || node.try(:parent)).present? ? class_name.constantize.first(:include => :node, :conditions => ['nodes.id = ?', parent || node.try(:parent) ]) : nil }
+          class_name = (options.delete(:class_name) || type.to_s.classify)
+          klass = class_name.constantize
+          
+          define_method(type) {
+            (parent || node.try(:parent)).present? ? klass.first(:include => :node, :conditions => ['nodes.id = ?', parent || node.try(:parent) ]) : nil
+          }
+          
+          (class << self; self; end).send(:define_method, :parent_type) { klass }
         end
                   
         def has_children(type, options = {})
           class_name = (options.delete(:class_name) || type.to_s.classify)
-          define_method(type){ class_name.constantize.with_parent(node, options)}          
-        end        
+          define_method(type) { class_name.constantize.with_parent(node, options) }          
+        end
 
         self.class_eval do                                
           # Register that this is now a content node.
@@ -182,6 +161,20 @@ module Acts #:nodoc:
           # Content nodes are indexable by the search engine by default.
           def self.indexable?
             true
+          end
+          
+          # Ugly hack necessary to associate node before attributes are set, as we use delegate to node for some attributes
+          def initialize(attributes = nil)
+            @attributes = attributes_from_column_definition
+            @attributes_cache = {}
+            @new_record = true
+            ensure_proper_type
+            associate_node # Here thar be magic
+            self.attributes = attributes unless attributes.nil?
+            assign_attributes(self.class.send(:scope, :create)) if self.class.send(:scoped?, :create)
+            result = yield self if block_given?
+            callback(:after_initialize) if respond_to_without_attributes?(:after_initialize)
+            result
           end
 
           # Generate a path to suffix the URL alias with. Defaults to the
@@ -211,36 +204,27 @@ module Acts #:nodoc:
               self.original_save(*args)
             end
           end
-
-          # Sets the +Node+ that is associated with this content node.
-          #
-          # This method has been overloaded to make the +Node+ property
-          # read-only once it has been set. Once set, this method will
-          # essentially disappear by throwing a +NoMethodError+ exception.
-          def node=(node)
-            if self.original_node.nil?
-              original_node = node
-            else
-              raise NoMethodError
-            end
-          end
           
-          alias_method :original_node, :node
-          
-          def node
-            if new_record? && original_node.blank?
-              self.build_node(:content => self)
-            else
-              original_node
-            end
+          def save!(*args)
+            self.save(*args) || raise(ActiveRecord::RecordNotSaved, self.errors.full_messages.join(', '))
           end
 
-          # Returns this content node's title or a substitute.
-          # If no title attribute is present 'ModelName #id' is returned,
-          # e.g. 'Page 1427'.
-          # You might want to override this method in the model.
+          # Make sure the title is stored in the node as well
+          def title=(value)
+            self.write_attribute(:title, value)
+            self.node.write_attribute(:title, value)
+          end
+          
+          def last_updated_at
+            self.updated_at
+          end
+          
+          def touch!
+            self.update_attribute(:updated_at, Time.now)
+          end
+          
           def content_title
-            self.respond_to?(:title) ? self.title : "#{self.class} #{self.id}"
+            self.respond_to?(:title) ? self.title : "#{self.class.name} #{self.id}"
           end
 
           # Returns this content node's tokens that are available for indexing.
@@ -282,85 +266,49 @@ module Acts #:nodoc:
           def show_content_box_header
             Node.content_type_configuration(self.class.to_s)[:show_content_box_header]
           end
-
-          unless method_defined? :accessible_children_for
-            def accessible_children_for *args
-              []
-            end
+          
+          def show_in_menu
+            Node.content_type_configuration(self.class.to_s)[:show_in_menu]
           end
 
         private
-
-          # Validation callbacks
-
-          def ensure_publication_start_date_is_present_when_publication_end_date_is_present
-            if self.publication_end_date && !self.publication_start_date
-              self.errors.add_to_base(I18n.t('acts_as_content_node.publication_start_date_should_be_present'))
-            end
+        
+          def associate_node
+            self.build_node :content => self
           end
 
-          def ensure_publication_end_date_after_publication_start_date
-            if self.publication_start_date && self.publication_end_date && self.publication_start_date >= self.publication_end_date
-              self.errors.add_to_base(I18n.t('acts_as_content_node.publication_end_date_should_be_after_publication_start_date'))
-            end
-          end
-
-          def ensure_content_box_number_of_items_should_be_greater_than_two
-            if self.content_box_number_of_items && self.content_box_number_of_items.to_i <= 2
-              self.errors.add_to_base(I18n.t('acts_as_content_node.content_box_number_of_items_should_be_greater_than_two'))
-            end
-          end
-
-          # Sets the publication_end_date to current time if none is specified
-          def set_publication_start_date_to_current_time_if_blank
-            self.publication_start_date = Time.now unless self.publication_start_date
-          end
-
-          def touch_node
-            node.update_attribute(:updated_at, Time.current)
-          end
-
-          def self.valid_parent_class?(klass)
-            Node.content_type_configuration(klass.to_s)[:allowed_child_content_types].any? do |content_type|
-              class_exists?(content_type) ? (self <= content_type.constantize) : false
-            end
-          end
-
-          def valid_responsible_user_role
-            errors.add_to_base(I18n.t('acts_as_content_node.responsible_user_requires_role')) unless node.responsible_user.blank? || node.responsible_user.has_role_on?(['admin', 'editor', 'final_editor'], node)
-          end
-
-          def expires_on_valid?
-            if expirable? && node.expires_on.present?
-              unless (Date.today..(Date.today + Settler[:default_expiration_time].days)).include?(node.expires_on)
-                errors.add_to_base(I18n.t('nodes.expires_on_out_of_range', :date => I18n.l(Date.today + Settler[:default_expiration_time])))
+          def ensure_node_is_valid
+            unless self.node.valid?            
+              self.node.errors.each do |k, v|
+                self.errors.add(k.to_sym, v)
               end
             end
           end
 
           def update_url_alias_if_title_changed
             if self.respond_to?(:title) && self.title_changed?
-              # Necessary to make set_url_alias use the current title stored in memory (not yet in the DB!)
               node.content = self
               node.set_url_alias(true)
             end
           end
 
-          def validate_parent
-            if self.parent
-              if !own_content_class.valid_parent_class?(self.parent.content_class)
-                errors.add_to_base "'#{self.parent.content_class.human_name}' #{I18n.t('acts_as_content_node.doesnt_accept')} '#{own_content_class.human_name}' #{:type}."
-              end
-            elsif !Node.count.zero? && Node.root && self.new_record?
-              errors.add_to_base(I18n.t('acts_as_content_node.could_not_create_content'))
-            end
+          def touch_node
+            self.node.updated_at = Time.now
           end
         end
       end
       
-      def delegate_accessor_to_node(*methods)
-        methods.each do |m|
-          delegate m, "#{m}=", :to => :node
+      def valid_parent_class?(klass)
+        Node.content_type_configuration(klass.to_s)[:allowed_child_content_types].any? do |content_type|
+          self <= content_type.constantize
+        end
+      end
+      
+      def delegate_accessor(*args)
+        options = args.extract_options!
+        
+        args.each do |m|
+          delegate m, "#{m}=", options
         end
       end
     end

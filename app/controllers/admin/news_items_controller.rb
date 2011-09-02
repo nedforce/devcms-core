@@ -26,7 +26,7 @@ class Admin::NewsItemsController < Admin::AdminController
   # * GET /admin/news_items/:id
   # * GET /admin/news_items/:id.xml
   def show
-    @header_image = Image.find_accessible(:first, :for => current_user, :include => :node, :conditions => [ "nodes.ancestry = :latest_news_ancestry", { :latest_news_ancestry => @news_item.node.child_ancestry }])
+    @header_image = Image.accessible.first(:include => :node, :conditions => [ "nodes.ancestry = :latest_news_ancestry", { :latest_news_ancestry => @news_item.node.child_ancestry }])
 
     respond_to do |format|
       format.html { render :partial => 'show', :locals => { :record => @news_item }, :layout => 'admin/admin_show' }
@@ -113,6 +113,6 @@ protected
 
   # Finds the NewsItem object corresponding to the passed in +id+ parameter.
   def find_news_item
-    @news_item = ((@news_archive) ? @news_archive.news_items : NewsItem).find(params[:id], :include => :node).current_version
+    @news_item = NewsItem.find(params[:id], :include => :node).current_version
   end
 end

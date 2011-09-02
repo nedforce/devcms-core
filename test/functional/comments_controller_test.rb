@@ -37,8 +37,6 @@ class CommentsControllerTest < ActionController::TestCase
     end
   end
 
-  #  Support for commenting by unauthenticated users is present but has been disabled
-
   def test_should_not_create_comment_without_user_but_with_user_name
     assert_no_difference('Comment.count') do
       create_comment(:user_name => 'Jan')
@@ -46,37 +44,13 @@ class CommentsControllerTest < ActionController::TestCase
     end
   end
 
-#  def test_should_create_comment_without_user_but_with_user_name
-#    assert_difference('Comment.count') do
-#      create_comment(:user_name => 'Jan')
-#      assert_equal 'Jan', assigns(:comment).user_name
-#      assert assigns(:comment).valid?
-#    end
-#  end
-#
-#  def test_should_not_create_comment_without_user_and_user_name
-#    assert_no_difference('Comment.count') do
-#      create_comment
-#      assert assigns(:comment).errors.on(:user_name)
-#    end
-#  end
-
   def test_should_destroy_comment
     login_as :arthur
     create_comment
 
     assert_difference('Comment.count', -1) do
-      delete :destroy, :id => assigns(:comment).id
+      delete :destroy, :node_id => nodes(:devcms_news_item_node).id, :id => assigns(:comment).id
       assert_response :redirect
-    end
-  end
-
-  def test_should_not_destroy_comment_without_login
-    create_comment
-
-    assert_no_difference('Comment.count') do
-      delete :destroy, :id => assigns(:comment).id
-      assert_response :not_found
     end
   end
 
@@ -85,7 +59,7 @@ class CommentsControllerTest < ActionController::TestCase
     create_comment
 
     assert_no_difference 'Comment.count' do
-      get :destroy, :id => assigns(:comment).id
+      get :destroy, :node_id => nodes(:devcms_news_item_node).id, :id => assigns(:comment).id
       assert_response :success
       assert_template 'confirm_destroy'
     end

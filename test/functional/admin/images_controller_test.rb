@@ -23,13 +23,6 @@ class Admin::ImagesControllerTest < ActionController::TestCase
     assert assigns(:image)
   end
 
-  def test_should_render_404_if_not_found
-    login_as :sjoerd
-
-    get :show, :id => -1
-    assert_response :not_found
-  end
-
   def test_should_get_new
     login_as :sjoerd
     get :new, :parent_node_id => nodes(:about_page_node).id
@@ -117,15 +110,6 @@ class Admin::ImagesControllerTest < ActionController::TestCase
     put :update, :id => images(:test_image).id, :image => {:title => nil}
     assert_response :unprocessable_entity
     assert assigns(:image).errors.on(:title)
-  end
-
-  def test_should_require_roles
-    assert_user_can_access :arthur, [:new, :create], {:parent_node_id => nodes(:about_page_node).id}
-    assert_user_can_access :arthur, [:update, :edit], {:id => images(:test_image).id}
-    assert_user_cant_access :editor, [:new, :create], {:parent_node_id => nodes(:about_page_node).id}
-    assert_user_cant_access :editor, [:update, :edit], {:id => images(:test_image).id}
-    assert_user_cant_access :normal_user, [:new, :create], {:parent_node_id => nodes(:about_page_node).id}
-    assert_user_cant_access :normal_user, [:update, :edit], {:id => images(:test_image).id}
   end
 
   def test_should_not_show_image_url_controls_to_editors

@@ -17,6 +17,6 @@ class SocialMediaLinksBoxesController < ApplicationController
 
   # Finds the +SocialMediaLinksBox+ object corresponding to the passed in +id+ parameter.
   def find_social_media_links_box
-    @social_media_links_box = SocialMediaLinksBox.find_accessible(params[:id], :for => current_user)
+    @social_media_links_box = @node.content
   end
 end

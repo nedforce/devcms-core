@@ -1,16 +1,7 @@
 - content = node.content
-%div{:class => "content_box #{node.content_class.name.underscore}_content_box"}
-  %div{:class => "content_box_wrapper #{node.content_box_colour || content_box_color || 'default'}"}
-    - if content.show_content_box_header
-      .header
-        .corner_overlay.transparent
-        - unless content.is_a?(Poll) || content.is_a?(NewsletterArchive) || node.content_box_icon.blank?
-          = image_tag "icons/content_box_#{node.content_box_icon}.png", :class => 'icon_overlay transparent', :alt => content_box_icon_alt_for(node)
-        - if sidebox_title.present?
-          %h2= sidebox_title
-        - elsif node.content_type_configuration[:has_default_representation]
-          %h2= link_to_content_node content_box_title_for(node), content
-        - else
-          %h2= content_box_title_for(node)
-    .content.hoverable
-      = render :partial => "/#{node.content.class.to_s.tableize}/#{partial}", :locals => { :node => node, :parent => parent }
+
+- if [ Poll, NewsletterArchive, TopHitsPage, CombinedCalendar ].any? { |klass| content.is_a?(klass) }
+  = render :partial => '/layouts/partials/content_box_content', :locals => { :node => node, :content => content, :parent => parent, :sidebox_title => sidebox_title, :partial => partial, :content_box_color => content_box_color }
+- else
+  - cache(:content_type => content.class.name, :content_id => content.id, :controller => '/nodes', :action => :content_box, :last_updated_at => content.last_updated_at, :expires_in => 15.minutes) do
+    = render :partial => '/layouts/partials/content_box_content', :locals => { :node => node, :content => content, :parent => parent, :sidebox_title => sidebox_title, :partial => partial, :content_box_color => content_box_color }

@@ -131,7 +131,7 @@ class AgendaItemTest < ActiveSupport::TestCase
   end
   
   def test_should_not_return_agenda_item_children_for_menu
-    assert @meeting.node.accessible_children(:for_menu => true).empty?
+    assert @meeting.node.children.accessible.shown_in_menu.empty?
   end
   
   def test_content_title_should_return_description

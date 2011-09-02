@@ -3,13 +3,6 @@ require File.dirname(__FILE__) + '/../../test_helper'
 class Admin::FeedsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
-  def test_should_render_404_if_not_found
-    login_as :sjoerd
-
-    get :show, :id => -1
-    assert_response :not_found
-  end
-
   def test_should_get_new
     login_as :sjoerd
 
@@ -49,30 +42,6 @@ class Admin::FeedsControllerTest < ActionController::TestCase
     assert_response :success
     assert assigns(:feed)
   end
-
-  def test_should_update_feed
-    login_as :sjoerd
-    create_feed
-    put :update, :id => assigns(:feed).id, :feed => { :url => "http://office.nedforce.nl/dummy.xml" }
-
-    assert_response :success
-    assert_equal 'http://office.nedforce.nl/dummy.xml', assigns(:feed).url
-  end
-
-  def test_should_not_update_feed
-    login_as :sjoerd
-    create_feed
-    put :update, :id => assigns(:feed).id, :feed => { :url => "http://office.nedforce.nl/robots.txt" }
-    assert_response :unprocessable_entity
-    assert assigns(:feed).errors.on(:url)
-  end
-
-  def test_should_require_roles
-    assert_user_can_access  :arthur,       [ :new, :create ], { :parent_node_id => nodes(:root_section_node).id }
-    assert_user_cant_access :final_editor, [ :new, :create ], { :parent_node_id => nodes(:economie_section_node).id }
-    assert_user_cant_access :editor,       [ :new, :create ], { :parent_node_id => nodes(:devcms_news_node).id }
-  end
-
   def test_should_create_test_with_title
     login_as :sjoerd
 

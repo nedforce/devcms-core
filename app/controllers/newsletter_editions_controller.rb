@@ -20,6 +20,7 @@ protected
   # Will only retrieve editions that have been published or are currently publishing.
   def find_newsletter_edition
     @newsletter_edition = @node.content
+    
     raise ActiveRecord::RecordNotFound if @newsletter_edition.published == 'unpublished'
   end
   

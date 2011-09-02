@@ -1,4 +1,4 @@
-module DateExtensions
+class Date
   def start_of_week
     self - (self.cwday - 1)
   end

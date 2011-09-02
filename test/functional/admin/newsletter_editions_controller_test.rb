@@ -13,13 +13,7 @@ class Admin::NewsletterEditionsControllerTest < ActionController::TestCase
     assert_equal newsletter_editions(:devcms_newsletter_edition).node, assigns(:node)
     
   end
- 
-  def test_should_render_404_if_not_found
-    login_as :sjoerd
-        
-    get :show, :id => -1
-    assert_response :not_found
-  end
+
   
   def test_should_get_new
     login_as :sjoerd
@@ -167,15 +161,6 @@ class Admin::NewsletterEditionsControllerTest < ActionController::TestCase
     assert_equal 3, assigns(:newsletter_edition).items.size
   end
   
-  def test_should_not_require_roles
-    assert_user_can_access :arthur, [:new, :create], {:parent_node_id => nodes(:newsletter_archive_node).id}
-    assert_user_can_access :final_editor, [:new, :create], {:parent_node_id => nodes(:newsletter_archive_node).id}    
-    assert_user_can_access :arthur, [:update, :edit], {:id => newsletter_editions(:devcms_newsletter_edition).id}
-    assert_user_can_access :final_editor, [:update, :edit], {:id => newsletter_editions(:devcms_newsletter_edition).id}
-    assert_user_can_access :editor, [:new, :create], {:parent_node_id => nodes(:newsletter_archive_node).id}
-    assert_user_can_access :editor, [:update, :edit], {:id => newsletter_editions(:devcms_newsletter_edition).id}
-  end
-
   def test_should_set_publication_start_date_on_create
     login_as :sjoerd
 

@@ -14,7 +14,7 @@ end
 
 config.gem 'acts-as-taggable-on',   :version => '2.0.3',                              :source => "http://gemcutter.org"
 config.gem 'addressable',           :version => "~> 2.1",   :lib => 'addressable/uri'
-config.gem 'ancestry',              :version => '~> 1.2.0'
+config.gem 'ancestry',              :version => '~> 1.2.4'
 config.gem 'dsl_accessor',          :version => '0.3.3'
 config.gem 'dynamic_attributes',    :version => '~> 1.1.3'  
 config.gem 'fastercsv'
@@ -28,3 +28,11 @@ config.gem 'shuber-sortable',       :version => "~> 1.0.6", :lib => 'sortable', 
 config.gem 'tidy',                  :version => '1.1.2'
 config.gem 'whenever',              :version => '>= 0.5.0', :lib => false
 config.gem 'spreadsheet',           :version => '~> 0.6.5.2'
+
+config.after_initialize do
+  DEVCMS_INITIALIZED = true
+  
+  if ActiveRecord::Base.connection.table_exists?('nodes')
+    Node.preload_models!
+  end
+end

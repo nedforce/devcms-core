@@ -109,13 +109,13 @@ class Admin::UsersController < Admin::AdminController
   def accessible_newsletter_archives
     respond_to do |format|
       format.json do
-        newsletter_archives = NewsletterArchive.find_accessible(:all, :select => [:id, :title], :order => 'title', :for => @user)
+        newsletter_archives = NewsletterArchive.accessible.all(:select => [:id, :title], :order => 'newsletter_archives.title')
         newsletter_archives = newsletter_archives.collect do |na|
-              {
-                :id      => na.id,
-                :title   => na.title,
-                :checked => @user.newsletter_archives.include?(na)
-              }
+          {
+            :id      => na.id,
+            :title   => na.title,
+            :checked => @user.newsletter_archives.include?(na)
+          }
         end
         render :json => {:newsletter_archives => newsletter_archives, :success => true, :total_count => newsletter_archives.size}.to_json, :status => :ok
       end

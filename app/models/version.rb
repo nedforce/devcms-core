@@ -18,7 +18,7 @@ class Version < ActiveRecord::Base #:nodoc:
     :drafted => 'drafted',
     :unapproved => 'unapproved',
     :rejected => 'rejected'
-  }
+  }.freeze
   
   belongs_to :versionable, :polymorphic => true
   belongs_to :editor, :class_name => 'User'
@@ -26,9 +26,11 @@ class Version < ActiveRecord::Base #:nodoc:
   validates_presence_of :status
   validates_inclusion_of :status, :in => STATUSES.values
   
-  named_scope :unapproved, { :conditions => [ "status = ? OR status = ?", STATUSES[:unapproved], STATUSES[:rejected] ], :order => "created_at DESC" }
-  
   before_create :set_number
+  
+  default_scope :order => "created_at DESC"
+  
+  named_scope :unapproved, :conditions => [ "status = ? OR status = ?", STATUSES[:unapproved], STATUSES[:rejected] ]
   
   def drafted?
     self.status == STATUSES[:drafted]
@@ -61,16 +63,17 @@ class Version < ActiveRecord::Base #:nodoc:
   end
   
   def self.create_version(original, attributes_to_overwrite = {})
-    obj = original.class.find(original.id)
+    klass = original.class
+    
+    record = klass.with_exclusive_scope do
+      klass.find(original.id)
+    end
     
     attributes_to_overwrite.except(*original.simply_versioned_excluded_columns).each do |name, value|
-      # rescue to ignore things we cannot deserialize anymore; this may happen
-      # after a schema change for the stored content (e.g. a attribute is
-      # removed).
-      obj.__send__("#{name}=", value) rescue value
+      record.send("#{name}=", value) rescue nil
     end
 
-    obj
+    record
   end
   
   # Return the next higher numbered version, or nil if this is the last version

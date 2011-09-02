@@ -5,18 +5,14 @@
 module TreeDelegation
   def self.included(base)
     base.class_eval do
-      acts_as_tree
+      has_ancestry :cache_depth => true
 
       sortable :scope => :ancestry
 
-      named_scope :sorted_by_position, :order => :position
-      named_scope :hidden, :conditions => {:hidden => true}
+      named_scope :sorted_by_position, :order => 'nodes.position'
       
       validates_presence_of :parent, :unless => lambda {|n| Node.count.zero? || (Node.root && Node.root == n ) }
             
-      # validates_numericality_of :position, :greater_than => 0, :only => :update
-      
-      #alidates_associated :content
       validate :parent_should_allow_type
       
       include InstanceMethods
@@ -28,7 +24,16 @@ module TreeDelegation
     def parent_id
       super
     end
-
+    
+    # Determines which nodes from the given set of nodes can be reached from the current node.
+    # Returns the tree that can be constructed from the given nodes and which is rooted at the current node.
+    # Respects the order of the nodes given.
+    def closure_for(nodes = [])
+      tree = ActiveSupport::OrderedHash.new
+      tree[self] = self.calculate_closure_for(nodes).first
+      tree
+    end
+    
     # Returns true if this is a root node.
     def root?
       is_root?
@@ -50,20 +55,29 @@ module TreeDelegation
 
     # Returns the array of all parents and self
     def self_and_ancestors
-      path
+      self.path
+    end
+    
+    def self_and_ancestor_ids
+      self.path_ids
+    end
+    
+    def self_and_children
+      base_class = self.base_class
+      table_name = base_class.table_name
+      
+      base_class.scoped :conditions => [ 
+        "#{table_name}.#{base_class.primary_key} = :own_id OR #{table_name}.#{base_class.ancestry_column} = :child_ancestry", 
+        { 
+          :own_id => self.send(base_class.primary_key),
+          :child_ancestry => self.child_ancestry
+        } 
+      ]
     end
 
     # Returns an array of all parents
     def ancestors(*args)
       super
-    end
-
-    def is_hidden?
-      hidden? or has_hidden_ancestor?
-    end
-
-    def has_hidden_ancestor?
-      ancestors.hidden.any?
     end
 
     # Returns the array of all children of the parent, except self
@@ -72,13 +86,8 @@ module TreeDelegation
     end
 
     # Returns a set of itself and all of its nested children
-    def self_and_descendants
-      subtree
-    end
-
-    # Returns a set of all of its children and nested children
-    def descendants(*args)
-      super
+    def self_and_descendants(*args)
+      self.subtree(*args)
     end
 
     # Returns a set of only this entry's immediate children
@@ -87,7 +96,7 @@ module TreeDelegation
     end
 
     def is_descendant_of?(other)
-      ancestors.include?(other)
+      self.ancestors.include?(other)
     end
 
     # Find the first sibling to the left
@@ -161,17 +170,57 @@ module TreeDelegation
       end
     end
     
-    # checks wether the content type is valid as a child of the parent
+    # checks whether the content type is valid as a child of the parent
     def parent_should_allow_type
-      unless self.parent.nil? || content.own_content_class.valid_parent_class?(self.parent.content_class)
+      unless self.parent.nil? || self.content.own_content_class.valid_parent_class?(self.parent.content_class)
         errors.add_to_base "'#{self.parent.content_class.human_name}' #{I18n.t('tree_delegation.doesnt_accept')} '#{content.own_content_class.human_name}' #{:type}."
       end
     end
+    
+  protected
+  
+    def calculate_closure_for(nodes)
+      children, rest = nodes.partition { |n| n.ancestry == self.child_ancestry }
+      
+      tree = children.inject(ActiveSupport::OrderedHash.new) do |subtree, child|
+        subtree[child], rest = child.calculate_closure_for(rest)
+        subtree
+      end
+      
+      [ tree, rest ]
+    end
+    
   end
 
   module ClassMethods
     def root
       super
+    end
+    
+    def exclude_subtrees_conditions_for(nodes = nil)
+      nodes = Array(nodes)
+      
+      return { :conditions => {} } unless nodes.present?
+
+      sql = ""
+      values = {}
+
+      node_ids = nodes.map { |n| n.id }
+      node_child_ancestries = nodes.map { |n| n.child_ancestry }
+
+      sql += "NOT (nodes.id IN (:node_ids) OR (nodes.ancestry IS NOT NULL AND nodes.ancestry IN (:node_child_ancestries))"
+      values.update(:node_ids => node_ids, :node_child_ancestries => node_child_ancestries)
+
+      node_child_ancestries.each_with_index do |child_ancestry, index|
+        symbol = :"node_child_ancestry_#{index}"
+
+        sql += " OR (nodes.ancestry IS NOT NULL AND nodes.ancestry LIKE :#{symbol})"
+        values.update(symbol => "#{child_ancestry}/%")
+      end
+
+      sql += ")"
+
+      { :conditions => [ sql, values ] }
     end
   end
 end

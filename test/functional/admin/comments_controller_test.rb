@@ -102,18 +102,5 @@ class Admin::CommentsControllerTest < ActionController::TestCase
     end
   end
 
-  ## Authorization
-  def test_should_require_roles
-    assert_user_can_access :arthur, :index
-    assert_user_can_access :arthur, :update, :id => @comment
-    assert_user_can_access :arthur, :destroy, :id => @comment
-    assert_user_can_access :final_editor, :index
-    assert_user_can_access :final_editor, :update, :id => @comment
-    assert_user_can_access :final_editor, :destroy, :id => @comment
-    assert_user_can_access :editor, :index
-    assert_user_can_access :editor, :update, :id => @comment
-    assert_user_can_access :editor, :destroy, :id => @comment
-  end
-
 end
 

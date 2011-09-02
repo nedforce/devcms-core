@@ -36,10 +36,9 @@ class Calendar < ActiveRecord::Base
   validates_presence_of :title
   validates_length_of   :title, :in => 2..255, :allow_blank => true
 
-  # Returns the last update date, as seen from the perspective of the given user
-  def last_updated_at(user)
-    ci = self.calendar_items.find_accessible(:first, :order => 'events.created_at DESC', :for => user)
-    ci ? ci.created_at : self.updated_at
+  # Returns the last update date
+  def last_updated_at
+    [ self.node.children.accessible.with_content_type(%w( Meeting CalendarItem )).maximum('nodes.created_at'), self.updated_at ].compact.max
   end
   
   # Returns the description as the token for indexing.

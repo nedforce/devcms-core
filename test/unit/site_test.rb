@@ -17,7 +17,7 @@ class SiteTest < ActiveSupport::TestCase
 
   def test_should_validate_domain_if_given
     assert_no_difference 'Site.count' do
-      site = create_site :domain => 'fok'
+      site = create_site :domain => 'qlu'
       assert site.errors.on(:domain)
     end
   end

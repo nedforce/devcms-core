@@ -94,33 +94,6 @@ class WeblogArchiveTest < ActiveSupport::TestCase
     assert !@devcms_weblog_archive.reload.has_weblog_for_user?(@weblog.user)
   end
 
-  def test_find_last_updated_weblogs
-    user = users(:arthur)
-
-    @devcms_weblog_archive.weblogs.each do |weblog|
-      3.times do |i|
-        weblog.weblog_posts.create!(:parent => weblog.node, :body => 'foobar', :title => 'bar', :publication_start_date => Time.now + i.hours)
-      end
-    end
-
-    [ -1, 0, 2, 4 ].each do |limit|
-      found_weblogs = @devcms_weblog_archive.find_last_updated_weblogs(user, limit)
-
-      if limit <= 0
-        assert found_weblogs.empty?
-      else
-        assert found_weblogs.size <= limit
-
-        i = 0;
-
-        while i < (found_weblogs.size - 1)
-          assert found_weblogs[i].last_updated_at(user) >= found_weblogs[i + 1].last_updated_at(user)
-          i = i + 1
-        end
-      end
-    end
-  end
-
 protected
 
   def create_weblog_archive(options = {})

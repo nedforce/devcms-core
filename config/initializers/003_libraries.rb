@@ -1,19 +1,29 @@
-require 'acts_as_content_node'
-require 'routing_helpers'
-require 'routing_extensions'
-require 'editor_approval_requirement'
-require 'acts_as_archive'
-require 'date_extensions'
-require 'array_extensions'
-require 'acts_as_commentable'
-require 'caching_extensions'
+# Various fixes, these have to be checked for redundantness every time we upgrade Rails
 require 'form_tag_helper_style_fix'
 require 'association_preload_fix'
+require 'has_one_association_fix'
+require 'test_process_fix'
+require 'sweeper_fix'
+
+require 'date_extensions'
+require 'array_extensions'
+
+require 'acts_as_content_node'
+
+require 'editor_approval_requirement'
+require 'acts_as_archive'
+require 'acts_as_commentable'
+require 'simply_versioned'
+require 'validates_email_format_of'
+
+require 'routing_helpers'
+require 'routing_extensions'
+require 'cache_extensions'
 require 'acts_as_archive_controller'
 require 'searcher'
 require 'recaptcha'
-require 'simply_versioned'
-require 'validates_email_format_of'
+
+require 'content_type_registration_functionality'
 
 # Extend ActiveRecord::Base with the +acts_as_content_node+ functionality.
 ActiveRecord::Base.send(:include, Acts::ContentNode)
@@ -38,12 +48,6 @@ ActiveRecord::Base.send(:include, EditorApprovalRequirement)
 
 # Extend ActiveRecord::Base to include +ActsAsCommentable+.
 ActiveRecord::Base.send(:include, Juixe::Acts::Commentable)
-
-# Extend ::Date to include the end and start of month/week
-Date.send(:include, DateExtensions)
-
-# Extend ::Array to include a set equality check
-Array.send(:include, ArrayExtensions)
 
 # Extend ActionView::Helpers::FormTagHelper to make sure form tags do not use inline styles.
 ActionView::Base.send(:include, FormTagHelperStyleFix)
