@@ -36,7 +36,7 @@ class PollQuestion < ActiveRecord::Base
   # A +PollQuestion+ has many +PollOption+ objects.
   has_many :poll_options, :dependent => :destroy, :order => 'created_at'
   
-  has_many :user_votes, :class_name => 'UserPollQuestionVote'
+  has_many :user_votes, :class_name => 'UserPollQuestionVote', :dependent => :destroy
   
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of  :poll, :question
@@ -52,7 +52,9 @@ class PollQuestion < ActiveRecord::Base
   
   # Ensure the updated +PollOption+ objects are saved.
   after_update :save_poll_options
-  
+
+  after_paranoid_delete :remove_associated_content
+
   # Virtual attribute to allow the creation of new +PollOption+ objects from an attribute hash.
   def new_poll_option_attributes=(option_attributes)
     option_attributes.each do |attributes|
@@ -147,4 +149,10 @@ protected
       poll_option.save(false)
     end
   end
+
+  def remove_associated_content
+    self.poll_options.destroy_all
+    self.user_votes.destroy_all
+  end
+  
 end

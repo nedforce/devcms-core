@@ -53,6 +53,7 @@ Ext.dvtr.AsyncContentTreeNode = function (config) {
         /* permissions */
         this.undeletable                     = config.undeletable;
         this.allowGlobalFrontpageSetting     = config.allowGlobalFrontpageSetting;
+        this.allowShowInMenu                 = config.allowShowInMenu;
 				this.allowToggleHidden               = config.allowToggleHidden;
         this.allowTogglePrivate              = config.allowTogglePrivate;
         this.allowToggleChangedFeed          = config.allowToggleChangedFeed;

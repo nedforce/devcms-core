@@ -45,6 +45,7 @@ class Site < Section
     else
       site = Site.first(:include => :node, :conditions => [ 'lower(sections.domain) = ? OR lower(sections.domain) = ?', domain.downcase, 'www.' + domain.downcase ])
       site ||= Node.root.content unless Rails.env.production?
+
       site
     end
   end

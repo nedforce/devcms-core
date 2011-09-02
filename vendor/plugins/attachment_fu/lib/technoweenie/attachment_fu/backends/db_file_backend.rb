@@ -38,7 +38,7 @@ module Technoweenie # :nodoc:
               raise "LO creation failed!" if db_file.loid.nil?
               #(db_file || build_db_file).data = temp_data
               db_file.save!
-              self.class.update_all ['db_file_id = ?', self.db_file_id = db_file.id], ['id = ?', id]
+              self.class.update_all ['db_file_id = ?', self.db_file_id = db_file.id], ["#{self.class.quoted_table_name}.id = ?", id]
             end
             true
           end

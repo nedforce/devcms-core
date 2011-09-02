@@ -25,7 +25,6 @@ module RoutingExtensions
       begin
         # Use Rails' default path parsing
         params = recognize_path_without_delegation_or_url_aliasing(path, environment).merge({ :site_id => site.node.id })
-        
         controller = params[:controller]
         
         # What we do next depends on the 'controller'
@@ -74,14 +73,14 @@ module RoutingExtensions
             elsif klass.nil? || klass == Node
               node = Node.find(params[:id])
             end
-          
+
             if node.present?
               if controller.starts_with?('admin')
                 params[:node_id] = node.id
               else
                 # Node might point to a different node
                 node = update_to_referenced_node(node)
-        
+
                 params.update({ 
                   :id => node.content_id,
                   :node_id => node.id,

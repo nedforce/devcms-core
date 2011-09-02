@@ -41,7 +41,7 @@ class ForumThread < ActiveRecord::Base
   validates_presence_of     :title, :forum_topic, :user
   validates_length_of       :title, :in => 2..255, :allow_blank => true
   validates_numericality_of :forum_topic_id, :user_id
-  
+
   def self.parent_type
     ForumTopic
   end
@@ -88,4 +88,5 @@ class ForumThread < ActiveRecord::Base
   def number_of_replies
     self.forum_posts.count - 1
   end
+  
 end

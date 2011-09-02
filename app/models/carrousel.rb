@@ -25,7 +25,7 @@ class Carrousel < ActiveRecord::Base
   ANIMATION_SLIDE = 2
   ANIMATION_DIA = 3
   ANIMATION_SPRING = 4
-  ALLOWED_ANIMATION_TYPES = [0,1,2,3,4]
+  ALLOWED_ANIMATION_TYPES = (0..4).to_a
   ANIMATION_NAMES = {0 => "None", 1 => "Fade", 2 => "Slide", 3 => "Dia", 4 => "Spring"}
   
   # Adds content node functionality to news archives.
@@ -48,6 +48,8 @@ class Carrousel < ActiveRecord::Base
   validates_length_of       :title, :in => 2..255,    :allow_blank => true
   validates_numericality_of :display_time_in_seconds, :allow_blank => true, :integer_only => true, :greater_than_or_equal_to => 0
   validates_numericality_of :animation, :integer_only => true, :greater_than_or_equal_to => 0
+  
+  after_paranoid_delete :remove_associated_content
   
   def last_updated_at
     [ self.carrousel_items.maximum(:updated_at), self.updated_at ].compact.max
@@ -147,6 +149,12 @@ class Carrousel < ActiveRecord::Base
     else 
       [display_time_in_seconds/(30*(60*60*24)), 'months']
     end    
+  end
+  
+protected
+
+  def remove_associated_content
+    self.carrousel_items.destroy_all
   end
   
 private

@@ -110,7 +110,7 @@ class Admin::CalendarItemsController < Admin::AdminController
 
   # DELETE /admin/calendar_items/:id
   def destroy
-    CalendarItem.destroy_calendar_item(@calendar_item)
+    CalendarItem.destroy_calendar_item(@calendar_item, true)
 
     respond_to do |format|
       format.xml  { head :ok }

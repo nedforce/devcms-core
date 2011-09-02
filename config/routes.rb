@@ -1,5 +1,4 @@
 ActionController::Routing::Routes.draw do |map|
-
   map.resource  :session, :only => [ :new, :create, :destroy ], :collection => { :destroy => :any }
 
   map.resources :nodes, :member => { :changes => :get, :all_changes => :get }  do |node|
@@ -53,11 +52,13 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :abbreviations, :except => [ :show, :edit ]
     admin.resources :agenda_items, :except => [ :index, :destroy ], :member => { :previous => :get }
     admin.resources :alphabetic_indices, :except => [ :index, :destroy ]
+
     admin.resources :attachments, :except => [ :index, :destroy ], :member => { :previous => :get, :preview => :get }, :collection => { :categories => :any }
     admin.resources :attachment_themes,   :except => :index,  :controller => :themes, :requirements => { :type => :attachment_theme }
     admin.resources :calendars, :except => :destroy
     admin.resources :calendar_items, :except => :index, :member => { :previous => :get }
     admin.resources :carrousels, :except => [ :index, :destroy ]
+
     admin.resources :categories,
                       :only => [ :index, :create, :update, :destroy ],
                       :collection => { :categories => :get, :root_categories => :get },
@@ -126,6 +127,7 @@ ActionController::Routing::Routes.draw do |map|
       nodes.resource :layout, :only => [:edit, :update]
       nodes.resources :layouts, :only => [], :member => { :settings_variants_and_targets => :get,  :targets => :get }
     end    
+
     admin.connect 'nodes/:parent_id/:year/:month',
                   :controller => :nodes,
                   :action     => :bulk_destroy,
@@ -137,7 +139,6 @@ ActionController::Routing::Routes.draw do |map|
                   :action     => :bulk_destroy,
                   :year       => /\d{4}/,
                   :parent_id  => /\d+/
-    
   end
 
   map.connect '/admin', :controller => 'admin/nodes'

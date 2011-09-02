@@ -43,6 +43,8 @@ class Page < ActiveRecord::Base
   validates_presence_of :title, :body
   validates_length_of   :title, :in => 2..255, :allow_blank => true
 
+  after_paranoid_delete :remove_associated_content
+
   # Returns the preamble and body as the tokens for indexing.
   def content_tokens
     [ preamble, body ].compact.join(' ')
@@ -51,5 +53,12 @@ class Page < ActiveRecord::Base
   # Returns the OWMS type.
   def self.owms_type
     I18n.t('owms.web_page')
+  end
+
+protected
+
+  def remove_associated_content
+    self.newsletter_edition_items.destroy_all
+    self.carrousel_items.destroy_all
   end
 end
