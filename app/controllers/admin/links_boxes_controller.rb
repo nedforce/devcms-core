@@ -6,7 +6,7 @@ class Admin::LinksBoxesController < Admin::AdminController
   prepend_before_filter :find_parent_node,     :only => [ :new, :create ]
   
   # The +show+, +edit+ and +update+ actions need a +LinksBox+ object to act upon.
-  before_filter :find_links_box,                    :only => [ :show, :edit, :update ]
+  before_filter :find_links_box,                :only => [ :show, :edit, :update ]
 
   # Parse the publication start date for the +create+ and +update+ actions.
   before_filter :parse_publication_start_date, :only => [ :create, :update ]
