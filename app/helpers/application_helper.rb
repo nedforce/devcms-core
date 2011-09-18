@@ -22,8 +22,8 @@ module ApplicationHelper
   # See documentation of +bread_crumbs_track_for+ for more information.
   def bread_crumbs_for(node, options = {})
     crumb_track = bread_crumbs_track_for(node, options)
-    
-    content_tag(:div, crumb_track, :class => 'bread_crumbs') unless crumb_track.blank?
+
+    content_tag(:div, crumb_track, :class => 'bread_crumbs') if crumb_track.present?
   end
 
   # Creates the breadcrumbs element, which displays links to all the node's ancestors.
@@ -79,12 +79,10 @@ module ApplicationHelper
           elsif node.class.name == 'ProductCategory'
             crumb_track << link_to(html_escape(n.title), product_catalogue_products_path(:product_catalogue_id => @product_catalogue, :selection => 'category', :selection_id => n.id))
           end
-        else
-          if node.class == Node
-            crumb_track << "<span class='last_crumb'>#{(options[:skip_link_self] ? n.content_title.capitalize : link_to_content_node(html_escape(n.content_title.capitalize), n, {}, link_options))}</span>"
-          elsif node.class.name == 'ProductCategory'
-            crumb_track << "<span class='last_crumb'>#{(options[:skip_link_self] ? n.title : link_to(html_escape(n.title), product_catalogue_products_path(:product_catalogue_id => @product_catalogue, :selection => 'category', :selection_id => n.id)))}</span>"
-          end
+        elsif node.class == Node
+          crumb_track << "<span class='last_crumb'>#{(options[:skip_link_self] ? n.content_title.capitalize : link_to_content_node(html_escape(n.content_title.capitalize), n, {}, link_options))}</span>"
+        elsif node.class.name == 'ProductCategory'
+          crumb_track << "<span class='last_crumb'>#{(options[:skip_link_self] ? n.title : link_to(html_escape(n.title), product_catalogue_products_path(:product_catalogue_id => @product_catalogue, :selection => 'category', :selection_id => n.id)))}</span>"
         end
       end
     end
