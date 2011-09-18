@@ -97,9 +97,9 @@ class User < ActiveRecord::Base
   has_many :user_categories, :dependent => :destroy
   has_many :categories,      :through => :user_categories
   
-  named_scope :admins, :include => :role_assignments, :conditions => "role_assignments.name = 'admin'"
+  named_scope :admins,        :include => :role_assignments, :conditions => "role_assignments.name = 'admin'"
   named_scope :final_editors, :include => :role_assignments, :conditions => "role_assignments.name = 'final_editor'"
-  named_scope :editors, :include => :role_assignments, :conditions => "role_assignments.name = 'editor'"
+  named_scope :editors,       :include => :role_assignments, :conditions => "role_assignments.name = 'editor'"
 
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of     :password,                :if => :password_required?
@@ -320,7 +320,7 @@ class User < ActiveRecord::Base
 
   # Returns the name to use on the frontend.
   def screen_name
-    full_name.empty? ? login : full_name
+    full_name.present? ? full_name : login
   end
 
   # Aliases +login+ as +to_param+.
@@ -337,9 +337,9 @@ class User < ActiveRecord::Base
   def remove_category_from_favorites(category)
     self.categories.delete(category) if self.categories.include?(category)
   end
-  
+
   def to_s
-    full_name.empty? ? login : "#{full_name} (#{login})"
+    full_name.present? ? "#{full_name} (#{login})" : login
   end
 
   protected
