@@ -69,14 +69,14 @@ class AgendaItem < ActiveRecord::Base
   # Sets the associated AgendaItemCategory using the given +name+.
   # If there is no AgendaItemCategory with the given +name+, a new one is created.
   def agenda_item_category_name=(name)
-    self.agenda_item_category = AgendaItemCategory.find_or_new_by_name(name.to_s) unless name.blank?
+    self.agenda_item_category = AgendaItemCategory.find_or_new_by_name(name.to_s) if name.present?
   end
-  
+
   # Aliases +description+ as +title+.
   def title
     self.description
   end
-  
+
   def title_changed?
     self.description_changed?
   end
