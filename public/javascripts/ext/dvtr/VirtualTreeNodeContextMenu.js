@@ -3,7 +3,7 @@
  * @extends Ext.menu.Menu
  */
 
-Ext.dvtr.VirtualTreeNodeContextMenu = function(config) {
+Ext.dvtr.VirtualTreeNodeContextMenu = function (config) {
     if (!config || !config.tn || !(config.tn instanceof Ext.dvtr.AsyncVirtualTreeNode)) {
         throw new SyntaxError('Ext.dvtr.VirtualTreeNodeContextMenu requires an Ext.dvtr.AsyncVirtualTreeNode instance to be set to the \'tn\' config option.');
     }
@@ -18,13 +18,13 @@ Ext.dvtr.VirtualTreeNodeContextMenu = function(config) {
             text: 'Verwijderen',
             icon: '/images/icons/delete.png',
             scope: this,
-            handler: function() {
+            handler: function () {
                 Ext.Msg.show({
                     title: I18n.t('delete_content', 'nodes'),
                     msg: I18n.t('delete_all_items', 'nodes'),
                     buttons: Ext.Msg.YESNO,
                     scope: this,
-                    fn: function(btn) {
+                    fn: function (btn) {
                         if (btn == 'yes') {
                             this.tn.onDelete();
                         }
@@ -33,12 +33,12 @@ Ext.dvtr.VirtualTreeNodeContextMenu = function(config) {
                 });
             }
         });
-     }
+    }
 };
 
 // Extend the Menu class
 Ext.extend(Ext.dvtr.VirtualTreeNodeContextMenu, Ext.menu.Menu, {
-    show: function() {
+    show: function () {
         if (this.items.getCount() > 0) {
             Ext.dvtr.VirtualTreeNodeContextMenu.superclass.show.call(this, this.tn.ui.getAnchor());
         }

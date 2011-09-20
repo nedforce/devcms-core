@@ -4,7 +4,7 @@
  */
 
 Ext.dvtr.MultipleTreeNodeContextMenu = Ext.extend(Ext.menu.Menu, {
-  show: function(anchorNode, selectedNodes) {
+  show: function (anchorNode, selectedNodes) {
     this.selectedNodes = selectedNodes;
 
     this.addButtons();
@@ -14,14 +14,14 @@ Ext.dvtr.MultipleTreeNodeContextMenu = Ext.extend(Ext.menu.Menu, {
     }
   },
 
-  addButtons: function() {
+  addButtons: function () {
     this.addEditButton();
   },
 
-  addEditButton: function() {
+  addEditButton: function () {
     var allNodesAreEditable = true;
 
-    this.selectedNodes.each(function(node) {
+    this.selectedNodes.each(function (node) {
       if (!node.isEditable()) {
         allNodesAreEditable = false;
       }
@@ -38,10 +38,10 @@ Ext.dvtr.MultipleTreeNodeContextMenu = Ext.extend(Ext.menu.Menu, {
 
   // Button handlers
 
-  handleEdit: function() {
+  handleEdit: function () {
     var nodeIDs = [];
 
-    this.selectedNodes.each(function(node) {
+    this.selectedNodes.each(function (node) {
       nodeIDs.push(node.id);
     });
 
@@ -49,7 +49,7 @@ Ext.dvtr.MultipleTreeNodeContextMenu = Ext.extend(Ext.menu.Menu, {
       url: '/admin/nodes/bulk_edit',
       params: Ext.ux.prepareParams(defaultParams, { format: 'html', 'ids[]': nodeIDs }),
       method: 'GET',
-      callback: function(options, success, response) {
+      callback: function (options, success, response) {
         if (!success) {
           Ext.ux.alertResponseError(response, I18n.t('form_load_failed', 'errors'));
         }

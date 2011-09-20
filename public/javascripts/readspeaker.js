@@ -3,8 +3,8 @@ document.observe('dom:loaded', function() {
 });
 
 function javascriptifyReadspeakerLinks() {
-  $$('a.readspeaker_link').each(function(anchor) {
-    anchor.observe('click', function(event) {
+  $$('a.readspeaker_link').each(function (anchor) {
+    anchor.observe('click', function (event) {
       showReadspeaker(anchor);
       event.stop();
     });
@@ -27,9 +27,9 @@ function showReadspeaker(anchor) {
 
   if (anchor.hasClassName('topRightReadspeaker')) {
     var page_container = readspeaker_button.up('.regularPage');
-    page_container.insert( { top: flash });
+    page_container.insert({ top: flash });
   } else {
     var buttons_container = readspeaker_button.up('.buttons');
-    buttons_container.insert( { bottom: flash });
+    buttons_container.insert({ bottom: flash });
   }
 }

@@ -15,7 +15,7 @@
 *             field may receive tree nodes. (String)
 */
 
-Ext.dvtr.NodeDropField = function(cfg){
+Ext.dvtr.NodeDropField = function (cfg) {
     this.originalText = cfg.text || '';
     this.ddConfig = {ddGroup: cfg.ddGroup};
     Ext.applyIf(cfg, {width: 30, readOnly: true});
@@ -23,28 +23,28 @@ Ext.dvtr.NodeDropField = function(cfg){
 };
 Ext.extend(Ext.dvtr.NodeDropField, Ext.form.TextField, {
     cls: 'x-node-drop-field',
-    initComponent : function(){
+    initComponent : function () {
         Ext.dvtr.NodeDropField.superclass.initComponent.call(this);
         this.addEvents({
-            validatedrop:true,
-            beforedragover:true,
-            dragover:true,
-            beforedrop:true,
-            drop:true,
-            afterinserttreenode:true
+            validatedrop: true,
+            beforedragover: true,
+            dragover: true,
+            beforedrop: true,
+            drop: true,
+            afterinserttreenode: true
         });
     },
 
-    initEvents : function(){
+    initEvents : function () {
         Ext.dvtr.NodeDropField.superclass.initEvents.call(this);
         this.dd = new Ext.dvtr.NodeDropField.DropTarget(this, this.ddConfig);
     },
 
-    setText : function(txt){
-      this.textLabel.update(txt);
+    setText : function (txt) {
+        this.textLabel.update(txt);
     },
 
-    onRender: function(ct, position){
+    onRender: function (ct, position) {
         Ext.dvtr.NodeDropField.superclass.onRender.call(this, ct, position);
 
         var span = {
@@ -58,13 +58,13 @@ Ext.extend(Ext.dvtr.NodeDropField, Ext.form.TextField, {
     }
 });
 
-Ext.dvtr.NodeDropField.DropTarget = function(ndf, cfg){
+Ext.dvtr.NodeDropField.DropTarget = function (ndf, cfg) {
     this.nodeDropField = ndf;
     Ext.dvtr.NodeDropField.DropTarget.superclass.constructor.call(this, ndf.el.dom, cfg);
 };
 
-Ext.extend(Ext.dvtr.NodeDropField.DropTarget, Ext.dd.DropTarget,{
-    createEvent : function(dd, e, data){
+Ext.extend(Ext.dvtr.NodeDropField.DropTarget, Ext.dd.DropTarget, {
+    createEvent : function (dd, e, data) {
         return {
             nodeDropField: this.nodeDropField,
             data: data,
@@ -74,17 +74,17 @@ Ext.extend(Ext.dvtr.NodeDropField.DropTarget, Ext.dd.DropTarget,{
         };
     },
 
-    notifyOut: function(dd, e, data){
+    notifyOut: function (dd, e, data) {
         this.nodeDropField.el.removeClass('x-node-drop-field-over');
     },
 
-    notifyOver: function(dd, e, data){
+    notifyOver: function (dd, e, data) {
 
         var event = this.createEvent(dd, e, data);
 
-        if(this.nodeDropField.fireEvent('validatedrop', event) !== false &&
-           this.nodeDropField.fireEvent('beforedragover', event) !== false &&
-           dd instanceof Ext.tree.TreeDragZone){
+        if (this.nodeDropField.fireEvent('validatedrop', event) !== false &&
+            this.nodeDropField.fireEvent('beforedragover', event) !== false &&
+            dd instanceof Ext.tree.TreeDragZone) {
 
               this.nodeDropField.el.addClass('x-node-drop-field-over');
         }
@@ -92,21 +92,21 @@ Ext.extend(Ext.dvtr.NodeDropField.DropTarget, Ext.dd.DropTarget,{
         return event.status;
     },
 
-    notifyDrop: function(dd, e, data){
+    notifyDrop: function (dd, e, data) {
 
         var event = this.createEvent(dd, e, data);
 
-        if(this.nodeDropField.fireEvent('validatedrop', event) !== false &&
-           this.nodeDropField.fireEvent('beforedrop', event) !== false &&
-           dd instanceof Ext.tree.TreeDragZone){
+        if (this.nodeDropField.fireEvent('validatedrop', event) !== false &&
+            this.nodeDropField.fireEvent('beforedrop', event) !== false &&
+            dd instanceof Ext.tree.TreeDragZone) {
 
-           // Create a new sortlet object
-           var treeNode = dd.dragData.node;
-           // Remove currently selected node
-           this.nodeDropField.setRawValue(treeNode.id);
-           this.nodeDropField.setText(treeNode.text);
+            // Create a new sortlet object
+            var treeNode = dd.dragData.node;
+            // Remove currently selected node
+            this.nodeDropField.setRawValue(treeNode.id);
+            this.nodeDropField.setText(treeNode.text);
 
-           this.nodeDropField.el.removeClass('x-node-drop-field-over');
+            this.nodeDropField.el.removeClass('x-node-drop-field-over');
         }
     }
 });

@@ -6,26 +6,26 @@
  * Creates a new RemovableTextField
  * @param {Object} config Configuration options
  */
-Ext.dvtr.RemovableTextField = function(cfg){
+Ext.dvtr.RemovableTextField = function (cfg) {
     Ext.dvtr.RemovableTextField.superclass.constructor.call(this, cfg);
 };
 Ext.extend(Ext.dvtr.RemovableTextField, Ext.form.TextField, {
-    createEvent: function(){
+    createEvent: function () {
         return {
             textField: this,
             ct: this.getContainerDom()
         };
     },
     // private
-    initComponent : function(){
+    initComponent : function () {
         Ext.dvtr.RemovableTextField.superclass.initComponent.call(this);
         this.addEvents({
-            beforeremove:true,
-            afterremove:true
+            beforeremove: true,
+            afterremove: true
         });
     },
     // private
-    onRender: function(ct, position){
+    onRender: function (ct, position) {
         Ext.dvtr.RemovableTextField.superclass.onRender.call(this, ct, position);
 
         var btn = {
@@ -37,8 +37,8 @@ Ext.extend(Ext.dvtr.RemovableTextField, Ext.form.TextField, {
 
         var btnEl = Ext.DomHelper.insertAfter(this.el.dom, btn, true);
 
-        btnEl.on('click', function(){
-            if(this.fireEvent('beforeremove', this.createEvent()) !== false){
+        btnEl.on('click', function () {
+            if (this.fireEvent('beforeremove', this.createEvent()) !== false) {
                 this.el.next().remove(); // remove button
                 this.destroy(); // remove textfield component
 
