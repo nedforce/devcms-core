@@ -423,7 +423,7 @@ class Node < ActiveRecord::Base
 
   # Returns true if this node should be visible to the given +user+, false otherwise.
   def visible_for_user?(user = nil)
-     (user.is_a?(User) && user.has_role_on?(RoleAssignment::ALL_ROLES, self)) || !self.is_hidden?
+    (user.is_a?(User) && user.has_role_on?(RoleAssignment::ALL_ROLES, self)) || !self.is_hidden?
   end
 
   # Returns true if this node is published, false otherwise.
