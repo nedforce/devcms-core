@@ -320,4 +320,5 @@ nl:
         user:
           attributes:
             login:
-              reserved_login: is een gereserveerde login, gelieve een andere te kiezen.
+              invalid: "kan alleen letters, cijfers en '-' bevatten."
+              reserved_login: "is een gereserveerde login, gelieve een andere te kiezen."
