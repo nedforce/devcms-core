@@ -2,7 +2,7 @@ module ApplicationHelper
 
   def content_box_title_for(node)
     (node.content.respond_to?(:custom_content_box_title) && node.content.custom_content_box_title) || 
-    (!node.content_box_title.blank? && node.content_box_title) || node.content.title
+    (node.content_box_title.present? && node.content_box_title) || node.content.title
   end
 
   # Creates div elements containing the various flash messages, if any are set.
@@ -51,7 +51,7 @@ module ApplicationHelper
     # Warning: some 'ad-hoc' solutions for supporting subcatergories in opus PDCs. Do _not_ port to treehouse
     suffix = options.delete(suffix) || @category
     if suffix
-      product = crumb_nodes.pop if @category && node.content_type=="Product"
+      product = crumb_nodes.pop if @category && node.content_type == 'Product'
       crumb_nodes += suffix.ancestors.sort_by { |s| s.id }
       crumb_nodes << suffix
       crumb_nodes << product unless product.nil?
@@ -127,7 +127,7 @@ module ApplicationHelper
   def create_footer_menu_links
     current_site.accessible_content_children(:for_menu => true, :order => :position).map do |item|
       link_to_content_node(h(item.content_title.downcase), item)
-    end.join(" | ")
+    end.join(' | ')
   end
 
   # Generates include tags for the given scripts and places them in the head element of the page.
@@ -275,16 +275,16 @@ module ApplicationHelper
     available_header_images = available_header_images_nodes.map do |header_image|
       if header_image.is_a?(String)
         {
-          :url => header_image,
-          :id => nil,
-          :alt => nil,
+          :url   => header_image,
+          :id    => nil,
+          :alt   => nil,
           :title => nil
         }
       else
         {
-          :url => big_header ? big_header_image_path(header_image, :format => :jpg) : header_image_path(header_image, :format => :jpg),
-          :id => "ss-image-#{header_image.id}",
-          :alt => header_image.alt,
+          :url   => big_header ? big_header_image_path(header_image, :format => :jpg) : header_image_path(header_image, :format => :jpg),
+          :id    => "ss-image-#{header_image.id}",
+          :alt   => header_image.alt,
           :title => header_image.title
         }
       end
@@ -292,7 +292,7 @@ module ApplicationHelper
     
     render :partial => '/layouts/partials/header_slideshow', :locals => { :available_header_images => available_header_images }
   end
-  
+
   def image_url(source)
     abs_path = compute_public_path(source, 'images')
     unless abs_path =~ /^http/

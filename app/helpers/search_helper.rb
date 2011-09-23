@@ -22,21 +22,21 @@ module SearchHelper
     last_page_record  = @results.size if @results.size < last_page_record    
 
     result = "#{prefix} <strong>"    
-    result << first_page_record.to_s + " - "
-    result << last_page_record.to_s + "</strong>"
+    result << first_page_record.to_s + ' - '
+    result <<  last_page_record.to_s + '</strong>'
     result
   end
 
   def print_category(category)
     default_options = {
      :advanced      => true,
-     :query         => "",
+     :query         => '',
      :search_engine => params[:search_engine]
     }
     default_options[:programme] = category.parent ? category.parent_id : category.id
     if category.parent
       link_to(category.parent.name, search_path(default_options)) + 
-      " | " +
+      ' | ' +
       link_to(category.name, search_path({:project => category.id}.merge(default_options)))
     else
       link_to category.name, search_path(default_options)

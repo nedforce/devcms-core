@@ -35,7 +35,7 @@ module HtmlEditorHelper
 
   def init_tinymce_js(value, field_id, options = {})
     front_end = false || options.delete(:front_end)
-    heading   = options.delete(:heading) || "h2"
+    heading   = options.delete(:heading) || 'h2'
     width     = options.delete(:width)   || (front_end ? '410' : '600')
 
     <<-JS
