@@ -2,11 +2,11 @@
 # the application relating to +AgendaItem+ objects.
 
 class AgendaItemsController < ApplicationController
-  
+
   # The +show+ action needs a +AgendaItem+ object to work with.
   # Also any possible +Attachment+ objects need to be retrieved for the +show+ action.
   before_filter :find_agenda_item, :find_images_and_attachments, :only => :show
-    
+
   # * GET /agenda_items/:id
   # * GET /agenda_items/:id.xml
   def show
@@ -15,7 +15,7 @@ class AgendaItemsController < ApplicationController
       format.xml  { render :xml => @agenda_item }
     end
   end
-  
+
 protected
 
   # Finds the +AgendaItem+ object corresponding to the passed in +id+ parameter.

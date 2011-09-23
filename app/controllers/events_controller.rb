@@ -1,10 +1,10 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of 
-# the application relating to +CalendarItem+ objects.
+# the application relating to +Event+ objects.
 class EventsController < ApplicationController
-  
+
   # The +show+ action needs a +CalendarItem+ object to work with.  
   before_filter :find_calender_item, :only => :show
-    
+
   # * GET /calender_items/:id
   # * GET /calender_items/:id.xml
   def show

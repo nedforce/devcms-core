@@ -8,41 +8,41 @@ class CommentsController < ApplicationController
   # Only admins and final editors are allowed to delete comments
   require_role [ 'admin', 'final_editor' ], :only => :destroy
 
-  # * POST /nodes/1/comments
-  # * POST /nodes/1/comments.xml
+  # * POST /nodes/:id/comments
+  # * POST /nodes/:id/comments.xml
   def create
-    unless @node.commentable?
-      redirect_back_or_default
-    else
+    if @node.commentable?
       @comment = @node.comments.build(params[:comment])
       # TODO: Current user weer toevoegen
       @comment.user = current_user if logged_in?
       respond_to do |format|
         if @comment.save
           format.html { redirect_to @node.content }
-          format.js { 
+          format.js   { 
             render :update do |page|
               page.replace_html('comment_container', :partial => '/shared/comments', :locals => { :commentable => @node, :comment => @comment })
 
               page['comment' + @comment.id.to_s].visual_effect :highlight, :startcolor => "#D9EAF2"
             end
           }
-          format.xml { render :xml => @comment, :status => :created, :location => @comment }
+          format.xml  { render :xml => @comment, :status => :created, :location => @comment }
         else
           format.html { render :action => :new }
-          format.js { 
+          format.js   { 
             render :update do |page|
               page.replace_html('new_comment_container', :partial => '/shared/new_comment', :locals => { :commentable => @node, :comment => @comment })
             end
           }
-          format.xml { render :xml => @comment.errors, :status => :unprocessable_entity }
+          format.xml  { render :xml => @comment.errors, :status => :unprocessable_entity }
         end
       end
+    else
+      redirect_back_or_default
     end
   end
 
-  # * DELETE /nodes/1/comments
-  # * DELETE /nodes/1/comments.xml
+  # * DELETE /nodes/:id/comments
+  # * DELETE /nodes/:id/comments.xml
   def destroy    
     @comment.destroy
 

@@ -9,8 +9,8 @@ class LinksController < ApplicationController
   # +InternalLink+ object, an internal redirect is issued. In the case of an
   # +ExternalLink+ object, an external redirect is issued.
   #
-  # * GET /sections/1
-  # * GET /sections/1.xml
+  # * GET /sections/:id
+  # * GET /sections/:id.xml
   def show
     respond_to do |format|
       format.html { redirect_to generate_url_for_link(@link) }

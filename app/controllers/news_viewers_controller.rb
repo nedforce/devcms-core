@@ -8,9 +8,9 @@ class NewsViewersController < ApplicationController
   # The +show+ action needs a list of recent news items to work with.
   before_filter :find_recent_news_items, :only => :show  
 
-  # * GET /news_viewers/1
-  # * GET /news_viewers/1.atom
-  # * GET /news_viewers/1.xml
+  # * GET /news_viewers/:id
+  # * GET /news_viewers/:id.atom
+  # * GET /news_viewers/:id.xml
   def show
     respond_to do |format|
       format.html # show.html.erb
@@ -28,7 +28,7 @@ protected
 
   # Finds recent news items.
   def find_recent_news_items
-    @news_items = @news_viewer.accessible_news_items_for(current_user, { :page => {:size => 25, :current => params[:page]}})
+    @news_items = @news_viewer.accessible_news_items_for(current_user, { :page => { :size => 25, :current => params[:page] }})
     @latest_news_items = []
     @news_items_for_table = @news_items.to_a
 
