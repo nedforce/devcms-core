@@ -106,12 +106,20 @@ class User < ActiveRecord::Base
   validates_presence_of     :password_confirmation,   :if => :password_required?
   validates_length_of       :password, :in => 2..255, :if => :password_required?, :allow_blank => true
   validates_confirmation_of :password,                :if => :password_required?
-  validates_presence_of     :login, :email_address, :verification_code
-  validates_uniqueness_of   :login, :email_address, :case_sensitive => false
+
+  validates_presence_of     :login
+  validates_uniqueness_of   :login, :case_sensitive => false
   validates_length_of       :login, :in => 2..255,                :on => :create, :allow_blank => true
   validates_format_of       :login, :with => /\A[a-z0-9_\-]+\z/i, :on => :create, :unless => Proc.new { |user| user.login.blank? }
+
+  validates_presence_of     :email_address
+  validates_uniqueness_of   :email_address, :case_sensitive => false
   validates_email_format_of :email_address, :allow_blank => true
+
+  validates_presence_of     :verification_code
+
   validates_inclusion_of    :sex,   :in => User::SEXES.keys, :allow_blank => true
+
   validate :should_not_allow_reserved_login
 
   # Make sure the user's password (stored in the virtual attribute +password+)
