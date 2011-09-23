@@ -24,11 +24,11 @@ module ActiveRecord
       #   method, proc or string should return or evaluate to a true or false value.
       # * <tt>unless</tt> - See <tt>:if</tt>
       def validates_email_format_of(*attr_names)
-        options = { :message => ' does not appear to be a valid e-mail address', 
-                          :on => :save, 
-                          :allow_nil => false,
-                          :allow_blank => false,
-                          :with => ValidatesEmailFormatOf::Regex }
+        options = { :message     => I18n.t('validates_email_format_of.does_not_appear_to_be_a_valid_email_address'), 
+                    :on          => :save, 
+                    :allow_nil   => false,
+                    :allow_blank => false,
+                    :with        => ValidatesEmailFormatOf::Regex }
 
         options.update(attr_names.pop) if attr_names.last.is_a?(Hash)
 

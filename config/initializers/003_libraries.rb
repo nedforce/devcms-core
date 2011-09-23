@@ -12,6 +12,7 @@ require 'association_preload_fix'
 require 'acts_as_archive_controller'
 require 'searcher'
 require 'recaptcha'
+require 'validates_email_format_of'
 
 # Extend ActiveRecord::Base with the +acts_as_content_node+ functionality.
 ActiveRecord::Base.send(:include, Acts::ContentNode)
