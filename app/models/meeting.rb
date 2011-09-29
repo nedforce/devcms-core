@@ -20,12 +20,12 @@
 #  * A Meeting only accepts AgendaItem children.
 #
 class Meeting < CalendarItem
-  
+
   acts_as_content_node({
     :allowed_child_content_types => %w( Attachment AgendaItem ),
-    :show_in_menu => false,
-    :copyable => false,
-    :controller_name => 'meetings'
+    :show_in_menu                => false,
+    :copyable                    => false,
+    :controller_name             => 'meetings'
   })
   
   needs_editor_approval
@@ -49,7 +49,7 @@ class Meeting < CalendarItem
   # Sets the associated MeetingCategory using the given +name+.
   # If there is no MeetingCategory with the given +name+, a new one is created.
   def meeting_category_name=(name)
-    self.meeting_category = MeetingCategory.find_or_new_by_name(name.to_s) unless name.blank?
+    self.meeting_category = MeetingCategory.find_or_new_by_name(name.to_s) if name.present?
   end
 
   # Returns accessible agenda items for the given +user+.

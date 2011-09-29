@@ -19,3 +19,5 @@ nl:
     not_authorized: U heeft niet voldoende rechten om deze pagina te kunnen bekijken.
   tree_delegation:
     doesnt_accept: accepteert geen content van het
+  validates_email_format_of:
+    does_not_appear_to_be_a_valid_email_address: lijkt geen geldig e-mailadres te zijn

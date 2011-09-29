@@ -2,7 +2,7 @@ module ApplicationHelper
 
   def content_box_title_for(node)
     (node.content.respond_to?(:custom_content_box_title) && node.content.custom_content_box_title) || 
-    (!node.content_box_title.blank? && node.content_box_title) || node.content.title
+    (node.content_box_title.present? && node.content_box_title) || node.content.title
   end
 
   # Creates div elements containing the various flash messages, if any are set.
@@ -22,8 +22,8 @@ module ApplicationHelper
   # See documentation of +bread_crumbs_track_for+ for more information.
   def bread_crumbs_for(node, options = {})
     crumb_track = bread_crumbs_track_for(node, options)
-    
-    content_tag(:div, crumb_track, :class => 'bread_crumbs') unless crumb_track.blank?
+
+    content_tag(:div, crumb_track, :class => 'bread_crumbs') if crumb_track.present?
   end
 
   # Creates the breadcrumbs element, which displays links to all the node's ancestors.
@@ -51,7 +51,7 @@ module ApplicationHelper
     # Warning: some 'ad-hoc' solutions for supporting subcatergories in opus PDCs. Do _not_ port to treehouse
     suffix = options.delete(suffix) || @category
     if suffix
-      product = crumb_nodes.pop if @category && node.content_type=="Product"
+      product = crumb_nodes.pop if @category && node.content_type == 'Product'
       crumb_nodes += suffix.ancestors.sort_by { |s| s.id }
       crumb_nodes << suffix
       crumb_nodes << product unless product.nil?
@@ -79,12 +79,10 @@ module ApplicationHelper
           elsif node.class.name == 'ProductCategory'
             crumb_track << link_to(html_escape(n.title), product_catalogue_products_path(:product_catalogue_id => @product_catalogue, :selection => 'category', :selection_id => n.id))
           end
-        else
-          if node.class == Node
-            crumb_track << "<span class='last_crumb'>#{(options[:skip_link_self] ? n.content_title.capitalize : link_to_content_node(html_escape(n.content_title.capitalize), n, {}, link_options))}</span>"
-          elsif node.class.name == 'ProductCategory'
-            crumb_track << "<span class='last_crumb'>#{(options[:skip_link_self] ? n.title : link_to(html_escape(n.title), product_catalogue_products_path(:product_catalogue_id => @product_catalogue, :selection => 'category', :selection_id => n.id)))}</span>"
-          end
+        elsif node.class == Node
+          crumb_track << "<span class='last_crumb'>#{(options[:skip_link_self] ? n.content_title.capitalize : link_to_content_node(html_escape(n.content_title.capitalize), n, {}, link_options))}</span>"
+        elsif node.class.name == 'ProductCategory'
+          crumb_track << "<span class='last_crumb'>#{(options[:skip_link_self] ? n.title : link_to(html_escape(n.title), product_catalogue_products_path(:product_catalogue_id => @product_catalogue, :selection => 'category', :selection_id => n.id)))}</span>"
         end
       end
     end
@@ -129,7 +127,7 @@ module ApplicationHelper
   def create_footer_menu_links
     current_site.accessible_content_children(:for_menu => true, :order => :position).map do |item|
       link_to_content_node(h(item.content_title.downcase), item)
-    end.join(" | ")
+    end.join(' | ')
   end
 
   # Generates include tags for the given scripts and places them in the head element of the page.
@@ -277,16 +275,16 @@ module ApplicationHelper
     available_header_images = available_header_images_nodes.map do |header_image|
       if header_image.is_a?(String)
         {
-          :url => header_image,
-          :id => nil,
-          :alt => nil,
+          :url   => header_image,
+          :id    => nil,
+          :alt   => nil,
           :title => nil
         }
       else
         {
-          :url => big_header ? big_header_image_path(header_image, :format => :jpg) : header_image_path(header_image, :format => :jpg),
-          :id => "ss-image-#{header_image.id}",
-          :alt => header_image.alt,
+          :url   => big_header ? big_header_image_path(header_image, :format => :jpg) : header_image_path(header_image, :format => :jpg),
+          :id    => "ss-image-#{header_image.id}",
+          :alt   => header_image.alt,
           :title => header_image.title
         }
       end
@@ -294,7 +292,7 @@ module ApplicationHelper
     
     render :partial => '/layouts/partials/header_slideshow', :locals => { :available_header_images => available_header_images }
   end
-  
+
   def image_url(source)
     abs_path = compute_public_path(source, 'images')
     unless abs_path =~ /^http/
@@ -306,6 +304,7 @@ module ApplicationHelper
   def social_media_buttons(page)
     social_media_button(page, 'social_hyves.png',    t('application.add_to_hyves'),    'http://www.hyves.nl/profilemanage/add/tips/?name={{title}}&amp;text=[url={{url}}]{{title}}[/url]&amp;type=12') +
     social_media_button(page, 'social_twitter.png',  t('application.add_to_twitter'),  'http://twitter.com/?status={{title}} {{url}}') +
+    social_media_button(page, 'social_facebook.png', t('application.add_to_facebook'), 'http://www.facebook.com/sharer.php?u={{url}}&amp;t={{title}}') +
     social_media_button(page, 'social_linkedin.png', t('application.add_to_linkedin'), 'http://www.linkedin.com/shareArticle?mini=true&amp;url={{url}}&amp;title={{title}}&amp;source={{title}}') +
     social_media_button(page, 'social_blogger.png',  t('application.add_to_blogger'),  'http://www.blogger.com/blog_this.pyra?t=&amp;u={{url}}&amp;n={{title}}') +
     email_button(page, 'email.png', t('application.email_page'))
@@ -341,16 +340,16 @@ module ApplicationHelper
     def create_main_menu_item(item)
       node     = item.node
       children = node.accessible_content_children(:for_menu => true, :order => :position)
-      active = (@node && @node.path_ids.include?(item.node.id))? " active": ""
+      active   = (@node && @node.path_ids.include?(item.node.id)) ? 'active' : ''
 
       if node.leaf? || children.empty?
-        content_tag(:li, create_menu_link(item, :class => 'main_menu_link'), :class => node.own_or_inherited_layout_configuration['template_color'] + active)
+        content_tag(:li, create_menu_link(item, :class => 'main_menu_link'), :class => "#{node.own_or_inherited_layout_configuration['template_color']} #{active}")
       else
         link             = create_menu_link(item, :class => 'main_menu_link')
         sub_menu_items   = children.map { |sub_item| content_tag(:li, create_menu_link(sub_item, :class => 'sub_menu_link')) }
         sub_menu         = content_tag(:ul,  sub_menu_items, :class => 'sub_menu')
         sub_menu_wrapper = content_tag(:div, sub_menu,       :class => 'sub_menu_wrapper')
-        content_tag(:li, link + sub_menu_wrapper, :class => "#{node.own_or_inherited_layout_configuration['template_color']} hover " + active)
+        content_tag(:li, link + sub_menu_wrapper, :class => "#{node.own_or_inherited_layout_configuration['template_color']} hover #{active}")
       end
     end
 

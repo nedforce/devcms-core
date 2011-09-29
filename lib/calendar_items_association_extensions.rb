@@ -3,6 +3,16 @@ module CalendarItemsAssociationExtensions #:nodoc:
     start_of_month = date.start_of_month
     end_of_month   = date.end_of_month
 
+    # There is a bug in certain Ruby versions where +end_of_month+ does not take
+    # Gregorian leap years into account, so it returns 29 February for a year in which
+    # there was none.
+    #
+    # Known good Ruby version: ruby 1.8.6 (2007-09-24 patchlevel 111)
+    # Known bad Ruby version: ruby-enterprise-1.8.7-2010.02
+    if end_of_month.month == 2 && end_of_month.day == 29 && !Date.gregorian_leap?(end_of_month.year)
+      end_of_month = end_of_month - 1.day
+    end
+
     conditions = [
                    '((date(start_time) BETWEEN ? AND ? ) OR (date(end_time) BETWEEN ? AND ?) OR (date(start_time) < ? AND date(end_time) > ?))', 
                    start_of_month, end_of_month, start_of_month, end_of_month, start_of_month, end_of_month 

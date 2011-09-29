@@ -8,20 +8,20 @@ var defaultContainerClassName = 'header-slideshow'; // Default container class n
 // Classes
 
 var SlideShow = Class.create({
-  
+
   // Call this function to start the image cycler.
-  start: function() {
+  start: function () {
     this.startTimer();
   },
-  
+
   // Do not call this function directly.
   startTimer: function () {
     var _self = this; // Hack required because Javascript timers execute in a global context
-		setTimeout(function() { _self.loadNextSlide() }, this.options.displayDuration);
+		setTimeout(function () { _self.loadNextSlide(); }, this.options.displayDuration);
   },
-  
+
   // Do not call this function directly.
-  loadNextSlide: function() {
+  loadNextSlide: function () {
     if (this.previousSlide) {
       this.container.removeChild(this.previousSlide);
     }
@@ -35,42 +35,41 @@ var SlideShow = Class.create({
 
     this.buildCurrentSlide(this.slides[this.currentSlideIndex]);
   },
-  
-  fadePreviousSlideOut: function() {
+
+  fadePreviousSlideOut: function () {
     this.previousSlide.fade({ duration: this.options.fadeDuration / 1000 });
-		var _self = this; // Hack required because Javascript timers execute in a global context
-		setTimeout(function() { _self.fadeCurrentSlideIn() }, this.options.fadeOutStartToFadeInStartDelay);
+      var _self = this; // Hack required because Javascript timers execute in a global context
+      setTimeout(function () { _self.fadeCurrentSlideIn(); }, this.options.fadeOutStartToFadeInStartDelay);
   },
-  
-  fadeCurrentSlideIn: function() {
+
+  fadeCurrentSlideIn: function () {
     this.currentSlide.appear({ duration: this.options.fadeDuration / 1000, afterFinish: this.startTimer.bindAsEventListener(this) });
   },
-  
+
   // Do not call this function directly.
-  buildCurrentSlide: function(slide) {
+  buildCurrentSlide: function (slide) {
     this.currentSlide = new Element("img", { 'src': slide['url'], 'id': slide['id'], 'title': slide['title'], 'style' : 'display: none'});
-    
-		this.container.appendChild(this.currentSlide);
+
+    this.container.appendChild(this.currentSlide);
     this.fadePreviousSlideOut();
   },
-    
+
   // Do not call this function directly.
-  initialize: function(slides, options) {
+  initialize: function (slides, options) {
     if (slides.length == 0) {
       throw 'passed in slides list is empty';
     }
 
-		this.options = Object.extend({
+    this.options = Object.extend({
       fadeDuration: defaultFadeDuration,
       displayDuration: defaultDisplayDuration,
 			fadeOutStartToFadeInStartDelay: defaultFadeOutStartToFadeInStartDelay,
 			containerClassName: defaultContainerClassName
-    }, options || {});    
-        
+    }, options || {});
+
     this.container = $(this.options.containerClassName);
     this.slides = slides;
     this.currentSlide = this.container.down();
     this.currentSlideIndex = 0;
 	}
 });
-

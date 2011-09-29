@@ -99,21 +99,29 @@ class User < ActiveRecord::Base
   
   has_many :versions,        :foreign_key => :editor_id, :dependent => :destroy
   
-  named_scope :admins, :include => :role_assignments, :conditions => "role_assignments.name = 'admin'"
+  named_scope :admins,        :include => :role_assignments, :conditions => "role_assignments.name = 'admin'"
   named_scope :final_editors, :include => :role_assignments, :conditions => "role_assignments.name = 'final_editor'"
-  named_scope :editors, :include => :role_assignments, :conditions => "role_assignments.name = 'editor'"
+  named_scope :editors,       :include => :role_assignments, :conditions => "role_assignments.name = 'editor'"
 
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of     :password,                :if => :password_required?
   validates_presence_of     :password_confirmation,   :if => :password_required?
   validates_length_of       :password, :in => 2..255, :if => :password_required?, :allow_blank => true
   validates_confirmation_of :password,                :if => :password_required?
-  validates_presence_of     :login, :email_address, :verification_code
-  validates_uniqueness_of   :login, :email_address, :case_sensitive => false
+
+  validates_presence_of     :login
+  validates_uniqueness_of   :login, :case_sensitive => false
   validates_length_of       :login, :in => 2..255,                :on => :create, :allow_blank => true
   validates_format_of       :login, :with => /\A[a-z0-9_\-]+\z/i, :on => :create, :unless => Proc.new { |user| user.login.blank? }
+
+  validates_presence_of     :email_address
+  validates_uniqueness_of   :email_address, :case_sensitive => false
   validates_email_format_of :email_address, :allow_blank => true
+
+  validates_presence_of     :verification_code
+
   validates_inclusion_of    :sex,   :in => User::SEXES.keys, :allow_blank => true
+
   validate :should_not_allow_reserved_login
 
   # Make sure the user's password (stored in the virtual attribute +password+)
@@ -322,7 +330,7 @@ class User < ActiveRecord::Base
 
   # Returns the name to use on the frontend.
   def screen_name
-    full_name.empty? ? login : full_name
+    full_name.present? ? full_name : login
   end
 
   # Aliases +login+ as +to_param+.
@@ -339,9 +347,9 @@ class User < ActiveRecord::Base
   def remove_category_from_favorites(category)
     self.categories.delete(category) if self.categories.include?(category)
   end
-  
+
   def to_s
-    full_name.empty? ? login : "#{full_name} (#{login})"
+    full_name.present? ? "#{full_name} (#{login})" : login
   end
 
   protected

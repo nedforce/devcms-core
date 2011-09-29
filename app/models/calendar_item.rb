@@ -102,12 +102,12 @@ class CalendarItem < Event
 
   # Destroy calendar item and all of its repetitions
   def self.destroy_calendar_item(calender_item)
-    unless calender_item.has_repetitions?
-      calender_item.destroy
-    else
+    if calender_item.has_repetitions?
       CalendarItem.find_each(:conditions => { :repeat_identifier => calender_item.repeat_identifier }) do |repetition|
         repetition.destroy
       end
+    else
+      calender_item.destroy
     end
   end
 
@@ -116,13 +116,15 @@ class CalendarItem < Event
     @repeat_end = Date.parse(value.to_s) if value.present?
   end
 
+  # TODO: Refactor the method below; it is totally unmaintainable in its current form.
+  #
   # Flag is repetitions of this calendar item should be created
   def repeating=(value)
     @repeating = if value.is_a?(TrueClass) || value.is_a?(FalseClass) 
       value
     else
       value != "0" && value != "false"
-    end if value.is_a?(TrueClass) || value.is_a?(FalseClass) || (value.is_a?(String) && !value.blank?)
+    end if value.is_a?(TrueClass) || value.is_a?(FalseClass) || (value.is_a?(String) && value.present?)
   end
 
   # Set repeat interval granularity (day, week, month)
@@ -149,9 +151,7 @@ protected
 
   # Validate that the end of repetition is in the future.
   def repeat_end_should_be_in_the_future
-    if self.repeating?
-      errors.add(:repeat_end, :repeat_end_should_be_in_the_future) if self.repeat_end && self.repeat_end <= Date.today
-    end
+    errors.add(:repeat_end, :repeat_end_should_be_in_the_future) if self.repeating? && self.repeat_end && self.repeat_end <= Date.today
   end
 
   # Set the repetition grouping identifier when calendar item is repeated.
@@ -204,8 +204,8 @@ protected
   # Attributes hash that needs to be included in repeating items.
   def cloning_hash
     {
-      :title    => self.title,
-      :body     => self.body,
+      :title                => self.title,
+      :body                 => self.body,
       :location_description => self.location_description
     }
   end

@@ -1,5 +1,5 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of 
-# the application relating to NewsItem objects.
+# the application relating to Carrousel objects.
 class CarrouselsController < ApplicationController
 
   # * GET /carrousels/:id

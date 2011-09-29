@@ -2,8 +2,8 @@
 # the application relating to +LinksBox+ objects.
 class LinksBoxesController < ApplicationController
 
-  before_filter :find_links_box,              :only => :show
-  before_filter :find_children,               :only => :show
+  before_filter :find_links_box, :only => :show
+  before_filter :find_children,  :only => :show
 
   # * GET /links_boxes/:id
   # * GET /links_boxes/:id.xml

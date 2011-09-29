@@ -5,7 +5,7 @@ module OwmsMetadataHelper
     metadata << indexing_metadata_for(node)    
     metadata << owms_core_metadata_for(node)
     metadata << owms_mantle_metadata_for(node)
-    metadata << owms_permit_metadata_for(node) if node.content_type == "Permit"
+    metadata << owms_permit_metadata_for(node) if node.content_type == 'Permit'
 
     unless node.categories.empty?
       categories = node.categories.categories
@@ -36,8 +36,8 @@ module OwmsMetadataHelper
   # * dcterms:spatial (Locatie)
   # * dcterms:temporal (Dekking in tijd)
   def owms_core_metadata_for(node)
-    tags = []
     content = node.content
+    tags = []
     tags << meta_tag('DCTERMS.identifier', node_url(node),                                                                            'DCTERMS.URI')
     tags << meta_tag('DCTERMS.title',      @page_title)
     tags << meta_tag('DCTERMS.type',       content.class.respond_to?(:owms_type) ? content.class.owms_type : I18n.t('owms.web_page'), 'OVERHEID.Informatietype')
@@ -131,7 +131,7 @@ module OwmsMetadataHelper
   end
 
   def node_url(node)
-    if node.content_type == "ProductCatalogue" && params[:controller] == 'products' && params[:action] == 'index'
+    if node.content_type == 'ProductCatalogue' && params[:controller] == 'products' && params[:action] == 'index'
       options = {}
       [:letter, :selection, :selection_id].each do |param|
         options[param] = params[param] if params[param].present?

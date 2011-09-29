@@ -10,10 +10,10 @@ class CalendarsController < ApplicationController
     respond_to do |format|
       format.atom {
         combined_calendar = CombinedCalendar.first
-        if combined_calendar.blank?
-          raise ActiveRecord::RecordNotFound
-        else
+        if combined_calendar.present?
           redirect_to :controller => :combined_calendars, :action => :show, :id => combined_calendar.id, :format => :atom
+        else
+          raise ActiveRecord::RecordNotFound
         end
       }
     end
@@ -49,7 +49,7 @@ class CalendarsController < ApplicationController
       format.xml { render :xml => @calendar }
     end
   end
- 
+
 protected
 
   # Finds the +Calendar+ object corresponding to the passed in +id+ parameter.

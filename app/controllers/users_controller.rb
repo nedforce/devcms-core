@@ -13,15 +13,15 @@ class UsersController < ApplicationController
 
   before_filter :verify_invitation_code, :only => [ :new, :create ]
   
-  before_filter :find_user, :only => [:send_verification_email, :verification]
+  before_filter :find_user, :only => [ :send_verification_email, :verification ]
   
   # Only allow updates and views for the owner of a user record.
-  before_filter :login_required, :set_user, :only => [:edit, :update, :show, :profile, :destroy, :confirm_destroy]
-  before_filter :set_user, :only => [:edit, :update, :show, :destroy, :confirm_destroy]
-  
-  before_filter :get_newsletters, :only => [:new, :create, :show, :profile]
-  before_filter :get_interests, :only => [:new, :create, :show, :profile]
-  
+  before_filter :login_required, :set_user, :only => [ :edit, :update, :show, :profile, :destroy, :confirm_destroy ]
+  before_filter :set_user,                  :only => [ :edit, :update, :show,           :destroy, :confirm_destroy ]
+
+  before_filter :get_newsletters, :only => [ :new, :create, :show, :profile ]
+  before_filter :get_interests,   :only => [ :new, :create, :show, :profile ]
+
   # Shows the registration form.
   #
   # * GET /users/new
@@ -40,7 +40,7 @@ class UsersController < ApplicationController
   # * POST /users
   # * POST /users.xml
   def create
-    if !params[:user][:username].blank?
+    if params[:user][:username].present?
       flash[:error] = I18n.t('users.try_again')
       redirect_to new_user_path
     else
@@ -55,9 +55,7 @@ class UsersController < ApplicationController
           end
           format.xml  { render :xml => @user.to_xml, :status => :created, :location => @user }
         else
-          format.html do
-            render :action => "new"
-          end
+          format.html { render :action => 'new' }
           format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
         end
       end
@@ -68,68 +66,68 @@ class UsersController < ApplicationController
     @user = current_user
     render :action => 'show'
   end
-  
+
   # Shows user profile page.
   #
-  # * GET /users/1
-  def show; end
-  
+  # * GET /users/:id
+  def show
+  end
+
   # Shows edit user details form.
   #
-  # * GET /users/1/edit
-  def edit; end
-  
+  # * GET /users/:id/edit
+  def edit
+  end
+
   # Updates a users details.
   #
-  # * PUT /users/1
-  # * PUT /users/1.xml
+  # * PUT /users/:id
+  # * PUT /users/:id.xml
   def update
     if params[:update_newsletters_and_interests]
       params[:user] ||= {}
       params[:user][:newsletter_archive_ids] ||= []
       params[:user][:interest_ids] ||= []
     end
+
     respond_to do |format|
       if @user.update_attributes(params[:user])
         format.html do
           flash[:notice] = I18n.t('users.update_successful')
           redirect_to @user
         end
-        format.xml { head :ok }
+        format.xml  { head :ok }
       else
-        format.html do
-          render :action => 'edit'
-        end
-        format.xml { render :xml => @user.errors, :status => :unprocessable_entity }
+        format.html { render :action => 'edit' }
+        format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
       end
     end
   end
-  
+
   # Shows a user deletion confirmation form
   #
-  # * GET /users/1/confirm_destroy
-  def confirm_destroy; end
-  
+  # * GET /users/:id/confirm_destroy
+  def confirm_destroy
+  end
+
   # Deletes an user.
   #
-  # * DELETE /users/1
+  # * DELETE /users/:id
   def destroy
     respond_to do |format|
-      if @user == User.authenticate(@user.login, params[:user][:password])
-        format.html do
+      format.html do
+        if @user == User.authenticate(@user.login, params[:user][:password])
           @user.destroy
           flash[:notice] = I18n.t('users.deleted')
           redirect_to root_path
-        end
-      else
-        format.html do
+        else
           flash[:notice] = I18n.t('users.wrong_password')
           redirect_to confirm_destroy_user_path(@user)
         end
       end
     end
   end
-  
+
   # Verifies a user if the given verification code matches the user's code.
   #
   # * GET /users/:login/verification?code=XXXXXX
@@ -148,11 +146,11 @@ class UsersController < ApplicationController
       else
         @page_title = I18n.t('users.verification_failed')
         format.html { render :action => 'verification_failed' }
-        format.xml  { render :xml => {:error => I18n.t('users.verification_failed')}.to_xml, :status => :unprocessable_entity }
+        format.xml  { render :xml => { :error => I18n.t('users.verification_failed') }.to_xml, :status => :unprocessable_entity }
       end
     end
   end
-  
+
   # Generates a new verification code and sends it to the user's email address.
   # 
   # * GET /users/1/send_verification_email
@@ -164,20 +162,19 @@ class UsersController < ApplicationController
     else
       flash[:warning] = I18n.t('users.already_verified')
     end
+
     respond_to do |format|
-      format.html do
-        redirect_to login_path
-      end
+      format.html { redirect_to login_path }
     end
   end
-  
+
   # Renders the request password view
   #
   # * GET  /users/request_password
   def request_password
     @page_title = I18n.t('users.request_password')
   end
-  
+
   # Resets a user's password and sends the new password by email.
   # 
   # * GET /users/send_password?login_email=arthur
@@ -203,9 +200,9 @@ class UsersController < ApplicationController
       end
     end
   end
-  
+
 protected
-  
+
   # Finds the requested user and saves it to the <tt>@user</tt> instance variable.
   def find_user
     @user = User.find_by_login(params[:id])
@@ -216,20 +213,20 @@ protected
     @user = User.find_by_id_and_login(current_user.id, params[:id])
     raise ActiveRecord::RecordNotFound if @user.nil?
   end
-   
+
   def get_newsletters
     @newsletter_archives = NewsletterArchive.find_accessible(:all, :order => 'title', :for => current_user)
   end
-  
+
   def get_interests
     @interests = Interest.all(:order => 'title')
   end
 
   def set_page_title
     case action_name.to_s
-      when "new", "create"
+      when 'new', 'create'
         @page_title = I18n.t('users.register')
-      when "show", "edit", "profile"
+      when 'show', 'edit', 'profile'
         @page_title = I18n.t('users.profile')
     end
   end

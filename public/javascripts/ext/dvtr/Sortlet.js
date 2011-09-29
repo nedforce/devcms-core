@@ -1,44 +1,44 @@
 Ext.namespace('Ext.dvtr');
 
-Ext.dvtr.Sortlet = function(config){
-    
+Ext.dvtr.Sortlet = function (config) {
+
     this.sorter = config.sorter;
-    
+
     var ddConfig = {
-        beforeInvalidDrop: function(dd, e, id){
+        beforeInvalidDrop: function (dd, e, id) {
             var debug = Ext.get('debug_out');
-            if(!dd.sorter) {
+            if (!dd.sorter) {
                 // If this sortlet is dropped outside of a Sorter:
                 // Call notifyDrop() on the last sorter this sortlet was moved over.
                 this.originatingSorterDD.notifyDrop(this, e, {});
             }
         }
     };
-    if(config.ddGroup) { ddConfig.ddGroup = config.ddGroup; }
-    
+    if (config.ddGroup) { ddConfig.ddGroup = config.ddGroup; }
+
     // create some portlet tools using built in Ext tool ids
     var tools = [{
-        id:'toggle',
+        id: 'toggle',
         scope: this,
         hidden: true,
-        handler: function(e, target, sortlet){
+        handler: function (e, target, sortlet) {
             this.toggleCollapse(true);
         }
-     },{
-        id:'close',
+    }, {
+        id: 'close',
         scope: this,
         hidden: (config.hideClose == undefined) ? false : config.hideClose,
-        handler: function(e, target, sortlet){
+        handler: function (e, target, sortlet) {
             var event = {
                 sortlet: this,
                 sorter: this.sorter
             };
-            if(this.sorter.fireEvent('beforedestroysortlet', event)) {
-               sortlet.ownerCt.remove(sortlet, true);
+            if (this.sorter.fireEvent('beforedestroysortlet', event)) {
+                sortlet.ownerCt.remove(sortlet, true);
             }
         }
     }];
-    
+
     Ext.applyIf(config, {
         draggable: ddConfig,
         cls: 'x-sortlet',
@@ -50,17 +50,17 @@ Ext.dvtr.Sortlet = function(config){
 
 };
 Ext.extend(Ext.dvtr.Sortlet, Ext.Panel, {
-    assignId: function(id){
+    assignId: function (id) {
         this.id = id;
         this.tools.close.show();
     },
-    showCollapse: function(){
+    showCollapse: function () {
         this.tools.toggle.show();
     },
-    showSpinner: function(){
+    showSpinner: function () {
         this.header.addClass('x-sortlet-header-loading');
     },
-    hideSpinner: function(){
+    hideSpinner: function () {
         this.header.removeClass('x-sortlet-header-loading');
     }
 });
