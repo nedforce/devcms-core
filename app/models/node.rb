@@ -58,7 +58,7 @@ require 'iconv'
 # * +content_box_icon+ - The icon of the content box representation of this node.
 # * +content_box_colour+ - The colour of the content box representation of this node.
 # * +content_box_number_of_items+ - The number of items of the content box representation of this node.
-# * +exprires_on+ - The date after which this node should no longer be considered up-to-date.
+# * +expires_on+ - The date after which this node should no longer be considered up-to-date.
 #
 # Preconditions
 #
@@ -75,6 +75,9 @@ require 'iconv'
 # * The content node will be destroyed before this node is.
 #
 class Node < ActiveRecord::Base
+  # Prevents the root +Node+ from being destroyed.
+  before_destroy :prevent_root_destruction
+  
   # Delegate tree calls to use Ancestry. Ensure this is added *after* other before/after filters.
   include TreeDelegation
   
@@ -110,7 +113,6 @@ class Node < ActiveRecord::Base
   has_many :categories, :through => :node_categories
 
   belongs_to :content, :polymorphic => true
-  belongs_to :editor, :class_name => 'User', :foreign_key => 'edited_by'
   belongs_to :responsible_user, :class_name => 'User'
 
   has_many :links,            :dependent => :destroy, :class_name => 'InternalLink', :foreign_key => :linked_node_id
@@ -127,87 +129,23 @@ class Node < ActiveRecord::Base
 
   validates_inclusion_of :commentable,       :in => [ false, true ], :allow_nil => true
   validates_inclusion_of :hide_right_column, :in => [ false, true ], :allow_nil => true
-  
-  # Prevents the root +Node+ from being destroyed.
-  before_destroy :prevent_root_destruction
 
   # A private copy of the original destroy method that is used for overloading.
   alias_method :original_destroy, :destroy
 
-  # Create a scope for only finding approved nodes.
-  named_scope :approved,   :conditions => { :status => 'approved' }
-  named_scope :unapproved, :conditions => [ "status = ? OR status = ?", "unapproved", "rejected" ], :order => "updated_at DESC"
-
   # After update to hidden reindex all children
-  before_update { |node| @hidden_changed = node.hidden_changed?; true}
-  after_update { |node| node.reindex_self_and_children if @hidden_changed; true }
+  before_update { |node| @hidden_changed = node.hidden_changed?; @publishable_changed = node.publishable_changed?; true }
+  after_update { |node| node.reindex_self_and_children if @hidden_changed || @publishable_changed; true }
 
   after_save :save_category_attributes
 
   attr_accessor :category_attributes
   
-  # Nodes are taggable with alterative titles
-  acts_as_taggable_on :title_alternatives
-
-  # Keep state of nodes made or updated by editors
-  #
-  #                       reject
-  #                       (admin,final_editor)
-  #               '----------------------------> rejected -'
-  #               |                              |         |
-  # create        |                    approve   |         |
-  # (editor)      |        (admin,final_editor)  v         |
-  # ---------> unapproved ---------------------> approved--|
-  #               ^                                        |
-  #               '----------------------------------------'
-  #                       wait_for_approval (editor)
-  #
-  # draft              wait_for_approval (editor)
-  # ---------> drafted ---------------------------> unapproved
-  #             | ^                                      |
-  #    approve  | '--------------------------------------'
-  #             |          draft
-  #             v
-  #           approved
-  acts_as_state_machine :initial => :approved, :column => 'status'
-
   # A node is commentable
   acts_as_commentable
-
-  state :unapproved
-  state :approved
-  state :rejected
-  state :drafted
-
-  event :draft do
-    transitions :from => :approved,   :to => :drafted
-    transitions :from => :unapproved, :to => :drafted
-  end
-
-  event :wait_for_approval do
-    transitions :from => :drafted,  :to => :unapproved
-    transitions :from => :approved, :to => :unapproved
-    transitions :from => :rejected, :to => :unapproved
-  end
-
-  event :reject do
-    transitions :from => :unapproved, :to => :rejected
-  end
-
-  event :approve do
-    transitions :from => :drafted,    :to => :approved
-    transitions :from => :unapproved, :to => :approved
-    transitions :from => :rejected,   :to => :approved
-  end
-
-  # Immediately reindex this node after it has been approved.
-  # Also, create a new current version
-  def approve_with_reindexing_and_versioning!
-    self.approve_without_reindexing_and_versioning!
-    self.update_search_index
-  end
-
-  alias_method_chain :approve!, :reindexing_and_versioning
+  
+  # Nodes are taggable with alterative titles
+  acts_as_taggable_on :title_alternatives
 
   def move_to_with_reindexing(*args)
     self.move_to_without_reindexing(*args)
@@ -270,7 +208,7 @@ class Node < ActiveRecord::Base
       end
       destroyed_content.nil? ? nil : self
     else
-      without_search_reindex{ self.original_destroy } # Disable ferret updates (ferret_destroy is executed anyway)
+      without_search_reindex { self.original_destroy } # Disable ferret updates (ferret_destroy is executed anyway)
     end
   end
   
@@ -389,18 +327,21 @@ class Node < ActiveRecord::Base
 
   # Returns the text that should be displayed in the node tree
   def tree_text
-    tree_text = html_escape(self.content.tree_text(self))
+    tree_text = html_escape(self.content.current_version.tree_text(self))
 
-    # TODO This should be handled by the JS class Ext.treehouse.AsyncContentTreeNode
-    if !self.approved?
+    latest_version = self.content.versions.current
+
+    if latest_version.present?
       tree_text += " <i>("
-      if self.drafted?
+      
+      if latest_version.drafted?
         tree_text += I18n.t('nodes.draft')
-      elsif self.rejected?
+      elsif latest_version.rejected?
         tree_text += I18n.t('nodes.rejected')
-      elsif self.unapproved?
+      else
         tree_text += I18n.t('nodes.unapproved')
       end
+      
       tree_text += ")</i>"
     end
 
@@ -458,45 +399,19 @@ class Node < ActiveRecord::Base
     end
 
     conditions = Node.merge_conditions(conditions, options[:conditions]) if options[:conditions]
+    
     Node.find_accessible(:all, options.merge({:conditions => conditions, :parent => self}))
   end
 
   # Returns the children content nodes of this node that are accessible, for the given +options+.
   def accessible_content_children(options = {})
-    accessible_children(options).map { |child| child.approved_content(:allow_nil => true) }.compact
+    accessible_children(options).map(&:content)
   end
   
   # Override to return the descendant ancestry with table name prepended
   def descendant_conditions
     ["nodes.ancestry like ? or nodes.ancestry = ?", "#{child_ancestry}/%", child_ancestry]
   end  
-
-  # Returns the latest approved content for this node. If nothing has been
-  # approved yet, then raise an ActiveRecord::RecordNotFound exception to
-  # render a 404. You can suppress the exception by setting :allow_nil => true
-  # in which case nil may be returned.
-  def approved_content(options = { :allow_nil => false })
-    content = (self.approvable? ? self.content.approved_version : self.content)
-
-    raise ActiveRecord::RecordNotFound if content.nil? && !options[:allow_nil]
-    content
-  end
-
-  # Returns true if this node is versioned, false otherwise.
-  def approvable?
-    content.respond_to?(:is_versioned?)
-  end
-
-  def set_approval_state_for_user(user, skip_approval = false)
-    # Update the edited_by field.
-    self.update_attribute(:edited_by, user.id) unless skip_approval
-
-    if user.has_role_on?(['admin', 'final_editor'], self) && !skip_approval
-      self.approve!
-    else
-      self.wait_for_approval!
-    end
-  end
 
   # Increments the hits counter without updating the updated_at value.
   # This implementation does not affect the +updated_at+ field.
@@ -651,8 +566,8 @@ class Node < ActiveRecord::Base
       nodes.each do |node|
         content = node.content
 
-        if content.respond_to?(:update_attributes_for_user!)
-          content.update_attributes_for_user!(user, attributes)
+        if content.class.requires_editor_approval?
+          content.update_attributes!(attributes.merge(:user => user))
         else
           content.update_attributes!(attributes)
         end
@@ -665,7 +580,9 @@ class Node < ActiveRecord::Base
   end
 
   attr_accessor :keep_existing_categories
+  
   alias_method :original_category_ids=, :category_ids=
+  
   def category_ids=(new_category_ids)
     new_category_ids = new_category_ids.reject(&:blank?).map(&:to_i)
 
@@ -687,7 +604,6 @@ class Node < ActiveRecord::Base
     sortable_scope_changes << :ancestry unless sortable_scope_changes.include?(:ancestry) || new_record? || (send(:ancestry).present? && value.to_s.split("/").last == send(:ancestry).to_s.split("/").last) || !self.class.sortable_lists.any? { |list_name, configuration| configuration[:scope].include?(:ancestry) }
     self.ancestry_without_sortable = value
   end
-  
 
 protected
 

@@ -120,7 +120,7 @@ class AgendaItemTest < ActiveSupport::TestCase
   def test_should_update_agenda_item
     assert_no_difference 'AgendaItem.count' do
       @agenda_item.description = 'New title'
-      assert @agenda_item.save_for_user(users(:arthur))
+      assert @agenda_item.save(:user => users(:arthur))
     end
   end
   

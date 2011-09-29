@@ -19,7 +19,7 @@ protected
   
   # Finds the +WeblogArchive+ object corresponding to the passed in +id+ parameter.
   def find_weblog_archive
-    @weblog_archive = @node.approved_content
+    @weblog_archive = @node.content
   end
 
   def find_weblogs

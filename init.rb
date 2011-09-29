@@ -10,5 +10,5 @@ Dir["#{plugin_root}/config/initializers/**/*.rb"].sort.each do |initializer|
 end if FileTest.exist?("#{RAILS_ROOT}/config/initializers/001_share_point_settings.rb")
 
 if Rails.env.development?
-   ActiveSupport::Dependencies.load_once_paths.reject!{|x| x =~ /^#{Regexp.escape(File.dirname(__FILE__))}/}
+   ActiveSupport::Dependencies.autoload_once_paths.reject!{|x| x =~ /^#{Regexp.escape(File.dirname(__FILE__))}/}
 end

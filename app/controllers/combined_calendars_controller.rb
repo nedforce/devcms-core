@@ -42,7 +42,7 @@ protected
 
   # Finds the +CombinedCalendar+ object corresponding to the passed in +id+ parameter.
   def find_combined_calendar
-    @calendar = @node.approved_content
+    @calendar = @node.content
   end
 
 end

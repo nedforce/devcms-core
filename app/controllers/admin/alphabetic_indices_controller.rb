@@ -76,6 +76,6 @@ class Admin::AlphabeticIndicesController < Admin::AdminController
 
   # Finds the +AlphabeticIndex+ object corresponding to the passed in +id+ parameter.
   def find_alphabetic_index
-    @alphabetic_index = AlphabeticIndex.find(params[:id])
+    @alphabetic_index = AlphabeticIndex.find(params[:id]).current_version
   end
 end

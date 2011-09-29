@@ -20,7 +20,7 @@ protected
 
   # Finds the +AgendaItem+ object corresponding to the passed in +id+ parameter.
   def find_agenda_item
-    @agenda_item = @node.approved_content
+    @agenda_item = @node.content
   end
 
 end

@@ -64,7 +64,7 @@ class Admin::SectionsController < Admin::AdminController
       if @commit_type == 'preview' && @section.valid?
         format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @section }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @section, :status => :created, :location => @section }
-      elsif @commit_type == 'save' && @section.save_for_user(current_user)
+      elsif @commit_type == 'save' && @section.save(:user => current_user)
         format.html { render :template => 'admin/shared/create' }
         format.xml  { render :xml => @section, :status => :created, :location => @section }
       else
@@ -89,7 +89,7 @@ class Admin::SectionsController < Admin::AdminController
           render :template => 'admin/shared/update_preview', :locals => { :record => @section }, :layout => 'admin/admin_preview'
         end
         format.xml  { render :xml => @section, :status => :created, :location => @section }
-      elsif @commit_type == 'save' && @section.save_for_user(current_user, @for_approval)
+      elsif @commit_type == 'save' && @section.save(:user => current_user, :approval_required => @for_approval)
         format.html # update.html.erb
         format.xml  { head :ok }
       else
@@ -103,7 +103,7 @@ protected
 
   # Retrieves the requested +Section+ object using the passed in +id+ parameter.
   def find_section
-    @section = Section.find(params[:id], :include => :node)
+    @section = Section.find(params[:id], :include => :node).current_version
   end
 
   def find_children

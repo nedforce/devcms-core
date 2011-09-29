@@ -18,16 +18,6 @@ feedback_page:
   preamble: This page was created from test fixture data.
   body: Please send us your feedback.
 
-unapproved_page:
-  title: Unapproved
-  preamble: This page was created from test fixture data.
-  body: I was edited by an editor
-
-rejected_page:
-  title: Rejected
-  preamble: This page was created from test fixture data.
-  body: I was rejected by a final editor, so I'm also unapproved
-
 downloads_page:
   title: Downloads
   preamble: This page was created from test fixture data.

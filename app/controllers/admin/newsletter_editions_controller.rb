@@ -75,7 +75,7 @@ class Admin::NewsletterEditionsController < Admin::AdminController
         get_approved_content_items
         format.html { render :action => 'create_preview', :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @newsletter_edition, :status => :created, :location => @newsletter_edition }
-      elsif @commit_type == 'save' && @newsletter_edition.save_for_user(current_user)
+      elsif @commit_type == 'save' && @newsletter_edition.save(:user => current_user)
         # Add the items to the edition (if any)
         @newsletter_edition.associate_items(@item_ids)
         format.html { render :template => 'admin/shared/create' }
@@ -101,7 +101,7 @@ class Admin::NewsletterEditionsController < Admin::AdminController
           render :action => 'update_preview', :layout => 'admin/admin_preview'
         end
         format.xml  { render :xml => @newsletter_edition, :status => :created, :location => @newsletter_edition }
-      elsif @commit_type == 'save' && @newsletter_edition.save_for_user(current_user, @for_approval)
+      elsif @commit_type == 'save' && @newsletter_edition.save(:user => current_user, :approval_required => @for_approval)
         # Replace the items for the edition (if any)
         @newsletter_edition.associate_items(@item_ids)
         format.html {
@@ -126,7 +126,7 @@ protected
 
   # Finds the +NewsItem+ object corresponding to the passed in +id+ parameter.
   def find_newsletter_edition
-    @newsletter_edition = ((@newsletter_archive) ? @newsletter_archive.newsletter_editions : NewsletterEdition).find(params[:id], :include => :node)
+    @newsletter_edition = ((@newsletter_archive) ? @newsletter_archive.newsletter_editions : NewsletterEdition).find(params[:id], :include => :node).current_version
   end
 
   def get_item_ids
@@ -135,7 +135,7 @@ protected
 
   def get_approved_content_items
     @approved_content_items = @item_ids.map do |item_id|
-      Node.find(item_id).approved_content
+      Node.find(item_id).content
     end
   end
 end

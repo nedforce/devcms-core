@@ -30,23 +30,27 @@ class UserMailerTest < ActionMailer::TestCase
   end
 
   def test_rejection_notification
-    node = nodes(:unapproved_page_node)
-    user = users(:sjoerd)
-    reason = 'rejection'
-    response = UserMailer.create_rejection_notification(user, node, reason)
+    user = users(:arthur)
+    node = nodes(:help_page_node)
+    editor = users(:gerjan)
+    reason = 'rejected'
+    
+    response = UserMailer.create_rejection_notification(user, node, editor, reason)
     assert response.reply_to.to_s =~ /#{user.email_address}/
-    assert response.to.to_s =~ /#{node.editor.email_address}/
+    assert response.to.to_s =~ /#{editor.email_address}/
     assert response.body =~ /#{node.url_alias}/
     assert response.body =~ /#{reason}/
   end
 
   def test_approval_notification
-    node = nodes(:unapproved_page_node)
-    user = users(:sjoerd)
-    comment = 'approval'
-    response = UserMailer.create_approval_notification(user, node, comment)
+    user = users(:arthur)
+    node = nodes(:help_page_node)
+    editor = users(:gerjan)
+    comment = 'approved'
+    
+    response = UserMailer.create_approval_notification(user, node, editor, comment)
     assert response.reply_to.to_s =~ /#{user.email_address}/
-    assert response.to.to_s =~ /#{node.editor.email_address}/
+    assert response.to.to_s =~ /#{editor.email_address}/
     assert response.body =~ /#{node.url_alias}/
     assert response.body =~ /#{comment}/
   end

@@ -104,7 +104,7 @@ class Admin::ContactFormsController < Admin::AdminController
 
   # Finds the +ContactForm+ object corresponding to the passed +id+ parameter.
   def find_contact_form
-    @contact_form = ContactForm.find(params[:id], :include => :contact_form_fields)
+    @contact_form = ContactForm.find(params[:id], :include => :contact_form_fields).current_version
     @contact_form_fields = @contact_form.contact_form_fields
   end
 end

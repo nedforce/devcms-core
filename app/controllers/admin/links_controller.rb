@@ -53,7 +53,7 @@ class Admin::LinksController < Admin::AdminController
     @link.parent = @parent_node
 
     respond_to do |format|
-      if @link.save_for_user(current_user)
+      if @link.save(:user => current_user)
         format.html { render :template => 'admin/shared/create' }
         format.xml  { render :xml => @link, :status => :created, :location => @link }
       else
@@ -66,8 +66,10 @@ class Admin::LinksController < Admin::AdminController
   # * PUT /admin/links/:id
   # * PUT /admin/links/:id.xml
   def update
+    @link.attributes = params[:link]
+    
     respond_to do |format|
-      if @link.update_attributes_for_user(current_user, params[:link], @for_approval)       
+      if @link.save(:user => current_user, :approval_required => @for_approval)       
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else
@@ -81,6 +83,6 @@ protected
 
   # Finds the +Link+ object corresponding to the passed in +id+ parameter.
   def find_link
-    @link = Link.find(params[:id])
+    @link = Link.find(params[:id], :include => :node).current_version
   end
 end

@@ -103,7 +103,7 @@ class Admin::CarrouselsController < Admin::AdminController
 
   # Finds the +Carrousel+ object corresponding to the passed in +id+ parameter.
   def find_carrousel
-    @carrousel = Carrousel.find(params[:id], :include => :node)
+    @carrousel = Carrousel.find(params[:id], :include => :node).current_version
   end
 
   def get_item_ids
@@ -113,7 +113,7 @@ class Admin::CarrouselsController < Admin::AdminController
 
   def get_approved_content_items
     @approved_content_items = @item_ids.map do |item_id|
-      Node.find(item_id).approved_content
+      Node.find(item_id).content
     end
   end
 

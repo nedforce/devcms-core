@@ -84,6 +84,6 @@ class Admin::SocialMediaLinksBoxesController < Admin::AdminController
 
   # Finds the +SocialMediaLinksBox+ object corresponding to the passed in +id+ parameter.
   def find_social_media_links_box
-    @social_media_links_box = SocialMediaLinksBox.find(params[:id])
+    @social_media_links_box = SocialMediaLinksBox.find(params[:id]).current_version
   end
 end

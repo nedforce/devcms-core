@@ -56,7 +56,7 @@ module Acts #:nodoc:
         end
 
         def find_record
-          instance_variable_set("@#{self.class.singular_name}", self.class.content_class_name.constantize.find(params[:id], :include => [:node]))
+          instance_variable_set("@#{self.class.singular_name}", self.class.content_class_name.constantize.find(params[:id], :include => [:node]).current_version)
         end
 
         def render_weeks(record_node, node_id, common_hash, active_node, archive_includes_active_node)

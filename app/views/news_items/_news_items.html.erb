@@ -21,11 +21,11 @@
           <% if (image_node = news_item.node.accessible_children.reject { |c| c.content_class != Image }.first) -%>
             <%=
               link_to_node(
-                image_tag(content_node_path(image_node, :action => :thumbnail), :alt => h(image_node.approved_content.title)),
+                image_tag(content_node_path(image_node, :action => :thumbnail), :alt => h(image_node.content.title)),
                 image_node,
                 { :action => :full },
                 {
-                  :rel => "lightbox[#{news_item.node.id}]", :title => h(image_node.approved_content.title),
+                  :rel => "lightbox[#{news_item.node.id}]", :title => h(image_node.content.title),
                   :class => 'right'
                 }
               )

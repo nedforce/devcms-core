@@ -39,7 +39,7 @@ class ExternalLinkTest < ActiveSupport::TestCase
     assert_equal nil, l1.description
     l2 = create_external_link(:title => nil, :description => nil)
     assert !l2.new_record?
-    l2.update_attributes_for_user(users(:arthur), :title => '', :description => '')
+    l2.update_attributes(:user => users(:arthur), :title => '', :description => '')
     assert_equal nil, l2.title
     assert_equal nil, l2.description
   end
@@ -76,7 +76,7 @@ class ExternalLinkTest < ActiveSupport::TestCase
       @external_link.title = 'New title'
       @external_link.description = 'New body'
       @external_link.url = 'http://www.disney.com'
-      assert @external_link.save_for_user(users(:arthur))
+      assert @external_link.save(:user => users(:arthur))
     end
   end
 

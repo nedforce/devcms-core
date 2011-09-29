@@ -89,7 +89,7 @@ protected
 
   # Finds the +NewsViewer+ object corresponding to the passed in +id+ parameter.
   def find_news_viewer
-    @news_viewer = NewsViewer.find(params[:id], :include => [:node])
+    @news_viewer = NewsViewer.find(params[:id], :include => [:node]).current_version
   end
 
   def find_recent_news_items

@@ -25,7 +25,7 @@ class SharesController < ApplicationController
 
   def find_page
     if @node.present?
-      @page = @node.approved_content
+      @page = @node.content
     else
       raise ActiveRecord::RecordNotFound
     end

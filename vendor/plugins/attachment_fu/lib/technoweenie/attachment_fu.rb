@@ -245,7 +245,7 @@ module Technoweenie # :nodoc:
 
       # Writes the given data to a new tempfile, returning the closed tempfile.
       def write_to_temp_file(data, temp_base_name)
-        returning Tempfile.new(temp_base_name, Technoweenie::AttachmentFu.tempfile_path) do |tmp|
+        Tempfile.new(temp_base_name, Technoweenie::AttachmentFu.tempfile_path).tap do |tmp|
           tmp.binmode
           tmp.write data
           tmp.close
@@ -409,7 +409,7 @@ module Technoweenie # :nodoc:
 
         def sanitize_filename(filename)
           return unless filename
-          returning filename.strip do |name|
+          filename.strip.tap do |name|
             # NOTE: File.basename doesn't work right with Windows paths on Unix
             # get only the filename, not the whole path
             name.gsub! /^.*(\\|\/)/, ''

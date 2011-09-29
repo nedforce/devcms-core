@@ -22,8 +22,7 @@ protected
     @news_item = NewsItem.find_accessible(
                               @node.content_id, 
                               :include => [ :node, { :node => :comments } ],
-                              :for => current_user, 
-                              :approved_content => true 
+                              :for => current_user
                             )
   end
   

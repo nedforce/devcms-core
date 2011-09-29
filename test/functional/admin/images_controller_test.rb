@@ -15,7 +15,8 @@ class Admin::ImagesControllerTest < ActionController::TestCase
   end
 
   def test_should_get_previous
-    @image.create_approved_version
+    @image.save :user => User.find_by_login('editor')
+    
     login_as :sjoerd
     get :previous, :id => @image
     assert_response :success

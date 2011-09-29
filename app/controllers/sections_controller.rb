@@ -19,7 +19,7 @@ protected
 
   # Retrieves the requested +Section+ object using the passed in +id+ parameter.
   def find_section
-    @section = @node.approved_content
+    @section = @node.content
   end
 
   def find_children

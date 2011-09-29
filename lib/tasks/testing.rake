@@ -18,20 +18,20 @@ namespace :devcms do
       t.pattern = File.dirname(__FILE__) + '/../test/unit/**/*_test.rb'
       t.verbose = true
     end
-    Rake::Task['test:units'].comment = "Run the unit tests in test/unit"
+    Rake::Task['test:units'].comment = "Run the unit tests in test/unit\n"
 
     Rake::TestTask.new(:functionals => "db:test:prepare") do |t|
       t.libs << "test"
       t.pattern = File.dirname(__FILE__) + '/../test/functional/**/*_test.rb'
       t.verbose = true
     end
-    Rake::Task['test:functionals'].comment = "Run the functional tests in test/functional"
+    Rake::Task['test:functionals'].comment = "Run the functional tests in test/functional\n"
 
     Rake::TestTask.new(:integration => "db:test:prepare") do |t|
       t.libs << "test"
       t.pattern = File.dirname(__FILE__) + '/../test/integration/**/*_test.rb'
       t.verbose = true
     end
-    Rake::Task['test:integration'].comment = "Run the integration tests in test/integration"
+    Rake::Task['test:integration'].comment = "Run the integration tests in test/integration\n"
   end
 end

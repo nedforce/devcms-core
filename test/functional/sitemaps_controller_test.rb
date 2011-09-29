@@ -35,9 +35,9 @@ class SitemapsControllerTest < ActionController::TestCase
     create_news_item(:publication_start_date => 2.days.ago, :publication_end_date => 1.day.ago, :title => "Niet meer beschikbaar")
     get :changes, :format => 'atom'
     assert_response :success
-    assert_nil(assigns(:nodes).reject! { |node| !node.approved_content.respond_to?(:title) || node.approved_content.title == "Nog niet beschikbaar" }, "Not yet published items should not be shown")
-    assert_nil(assigns(:nodes).reject! { |node| !node.approved_content.respond_to?(:title) || node.approved_content.title == "Niet meer beschikbaar" }, "No longer published items should not be shown")
-    assert_not_nil(assigns(:nodes).reject! { |node| !node.approved_content.respond_to?(:title) || node.approved_content.title == "Beschikbaar" }, "Published items should not have been deleted")
+    assert_nil(assigns(:nodes).reject! { |node| !node.content.respond_to?(:title) || node.content.title == "Nog niet beschikbaar" }, "Not yet published items should not be shown")
+    assert_nil(assigns(:nodes).reject! { |node| !node.content.respond_to?(:title) || node.content.title == "Niet meer beschikbaar" }, "No longer published items should not be shown")
+    assert_not_nil(assigns(:nodes).reject! { |node| !node.content.respond_to?(:title) || node.content.title == "Beschikbaar" }, "Published items should not have been deleted")
   end
   
   def test_should_not_contain_feeds

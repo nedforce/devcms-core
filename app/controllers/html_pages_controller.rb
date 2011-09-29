@@ -17,7 +17,7 @@ protected
   
   # Finds the HtmlPage object corresponding to the passed in +id+ parameter.
   def find_html_page
-    @html_page = @node.approved_content
+    @html_page = @node.content
   end
 
 end

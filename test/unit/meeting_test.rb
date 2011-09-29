@@ -26,7 +26,7 @@ class MeetingTest < ActiveSupport::TestCase
   def test_should_update_meeting
     assert_no_difference 'Meeting.count' do
       @meetings_calendar_meeting_one.title = 'New title'
-      assert @meetings_calendar_meeting_one.save_for_user(users(:arthur))
+      assert @meetings_calendar_meeting_one.save(:user => users(:arthur))
     end
   end
   

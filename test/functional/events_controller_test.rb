@@ -21,9 +21,4 @@ class EventsControllerTest < ActionController::TestCase
     get :show, :id => -1
     assert_response :not_found
   end
-  
-  def test_should_render_404_for_unapproved_calendar_item
-    get :show, :id => events(:events_calendar_item_two).id
-    assert_response :not_found
-  end
 end

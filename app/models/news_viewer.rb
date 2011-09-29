@@ -53,8 +53,7 @@ class NewsViewer < ActiveRecord::Base
   # Gets accessible news items for the frontend. This method does not return unapproved content.
   def accessible_news_items_for(user, options = {})
     self.news_items.newest.find_accessible(:all, {
-      :for              => user, 
-      :approved_content => true,
+      :for              => user,
       :order            => 'news_viewer_items.position, nodes.publication_start_date desc'
       }.merge(options))
   end

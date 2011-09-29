@@ -21,7 +21,7 @@ var tabs = new Ext.TabPanel({
     border: false,
     defaults: {autoHeight: true},
     items:[
-        {contentEl: 'tab_current_content', title: "<%= escape_javascript(@node.content.title) -%> <%= t 'nodes.edit' -%>", autoLoad: '<%= @current_url -%>' }
+        {contentEl: 'tab_current_content', title: "<%= escape_javascript(@node.content.current_version.title) -%> <%= t 'nodes.edit' -%>", autoLoad: '<%= @current_url -%>' }
     ]
 });
 

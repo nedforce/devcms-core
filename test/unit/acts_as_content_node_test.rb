@@ -20,7 +20,7 @@ class ActsAsContentNodeTestTransactional < ActiveSupport::TestCase
     page = build_page(:parent => nodes(:henk_weblog_post_one_node))
 
     assert_no_difference 'Page.count' do
-      assert_raise ActiveRecord::RecordInvalid do
+      assert_raise ActiveRecord::RecordNotSaved do
         page.save!
       end
     end
@@ -33,7 +33,7 @@ class ActsAsContentNodeTestTransactional < ActiveSupport::TestCase
     end
 
     assert_no_difference 'Page.count' do
-      assert_raise ActiveRecord::RecordInvalid do
+      assert_raise ActiveRecord::RecordNotSaved do
         Page.create!(:parent => nodes(:henk_weblog_post_one_node), :title => "Page title", :preamble => "Ambule", :body => "Page body")
       end
     end
@@ -86,7 +86,7 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
     page = build_page :body => nil
 
     assert_no_difference 'Page.count' do
-      assert_raise ActiveRecord::RecordInvalid do
+      assert_raise ActiveRecord::RecordNotSaved do
         page.save!
       end
     end
@@ -214,7 +214,7 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
     assert !page.node.commentable?
 
     page.commentable = true
-    assert page.save_for_user(users(:arthur))
+    assert page.save(:user => users(:arthur))
     assert page.commentable?
     assert page.node.commentable
   end
@@ -234,7 +234,7 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
     page.publication_start_date = new_start_date
     page.publication_end_date = new_end_date
 
-    assert page.save_for_user(users(:arthur))
+    assert page.save(:user => users(:arthur))
 
     assert_equal new_start_date.to_s, page.publication_start_date.to_s
     assert_equal new_end_date.to_s, page.publication_end_date.to_s

@@ -15,7 +15,6 @@ protected
     @news_items = @news_archive.news_items.find_accessible(:all,
                                                            :include => [ :node ],
                                                            :for => current_user,
-                                                           :approved_content => true,
                                                            :page => { :size => 25, :current => 1 }
                                                           )
     @news_items_for_table  = @news_items.to_a

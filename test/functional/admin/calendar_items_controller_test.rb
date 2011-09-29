@@ -24,7 +24,8 @@ class Admin::CalendarItemsControllerTest < ActionController::TestCase
   end
   
   def test_should_get_previous
-    @calendar_item.create_approved_version
+    @calendar_item.title = 'foo'
+    @calendar_item.save :user => User.find_by_login('editor')
 
     login_as :sjoerd
 

@@ -27,6 +27,8 @@ class Meeting < CalendarItem
     :copyable => false,
     :controller_name => 'meetings'
   })
+  
+  needs_editor_approval
 
   # The category that this meeting belongs to.
   belongs_to :meeting_category

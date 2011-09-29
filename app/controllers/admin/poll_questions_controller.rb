@@ -99,6 +99,6 @@ protected
 
   # Finds the +PollQuestion+ object corresponding to the passed in +id+ parameter.
   def find_poll_question
-    @poll_question = ((@poll) ? @poll.poll_questions : PollQuestion).find(params[:id], :include => :poll_options)
+    @poll_question = ((@poll) ? @poll.poll_questions : PollQuestion).find(params[:id], :include => :poll_options).current_version
   end
 end

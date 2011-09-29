@@ -25,15 +25,13 @@
 #  * An +Event+ can only be inserted into +Calendar+ nodes.
 #
 class Event < ActiveRecord::Base
-  
   acts_as_content_node
+  
+  needs_editor_approval
   
   # Adds support for optional attributes
   has_dynamic_attributes
-
-  # This content type needs approval when created or altered by an editor.
-  needs_editor_approval
-
+  
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of :title, :calendar
   validates_length_of   :title, :in => 2..255, :allow_blank => true

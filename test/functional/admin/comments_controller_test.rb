@@ -28,6 +28,7 @@ class Admin::CommentsControllerTest < ActionController::TestCase
 
   def test_should_get_index_for_final_editor
     login_as :final_editor
+    
     get :index
     assert_response :success
     assert assigns(:comments).empty?

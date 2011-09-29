@@ -12,6 +12,7 @@ I18n.locale['nl'] = {
 		global_frontpage_success: 'Globale frontpage instellen gelukt.',
 		global_frontpage_failed: 'Sorry, de globale frontpage kon niet worden ingesteld.',
 		hide_right_column_failed: 'Sorry, het verbergen van de rechterkolom is mislukt.',
+		import_items: 'Importeren',
 		invisible_failed: 'Sorry, onzichtbaar maken mislukt.',
 		move_failed: 'Sorry, het verplaatsen is mislukt.',
 		show_in_menu_failed: 'Sorry, tonen in menu mislukt.',		

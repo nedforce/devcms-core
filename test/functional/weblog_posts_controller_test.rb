@@ -216,7 +216,7 @@ class WeblogPostsControllerTest < ActionController::TestCase
     assert_equal 2, images.size
     assert images.all? { |i| i.parent_id.equal?(assigns(:weblog_post).node.id)}
     assert images.all? { |i| !i.root?}
-    assert images.all? { |i| !i.approved_content(:allow_nil => true).nil?}
+    assert images.all? { |i| i.reload.publishable?}
   end
 
   def test_should_not_create_with_more_than_four_images

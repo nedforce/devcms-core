@@ -14,9 +14,4 @@ class AgendaItemsControllerTest < ActionController::TestCase
     get :show, :id => -1
     assert_response :not_found
   end
-  
-  def test_should_render_404_for_unapproved_agenda_item
-    get :show, :id => agenda_items(:agenda_item_three).id
-    assert_response :not_found
-  end
 end

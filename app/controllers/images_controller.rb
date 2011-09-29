@@ -73,7 +73,7 @@ protected
 
   def find_image
     @node ||= find_node
-    @image = @node.approved_content
+    @image = @node.content
   end
 
   def redirect_to_jpg

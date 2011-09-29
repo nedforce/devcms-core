@@ -74,6 +74,6 @@ class Admin::SearchPagesController < Admin::AdminController
 
   # Finds the +SearchPage+ object corresponding to the passed in +id+ parameter.
   def find_search_page
-    @search_page = SearchPage.find(params[:id], :include => [:node])
+    @search_page = SearchPage.find(params[:id], :include => :node).current_version
   end
 end

@@ -16,6 +16,6 @@ protected
 
   # Finds the ContactBox object corresponding to the passed in +id+ parameter.
   def find_contact_box
-    @contact_box = @node.approved_content
+    @contact_box = @node.content
   end
 end

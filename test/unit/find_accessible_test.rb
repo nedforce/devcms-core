@@ -50,8 +50,10 @@ class FindAccessibleTest < ActiveSupport::TestCase
   end
 
   def test_find_all_accessible_for_user
-    assert Page.all.reject{|page| page.node.is_hidden? || page.approved_version.nil? }.set_equals?(Page.find_accessible(:all, :for => users(:normal_user)))
-    assert Page.all.reject{|page| page.approved_version.nil? }.set_equals?(Page.find_accessible(:all, :for => @arthur))
+    set1 = Page.all.reject { |page| page.node.is_hidden? || !page.node.publishable? }
+    set2 = Page.find_accessible(:all, :for => users(:normal_user))
+    assert set1.set_equals?(set2)
+    assert Page.all.reject { |page| !page.node.publishable? }.set_equals?(Page.find_accessible(:all, :for => @arthur))
   end
 
   def test_find_accessible_in_association
@@ -66,13 +68,13 @@ class FindAccessibleTest < ActiveSupport::TestCase
   def test_find_approved_versions
     page = create_page(:body => 'Version 1')
     page.body = 'Version 2'
-    page.save_for_user(users(:editor))
+    page.save(:user => users(:editor))
 
-    result = Page.find_accessible(:all, :approved_content => true, :page => {})
+    result = Page.find_accessible(:all, :page => {})
     assert_instance_of PagingEnumerator, result
 
     result.each do |p|
-      assert_equal p.node.approved_content.body, p.body
+      assert_equal p.node.content.body, p.body
     end
   end
 
@@ -100,11 +102,11 @@ class FindAccessibleTest < ActiveSupport::TestCase
       Node.find_accessible(nested_node.id, :for => normal_user)
     end
     #all
-    assert_equal Node.all.reject{ |node| node.is_hidden? || node.approved_content(:allow_nil => true).nil? || !node.published? }.size,
+    assert_equal Node.all.reject{ |node| node.is_hidden? || !node.publishable? || !node.published? }.size,
                   Node.find_accessible(:all).size
-    assert_equal Node.all.reject{ |node| node.approved_content(:allow_nil => true).nil? }.size,
+    assert_equal Node.all.reject{ |node| !node.publishable? }.size,
                   Node.find_accessible(:all, :for => arthur).size
-    assert_equal Node.all.reject{ |node| (node.is_hidden? && reader.role_on(node).nil?) || node.approved_content(:allow_nil => true).nil? }.size,
+    assert_equal Node.all.reject{ |node| (node.is_hidden? && reader.role_on(node).nil?) || !node.publishable? }.size,
                   Node.find_accessible(:all, :for => arthur).size
     #extra condition
     assert Node.find_accessible(:all, :for => arthur, :conditions => { :content_type => 'image' }).all?{ |node| node.content === Image }

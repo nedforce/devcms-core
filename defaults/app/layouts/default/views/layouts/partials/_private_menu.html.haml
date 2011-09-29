@@ -9,4 +9,4 @@
           - if item.is_a?(Array)
             %li= link_to(item.first, item.last)
           - else
-            %li= link_to_node(item.approved_content.title, item)
+            %li= link_to_node(item.content.title, item)

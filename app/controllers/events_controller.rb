@@ -18,7 +18,7 @@ protected
 
   # Finds the +CalendarItem+ object corresponding to the passed in +id+ parameter.
   def find_calender_item
-    @calendar_item = @node.approved_content
+    @calendar_item = @node.content
   end
   
 end

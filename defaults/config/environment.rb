@@ -13,8 +13,8 @@ Rails::Initializer.run do |config|
   config.gem 'wkhtmltopdf-binary',    :version => '~> 0.9.5'
   
   config.action_controller.session = {
-    :session_key => '_deventer_session',
-    :secret      => '766afa393f5c2d70a243149f13a3b1ad8bab2feef1de0d2427406bd75ac417c2f94b2538c5c0f512af9f0c2f5d416e226b4d6e8cb50b83a5477a850d17aa0afc'
+    :key    => '_deventer_session',
+    :secret => '766afa393f5c2d70a243149f13a3b1ad8bab2feef1de0d2427406bd75ac417c2f94b2538c5c0f512af9f0c2f5d416e226b4d6e8cb50b83a5477a850d17aa0afc'
   }
 
   config.action_controller.page_cache_directory = RAILS_ROOT + "/public/cache/"

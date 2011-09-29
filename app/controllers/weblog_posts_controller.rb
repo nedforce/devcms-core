@@ -63,12 +63,12 @@ class WeblogPostsController < ApplicationController
       if @weblog_post.save
         images.delete_if do |image|
           image.parent = @weblog_post.node
-          success      = image.save_for_user(current_user)
-          image.node.approve! if success
+          success      = image.save(:user => current_user)
+          image.versions.current.approve! if success
           success
         end if images
 
-        flash[:warn] = I18n.t('weblogs.not_all_images_saved') unless images.nil? || images.empty?
+        flash[:warn] = I18n.t('weblogs.not_all_images_saved') unless images.blank?
 
         format.html { redirect_to [ @weblog.weblog_archive, @weblog ] }
         format.xml  { render :xml => @weblog_post, :status => :created, :location => @weblog_post }
@@ -96,12 +96,12 @@ class WeblogPostsController < ApplicationController
       if @weblog_post.update_attributes(params[:weblog_post])
 
         images.delete_if do |image|
-          success = image.save_for_user(current_user)
-          image.node.approve! if success
+          success = image.save(:user => current_user)
+          image.versions.current.approve! if success
           success
         end if images
 
-        flash[:warning] = I18n.t('weblogs.not_all_images_saved') unless images.nil? || images.empty?
+        flash[:warning] = I18n.t('weblogs.not_all_images_saved') unless images.blank?
 
         format.html { redirect_to aliased_or_delegated_path(@weblog_post.node) }
         format.xml  { head :ok }

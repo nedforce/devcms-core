@@ -45,7 +45,7 @@ class TopHitsPage < ActiveRecord::Base
   def find_top_hits(amount = nil)
     amount ||= 10
 
-    site_node = (self.node.nil? ? self.parent : self.node).containing_site
+    site_node = (self.node.nil? || self.node.new_record? ? self.parent : self.node).containing_site
     subtrees_to_exclude = Site.all(:include => :node, :conditions => ["id != ?", site_node.content_id]).collect {|site| site.node }
     
     descendants_to_exclude = site_node.subtree.find_all_by_url_alias("vacatures")
@@ -72,7 +72,7 @@ class TopHitsPage < ActiveRecord::Base
 
     options.update(:limit => amount, :conditions => { :id => top_ids })
 
-    @top_hits = Node.find_accessible(:all, options).map { |node| node.approved_content(:allow_nil => true) }.compact
+    @top_hits = Node.find_accessible(:all, options).map { |node| node.content }
   end
   
 end

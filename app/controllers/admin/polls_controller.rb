@@ -90,7 +90,7 @@ protected
 
   # Finds the +Poll+ object corresponding to the passed in +id+ parameter.
   def find_poll
-    @poll = Poll.find(params[:id])
+    @poll = Poll.find(params[:id], :include => :node).current_version
   end
 
   def find_poll_questions

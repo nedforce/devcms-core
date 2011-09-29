@@ -66,7 +66,7 @@ class Admin::CalendarItemsController < Admin::AdminController
       if @commit_type == 'preview' && @calendar_item.valid?
         format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @calendar_item }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @calendar_item, :status => :created, :location => @calendar_item }
-      elsif @commit_type == 'save' && @calendar_item.save_for_user(current_user)
+      elsif @commit_type == 'save' && @calendar_item.save(:user => current_user)
         format.html do
           if params[:continue].present?
             @calendar_item = CalendarItem.new
@@ -95,11 +95,11 @@ class Admin::CalendarItemsController < Admin::AdminController
           render :template => 'admin/shared/update_preview', :locals => { :record => @calendar_item }, :layout => 'admin/admin_preview'
         end
         format.xml  { render :xml => @calendar_item, :status => :created, :location => @calendar_item }
-      elsif @commit_type == 'save' && @calendar_item.save_for_user(current_user, @for_approval)
-        format.html {
+      elsif @commit_type == 'save' && @calendar_item.save(:user => current_user, :approval_required => @for_approval)
+        format.html do
           @refresh = true
           render :template => 'admin/shared/update'
-        }
+        end
         format.xml  { head :ok }
       else
         format.html { render :template => 'admin/shared/edit', :locals => { :record => @calendar_item }, :status => :unprocessable_entity }
@@ -127,6 +127,6 @@ protected
 
   # Finds the +CalendarItem+ object corresponding to the passed in +id+ parameter.
   def find_calendar_item
-    @calendar_item = CalendarItem.find(params[:id], :include => :node)
+    @calendar_item = CalendarItem.find(params[:id], :include => :node).current_version
   end
 end

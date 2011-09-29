@@ -57,7 +57,7 @@ class NewsletterEdition < ActiveRecord::Base
   # Retrieves the approved items belonging to this newsletter edition in correct order.
   # TODO: Tests
   def approved_items
-    self.items.map { |item| item.node.approved_content }
+    self.items.map { |item| item.node.content }
   end
   
   # Adds items to a +NewsletterEdition+, which must be a +Page+ or a +NewsItem+. Old associations are removed first.

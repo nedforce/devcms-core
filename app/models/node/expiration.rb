@@ -7,6 +7,7 @@ module Node::Expiration
       date = args.first.is_a?(Date) ? args.first : Date.today
       { :conditions => ["nodes.expires_on IS NOT NULL AND nodes.expires_on <= ? AND nodes.content_type IN (?)", date, Node.expirable_content_types] }
     }
+    
     if SETTLER_LOADED
       base.validates_presence_of :expires_on, :if => :expiration_required?
     end

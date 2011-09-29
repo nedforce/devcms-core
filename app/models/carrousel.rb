@@ -72,7 +72,7 @@ class Carrousel < ActiveRecord::Base
 
   # Retrieves the approved items.
   def approved_items
-    items.map { |item| item.node.approved_content }
+    items.map { |item| item.node.content }
   end
 
   # Adds items to a +Carrousel+, which must be a +Page+, an +Image+ or a +NewsItem+. Old associations are removed first.

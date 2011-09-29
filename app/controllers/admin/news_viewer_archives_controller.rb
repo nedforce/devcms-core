@@ -33,7 +33,7 @@ class Admin::NewsViewerArchivesController < Admin::AdminController
 private
 
   def find_news_viewer_and_node
-    @news_viewer = NewsViewer.find(params[:news_viewer_id]) 
+    @news_viewer = NewsViewer.find(params[:news_viewer_id])
     @node        = @news_viewer.node   
   end
 end

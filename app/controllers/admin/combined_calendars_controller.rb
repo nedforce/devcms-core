@@ -93,7 +93,7 @@ protected
 
   # Finds the +CombinedCalendar+ object corresponding to the passed in +id+ parameter.
   def find_combined_calendar
-    @combined_calendar = CombinedCalendar.find(params[:id], :include => :node)
+    @combined_calendar = CombinedCalendar.find(params[:id], :include => :node).current_version
   end
 
   def find_calendar_items

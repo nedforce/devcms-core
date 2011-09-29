@@ -68,7 +68,7 @@ class Admin::AttachmentsController < Admin::AdminController
     @attachment.parent = @parent_node
 
     respond_to do |format|
-      if @attachment.save_for_user(current_user)  
+      if @attachment.save(:user => current_user)  
 
         format.html # create.html.erb
         format.xml  { render :xml => @attachment, :status => :created, :location => @attachment }
@@ -101,8 +101,10 @@ class Admin::AttachmentsController < Admin::AdminController
   # * PUT /admin/attachments/:id
   # * PUT /admin/attachments/:id.xml
   def update
+    @attachment.attributes = params[:attachment]
+    
     respond_to do |format|      
-      if @attachment.update_attributes_for_user(current_user, params[:attachment], @for_approval)
+      if @attachment.save(:user => current_user, :approval_required => @for_approval)
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else
@@ -115,7 +117,7 @@ class Admin::AttachmentsController < Admin::AdminController
   protected
 
     def find_attachment
-      @attachment = Attachment.find(params[:id])
+      @attachment = Attachment.find(params[:id]).current_version
     end
 
     def upload_file

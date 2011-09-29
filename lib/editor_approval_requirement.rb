@@ -2,12 +2,6 @@
 # Module EditorApprovalRequirement is used to tell ActtiveRecord classes that they need to be approved when
 # created or edited by an editor.
 #
-# To specify that a model has an editor approval requirement:
-#
-# - Add a column 'status' to the ActiveRecord: add_column <table>, :status, :string (, :default => 'approved')
-# - Add the method call 'needs_editor_approval' to the model
-#
-#
 module EditorApprovalRequirement
 
   def self.included(base)
@@ -17,138 +11,76 @@ module EditorApprovalRequirement
   module ClassMethods
 
     def needs_editor_approval
-
-      # Keep 1 version
-      simply_versioned :keep => 1, :automatic => false
-
+      attr_accessor :editor_comment
+      
       self.class_eval do
-
-        def editor_comment=(value)
-          @editor_comment = value
-        end
-
-        def editor_comment
-          if self.new_record?
-            @editor_comment
-          else
-            @editor_comment || self.node.editor_comment
-          end
-        end
-
-        # Create accessor to make this object a draft if requested by an editor
-        def draft=(value)
-          @draft = (value == "1") ? true : false
-        end
-
-        def draft
-          @draft = self.node.drafted? if @draft.nil? && !self.new_record?
-          @draft || false
-        end
-
-        # Saves the content node and moves it at the given position relative to the specified node.
-        # Also sets the approval state for the given user, and handles versioning if appropriate.
-        # If +rescue_exceptions+ is true (the default), any thrown +ActiveRecord::ActiveRecordError+ exceptions on save will be rescued.
-        # If +skip_approval+ is true, then the content is not automatically approved when updated by an admin or final editor
-        # If a block is passed in, then that block is executed instead of calling +self.save+, note that this block must return a boolean to indicate success
-        def save_for_user(user, skip_approval = false, &block)          
-          role_node = self.new_record? ? self.parent : self
-          
-          saved = self.with_versioning(!self.new_record? && (!user.has_role_on?(['admin','final_editor'], role_node) || skip_approval)) do
-            if block_given?
-              yield
-            else
-              self.save
-            end
-          end
-
-          # set approval state and editor comment
-          if saved
-            set_approval_state_for_user(user, skip_approval)
-            set_editor_comment
-          end
-
-          saved
+        unless self.method_defined?(:original_save)
+          alias_method :original_save, :save
         end
         
-        def save_for_user!(user, skip_approval = false)
-          self.save_for_user(user, skip_approval) do
-            self.save!
+        def save(*args)
+          options = args.extract_options!
+          user = options.delete(:user)
+          
+          user_is_editor = user.present? && !user.has_role_on?(['admin', 'final_editor'], self.new_record? ? self.parent : self)
+          approval_required = options[:approval_required].blank? ? false : options[:approval_required]
+          
+          extra_version_attributes = { :status => Version::STATUSES[self.draft? ? :drafted : :unapproved], :editor => user }
+          extra_version_attributes.update(:editor_comment => self.editor_comment) unless self.editor_comment.blank?
+          
+          self.with_versioning(self.draft? || user_is_editor || approval_required, extra_version_attributes) do
+            self.original_save(*args)
           end
         end
+        
+        def save!(*args)
+          self.save(*args) || raise(ActiveRecord::RecordNotSaved)
+        end
 
-        # this method should be used instead of update_attributes to update a record
-        # If +skip_approval+ is true, then the content is not automatically approved when updated by an admin or final editor
-        def update_attributes_for_user(user, attributes, skip_approval = false)
-          self.save_for_user(user, skip_approval) do
-            self.update_attributes(attributes)
+        def update_attributes(attributes)
+          user = attributes.delete(:user)
+          parent = attributes[:parent]
+          
+          if user && parent && user.has_role_on?('editor', parent)
+            attributes[:responsible_user] = user
           end
+          
+          approval_required = attributes.delete(:approval_required)
+          self.attributes = attributes
+          self.save(:user => user, :approval_required => approval_required)
         end
-
-        # this method should be used instead of update_attributes to update a record
-        # If +skip_approval+ is true, then the content is not automatically approved when updated by an admin or final editor
-        def update_attributes_for_user!(user, attributes, skip_approval = false)
-          self.save_for_user(user, skip_approval) do
-            self.update_attributes!(attributes)
-          end
+        
+        def update_attributes!(attributes)
+          self.update_attributes(attributes) || raise(ActiveRecord::RecordNotSaved)
         end
-
-        # Creates a new content node with the given attribute hash and moves it at the given position relative to the specified node.
-        # Also sets the approval state for the given user, and handles versioning if appropriate.
-        # If +rescue_exceptions+ is true (the default), any thrown +ActiveRecord::ActiveRecordError+ exceptions on save
-        def self.create_for_user(user, attributes)
-          new_object = self.new(attributes)
-          new_object.responsible_user = user if user.has_role_on?(['editor'], new_object.parent)
-          new_object.responsible_user = user if new_object.responsible_user.blank? && user.has_role_on?(['final_editor'], new_object.parent)
-          new_object.save_for_user(user)
-          new_object
-        end
-
-        def set_editor_comment
-          self.node.update_attribute(:editor_comment, @editor_comment)
-        end
-
-        def set_approval_state_for_user(user, skip_approval)
-          if self.draft
-            self.node.draft!
+        
+        def self.create(attributes = nil, &block)
+          if attributes.is_a?(Array)
+            super(attributes, &block)
           else
-            self.node.set_approval_state_for_user(user, skip_approval)
+            user = attributes.delete(:user)
+            parent = attributes[:parent]
+
+            if user && parent && user.has_role_on?('editor', parent)
+              attributes[:responsible_user] = user
+            end
+            
+            approval_required = attributes.delete(:approval_required)
+            object = new(attributes)
+            yield(object) if block_given?
+            object.save(:user => user, :approval_required => approval_required)
+            object
           end
         end
-
-        def previous_version
-          if versioned?
-            model = self.versions.current.model
-            model.original_node = self.node
-            model
-          else
-            nil
-          end
+        
+        def self.create!(attributes = nil, &block)
+          self.create(attributes, &block) || raise(ActiveRecord::RecordNotSaved)
         end
-
-        def approved?
-          self.node.approved?
-        end
-
-        def approved_version
-          if self.approved?
-            self
-          else
-            self.previous_version
-          end
-        end
-
-        def is_versioned?
-          versioned?
-        end
-
-        def create_approved_version
-          self.with_versioning(true) { self.save }
+        
+        def self.requires_editor_approval?
+          true
         end
       end
-    end
-    
-    def requires_editor_approval?
-      true
     end
   end
 end

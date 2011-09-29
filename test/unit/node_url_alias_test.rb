@@ -178,7 +178,7 @@ class NodeURLAliasTestTransactional < ActiveSupport::TestCase
 protected
 
   def create_page(options = {})
-    Page.create_for_user(@arthur, { :parent => nodes(:root_section_node), :title => 'foo', :preamble => 'xuu', :body => 'bar', :expires_on => 1.day.from_now.to_date }.merge(options)).reload
+    Page.create({ :user => @arthur, :parent => nodes(:root_section_node), :title => 'foo', :preamble => 'xuu', :body => 'bar', :expires_on => 1.day.from_now.to_date }.merge(options)).reload
   end
 
 end

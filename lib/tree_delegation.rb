@@ -6,7 +6,7 @@ module TreeDelegation
   def self.included(base)
     base.class_eval do
       acts_as_tree
-      #acts_as_list :scope => 'ancestry = \'#{ancestry}\''
+
       sortable :scope => :ancestry
 
       named_scope :sorted_by_position, :order => :position

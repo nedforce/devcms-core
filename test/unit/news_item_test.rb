@@ -52,7 +52,7 @@ class NewsItemTest < ActiveSupport::TestCase
     assert_no_difference 'NewsItem.count' do
       @devcms_news_item.title = 'New title'
       @devcms_news_item.body = 'New body'
-      assert @devcms_news_item.save_for_user(users(:arthur))
+      assert @devcms_news_item.save(:user => users(:arthur))
     end
   end
   

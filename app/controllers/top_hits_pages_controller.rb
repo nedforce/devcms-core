@@ -19,6 +19,6 @@ protected
 
   # Finds the TopHitsPage object corresponding to the passed in +id+ parameter.
   def find_top_hits_page
-    @top_hits_page = @node.approved_content
+    @top_hits_page = @node.content
   end
 end

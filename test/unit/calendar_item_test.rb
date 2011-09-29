@@ -67,7 +67,7 @@ class CalendarItemTest < ActiveSupport::TestCase
       @events_calendar_item_one.title = 'New title'
       @events_calendar_item_one.start_time = DateTime.now
       @events_calendar_item_one.end_time = DateTime.now + 1.hour
-      assert @events_calendar_item_one.save_for_user(users(:arthur))
+      assert @events_calendar_item_one.save(:user => users(:arthur))
     end
   end
 

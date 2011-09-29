@@ -72,6 +72,6 @@ protected
 
   # Finds the +ContactBox+ object corresponding to the passed in +id+ parameter.
   def find_contact_box
-    @contact_box = ContactBox.find(params[:id])
+    @contact_box = ContactBox.find(params[:id]).current_version
   end
 end

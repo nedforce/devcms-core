@@ -97,7 +97,7 @@ protected
 
   # Finds the +ForumTopic+ object corresponding to the passed in +id+ parameter.
   def find_forum_topic
-    @forum_topic = ((@forum) ? @forum.forum_topics : ForumTopic).find(params[:id], :include => :node)
+    @forum_topic = ((@forum) ? @forum.forum_topics : ForumTopic).find(params[:id], :include => :node).current_version
   end
 
   def find_forum_threads

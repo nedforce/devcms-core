@@ -6,7 +6,7 @@ class Admin::LinksBoxesController < Admin::AdminController
   prepend_before_filter :find_parent_node,     :only => [ :new, :create ]
   
   # The +show+, +edit+ and +update+ actions need a +LinksBox+ object to act upon.
-  before_filter :find_links_box,                :only => [ :show, :edit, :update ]
+  before_filter :find_links_box,                :only => [ :show,  :previous, :edit, :update ]
 
   # Parse the publication start date for the +create+ and +update+ actions.
   before_filter :parse_publication_start_date, :only => [ :create, :update ]
@@ -28,6 +28,13 @@ class Admin::LinksBoxesController < Admin::AdminController
       format.html { render :partial => '/admin/links_boxes/show', :locals => { :record => @links_box }, :layout => 'admin/admin_show' }
       format.xml  { render :xml => @links_box }
     end
+  end
+  
+  # * GET /admin/links_boxes/:id/previous
+  # * GET /admin/links_boxes/:id/previous.xml
+  def previous
+    @links_box = @links_box.previous_version
+    show
   end
 
   # * GET /admin/links_boxes/new
@@ -56,7 +63,7 @@ class Admin::LinksBoxesController < Admin::AdminController
       if @commit_type == 'preview' && @links_box.valid?
         format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @links_box }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @links_box, :status => :created, :location => @links_box }
-      elsif @commit_type == 'save' && @links_box.save_for_user(current_user)
+      elsif @commit_type == 'save' && @links_box.save(:user => current_user)
         format.html { render :template => 'admin/shared/create' }
         format.xml  { render :xml => @links_box, :status => :created, :location => @links_box }
       else
@@ -79,7 +86,7 @@ class Admin::LinksBoxesController < Admin::AdminController
           render :template => 'admin/shared/update_preview', :locals => { :record => @links_box }, :layout => 'admin/admin_preview'
         end
         format.xml  { render :xml => @links_box, :status => :created, :location => @links_box }
-      elsif @commit_type == 'save' && @links_box.save_for_user(current_user, @for_approval)
+      elsif @commit_type == 'save' && @links_box.save(:user => current_user, :approval_required => @for_approval)
         format.html { render :template => '/admin/shared/update' }
         format.xml  { head :ok }
       else

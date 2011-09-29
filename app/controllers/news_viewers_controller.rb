@@ -23,7 +23,7 @@ protected
 
   # Finds the +NewsViewer+ object corresponding to the passed in +id+ parameter.
   def find_news_viewer
-    @news_viewer = @node.approved_content
+    @news_viewer = @node.content
   end
 
   # Finds recent news items.

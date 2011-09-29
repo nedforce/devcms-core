@@ -21,14 +21,6 @@ class NodeTest < ActiveSupport::TestCase
     assert node.reload
   end
 
-  def test_lobs_should_be_saved_to_database
-    body = 'a' * 5000
-    page = create_page :body => body
-
-    assert_equal body, page.body
-    assert_equal body, page.reload.body
-  end
-
   def test_node_should_be_updateable
     node = create_page.node
     date = Time.now
@@ -191,16 +183,16 @@ class NodeTest < ActiveSupport::TestCase
      reader      = users(:reader)
      normal_user = users(:normal_user)
 
-     assert_equal @root_node.children.reject{|node| node.approved_content(:allow_nil => true).nil?}.size, @root_node.accessible_children(:for => reader).size
+     assert_equal @root_node.children.reject{|node| !node.publishable? }.size, @root_node.accessible_children(:for => reader).size
      assert_equal hidden_node.children, hidden_node.accessible_children(:for => reader)
-     assert_equal @root_node.children.reject{|node| node.is_hidden? || node.approved_content(:allow_nil => true).nil?}.size, @root_node.accessible_children(:for => normal_user).size
+     assert_equal @root_node.children.reject{|node| node.is_hidden? || !node.publishable }.size, @root_node.accessible_children(:for => normal_user).size
      assert_equal [], hidden_node.accessible_children(:for => normal_user)
    end
 
    def test_should_not_find_unapproved_children
      node = nodes(:piet_weblog_post_two_node)
      i = Image.new(:title => "Dit is een image.", :data => @header_img_data, :parent => node)
-     i.save_for_user(users(:piet))
+     i.save(:user => users(:piet))
      children = node.accessible_content_children(:conditions => { :content_type => ["Image", "Attachment"] }, :for => users(:arthur))
      assert children.all? { |c| !c.nil? }
      assert children.all? { |c| c.node.status == "unapproved" }
@@ -221,42 +213,39 @@ class NodeTest < ActiveSupport::TestCase
    def test_should_return_approved_content
      page = create_page(:title => "Frokkel")
      node = page.node
-     assert_equal page, node.approved_content
+     assert_equal page, node.content
 
      page.title = "New title"
-     page.save_for_user(users(:editor))
+     page.save(:user => users(:editor))
 
-     assert_not_same page, node.approved_content
-     assert_equal "Frokkel", node.approved_content.title
+     assert_not_same page, node.content
+     assert_equal "Frokkel", node.content.title
    end
 
    def test_should_create_version_and_check_accessibility_flow
      page = create_editor_content_node(:title => "Version 1", :publication_start_date => 1.day.ago)
      node = page.node
-     assert_equal 0, page.versions.size
-     assert !node.approved?
+     assert !node.publishable?
+     assert_nil page.previous_version
      assert_raise(ActiveRecord::RecordNotFound) { Node.find_accessible(node) }
 
-     page.update_attributes_for_user(users(:editor), :title => "Version 2")
-     assert_equal 0, page.versions.size
-     assert !node.approved?
+     page.update_attributes(:user => users(:editor), :title => "Version 2")
+     assert !node.publishable?
+     assert_nil page.previous_version
      assert_raise(ActiveRecord::RecordNotFound) { Node.find_accessible(node) }
 
-     node.approve!
-     assert node.approved?
-     assert Node.find_accessible(node)
+     page.versions.current.approve!(users(:arthur))
+     page = page.reload
+     
+     assert page.node.publishable?
+     assert Node.find_accessible(page.node)
 
-     page.update_attributes_for_user(users(:editor), :title => "Version 3")
-     assert_equal 1, page.versions.size
-     assert !node.approved?
-     assert Node.find_accessible(node)
-   end
-
-   def test_should_set_edited_by_when_setting_approval_state
-     page = create_editor_content_node(:title => "Editor Content")
-     node = page.node
-     assert page.errors.empty?
-     assert_equal @editor, node.editor
+     page.update_attributes(:user => users(:editor), :title => "Version 3")
+     page = page.reload
+     
+     assert page.node.publishable?
+     assert_not_nil page.previous_version
+     assert Node.find_accessible(page.node)
    end
   
    # Using news items to test rejecting of content types with +never_show_in_menu+ set to true.
@@ -286,30 +275,6 @@ class NodeTest < ActiveSupport::TestCase
      assert nodes(:events_calendar_item_one_node).hidden_from_menu?
      assert !@about_page_node.hidden_from_menu?
      assert nodes(:devcms_news_item_node).hidden_from_menu?
-   end
-
-   def test_should_create_draft
-     page = create_editor_content_node(:draft => "1")
-     assert page.node.drafted?
-   end
-
-   def test_should_transition_from_draft
-     page = create_editor_content_node(:draft => "1")
-     assert page.node.drafted?
-
-     page.draft = false
-     page.save_for_user(users(:editor))
-     assert page.node.unapproved?
-
-     page.save_for_user(@arthur)
-     assert page.node.approved?
-   end
-
-   def test_should_approve_drafted
-     page = create_editor_content_node(:draft => "1")
-     page.node.approve!
-
-     assert page.node.approved?
    end
 
    def test_should_sort_children_ascending_by_content_title
@@ -470,9 +435,9 @@ class NodeTest < ActiveSupport::TestCase
      create_news_item(:publication_start_date => 2.days.ago, :publication_end_date => 1.day.ago, :title => "Niet meer beschikbaar")
      changes = nodes(:devcms_news_node).last_changes(:all)
      assert_equal size+1, changes.size
-     assert_nil(    changes.reject! { |node| !node.approved_content.respond_to?(:title) || node.approved_content.title == "Nog niet beschikbaar"  }, "Not yet published items should not be shown")
-     assert_nil(    changes.reject! { |node| !node.approved_content.respond_to?(:title) || node.approved_content.title == "Niet meer beschikbaar" }, "No longer published items should not be shown")
-     assert_not_nil(changes.reject! { |node| !node.approved_content.respond_to?(:title) || node.approved_content.title == "Beschikbaar"           }, "Published items should not have been deleted")
+     assert_nil(    changes.reject! { |node| !node.content.respond_to?(:title) || node.content.title == "Nog niet beschikbaar"  }, "Not yet published items should not be shown")
+     assert_nil(    changes.reject! { |node| !node.content.respond_to?(:title) || node.content.title == "Niet meer beschikbaar" }, "No longer published items should not be shown")
+     assert_not_nil(changes.reject! { |node| !node.content.respond_to?(:title) || node.content.title == "Beschikbaar"           }, "Published items should not have been deleted")
    end
 
    def test_changes_should_not_include_feeds
@@ -481,7 +446,7 @@ class NodeTest < ActiveSupport::TestCase
    end
 
    def test_changes_should_only_include_accessible_children
-     assert_nil @root_node.last_changes(:all).reject! { |n| n.approved_content(:allow_nil => true).nil? }
+     assert_nil @root_node.last_changes(:all).reject! { |n| !n.publishable? }
    end
 
    def test_changes_should_accept_limit
@@ -623,23 +588,20 @@ class NodeTest < ActiveSupport::TestCase
     assert n.categories.include?(category4)
   end
 
-  def test_bulk_update_should_use_versioned_update_attributes_when_necessary
-    node1 = stub(:content => mock(:update_attributes_for_user!))
-    node2 = stub(:content => mock(:update_attributes!))
-    Node.bulk_update(stub, [ node1, node2 ], {})
-  end
-
   def test_bulk_update_should_return_true_if_updating_succeeds_for_all_nodes
-    node1 = stub(:content => stub(:update_attributes_for_user!))
-    node2 = stub(:content => stub(:update_attributes!))
+    node1 = stub(:content => stub(:update_attributes! => true, :class => stub(:requires_editor_approval? => false)))
+    node2 = stub(:content => stub(:update_attributes! => true, :class => stub(:requires_editor_approval? => false)))
     assert_equal true, Node.bulk_update(stub, [ node1, node2 ], {})
   end
 
   def test_bulk_update_should_return_false_if_updating_fails_for_one_of_the_nodes
-    content = stub
-    content.stubs(:update_attributes_for_user!).raises(ActiveRecord::RecordInvalid)
+    content = stub(:class => { :requires_editor_approval? => false })
+    content.stubs(:update_attributes!).raises(ActiveRecord::RecordInvalid)
     node1 = stub(:content => content)
-    node2 = stub(:content => stub(:update_attributes!))
+    
+    content = stub(:update_attributes! => true, :class => stub(:requires_editor_approval? => false))
+    
+    node2 = stub(:content => content)
     assert_equal false, Node.bulk_update(stub, [ node1, node2 ], {})
   end
   
@@ -682,7 +644,7 @@ protected
   end
 
   def create_news_item(options = {})
-    NewsItem.create_for_user(@arthur, { :parent => nodes(:devcms_news_node), :title => "Slecht weer!", :body => "Het zonnetje schijnt niet en de mensen zijn ontevreden.", :publication_start_date => 1.day.ago, :publication_end_date => 1.day.from_now }.merge(options)).reload
+    NewsItem.create({ :user => @arthur, :parent => nodes(:devcms_news_node), :title => "Slecht weer!", :body => "Het zonnetje schijnt niet en de mensen zijn ontevreden.", :publication_start_date => 1.day.ago, :publication_end_date => 1.day.from_now }.merge(options)).reload
   end
 
   def create_newsletter_edition(options = {})
@@ -698,15 +660,15 @@ protected
   end
 
   def create_page(options = {})
-    Page.create_for_user(@arthur, { :parent => nodes(:root_section_node), :title => 'foo', :preamble => 'xuu', :body => 'bar', :expires_on => 1.day.from_now.to_date }.merge(options)).reload
+    Page.create({ :user => @arthur, :parent => nodes(:root_section_node), :title => 'foo', :preamble => 'xuu', :body => 'bar', :expires_on => 1.day.from_now.to_date }.merge(options)).reload
   end
 
   def create_section(options={})
-    Section.create({ :parent => nodes(:root_section_node), :title => 'new section', :description => 'new description for section.' }.merge(options)).reload
+    Section.create({ :user => @arthur, :parent => nodes(:root_section_node), :title => 'new section', :description => 'new description for section.' }.merge(options)).reload
   end
 
   def create_editor_content_node(options = {})
-    Page.create_for_user(users(:editor), { :parent => nodes(:editor_section_node), :title => 'foo', :preamble => 'xuu', :body => 'bar', :expires_on => 1.day.from_now.to_date }.merge(options)).reload
+    Page.create({ :user => users(:editor), :parent => nodes(:editor_section_node), :title => 'foo', :preamble => 'xuu', :body => 'bar', :expires_on => 1.day.from_now.to_date }.merge(options)).reload
   end
 
 end

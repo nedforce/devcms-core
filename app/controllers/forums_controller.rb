@@ -19,7 +19,7 @@ protected
   
   # Finds the +Forum+ object corresponding to the passed in +id+ parameter.
   def find_forum
-    @forum = @node.approved_content
+    @forum = @node.content
   end
 
   def find_forum_topics

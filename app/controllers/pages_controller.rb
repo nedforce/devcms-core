@@ -17,6 +17,6 @@ protected
   
   # Finds the Page object corresponding to the passed in +id+ parameter.
   def find_page
-    @page = @node.approved_content
+    @page = @node.content
   end  
 end

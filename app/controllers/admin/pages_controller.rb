@@ -63,7 +63,7 @@ class Admin::PagesController < Admin::AdminController
       if @commit_type == 'preview' && @page.valid?
         format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @page }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @page, :status => :created, :location => @page }
-      elsif @commit_type == 'save' && @page.save_for_user(current_user)
+      elsif @commit_type == 'save' && @page.save(:user => current_user)
         format.html # create.html.erb
         format.xml  { head :ok }
       else
@@ -85,7 +85,7 @@ class Admin::PagesController < Admin::AdminController
           render :template => 'admin/shared/update_preview', :locals => { :record => @page }, :layout => 'admin/admin_preview'
         end
         format.xml  { render :xml => @page, :status => :created, :location => @page }
-      elsif @commit_type == 'save' && @page.save_for_user(current_user, @for_approval)
+      elsif @commit_type == 'save' && @page.save(:user => current_user, :approval_required => @for_approval)
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else
@@ -99,6 +99,6 @@ protected
 
   # Finds the +Page+ object corresponding to the passed in +id+ parameter.
   def find_page
-    @page = Page.find(params[:id])
+    @page = Page.find(params[:id]).current_version
   end
 end

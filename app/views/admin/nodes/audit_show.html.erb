@@ -27,11 +27,11 @@ Ext.QuickTips.init();
 
 <%
   if @previous_url
-    tabs = [%({contentEl: 'tab_diff_content', title: '#{ escape_javascript(@node.content.title)} (#{I18n.t("nodes.diff")})', autoLoad: '#{@diff_url}' })]
-    tabs << %({contentEl: 'tab_current_content', title: '#{escape_javascript(@node.content.title)} (#{I18n.t("nodes.new_version")})', autoLoad: '#{@current_url}' })
+    tabs = [%({contentEl: 'tab_diff_content', title: '#{ escape_javascript(@node.content.current_version.title)} (#{I18n.t("nodes.diff")})', autoLoad: '#{@diff_url}' })]
+    tabs << %({contentEl: 'tab_current_content', title: '#{escape_javascript(@node.content.current_version.title)} (#{I18n.t("nodes.new_version")})', autoLoad: '#{@current_url}' })
     tabs << %({contentEl: 'tab_previous_content', title: '#{ escape_javascript(@node.content.previous_version.title)} (#{I18n.t("nodes.previous_version")})', autoLoad: '#{@previous_url}' })    
   else
-    tabs = [%({contentEl: 'tab_current_content', title: '#{escape_javascript(@node.content.title)}', autoLoad: '#{@current_url}' })]
+    tabs = [%({contentEl: 'tab_current_content', title: '#{escape_javascript(@node.content.current_version.title)}', autoLoad: '#{@current_url}' })]
   end
 %>
 

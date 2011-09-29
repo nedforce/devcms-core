@@ -12,12 +12,16 @@ require 'association_preload_fix'
 require 'acts_as_archive_controller'
 require 'searcher'
 require 'recaptcha'
+require 'simply_versioned'
 
 # Extend ActiveRecord::Base with the +acts_as_content_node+ functionality.
 ActiveRecord::Base.send(:include, Acts::ContentNode)
 
 # Extend ActiveRecord::Base with the +acts_as_archive+ functionality.
 ActiveRecord::Base.send(:include, Acts::Archive)
+
+# Extend ActiveRecord::Base with the +simply_versioned+ functionality.
+ActiveRecord::Base.send(:include, SoftwareHeretics::ActiveRecord::SimplyVersioned)
 
 ActiveRecord::Base.send(:extend, AssociationPreloadFix)
 

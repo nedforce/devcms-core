@@ -18,6 +18,6 @@ protected
 
   # Finds the +Feed+ object corresponding to the passed in +id+ parameter.
   def find_feed
-    @feed = @node.approved_content
+    @feed = @node.content
   end  
 end

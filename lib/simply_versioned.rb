@@ -4,6 +4,7 @@
 # Copyright (c) 2007,2008 Matt Mower <self@mattmower.com>
 # Released under the MIT license (see accompany MIT-LICENSE file)
 #
+# Edited by Gerjan Stokkink
 
 module SoftwareHeretics
   
@@ -40,14 +41,16 @@ module SoftwareHeretics
           options.reverse_merge!( {
             :keep => nil,
             :automatic => true,
-            :exclude => []
+            :exclude => [ :created_at, :updated_at ]
           })
           
           has_many :versions, :order => 'number DESC', :as => :versionable, :dependent => :destroy, :extend => VersionsProxyMethods
 
           before_save :simply_versioned_create_version
 
-          after_save :simply_versioned_cleanup_old_versions
+          after_save :simply_versioned_cleanup_old_versions, :simply_versioned_delete_current_version
+          
+          attr_accessor :new_attributes, :extra_version_attributes
           
           cattr_accessor :simply_versioned_keep_limit
           self.simply_versioned_keep_limit = options[:keep]
@@ -85,39 +88,48 @@ module SoftwareHeretics
         # options:
         # +except+ specify a list of attributes that are not restored (default: created_at, updated_at)
         #
-        def revert_to_version( version, options = {} )
+        def revert_to_version version, options = {}
           options.reverse_merge!({
-            :except => [:created_at,:updated_at]
+            :except => [ :created_at, :updated_at ]
           })
           
-          version = if version.kind_of?( Version )
+          version = if version.kind_of?(Version)
             version
-          elsif version.kind_of?( Fixnum )
-            self.versions.find_by_number( version )
+          elsif version.kind_of?(Fixnum)
+            self.versions.find_by_number(version)
           end
           
           raise "Invalid version (#{version.inspect}) specified!" unless version
           
-          options[:except] = options[:except].map( &:to_s )
+          options[:except] = options[:except].map(&:to_s)
           
-          self.update_attributes( YAML::load( version.yaml ).except( *options[:except] ) )
+          self.update_attributes(YAML::load(version.yaml).merge(:draft => version.drafted?).except(*options[:except]))
         end
         
-        # Invoke the supplied block passing the receiver as the sole block argument with
-        # versioning enabled or disabled depending upon the value of the +enabled+ parameter
-        # for the duration of the block.
-        def with_versioning( enabled, &block )
+        def with_versioning(enabled, extra_version_attributes = {}, &block)
           versioning_was_enabled = self.versioning_enabled?
           self.versioning_enabled = enabled
+          self.extra_version_attributes = extra_version_attributes
+        
           begin
-            block.call( self )
+            self.class.transaction do
+              if enabled
+                self.new_attributes = self.attributes.dup
+                self.reload unless self.new_record?
+              end
+              
+              self.node.publishable = true if !self.node.publishable? && !enabled
+              block.call(self)
+            end
           ensure
+            self.attributes = new_attributes if !self.new_record? && enabled
             self.versioning_enabled = versioning_was_enabled
+            self.extra_version_attributes = {}
           end
         end
         
         def unversioned?
-          self.versions.nil? || self.versions.size == 0
+          self.versions.unapproved.empty?
         end
         
         def versioned?
@@ -132,35 +144,47 @@ module SoftwareHeretics
           end
         end
         
+        def current_version
+          if self.versions.empty?
+            Version.create_version(self)
+          else
+            self.versions.current.model
+          end
+        end
+        
+        def previous_version
+          return nil if self.versions.empty?
+          
+          if self.versions.count == 1
+            self.node.publishable? ? Version.create_version(self) : nil
+          else
+            self.versions.current.model
+          end
+        end
+        
         protected
         
         def simply_versioned_create_version
-          # Only create new versions when the current node is approved, to prevent overwriting
-          if self.versioning_enabled? && self.approved?
-            self.versions.build( :yaml => self.old_attributes.except(*simply_versioned_excluded_columns).to_yaml )
+          if self.versioning_enabled?
+            version_attributes = { :yaml => self.new_attributes.except(*simply_versioned_excluded_columns).to_yaml }
+            version_attributes.update(self.extra_version_attributes)
+            v = self.versions.build(version_attributes)
           end
 
           true
         end
 
-        def old_attributes
-          old_attributes = self.attributes
-
-          self.changes.each do |attr, change|
-            old_attributes[attr] = change.first
-          end
-
-          old_attributes
-        end
-
         def simply_versioned_cleanup_old_versions
-          if self.versioning_enabled? && self.approved?
-            self.versions.clean_old_versions( simply_versioned_keep_limit.to_i ) if simply_versioned_keep_limit
-          end
+          self.versions.clean_old_versions( self.simply_versioned_keep_limit.to_i ) if self.versioning_enabled? && simply_versioned_keep_limit
 
           true
         end
         
+        def simply_versioned_delete_current_version
+          self.versions.current.destroy if self.versions.current && !self.versioning_enabled?
+          
+          true
+        end
       end
 
       module VersionsProxyMethods

@@ -29,7 +29,7 @@ class InternalLinkTest < ActiveSupport::TestCase
     assert_equal nil, l1.description
     l2 = create_internal_link(:title => nil, :description => nil)
     assert !l2.new_record?
-    l2.update_attributes_for_user(users(:arthur), :title => '', :description => '')
+    l2.update_attributes(:user => users(:arthur), :title => '', :description => '')
     assert_equal nil, l2.title
     assert_equal nil, l2.description
   end
@@ -65,7 +65,7 @@ class InternalLinkTest < ActiveSupport::TestCase
     assert_no_difference 'InternalLink.count' do
       @internal_link.title = 'New title'
       @internal_link.description = 'New body'
-      assert @internal_link.save_for_user(users(:arthur))
+      assert @internal_link.save(:user => users(:arthur))
     end
   end
   

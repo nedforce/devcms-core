@@ -46,7 +46,7 @@ class PageTest < ActiveSupport::TestCase
     assert_no_difference 'Page.count' do
       @about_page.title = 'New title'
       @about_page.body = 'New body'
-      assert @about_page.save_for_user(users(:arthur))
+      assert @about_page.save(:user => users(:arthur))
     end
   end
 

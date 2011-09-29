@@ -26,22 +26,25 @@ class UserMailer < ActionMailer::Base
     @body[:password] = new_password
   end
 
-  def rejection_notification(user, node, reason, options = {})
-    set_defaults(node.editor, options)
+  def rejection_notification(user, node, editor, reason, options = {})
+    set_defaults(editor, options)
     headers("Reply-To" => "#{user.full_name} <#{user.email_address}>")
+    
     @subject       = "Wijziging aan #{Settler[:host]}/#{node.url_alias} afgewezen."
     @body[:user]   = user
     @body[:node]   = node
+    @body[:editor] = editor
     @body[:reason] = reason
   end
 
-  def approval_notification(user, node, comment, options = {})
-    set_defaults(node.editor, options)
+  def approval_notification(user, node, editor, comment, options = {})
+    set_defaults(editor, options)
     headers("Reply-To" => "#{user.full_name} <#{user.email_address}>")
 
     @subject        = "Wijziging aan #{Settler[:host]}/#{node.url_alias} goedgekeurd."
     @body[:user]    = user
     @body[:node]    = node
+    @body[:editor]  = editor
     @body[:comment] = comment
   end
 

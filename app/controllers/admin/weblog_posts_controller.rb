@@ -66,7 +66,7 @@ protected
 
   # Finds the +WeblogPost+ object corresponding to the passed in +id+ parameter.
   def find_weblog_post
-    @weblog_post = WeblogPost.find(params[:id], :include => :node)
+    @weblog_post = WeblogPost.find(params[:id], :include => :node).current_version
   end
 
   def find_content

@@ -66,7 +66,7 @@ module ApplicationHelper
 
         n = nil
         if node.class == Node
-          n = node.approved_content rescue node.content
+          n = node.content
         else
           n = node
         end
@@ -194,7 +194,7 @@ module ApplicationHelper
 
       content_tag(:div, :class => 'readspeaker_button') do
         (image_tag('icons/sayit.png', :class => 'icon', :alt => t('application.sayit_alt'), :title => t('application.sayit_title')) +
-        (link_to(t('application.sayit'), readspeaker_url, { :class => link_class }.merge(options))) unless @node && (@node.is_hidden? || @node.approved_content.nil?))
+        (link_to(t('application.sayit'), readspeaker_url, { :class => link_class }.merge(options))) unless @node && (@node.is_hidden? || !@node.publishable?))
       end
     end
   end

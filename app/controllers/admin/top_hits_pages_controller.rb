@@ -90,7 +90,7 @@ protected
 
   # Finds the +TopHitsPage+ object corresponding to the passed in +id+ parameter.
   def find_top_hits_page
-    @top_hits_page = TopHitsPage.find(params[:id])
+    @top_hits_page = TopHitsPage.find(params[:id], :include => :node).current_version
   end
 
   # Finds the top hits based on the +TopHitsPage+ object.

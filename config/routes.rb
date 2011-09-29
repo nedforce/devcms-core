@@ -60,7 +60,7 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :alphabetic_indices, :except => [ :index, :destroy ]
     admin.resources :attachments, :except => [ :index, :destroy ], :member => { :previous => :get, :preview => :get }, :collection => { :ajax => :any }
     admin.resources :social_media_links_boxes, :except => [ :index, :destroy ]
-    admin.resources :approvals, :only => [ :index, :create ], :member => { :approve => :put, :reject => :put }
+    admin.resources :versions, :only => [ :index, :create ], :member => { :approve => :put, :reject => :put }
     admin.resources :permissions, :only => [ :index, :new, :create, :destroy ]
     admin.resources :categories,
                     :only => [ :index, :create, :update, :destroy ],
@@ -102,7 +102,7 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :pages, :except => [ :index, :destroy ], :member => { :previous => :get }
     admin.resources :contact_boxes, :except => [ :index, :destroy ]
     admin.resources :sections, :except => [ :index, :destroy ], :member => { :previous => :get }
-    admin.resources :sites, :except => [ :index, :destroy ], :member => { :previous => :get }
+    admin.resources :sites, :except => [ :index, :destroy ]
     admin.resources :news_archives, :except => :destroy
     admin.resources :news_items, :except => [ :index, :destroy ], :member => { :previous => :get }
     admin.resources :calendars, :except => :destroy

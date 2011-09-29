@@ -2,7 +2,7 @@ module FindAccessible #:nodoc:
 
   #TODO: reduce duplication in sql
   CONDITIONS = {
-          :has_approved_version                            => "(nodes.status = 'approved' OR EXISTS (SELECT * FROM versions v WHERE v.versionable_type = nodes.content_type AND v.versionable_id = nodes.content_id))",
+          :has_approved_version                            => "(nodes.publishable = :true)",
           :is_published                                    => "(:now >= nodes.publication_start_date AND (nodes.publication_end_date IS NULL OR :now <= nodes.publication_end_date))",
           :is_accessible                                   => "(nodes.hidden = :false OR :user_has_role_on_ancestor = :true OR nodes.id IN (:user_accessible_node_ids))",
           :has_no_hidden_ancestor_or_self                  => "NOT EXISTS ( SELECT * FROM nodes n1 WHERE n1.hidden = :true AND (n1.id = ANY( string_to_array(nodes.ancestry, '/')::integer[] || nodes.id)))",
@@ -25,7 +25,6 @@ module FindAccessible #:nodoc:
     # * +:for+ The user which to check access rights for
     # * +:parent+ Optionally provides a parent to check rights and accessebility against first. Provides a performance increase, does not yet auto-scope!
     # * +:order+ Overrides default ordering by node.position
-    # * +:approved_content+ Ensure the approved version is fetched from the versions table, only for content classes
     # * +:include+ Normal find includes, extended with node if not present and only for content classes
     #
     # Furthermore all default find options are allowed.
@@ -63,8 +62,6 @@ module FindAccessible #:nodoc:
         end
       end
 
-      approved_versions = options.delete(:approved_content)
-
       # set default where options, joined into the acctual conditions
       where_values = {
         :user_accessible_node_ids => (user.is_a?(User) ? user.role_assignments.collect{|ra| ra.node_id } : nil ),
@@ -94,7 +91,6 @@ module FindAccessible #:nodoc:
         where_sql = "(1 = 0)"
       end
 
-
       new_condition = [where_sql, where_values]
 
       # wrap any given conditions in brackets or non-approved content will be retrieved after all
@@ -114,19 +110,6 @@ module FindAccessible #:nodoc:
       options.update(:limit      => limit)      if limit
 
       result = self.find(*(args << options))
-
-      # enforce the approved version option
-      # this is acctually the main reason we can't refactor to a scope, so if we refactor the versioning we can really improve on this
-      if approved_versions && !result.nil? && self != Node
-        approved_results = [Array, PagingEnumerator].include?(result.class) ? result.collect {|r| r.approved_version } : result.approved_version
-        if result.is_a?(PagingEnumerator)
-          result.results = approved_results
-        else
-          result = approved_results
-        end
-      end
-
-      return result
     end
   end
 

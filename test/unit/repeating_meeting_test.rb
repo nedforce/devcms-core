@@ -18,7 +18,6 @@ class RepeatingMeetingTest < ActiveSupport::TestCase
       :repeat_interval_granularity => Meeting::REPEAT_INTERVAL_GRANULARITIES[:days],
       :repeat_end => (start_time + 1.week).to_date,
       :title => 'Foo1',
-      :location => 'Foo1',
       :body => 'Foo1',
       :meeting_category => @meeting_category
     }, {
@@ -26,7 +25,6 @@ class RepeatingMeetingTest < ActiveSupport::TestCase
       :repeat_interval_granularity => Meeting::REPEAT_INTERVAL_GRANULARITIES[:days],
       :repeat_end => (start_time + 2.weeks).to_date,
       :title => 'Foo2',
-      :location => 'Foo2',
       :body => 'Foo2',
       :meeting_category => @meeting_category
     }, {
@@ -34,7 +32,6 @@ class RepeatingMeetingTest < ActiveSupport::TestCase
       :repeat_interval_granularity => Meeting::REPEAT_INTERVAL_GRANULARITIES[:weeks],
       :repeat_end => (start_time + 2.month).to_date,
       :title => 'Foo3',
-      :location => 'Foo3',
       :body => 'Foo4',
       :meeting_category => @meeting_category
     }, {
@@ -42,7 +39,6 @@ class RepeatingMeetingTest < ActiveSupport::TestCase
       :repeat_interval_granularity => Meeting::REPEAT_INTERVAL_GRANULARITIES[:weeks],
       :repeat_end => (start_time + 7.months).to_date,
       :title => 'Foo4',
-      :location => 'Foo4',
       :body => 'Foo4',
       :meeting_category => @meeting_category
     }, {
@@ -50,7 +46,6 @@ class RepeatingMeetingTest < ActiveSupport::TestCase
       :repeat_interval_granularity => Meeting::REPEAT_INTERVAL_GRANULARITIES[:months],
       :repeat_end => (start_time + 1.year).to_date,
       :title => 'Foo5',
-      :location => 'Foo5',
       :body => 'Foo5',
       :meeting_category => @meeting_category
     }, {
@@ -58,7 +53,6 @@ class RepeatingMeetingTest < ActiveSupport::TestCase
       :repeat_interval_granularity => Meeting::REPEAT_INTERVAL_GRANULARITIES[:months],
       :repeat_end => (start_time + 3.years).to_date,
       :title => 'Foo6',
-      :location => 'Foo6',
       :body => 'Foo6',
       :meeting_category => @meeting_category
     } ]
@@ -71,7 +65,6 @@ class RepeatingMeetingTest < ActiveSupport::TestCase
 
       assert_difference('Meeting.count', difference) do
         m = create_repeating_meeting(attribute_hash.merge(common_attributes))
-        assert m.valid?
 
         ## Retrieve all calendar ites with m's repeat_identifier, these are the original calendar item (m) and the copies
         created_meetings = Meeting.all(

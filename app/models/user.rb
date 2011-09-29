@@ -97,6 +97,8 @@ class User < ActiveRecord::Base
   has_many :user_categories, :dependent => :destroy
   has_many :categories,      :through => :user_categories
   
+  has_many :versions,        :foreign_key => :editor_id, :dependent => :destroy
+  
   named_scope :admins, :include => :role_assignments, :conditions => "role_assignments.name = 'admin'"
   named_scope :final_editors, :include => :role_assignments, :conditions => "role_assignments.name = 'final_editor'"
   named_scope :editors, :include => :role_assignments, :conditions => "role_assignments.name = 'editor'"

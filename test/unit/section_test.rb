@@ -130,8 +130,8 @@ class SectionTest < ActiveSupport::TestCase
   
   def test_should_return_accessible_children_without_images_or_attachments
     children = @root_section.accessible_children_for(users(:arthur))
-    assert children.any?
-    children.each{ |c| assert !c.is_a?(Attachment) and !c.is_a?(Image) }    
+    assert !children.empty?
+    children.each{ |c| assert !c.is_a?(Attachment) && !c.is_a?(Image) }    
   end
   
 protected

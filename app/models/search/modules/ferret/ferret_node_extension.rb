@@ -19,7 +19,7 @@ module Search::Modules::Ferret::FerretNodeExtension
                    :is_hidden_to_index              => {},
                    :url_alias                       => { :store => :yes }
                  },
-                 :if       => Proc.new{ |node| node.approved_content(:allow_nil => true) && node.content_class.indexable? },
+                 :if       => Proc.new { |node| node.publishable? && node.content_class.indexable? },
                  :analyzer => DutchStemmingAnalyzer.new,
                  :remote   => true,
                  :boost    => :dynamic_boost,
@@ -48,7 +48,7 @@ module Search::Modules::Ferret::FerretNodeExtension
 
     # Returns the latest approved content title for indexing.
     def content_title_to_index
-      approved_content.content_title
+      content.content_title
     end
 
     def categories_to_index
@@ -70,7 +70,7 @@ module Search::Modules::Ferret::FerretNodeExtension
     # Returns the latest approved content tokens for indexing.
     def content_tokens_to_index
       begin
-        result = help.strip_tags(approved_content.content_tokens)
+        result = help.strip_tags(content.content_tokens)
         # Strip any HTML and JavaScript and replace whitespace characters (including newlines) with a single space.
         result = help.sanitize(result.gsub(/[[:space:]]/, ' ').gsub(/[[:space:]]{2,}/, ' '))
         return result.strip

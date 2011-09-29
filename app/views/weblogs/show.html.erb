@@ -3,7 +3,7 @@
     <h1><span class="prefix"><%=t 'weblogs.weblog' -%></span><%=h @weblog.title -%></h1>
 
     <div class="metadata clearfix">
-      <p class="weblogDetails"><%= "#{t 'weblogs.created_on'} #{l @weblog.created_at, :format => :long} #{t 'weblogs.by'} <span class='userLogin'>#{truncate(@weblog.user.screen_name, :length => 12)}</span>, #{@weblog.weblog_posts.count} #{t (@weblog.weblog_posts.count == 1) ? 'weblogs.weblog_post' : 'weblogs.weblog_posts'}" -%></p>
+      <p class="weblogDetails"><%= "#{t 'weblogs.created_on'} #{l @weblog.created_at, :format => :long} #{t 'weblogs.by'} <span class='userLogin'>#{truncate(@weblog.user.screen_name, :length => 12)}</span>, #{@weblog.weblog_posts.count} #{t((@weblog.weblog_posts.count == 1) ? 'weblogs.weblog_post' : 'weblogs.weblog_posts')}" -%></p>
       <p class="lastUpdateDate"><%=t 'shared.last_updated' -%>: <%=l @weblog.last_updated_at(current_user), :format => :long -%></p>
     </div>
 
@@ -50,7 +50,7 @@
         <% if (image_node = weblog_post.node.children.first) %>
           <%= 
             link_to_node(
-              image_tag(content_node_path(image_node, :action => :thumbnail), :alt => h(image_node.approved_content.title)),
+              image_tag(content_node_path(image_node, :action => :thumbnail), :alt => h(image_node.content.title)),
               image_node,
               { :action => :full },
               { 

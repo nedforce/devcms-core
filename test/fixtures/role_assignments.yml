@@ -2,6 +2,10 @@ admin_arthur:
   user: arthur
   node: root_section_node
   name: admin
+root_editor:
+  user: root_editor
+  node: root_section_node
+  name: editor
 editor:
   user: editor
   node: devcms_news_node
@@ -21,10 +25,6 @@ page_editor:
 page_final_editor:
   user: final_editor
   node: contact_page_node
-  name: final_editor
-unapproved_page_final_editor:
-  user: final_editor
-  node: unapproved_page_node
   name: final_editor
 admin_sjoerd:
   user: sjoerd

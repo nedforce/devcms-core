@@ -76,7 +76,7 @@ class Admin::ImagesController < Admin::AdminController
     @image.parent           = @parent_node
 
     respond_to do |format|
-      if @image.save_for_user(current_user)
+      if @image.save(:user => current_user)
 
         format.html # create.html.erb
         format.xml  { render :xml => @image, :status => :created, :location => @image }
@@ -129,9 +129,10 @@ class Admin::ImagesController < Admin::AdminController
   def update
     @show_image_url_control = can_set_image_url?
     params[:image].delete(:url) if !@show_image_url_control
+    @image.attributes = params[:image]
 
     respond_to do |format|
-      if @image.update_attributes_for_user(current_user, params[:image], @for_approval)
+      if @image.save(:user => current_user, :approval_required => @for_approval)
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else

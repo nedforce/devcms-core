@@ -275,7 +275,7 @@ protected
         else
           set_search_scopes
           if (error_404_url_alias = Settler[:error_page_404]).present? && @node = Node.find_by_url_alias(error_404_url_alias)
-            @page = @node.approved_content
+            @page = @node.content
             render :template => 'pages/show', :status => :not_found
           else
             @page_title = "----#{I18n.t('application.page_not_found')}---"
@@ -304,7 +304,7 @@ protected
         else # in production *and* test (test should simulate production so we can test production behaviour)
           set_search_scopes
           if (error_500_url_alias = Settler[:error_page_500]).present? && @node = Node.find_by_url_alias(error_500_url_alias)
-            @page = @node.approved_content
+            @page = @node.content
             render :template => 'pages/show', :status => :internal_server_error
           else
             render :template => "errors/500", :status => :internal_server_error
@@ -342,7 +342,7 @@ protected
 
   def set_page_title
     # rather safe than sorry -> rescue nil in case we don't have a node
-    @page_title ||= @node.approved_content.content_title rescue nil
+    @page_title ||= @node.content.content_title rescue nil
   end
 
   # Returns true if the current user has a particular role on a given node, false otherwise.
@@ -421,6 +421,6 @@ protected
   def set_extra_search_scopes
     @search_scopes << SEARCH_SCOPE_SEPARATOR
 
-    @search_scopes += current_site.accessible_children(:for_menu => true).map { |n| [ n.approved_content.title, "node_#{n.id}" ]}
+    @search_scopes += current_site.accessible_children(:for_menu => true).map { |n| [ n.content.title, "node_#{n.id}" ]}
   end
 end

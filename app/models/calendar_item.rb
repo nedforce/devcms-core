@@ -55,6 +55,8 @@ class CalendarItem < Event
      :copyable => false,
      :controller_name => 'calendar_items'
    })
+   
+  needs_editor_approval
 
   # Create repeating calendar items if necessary.
   after_create :create_repeating_calendar_items
@@ -160,13 +162,12 @@ protected
   # Create repetitions of calendar item if it is repeating.
   def create_repeating_calendar_items
     # Don't do anything if this item is not repeating.
-    return unless self.repeating?
+    return true unless self.repeating?
 
     # Calculate the time interval between repeating items.
     span = self.repeat_interval_multiplier.send(REPEAT_INTERVAL_GRANULARITIES_REVERSE[self.repeat_interval_granularity])
 
     # Assign local variables.
-    editor          = self.node.editor
     parent          = self.calendar.node
     next_start_time = self.start_time + span
     next_end_time   = self.end_time   + span
@@ -186,16 +187,18 @@ protected
       calendar_item.parent            = parent
 
       # Save calendar item.
-      if (editor)
-        calendar_item.save_for_user!(editor)
+      if (self.versioned?)
+        calendar_item.save!(:user => self.versions.current.editor)
       else
-        calendar_item.save
+        calendar_item.save!
       end
 
       # Increment times with repetition interval.
       next_start_time += span
       next_end_time   += span
     end
+    
+    true
   end
 
   # Attributes hash that needs to be included in repeating items.

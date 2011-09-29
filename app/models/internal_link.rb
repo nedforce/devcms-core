@@ -27,6 +27,8 @@ class InternalLink < Link
     :show_content_box_header => false
   })
   
+  needs_editor_approval
+  
   # The node that this internal link links to.
   belongs_to :linked_node, :class_name => "Node"
 

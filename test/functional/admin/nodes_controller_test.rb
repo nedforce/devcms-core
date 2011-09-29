@@ -98,51 +98,6 @@ class Admin::NodesControllerTest < ActionController::TestCase
     get :index
     assert_redirected_to root_path
   end
-
-  def test_should_audit_show_unapproved_page
-    login_as :sjoerd
-    get :audit_show, :id => nodes(:unapproved_page_node).id
-    assert_response :success
-  end
-
-  def test_should_audit_show_unapproved_internal_link
-    login_as :sjoerd
-    get :audit_show, :id => nodes(:unapproved_internal_link_node).id
-    assert_response :success
-  end
-
-  def test_should_audit_show_unapproved_external_link
-    login_as :sjoerd
-    get :audit_show, :id => nodes(:unapproved_external_link_node).id
-    assert_response :success
-  end
-
-  def test_should_audit_show_unapproved_calendar_item
-    login_as :sjoerd
-    get :audit_show, :id => nodes(:unapproved_calendar_item_node).id
-    assert_response :success
-  end
-
-  def test_should_audit_show_unapproved_meeting
-    login_as :sjoerd
-    
-    # Ensure the node is versioned
-    nodes(:unapproved_meeting_node).content.save_for_user(users(:sjoerd))
-    nodes(:unapproved_meeting_node).content.save_for_user(users(:editor))        
-    assert nodes(:unapproved_meeting_node).content.versioned?
-    
-    get :audit_show, :id => nodes(:unapproved_meeting_node).id
-    assert_response :success
-  end  
-  
-  def test_should_get_previous_diffed_for_unapproved_page
-    login_as :sjoerd
-    get :previous_diffed, :id => nodes(:unapproved_page_node).id
-    assert_response :success    
-    assert assigns(:content)
-    assert assigns(:previous_content)
-    assert assigns(:children)
-  end  
   
   def test_should_get_previous_diffed_for_approved_page_with_new_same_as_previous
     login_as :sjoerd
@@ -152,60 +107,6 @@ class Admin::NodesControllerTest < ActionController::TestCase
     assert assigns(:previous_content)
     assert_equal assigns(:content), assigns(:previous_content)
   end    
-  
-  def test_should_get_previous_diffed_for_unapproved_internal_link
-    login_as :sjoerd
-    get :previous_diffed, :id => nodes(:unapproved_internal_link_node).id
-    assert_response :success
-  end
-
-  def test_should_get_previous_diffed_for_unapproved_external_link
-    login_as :sjoerd
-    get :previous_diffed, :id => nodes(:unapproved_external_link_node).id
-    assert_response :success
-  end
-
-  def test_should_get_previous_diffed_for_unapproved_calendar_item
-    login_as :sjoerd
-    get :previous_diffed, :id => nodes(:unapproved_calendar_item_node).id
-    assert_response :success
-  end
-
-  def test_should_get_previous_diffed_for_unapproved_meeting
-    login_as :sjoerd
-    get :previous_diffed, :id => nodes(:unapproved_meeting_node).id
-    assert_response :success
-  end    
-
-  def test_should_audit_edit_unapproved_page
-    login_as :sjoerd
-    get :audit_edit, :id => nodes(:unapproved_page_node).id
-    assert_response :success
-  end
-
-  def test_should_audit_edit_unapproved_internal_link
-    login_as :sjoerd
-    get :audit_edit, :id => nodes(:unapproved_internal_link_node).id
-    assert_response :success
-  end
-
-  def test_should_audit_edit_unapproved_external_link
-    login_as :sjoerd
-    get :audit_edit, :id => nodes(:unapproved_external_link_node).id
-    assert_response :success
-  end
-
-  def test_should_audit_edit_unapproved_calendar_item
-    login_as :sjoerd
-    get :audit_edit, :id => nodes(:unapproved_calendar_item_node).id
-    assert_response :success
-  end
-
-  def test_should_audit_edit_unapproved_meeting
-    login_as :sjoerd
-    get :audit_edit, :id => nodes(:unapproved_meeting_node).id
-    assert_response :success
-  end
 
   def test_should_sort_children
     login_as :arthur

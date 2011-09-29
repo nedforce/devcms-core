@@ -78,7 +78,7 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
     [ 'asdsad', -1, nil ].each do |repeating|
       ci = create_repeating_calendar_item
       ci.repeating = repeating
-      assert ci.save_for_user(@arthur)
+      assert ci.save(:user => @arthur)
       assert ci.valid?
       assert !ci.errors.on(:repeating)
     end
@@ -103,7 +103,7 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
       ci = create_repeating_calendar_item
       ci.repeating = true
       ci.repeat_interval_granularity = repeat_interval_granularity
-      assert ci.save_for_user(@arthur)
+      assert ci.save(:user => @arthur)
       assert ci.valid?
       assert !ci.errors.on(:repeat_interval_granularity)
     end
@@ -136,7 +136,7 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
       ci = create_repeating_calendar_item
       ci.repeating = true
       ci.repeat_interval_multiplier = repeat_interval_multiplier
-      assert ci.save_for_user(@arthur)
+      assert ci.save(:user => @arthur)
       assert ci.valid?
       assert !ci.errors.on(:repeat_interval_multiplier)
     end
@@ -166,7 +166,7 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
     ci = create_repeating_calendar_item
     ci.repeating = true
     ci.instance_variable_set(:@repeat_end, nil)
-    assert ci.save_for_user(@arthur)
+    assert ci.save(:user => @arthur)
     assert ci.valid?
     assert !ci.errors.on(:repeat_end)
   end
@@ -187,7 +187,7 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
     ci = create_repeating_calendar_item
     ci.repeating = true
     ci.instance_variable_set(:@repeat_end, 1.day.ago.to_date)
-    assert ci.save_for_user(@arthur)
+    assert ci.save(:user => @arthur)
     assert ci.valid?
     assert !ci.errors.on(:repeat_end)
   end
@@ -212,7 +212,7 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
     ci = create_repeating_calendar_item :repeating => true
     repeat_identifier = ci.repeat_identifier
     ci.title = 'New title'
-    ci.save_for_user(@arthur)
+    ci.save(:user => @arthur)
     assert_equal repeat_identifier, ci.reload.repeat_identifier
   end
 
@@ -252,7 +252,7 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
         :repeat_end => (now + 1.week).to_date
       }
 
-      ci.save_for_user(@arthur)
+      ci.save(:user => @arthur)
     end
   end
 

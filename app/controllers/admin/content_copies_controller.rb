@@ -37,7 +37,7 @@ class Admin::ContentCopiesController < ApplicationController
     @content_copy.parent = @parent_node
 
     respond_to do |format|
-      if @content_copy.save_for_user(current_user) 
+      if @content_copy.save(:user => current_user) 
         @content_copy.node.move_to_right_of(@content_copy.copied_node)
         format.json { render :json => { :notice => I18n.t('nodes.content_copy_creation_successful'), :status => :ok } }
         format.xml  { head :ok }
@@ -52,6 +52,6 @@ protected
 
   # Finds the ContentCopy object corresponding to the passed in +id+ parameter.
   def find_content_copy
-    @content_copy = ContentCopy.find(params[:id], :include => [ :copied_node ])
+    @content_copy = ContentCopy.find(params[:id], :include => [ :copied_node ]).current_version
   end
 end

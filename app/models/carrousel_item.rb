@@ -51,6 +51,6 @@ class CarrouselItem < ActiveRecord::Base
 
   # Returns the approved content node.
   def approved_item
-    node.approved_content
+    node.content
   end
 end

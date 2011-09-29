@@ -17,7 +17,7 @@ class Admin::NewsItemsControllerTest < ActionController::TestCase
   end
   
   def test_should_get_previous
-    @news_item.create_approved_version
+    @news_item.save :user => User.find_by_login('editor')
     
     login_as :sjoerd
 

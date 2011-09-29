@@ -2,18 +2,18 @@
 # the application relating to +Site+ objects.
 class Admin::SitesController < Admin::AdminController
 
-  # The +create+ action needs the parent +Node+ object to link the new +Page+ content node to.
+  # The +create+ action needs the parent +Node+ object to link the new +Site+ content node to.
   prepend_before_filter :find_parent_node,     :only => [ :new, :create ]
   
   # The +show+, +edit+ and +update+ actions need a +Site+ object to act upon.
-  before_filter :find_site,                    :only => [ :show, :previous, :edit, :update ]
+  before_filter :find_site,                    :only => [ :show, :edit, :update ]
 
   # Parse the publication start date for the +create+ and +update+ actions.
   before_filter :parse_publication_start_date, :only => [ :create, :update ]
   
-  before_filter :find_images_and_attachments,  :only => [ :show, :previous ]
+  before_filter :find_images_and_attachments,  :only => :show
 
-  before_filter :find_children,                :only => [ :show, :previous ]
+  before_filter :find_children,                :only => :show
 
   before_filter :set_commit_type,              :only => [ :create, :update ]
 
@@ -28,13 +28,6 @@ class Admin::SitesController < Admin::AdminController
       format.html { render :partial => '/admin/sites/show', :locals => { :record => @site }, :layout => 'admin/admin_show' }
       format.xml  { render :xml => @site }
     end
-  end
-
-  # * GET /admin/sites/:id/previous
-  # * GET /admin/sites/:id/previous.xml
-  def previous
-    @site = @site.previous_version
-    show
   end
 
   # * GET /admin/sites/new
@@ -64,7 +57,7 @@ class Admin::SitesController < Admin::AdminController
       if @commit_type == 'preview' && @site.valid?
         format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @site }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @site, :status => :created, :location => @site }
-      elsif @commit_type == 'save' && @site.save_for_user(current_user)
+      elsif @commit_type == 'save' && @site.save
         format.html { render :template => 'admin/shared/create' }
         format.xml  { render :xml => @site, :status => :created, :location => @site }
       else
@@ -89,7 +82,7 @@ class Admin::SitesController < Admin::AdminController
           render :template => 'admin/shared/update_preview', :locals => { :record => @site }, :layout => 'admin/admin_preview'
         end
         format.xml  { render :xml => @site, :status => :created, :location => @site }
-      elsif @commit_type == 'save' && @site.save_for_user(current_user, @for_approval)
+      elsif @commit_type == 'save' && @site.save
         format.html { render :template => '/admin/shared/update' }
         format.xml  { head :ok }
       else
@@ -103,7 +96,7 @@ protected
 
   # Retrieves the requested +Site+ object using the passed in +id+ parameter.
   def find_site
-    @site = Site.find(params[:id], :include => :node)
+    @site = Site.find(params[:id], :include => :node).current_version
   end
 
   def find_children

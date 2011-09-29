@@ -196,9 +196,10 @@ class Admin::NodesController < Admin::AdminController
   # Diffs the current and previous version of a content node.
   # * GET /admin/nodes/1/previous_diffed
   def previous_diffed
-    @content          = @node.content
-    @previous_content = @content.previous_version || @content
-    @children         = @content.accessible_children_for(current_user)
+    content = @node.content
+    @content          = content.current_version
+    @previous_content = content.previous_version || @content
+    @children         = content.accessible_children_for(current_user)
     @controller_path  = @node.content_type_configuration[:controller_name] || @node.content_class.table_name
   end
 

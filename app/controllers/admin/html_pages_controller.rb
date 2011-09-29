@@ -90,7 +90,7 @@ protected
 
   # Finds the +HtmlPage+ object corresponding to the passed in +id+ parameter.
   def find_html_page
-    @html_page = HtmlPage.find(params[:id])
+    @html_page = HtmlPage.find(params[:id]).current_version
   end
 
   # Disable the 'bewerken' button

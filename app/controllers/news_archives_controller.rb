@@ -23,12 +23,12 @@ protected
   
   # Finds the +NewsArchive+ object corresponding to the passed in +id+ parameter.
   def find_news_archive
-    @news_archive = @node.approved_content
+    @news_archive = @node.content
   end
 
   # Finds recent news items.
   def find_recent_news_items
-    @news_items = @news_archive.news_items.find_accessible(:all, :for => current_user, :approved_content => true, :page => {:size => 25, :current => params[:page]})
+    @news_items = @news_archive.news_items.find_accessible(:all, :for => current_user, :page => {:size => 25, :current => params[:page]})
     @latest_news_items = []
     @news_items_for_table = @news_items.to_a
 

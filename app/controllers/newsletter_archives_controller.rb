@@ -102,7 +102,7 @@ protected
   
   # Finds the +NewsletterArchive+ object corresponding to the passed in +id+ parameter.
   def find_newsletter_archive
-    @newsletter_archive = @node.approved_content
+    @newsletter_archive = @node.content
   end
   
 end

@@ -29,6 +29,6 @@ class AttachmentsController < ApplicationController
   end
 
   def find_attachment
-    @attachment = @node.approved_content
+    @attachment = @node.content
   end
 end

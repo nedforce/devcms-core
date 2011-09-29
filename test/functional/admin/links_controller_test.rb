@@ -17,7 +17,7 @@ class Admin::LinksControllerTest < ActionController::TestCase
   end
 
   def test_should_get_previous
-    @link.create_approved_version
+    @link.save :user => User.find_by_login('editor')
     
     login_as :sjoerd
     

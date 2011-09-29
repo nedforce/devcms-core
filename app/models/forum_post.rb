@@ -63,7 +63,7 @@ class ForumPost < ActiveRecord::Base
 
   # Returns true if this ForumPost is the first post of the associated ForumThread, else false.
   def is_start_post?
-    self == self.forum_thread.start_post
+    self.forum_thread.blank? ? false : self == self.forum_thread.start_post
   end
 
   # Added to make ForumPosts similar to Comments. This is used to allow admins

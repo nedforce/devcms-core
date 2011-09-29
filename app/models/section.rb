@@ -23,6 +23,7 @@
 #  * A Section can be inserted into nodes of any accepting type.
 #
 class Section < ActiveRecord::Base
+
   # Adds content node functionality to sections.
   acts_as_content_node({
     :allowed_child_content_types => %w(
@@ -97,7 +98,7 @@ class Section < ActiveRecord::Base
   # Returns the children content nodes of this section for the given +user+.
   # By default images and attachments are excluded.
   def accessible_children_for(user, exclude_content_types = ['Image','Attachment']) 
-    node.accessible_content_children(:for => user, :exclude_content_type => exclude_content_types)
+    self.node.accessible_content_children(:for => user, :exclude_content_type => exclude_content_types)
   end  
 
   # Returns the OWMS type.

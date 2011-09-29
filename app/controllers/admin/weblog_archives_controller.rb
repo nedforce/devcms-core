@@ -144,7 +144,7 @@ protected
 
   # Finds the +WeblogArchive+ object corresponding to the passed in +id+ parameter.
   def find_weblog_archive
-    @weblog_archive = WeblogArchive.find(params[:id], :include => [:node])
+    @weblog_archive = WeblogArchive.find(params[:id], :include => :node).current_version
   end
 
   def find_weblogs

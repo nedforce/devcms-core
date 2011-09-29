@@ -16,7 +16,9 @@ class Admin::AttachmentsControllerTest < ActionController::TestCase
   end
 
   def test_should_get_previous
-    @attachment.create_approved_version
+    @attachment.title = 'foo'
+    @attachment.save :user => User.find_by_login('editor')
+    
     login_as :sjoerd
     get :previous, :id => @attachment
     assert_response :success

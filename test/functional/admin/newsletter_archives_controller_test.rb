@@ -34,7 +34,6 @@ class Admin::NewsletterArchivesControllerTest < ActionController::TestCase
 
     get :index, :node => nodes(:newsletter_archive_node).id
     assert_response :success
-    assert assigns(:newsletter_archive_node)
   end
 
   def test_should_get_index_for_year
@@ -42,7 +41,6 @@ class Admin::NewsletterArchivesControllerTest < ActionController::TestCase
 
     get :index, :super_node => nodes(:newsletter_archive_node).id, :year => '2008'
     assert_response :success
-    assert assigns(:newsletter_archive_node)
     assert assigns(:year)
   end
 
@@ -51,7 +49,6 @@ class Admin::NewsletterArchivesControllerTest < ActionController::TestCase
 
     get :index, :super_node => nodes(:newsletter_archive_node).id, :year => '2008', :month => '1'
     assert_response :success
-    assert assigns(:newsletter_archive_node)
     assert assigns(:year)
     assert assigns(:month)
   end

@@ -18,7 +18,7 @@ protected
 
   # Retrieves the requested +LinksBoxes+ object using the passed in +id+ parameter.
   def find_links_box
-    @links_box = @node.approved_content
+    @links_box = @node.content
   end
 
   def find_children

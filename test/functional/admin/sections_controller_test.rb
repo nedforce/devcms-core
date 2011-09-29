@@ -16,7 +16,7 @@ class Admin::SectionsControllerTest < ActionController::TestCase
   end
   
   def test_should_get_previous
-    @editor_section.create_approved_version
+    @editor_section.save :user => User.find_by_login('editor')
 
     login_as :sjoerd
 

@@ -28,6 +28,12 @@ roderick:
   password_salt: <%= SALT %>
   password_hash: <%= User.encrypt('roderick', SALT) %>
   verification_code: <%= User.generate_verification_code_for(User.new(:login => 'roderick')) %>
+root_editor:
+  email_address: root_editor@nedforce.nl
+  login: root_editor
+  password_salt: <%= SALT %>
+  password_hash: <%= User.encrypt('root_editor', SALT) %>
+  verification_code: <%= User.generate_verification_code_for(User.new(:login => 'root_editor')) %>
 editor:
   email_address: editor@nedforce.nl
   login: editor

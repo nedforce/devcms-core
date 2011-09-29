@@ -18,12 +18,10 @@
 # * Requires +description+ to have a certain length, if present.
 #
 class Link < ActiveRecord::Base
-  
   acts_as_content_node
   
-  # This content type needs approval when created or altered by an editor.
   needs_editor_approval
-
+  
   # Ensure that +title+ and +description+ are set to nil if they are blank.
   before_validation :set_title_and_description_to_nil_if_blank
 

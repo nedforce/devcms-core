@@ -23,8 +23,8 @@ class Admin::PagesControllerTest < ActionController::TestCase
   end
 
   def test_should_get_previous
-    @page.create_approved_version
-
+    @page.save :user => User.find_by_login('editor')
+    
     login_as :sjoerd
 
     get :previous, :id => @page

@@ -8,6 +8,7 @@
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 1
+    publishable: true
 
 - help_page_node:
     content: help_page (Page)
@@ -17,6 +18,7 @@
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 1
+    publishable: true
 
 - contact_page_node:
     content: contact_page (Page)
@@ -25,15 +27,16 @@
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 2
+    publishable: true
 
 - feedback_page_node:
     content: feedback_page (Page)
-    status: drafted
     ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 3
+    publishable: false
 
 - devcms_news_node:
     content: devcms_news (NewsArchive)
@@ -41,6 +44,7 @@
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 4
+    publishable: true
 
 - devcms_news_item_node:
     content: devcms_news_item (NewsItem)
@@ -49,12 +53,14 @@
     commentable: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 1
+    publishable: true
 
 - test_image_two_node:
     content: test_image_two (Image)
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_news_node, :devcms_news_item_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 1
+    publishable: true
 
 - devcms_news_item_voor_vorige_maand_node:
     content: devcms_news_item_voor_vorige_maand (NewsItem)
@@ -62,12 +68,14 @@
     commentable: false
     publication_start_date: <%= 1.month.ago.to_s(:db) %>
     position: 2
+    publishable: true
 
 - devcms_news_item_voor_vorig_jaar_node:
     content: devcms_news_item_voor_vorig_jaar (NewsItem)
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_news_node) %>
     publication_start_date: <%= 1.year.ago.to_s(:db) %>
     position: 3
+    publishable: true
 
 - economie_section_node:
     content: economie_section (Section)
@@ -76,36 +84,42 @@
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 5
+    publishable: true
 
 - economie_poll_node:
     content: economy_poll (Poll)
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :economie_section_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 1
+    publishable: true
 
 - eco_question_1_node:
     content: eco_question_1 (PollQuestion)
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :economie_section_node, :economie_poll_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 1
+    publishable: true
 
 - healthcare_poll_node:
     content: healthcare_poll (Poll)
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :economie_section_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 2
-
+    publishable: true
+    
 - hc_question_1_node:
     content: hc_question_1 (PollQuestion)
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :economie_section_node, :healthcare_poll_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 1
+    publishable: true
 
 - hc_question_2_node:
     content: hc_question_2 (PollQuestion)
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :economie_section_node, :healthcare_poll_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 2
+    publishable: true
 
 - about_page_node:
     content: about_page (Page)
@@ -115,12 +129,14 @@
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 6
+    publishable: true
 
 - test_image_node:
     content: test_image (Image)
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :about_page_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 1
+    publishable: true
 
 - internal_link_node:
     content: internal_link (Link)
@@ -128,6 +144,7 @@
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 7
+    publishable: true
 
 - external_link_node:
     content: external_link (Link)
@@ -135,45 +152,29 @@
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 8
-
-- unapproved_page_node:
-    content: unapproved_page (Page)
-    status: unapproved
-    edited_by: <%= Fixtures.identify(:editor) %>
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
-    position: 9
-
-- rejected_page_node:
-    content: rejected_page (Page)
-    status: rejected
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
-    position: 10
+    publishable: true
 
 - newsletter_archive_node:
     content: devcms_newsletter_archive (NewsletterArchive)
     ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 11
+    position: 9
+    publishable: true
 
 - newsletter_edition_node:
     content: devcms_newsletter_edition (NewsletterEdition)
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :newsletter_archive_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 1
+    publishable: true
 
 - newsletter_edition_volgend_jaar_node:
     content: devcms_newsletter_edition_volgend_jaar (NewsletterEdition)
-    status: unapproved
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :newsletter_archive_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 2
+    publishable: true
 
 - events_calendar_node:
     content: events_calendar (Calendar)
@@ -181,31 +182,35 @@
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 12
+    publishable: true
 
 - events_calendar_item_one_node:
     content: events_calendar_item_one (Event)
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :events_calendar_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 1
+    publishable: true
 
 - events_calendar_item_two_node:
     content: events_calendar_item_two (Event)
-    status: unapproved
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :events_calendar_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 2
+    publishable: true
 
 - events_calendar_item_three_node:
     content: events_calendar_item_three (Event)
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :events_calendar_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 3
+    publishable: true
 
 - events_calendar_item_four_node:
     content: events_calendar_item_four (Event)
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :events_calendar_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 4
+    publishable: true
 
 - devcms_weblog_archive_node:
     content: devcms_weblog_archive (WeblogArchive)
@@ -213,60 +218,70 @@
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 13
+    publishable: true
 
 - henk_weblog_node:
     content: henk_weblog (Weblog)
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 1
+    publishable: true
 
 - henk_weblog_post_one_node:
     content: henk_weblog_post_one (WeblogPost)
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node, :henk_weblog_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 1
+    publishable: true
 
 - henks_weblog_image_node:
     content: henks_weblog_image (Image)
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node, :henk_weblog_node, :henk_weblog_post_one_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 1
+    publishable: true
 
 - henk_weblog_post_two_node:
     content: henk_weblog_post_two (WeblogPost)
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node, :henk_weblog_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 2
+    publishable: true
 
 - piet_weblog_node:
     content: piet_weblog (Weblog)
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 2
+    publishable: true
 
 - piet_weblog_post_one_node:
     content: piet_weblog_post_one (WeblogPost)
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node, :piet_weblog_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 1
+    publishable: true
 
 - piet_weblog_post_two_node:
     content: piet_weblog_post_two (WeblogPost)
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node, :piet_weblog_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 2
+    publishable: true
 
 - jan_weblog_node:
     content: jan_weblog (Weblog)
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 3
+    publishable: true
 
 - klaas_weblog_node:
     content: klaas_weblog (Weblog)
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 4
+    publishable: true
 
 - example_weblog_archive_node:
     content: example_weblog_archive (WeblogArchive)
@@ -274,6 +289,7 @@
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 14
+    publishable: true
 
 - downloads_page_node:
     content: downloads_page (Page)
@@ -282,18 +298,21 @@
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 15
+    publishable: true
 
 - besluit_attachment_node:
     content: besluit_attachment (Attachment)
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :downloads_page_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 1
+    publishable: true
 
 - verslag_attachment_node:
     content: verslag_attachment (Attachment)
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :downloads_page_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 2
+    publishable: true
 
 - hidden_section_node:
     content: hidden_section (Section)
@@ -302,6 +321,7 @@
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 16
+    publishable: true
 
 - hidden_page_node:
     content: hidden_page (Page)
@@ -310,6 +330,7 @@
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 1
+    publishable: true
 
 - nested_page_node:
     content: nested_page (Page)
@@ -317,6 +338,7 @@
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 1
+    publishable: true
 
 - not_hidden_section_node:
     content: not_hidden_section (Section)
@@ -324,6 +346,7 @@
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 17
+    publishable: true
 
 - not_hidden_page_node:
     content: not_hidden_page (Page)
@@ -331,6 +354,7 @@
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 1
+    publishable: true
 
 - hidden_image_node:
     content: hidden_image (Image)
@@ -338,6 +362,7 @@
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :not_hidden_section_node, :not_hidden_page_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 1
+    publishable: true
 
 - hidden_attachment_node:
     content: hidden_attachment (Attachment)
@@ -345,6 +370,7 @@
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :not_hidden_section_node, :not_hidden_page_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 2
+    publishable: true
 
 - bewoners_forum_node:
     content: bewoners_forum (Forum)
@@ -352,18 +378,21 @@
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 18
+    publishable: true
 
 - bewoners_forum_topic_wonen_node:
     content: bewoners_forum_topic_wonen (ForumTopic)
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :bewoners_forum_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 1
+    publishable: true
 
 - bewoners_forum_topic_werken_node:
     content: bewoners_forum_topic_werken (ForumTopic)
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :bewoners_forum_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 2
+    publishable: true
 
 - bedrijven_forum_node:
     content: bedrijven_forum (Forum)
@@ -371,6 +400,7 @@
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 19
+    publishable: true
 
 - example_newsletter_archive_node:
     content: example_newsletter_archive (NewsletterArchive)
@@ -378,12 +408,14 @@
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 20
+    publishable: true
 
 - example_newsletter_edition_node:
     content: example_newsletter_edition (NewsletterEdition)
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :example_newsletter_archive_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 1
+    publishable: true
 
 - no_extention_attachment_node:
     content: no_extension_attachment (Attachment)
@@ -391,6 +423,7 @@
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 21
+    publishable: true
 
 - meetings_calendar_node:
     content: meetings_calendar (Calendar)
@@ -404,43 +437,49 @@
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :meetings_calendar_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 1
+    publishable: true
 
 - agenda_item_one_node:
     content: agenda_item_one (AgendaItem)
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :meetings_calendar_node, :meetings_calendar_meeting_one_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 1
+    publishable: true
 
 - agenda_item_two_node:
     content: agenda_item_two (AgendaItem)
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :meetings_calendar_node, :meetings_calendar_meeting_one_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 2
+    publishable: true
 
 - agenda_item_three_node:
     content: agenda_item_three (AgendaItem)
-    status: unapproved
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :meetings_calendar_node, :meetings_calendar_meeting_one_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 3
+    publishable: true
 
 - meetings_calendar_meeting_two_node:
     content: meetings_calendar_meeting_two (Event)
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :meetings_calendar_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 2
+    publishable: true
 
 - meetings_calendar_meeting_three_node:
     content: meetings_calendar_meeting_three (Event)
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :meetings_calendar_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 3
+    publishable: true
 
 - meetings_calendar_meeting_four_node:
     content: meetings_calendar_meeting_four (Event)
     ancestry: <%= fixtures_to_ancestry(:root_section_node, :meetings_calendar_node) %>
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 4
+    publishable: true
 
 - editor_section_node:
     content: editor_section (Section)
@@ -448,6 +487,7 @@
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 23
+    publishable: true
 
 - editor_section_page_node:
     content: editor_section_page (Page)
@@ -455,6 +495,7 @@
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 1
+    publishable: true
 
 - test_image_copy_node:
     content: test_image_copy (ContentCopy)
@@ -462,6 +503,7 @@
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 24
+    publishable: true
 
 - bewoners_forum_copy_node:
     content: bewoners_forum_copy (ContentCopy)
@@ -469,6 +511,7 @@
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 25
+    publishable: true
 
 - root_section_image_node:
     content: root_section_image (Image)
@@ -476,6 +519,7 @@
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 26
+    publishable: true
 
 - node_for_sorting:
     content: section_for_sorting (Section)
@@ -483,6 +527,7 @@
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 27
+    publishable: true
 
 - ccc_node:
     content: page_for_sorting_ccc (Page)
@@ -491,6 +536,7 @@
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 1
+    publishable: true
 
 - aaa_node:
     content: page_for_sorting_aaa (Page)
@@ -499,6 +545,7 @@
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 2
+    publishable: true
 
 - bbb_node:
     content: page_for_sorting_bbb (Page)
@@ -507,6 +554,7 @@
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 3
+    publishable: true
 
 - combined_calendar_node:
     content: combined_calendar (CombinedCalendar)
@@ -514,6 +562,7 @@
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 28
+    publishable: true
 
 - without_header_image:
     content: no_header_image (Page)
@@ -522,6 +571,7 @@
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 29
+    publishable: true
 
 - section_with_frontpage_node:
     content: section_with_frontpage (Section)
@@ -529,6 +579,7 @@
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 30
+    publishable: true
 
 - frontpage_for_section_node:
     content: frontpage_for_section (Page)
@@ -537,6 +588,7 @@
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 1
+    publishable: true
 
 - bis_section_node:
     content: bis_section (Section)
@@ -545,6 +597,7 @@
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 2
+    publishable: true
 
 - bis_page_node:
     content: bis_page (Page)
@@ -553,6 +606,7 @@
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 1
+    publishable: true
 
 - about_html_page_node:
     content: about_html_page (HtmlPage)
@@ -561,48 +615,15 @@
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 31
-
-- unapproved_external_link_node:
-    content: unapproved_external_link (Link)
-    status: unapproved
-    edited_by: <%= Fixtures.identify(:editor) %>
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: false
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 32
-
-- unapproved_internal_link_node:
-    content: unapproved_internal_link (Link)
-    status: unapproved
-    edited_by: <%= Fixtures.identify(:editor) %>
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: false
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 33
+    publishable: true
 
 - yet_another_calendar_node:
     content: yet_another_calendar (Calendar)
     ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 34
-
-- unapproved_calendar_item_node:
-    content: unapproved_calendar_item (Event)
-    status: unapproved
-    edited_by: <%= Fixtures.identify(:editor) %>
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :yet_another_calendar_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 1
-
-- unapproved_meeting_node:
-    content: unapproved_meeting (Event)
-    status: unapproved
-    edited_by: <%= Fixtures.identify(:editor) %>
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :yet_another_calendar_node) %>
-    show_in_menu: false
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 2
+    position: 32
+    publishable: true
 
 - top_ten_page_node:
     content: top_ten_page (TopHitsPage)
@@ -610,6 +631,7 @@
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 35
+    publishable: true
 
 - contact_box_node:
     content: contact_box (ContactBox)
@@ -617,6 +639,7 @@
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 36
+    publishable: true
 
 - standard_search_page_node:
     content: standard_search_page (SearchPage)
@@ -624,6 +647,7 @@
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 37
+    publishable: true
 
 - nedforce_feed_node:
     content: nedforce_feed (Feed)
@@ -631,6 +655,7 @@
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 38
+    publishable: true
 
 - contact_form_node:
     content: help_form (ContactForm)
@@ -638,6 +663,7 @@
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 39
+    publishable: true
 
 - info_form_node:
     content: info_form (ContactForm)
@@ -645,6 +671,7 @@
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 40
+    publishable: true
 
 - sub_site_section_node:
     content: sub_site_section (Section)
@@ -652,6 +679,7 @@
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 41
+    publishable: true
 
 - yet_another_page_node:
     content: yet_another_page (Page)
@@ -660,6 +688,7 @@
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 1
+    publishable: true
 
 - subsection_alphabetic_index_node:
     content: subsection_alphabetic_index (AlphabeticIndex)
@@ -667,6 +696,7 @@
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 2
+    publishable: true
 
 - root_alphabetic_index_node:
     content: root_alphabetic_index (AlphabeticIndex)
@@ -674,6 +704,7 @@
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 42
+    publishable: true
 
 - test_social_media_links_box_node:
     content: test_social_media_links_box (SocialMediaLinksBox)
@@ -681,3 +712,4 @@
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     position: 43
+    publishable: true

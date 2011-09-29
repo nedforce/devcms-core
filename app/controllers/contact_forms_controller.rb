@@ -50,7 +50,7 @@ class ContactFormsController < ApplicationController
 
   # Finds the +ContactForm+ object corresponding to the passed in +id+ parameter.
   def find_contact_form
-    @contact_form = @node.approved_content
+    @contact_form = @node.content
   end
 
   # Find the +ContactFormField+ objects related to the +ContactForm+.

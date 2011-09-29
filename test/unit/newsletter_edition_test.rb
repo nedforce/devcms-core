@@ -55,7 +55,7 @@ class NewsletterEditionTest < ActiveSupport::TestCase
     assert_no_difference 'NewsletterEdition.count' do
       @devcms_newsletter_edition.title = 'New title'
       @devcms_newsletter_edition.body = 'New body'
-      assert @devcms_newsletter_edition.save_for_user(users(:arthur))
+      assert @devcms_newsletter_edition.save(:user => users(:arthur))
     end
   end
   

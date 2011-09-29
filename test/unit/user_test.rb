@@ -60,9 +60,8 @@ class UserTest < ActiveSupport::TestCase
     u = create_user(:login => "A") # TOO SHORT
     assert u.errors.on(:login)
 
-# => Bug in DB2 adapter: Throws a StatementInvalid exception on validation.
-#    u = create_user(:login => "A"*256) # TOO LONG
-#    assert u.errors.on(:login)
+    u = create_user(:login => "A"*256) # TOO LONG
+    assert u.errors.on(:login)
 
     u = create_user(:login => "no%crazy)stuff*allowed")
     assert u.errors.on(:login)

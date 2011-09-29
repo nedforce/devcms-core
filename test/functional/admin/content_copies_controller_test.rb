@@ -17,7 +17,8 @@ class Admin::ContentCopiesControllerTest < ActionController::TestCase
   end
  
   def test_should_get_previous
-    @content_copy.create_approved_version
+    @content_copy.save :user => User.find_by_login('editor')
+    
     login_as :sjoerd
 
     get :previous, :id => @content_copy

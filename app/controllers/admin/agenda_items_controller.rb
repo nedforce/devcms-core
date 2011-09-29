@@ -68,7 +68,7 @@ class Admin::AgendaItemsController < Admin::AdminController
       if @commit_type == 'preview' && @agenda_item.valid?
         format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @agenda_item }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @agenda_item, :status => :created, :location => @agenda_item }
-      elsif @commit_type == 'save' && @agenda_item.save_for_user(current_user)
+      elsif @commit_type == 'save' && @agenda_item.save(:user => current_user)
         format.html do
           if params[:continue].present?
             find_agenda_item_categories
@@ -103,7 +103,7 @@ class Admin::AgendaItemsController < Admin::AdminController
           render :template => 'admin/shared/update_preview', :locals => { :record => @agenda_item }, :layout => 'admin/admin_preview'
         end
         format.xml  { render :xml => @agenda_item, :status => :created, :location => @agenda_item }
-      elsif @commit_type == 'save' && @agenda_item.save_for_user(current_user, @for_approval)
+      elsif @commit_type == 'save' && @agenda_item.save(:user => current_user, :approval_required => @for_approval)
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else
@@ -126,7 +126,7 @@ protected
 
   # Finds the AgendaItem object corresponding to the passed in +id+ parameter.
   def find_agenda_item
-    @agenda_item = ((@meeting) ? @meeting.agenda_items : AgendaItem).find(params[:id], :include => :node)
+    @agenda_item = ((@meeting) ? @meeting.agenda_items : AgendaItem).find(params[:id], :include => :node).current_version
   end
 
   # Finds all AgendaItemCategory objects.

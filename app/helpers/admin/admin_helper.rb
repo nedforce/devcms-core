@@ -17,9 +17,9 @@ module Admin::AdminHelper
       :url  => { :controller => 'admin/permissions', :action => :index },
       :text => I18n.t('admin.rights')
     }
-    approvals = {
-      :page => :approvals,
-      :url  => { :controller => 'admin/approvals', :action => :index },
+    versions = {
+      :page => :versions,
+      :url  => { :controller => 'admin/versions', :action => :index },
       :text => I18n.t('admin.approvals_button')
     }
     comments = {
@@ -43,7 +43,7 @@ module Admin::AdminHelper
 
     if current_user.has_role?('admin', 'final_editor')
       menu_items << comments
-      menu_items.unshift approvals
+      menu_items.unshift versions
     end
 
     menu_anchors = []
@@ -118,7 +118,7 @@ module Admin::AdminHelper
       html << hidden_field_tag(:continue)
     end
     
-    return html
+    html
   end
   
   def default_fields_before_form(form)
@@ -138,18 +138,26 @@ module Admin::AdminHelper
     return fields
   end
 
-  def approval_fields(form)
-    if form.object.class.respond_to?(:requires_editor_approval)
-      hidden_field_tag(:for_approval, true) if @for_approval
-      form.html_editor(:editor_comment, :label => t('pages.editor_comment'), :rows => 3) if current_user.has_role?('editor')
+  def approval_fields(form, obj = nil)
+    html = form.check_box :draft, :label => t('pages.save_as_draft'), :for_check_box => true
+    
+    if obj ? obj.class.requires_editor_approval? : form.object.class.requires_editor_approval?
+      html << hidden_field_tag(:for_approval, true) if @for_approval
+      html << form.html_editor(:editor_comment, :label => t('pages.editor_comment'), :rows => 3) if current_user.has_role?('editor')
     end
+    
+    html
   end
   
-  def approval_hidden_fields(form)
-    if form.object.class.respond_to?(:requires_editor_approval)
-      hidden_field_tag(:for_approval, true) if @for_approval
-      form.hidden_field :editor_comment if current_user.has_role?('editor')
+  def approval_hidden_fields(form, obj = nil)
+    html = form.hidden_field(:draft)
+    
+    if obj ? obj.class.requires_editor_approval? : form.object.class.requires_editor_approval?
+      html << hidden_field_tag(:for_approval, true) if @for_approval
+      html << form.hidden_field(:editor_comment) if current_user.has_role?('editor')
     end
+    
+    html
   end
 
   def create_message

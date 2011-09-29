@@ -41,7 +41,7 @@ class Site < Section
   def self.find_by_domain(domain)
     site = Site.first(:include => :node, :conditions => [ 'sections.domain = ? OR sections.domain = ?', domain, 'www.' + domain ])
     site ||= Node.root.content #if domain == 'localhost'
-    return site
+    site
   end
 
   protected

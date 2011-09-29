@@ -33,7 +33,7 @@ class AlphabeticIndexTest < ActiveSupport::TestCase
     assert_equal pages.collect {|p| p.title.upcase }, pages.collect {|p| p.title.upcase }.sort
     page = Page.create :title => "Not with an A", :body => "....", :parent => nodes(:root_section_node), :title_alternative_list => "Alternative", :expires_on => 1.day.from_now.to_date
     
-    alphabetic_indices(:root_alphabetic_index).items
+    sleep 1
     
     assert_equal page, alphabetic_indices(:root_alphabetic_index).items.last
     page.update_attributes :title_alternative_list => "A1ternative"

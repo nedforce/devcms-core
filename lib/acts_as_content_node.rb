@@ -87,8 +87,10 @@ module Acts #:nodoc:
       # * +:has_edit_items+ => false
       
       def acts_as_content_node(configuration = {})
+        simply_versioned :keep => 1, :automatic => false
         
         raise "Invalid content configuration, hash expected" unless configuration.is_a?(Hash)
+        
         configuration.keys.each do |key|
           raise "Invalid content configuration options, unknown key: :#{key}" unless DEFAULT_CONTENT_TYPE_CONFIGURATION.keys.include?(key.to_sym)
         end
@@ -160,10 +162,14 @@ module Acts #:nodoc:
           define_method(type){ class_name.constantize.with_parent(node, options)}          
         end        
 
-        self.class_eval do                            
+        self.class_eval do                                
           # Register that this is now a content node.
           def self.is_content_node?
             true
+          end
+          
+          def self.requires_editor_approval?
+            false
           end
 
           # Content nodes are indexable by the search engine by default.
@@ -175,6 +181,28 @@ module Acts #:nodoc:
           # properly formatted content title.
           def path_for_url_alias(node)
             content_title
+          end
+          
+          def draft=(value)
+            @draft = (value == "1" || value == true) ? true : false
+          end
+
+          def draft
+            @draft || false
+          end
+          
+          def draft?
+            draft == '1' || draft == true
+          end
+          
+          unless self.method_defined?(:original_save)
+            alias_method :original_save, :save
+          end
+          
+          def save(*args)
+            self.with_versioning(self.draft?, :status => Version::STATUSES[:drafted]) do
+              self.original_save(*args)
+            end
           end
 
           # Sets the +Node+ that is associated with this content node.
@@ -191,6 +219,7 @@ module Acts #:nodoc:
           end
           
           alias_method :original_node, :node
+          
           def node
             if new_record? && original_node.blank?
               self.build_node(:content => self)
@@ -247,7 +276,7 @@ module Acts #:nodoc:
             Node.content_type_configuration(self.class.to_s)[:show_content_box_header]
           end
           
-          unless respond_to? :accessible_children_for
+          unless method_defined? :accessible_children_for
             def accessible_children_for *args
               []
             end

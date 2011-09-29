@@ -56,18 +56,18 @@ Ext.onReady(function() {
     // create the Data Store
     var store = new Ext.data.Store({
         // load using HTTP
-        url: 'approvals.xml',
+        url: 'versions.xml',
         remoteSort: false,
 
         // the return will be XML, so lets set up a reader
         reader: new Ext.data.XmlReader({
                // records will have an "approval" tag
-               record: 'approval',
-               id: 'node_id',
+               record: 'version',
+               id: 'id',
                totalRecords: 'total_count'
            }, [
                // set up the fields mapping into the xml doc
-               'node_id', 'content_type', 'title', 'edited_by', 'updated_at', 'status', 'editor_comment'
+               'id', 'node_id', 'content_type', 'title', 'edited_by', 'updated_at', 'status', 'editor_comment'
            ]),
 
         autoLoad: {params: {start: 0, limit: perPage}}
@@ -169,7 +169,7 @@ Ext.onReady(function() {
       editorCommentTemplate.overwrite(editorCommentPanel.body, { editor_comment: record.get('editor_comment') });
 
       rightPanel.load({
-        url: '/admin/nodes/'+record.id+'/audit_show',
+        url: '/admin/nodes/'+record.get('node_id')+'/audit_show',
          params: Ext.ux.prepareParams(defaultParams, {format: 'html'}),
          method: 'GET',
          callback: function(options, success, response) {
@@ -190,7 +190,7 @@ Ext.onReady(function() {
         editorCommentTemplate.overwrite(editorCommentPanel.body, { editor_comment: item.get('editor_comment') });
 
         rightPanel.load({
-            url: '/admin/nodes/'+item.id+'/audit_edit',
+            url: '/admin/nodes/'+item.get('node_id')+'/audit_edit',
             params: Ext.ux.prepareParams(defaultParams, {format: 'html'}),
             method: 'GET',
             callback: function(options, success, response) {
@@ -226,7 +226,7 @@ Ext.onReady(function() {
 
                   Ext.Ajax.request({
                       waitMsg: '<%= I18n.t("approvals.approving") %>',
-                      url: '/admin/approvals/'+item.id+'/approve.xml',
+                      url: '/admin/versions/'+item.id+'/approve.xml',
                       method: 'POST',
                       params: Ext.urlEncode(params),
                       callback: function(options, success, response){
@@ -261,7 +261,7 @@ Ext.onReady(function() {
           var selectedRows = grid.selModel.getSelections();
           if(selectedRows.length == 1)
           {
-            window.location = '<%= admin_nodes_path %>?active_node_id='+selectedRows[0].id;
+            window.location = '<%= admin_nodes_path %>?active_node_id='+selectedRows[0].get('node_id');
           } else {
             if (selectedRows.length > 1)
             {
@@ -296,7 +296,7 @@ Ext.onReady(function() {
 
                       Ext.Ajax.request({
                           waitMsg: '<%= I18n.t("approvals.rejecting") %>',
-                          url: '/admin/approvals/'+item.id+'/reject.xml',
+                          url: '/admin/versions/'+item.id+'/reject.xml',
                           method: 'POST',
                           params: Ext.urlEncode(params),
                           callback: function(options, success, response){

@@ -54,6 +54,6 @@ protected
 
   # Finds the +Calendar+ object corresponding to the passed in +id+ parameter.
   def find_calendar
-    @calendar = @node.approved_content
+    @calendar = @node.content
   end
 end

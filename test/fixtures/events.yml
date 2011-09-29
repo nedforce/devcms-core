@@ -67,20 +67,3 @@ meetings_calendar_meeting_four:
   location_description: Verweggistan
   start_time: <%= (now + 4.days).to_s(:db) %>
   end_time: <%= (now + 4.days + 4.hours).to_s(:db) %>
-
-unapproved_calendar_item:
-  type: CalendarItem
-  title: Zwemmen 2
-  body: Lekker fris!
-  location_description: Moskou
-  start_time: <%= (now + 1.day).to_s(:db) %>
-  end_time: <%= (now + 1.day + 1.hour).to_s(:db) %>
-
-unapproved_meeting:
-  type: Meeting
-  meeting_category: gemeenteraad_meetings
-  title: Belangrijke vergadering van de gemeenteraad!
-  body: Iedereen moet aanwezig zijn!
-  location_description: Timboektoe
-  start_time: <%= (now + 1.day).to_s(:db) %>
-  end_time: <%= (now + 1.day + 1.hour).to_s(:db) %>

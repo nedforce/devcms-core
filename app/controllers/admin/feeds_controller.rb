@@ -73,6 +73,6 @@ protected
 
   # Finds the +Feed+ object corresponding to the passed in +id+ parameter.
   def find_feed
-    @feed = Feed.find(params[:id])
+    @feed = Feed.find(params[:id]).current_version
   end
 end

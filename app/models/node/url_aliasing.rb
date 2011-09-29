@@ -61,14 +61,7 @@ module Node::UrlAliasing
       generated_url_alias << "#{parent_url_alias}/"
     end
 
-    # Use the URL alias path of the approved content if available.
-    # Otherwise use the URL alias path of the unapproved content if this is
-    # a preview.
-    begin
-      generated_url_alias << clean_for_url(self.approved_content.path_for_url_alias(self))
-    rescue
-      generated_url_alias << clean_for_url(self.content.path_for_url_alias(self))
-    end
+    generated_url_alias << clean_for_url(self.content.path_for_url_alias(self))
 
     generated_url_alias
   end

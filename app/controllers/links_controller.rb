@@ -22,7 +22,7 @@ class LinksController < ApplicationController
 
   # Retrieves the requested +Link+ object using the passed in +id+ parameter.
   def find_link
-    @link = @node.approved_content
+    @link = @node.content
   end
 
   # Generates the URL for the given +Link+ object.

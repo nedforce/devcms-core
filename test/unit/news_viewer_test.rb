@@ -52,7 +52,7 @@ class NewsViewerTest < ActiveSupport::TestCase
     n2 = create_news_item
     n2.node.update_attribute(:hidden, true)
     n3 = create_news_item    
-    n3.node.wait_for_approval!
+    n3.node.update_attribute(:publishable, false)
     n4 = create_news_item :publication_start_date => 3.weeks.ago
     
     @news_viewer.news_viewer_items.create(:news_item => n1, :position => 0)

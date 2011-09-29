@@ -21,8 +21,8 @@ class Share < ActiveRecord::Base
   validates_email_format_of :from_email_address, :to_email_address, :allow_blank => true
 
   def subject
-    if self.node.present? && self.node.approved_content.present?
-      self.node.approved_content.title
+    if self.node.present? && self.node.content.present?
+      self.node.content.title
     else
       nil
     end

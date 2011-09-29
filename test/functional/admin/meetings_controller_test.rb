@@ -24,7 +24,7 @@ class Admin::MeetingsControllerTest < ActionController::TestCase
   end
 
   def test_should_get_previous
-    @meeting.create_approved_version
+    @meeting.save :user => User.find_by_login('editor')
 
     login_as :sjoerd
 
