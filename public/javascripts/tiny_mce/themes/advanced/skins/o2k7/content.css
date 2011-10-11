@@ -6,7 +6,7 @@ h2 {
   font-family: inherit;
   font-size: 12px;
   font-weight: bold;
-  margin: 0px;
+  margin: 0;
   line-height: normal;
   color: #000;
 }
@@ -14,7 +14,7 @@ h3 {
   font-family: inherit;
   font-size: 12px;
   font-weight: bold;
-  margin: 0px;
+  margin: 0;
   line-height: normal;
   color: #000;
 }
@@ -25,7 +25,7 @@ h6 {font-size: .75em}
 a.mceItemAnchor {width:12px; line-height:6px; overflow:hidden; padding-left:12px; background:url(../default/img/items.gif) no-repeat bottom left;}
 img.mceItemAnchor {width:12px; height:12px; background:url(../default/img/items.gif) no-repeat;}
 img {
-  border: 0px; 
+  border: 0; 
   display: block;
 }
 table {cursor:default}

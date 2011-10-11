@@ -514,7 +514,7 @@ fieldset.x-panel-collapsed .x-fieldset-bwrap {
     top:-1px;
 }
 .x-fieldset-noborder {
-    border:0px none transparent;
+    border:0 none transparent;
 }
 .x-fieldset-noborder legend {
     margin-left:-3px;
