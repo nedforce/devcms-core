@@ -13,11 +13,11 @@ var SlideShow = Class.create({
   start: function () {
     this.startTimer();
   },
-
+	
   // Do not call this function directly.
   startTimer: function () {
     var _self = this; // Hack required because Javascript timers execute in a global context
-		setTimeout(function () { _self.loadNextSlide(); }, this.options.displayDuration);
+    setTimeout(function () { _self.loadNextSlide(); }, this.options.displayDuration);
   },
 
   // Do not call this function directly.
@@ -38,8 +38,8 @@ var SlideShow = Class.create({
 
   fadePreviousSlideOut: function () {
     this.previousSlide.fade({ duration: this.options.fadeDuration / 1000 });
-      var _self = this; // Hack required because Javascript timers execute in a global context
-      setTimeout(function () { _self.fadeCurrentSlideIn(); }, this.options.fadeOutStartToFadeInStartDelay);
+    var _self = this; // Hack required because Javascript timers execute in a global context
+    setTimeout(function () { _self.fadeCurrentSlideIn(); }, this.options.fadeOutStartToFadeInStartDelay);
   },
 
   fadeCurrentSlideIn: function () {
@@ -63,13 +63,13 @@ var SlideShow = Class.create({
     this.options = Object.extend({
       fadeDuration: defaultFadeDuration,
       displayDuration: defaultDisplayDuration,
-			fadeOutStartToFadeInStartDelay: defaultFadeOutStartToFadeInStartDelay,
-			containerClassName: defaultContainerClassName
+      fadeOutStartToFadeInStartDelay: defaultFadeOutStartToFadeInStartDelay,
+      containerClassName: defaultContainerClassName
     }, options || {});
 
     this.container = $(this.options.containerClassName);
     this.slides = slides;
     this.currentSlide = this.container.down();
     this.currentSlideIndex = 0;
-	}
+  }
 });
