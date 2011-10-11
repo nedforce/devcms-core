@@ -407,7 +407,7 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
                 checked ? this.makePrivate() : this.makePublic();
             },
             callback: function (options, success, response) {
-                if (!success && response.status == 422) {
+                if (!success && response.status === 422) {
                     item.setChecked(!checked, true); // reset checked state
                     var responseJson = Ext.util.JSON.decode(response.responseText);
                     Ext.Msg.alert('Error', responseJson.errors[0]);
@@ -426,7 +426,7 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
             params: Ext.ux.prepareParams(defaultParams, { _method: 'put', 'node[show_in_menu]': (checked ? '1' : '0') }),
             scope: this,
             callback: function (options, success, response) {
-                if (!success && response.status == 422) {
+                if (!success && response.status === 422) {
                     item.setChecked(!checked, true); // reset checked state
                     var responseJson = Ext.util.JSON.decode(response.responseText);
                     Ext.Msg.alert('Error', responseJson.errors[0]);
@@ -448,7 +448,7 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
             params: Ext.ux.prepareParams(defaultParams, { _method: 'put', 'node[has_changed_feed]': (checked ? '1' : '0') }),
             scope: this,
             callback: function (options, success, response) {
-                if (!success && response.status == 422) {
+                if (!success && response.status === 422) {
                     item.setChecked(!checked, true); // reset checked state
                     var responseJson = Ext.util.JSON.decode(response.responseText);
                     Ext.Msg.alert('Error', responseJson.errors[0]);
@@ -475,7 +475,7 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
                 this.parentNode.reload();
             },
             failure: function (response, options) {
-                if (response.status == 422) { // unprocessable entity
+                if (response.status === 422) { // unprocessable entity
                     var responseJson = Ext.util.JSON.decode(response.responseText);
                     Ext.Msg.alert('Error', responseJson.errors[0]);
                 } else { // unhandled error statuses
@@ -529,7 +529,7 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
 	                        //Ext.Msg.alert('Succes', 'Webadres instellen gelukt!');
 	                    },
 	                    failure: function (response, options) {
-	                        if (response.status == 422) { // unprocessable entity
+	                        if (response.status === 422) { // unprocessable entity
 	                            var responseJson = Ext.util.JSON.decode(response.responseText);
 	                            Ext.Msg.alert('Error', responseJson.errors[0]);
 	                        } else { // unhandled error statuses
@@ -677,7 +677,7 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
         this.constructMenu();
 
         if (!this.isRoot) {
-          this.parentNode.SetContainsGlobalFrontpage(flag);
+            this.parentNode.SetContainsGlobalFrontpage(flag);
         }
     },
 
