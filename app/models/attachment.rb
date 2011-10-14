@@ -89,6 +89,12 @@ class Attachment < ActiveRecord::Base
   def path_for_url_alias(node)
     self.basename.gsub(/[^a-z0-9\-_]/i, '-')
   end
+  
+  def tree_text(node)
+    txt = content_title
+    txt += " (#{category})" if category.present?
+    txt
+  end
 
   protected
     
