@@ -251,8 +251,8 @@ Ext.extend(Ext.dvtr.TreeNodeContextMenu, Ext.menu.Menu, {
 
 function itemForSortMenu(text, sortBy, tn) {
   var ascDescItems = [
-      {text: I18n.t('sort_ascending', 'nodes'), icon: '/images/icons/arrow_up.png', order: 'asc'},
-      {text: I18n.t('sort_descending', 'nodes'), icon: '/images/icons/arrow_down.png', order: 'desc'}
+      {text: I18n.t('sort_ascending', 'nodes'), icon: '/images/icons/arrow_up.gif', order: 'asc'},
+      {text: I18n.t('sort_descending', 'nodes'), icon: '/images/icons/arrow_down.gif', order: 'desc'}
   ];
   return {
       text: text,
