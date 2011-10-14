@@ -15,7 +15,7 @@
         <%= javascript_include_merged(:admin) %>
         
         <!-- Include Ext Js-->
-        <%= javascript_include_tag 'ext/adapter/ext/ext-base.js', 'ext/ext-ie9-fix.js',
+        <%= javascript_include_tag 'ext/adapter/ext/ext-base.js', 'ie9_create_contextual_fragment.js',
           (RAILS_ENV == 'development' ? 'ext/ext-all-debug.js' : 'ext/ext-all.js'), :plugin => 'devcms-core' %>
 
         <!-- Init Ext Js -->

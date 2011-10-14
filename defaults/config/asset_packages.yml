@@ -2,6 +2,7 @@ javascripts:
 - base:
   - plugin: devcms-core
   - application
+  - ie9_create_contextual_fragement
   - prototype
   - prototype_custom
   - builder_custom
