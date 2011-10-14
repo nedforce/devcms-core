@@ -39,7 +39,7 @@ class Site < Section
   validate :ensure_parent_is_root
 
   def self.find_by_domain(domain)
-    site = Site.first(:include => :node, :conditions => [ 'sections.domain = ? OR sections.domain = ?', domain, 'www.' + domain ])
+    site = Site.first(:include => :node, :conditions => [ 'lower(sections.domain) = ? OR lower(sections.domain) = ?', domain.downcase, 'www.' + domain.downcase ])
     site ||= Node.root.content #if domain == 'localhost'
     site
   end
