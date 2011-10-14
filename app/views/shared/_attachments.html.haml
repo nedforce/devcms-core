@@ -4,7 +4,7 @@
 
 %table.attachmentsTable
   - attachments.group_by(&:category).tap do |grouped_attachments|
-    - if grouped_attachments.keys.size == 1 && attachments.size <= 10
+    - if grouped_attachments.keys.size == 1
       = render :partial => '/shared/attachments_table', :locals => {:attachments => attachments}
     - elsif params[:layout] == "print"
       - grouped_attachments.sort.each do |cat, attachs|
