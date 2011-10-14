@@ -15,7 +15,7 @@ document.observe('dom:loaded', function () {
             if (input.id) {
                 // update input id and label
                 placeholder.id += PLACEHOLDER_SUFFIX;
-                label = $$('label[for="' + input.id + '"]')
+                label = $$('label[for="' + input.id + '"]');
                 label.invoke('writeAttribute', 'for', input.id +
                         PLACEHOLDER_SUFFIX);
             }

@@ -13,7 +13,7 @@ var SlideShow = Class.create({
   start: function () {
     this.startTimer();
   },
-	
+
   // Do not call this function directly.
   startTimer: function () {
     var _self = this; // Hack required because Javascript timers execute in a global context
@@ -56,7 +56,7 @@ var SlideShow = Class.create({
 
   // Do not call this function directly.
   initialize: function (slides, options) {
-    if (slides.length == 0) {
+    if (slides.length === 0) {
       throw 'passed in slides list is empty';
     }
 

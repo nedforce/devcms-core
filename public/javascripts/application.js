@@ -6,7 +6,7 @@ I18n = {
 	currentLocale: 'nl',
 	locale: {},
 	t: function (key, scope) {
-		if (I18n.availableLocales.indexOf(I18n.currentLocale) == -1) {
+		if (I18n.availableLocales.indexOf(I18n.currentLocale) === -1) {
 			return I18n.currentLocale + ' translation missing!';
 		}
 		if (scope == null && I18n.locale[I18n.currentLocale][key]) {

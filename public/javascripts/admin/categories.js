@@ -6,16 +6,9 @@ function javascriptifyCategoryFields() {
   activateRemoveCategoryCombinationFromFavoritesLinks();
 }
 
-function observeRootCategorySelectionFields() {
-  $$('.category_selection_fields').each(function (field) {
-    var select = field.down('.root_category_selection_field select');
-
-    select.stopObserving('change');
-
-    select.observe('change', function (event) {
-      getCategoriesForRootCategory(select.getValue(), field);
-      event.stop();
-    });
+function getSynonymsForCategory(category_id, field) {
+  new Ajax.Updater(field.down('.category_synonyms_field_wrapper'), '/admin/categories/' + category_id + '/synonyms', {
+    method: 'get'
   });
 }
 
@@ -30,6 +23,19 @@ function getCategoriesForRootCategory(root_category_id, field) {
   });
 }
 
+function observeRootCategorySelectionFields() {
+  $$('.category_selection_fields').each(function (field) {
+    var select = field.down('.root_category_selection_field select');
+
+    select.stopObserving('change');
+
+    select.observe('change', function (event) {
+      getCategoriesForRootCategory(select.getValue(), field);
+      event.stop();
+    });
+  });
+}
+
 function observeCategorySelectionFields() {
   $$('.category_selection_fields').each(function (field) {
     var select = field.down('.category_selection_field select');
@@ -40,12 +46,6 @@ function observeCategorySelectionFields() {
       getSynonymsForCategory(select.getValue(), field);
       event.stop();
     });
-  });
-}
-
-function getSynonymsForCategory(category_id, field) {
-  new Ajax.Updater(field.down('.category_synonyms_field_wrapper'), '/admin/categories/' + category_id + '/synonyms', {
-    method: 'get'
   });
 }
 
@@ -73,24 +73,6 @@ function activateRemoveCategoryCombinationLinks() {
   // }
 }
 
-function activateAddCategoryCombinationToFavoritesLinks() {
-  $$('.add_category_combination_to_favorites_link').each(function (link) {
-    link.stopObserving('click');
-
-    link.observe('click', function (event) {
-      addCategoryCombinationToFavorites(link.up('.category_selection_fields').down('.category_selection_field select').getValue());
-      event.stop();
-    });
-  });
-}
-
-function addCategoryCombinationToFavorites(category_id) {
-  new Ajax.Updater('favorite_category_combinations', '/admin/categories/' + category_id + '/add_to_favorites', {
-    method: 'put',
-    onComplete: activateRemoveCategoryCombinationFromFavoritesLinks
-  });
-}
-
 function activateRemoveCategoryCombinationFromFavoritesLinks() {
   $$('.remove_category_combination_from_favorites_link').each(function (link) {
     link.stopObserving('click');
@@ -106,5 +88,23 @@ function removeCategoryCombinationFromFavorites(category_id) {
   new Ajax.Updater('favorite_category_combinations', '/admin/categories/' + category_id + '/remove_from_favorites', {
     method: 'put',
     onComplete: activateRemoveCategoryCombinationFromFavoritesLinks
+  });
+}
+
+function addCategoryCombinationToFavorites(category_id) {
+  new Ajax.Updater('favorite_category_combinations', '/admin/categories/' + category_id + '/add_to_favorites', {
+    method: 'put',
+    onComplete: activateRemoveCategoryCombinationFromFavoritesLinks
+  });
+}
+
+function activateAddCategoryCombinationToFavoritesLinks() {
+  $$('.add_category_combination_to_favorites_link').each(function (link) {
+    link.stopObserving('click');
+
+    link.observe('click', function (event) {
+      addCategoryCombinationToFavorites(link.up('.category_selection_fields').down('.category_selection_field select').getValue());
+      event.stop();
+    });
   });
 }

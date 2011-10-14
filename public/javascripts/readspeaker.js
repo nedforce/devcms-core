@@ -1,15 +1,6 @@
-document.observe('dom:loaded', function() {
+document.observe('dom:loaded', function () {
   javascriptifyReadspeakerLinks();
 });
-
-function javascriptifyReadspeakerLinks() {
-  $$('a.readspeaker_link').each(function (anchor) {
-    anchor.observe('click', function (event) {
-      showReadspeaker(anchor);
-      event.stop();
-    });
-  });
-}
 
 function showReadspeaker(anchor) {
   var flash_url = 'http://media.readspeaker.com/flash/readspeaker20.swf?mp3=' + escape(anchor.href) + '&autoplay=1&rskin=bump';
@@ -32,4 +23,13 @@ function showReadspeaker(anchor) {
     var buttons_container = readspeaker_button.up('.buttons');
     buttons_container.insert({ bottom: flash });
   }
+}
+
+function javascriptifyReadspeakerLinks() {
+  $$('a.readspeaker_link').each(function (anchor) {
+    anchor.observe('click', function (event) {
+      showReadspeaker(anchor);
+      event.stop();
+    });
+  });
 }

@@ -1,10 +1,10 @@
 RTF_CNT = 0; // number of inserted removable textfields
-  
+
 /*
 * Returns number of removable textfields in #poll_question_options.
 */
-nrOfOptions = function(){
-     return Ext.get('poll_question_options').select('.formFieldCt').getCount();
+nrOfOptions = function () {
+    return Ext.get('poll_question_options').select('.formFieldCt').getCount();
 };
 
 /*
@@ -15,11 +15,11 @@ nrOfOptions = function(){
 * Arguments
 * cfg: Config object containing optional id and name for textfield (e.g. {id: str, name: str}).
 */
-insertOption = function(cfg){
+insertOption = function (cfg) {
     cfg = cfg || {};
     // Init default config options
-    Ext.applyIf(cfg,{
-        id: 'new_option_'+RTF_CNT,
+    Ext.applyIf(cfg, {
+        id: 'new_option_' + RTF_CNT,
         name: 'poll_question[new_poll_option_attributes][][text]',
         value: ''
     });
@@ -37,11 +37,11 @@ insertOption = function(cfg){
         value: cfg.value,
         renderTo: ct,
         listeners: {
-            beforeremove: function(e){
-                if( nrOfOptions() > 2 ){
+            beforeremove: function (e) {
+                if (nrOfOptions() > 2) {
                     e.textField.el.up('.formFieldCt').remove(); // remove containing element (including label)
                 } else {
-                    Ext.Msg.alert('Sorry', I18n.t('minimal_two', 'poll_options'))
+                    Ext.Msg.alert('Sorry', I18n.t('minimal_two', 'poll_options'));
                 }
                 return false; // to suppress default behaviour
             }
