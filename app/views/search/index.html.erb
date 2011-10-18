@@ -39,19 +39,19 @@
     <div id="controls" class="clearfix">
       <%= text_field_tag(:query, @query, :class => 'query') -%>
       <p><%=t 'search.in' -%></p>
-      <%= render :partial => 'search_options'%>
+      <%= render :partial => 'search_options' %>
 
-      <div id="top_search_button" <%= 'class=hidden' if params[:advanced] -%>>
+      <div id="top_search_button" <%= 'class="hidden"' if params[:advanced] -%>>
         <%= submit_tag(t('search.search'), :class => 'submit') -%>
       </div>
 
-      <div id="show_advanced_options" <%= 'class=hidden' if params[:advanced] -%>>
+      <div id="show_advanced_options" <%= 'class="hidden"' if params[:advanced] -%>>
         <%= link_to_function(t('search.advanced_search'), 'show_advanced_search_options()', :href => search_path(params[:search_engine], :advanced => true)) %>
         <%= image_tag 'blue_pointer_down.png', :alt => t('search.show_advanced_options') -%>
       </div>
     </div>
 
-    <div id="advanced_search" <%= 'class=hidden' unless params[:advanced] -%>>
+    <div id="advanced_search" <%= 'class="hidden"' unless params[:advanced] -%>>
       <div class="search_field_wrapper clearfix">
         <div class='search_description'><%=t 'search.for_zipcode' -%>: </div>
         <div class='search_field'><%= text_field_tag(:zipcode, params[:zipcode], :size => 6) %></div>
@@ -98,7 +98,7 @@
         <div class='search_description'><%= I18n.t('search.sort_by') %>: </div>
         <div class='search_field'>
           <%= radio_button_tag('sort', 'relevance', params[:sort] != 'date') %> <%= I18n.t('search.relevance') %>
-          <%= radio_button_tag('sort', 'date', params[:sort] == 'date') %> <%= I18n.t('search.date') %>
+          <%= radio_button_tag('sort', 'date',      params[:sort] == 'date') %> <%= I18n.t('search.date')      %>
         </div>
       </div>
 
@@ -120,4 +120,3 @@
 <% end %>
 
 </div>
-
