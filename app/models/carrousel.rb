@@ -49,7 +49,7 @@ class Carrousel < ActiveRecord::Base
   validates_numericality_of :display_time_in_seconds, :allow_blank => true, :integer_only => true, :greater_than_or_equal_to => 0
   validates_numericality_of :animation, :integer_only => true, :greater_than_or_equal_to => 0
   
-  validate :number_of_carrousel_items_less_than_ten
+  #validate :number_of_carrousel_items_less_than_ten
   
   def animation
     super.to_i
