@@ -28,6 +28,15 @@ class SiteTest < ActiveSupport::TestCase
       assert site.errors.on_base
     end
   end
+  
+  def test_should_have_case_insensitive_unique_urls
+    assert_difference 'Site.count', 1 do
+      site = create_site
+      assert !site.new_record?
+      site = create_site :domain => 'WwW.nEdFoRcE.nL'
+      assert site.errors.on(:domain)
+    end
+  end
 
 protected
 
