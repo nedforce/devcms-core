@@ -58,7 +58,8 @@ Ext.override(Array, {
     includes: function(el){
         return (this.indexOf(el) != -1)
     },
-    join: function(sep){
+    join: function(separator){
+        var sep = separator || "";
         var str = ""
         Ext.each(this, function(e){
             str += (e + sep)
