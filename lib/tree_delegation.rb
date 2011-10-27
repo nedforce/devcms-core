@@ -128,24 +128,25 @@ module TreeDelegation
     # Move node to left, right or child of target node
     def move_to(target, position)
       raise ActiveRecord::ActiveRecordError, "You cannot move a new node" if self.new_record?
-
-      if position == :child
-        self.parent = target
-      else
-        self.parent = target.parent
-      end
-
-      if save
-        case position
-        when :left
-          insert_at!(target.position)
-        when :right
-          insert_at!(target.position + 1)
-        when :child
-          move_to_bottom!
+      transaction do
+        if position == :child
+          self.parent = target
+        else
+          self.parent = target.parent
         end
-      else
-        raise ActiveRecord::ActiveRecordError, "Move failed: #{self.errors.full_messages.pretty_inspect}"
+
+        if save
+          case position
+          when :left
+            insert_at!(target.position)
+          when :right
+            insert_at!(target.position + 1)
+          when :child
+            move_to_bottom!
+          end
+        else
+          raise ActiveRecord::ActiveRecordError, "Move failed: #{self.errors.full_messages.pretty_inspect}"
+        end
       end
     end
     

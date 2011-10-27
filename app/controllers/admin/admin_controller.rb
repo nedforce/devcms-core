@@ -31,12 +31,20 @@ class Admin::AdminController < ApplicationController
 
   # Expire the main menu fragment cache.
   after_filter :expire_changes_cache
-
+  
+  # Politely ask browsers to not cache anything in the admin namespace..
+  before_filter :set_cache_buster
+  
   layout :layout?
   
   helper Admin::PermitsHelper, Admin::NewsletterArchiveHelper, Admin::AgendaItemsHelper, Admin::AdminHelper, Admin::AdminFormBuilderHelper, Admin::CategoriesHelper, Admin::DiffHelper
 
 protected
+  def set_cache_buster
+    response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
+  end
 
   def expire_changes_cache
     expire_page("/sitemap/changes.atom") unless request.get?

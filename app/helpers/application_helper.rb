@@ -46,7 +46,9 @@ module ApplicationHelper
     crumb_nodes = node.self_and_ancestors
     crumb_nodes.shift unless node.containing_site.root?
     crumb_nodes.shift unless options[:include_root]
-
+    # Remove frontpage node to prevent semingly double crumbs
+    crumb_nodes.pop if crumb_nodes[-2] && crumb_nodes[-2].content_type == "Section" && crumb_nodes[-2].content.frontpage_node == crumb_nodes.last
+    
     # move in a suffix, if any
     # Warning: some 'ad-hoc' solutions for supporting subcatergories in opus PDCs. Do _not_ port to treehouse
     suffix = options.delete(suffix) || @category

@@ -562,7 +562,7 @@ class Node < ActiveRecord::Base
   end
 
   def self.bulk_update(user, nodes, attributes)
-    Node.transaction do
+    transaction do
       nodes.each do |node|
         content = node.content
 

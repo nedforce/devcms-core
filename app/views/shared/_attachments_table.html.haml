@@ -10,4 +10,4 @@
       %td{ :class => "title" }= h attachment.title
       %td{ :class => "type" }== #{attachment_icon(attachment)}&nbsp;#{attachment.extension}
       %td{ :class => "size" }== #{number_with_precision(attachment.size.to_f / 1024, :precision => 1)} KB
-      %td{ :class => "download" }= link_to_content_node t('shared.download'), attachment, {}, :title => h(attachment.title)
+      %td{ :class => "download" }= link_to_content_node t('shared.download'), attachment, {:format => attachment.extension }, :title => h(attachment.title)
