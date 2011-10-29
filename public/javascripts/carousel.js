@@ -143,7 +143,7 @@ Carousel = Class.create(Abstract, {
             default:
                 var transition;
                 switch (this.options.transition) {
-										case 'linear':
+                    case 'linear':
                         transition = Effect.Transitions.linear;
                         break;
                     case 'spring':
@@ -265,7 +265,11 @@ Carousel = Class.create(Abstract, {
     
     wheel: function (event) {
         event.cancelBubble = true;
-        event.stop();
+        // http://code.google.com/p/prototype-carousel/issues/detail?id=7
+        // http://code.google.com/p/prototype-carousel/issues/detail?id=9
+        if (event.stop) {
+          event.stop();
+        }
         
 		var delta = 0;
 		if (!event) {
