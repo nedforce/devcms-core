@@ -33,6 +33,7 @@ Carousel = Class.create(Abstract, {
 		this.options    = Object.extend({
             duration:           1,
             auto:               false,
+            autoPause:          false, // http://code.google.com/p/prototype-carousel/issues/detail?id=18
             frequency:          3,
             visibleSlides:      1,
             controlClassName:   'carousel-control',
@@ -59,6 +60,12 @@ Carousel = Class.create(Abstract, {
         
         if (this.options.wheel) {            
             this.scroller.observe('mousewheel', this.wheel.bindAsEventListener(this)).observe('DOMMouseScroll', this.wheel.bindAsEventListener(this));;
+        }
+
+        // http://code.google.com/p/prototype-carousel/issues/detail?id=18
+        if (this.options.autoPause) {
+            this.scroller.observe('mouseover', this.pause.bindAsEventListener(this));
+            this.scroller.observe('mouseout', this.resume.bindAsEventListener(this));
         }
 
         if (this.options.auto) {
