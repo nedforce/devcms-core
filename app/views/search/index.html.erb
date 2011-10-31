@@ -12,15 +12,14 @@
     $('advanced_search').removeClassName("hidden");
     $('top_search_button').addClassName("hidden");
     $('show_advanced_options').addClassName("hidden");
-
   }
-  
+
   function hide_advanced_search_options() {
     $('advanced_search').addClassName("hidden");
     $('top_search_button').removeClassName("hidden");
     $('show_advanced_options').removeClassName("hidden");
   }
-  document.observe('dom:loaded', function() { 
+  document.observe('dom:loaded', function() {
     $('static_programme_and_project_selector').hide();
     $('dynamic_programme_and_project_selectors').removeClassName("hidden");
   });
@@ -70,16 +69,16 @@
         <div class='search_field'>
           <% categories = Category.root_categories.map do |category|
               children = category.children.map { |cat| [ cat.name, cat.id ] }
-               [ 
-                   category.name, 
+               [
+                   category.name,
                    children.unshift([t('search.all_in_programme'), category.id]) 
-               ] 
+               ]
              end %>
           <%= select_tag 'category', grouped_options_for_select(categories,  @category.present? ? @category.id : nil, t('search.select_programme')) -%>
        </div>
       </div>
 
-    <% unless Category.root_categories.empty? %>
+    <% if Category.root_categories.present? %>
       <div id="dynamic_programme_and_project_selectors" class='hidden'>
           <div class="search_field_wrapper clearfix">
             <div class='search_description'><%=t 'search.in_programme' -%>: </div>
