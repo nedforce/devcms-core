@@ -1,14 +1,15 @@
 #existing_agenda_item_category_wrapper.formFieldCt.clearfix{ :style => ('display:none;' if (@categories.blank? || (record.agenda_item_category && record.agenda_item_category.new_record?))) }
-  %label :for => "agenda_item_category_select"
+  %label{ :for => 'agenda_item_category_select' }
     =t 'calendars.agenda_item_category'
-  = select_tag "agenda_item_category_select", options_from_collection_for_select_with_blank_option(@categories, 'name', 'name', record.agenda_item_category_name), :onclick => 'setAgendaItemCategoryName()', :id => 'agenda_item_category_select'
+  = select_tag 'agenda_item_category_select', options_from_collection_for_select_with_blank_option(@categories, 'name', 'name', record.agenda_item_category_name), :onclick => 'setAgendaItemCategoryName()', :id => 'agenda_item_category_select'
   = link_to_function t('calendars.new_category'), "toggleNewAgendaItemCategoryField()"
 
 #new_agenda_item_category_wrapper.formFieldCt.clearfix{ :style => ('display:none;' unless (@categories.blank? || (record.agenda_item_category && record.agenda_item_category.new_record?))) }
-  %label :for => "agenda_item_category_name"
+  %label{ :for => 'agenda_item_category_name' }
     =t 'calendars.agenda_item_category'
   = text_field_tag 'agenda_item[agenda_item_category_name]', record.agenda_item_category_name, :class => 'admin_form_text_field', :id => 'agenda_item_category_name'
-  = link_to_function t('calendars.existing_category'), "toggleExistingAgendaItemCategoryField()" if @categories.present?
+  - if @categories.present?
+    = link_to_function t('calendars.existing_category'), "toggleExistingAgendaItemCategoryField()"
 
 :javascript
   var existingAgendaItemCategoryFieldWrapper = Ext.get('existing_agenda_item_category_wrapper');
