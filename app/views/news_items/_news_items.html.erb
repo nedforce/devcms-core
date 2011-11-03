@@ -1,4 +1,4 @@
-<% 
+<%
   latest_news_items    ||= []
   news_items_for_table ||= []
   show_bread_crumbs    ||= false
@@ -35,7 +35,7 @@
         </div>
         <div class="buttons clearfix">
           <% news_item_button t('news.full_article') do %>
-              <%= link_to_content_node t('news.full_article'), news_item, {}, :title => h(news_item.title) -%>
+              <%= link_to_content_node t('news.full_article'), news_item, { :type => :url, :host => news_item.node.containing_site.content.domain }, :title => h(news_item.title) -%>
               <% if news_item.node.comments.count > 0 -%>
                   (<%= pluralize(news_item.node.comments.count, t('news.comment'), t('news.comments')) %>)
               <% end -%>
