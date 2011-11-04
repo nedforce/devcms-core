@@ -342,8 +342,7 @@ module ApplicationHelper
     def create_main_menu_item(item)
       node     = item.node
       children = node.accessible_content_children(:for_menu => true, :order => :position)
-      #active   = (@node && @node.path_ids.include?(item.node.id)) ? 'active' : ''
-      active   = (@node && (@node.id == node.id || node.children.map(&:id).include?(@node.id))) ? 'active': ''
+      active   = (@node && @node.path_ids.include?(item.node.id)) ? 'active' : ''
 
       if node.leaf? || children.empty?
         content_tag(:li, create_menu_link(item, :class => 'main_menu_link'), :class => "#{node.own_or_inherited_layout_configuration['template_color']} #{active}")
