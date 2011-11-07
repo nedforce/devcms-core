@@ -76,6 +76,9 @@ I18n.locale['nl'] = {
 		edit: 'Bewerken',
 		show: 'Bekijken'		
 	},
+	'NewsViewer': {
+		edit_items: 'Items bewerken'
+	},
 	poll_options: {
 		answer_option: 'Antwoordoptie',
 		minimal_two: 'Minimaal 2 opties zijn vereist.'
