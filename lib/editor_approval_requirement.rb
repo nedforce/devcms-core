@@ -21,39 +21,22 @@ module EditorApprovalRequirement
         def save(*args)
           options = args.extract_options!
           user = options.delete(:user)
-          
+    
           user_is_editor = user.present? && !user.has_role_on?(['admin', 'final_editor'], self.new_record? ? self.parent : self)
           approval_required = options[:approval_required].blank? ? false : options[:approval_required]
-          
+    
           extra_version_attributes = { :status => Version::STATUSES[self.draft? ? :drafted : :unapproved], :editor => user }
           extra_version_attributes.update(:editor_comment => self.editor_comment) unless self.editor_comment.blank?
-          
+    
           self.with_versioning(self.draft? || user_is_editor || approval_required, extra_version_attributes) do
             self.original_save(*args)
           end
         end
-        
+  
         def save!(*args)
           self.save(*args) || raise(ActiveRecord::RecordNotSaved)
-        end
+        end        
 
-        def update_attributes(attributes)
-          user = attributes.delete(:user)
-          parent = attributes[:parent]
-          
-          if user && parent && user.has_role_on?('editor', parent)
-            attributes[:responsible_user] = user
-          end
-          
-          approval_required = attributes.delete(:approval_required)
-          self.attributes = attributes
-          self.save(:user => user, :approval_required => approval_required)
-        end
-        
-        def update_attributes!(attributes)
-          self.update_attributes(attributes) || raise(ActiveRecord::RecordNotSaved)
-        end
-        
         def self.create(attributes = nil, &block)
           if attributes.is_a?(Array)
             super(attributes, &block)
@@ -81,7 +64,30 @@ module EditorApprovalRequirement
           true
         end
       end
+      
+      include InstanceMethods
     end
+  end
+  
+  module InstanceMethods
+
+    def update_attributes(attributes)
+      user = attributes.delete(:user)
+      parent = attributes[:parent]
+    
+      if user && parent && user.has_role_on?('editor', parent)
+        attributes[:responsible_user] = user
+      end
+
+      approval_required = attributes.delete(:approval_required)
+      self.attributes = attributes
+      self.save(:user => user, :approval_required => approval_required)
+    end
+  
+    def update_attributes!(attributes)
+      self.update_attributes(attributes) || raise(ActiveRecord::RecordNotSaved)
+    end  
+      
   end
 end
 

@@ -55,8 +55,6 @@ class CalendarItem < Event
      :copyable => false,
      :controller_name => 'calendar_items'
    })
-   
-  needs_editor_approval
 
   # Create repeating calendar items if necessary.
   after_create :create_repeating_calendar_items

@@ -6,6 +6,8 @@ require File.expand_path(File.join(ENV['RAILS_ROOT'], 'config/environment.rb'))
 require 'test_help'
 require File.expand_path(File.dirname(__FILE__) + '/../vendor/plugins/flex_image/test/mock_file')
 
+Rails.backtrace_cleaner.remove_silencers!
+
 include ActionController::TestProcess # Required to make fixture_file_upload work
 
 begin
