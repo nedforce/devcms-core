@@ -180,7 +180,7 @@ class Admin::NodesController < Admin::AdminController
       self.send("admin_#{@node.content_class.name.underscore}_url", @node.content) + '?show_actions=false'
     end
 
-    if @node.content.versioned?
+    if @node.content.versioned? && @node.publishable?
       @previous_url = if @node.content_class == InternalLink || @node.content_class == ExternalLink
         previous_admin_link_url(@node.content, :show_actions => false)
       else

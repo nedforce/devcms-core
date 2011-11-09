@@ -9,7 +9,7 @@ class LinksBox < ActiveRecord::Base
     :allowed_roles_for_update  => %w( admin ),
     :allowed_roles_for_destroy => %w( admin ),
     :available_content_representations => ['content_box'],
-    :has_own_content_box => true,
+    :has_own_content_box => false,
     :controller_name => 'links_boxes',
     :show_in_menu => false,
     :copyable => false
