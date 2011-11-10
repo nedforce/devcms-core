@@ -3,5 +3,5 @@
     %h2= h record.title
     %p
       %a{ :href => preview_admin_attachment_path(record) }= h record.filename
-      == (#{record.size / 1024} KB)
+      == (#{(record.size || 0) / 1024} KB)
     %p #{t('attachments.attachment_category')}: #{unemptynize(record.category, t('attachments.uncategorized'))}
