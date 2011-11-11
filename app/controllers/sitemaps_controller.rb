@@ -13,6 +13,16 @@ class SitemapsController < ApplicationController
     end  
   end
   
+  def changes
+    raise ActionController::UnknownAction if params[:interval].blank?
+    
+    @changes = Node.all(:conditions => ["updated_at > ?", Time.now - params[:interval].to_i])
+    
+    respond_to do |format|
+      format.xml
+    end
+  end
+  
   protected
 
   def set_node_to_root
