@@ -28,7 +28,7 @@ settings: &settings
     value: 'UA-xxxxxxx-x'
     editable: true    
     validations:
-      format: !ruby/regexp "/^(|UA-\d*-\d)$/i"        
+      format: !ruby/regexp "/^(|UA-\d*-\d*)$/i"        
   host:
     alt: The hostname of your site
     value: 'localhost:3000'    
