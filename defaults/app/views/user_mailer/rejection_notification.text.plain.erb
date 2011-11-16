@@ -2,7 +2,7 @@ Beste <%=@editor.full_name-%>,
   
 De wijzigingen aan http://<%= @host %>/<%= @node.url_alias %> die u gemaakt heeft zijn niet goedgekeurd.
 
-<%- unless @reason.blank? -%>
+<%- if @reason.present? -%>
 De volgende reden is hiervoor opgegeven:
 
 "<%= h @reason -%>"

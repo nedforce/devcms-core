@@ -5,7 +5,7 @@
   <p>
     De wijzigingen aan <a href="<%= "#{@host}/#{@node.url_alias}" %>"><%= "#{@host}/#{@node.url_alias}" %></a> die u gemaakt heeft zijn goedgekeurd.
   </p>
-  <%- unless @comment.blank? -%>
+  <%- if @comment.present? -%>
   <p>
     Het volgende commentaar is tevens opgegeven:
   </p>
