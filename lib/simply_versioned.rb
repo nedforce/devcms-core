@@ -34,14 +34,14 @@ module SoftwareHeretics
         # the model from its block.
         #
         
-        def simply_versioned( options = {} )
-          bad_keys = options.keys - [:keep,:automatic,:exclude]
-          raise SimplyVersioned::BadOptions.new( bad_keys ) unless bad_keys.empty?
+        def simply_versioned(options = {})
+          bad_keys = options.keys - [ :keep, :automatic, :exclude ]
+          raise SimplyVersioned::BadOptions.new(bad_keys) unless bad_keys.empty?
           
-          options.reverse_merge!( {
+          options.reverse_merge!({
             :keep => nil,
             :automatic => true,
-            :exclude => [ :created_at, :updated_at ]
+            :exclude => [ :updated_at, :created_at ]
           })
           
           has_many :versions, :order => 'number DESC', :as => :versionable, :dependent => :destroy, :extend => VersionsProxyMethods
