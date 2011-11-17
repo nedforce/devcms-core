@@ -75,14 +75,14 @@ module ApplicationHelper
 
         if node != crumb_nodes.last
           if node.class == Node && node.root?
-            crumb_track << link_to(html_escape(n.content_title.capitalize), root_path, {}, link_options)
+            crumb_track << link_to(html_escape(n.content_title), root_path, {}, link_options)
           elsif node.class == Node
-            crumb_track << link_to_content_node(html_escape(n.content_title.capitalize), n, {}, link_options)
+            crumb_track << link_to_content_node(html_escape(n.content_title), n, {}, link_options)
           elsif node.class.name == 'ProductCategory'
             crumb_track << link_to(html_escape(n.title), product_catalogue_products_path(:product_catalogue_id => @product_catalogue, :selection => 'category', :selection_id => n.id))
           end
         elsif node.class == Node
-          crumb_track << "<span class='last_crumb'>#{(options[:skip_link_self] ? n.content_title.capitalize : link_to_content_node(html_escape(n.content_title.capitalize), n, {}, link_options))}</span>"
+          crumb_track << "<span class='last_crumb'>#{(options[:skip_link_self] ? n.content_title : link_to_content_node(html_escape(n.content_title), n, {}, link_options))}</span>"
         elsif node.class.name == 'ProductCategory'
           crumb_track << "<span class='last_crumb'>#{(options[:skip_link_self] ? n.title : link_to(html_escape(n.title), product_catalogue_products_path(:product_catalogue_id => @product_catalogue, :selection => 'category', :selection_id => n.id)))}</span>"
         end

@@ -129,14 +129,14 @@ module Acts #:nodoc:
                   :ensure_publication_end_date_after_publication_start_date,
                   :ensure_content_box_number_of_items_should_be_greater_than_two
 
-        validates_presence_of :publication_start_date
-        validates_length_of :content_box_title, :in => 2..255, :allow_blank => true
+        validates_presence_of  :publication_start_date
+        validates_length_of    :content_box_title,  :in => 2..255,                     :allow_blank => true
         validates_inclusion_of :content_box_colour, :in => DevCMS.content_box_colours, :allow_blank => true
-        validates_inclusion_of :content_box_icon, :in => DevCMS.content_box_icons, :allow_blank => true
-        
+        validates_inclusion_of :content_box_icon,   :in => DevCMS.content_box_icons,   :allow_blank => true
+
         validates_presence_of :expires_on, :if => :expiration_required?, :message => I18n.t("nodes.expires_on_required")
         validate :expires_on_valid?
-        
+
 
         validate :valid_responsible_user_role
         validate :validate_parent
@@ -191,7 +191,7 @@ module Acts #:nodoc:
           end
           
           def draft=(value)
-            @draft = (value == "1" || value == true) ? true : false
+            @draft = (value == '1' || value == true) ? true : false
           end
 
           def draft
@@ -261,7 +261,7 @@ module Acts #:nodoc:
           # It uses the 'model_name_icon' by default.
           # You might want to override this method in the model.
           def tree_icon_class
-            self.class.to_s.underscore + "_icon"
+            "#{self.class.to_s.underscore}_icon"
           end
 
           # Returns the filename to be used for icons in front end website view.
@@ -278,11 +278,11 @@ module Acts #:nodoc:
           def own_content_class
             (self.class == ContentCopy) ? self.copied_content_class : self.class
           end
-          
+
           def show_content_box_header
             Node.content_type_configuration(self.class.to_s)[:show_content_box_header]
           end
-          
+
           unless method_defined? :accessible_children_for
             def accessible_children_for *args
               []
@@ -294,20 +294,20 @@ module Acts #:nodoc:
           # Validation callbacks
 
           def ensure_publication_start_date_is_present_when_publication_end_date_is_present
-            if self.publication_end_date
-              self.errors.add_to_base(I18n.t('acts_as_content_node.publication_start_date_should_be_present')) unless self.publication_start_date
+            if self.publication_end_date && !self.publication_start_date
+              self.errors.add_to_base(I18n.t('acts_as_content_node.publication_start_date_should_be_present'))
             end
           end
 
           def ensure_publication_end_date_after_publication_start_date
-            if self.publication_start_date && self.publication_end_date
-              self.errors.add_to_base(I18n.t('acts_as_content_node.publication_end_date_should_be_after_publication_start_date')) if self.publication_start_date >= self.publication_end_date
+            if self.publication_start_date && self.publication_end_date && self.publication_start_date >= self.publication_end_date
+              self.errors.add_to_base(I18n.t('acts_as_content_node.publication_end_date_should_be_after_publication_start_date'))
             end
           end
 
           def ensure_content_box_number_of_items_should_be_greater_than_two
-            if self.content_box_number_of_items
-              self.errors.add_to_base(I18n.t('acts_as_content_node.content_box_number_of_items_should_be_greater_than_two')) if self.content_box_number_of_items.to_i <= 2
+            if self.content_box_number_of_items && self.content_box_number_of_items.to_i <= 2
+              self.errors.add_to_base(I18n.t('acts_as_content_node.content_box_number_of_items_should_be_greater_than_two'))
             end
           end
 
@@ -325,17 +325,19 @@ module Acts #:nodoc:
               class_exists?(content_type) ? (self <= content_type.constantize) : false
             end
           end
-          
+
           def valid_responsible_user_role
             errors.add_to_base(I18n.t('acts_as_content_node.responsible_user_requires_role')) unless node.responsible_user.blank? || node.responsible_user.has_role_on?(['admin', 'editor', 'final_editor'], node)
           end
-          
+
           def expires_on_valid?
             if expirable? && expires_on.present?
-              errors.add_to_base(I18n.t("nodes.expires_on_out_of_range")) unless (Date.today..(Date.today + Settler[:default_expiration_time].days)).include?(expires_on)
+              unless (Date.today..(Date.today + Settler[:default_expiration_time].days)).include?(expires_on)
+                errors.add_to_base(I18n.t('nodes.expires_on_out_of_range'))
+              end
             end
           end
-          
+
           def update_url_alias_if_title_changed
             if self.respond_to?(:title) && self.title_changed?
               # Necessary to make set_url_alias use the current title stored in memory (not yet in the DB!)
@@ -346,11 +348,11 @@ module Acts #:nodoc:
 
           def validate_parent
             if self.parent
-              unless own_content_class.valid_parent_class?(self.parent.content_class)
+              if !own_content_class.valid_parent_class?(self.parent.content_class)
                 errors.add_to_base "'#{self.parent.content_class.human_name}' #{I18n.t('acts_as_content_node.doesnt_accept')} '#{own_content_class.human_name}' #{:type}."
               end
-            elsif !Node.count.zero? && Node.root
-              errors.add_to_base(I18n.t('acts_as_content_node.could_not_create_content')) if self.new_record?
+            elsif !Node.count.zero? && Node.root && self.new_record?
+              errors.add_to_base(I18n.t('acts_as_content_node.could_not_create_content'))
             end
           end
         end

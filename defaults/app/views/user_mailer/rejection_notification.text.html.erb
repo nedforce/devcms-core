@@ -5,7 +5,7 @@
   <p>
     De wijzigingen aan <a href="<%= "http://#{@host}/#{@node.url_alias}" %>"><%= "http://#{@host}/#{@node.url_alias}" %></a> die u gemaakt heeft zijn niet goedgekeurd.
   </p>
-  <%- unless @reason.blank? -%>
+  <%- if @reason.present? -%>
   <p>
     De volgende reden is hiervoor opgegeven:
   </p>
