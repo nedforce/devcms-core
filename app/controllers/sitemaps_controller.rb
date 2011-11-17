@@ -13,6 +13,9 @@ class SitemapsController < ApplicationController
     end  
   end
   
+  # Shows the changes since params[:interval] in seconds
+  #
+  # * GET /sitemap/changes
   def changes
     raise ActionController::UnknownAction if params[:interval].blank?
     
