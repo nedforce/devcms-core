@@ -35,6 +35,8 @@ class Attachment < ActiveRecord::Base
   acts_as_content_node({
     :show_in_menu            => false,
     :show_content_box_header => false
+  }, {
+    :exclude => [ :id, :created_at, :updated_at, :size, :height, :width, :db_file_id, :parent_id, :filename, :thumbnail, :content_type ]
   })
 
   # This content type needs approval when created or altered by an editor.

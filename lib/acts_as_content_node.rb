@@ -86,10 +86,9 @@ module Acts #:nodoc:
       # * +:has_sync+ => false
       # * +:has_edit_items+ => false
       
-      def acts_as_content_node(configuration = {})
-        simply_versioned :keep => 1, :automatic => false
-        
+      def acts_as_content_node(configuration = {}, versioning_configuration = {})
         raise "Invalid content configuration, hash expected" unless configuration.is_a?(Hash)
+        raise "Invalid versioning configuration, hash expected" unless versioning_configuration.is_a?(Hash)
         
         configuration.keys.each do |key|
           raise "Invalid content configuration options, unknown key: :#{key}" unless DEFAULT_CONTENT_TYPE_CONFIGURATION.keys.include?(key.to_sym)
@@ -97,6 +96,14 @@ module Acts #:nodoc:
         
         # Register content type and configuration
         Node.register_content_type(self, DEFAULT_CONTENT_TYPE_CONFIGURATION.merge(configuration))
+        
+        versioning_configuration.reverse_merge!({
+          :keep => 1,
+          :automatic => false,
+          :exclude => [ :id, :created_at, :updated_at ]
+        })
+        
+        simply_versioned versioning_configuration
         
         # node_id not validated here, because it will be set properly after create.
         has_one :node, :as => :content

@@ -42,6 +42,8 @@ class Image < FlexImage::Model
     :available_content_representations => ['content_box'],
     :show_in_menu => false,
     :show_content_box_header => false
+  }, {
+      :exclude => [ :id, :created_at, :updated_at, :data ]
   })
 
   # This content type needs approval when created or altered by an editor.

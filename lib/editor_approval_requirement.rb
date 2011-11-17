@@ -10,7 +10,7 @@ module EditorApprovalRequirement
 
   module ClassMethods
 
-    def needs_editor_approval
+    def needs_editor_approval(options = {})
       attr_accessor :editor_comment
       
       self.class_eval do
