@@ -43,6 +43,11 @@ class Site < Section
     site ||= Node.root.content #if domain == 'localhost'
     site
   end
+  
+  def domain
+    domain = self.read_attribute(:domain)
+    domain.present? ? domain : Settler[:host]
+  end
 
   protected
 
