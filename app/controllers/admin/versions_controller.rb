@@ -30,7 +30,7 @@ class Admin::VersionsController < Admin::AdminController
   end
   
   # This method is used to approve an unapproved +node+
-  # * XHR PUT /admin/versions/approve/2.xml
+  # * XHR PUT /admin/versions/2/approve.xml
   def approve
     respond_to do |format|
       if @version.approve!(current_user)
@@ -43,7 +43,7 @@ class Admin::VersionsController < Admin::AdminController
   end
     
   # This method is used to reject an unapproved +node+
-  # * XHR PUT /admin/versions/reject/2.xml
+  # * XHR PUT /admin/versions/2/reject.xml
   def reject
     respond_to do |format|
       if @version.reject!

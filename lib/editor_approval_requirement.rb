@@ -22,8 +22,9 @@ module EditorApprovalRequirement
           options = args.extract_options!
           user = options.delete(:user)
     
-          user_is_editor = user.present? && !user.has_role_on?(['admin', 'final_editor'], self.new_record? ? self.parent : self)
-          approval_required = options[:approval_required].blank? ? false : options[:approval_required]
+          user_is_editor = user.present? && !user.has_role_on?(['admin', 'final_editor'], self.new_record? ? self.parent : self.node)
+          
+          approval_required = options[:approval_required_required].blank? ? false : options[:approval_required]
     
           extra_version_attributes = { :status => Version::STATUSES[self.draft? ? :drafted : :unapproved], :editor => user }
           extra_version_attributes.update(:editor_comment => self.editor_comment) unless self.editor_comment.blank?
