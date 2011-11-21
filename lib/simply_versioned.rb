@@ -115,7 +115,9 @@ module SoftwareHeretics
             self.class.transaction do
               if enabled
                 self.new_attributes = self.attributes.dup
-                self.reload unless self.new_record?
+                # This line breaks expires_on. Where is this for? Is this line of code necessary?
+                #
+                #self.reload unless self.new_record?
               end
               
               self.node.publishable = true if !self.node.publishable? && !enabled
