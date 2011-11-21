@@ -333,7 +333,7 @@ module Acts #:nodoc:
           def expires_on_valid?
             if expirable? && expires_on.present?
               unless (Date.today..(Date.today + Settler[:default_expiration_time].days)).include?(expires_on)
-                errors.add_to_base(I18n.t('nodes.expires_on_out_of_range'))
+                errors.add_to_base(I18n.t('nodes.expires_on_out_of_range', :date => I18n.l(Date.today + Settler[:default_expiration_time])))
               end
             end
           end
