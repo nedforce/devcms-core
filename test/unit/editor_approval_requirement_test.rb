@@ -11,6 +11,8 @@ class EditorApprovalRequirementTest < ActiveSupport::TestCase
     @editor_section_node = nodes(:editor_section_node)
     @arthur = users(:arthur)
     @editor = users(:editor)
+    @final_editor = users(:final_editor)
+    @final_editor.role_assignments.first.update_attribute :node, @editor_section_node
   end
   
   def test_save_for_user_for_editor_on_new_node_created_by_editor
@@ -129,6 +131,34 @@ class EditorApprovalRequirementTest < ActiveSupport::TestCase
     assert_equal 'Version 3', page.current_version.body
     assert page.previous_version.nil?
   end
+  
+  def test_save_for_user_for_final_editor_on_already_versioned_node_without_skip_approval
+    page = create_page :body => 'Version 1'
+    
+    assert page.node.publishable?
+    assert_equal 'Version 1', page.body
+    assert_equal 'Version 1', page.current_version.body
+    assert page.previous_version.nil?
+
+    page.body = 'Version 2'
+    assert page.save(:user => @editor)
+    
+    page = page.reload
+
+    assert_equal 'Version 1', page.body
+    assert_equal 'Version 2', page.current_version.body
+    assert_equal 'Version 1', page.previous_version.body
+
+    page.body = 'Version 3'
+    assert page.save(:user => @final_editor)
+    
+    page = page.reload
+
+    assert_equal 'Version 3', page.body
+    assert_equal 'Version 3', page.current_version.body
+    assert page.previous_version.nil?
+  end
+  
 
   def test_save_for_user_for_admin_on_already_versioned_node_with_skip_approval
     page = create_page :body => 'Version 1'

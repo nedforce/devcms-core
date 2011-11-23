@@ -3,6 +3,7 @@ root_section:
   title: Website root
   description: Dit is de eerste node in de website's boomstructuur.
   frontpage_node_id: <%= Fixtures.identify(:devcms_news_node) %>
+  domain: root.local.dev
 
 sub_site_section:
   type: Site

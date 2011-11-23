@@ -21,14 +21,14 @@ module EditorApprovalRequirement
         def save(*args)
           options = args.extract_options!
           user = options.delete(:user)
-    
-          user_is_editor = user.present? && !user.has_role_on?(['admin', 'final_editor'], self.new_record? ? self.parent : self.node)
           
-          approval_required = options[:approval_required_required].blank? ? false : options[:approval_required]
+          user_is_editor = user.present? && !user.has_role_on?(['admin', 'final_editor'], node.new_record? ? node.parent : node)
+          
+          approval_required = options[:approval_required].blank? ? false : options[:approval_required]
     
           extra_version_attributes = { :status => Version::STATUSES[self.draft? ? :drafted : :unapproved], :editor => user }
           extra_version_attributes.update(:editor_comment => self.editor_comment) unless self.editor_comment.blank?
-    
+          
           self.with_versioning(self.draft? || user_is_editor || approval_required, extra_version_attributes) do
             self.original_save(*args)
           end
@@ -58,7 +58,12 @@ module EditorApprovalRequirement
         end
         
         def self.create!(attributes = nil, &block)
-          self.create(attributes, &block) || raise(ActiveRecord::RecordNotSaved)
+          record = self.create(attributes, &block)
+          if record.new_record?
+            raise(ActiveRecord::RecordNotSaved)
+          else
+            record
+          end
         end
         
         def self.requires_editor_approval?

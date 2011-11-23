@@ -198,7 +198,7 @@ class PollQuestionTest < ActiveSupport::TestCase
   
   def test_should_register_votes
     pq = poll_questions(:hc_question_1)
-    assert_difference('pq.poll_options.first.number_of_votes', 1) do
+    assert_difference('pq.poll_options.first.reload.number_of_votes', 1) do
       pq.vote(pq.poll_options.first)
     end
   end
@@ -209,7 +209,7 @@ class PollQuestionTest < ActiveSupport::TestCase
     
     assert pq.poll.reload.requires_login?
     
-    assert_no_difference('pq.poll_options.first.number_of_votes') do
+    assert_no_difference('pq.poll_options.first.reload.number_of_votes') do
       assert_no_difference('pq.user_votes.count') do
         pq.vote(pq.poll_options.first)
       end
@@ -220,7 +220,7 @@ class PollQuestionTest < ActiveSupport::TestCase
     pq = poll_questions(:hc_question_1)
     pq.poll.update_attribute :requires_login, true
     
-    assert_difference('pq.poll_options.first.number_of_votes', 1) do
+    assert_difference('pq.poll_options.first.reload.number_of_votes', 1) do
       assert_difference('pq.user_votes.count', 1) do
         pq.vote(pq.poll_options.first, users(:arthur))
         assert pq.has_vote_from?(users(:arthur))
@@ -232,12 +232,12 @@ class PollQuestionTest < ActiveSupport::TestCase
     pq = poll_questions(:hc_question_1)
     pq.poll.update_attribute :requires_login, true
     
-    assert_difference('pq.poll_options.first.number_of_votes', 1) do
+    assert_difference('pq.poll_options.first.reload.number_of_votes', 1) do
       assert_difference('pq.user_votes.count', 1) do
         pq.vote(pq.poll_options.first, users(:arthur))
       end
     end
-    assert_no_difference('pq.poll_options.first.number_of_votes') do
+    assert_no_difference('pq.poll_options.first.reload.number_of_votes') do
       assert_no_difference('pq.user_votes.count') do
         pq.vote(pq.poll_options.first, users(:arthur))
       end

@@ -110,17 +110,25 @@ module SoftwareHeretics
           versioning_was_enabled = self.versioning_enabled?
           self.versioning_enabled = enabled
           self.extra_version_attributes = extra_version_attributes
-        
+
           begin
             self.class.transaction do
+              
+              deffered_attributes = [:expires_on, :publication_start_date, :publication_end_date]
               if enabled
                 self.new_attributes = self.attributes.dup
-                # This line breaks expires_on. Where is this for? Is this line of code necessary?
-                #
-                #self.reload unless self.new_record?
+                # Copy deffered node attributes
+                deffered_attribute_values = Hash[deffered_attributes.map {|key| [key, self.node.send(key)]}]
+
+                self.reload unless self.new_record?
+                
+                # Restore deffered node attributes after reload
+                deffered_attributes.each do |key|
+                  self.node.write_attribute key, deffered_attribute_values[key]
+                end
+              else
+                self.node.publishable = true if !self.node.publishable?
               end
-              
-              self.node.publishable = true if !self.node.publishable? && !enabled
               block.call(self)
             end
           ensure

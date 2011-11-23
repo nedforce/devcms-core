@@ -17,6 +17,22 @@ class NodeExpirationTest < ActiveSupport::TestCase
     assert_equal Settler[:default_expiration_time], (node.expires_on - Date.today).to_i
   end
   
+  def test_should_set_expires_on_with_versioning
+    page = pages(:editor_section_page)
+    node = page.node
+    node.update_attribute :expires_on, 2.days.ago
+    page.title = "Version 2"
+    page.expires_on = 5.days.from_now.to_date
+
+    assert page.valid?, page.errors.full_messages.to_sentence
+    assert page.save(:user => users(:editor)), page.errors.full_messages.to_sentence
+    
+    node.reload
+    
+    assert_not_nil node.expires_on
+    assert_equal 5.days.from_now.to_date, node.expires_on.to_date
+  end
+  
   def test_should_not_allow_expiration_date_longer_than_default_period
     page = build_page(:expires_on => (Date.today + Settler[:default_expiration_time].days + 1.week))
     assert !page.node.valid?
