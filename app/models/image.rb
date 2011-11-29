@@ -64,7 +64,7 @@ class Image < FlexImage::Model
 
   # Return generated alt if attribute isn't set.
   def alt
-    self.attribute_present?(:alt) ? super : "#{I18n.t('images.image_of')}: #{self.title}"
+    self.attribute_present?(:alt) ? super : "#{I18n.t('images.image_of')} #{self.title}"
   end
 
   # Never embed binary data in XML for images.
