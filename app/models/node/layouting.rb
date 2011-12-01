@@ -11,6 +11,8 @@ module Node::Layouting
     
     base.serialize :layout_configuration
     
+    base.before_create :set_default_layout
+    
     base.extend(ClassMethods)
   end
   
@@ -165,6 +167,14 @@ module Node::Layouting
   # Prevents a +Node+ from being hidden if it is, or contains the +global+ frontpage.
   def should_not_hide_global_frontpage
     errors.add_to_base(:cant_hide_frontpage) if self.hidden && (self.is_global_frontpage? || self.contains_global_frontpage?)
+  end
+  
+  def set_default_layout
+    if self.content_type == 'Section' && self.content.type == 'Site'
+      self.layout = Node.root.layout || 'default'
+      self.layout_variant = 'default'
+      self.layout_configuration = {}
+    end
   end
 
   # 
