@@ -13,6 +13,8 @@ newsItemCol = new Ext.dvtr.Sorter({
   });
 
 onSortletCreate = function(e){
+    // Assign the ID of the news_item to the sortlet
+    e.sortlet.assignId(e.sortlet.nodeId);
     e.sortlet.showSpinner(); // Show 'loading' spinner while waiting for a server response
     e.sortlet.load({
             url: e.sortlet.controllerName+'/'+e.sortlet.contentNodeId,
@@ -23,8 +25,6 @@ onSortletCreate = function(e){
                     Ext.ux.alertResponseError(response, '<%= I18n.t("newsletters.form_load_error") -%>')
                 e.sortlet.hideSpinner();
                 e.sortlet.showCollapse();
-                // Assign the ID of the news_item to the sortlet
-                e.sortlet.assignId(e.sortlet.nodeId);
             }
         });
 }

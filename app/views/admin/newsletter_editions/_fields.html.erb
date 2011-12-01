@@ -40,6 +40,7 @@ newsletterEditionForm.add({
   enableColors: false,
   enableAlignments: false,
   enableFontSize: false,
+  allowBlank: false,
   enableSourceEdit: true, // for dev purposes
   value: '<%= escape_javascript @newsletter_edition.body -%>'
 });
@@ -57,23 +58,5 @@ newsletterEditionForm.add({
   html: '<%= wrap_with_label(tinymce_html("newsletter_edition[body]", "newsletter_edition_body"),  { :text => I18n.t("newsletters.text")}) %>',
   listeners: { render: initEditor }
 });
-
-// <%- if current_user.has_role?('editor') -%>
-// newsletterEditionForm.add({
-//   id: 'newsletter_edition_editor_comment',
-//   fieldLabel: '<%= I18n.t("shared.editor_comment") %>',
-//   name: 'newsletter_edition[editor_comment]',
-//   xtype: 'htmleditor',
-//   height: 100,
-//   width: 400,
-//   enableFont: false,
-//   enableColors: false,
-//   enableAlignments: false,
-//   enableFontSize: false,
-//   enableSourceEdit: true, // for dev purposes
-//   value: '<%= escape_javascript @newsletter_edition.editor_comment -%>'
-// });
-<%- end -%>
-
 <%#= category_settings_for @newsletter_edition -%>
 

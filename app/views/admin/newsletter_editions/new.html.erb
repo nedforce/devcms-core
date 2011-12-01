@@ -21,6 +21,7 @@ var newsletterEditionForm = new Ext.dvtr.ContentNodeFormPanel({
 
 newsletterEditionForm.addButton({
     text: '<%= I18n.t("shared.preview") -%>',
+    cls: 'extSubmit',
     formBind: true,
     handler: function(){
 		resetTinyMCE();
@@ -52,6 +53,7 @@ newsletterEditionForm.addButton({
 
 newsletterEditionForm.addButton({
     text: '<%= I18n.t("shared.save") -%>',
+    cls: 'extSubmit',
     formBind: true,
     handler: function(){
 		resetTinyMCE();
