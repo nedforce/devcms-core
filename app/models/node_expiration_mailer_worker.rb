@@ -6,11 +6,11 @@ class NodeExpirationMailerWorker
       RAILS_DEFAULT_LOGGER
     end
   
-    def notify_authors
+    def notify_authors(node = Node.root)
       logger.info "Notifying responsible authors of expired content..."
-      Node.expired.all.group_by(&:responsible_user).each do |author, nodes|
-        logger.debug "Notifying #{author.login} of #{nodes.size} expired nodes."
-        send_author_notification(author, nodes) if nodes.present?
+      node.descendants.all(:select => "DISTINCT content_type").each {|ct| ct.content_type.constantize } # FIX: until preloading is merged..
+      node.descendants.expired.all.each do |node|
+        send_author_notification(node)
       end
     end
     
@@ -23,11 +23,11 @@ class NodeExpirationMailerWorker
       end
     end
   
-    def send_author_notification(author,nodes)
+    def send_author_notification(node)
       begin
-        NodeExpirationMailer.deliver_author_notification(author,nodes)
+        NodeExpirationMailer.deliver_author_notification(node)
       rescue Exception => exception
-        BackgroundNotifier.deliver_exception_notification(exception, "Notifying authors of expired content.", author)
+        BackgroundNotifier.deliver_exception_notification(exception, "Notifying authors of expired content.", node)
       end
     end
     

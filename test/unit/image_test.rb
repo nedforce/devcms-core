@@ -60,9 +60,9 @@ class ImageTest < ActiveSupport::TestCase
     assert_equal i.alt, "BOOM!"
   end
   
-  def test_should_return_set_alt_text
+  def test_should_return_set_alt_text_with_title
     i = create_image(:title => "BOOM!", :alt => nil)
-    assert_equal i.alt, "#{I18n.t('images.image_of')} BOOM!"
+    assert_equal "#{I18n.t('images.image_of')} BOOM!", i.alt
   end
   
   def test_should_not_return_image_children_for_menu

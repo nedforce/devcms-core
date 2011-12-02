@@ -270,11 +270,10 @@ protected
   # Find the Attachment and Image children belonging to the current Node instance.
   def find_images_and_attachments
     @image_content_nodes = Image.accessible.all(:conditions => { :is_for_header => false, 'nodes.ancestry' => @node.child_ancestry })
-    @attachment_content_nodes = []
+    @attachment_content_nodes = Attachment.accessible.all(:conditions => { 'nodes.ancestry' => @node.child_ancestry })
     
-    @node.children.accessible.with_content_type(%w( Attachment ContentCopy )).include_content.all.each do |child_node|
-      child = child_node.content
-      child = child.copied_node.content if child.is_a?(ContentCopy)
+    ContentCopy.accessible.all(:conditions => { 'nodes.ancestry' => @node.child_ancestry }).each do |content_copy|
+      child = content_copy.copied_node.content
       
       if child.is_a?(Image) && !child.is_for_header?
         @image_content_nodes << child
@@ -354,7 +353,7 @@ protected
   # Returns true if the current user has a particular role on a given node, false otherwise.
   def current_user_has_role?(role, node)
     if node && node.id # does this node exist in the database?
-      @current_user.has_role_on?(role, node)
+      @current_user.has_role_on?(role, node.new_record? ? node.parent : node)
     else
       @current_user.has_role?(role)
     end
@@ -362,17 +361,17 @@ protected
 
   # Returns true if the current user has admin rights on a given node, false otherwise.
   def current_user_is_admin?(node)
-    current_user_has_role?('admin', node)
+    current_user_has_role?('admin', node.new_record? ? node.parent : node)
   end
 
   # Returns true if the current user has final editor rights on a given node, false otherwise.
   def current_user_is_final_editor?(node)
-    current_user_has_role?('final_editor', node)
+    current_user_has_role?('final_editor', node.new_record? ? node.parent : node)
   end
 
   # Returns true if the current user has editor rights on a given node, false otherwise.
   def current_user_is_editor?(node)
-    current_user_has_role?('editor', node)
+    current_user_has_role?('editor', node.new_record? ? node.parent : node)
   end
 
   # Login as an admin user if the request is local.

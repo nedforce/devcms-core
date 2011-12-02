@@ -12,6 +12,8 @@
     sub_content_type: Site
     hidden: false
     private: false
+    expiration_notification_method: email
+    expiration_email_recipient: test@example.com
 
 - help_page_node:
     content: help_page (Page)
@@ -20,6 +22,7 @@
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
+    expiration_notification_method: responsible_user
     position: 1
     publishable: true
     sub_content_type: Page
@@ -33,6 +36,7 @@
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 2
+    expiration_notification_method: responsible_user
     publishable: true
     sub_content_type: Page
     hidden: false
@@ -446,8 +450,8 @@
     position: 16
     publishable: true
     sub_content_type: Section
-    hidden: false
-    private: true
+    hidden: true
+    private: false
 
 - hidden_page_node:
     content: hidden_page (Page)
@@ -458,8 +462,8 @@
     position: 1
     publishable: true
     sub_content_type: Page
-    hidden: false
-    private: true
+    hidden: true
+    private: false
 
 - nested_page_node:
     content: nested_page (Page)
@@ -469,7 +473,7 @@
     position: 1
     publishable: true
     sub_content_type: Page
-    hidden: false
+    hidden: true
     private: false
 
 - not_hidden_section_node:
@@ -502,8 +506,8 @@
     position: 1
     publishable: true
     sub_content_type: Image
-    hidden: false
-    private: true
+    hidden: true
+    private: false
 
 - hidden_attachment_node:
     content: hidden_attachment (Attachment)
@@ -513,8 +517,8 @@
     position: 2
     publishable: true
     sub_content_type: Attachment
-    hidden: false
-    private: true
+    hidden: true
+    private: false
 
 - bewoners_forum_node:
     content: bewoners_forum (Forum)
@@ -688,6 +692,7 @@
     publication_start_date: <%= 1.day.ago.to_s(:db) %>
     expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
     position: 1
+    expiration_notification_method: responsible_user
     publishable: true
     sub_content_type: Page
     hidden: false

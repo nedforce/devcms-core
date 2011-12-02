@@ -14,7 +14,7 @@ hidden_image:
 
 henks_weblog_image:
   data: <%= fixture_data('files/test.jpg') %>
-  title: A hidden image!
+  title: Henks image
 
 root_section_image:
   data: <%= fixture_data('files/test.jpg') %>

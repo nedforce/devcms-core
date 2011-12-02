@@ -325,6 +325,30 @@ module ApplicationHelper
     concat(content_tag(:div, :class => 'new') { image_tag('icons/add.png', :class => 'icon', :alt => 'Icoon van een plusteken', :title => title) + capture(&block) })
   end
 
+  # Returns true if the current user has a particular role on a given node, false otherwise.
+  def current_user_has_role?(role, node)
+    if node && node.id # does this node exist in the database?
+      @current_user.has_role_on?(role, node.new_record? ? node.parent : node)
+    else
+      @current_user.has_role?(role)
+    end
+  end
+
+  # Returns true if the current user has admin rights on a given node, false otherwise.
+  def current_user_is_admin?(node)
+    current_user_has_role?('admin', node.new_record? ? node.parent : node)
+  end
+
+  # Returns true if the current user has final editor rights on a given node, false otherwise.
+  def current_user_is_final_editor?(node)
+    current_user_has_role?('final_editor', node.new_record? ? node.parent : node)
+  end
+
+  # Returns true if the current user has editor rights on a given node, false otherwise.
+  def current_user_is_editor?(node)
+    current_user_has_role?('editor', node.new_record? ? node.parent : node)
+  end
+
   protected
 
     # Returns the HTML for a main menu item.

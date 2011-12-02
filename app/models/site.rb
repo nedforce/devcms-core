@@ -25,7 +25,8 @@ class Site < Section
     :has_own_content_box => true,
     :controller_name => 'sites',
     :show_in_menu => false,
-    :copyable => false
+    :copyable => false,
+    :expiration_container=> true
   })
   
   VALID_DOMAIN_REGEXP = /\A(?:[A-Z0-9\-]+\.)+(?:[A-Z]{2,4}|museum|travel)\Z/i

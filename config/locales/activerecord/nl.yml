@@ -190,6 +190,8 @@ nl:
         title: Titel
         domain: Domein
         original_domain: Domein
+        expiration_email_subject: Onderwerp
+        expiration_email_body: Tekst
       setting:
         key: Instelling
         alt: Omschrijving

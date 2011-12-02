@@ -1,6 +1,6 @@
 - if record.is_a?(Site)
   = form.text_field :domain, :label => t('sections.domain')
-  = form.text_field :analytics_code, :label => t('sites.analytics_code')
+  = form.text_field :analytics_code, :label => t('sites.analytics_code'), :style => 'height: 42px;'
 
 = form.date_field :publication_start_date_day,  :label => "#{t 'sections.begin_date'}", :value => record.publication_start_date, :allow_empty => true
 = form.time_field :publication_start_date_time, :label => "#{t 'sections.begin_time'}", :value => record.publication_start_date, :allow_empty => true
@@ -20,3 +20,8 @@
       id: '#{record.is_a?(Site) ? 'site' : 'section'}_frontpage_node_id',
       width: 60
     });
+
+- if current_user.has_role_on?(['final_editor', 'admin'], (record.new_record? ? record.parent : record.node))
+  - field_set_tag t('sections.expiration_settings') do
+    = form.text_field   :expiration_email_subject, :label => t('sections.expiration_email_subject')
+    = form.html_editor  :expiration_email_body,    :label => t('sections.expiration_email_body'), :height => 100

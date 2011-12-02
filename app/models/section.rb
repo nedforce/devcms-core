@@ -34,7 +34,8 @@ class Section < ActiveRecord::Base
     :allowed_roles_for_create  => %w( admin final_editor ),
     :allowed_roles_for_destroy => %w( admin final_editor ),
     :available_content_representations => ['content_box'],
-    :has_own_content_box => true
+    :has_own_content_box => true,
+    :expiration_container=> true
   })
 
   # This content type needs approval when created or altered by an editor.

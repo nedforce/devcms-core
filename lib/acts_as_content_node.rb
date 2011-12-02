@@ -24,7 +24,8 @@ module Acts #:nodoc:
       :has_sync => false,
       :has_edit_items => false,
       :expirable => false,
-      :expiration_required => false
+      :expiration_required => false,
+      :expiration_container => false
     }
 
     # This act provides objects with the behavior to function as content nodes.
@@ -122,7 +123,7 @@ module Acts #:nodoc:
 
         after_save :update_search_index
         
-        delegate :update_search_index, :expirable?, :expiration_required?, :expired?, :to => :node
+        delegate :update_search_index, :expirable?, :expiration_required?, :expired?, :expiration_container?, :to => :node
         
         delegate_accessor :commentable,
                           :content_box_title, :content_box_icon, :content_box_colour, :content_box_number_of_items,
@@ -130,6 +131,7 @@ module Acts #:nodoc:
                           :parent,
                           :publication_start_date, :publication_end_date,
                           :responsible_user, :responsible_user_id, :expires_on,
+                          :expiration_notification_method, :expiration_email_recipient, :cascade_expires_on,
                           :title_alternative_list, :title_alternatives, :to => :node
               
         def has_parent(type, options = {})

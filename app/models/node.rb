@@ -87,8 +87,8 @@ class Node < ActiveRecord::Base
   # Prevents the root +Node+ from being destroyed.
   before_destroy :prevent_root_destruction
   
-  # Delegate tree calls to use Ancestry. Ensure this is added *after* other before/after filters.
-  include TreeDelegation
+  # Load tree functionality
+  include Node::Tree
   
   # Load visibility & accessibility functionality
   include Node::VisibilityAndAccessibility

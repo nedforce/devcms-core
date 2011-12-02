@@ -82,7 +82,7 @@ class Admin::NewsletterEditionsController < Admin::AdminController
         format.xml  { render :xml => @newsletter_edition, :status => :created, :location => @newsletter_edition }
       else
         @item_sortlets = item_sortlet_hash_for_ids(@item_ids)
-        format.html { render :action => :new }
+        format.html { render :action => :new, :status => :unprocessable_entity }
         format.xml  { render :xml => @newsletter_edition.errors.to_xml, :status => :unprocessable_entity }
       end
     end

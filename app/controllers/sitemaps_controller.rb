@@ -14,11 +14,14 @@ class SitemapsController < ApplicationController
   #
   # * GET /sitemap/changes
   def changes
-    raise ActionController::UnknownAction if params[:interval].blank?
-    @changes = Node.all(:conditions => ["updated_at > ?", Time.now - params[:interval].to_i])
-    
     respond_to do |format|
-      format.xml
+      format.xml do
+        raise ActionController::UnknownAction if params[:interval].blank?
+        @changes = Node.all(:conditions => ["updated_at > ?", Time.now - params[:interval].to_i])
+      end
+      format.all do
+        super
+      end
     end
   end
   

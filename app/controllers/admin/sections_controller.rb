@@ -6,7 +6,7 @@ class Admin::SectionsController < Admin::AdminController
   prepend_before_filter :find_parent_node,     :only => [ :new, :create ]
 
   # The +show+, +edit+ and +update+ actions need a +Section+ object to act upon.
-  before_filter :find_section,                 :only => [ :show, :previous, :edit, :update ]
+  before_filter :find_section,                 :only => [ :show, :previous, :edit, :update, :send_expiration_notifications ]
 
   # Parse the publication start date for the +create+ and +update+ actions.
   before_filter :parse_publication_start_date, :only => [ :create, :update ]
@@ -16,7 +16,7 @@ class Admin::SectionsController < Admin::AdminController
   before_filter :find_children,                :only => [ :show, :previous ]
 
   before_filter :set_commit_type,              :only => [ :create, :update ]
-
+  
   layout false
 
   require_role [ 'admin', 'final_editor', 'editor' ]
@@ -24,6 +24,7 @@ class Admin::SectionsController < Admin::AdminController
   # * GET /admin/sections/:id
   # * GET /admin/sections/:id.xml
   def show
+    @actions << { :url => { :action => :send_expiration_notifications }, :text => I18n.t('sections.send_expiration_notifications') } if current_user_is_admin?(@node) || current_user_is_final_editor?(@node)
     respond_to do |format|
       format.html { render :partial => 'show', :locals => { :record => @section }, :layout => 'admin/admin_show' }
       format.xml  { render :xml => @section }
@@ -97,6 +98,11 @@ class Admin::SectionsController < Admin::AdminController
         format.xml  { render :xml => @section.errors, :status => :unprocessable_entity }
       end
     end
+  end
+  
+  def send_expiration_notifications
+    NodeExpirationMailerWorker.notify_authors(@section.node)
+    render :text => '<div class="rightPanelDefault" id="rightPanelDefault"><table><tr><td>' + t('sections.expiration_notification_sent') + '</td></tr></table></div>'
   end
 
 protected

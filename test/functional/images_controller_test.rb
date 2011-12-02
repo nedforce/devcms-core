@@ -8,10 +8,11 @@ class ImagesControllerTest < ActionController::TestCase
     assert_redirected_to :format => 'jpg'
   end
   
-  def test_should_redirect_to_private
+  def test_should_not_redirect_to_private_for_hidden
     login_as :arthur
     get :full, :format => 'jpg', :id => images(:hidden_image).id
-    assert_redirected_to :action => "private_full", :id => images(:hidden_image).id, :format => 'jpg'
+    assert_response :not_found
+    # assert_redirected_to :action => "private_full", :id => images(:hidden_image).id, :format => 'jpg'
   end
 
   def test_should_show_full_image

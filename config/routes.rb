@@ -104,7 +104,7 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :top_hits_pages, :except => [ :index, :destroy ]
     admin.resources :pages, :except => [ :index, :destroy ], :member => { :previous => :get }
     admin.resources :contact_boxes, :except => [ :index, :destroy ]
-    admin.resources :sections, :except => [ :index, :destroy ], :member => { :previous => :get }
+    admin.resources :sections, :except => [ :index, :destroy ], :member => { :previous => :get, :send_expiration_notifications => :any }
     admin.resources :sites, :except => [ :index, :destroy ]
     admin.resources :news_archives, :except => :destroy
     admin.resources :news_items, :except => [ :index, :destroy ], :member => { :previous => :get }
