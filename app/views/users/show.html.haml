@@ -45,7 +45,7 @@
       - delete_button t('users.delete_user') do
         = link_to t('users.delete_user'), secure_url(:url_for, { :action => 'confirm_destroy', :id => @user })
 
-  - unless @user.weblogs.empty?
+  - if @user.weblogs.present?
     #weblogs
       %h2= t 'users.weblog'
 
@@ -72,4 +72,5 @@
     = render :partial => 'interests'
 
     .formButtonCt
-      = submit_tag t('users.save'), :class => 'submit', :class => 'left'
+      = submit_tag t('users.save'),                  :class => 'submit left'
+      = link_to    t('layouts.logout'), logout_path, :class => 'right'
