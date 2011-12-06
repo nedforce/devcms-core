@@ -50,8 +50,12 @@ class UsersController < ApplicationController
       respond_to do |format|
         if @user.save
           format.html do
-            flash[:notice] = I18n.t('users.welcome')
-            redirect_to login_path
+            if Settler[:after_signup_path].present?
+              redirect_to Settler[:after_signup_path]
+            else
+              flash[:notice] = I18n.t('users.welcome')
+              redirect_to login_path
+            end
           end
           format.xml  { render :xml => @user.to_xml, :status => :created, :location => @user }
         else

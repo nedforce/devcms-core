@@ -33,7 +33,7 @@ class SessionsController < ApplicationController
       flash[:notice] = "#{I18n.t('sessions.logged_in_as')} '#{self.current_user.login}'."
       redirect_back_or_default(user_path(current_user), false)
     elsif @user && !@user.verified?
-      flash.now[:notice] = I18n.t('sessions.not_yet_verified') + " "+I18n.t('sessions.no_email?') + " <a href = \"#{send_verification_email_user_path(@user)}\">#{I18n.t('sessions.request_new_code')}</a>"
+      flash.now[:notice] = I18n.t('sessions.not_yet_verified') + ' ' + I18n.t('sessions.no_email?') + " <a href = \"#{send_verification_email_user_path(@user)}\">#{I18n.t('sessions.request_new_code')}</a>"
       render :action => 'new'
     else
       flash.now[:warning] = I18n.t('sessions.user_or_password_error')
@@ -47,8 +47,12 @@ class SessionsController < ApplicationController
       self.current_user.forget_me
       self.current_user = nil
       cookies.delete :auth_token
-      flash[:notice] = I18n.t('sessions.logged_out')
-      redirect_to root_path
+      if Settler[:after_logout_path].present?
+        redirect_to Settler[:after_logout_path]
+      else
+        flash[:notice] = I18n.t('sessions.logged_out')
+        redirect_to root_path
+      end
     else
       flash[:warning] = I18n.t('sessions.cant_log_out')
       redirect_back_or_default(root_path, false)
