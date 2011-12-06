@@ -1,8 +1,11 @@
-%h1= t 'sessions.confirm_logout'
+.textAboveForm.logoutPageText.clearfix
+  - if Settler[:logout_page_text].present?
+    = Settler[:login_page_text]
+  - else
+    %h1= t 'sessions.confirm_logout'
+    %p= t 'sessions.really_logout?'
 
 - form_tag session_path, :method => :delete do
-  %p= t 'sessions.really_logout?'
-
   .formButtonCt
-    = submit_tag t('shared.y'), :class => 'left submit'
+    = submit_tag t('shared.y'),        :class => 'left submit'
     = link_to    t('shared.n'), :back, :class => 'right'
