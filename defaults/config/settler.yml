@@ -43,12 +43,12 @@ settings: &settings
     validations:
       presence: true
   login_page_text:
-    alt: The text that is placed above the login form on the login page
+    alt: The text above the login form on the login page
     value: ''
     editable: true
   logout_page_text:
-    alt: The text that is placed above the logout form on the logout page
-    value: ''
+    alt: The text above the logout form on the logout page
+    value: '<h1>Uitloggen bevestigen</h1><p>Wilt u echt uitloggen?</p>'
     editable: true
   mail_from_address:
     alt: The default FROM e-mail address for automatically generated e-mails
