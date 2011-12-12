@@ -14,7 +14,7 @@ module Node::Expiration
     
     base.before_validation :set_default_expires_on, :if => :expiration_required?
     
-    base.validates :expires_on_valid?
+    base.validate :expires_on_valid?
     
     base.extend(ClassMethods)
   end

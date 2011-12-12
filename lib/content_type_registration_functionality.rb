@@ -29,7 +29,7 @@ module ActiveRecord
         
         puts "\"Preloading all models, this might take a while..\""
         
-        Dir["#{RAILS_ROOT}/**/models/**/*.rb"].each do |f|
+        (Dir["#{RAILS_ROOT}/app/models/*.rb"] + Dir["#{RAILS_ROOT}/vendor/plugins/devcms-*/app/models/*.rb"]).each do |f|
           model_type = File.basename(f, '.*').camelize
           
           unless model_type == self.name
