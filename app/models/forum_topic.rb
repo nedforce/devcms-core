@@ -30,17 +30,11 @@ class ForumTopic < ActiveRecord::Base
     :copyable => false
   })
 
-  # Extend this class with methods to find items based on their publication date.
-  #acts_as_archive :date_time_field => :last_update_date, :items => :forum_threads
-
-  # A +ForumTopic+ belongs to a +Forum+.
-  has_parent :forum
-
   # A +ForumTopic+ can have many +ForumThread+ children.
-  has_many :forum_threads, :dependent => :destroy, :extend => FindAccessible::AssociationExtension
+  has_many :forum_threads, :dependent => :destroy
 
   # See the preconditions overview for an explanation of these validations.  
-  validates_presence_of   :title, :description, :forum
+  validates_presence_of   :title, :description
   validates_uniqueness_of :title
   validates_length_of     :title, :in => 2..255
 

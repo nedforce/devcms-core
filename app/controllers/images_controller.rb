@@ -1,13 +1,25 @@
 class ImagesController < ApplicationController
-  # Find the relevant image and skip node/sidebox loading.
-  before_filter         :find_image
+  
   prepend_before_filter :redirect_to_jpg,  :except => :show
-  before_filter         :redirect_private, :except => :show
+  
+  skip_before_filter :confirm_destroy
 
-  # No layout should be rendered when an image is requested.
+  skip_before_filter :set_search_scopes
+  
+  skip_before_filter :set_private_menu
+  
+  skip_before_filter :find_accessible_content_children_for_menu
+  
+  skip_before_filter :set_rss_feed_url
+  
+  before_filter :find_image
+  
+  before_filter :redirect_private, :except => :show
+  
+  skip_after_filter :increment_hits
+
   layout false
 
-  #set caching
   caches_page :full, :sidebox, :header, :thumbnail, :content_box_header, :big_header
 
   def full
@@ -72,8 +84,7 @@ class ImagesController < ApplicationController
 protected
 
   def find_image
-    @node ||= find_node
-    @image = @node.content
+    @image = Image.select_all_columns.find(params[:id])
   end
 
   def redirect_to_jpg
@@ -83,14 +94,14 @@ protected
   end
 
   def redirect_private
-    if !params[:action].include?("private_") && @image.node.is_hidden?
+    if !params[:action].include?("private_") && @image.node.private?
       redirect_to url_for(:id => @image.id, :action => "private_#{params[:action]}", :format => 'jpg' )
     end
   end
 
   def render_image
     respond_to do |format|
-      headers['Cache-Control'] = (@image.node.is_hidden? ? 'private' : 'public') # this can be cached by proxy servers
+      headers['Cache-Control'] = (@image.node.private? ? 'private' : 'public') # this can be cached by proxy servers
       format.jpg { render_flex_image(@image) }
     end
   end

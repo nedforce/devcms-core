@@ -6,7 +6,6 @@ module Node::UrlAliasing
   VALID_URL_ALIAS_FORMAT = /\A[a-z0-9_\-]((\/)?[a-z0-9_\-])*\Z/i
   VALID_CUSTOM_URL_SUFFIX_FORMAT = /\A\/?[a-z0-9_\-]+\Z/i
   
-  
   def self.included(base)
     # Scopes, validations & associations
     base.attr_protected :url_alias, :custom_url_alias
@@ -56,7 +55,6 @@ module Node::UrlAliasing
   def generate_url_alias
     generated_url_alias = ""
 
-    # build parent "breadcrumb"
     if parent_url_alias
       generated_url_alias << "#{parent_url_alias}/"
     end
@@ -71,7 +69,6 @@ module Node::UrlAliasing
   def generate_custom_url_alias
     generated_custom_url_alias = ""
 
-    # build parent "breadcrumb"
     if !self.custom_url_suffix.starts_with?('/') && parent_url_alias
       generated_custom_url_alias << "#{parent_url_alias}/"
     end
@@ -86,7 +83,7 @@ module Node::UrlAliasing
   end
   
   protected
-    # Sets an URL alias if none has been specified on create.
+    # Sets an URL alias if none has been specified on create or +force+ is true.
     def set_url_alias(force = false)
       self.url_alias = generate_unique_url_alias if self.url_alias.blank? || force
     end
@@ -115,6 +112,19 @@ module Node::UrlAliasing
 
       temp_url_alias
     end
+    
+    # Cleans a URL by stripping any whitespace characters, transliterating any
+    # special characters, replacing illegal characters by hyphens and converting
+    # the entire URL to downcase.
+    def clean_for_url(url)
+      result = Iconv.iconv('ascii//ignore//translit', 'utf-8', help.strip_tags(url.strip)).join.downcase.gsub(/[^\/a-z0-9]/,'-').gsub(/-{2,}/,'-').gsub(/\/$/, "")
+
+      # remove any leading and trailing hyphens, also when directly after a slash
+      result = $1 while result =~ /\A-(.*)/
+      result = $1 while result =~ /(.*)-\z/
+      result.gsub!(/\/-/, '/')
+      return result
+    end
   
     # Prevents saving this node when the URL alias contains reserved words.
     def should_not_have_reserved_url_alias
@@ -131,16 +141,15 @@ module Node::UrlAliasing
       # Returns if the specified URL alias has been reserved.
       def url_alias_reserved?(alias_to_check)
         return false if alias_to_check.blank?
-
-        rs = ActionController::Routing::Routes
+        
         begin
-          # Return true if we can recognize the path, but only if it doesn't contain
-          # a node_id. This indicates that it's a "true" route and not another
-          # URL alias, which should be covered by validates_uniqueness_of.
-          # This situation occurs when updating a node.
-          path = rs.recognize_path "/#{alias_to_check}"
-          return !path.has_key?(:node_id)
-        rescue Exception => e
+          params = ActionController::Routing::Routes.recognize_path "/#{alias_to_check}"
+
+        # if the alias is not currently matched to a route, we will be redirected to the errors controller
+        # Otherwise, if the node_id key is set, the alias already exists for an other node, and the
+        # validations will catch this.
+          return params[:controller] != "errors" && !params.has_key?(:node_id)
+        rescue Exception
           return false
         end
       end      

@@ -16,7 +16,7 @@ module ActsAsFerret
     # The 'real' Ferret Index instance
     def ferret_index
       ensure_index_exists
-      returning @ferret_index ||= Ferret::Index::Index.new(index_definition[:ferret]) do
+      (@ferret_index ||= Ferret::Index::Index.new(index_definition[:ferret])).tap do
         @ferret_index.batch_size = index_definition[:reindex_batch_size]
         @ferret_index.logger = logger
       end

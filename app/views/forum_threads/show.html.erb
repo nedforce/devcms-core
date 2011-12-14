@@ -1,4 +1,6 @@
+<% cache(:controller => '/nodes', :action => :breadcrumbs, :node => @forum_thread.forum_topic.node.id, :last_updated_at => @forum_thread.forum_topic.node.self_and_ancestors.maximum(:updated_at)) do %>
 <%= bread_crumbs_for(@forum_thread.forum_topic.node, :include_root => false, :minimum_crumbs => 2) -%>
+<% end %>
 
 <div class="regularPage forumThread">
   <h1 <%= "class='closed'" if @forum_thread.closed? -%>><span class="prefix"><%=t 'forums.forum_thread' -%></span><%=h @forum_thread.title -%></h1>

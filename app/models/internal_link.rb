@@ -40,10 +40,10 @@ class InternalLink < Link
 
   # Overrides the +content_title+ method of the +acts_as_content_node+ mixin.
   def content_title
-    self.title || self.linked_node.content.title
+    self.title.blank? ? self.linked_node.content_title : self.title
   end
 
-  protected  
+protected  
 
   # To prevent multiple redirects, or even infinite redirection, we must ensure
   # that the linked +Node+ instance (as identified by +linked_node+) is not

@@ -3,7 +3,7 @@
     .corner_overlay.transparent
     %h2= (carrousel_item.try(:item) || content).title
 - if carrousel_item
-  - image = carrousel_item.image(current_user) 
+  - image = carrousel_item.image
   - url   = (carrousel_item.item.is_a?(Image) && carrousel_item.item.url.present? && carrousel_item.item.url) || content_node_url(carrousel_item.item.node)
 
   = link_to(image_tag(sidebox_image_path(image, :format => :jpg), :alt => h(image.alt)), url) if image

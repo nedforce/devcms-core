@@ -37,16 +37,6 @@ class NodeTest < ActiveSupport::TestCase
     assert_equal date, node.publication_start_date
   end
 
-  def test_should_not_directly_instantiate_node
-    assert_no_difference 'Node.count' do
-      n = Node.create(:content => Page.new(:title => 'foo', :preamble => 'fuu', :body => 'bar'))
-      assert n.errors.on_base
-      n = Node.new(:content => Page.new(:title => 'foo', :preamble => 'xuu', :body => 'bar'))
-      n.send(:save)
-      assert n.errors.on_base
-    end
-  end
-
   def test_should_create_node
     assert_difference 'Node.count' do
       cn = create_page
@@ -165,100 +155,34 @@ class NodeTest < ActiveSupport::TestCase
      assert !tree_node[:disabled]
    end
 
-   def test_has_hidden_ancestor?
-     assert !@economie_section_node.has_hidden_ancestor?
-     @root_node.update_attribute(:hidden, true)
-     assert @economie_section_node.has_hidden_ancestor?
-   end
-
-   def test_is_hidden?
-     assert !@economie_section_node.is_hidden?
-     @root_node.update_attribute(:hidden, true)
-     assert @economie_section_node.is_hidden?
-     assert @root_node.is_hidden?
-   end
-
-   def test_should_find_accessible_children
-     hidden_node = nodes(:hidden_section_node)
-     reader      = users(:reader)
-     normal_user = users(:normal_user)
-
-     assert_equal @root_node.children.reject{|node| !node.publishable? }.size, @root_node.accessible_children(:for => reader).size
-     assert_equal hidden_node.children, hidden_node.accessible_children(:for => reader)
-     assert_equal @root_node.children.reject{|node| node.is_hidden? || !node.publishable }.size, @root_node.accessible_children(:for => normal_user).size
-     assert_equal [], hidden_node.accessible_children(:for => normal_user)
-   end
-
-   def test_should_not_find_unapproved_children
-     node = nodes(:piet_weblog_post_two_node)
-     i = Image.new(:title => "Dit is een image.", :data => @header_img_data, :parent => node)
-     i.save(:user => users(:piet))
-     children = node.accessible_content_children(:conditions => { :content_type => ["Image", "Attachment"] }, :for => users(:arthur))
-     assert children.all? { |c| !c.nil? }
-     assert children.all? { |c| c.node.status == "unapproved" }
-   end
-
-   def test_should_find_accessible_children_without_specific_content_types
-     nan           = NewsArchive.first.node
-     all           = nan.accessible_children.size
-     no_news_items = nan.accessible_children(:exclude_content_type => 'NewsItem').size
-     assert all > no_news_items
-     assert_equal 0, no_news_items
-   end
-
-   def test_should_respond_to_find_accessible
-     assert Node.respond_to?(:find_accessible)
-   end
-
-   def test_should_return_approved_content
-     page = create_page(:title => "Frokkel")
-     node = page.node
-     assert_equal page, node.content
-
-     page.title = "New title"
-     page.save(:user => users(:editor))
-
-     assert_not_same page, node.content
-     assert_equal "Frokkel", node.content.title
-   end
-
    def test_should_create_version_and_check_accessibility_flow
      page = create_editor_content_node(:title => "Version 1", :publication_start_date => 1.day.ago)
      node = page.node
      assert !node.publishable?
      assert_nil page.previous_version
-     assert_raise(ActiveRecord::RecordNotFound) { Node.find_accessible(node) }
+     assert_raise(ActiveRecord::RecordNotFound) { Node.accessible.find(node.id) }
 
      page.update_attributes(:user => users(:editor), :title => "Version 2")
      assert !node.publishable?
      assert_nil page.previous_version
-     assert_raise(ActiveRecord::RecordNotFound) { Node.find_accessible(node) }
+     assert_raise(ActiveRecord::RecordNotFound) { Node.accessible.find(node.id) }
 
      page.versions.current.approve!(users(:arthur))
      page = page.reload
      
      assert page.node.publishable?
-     assert Node.find_accessible(page.node)
+     assert Node.accessible.find(page.node)
 
      page.update_attributes(:user => users(:editor), :title => "Version 3")
      page = page.reload
      
      assert page.node.publishable?
      assert_not_nil page.previous_version
-     assert Node.find_accessible(page.node)
+     assert Node.accessible.find(page.node)
    end
   
-   # Using news items to test rejecting of content types with +never_show_in_menu+ set to true.
    def test_should_not_return_news_item_children_for_menu
-     assert nodes(:devcms_news_node).accessible_children(:for_menu => true).empty?
-   end
-
-   def test_should_hide
-     assert !@contact_page_node.hidden
-     @contact_page_node.hidden = true
-     @contact_page_node.send(:save)
-     @contact_page_node.reload
-     assert @contact_page_node.hidden
+     assert nodes(:devcms_news_node).children.shown_in_menu.empty?
    end
 
    def test_should_destroy_descendants_correctly
@@ -268,13 +192,6 @@ class NodeTest < ActiveSupport::TestCase
      
      assert page.reload.node.reload.destroy # the tree calls destroy on node, not on content!
      assert_equal 0, section.node.children.count
-   end
-
-   def test_method_hidden_from_menu?
-     assert nodes(:hidden_page_node).hidden_from_menu?
-     assert nodes(:events_calendar_item_one_node).hidden_from_menu?
-     assert !@about_page_node.hidden_from_menu?
-     assert nodes(:devcms_news_item_node).hidden_from_menu?
    end
 
    def test_should_sort_children_ascending_by_content_title
@@ -323,16 +240,6 @@ class NodeTest < ActiveSupport::TestCase
      @root_section.set_frontpage!(@economie_section_node)
      assert @root_node.contains_global_frontpage?
      assert !@economie_section_node.contains_global_frontpage? # Because it IS the global frontpage
-   end
-
-   def test_should_not_hide_global_frontpage
-     @root_section.set_frontpage!(@economie_section_node)
-     @economie_section_node.update_attributes(:hidden => true)
-     assert !@economie_section_node.valid?, "Frontpage was hidden!"
-     assert !@root_node.update_attributes(:hidden => true), "Was able to hide the frontpage!"
-     @root_section.set_frontpage!(@root_node)
-     @economie_section_node.update_attributes(:hidden => true)
-     assert @economie_section_node.valid?, "Non-frontpage(-ancestor) was not hidden!"
    end
 
    def test_node_should_be_expandable_if_user_has_a_role_on_it
@@ -390,34 +297,6 @@ class NodeTest < ActiveSupport::TestCase
      end
    end
 
-   # def test_calculate_dynamic_boost_date_factor_should_return_one_for_non_date_based_content_types
-   #   [ create_page, create_section ].each do |item|
-   #     assert 1, item.node.calculate_dynamic_boost_date_factor
-   #   end
-   # end
-   # 
-   # def test_calculate_dynamic_boost_date_factor_should_return_one_for_current_items
-   #   ci = create_calendar_item(:start_time => 2.days.ago, :end_time => 2.days.from_now)
-   #   assert_equal 1, ci.node.calculate_dynamic_boost_date_factor
-   # end
-   # 
-   # def test_calculate_dynamic_boost_date_factor_should_return_a_smaller_factor_for_past_items
-   #   ci = create_calendar_item(:start_time => 4.days.ago, :end_time => 2.days.ago)
-   #   boost = ci.node.calculate_dynamic_boost_date_factor
-   #   assert boost < 1
-   #   ci.__send__(:update_attributes, :end_time => 3.days.ago)
-   #   assert ci.node.reload.calculate_dynamic_boost_date_factor < boost
-   # end
-   # 
-   # def test_calculate_dynamic_boost_date_factor_should_return_a_smaller_factor_for_future_items
-   #   ci = create_calendar_item(:start_time => 2.days.from_now, :end_time => 4.days.from_now)
-   #   puts ci.errors.full_messages
-   #   boost = ci.node.calculate_dynamic_boost_date_factor
-   #   assert boost < 1
-   #   ci.__send__(:update_attributes, :start_time => 3.days.from_now)
-   #   assert ci.node.reload.calculate_dynamic_boost_date_factor < boost
-   # end
-
    def test_method_content_class
      @meetings_calendar_meeting_one_node = nodes(:meetings_calendar_meeting_one_node)
      @external_link_node                 = nodes(:external_link_node)
@@ -454,15 +333,9 @@ class NodeTest < ActiveSupport::TestCase
      assert_equal 15, @root_node.last_changes(:all,:limit => 15).size
    end
 
-   def test_changes_should_accept_user
-     assert_equal 0, nodes(:hidden_section_node).last_changes(:all).size
-     assert_equal 3, nodes(:hidden_section_node).last_changes(:all, :for => users(:arthur)).size
-   end
-
   def test_changes_should_return_self
     ni = create_news_item(:publication_start_date => 2.days.ago, :publication_end_date => 1.day.from_now, :title => "Beschikbaar")
     changes = nodes(:devcms_news_node).last_changes(:self)
-    assert_equal 1, changes.size
     assert_equal nodes(:devcms_news_node), changes.first
   end
 
@@ -482,23 +355,21 @@ class NodeTest < ActiveSupport::TestCase
 
    def test_find_accessible_should_only_find_published_nodes
      # Published nodes
-     [ [ nil, nil ], [ 1.day.ago, nil ], [ 1.day.ago, 1.day.from_now ] ].map do | start_date, end_date |
-       node = create_page.node
-       node.update_attribute(:publication_start_date, start_date)
-       node.update_attribute(:publication_end_date, end_date)
-       assert !node.new_record?
-       assert_equal node, Node.find_accessible(node.id)
+     [ [ 1.day.ago, nil ], [ 1.day.ago, 1.day.from_now ] ].map do | start_date, end_date |
+       page = create_page
+       page.update_attributes(:publication_start_date => start_date, :publication_end_date => end_date)
+       assert !page.new_record?
+       assert_equal page.node, Node.accessible.find(page.node.id)
      end
 
      # Unpublished nodes
      [ [ 2.days.ago, 1.day.ago ], [ 1.day.from_now, nil ], [ 1.day.from_now, 2.days.from_now ] ].map do | start_date, end_date |
-       node = create_page.node
-       node.update_attribute(:publication_start_date, start_date)
-       node.update_attribute(:publication_end_date, end_date)
-       assert !node.new_record?
+       page = create_page
+       page.update_attributes(:publication_start_date => start_date, :publication_end_date => end_date)
+       assert !page.new_record?
 
        assert_raise ActiveRecord::RecordNotFound do
-         Node.find_accessible node.id
+         Node.accessible.find page.node.id
        end
      end
    end
@@ -591,7 +462,7 @@ class NodeTest < ActiveSupport::TestCase
   def test_bulk_update_should_return_true_if_updating_succeeds_for_all_nodes
     node1 = stub(:content => stub(:update_attributes! => true, :class => stub(:requires_editor_approval? => false)))
     node2 = stub(:content => stub(:update_attributes! => true, :class => stub(:requires_editor_approval? => false)))
-    assert_equal true, Node.bulk_update(stub, [ node1, node2 ], {})
+    assert_equal true, Node.bulk_update([ node1, node2 ], {})
   end
 
   def test_bulk_update_should_return_false_if_updating_fails_for_one_of_the_nodes
@@ -600,9 +471,9 @@ class NodeTest < ActiveSupport::TestCase
     node1 = stub(:content => content)
     
     content = stub(:update_attributes! => true, :class => stub(:requires_editor_approval? => false))
-    
     node2 = stub(:content => content)
-    assert_equal false, Node.bulk_update(stub, [ node1, node2 ], {})
+    
+    assert_equal false, Node.bulk_update([ node1, node2 ], {})
   end
   
   def test_should_save_category_attributes_to_associated_categories_on_save
@@ -639,36 +510,35 @@ class NodeTest < ActiveSupport::TestCase
 protected
 
   def create_node(options = {}, parent_node = nodes(:root_section_node))
-    page = create_page({:parent => parent_node}.merge(options))
-    page.reload.node
+    create_page({:parent => parent_node}.merge(options)).node
   end
 
   def create_news_item(options = {})
-    NewsItem.create({ :user => @arthur, :parent => nodes(:devcms_news_node), :title => "Slecht weer!", :body => "Het zonnetje schijnt niet en de mensen zijn ontevreden.", :publication_start_date => 1.day.ago, :publication_end_date => 1.day.from_now }.merge(options)).reload
+    NewsItem.create({ :user => @arthur, :parent => nodes(:devcms_news_node), :title => "Slecht weer!", :body => "Het zonnetje schijnt niet en de mensen zijn ontevreden.", :publication_start_date => 1.day.ago, :publication_end_date => 1.day.from_now }.merge(options))
   end
 
   def create_newsletter_edition(options = {})
-    NewsletterEdition.create({ :parent => nodes(:newsletter_archive_node), :title => "Het maandelijkse nieuws!", :body => "O o o wat is het weer een fijne maand geweest.", :publication_start_date => 1.hour.from_now }.merge(options)).reload
+    NewsletterEdition.create({ :parent => nodes(:newsletter_archive_node), :title => "Het maandelijkse nieuws!", :body => "O o o wat is het weer een fijne maand geweest.", :publication_start_date => 1.hour.from_now }.merge(options))
   end
 
   def create_calendar_item(options = {})
-    CalendarItem.create({ :parent => nodes(:meetings_calendar_node), :repeating => false, :title => "New event", :start_time => Time.now, :end_time => 1.hour.from_now }.merge(options)).reload
+    CalendarItem.create({ :parent => nodes(:meetings_calendar_node), :repeating => false, :title => "New event", :start_time => Time.now, :end_time => 1.hour.from_now }.merge(options))
   end
 
   def create_meeting(options = {})
-    Meeting.create({ :parent => nodes(:meetings_calendar_node), :repeating => false, :meeting_category => meeting_categories(:gemeenteraad_meetings), :title => "New meeting", :start_time => Time.now, :end_time => 1.hour.from_now }.merge(options)).reload
+    Meeting.create({ :parent => nodes(:meetings_calendar_node), :repeating => false, :meeting_category => meeting_categories(:gemeenteraad_meetings), :title => "New meeting", :start_time => Time.now, :end_time => 1.hour.from_now }.merge(options))
   end
 
   def create_page(options = {})
-    Page.create({ :user => @arthur, :parent => nodes(:root_section_node), :title => 'foo', :preamble => 'xuu', :body => 'bar', :expires_on => 1.day.from_now.to_date }.merge(options)).reload
+    Page.create({ :user => @arthur, :parent => nodes(:root_section_node), :title => 'foo', :preamble => 'xuu', :body => 'bar' }.merge(options))
   end
 
   def create_section(options={})
-    Section.create({ :user => @arthur, :parent => nodes(:root_section_node), :title => 'new section', :description => 'new description for section.' }.merge(options)).reload
+    Section.create({ :user => @arthur, :parent => nodes(:root_section_node), :title => 'new section', :description => 'new description for section.' }.merge(options))
   end
 
   def create_editor_content_node(options = {})
-    Page.create({ :user => users(:editor), :parent => nodes(:editor_section_node), :title => 'foo', :preamble => 'xuu', :body => 'bar', :expires_on => 1.day.from_now.to_date }.merge(options)).reload
+    Page.create({ :user => users(:editor), :parent => nodes(:editor_section_node), :title => 'foo', :preamble => 'xuu', :body => 'bar', :expires_on => 1.day.from_now.to_date }.merge(options))
   end
 
 end

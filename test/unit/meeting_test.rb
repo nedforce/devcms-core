@@ -88,11 +88,12 @@ class MeetingTest < ActiveSupport::TestCase
   end
   
   def test_should_not_return_meeting_children_for_menu
-    assert @meetings_calendar.node.accessible_children(:for_menu => true).empty?
+    assert @meetings_calendar.node.children.accessible.shown_in_menu.empty?
   end
   
   def test_should_find_child_agenda_items
-    items = @meetings_calendar_meeting_one.accessible_children_for(users(:arthur))
+    items = @meetings_calendar_meeting_one.agenda_items.accessible
+    
     assert items.include?(agenda_items(:agenda_item_one))
     assert items.include?(agenda_items(:agenda_item_two))
   end

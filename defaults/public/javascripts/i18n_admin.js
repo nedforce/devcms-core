@@ -13,7 +13,8 @@ I18n.locale['nl'] = {
 		global_frontpage_failed: 'Sorry, de globale frontpage kon niet worden ingesteld.',
 		hide_right_column_failed: 'Sorry, het verbergen van de rechterkolom is mislukt.',
 		import_items: 'Importeren',
-		invisible_failed: 'Sorry, onzichtbaar maken mislukt.',
+		private_failed: 'Sorry, privé maken mislukt.',
+		hidden_failed: 'Sorry, onzichtbaar maken mislukt.',
 		move_failed: 'Sorry, het verplaatsen is mislukt.',
 		show_in_menu_failed: 'Sorry, tonen in menu mislukt.',		
 		sort_ascending: 'Oplopend',
@@ -56,6 +57,7 @@ I18n.locale['nl'] = {
 		make_copy: 'Maak kopie',
 		make_global: 'Maak globale frontpage',
 		'private': 'Privé',
+		hidden: 'Verborgen',
 		show_in_menu: 'Toon in menu',
 		sort_content: 'Inhoud sorteren',
 		url_alias: 'Webadres...'

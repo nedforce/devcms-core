@@ -10,9 +10,4 @@ class TopHitsPagesControllerTest < ActionController::TestCase
     assert_equal nodes(:top_ten_page_node), assigns(:node)
   end
 
-  def test_should_render_404_if_not_found
-    get :show, :id => -1
-    assert_response :not_found
-  end
-
 end

@@ -3,19 +3,17 @@
 # to allow registered users to create, update and delete their own weblogs.
 class WeblogPostsController < ApplicationController
 
-  before_filter :find_node,                         :only => :show
-
   # Require the user to be logged in for the +new+, +create+, +edit+, +update+, +destroy+ and +destroy_image+ actions.
   before_filter :login_required,                    :only => [ :new, :create, :edit, :update, :destroy, :destroy_image ]
 
-  # The +new+, +create+, +edit+, +update+, +destroy+ and +destroy_image+ actions need an ancestor +WeblogArchive+ and parent +Weblog+ object to work with.
-  before_filter :find_weblog_archive, :find_weblog, :only => [ :new, :create, :edit, :update, :destroy, :destroy_image ]
+  # The +new+, +create+, +edit+, +update+, +destroy+ and +destroy_image+ actions need a parent +Weblog+ object to work with.
+  before_filter :find_weblog, :only => [ :new, :create, :edit, :update, :destroy, :destroy_image ]
 
   # The +show+, +edit+, +update+, +destroy+ and +destroy_image+ actions need a +WeblogPost+ object to work with.
   before_filter :find_weblog_post,                  :only => [ :show, :edit, :update, :destroy, :destroy_image ]
 
   # Check whether the user is authorized to perform the +new+, +create+, +edit+, +update+, +destroy+ and +destroy_image+ actions.
-  before_filter :check_authorization,               :only => [ :new, :create, :edit, :update, :destroy, :destroy_image ]
+  before_filter :check_authorization_for_weblog_post,               :only => [ :new, :create, :edit, :update, :destroy, :destroy_image ]
 
   before_filter :find_images_and_attachments,       :only => [ :show, :edit ]
 
@@ -94,7 +92,6 @@ class WeblogPostsController < ApplicationController
 
     respond_to do |format|
       if @weblog_post.update_attributes(params[:weblog_post])
-
         images.delete_if do |image|
           success = image.save(:user => current_user)
           image.versions.current.approve! if success
@@ -147,24 +144,18 @@ class WeblogPostsController < ApplicationController
 
   protected
 
-    # Finds the +WeblogArchive+ object corresponding to the passed in +weblog_archive_id+ parameter.
-    def find_weblog_archive
-      @weblog_archive = WeblogArchive.find_accessible(params[:weblog_archive_id], :for => current_user)
-    end
-
     # Finds the +Weblog+ object corresponding to the passed in +weblog_id+ parameter.
     def find_weblog
-      @weblog = @weblog_archive.weblogs.find_accessible(params[:weblog_id], :include => [ :node ], :for => current_user)
+      @weblog = Weblog.find(params[:weblog_id])
     end
 
     # Finds the +WeblogPost+ object corresponding to the passed in +id+ parameter.
     def find_weblog_post
-      parent = ((@weblog) ? @weblog.weblog_posts : WeblogPost)
-      @weblog_post = parent.find_accessible(params[:id], :include => [ :node, { :node => :comments } ], :for => current_user)
+      @weblog_post = @node.content
     end
 
     # Checks whether the user is authorized to perform the action.
-    def check_authorization
+    def check_authorization_for_weblog_post
       unless @weblog.is_owned_by_user?(current_user) || current_user.has_role?('admin')
         flash[:notice] = I18n.t('application.not_authorized')
         redirect_to root_path

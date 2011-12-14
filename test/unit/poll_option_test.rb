@@ -48,8 +48,8 @@ class PollOptionTest < ActiveSupport::TestCase
       16.times { o.vote! }
     end
 
-    assert_equal 50, @o.percentage_of_votes
-    assert_equal 50, @o2.percentage_of_votes
+    assert_equal 50, @o.reload.percentage_of_votes
+    assert_equal 50, @o2.reload.percentage_of_votes
   end
 
   def test_should_return_0_percent_for_no_votes

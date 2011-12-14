@@ -14,7 +14,7 @@ module Admin::AdminHelper
     }
     permissions = {
       :page => :permissions,
-      :url  => { :controller => 'admin/permissions', :action => :index },
+      :url  => { :controller => 'admin/role_assignments', :action => :index },
       :text => I18n.t('admin.rights')
     }
     versions = {

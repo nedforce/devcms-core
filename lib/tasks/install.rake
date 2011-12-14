@@ -1,7 +1,7 @@
 namespace :devcms do
   desc "Installs default config and public assets"
   task :install => :environment do
-    ["public", "config", "app", "db"].each do |task|
+    %w( public app config db ).each do |task|
       Rake::Task["devcms:install:#{task}"].invoke
     end
   end
@@ -27,7 +27,7 @@ namespace :devcms do
     task :db => :environment do
       plugin_root = File.expand_path(File.join(File.dirname(__FILE__), "..", ".."))
       Engines.mirror_files_from(File.join(plugin_root, "defaults", "db"), File.join(RAILS_ROOT, "db"))
-    end    
+    end
   end
 end
   

@@ -1,22 +1,17 @@
 # This administrative controller is used to manage the website's nodes.
 class Admin::NodesController < Admin::AdminController
 
-  # Only allow XHMLHttpRequests for the +move+ action.
-  verify :xhr => true, :only => [ :move, :count_children, :sort_children ]
+  # Only allow XHMLHttpRequests some actions.
+  verify :xhr => true, :only => [ :move, :count_children, :sort_children, :set_visibility, :set_accessibility ]
 
-  # The +destroy+, +move+ and +update+ actions require +Node+ objects to act upon.
-  # This needs to be done before any authorisation attempts, a +Node+ might be needed.
-  prepend_before_filter :find_node, :only => [ :audit_show, :audit_edit, :destroy, :move, :update, :make_global_frontpage, :layout, :count_children, :sort_children, :previous_diffed ]
-
-  prepend_before_filter :find_nodes, :only => [ :bulk_edit, :bulk_update ]
+  before_filter :find_nodes, :only => [ :bulk_edit, :bulk_update ]
 
   before_filter :find_images_and_attachments, :only => [ :audit_show, :audit_edit, :previous_diffed ]
 
   # Require a role for the current node on update, destroy and move
-  require_role ['admin', 'final_editor'], :except => [ :index, :update, :bulk_edit, :bulk_update, :destroy ]
-  require_role ['admin', 'final_editor', 'editor'], :only => [ :update, :bulk_edit, :bulk_update, :destroy, :move, :sort_children, :count_children ]
-
-  cache_sweeper :node_content_sweeper, :only => [ :destroy, :update, :move, :sort_children ]
+  require_role 'admin', :only => :set_accessibility
+  require_role ['admin', 'final_editor'], :except => [ :index, :update, :set_visibility, :set_accessibility, :bulk_edit, :bulk_update, :destroy ]
+  require_role ['admin', 'final_editor', 'editor'], :only => [ :update, :bulk_edit, :bulk_update, :set_visibility, :destroy, :move, :sort_children, :count_children ]
 
   # Shows the sitemap admin page for html requests. The tree's root will be
   # the node with the given id, or the root node if no id is given.
@@ -93,7 +88,7 @@ class Admin::NodesController < Admin::AdminController
 
   def bulk_update
     respond_to do |format|
-      if Node.bulk_update(current_user, @nodes, params[:node])
+      if Node.bulk_update(@nodes, params[:node], current_user)
         format.html # bulk_update.html.erb
       else
         format.html { render :action => 'bulk_edit' }
@@ -130,7 +125,7 @@ class Admin::NodesController < Admin::AdminController
   # * PUT /admin/nodes/1/make_global_frontpage.json
   # * PUT /admin/nodes/1/make_global_frontpage.xml
   def make_global_frontpage
-    if @node.is_hidden?
+    if !@node.visible?
       respond_to do |format|
         format.json { render :json => { :error => I18n.t('nodes.frontpage_cant_be_hidden')}.to_json, :status => :precondition_failed }
         format.xml  { head :precondition_failed }
@@ -199,7 +194,7 @@ class Admin::NodesController < Admin::AdminController
     content = @node.content
     @content          = content.current_version
     @previous_content = content.previous_version || @content
-    @children         = content.accessible_children_for(current_user)
+    @children         = content.node.children.accessible
     @controller_path  = @node.content_type_configuration[:controller_name] || @node.content_class.table_name
   end
 
@@ -250,6 +245,32 @@ class Admin::NodesController < Admin::AdminController
 
     render :text => 'Sorteren gelukt.'
   end
+
+  def set_visibility
+    respond_to do |format|
+      if @node.set_visibility!(!params[:hidden].to_bool)
+        format.xml  { head :ok }
+        format.json { render :json => { :success => 'true' } }
+      else
+        format.xml  { render :xml => @node.errors.to_xml, :status => :unprocessable_entity }
+        format.json { render :json => { :errors => @node.errors.map{ |e| e.join(' ') } }.to_json, :status => :unprocessable_entity }
+      end
+    end
+  end
+  
+  def set_accessibility
+    respond_to do |format|
+      if @node.set_accessibility!(!params[:private].to_bool)
+        format.xml  { head :ok }
+        format.json { render :json => { :success => 'true' } }
+      else
+        format.xml  { render :xml => @node.errors.to_xml, :status => :unprocessable_entity }
+        format.json { render :json => { :errors => @node.errors.map{ |e| e.join(' ') } }.to_json, :status => :unprocessable_entity }
+      end
+    end
+  end
+  
+protected
 
   def find_nodes
     @nodes = Node.find(params[:ids])

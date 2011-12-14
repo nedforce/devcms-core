@@ -3,7 +3,7 @@
 
   - if logged_in?
     .newComment
-      - remote_form_for [commentable, comment ] do |f|
+      - remote_form_for [commentable, comment] do |f|
         = error_messages_for :comment
         .content
           = f.text_area(:comment, :class => 'contentArea')

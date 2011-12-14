@@ -125,7 +125,7 @@ protected
   end
 
   def find_weblog_posts
-    @weblog_posts = @weblog.weblog_posts.find_accessible(:all, :include => [ :node ], :for => current_user,
+    @weblog_posts = @weblog.weblog_posts.accessible.all(:include => [ :node ],
                                                             :order => 'weblog_posts.created_at DESC',
                                                             :page => { :size => 25, :current => 1 })
 

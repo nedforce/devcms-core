@@ -7,13 +7,6 @@ class Admin::MeetingsControllerTest < ActionController::TestCase
     @meeting = events(:meetings_calendar_meeting_one)
   end
 
-  def test_should_render_404_if_not_found
-    login_as :sjoerd
-
-    get :show, :id => -1
-    assert_response :not_found
-  end
-
   def test_should_show_meeting
     login_as :sjoerd
 
@@ -31,13 +24,6 @@ class Admin::MeetingsControllerTest < ActionController::TestCase
     get :previous, :id => @meeting
     assert_response :success
     assert assigns(:meeting)
-  end
-
-  def test_should_render_404_if_not_found
-    login_as :sjoerd
-
-    get :show, :id => -1
-    assert_response :not_found
   end
 
   def test_should_get_new
@@ -161,13 +147,6 @@ class Admin::MeetingsControllerTest < ActionController::TestCase
     assert_response :unprocessable_entity
     assert assigns(:meeting).errors.on(:title)
     assert_equal old_title, @meeting.reload.title
-  end
-
-  def test_should_require_roles
-    assert_user_can_access :arthur, [:new, :create], {:parent_node_id => nodes(:events_calendar_node).id}
-    assert_user_cant_access :final_editor, [:new, :create], {:parent_node_id => nodes(:events_calendar_node).id}
-    assert_user_cant_access :editor, [:new, :create], {:parent_node_id => nodes(:events_calendar_node).id}
-    assert_user_can_access :arthur, [:update, :edit, :destroy], {:id => @meeting.id}
   end
 
   def test_should_delete_non_repeating_calender_item

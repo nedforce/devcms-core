@@ -12,13 +12,6 @@ class Admin::AgendaItemsControllerTest < ActionController::TestCase
     assert_response :success
     assert_equal nodes(:agenda_item_one_node), assigns(:node)
   end
- 
-  def test_should_render_404_if_not_found
-    login_as :sjoerd
-        
-    get :show, :id => -1
-    assert_response :not_found
-  end  
   
   def test_should_get_new
     login_as :sjoerd
@@ -141,15 +134,6 @@ class Admin::AgendaItemsControllerTest < ActionController::TestCase
     put :update, :id => agenda_items(:agenda_item_one).id, :agenda_item => { :description => nil }
     assert_response :unprocessable_entity
     assert assigns(:agenda_item).errors.on(:description)
-  end
-  
-  def test_should_require_roles
-    assert_user_can_access :arthur,       [ :new, :create ],  { :parent_node_id => nodes(:meetings_calendar_meeting_one_node).id }
-    assert_user_can_access :final_editor, [ :new, :create ],  { :parent_node_id => nodes(:meetings_calendar_meeting_one_node).id }
-    assert_user_can_access :editor,       [ :new, :create ],  { :parent_node_id => nodes(:meetings_calendar_meeting_one_node).id }
-    assert_user_can_access :arthur,       [ :update, :edit ], { :id => agenda_items(:agenda_item_one).id }
-    assert_user_can_access :final_editor, [ :update, :edit ], { :id => agenda_items(:agenda_item_one).id }
-    assert_user_can_access :editor,       [ :update, :edit ], { :id => agenda_items(:agenda_item_one).id }
   end
 
 protected

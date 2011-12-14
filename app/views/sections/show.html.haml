@@ -4,7 +4,7 @@
 
     %h1= h @section.title
 
-    = render :partial => '/shared/metadata', :locals => { :publication_date => @section.publication_start_date, :last_update_date => @section.last_updated_at(current_user) }
+    = render :partial => '/shared/metadata', :locals => { :publication_date => @section.publication_start_date, :last_update_date => @section.last_updated_at }
 
     - if @section.description.present?
       = content_tag(:div, w(@section.description), :class => 'htmlField')

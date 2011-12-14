@@ -51,22 +51,18 @@ class NewsViewer < ActiveRecord::Base
   end
 
   # Gets accessible news items for the frontend. This method does not return unapproved content.
-  def accessible_news_items_for(user, options = {})
-    self.news_items.newest.find_accessible(:all, {
-      :for              => user,
-      :order            => 'news_viewer_items.position, nodes.publication_start_date desc'
-      }.merge(options))
+  def accessible_news_items(options = {})
+    self.news_items.newest.accessible.all({ :order => 'news_viewer_items.position, nodes.publication_start_date DESC' }.merge(options))
   end
 
   # Returns the date when the +NewsViewer+ was last updated.
-  def last_updated_at(user)
-    last_item = self.news_items.newest.find_accessible(:first, :for => user, :parent => self, :order => 'nodes.publication_start_date DESC')
-    last_item ? last_item.publication_start_date : self.updated_at
+  def last_updated_at
+    [ self.news_items.newest.accessible.first(:order => 'nodes.publication_start_date DESC').try(:publication_start_date), self.updated_at ].compact.max
   end
 
   # Maintenance task for removing old news items and adding new ones.
   def self.update_news_items
-    NewsViewer.all.each{ |nv| nv.update_news_items }
+    NewsViewer.all.each { |nv| nv.update_news_items }
   end
 
   # Update the news items.

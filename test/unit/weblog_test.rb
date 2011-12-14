@@ -60,7 +60,7 @@ class WeblogTest < ActiveSupport::TestCase
   end
 
   def test_should_not_return_weblog_children_for_menu
-    assert @devcms_weblog_archive.node.accessible_children(:for_menu => true).empty?
+    assert @devcms_weblog_archive.node.children.shown_in_menu.empty?
   end
 
   def test_is_owned_by_user?
@@ -134,7 +134,7 @@ class WeblogTest < ActiveSupport::TestCase
     end
 
     [ -1, 0, 2, 4 ].each do |limit|
-      found_weblog_posts = w.find_last_published_weblog_posts(users(:arthur), limit)
+      found_weblog_posts = w.find_last_published_weblog_posts(limit)
 
       if limit <= 0
         assert found_weblog_posts.empty?
@@ -153,24 +153,11 @@ class WeblogTest < ActiveSupport::TestCase
 
   def test_last_updated_at_should_return_updated_at_when_no_accessible_weblog_posts_are_found
     w = create_weblog
-    assert_equal w.updated_at, w.last_updated_at(users(:arthur))
+    assert_equal w.updated_at, w.last_updated_at
     wp = create_weblog_post w
-    wp.node.update_attribute(:hidden, true)
-    assert_equal w.updated_at, w.last_updated_at(users(:editor))
-  end
-
-  def test_last_updated_at_should_return_publication_start_date_of_last_published_accessible_weblog_post
-    w = create_weblog
-
-    wp1 = create_weblog_post w, :publication_start_date => 2.days.ago
-
-    wp2 = create_weblog_post w, :publication_start_date => 1.day.ago
-    wp2.node.update_attribute(:hidden, true)
-
-    wp3 = create_weblog_post w, :publication_start_date => 1.day.from_now
-
-    assert_equal wp2.publication_start_date.to_s, w.last_updated_at(users(:arthur)).to_s
-    assert_equal wp1.publication_start_date.to_s, w.last_updated_at(users(:editor)).to_s
+    wp.node.hidden = true
+    wp.node.save!
+    assert_equal w.updated_at, w.last_updated_at
   end
   
 protected

@@ -3,13 +3,6 @@ require File.dirname(__FILE__) + '/../../test_helper'
 class Admin::CombinedCalendarsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
   
-  def test_should_render_404_if_not_found
-    login_as :sjoerd
-        
-    get :show, :id => -1
-    assert_response :not_found
-  end
-  
   def test_should_show_combined_calendar
     login_as :sjoerd
     
@@ -140,15 +133,6 @@ class Admin::CombinedCalendarsControllerTest < ActionController::TestCase
     put :update, :id => combined_calendars(:combined_calendar).id, :combined_calendar => {:title => nil}
     assert_response :unprocessable_entity
     assert assigns(:combined_calendar).errors.on(:title)
-  end
-  
-  def test_should_require_roles
-    assert_user_can_access :arthur, [:new, :create], {:parent_node_id => nodes(:root_section_node).id}
-    assert_user_can_access :final_editor, [:new, :create], {:parent_node_id => nodes(:economie_section_node).id}
-    assert_user_cant_access :editor, [:new, :create], {:parent_node_id => nodes(:devcms_news_node).id}
-    assert_user_can_access :arthur, [:update, :edit], {:id => combined_calendars(:combined_calendar).id}
-    assert_user_cant_access :final_editor, [:update, :edit], {:id => combined_calendars(:combined_calendar).id}
-    assert_user_cant_access :editor, [:update, :edit], {:id => combined_calendars(:combined_calendar).id}
   end
 
 protected

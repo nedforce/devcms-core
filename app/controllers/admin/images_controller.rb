@@ -5,6 +5,7 @@ class Admin::ImagesController < Admin::AdminController
   before_filter :find_sibling_images,      :only => [ :new, :create ]
 
   before_filter :find_image,             :except => [ :new, :create ]
+  
   before_filter :find_node,                :only => [ :update, :destroy, :edit, :show, :preview, :thumbnail, :thumbnail_preview, :content_box_header_preview, :previous ]
 
   before_filter :clean_is_for_header,      :only => [ :create, :update ]
@@ -144,11 +145,11 @@ class Admin::ImagesController < Admin::AdminController
   protected
 
     def find_image
-      @image = Image.find(params[:id])
+      @image = Image.select_all_columns.find(params[:id])
     end
 
     def find_sibling_images
-      @sibling_images = Image.find_accessible(:all, :for => current_user, :include => :node, :conditions => ["nodes.ancestry = :parent_child_ancestry", {:parent_child_ancestry => @parent_node.child_ancestry }])
+      @sibling_images = Image.accessible.select_all_columns.all(:conditions => ["nodes.ancestry = :parent_child_ancestry", {:parent_child_ancestry => @parent_node.child_ancestry }])
     end
 
     def render_image

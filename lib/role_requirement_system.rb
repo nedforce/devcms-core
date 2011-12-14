@@ -130,7 +130,7 @@ module RoleRequirementSystem
       node = @parent_node || @node || @nodes
       
       unless self.class.user_authorized_for?(current_user, node, params, binding)
-       if node && (node.is_a?(Array) ? node.any?(&:is_hidden?) : node.is_hidden?)
+       if node && (node.is_a?(Array) ? node.any? { |n| !n.visible? } : !node.visible?)
          raise ActionController::RoutingError, I18n.t('role_requirement_system.node_not_found')
        else
          return access_denied

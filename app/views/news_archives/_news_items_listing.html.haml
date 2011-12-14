@@ -1,6 +1,7 @@
 - unless news_items.empty?
   - first_item   = news_items.shift
-  - header_image = Image.find_accessible(:first, :for => current_user, :include => :node, :conditions => ["nodes.ancestry = :latest_news_ancestry", { :latest_news_ancestry => first_item.node.child_ancestry }])
+  
+  - header_image = first_item.node.children.accessible.with_content_type('Image').include_content.first.try(:content)
 
   - if header_image
     = image_tag(content_box_header_image_path(header_image, :format => :jpg), :alt => h(header_image.title), :class => 'content_box_header')

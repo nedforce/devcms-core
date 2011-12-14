@@ -18,19 +18,9 @@ class PagesControllerTest < ActionController::TestCase
     assert_equal old_hits + 1, page.node.reload.hits
   end
   
-  def test_should_render_404_if_not_found
-    get :show, :id => -1
-    assert_response :not_found
-  end
-  
   def test_should_render_404_if_hidden_for_user
     get :show, :id => pages(:hidden_page).id
-    assert_response :not_found
-  end
-  
-  def test_should_render_404_if_node_cannot_be_found
-    get :show
-    assert_response :not_found    
+    assert_redirected_to :controller => :errors, :action => :error_404
   end
   
 end

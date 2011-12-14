@@ -53,7 +53,7 @@ module OwmsMetadataHelper
   # OWMS Mantle metadata
   # * dcterms:accessrights. Change behavior to publish the ancestors of the current node (#3415)
   def owms_mantle_metadata_for(node)
-    node.path.collect{ |n| meta_tag('ancestry', n.id.to_s) } unless node.is_hidden?
+    node.path.collect{ |n| meta_tag('ancestry', n.id.to_s) } if node.visible?
   end
 
   # OWMS fields specifically meant for announcements (bm) and permits (vg)

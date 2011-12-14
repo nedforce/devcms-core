@@ -68,7 +68,7 @@ class WeblogPostTest < ActiveSupport::TestCase
   end
   
   def test_should_not_return_weblog_post_children_for_menu
-    assert @henk_weblog.node.accessible_children(:for_menu => true).empty?
+    assert @henk_weblog.node.children.shown_in_menu.empty?
   end
 
   def test_url_alias_for_news_item_with_publication_start_date

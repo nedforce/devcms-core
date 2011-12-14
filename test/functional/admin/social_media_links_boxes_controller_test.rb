@@ -15,13 +15,6 @@ class Admin::SocialMediaLinksBoxesControllerTest < ActionController::TestCase
     assert assigns(:social_media_links_box)
   end
 
-  def test_should_render_404_if_not_found
-    login_as :sjoerd
-
-    get :show, :id => -1
-    assert_response :not_found
-  end
-
   def test_should_get_new
     login_as :sjoerd
 
@@ -122,7 +115,6 @@ class Admin::SocialMediaLinksBoxesControllerTest < ActionController::TestCase
     assert_response :success
     assert_equal 'updated title', assigns(:social_media_links_box).title
     assert_equal old_title, smlb.reload.title
-    puts assigns(:social_media_links_box).errors.full_messages
     assert_template 'update_preview'
   end
 
@@ -144,16 +136,6 @@ class Admin::SocialMediaLinksBoxesControllerTest < ActionController::TestCase
     put :update, :id => @social_media_links_box.id, :social_media_links_box => {:title => nil}
     assert_response :unprocessable_entity
     assert assigns(:social_media_links_box).errors.on(:title)
-  end
-
-  def test_should_require_roles
-    assert_user_can_access  :arthur,       [ :new, :create ], { :parent_node_id => nodes(:root_section_node) }
-    assert_user_cant_access :final_editor, [ :new, :create ], { :parent_node_id => nodes(:economie_section_node) }
-    assert_user_cant_access :editor,       [ :new, :create ], { :parent_node_id => nodes(:root_section_node) }
-
-    assert_user_can_access  :arthur,       [ :update, :edit ], { :id => @social_media_links_box }
-    assert_user_cant_access :final_editor, [ :update, :edit ], { :id => @social_media_links_box }
-    assert_user_cant_access :editor,       [ :update, :edit ], { :id => @social_media_links_box }
   end
 
   protected

@@ -12,7 +12,7 @@ class AttachmentsController < ApplicationController
       render :file => '/attachments/show.html.haml'
     else
       # Upload file to user
-      upload_file(@attachment.node.is_hidden? ? 'private': 'public')
+      upload_file(!@attachment.node.visible? ? 'private': 'public')
     end
   end
 

@@ -58,10 +58,9 @@ class Weblog < ActiveRecord::Base
   validates_presence_of :title, :weblog_archive, :user
   validates_length_of   :title, :in => 2..255, :allow_blank => true
 
-  # Returns the last update date, as seen from the perspective of the given user.
-  def last_updated_at(user)
-    wp = self.weblog_posts.find_accessible(:first, :for => user, :order => 'nodes.publication_start_date DESC')
-    wp ? wp.node.publication_start_date : self.updated_at
+  # Returns the last update date
+  def last_updated_at
+    [ self.node.children.accessible.maximum('nodes.publication_start_date'), self.updated_at ].compact.max
   end
   
   # Returns true if this +Weblog+ is owned by the given +User+, else false.
@@ -69,11 +68,11 @@ class Weblog < ActiveRecord::Base
     self.user == user
   end
   
-  # Finds the +limit+ last published +WeblogPost+ children for the given +user+.
-  def find_last_published_weblog_posts(user, limit)
-    limit ||= 5
+  # Finds the +limit+ last published +WeblogPost+ children
+  def find_last_published_weblog_posts(limit = 5)
     return [] if limit <= 0
-    self.weblog_posts.find_accessible(:all, :limit => limit, :for => user, :order => 'nodes.publication_start_date DESC')
+    
+    self.weblog_posts.accessible.all(:limit => limit)
   end
 
   # Returns the description as the token for indexing.

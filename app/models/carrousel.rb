@@ -49,7 +49,9 @@ class Carrousel < ActiveRecord::Base
   validates_numericality_of :display_time_in_seconds, :allow_blank => true, :integer_only => true, :greater_than_or_equal_to => 0
   validates_numericality_of :animation, :integer_only => true, :greater_than_or_equal_to => 0
   
-  #validate :number_of_carrousel_items_less_than_ten
+  def last_updated_at
+    [ self.carrousel_items.maximum(:updated_at), self.updated_at ].compact.max
+  end
   
   def animation
     super.to_i
@@ -62,7 +64,7 @@ class Carrousel < ActiveRecord::Base
 
   # Retrieves the items belonging to this carrousel in correct order.
   def items
-    carrousel_items.all.collect(&:item)
+    carrousel_items.all.map { |ci| ci.item }
   end
   
   # Number of items in this carrousel.
@@ -72,7 +74,7 @@ class Carrousel < ActiveRecord::Base
 
   # Retrieves the approved items.
   def approved_items
-    items.map { |item| item.node.content }
+    items.map { |item| item.content }
   end
 
   # Adds items to a +Carrousel+, which must be a +Page+, an +Image+ or a +NewsItem+. Old associations are removed first.
@@ -166,10 +168,6 @@ private
       end
       self.current_carrousel_item
     end
-  end
-  
-  def number_of_carrousel_items_less_than_ten
-    errors.add_to_base(:too_many_carrousel_items) if self.carrousel_items.size > 9
   end
   
 end

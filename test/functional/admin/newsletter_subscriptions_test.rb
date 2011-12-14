@@ -3,13 +3,6 @@ require File.dirname(__FILE__) + '/../../test_helper'
 class Admin::NewsletterSubscriptionsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
   
-  def test_should_render_404_if_not_found
-    login_as :sjoerd
-        
-    get :show, :id => -1
-    assert_response :not_found
-  end
-  
   def test_should_show_newsletter_archive
     login_as :sjoerd
     
@@ -49,9 +42,4 @@ class Admin::NewsletterSubscriptionsControllerTest < ActionController::TestCase
     assert_equal users(:sjoerd).email_address, assigns(:users).results.first.email_address
   end
   
-  def test_should_require_roles
-    assert_user_can_access  :arthur,       [ :show, :list, :destroy ]
-    assert_user_can_access  :final_editor, [ :show, :list, :destroy ]
-    assert_user_cant_access :editor,       [ :show, :list, :destroy ]
-  end
 end

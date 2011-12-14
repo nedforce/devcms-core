@@ -31,10 +31,8 @@ class PollOption < ActiveRecord::Base
   validates_length_of     :text, :in => 1..255  
   validates_uniqueness_of :text, :scope => :poll_question_id
 
-  # Increases the vote count for this option in a single SQL execution.
   def vote!
-    connection.update("UPDATE poll_options SET number_of_votes = number_of_votes + 1 WHERE id = #{self.id}") if self.poll_question.active?
-    reload # Make sure the new value is read from the db.
+    PollOption.increment_counter :number_of_votes, self.id if self.poll_question.active?
   end
 
   # Returns the percentage of votes casted for this option relative to all votes for

@@ -5,7 +5,7 @@ class Admin::CarrouselsController < Admin::AdminController
   # The +show+, +new+, +edit+, +update+ and +create+ actions need a parent +Node+ object.
   before_filter :find_parent_node,             :only => [ :new, :create ]
 
-  # The +show+, +edit+ and +update+ actions need a +NewsletterEdition+ object to act upon.
+  # The +show+, +edit+ and +update+ actions need a +Carrousel+ object to act upon.
   before_filter :find_carrousel,               :only => [ :show, :edit, :update ]
 
   # Parse the publication start date for the +create+ and +update+ actions.
@@ -23,6 +23,7 @@ class Admin::CarrouselsController < Admin::AdminController
   # * GET /admin/carrousels/:id.xml
   def show
     @animation = Carrousel::ANIMATION_NAMES[@carrousel.animation]
+    
     respond_to do |format|
       format.html { render :partial => 'show', :locals => { :record => @carrousel }, :layout => 'admin/admin_show' }
       format.xml  { render :xml => @carrousel }
@@ -129,7 +130,6 @@ class Admin::CarrouselsController < Admin::AdminController
   end
 
   def item_sortlet_hash(element, excerpt = '')
-
     if element.node.content_type == 'Image'
       html = "<img src=\"/#{element.node.url_alias}\"/>"
     else

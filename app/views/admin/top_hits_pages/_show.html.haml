@@ -6,7 +6,8 @@
 
   - unless @top_hits.empty?
     %ol.top_hits
-      - @top_hits.each do |content_node|
+      - @top_hits.each do |top_hit|
+        - content_node = top_hit.content
         %li
           = image_tag "icons/#{content_node.icon_filename}", :class => 'icon', :alt => h(content_node.title)
           = link_to h(content_node.title), '#'

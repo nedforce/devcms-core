@@ -7,7 +7,7 @@
         == #{t 'shared.published'}: #{l record.publication_start_date, :format => :long}
     - unless record.new_record?
       %p.lastUpdateDate
-        == #{t 'shared.last_updated'}: #{l record.last_updated_at(current_user), :format => :long}
+        == #{t 'shared.last_updated'}: #{l record.last_updated_at, :format => :long}
 
   .content
     - if record.description.present?

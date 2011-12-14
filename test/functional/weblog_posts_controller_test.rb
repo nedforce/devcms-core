@@ -15,24 +15,6 @@ class WeblogPostsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  def test_should_render_404_for_invalid_weblog_archive
-    login_as :henk
-    get :edit, :weblog_archive_id => nil, :weblog_id => weblogs(:henk_weblog).id, :id => weblog_posts(:henk_weblog_post_one).id
-    assert_response :not_found
-  end
-
-  def test_should_render_404_for_invalid_weblog
-    login_as :henk
-    get :edit, :weblog_archive_id => weblog_archives(:devcms_weblog_archive).id, :weblog_id => nil, :id => weblog_posts(:henk_weblog_post_one).id
-    assert_response :not_found
-  end
-
-  def test_should_render_404_for_invalid_weblog_post
-    login_as :henk
-    get :edit, :weblog_archive_id => weblog_archives(:devcms_weblog_archive).id, :weblog_id => weblogs(:henk_weblog).id, :id => nil
-    assert_response :not_found
-  end
-
   def test_should_get_new_for_owner_of_weblog
     login_as :henk
     get :new, :weblog_archive_id => weblog_archives(:devcms_weblog_archive).id, :weblog_id => weblogs(:henk_weblog).id
@@ -171,14 +153,6 @@ class WeblogPostsControllerTest < ActionController::TestCase
     assert_response :redirect
   end
 
-  def test_should_show_confirmationon_destroy_with_get
-    login_as :henk
-    assert_no_difference('WeblogPost.count') do
-      get :destroy, :weblog_archive_id => weblog_archives(:devcms_weblog_archive).id, :weblog_id => weblogs(:henk_weblog).id, :id => weblog_posts(:henk_weblog_post_one).id
-      assert_template 'confirm_destroy'
-    end
-  end
-
   def test_should_destroy_weblog_post_for_admin
     login_as :sjoerd
     assert_difference('WeblogPost.count', -1) do
@@ -216,7 +190,6 @@ class WeblogPostsControllerTest < ActionController::TestCase
     assert_equal 2, images.size
     assert images.all? { |i| i.parent_id.equal?(assigns(:weblog_post).node.id)}
     assert images.all? { |i| !i.root?}
-    assert images.all? { |i| i.reload.publishable?}
   end
 
   def test_should_not_create_with_more_than_four_images

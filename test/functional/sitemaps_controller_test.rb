@@ -49,7 +49,15 @@ class SitemapsControllerTest < ActionController::TestCase
   def test_should_not_contain_hidden_content
     get :changes, :format => 'atom'
     assert_response :success
-    assert_nil assigns(:nodes).reject! { |n| n.is_hidden? }
+    assert_nil assigns(:nodes).reject! { |n| !n.visible? }
+  end
+  
+  def test_should_get_changes_since_interval
+    sleep 3
+    Node.root.touch
+    get :changes, :format => 'xml', :interval => 2.second.to_i
+    assert assigns(:changes).include?(Node.root)
+    assert_response :success
   end
 
 protected

@@ -3,13 +3,6 @@ require File.dirname(__FILE__) + '/../../test_helper'
 class Admin::SearchPagesControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
-  def test_should_render_404_if_not_found
-    login_as :sjoerd
-
-    get :show, :id => -1
-    assert_response :not_found
-  end
-
   def test_should_show_forum
     login_as :sjoerd    
 

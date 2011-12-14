@@ -53,7 +53,8 @@ class TopHitsPageTest < ActiveSupport::TestCase
     top_hits_page = create_top_hits_page(:parent => nodes(:sub_site_section_node))
     page_node = create_page(:parent => nodes(:root_section_node)).node
     page_node.update_attribute(:hits, 3000)
-    found_top_hits = top_hits_page.find_top_hits.map(&:node)
+    
+    found_top_hits = top_hits_page.find_top_hits
 
     assert !found_top_hits.include?(page_node)
   end
@@ -63,7 +64,7 @@ class TopHitsPageTest < ActiveSupport::TestCase
     page_node.update_attribute(:hidden, true)
     page_node.update_attribute(:hits, 3000)
 
-    found_top_hits = @top_ten_page.find_top_hits.map(&:node)
+    found_top_hits = @top_ten_page.find_top_hits
 
     assert !found_top_hits.include?(page_node)
   end
@@ -75,7 +76,7 @@ class TopHitsPageTest < ActiveSupport::TestCase
       excluded_content_type.node.update_attribute(:hits, 100000)
     end
 
-    found_top_hits = @top_ten_page.find_top_hits(excluded_content_types.size)
+    found_top_hits = @top_ten_page.find_top_hits(:limit => excluded_content_types.size).map(&:content)
 
     excluded_content_types.each do |excluded_content_type|
       assert !found_top_hits.include?(excluded_content_type), "a content node of type #{excluded_content_type.class} was included in the top list"
@@ -89,7 +90,7 @@ protected
   end
 
   def create_page(options = {})
-    Page.create({:parent => @root_node, :title => "Page title", :preamble => "Ambule", :body => "Page body", :expires_on => 1.day.from_now.to_date }.merge(options))
+    Page.create({:parent => @root_node, :title => "Page title", :preamble => "Ambule", :body => "Page body" }.merge(options))
   end
 
   def create_excluded_content_types

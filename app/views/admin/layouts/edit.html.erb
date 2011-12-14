@@ -33,8 +33,14 @@
             valid = e.sortlet.representation == e.sorter.representation || e.sorter.target == "custom_representations"
         } else if(e.sorter.target != 'custom_representations') {
             node = e.data.node || e.sortlet.node;
-            valid = e.sorter.maxItems == -1 || e.sorter.maxItems >= sortlets.length+1; // Sorter should not be full
+            valid = !e.sorter.node.isHidden // Sortlet cannot be hidden
+            valid = valid && (e.sorter.maxItems == -1 || e.sorter.maxItems >= sortlets.length+1); // Sorter should not be full
             valid = valid && node.siteNodeId == e.sorter.node.siteNodeId; // Sortlet should be part of the same site
+            
+            if (e.sorter.node.isPrivate) { // If the sortlet is private, then the node should be in the same private subtree
+              valid = valid && node.topLevelPrivateAncestorId == e.sorter.node.topLevelPrivateAncestorId;
+            }
+            
             valid = valid && !(sorters.any(function(sorter){ return sorter.nodeIds().include(node.id);}) && Object.isUndefined(e.sortlet)); //Sortlet should not exist in any sorter yet, unless it is a sortlet
             valid = valid && node.availableContentRepresentations.include(e.sorter.representation); // The content type should have a valid representation for this target
         } else {

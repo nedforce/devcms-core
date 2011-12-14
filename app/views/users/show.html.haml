@@ -62,7 +62,7 @@
           - @user.weblogs.each do |wl|
             %tr{ :class => cycle('alt','', :name => 'weblogs') }
               %td= h wl.title
-              %td.gray= h wl.last_updated_at(@user).to_s(:short)
+              %td.gray= h wl.last_updated_at.to_s(:short)
               %td.right.gray= link_to_content_node t('users.view_weblog'), wl, {}, :title => h(wl.title)
 
   - form_for @user, :url => secure_url(:url_for, { :action => 'update', :id => @user }) do |f|

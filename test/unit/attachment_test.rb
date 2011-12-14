@@ -91,6 +91,6 @@ class AttachmentTest < ActiveSupport::TestCase
     end
     
     def create_attachment(options = {})
-      Attachment.create({:parent => nodes(:downloads_page_node), :title => 'Park Zandweerd Matrix plannen', :uploaded_data => fixture_file_upload(FIXTURE_FILE, 'application/msword') }.merge(options))
+      Attachment.create({:parent => nodes(:downloads_page_node), :title => 'Park Zandweerd Matrix plannen', :category => 'foo', :uploaded_data => fixture_file_upload(FIXTURE_FILE, 'application/msword') }.merge(options))
     end
 end

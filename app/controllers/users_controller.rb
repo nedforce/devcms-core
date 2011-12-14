@@ -188,6 +188,7 @@ class UsersController < ApplicationController
   # * login_email - String. The login name or email address of the user that is requesting his password.
   def send_password
     @user = User.find_by_login(params[:login_email]) || User.find_by_email_address(params[:login_email])
+    
     respond_to do |format|
       if @user  
         pw = @user.reset_password
@@ -210,16 +211,19 @@ protected
   # Finds the requested user and saves it to the <tt>@user</tt> instance variable.
   def find_user
     @user = User.find_by_login(params[:id])
-    raise ActiveRecord::RecordNotFound if @user.nil?
+    raise ActiveRecord::RecordNotFound unless @user
   end
 
   def set_user
     @user = User.find_by_id_and_login(current_user.id, params[:id])
-    raise ActiveRecord::RecordNotFound if @user.nil?
+    raise ActiveRecord::RecordNotFound unless @user
   end
 
   def get_newsletters
-    @newsletter_archives = NewsletterArchive.find_accessible(:all, :order => 'title', :for => current_user)
+    @newsletter_archives = NewsletterArchive.accessible.all.select do |na|
+      node = na.node
+      !node.self_and_ancestors.sections.exists?(:private => true) || (current_user && current_user.role_assignments.exists?(:node_id => node.self_and_ancestor_ids))
+    end
   end
 
   def get_interests
@@ -238,6 +242,7 @@ protected
   def verify_invitation_code
     @invitation_email = params[:invitation_email]
     @invitation_code  = params[:invitation_code]
+    
     unless User.verify_invitation_code(@invitation_email, @invitation_code) || (@invitation_code.blank? && @invitation_email.blank? && !Settler[:user_invite_only])
       flash[:warning] = I18n.t('users.invalid_invitation_code_or_invitation_email')
       redirect_to root_path

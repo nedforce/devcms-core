@@ -25,13 +25,6 @@ class Admin::ContentCopiesControllerTest < ActionController::TestCase
     assert_response :success
     assert assigns(:content_copy)
   end
-    
-  def test_should_render_404_if_not_found
-    login_as :arthur
-        
-    get :show, :id => -1
-    assert_response :not_found
-  end  
   
   def test_should_create_content_copy
     login_as :arthur
@@ -63,16 +56,6 @@ class Admin::ContentCopiesControllerTest < ActionController::TestCase
       
       assert_response :precondition_failed
     end
-  end
-    
-  def test_should_require_roles
-    assert_user_can_access :arthur, :create, { :parent_node_id => nodes(:root_section_node).id }
-    assert_user_can_access :final_editor, :create, { :parent_node_id => nodes(:economie_section_node).id }
-    assert_user_can_access :editor, :create, { :parent_node_id => nodes(:editor_section_node).id }
-    assert_user_cant_access :final_editor, :create, { :parent_node_id => nodes(:editor_section_node).id }
-    assert_user_cant_access :editor, :create, { :parent_node_id => nodes(:economie_section_node).id }
-    assert_user_can_access :arthur, :create, { :parent_node_id => nodes(:editor_section_node).id }
-    assert_user_can_access :arthur, :create, { :parent_node_id => nodes(:economie_section_node).id }
   end
 
 protected

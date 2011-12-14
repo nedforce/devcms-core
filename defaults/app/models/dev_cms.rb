@@ -2,7 +2,6 @@ class DevCMS
 
   class << self
 
-    #  The hash returned by this method is reverse deep-merged with Node::DEFAULT_CONTENT_TYPES_CONFIGURATION
     def content_types_configuration
       {}
     end

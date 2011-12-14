@@ -3,8 +3,6 @@
 # to allow registered users to create, update and delete their own weblogs.
 class WeblogsController < ApplicationController
 
-  before_filter :find_node,               :only => [ :show, :destroy ]
-
   # Require the user to be logged in for the +new+, +create+, +edit+, +update+ and +destroy+ actions.
   before_filter :login_required,          :only => [ :new, :create, :edit, :update, :destroy ]
 
@@ -20,7 +18,7 @@ class WeblogsController < ApplicationController
   before_filter :find_weblog_posts,       :only => :show
 
   # Check whether the user is authorized to perform the +edit+, +update+ and +destroy+ actions.
-  before_filter :check_authorization,     :only => [ :edit, :update, :destroy ]
+  before_filter :check_weblog_rights,     :only => [ :edit, :update, :destroy ]
 
   # * GET /weblogs/:id
   # * GET /weblogs/:id.atom
@@ -92,16 +90,16 @@ protected
 
   # Finds the +WeblogArchive+ object corresponding to the passed in +weblog_archive_id+ parameter.
   def find_weblog_archive
-    @weblog_archive = WeblogArchive.find_accessible(params[:weblog_archive_id], :for => current_user)
+    @weblog_archive = WeblogArchive.find(params[:weblog_archive_id])
   end
 
   # Finds the +Weblog+ object corresponding to the passed in +id+ parameter.
   def find_weblog
-    @weblog = (@weblog_archive ? @weblog_archive.weblogs : Weblog).find_accessible(params[:id], :include => [ :node ], :for => current_user)
+    @weblog = @node.content
   end
 
   def find_weblog_posts
-    @weblog_posts = @weblog.weblog_posts.find_accessible(:all, :for => current_user, :page => { :size => 25, :current => params[:page] })
+    @weblog_posts = @weblog.weblog_posts.accessible.all(:page => { :size => 25, :current => params[:page] })
 
     @latest_weblog_posts    = []
     @weblog_posts_for_table = @weblog_posts.to_a
@@ -113,7 +111,7 @@ protected
   end
 
   # Checks whether the user is authorized to perform the action.
-  def check_authorization
+  def check_weblog_rights
     unless @weblog.is_owned_by_user?(current_user) || current_user.has_role?('admin')
       flash[:notice] = I18n.t('application.not_authorized')
       redirect_to root_path

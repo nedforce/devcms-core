@@ -19,17 +19,19 @@
 #
 class TopHitsPage < ActiveRecord::Base
 
-  # Content types to exclude from the top lists.
-  CONTENT_TO_EXCLUDE = %w(
-    Calendar CombinedCalendar NewsArchive NewsletterArchive Section PermitArchive Forum ForumTopic WeblogArchive
-    ProductCatalogue Image HeaderImage ContactBox Attachment
+  # Default content types to exclude from the top hits.
+  DEFAULT_CONTENT_TYPES_TO_EXCLUDE = %w(
+    Calendar CombinedCalendar NewsArchive NewsletterArchive Section Forum ForumTopic WeblogArchive Image HeaderImage ContactBox Attachment TopHitsPage
   )
+  
+  # Default number of top hits to show
+  DEFAULT_AMOUNT_TO_SHOW = 10
 
   # Adds content node functionality to top hits pages.
   acts_as_content_node({
     :allowed_roles_for_create  => %w( admin ),
     :allowed_roles_for_destroy => %w( admin ),
-    :available_content_representations => ['content_box']
+    :available_content_representations => %w( content_box )
   })
 
   # See the preconditions overview for an explanation of these validations.
@@ -40,39 +42,40 @@ class TopHitsPage < ActiveRecord::Base
   def content_tokens
     description
   end
+  
+  def self.content_types_to_exclude
+    DEFAULT_CONTENT_TYPES_TO_EXCLUDE
+  end
 
-  # Finds up to +amount+ content nodes that have been shown the most and are publicly accessible.
-  def find_top_hits(amount = nil)
-    amount ||= 10
-
-    site_node = (self.node.nil? || self.node.new_record? ? self.parent : self.node).containing_site
-    subtrees_to_exclude = Site.all(:include => :node, :conditions => ["id != ?", site_node.content_id]).collect {|site| site.node }
+  # Finds the content nodes within the current site that have been shown the most and are publicly accessible.
+  def find_top_hits(options = {})
+    return @top_hits if @top_hits
     
-    descendants_to_exclude = site_node.subtree.find_all_by_url_alias("vacatures")
-
-    options = {
-      :order => "hits DESC",
-      :limit => 2 * amount,
-      :conditions => [ 'content_type NOT IN (?)', CONTENT_TO_EXCLUDE ]
-    }
-
-    top_ids = site_node.subtree #.without_descendants_of(descendants_to_exclude).without_subtree_of(subtrees_to_exclude)
-    top_ids = subtrees_to_exclude.reduce(top_ids) do |scope, node|
-      subtree_conditions = node.subtree_conditions
-      subtree_conditions.unshift("NOT (#{subtree_conditions.shift})")
-      scope.scoped(:conditions => subtree_conditions)
+    include_content = options.has_key?(:include_content) ? options.delete(:include_content) : false
+    nodes_to_exclude = options.delete(:nodes_to_exclude) || []
+    content_types_to_exclude = options.delete(:content_types_to_exclude) || TopHitsPage.content_types_to_exclude
+    
+    # This method can be called when the record hasn't been saved yet, i.e., for the admin preview
+    containing_site = (self.node.nil? || self.node.new_record? ? self.parent : self.node).containing_site
+    
+    # Exclude other sites
+    nodes_to_exclude += containing_site.descendants.with_content_type('Site')
+    
+    # Exclude private sections
+    nodes_to_exclude += containing_site.descendants.sections.private
+    
+    options.reverse_merge!({
+      :limit => DEFAULT_AMOUNT_TO_SHOW,
+      :order => 'nodes.hits DESC'
+    })
+    
+    top_hits_scope = containing_site.descendants.accessible.exclude_subtrees_of(nodes_to_exclude.uniq).exclude_content_types(content_types_to_exclude)
+    
+    @top_hits = if include_content
+      top_hits_scope.include_content.all(options)
+    else
+      top_hits_scope.all(options)
     end
-    top_ids = descendants_to_exclude.reduce(top_ids) do |scope, node|
-      descendant_conditions = node.descendant_conditions
-      descendant_conditions.unshift("NOT (#{descendant_conditions.shift})")
-      scope.scoped(:conditions => descendant_conditions)
-    end
-    top_ids = top_ids.all({ :select => 'id' }.merge(options)).map { |node| node.id }
-    top_ids += descendants_to_exclude.collect(&:id) if descendants_to_exclude.present?
-
-    options.update(:limit => amount, :conditions => { :id => top_ids })
-
-    @top_hits = Node.find_accessible(:all, options).map { |node| node.content }
   end
   
 end

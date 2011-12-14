@@ -37,6 +37,10 @@ class Comment < ActiveRecord::Base
   validates_length_of   :comment,   :in => 1..500,   :allow_blank => true
   validates_length_of   :user_name, :maximum => 255, :allow_blank => true
 
+  def self.parent_type
+    Node
+  end
+
   # Returns comments that are editable for the given +user+.
   def self.editable_comments_for(user, options = {})
     if user.has_role?('editor')

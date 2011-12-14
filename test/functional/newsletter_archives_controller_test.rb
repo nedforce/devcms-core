@@ -12,11 +12,6 @@ class NewsletterArchivesControllerTest < ActionController::TestCase
     assert_equal nodes(:newsletter_archive_node), assigns(:node)
   end
   
-  def test_should_render_404_if_not_found
-    get :show, :id => -1
-    assert_response :not_found
-  end
-  
   def test_should_subscribe_to_news_archive_for_user
     login_as :gerjan
     

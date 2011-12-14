@@ -41,6 +41,11 @@ class ForumPost < ActiveRecord::Base
 
   validates_numericality_of :user_id, :forum_thread_id, :allow_nil => false
   validate_on_create :ensure_thread_not_closed
+  
+  # Note: NOT ForumThread, as ForumThreads are no content nodes either
+  def self.parent_type
+    ForumTopic
+  end
 
   # Returns replies only.
   def self.replies(options = {})

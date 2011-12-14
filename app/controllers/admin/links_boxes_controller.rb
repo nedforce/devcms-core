@@ -104,6 +104,6 @@ protected
   end
 
   def find_children
-    @children = @links_box.accessible_children_for(current_user)
+    @children = @links_box.node.children.accessible.public.exclude_content_types('Image').all
   end
 end

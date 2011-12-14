@@ -42,10 +42,12 @@ class NewsletterArchive < ActiveRecord::Base
   validates_length_of       :title, :in => 2..255, :allow_blank => true
   validates_email_format_of :from_email_address,   :allow_blank => true
 
-  # Returns the last update date, as seen from the perspective of the given +user+.
-  def last_updated_at(user)
-    nle = self.newsletter_editions.find_accessible(:first, :conditions => [ 'newsletter_editions.published <> ?', 'unpublished' ], :for => user, :order => 'nodes.publication_start_date DESC')
-    nle ? nle.publication_start_date : self.updated_at
+  # Returns the last update date
+  def last_updated_at
+    nle = self.newsletter_editions.accessible.first(:include => :node, :conditions => [ 'newsletter_editions.published <> ?', 'unpublished' ], :order => 'nodes.publication_start_date DESC')
+    last_nle_update = nle ? nle.node.publication_start_date : nil
+    
+    [ last_nle_update, self.updated_at].compact.max
   end
 
   # Returns all header images that can be used in a +NewsletterArchive+.

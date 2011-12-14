@@ -63,16 +63,6 @@ class Admin::AbbreviationsControllerTest < ActionController::TestCase
 
   end
 
-  def test_should_require_roles
-    assert_user_can_access  :arthur,        :index,                     { :node_id => @root.id }
-    assert_user_can_access  :arthur,        :create,                    { :node_id => @root.id, :abbreviation => { :abbr => "snafu", :definition => "Situation Normal All Fizzed Up" }}
-    assert_user_can_access  :arthur,        :destroy,                   { :node_id => @root.id, :id => abbreviations(:wmo).id }
-    assert_user_can_access  :editor,        :new,                       { :node_id => @root.id }
-    assert_user_can_access  :final_editor,  :new,                       { :node_id => @root.id }
-    assert_user_cant_access :editor,       [:create, :index, :destroy], { :node_id => @root.id }
-    assert_user_cant_access :final_editor, [:create, :index, :destroy], { :node_id => @root.id }
-  end
-
   protected
 
   def create_abbreviation(options = {})

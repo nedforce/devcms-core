@@ -26,13 +26,6 @@ class Admin::LinksControllerTest < ActionController::TestCase
     assert assigns(:link)
   end
   
-  def test_should_render_404_if_not_found
-    login_as :sjoerd
-        
-    get :show, :id => -1
-    assert_response :not_found
-  end
-  
   def test_should_get_new
     login_as :sjoerd
     

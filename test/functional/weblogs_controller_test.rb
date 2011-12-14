@@ -12,14 +12,14 @@ class WeblogsControllerTest < ActionController::TestCase
   
   # See Redmine #2448
   def test_show_should_render_many_posts_correctly
-    # Create a blog with more then 5 posts to cause show to render older posts differently.
     blog = Weblog.create!(:parent => weblog_archives(:devcms_weblog_archive).node, 
                                       :user => users(:gerjan), 
                                       :title => "Very Active Blog", 
-                                      :description => "Beschrijving komt hier." 
+                                      :description => "Beschrijving komt hier.",
+                                      :publication_start_date => 2.days.ago
                                       )
     1.upto(10) do |n|
-      WeblogPost.create!(:parent =>blog.node, :title => "Test Post #{n}", :body => '<p>Text</p>', :publication_start_date => Time.now)
+      WeblogPost.create!(:parent =>blog.node, :title => "Test Post #{n}", :body => '<p>Text</p>', :publication_start_date => 1.day.ago)
     end 
     
     get :show, :id => blog.id
@@ -32,18 +32,6 @@ class WeblogsControllerTest < ActionController::TestCase
   def test_should_show_weblog_atom
     get :show, :id => weblogs(:henk_weblog).id, :format => 'atom'
     assert_response :success
-  end
-  
-  def test_should_render_404_for_invalid_weblog_archive
-    login_as :henk
-    get :edit, :weblog_archive_id => nil, :id => weblogs(:henk_weblog).id
-    assert_response :not_found
-  end
-  
-  def test_should_render_404_for_invalid_weblog
-    login_as :henk
-    get :edit, :weblog_archive_id => weblog_archives(:devcms_weblog_archive).id, :id => nil
-    assert_response :not_found
   end
  
   def test_should_get_new_for_user_that_hasnt_got_a_weblog_yet
@@ -198,16 +186,6 @@ class WeblogsControllerTest < ActionController::TestCase
     assert_difference 'Weblog.count', -1 do
       w = weblogs(:henk_weblog)
       delete :destroy, :weblog_archive_id => w.weblog_archive.id, :id => w.id
-    end
-  end
-  
-  def test_should_render_confirmation_with_get
-    login_as :henk
-    assert_no_difference 'Weblog.count' do
-      w = weblogs(:henk_weblog)
-      get :destroy, :weblog_archive_id => w.weblog_archive.id, :id => w.id
-      assert_response :success
-      assert_template 'confirm_destroy'
     end
   end
   

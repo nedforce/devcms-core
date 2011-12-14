@@ -15,13 +15,6 @@ class Admin::HtmlPagesControllerTest < ActionController::TestCase
     assert assigns(:html_page)
   end
 
-  def test_should_render_404_if_not_found
-    login_as :arthur
-
-    get :show, :id => -1
-    assert_response :not_found
-  end
-
   def test_should_get_new
     login_as :arthur
 
@@ -132,16 +125,6 @@ class Admin::HtmlPagesControllerTest < ActionController::TestCase
     assert assigns(:html_page).errors.on(:title)
     assert_equal old_title, html_page.reload.title
     assert_template 'edit'
-  end
-
-  def test_should_require_roles
-    assert_user_can_access :arthur, [:new, :create], {:parent_node_id => nodes(:root_section_node).id}
-    assert_user_cant_access :final_editor, [:new, :create], {:parent_node_id => nodes(:economie_section_node).id}
-    assert_user_cant_access :editor, [:new, :create], {:parent_node_id => nodes(:root_section_node).id}
-    assert_user_cant_access :final_editor, [:new, :create], {:parent_node_id => nodes(:root_section_node).id}
-    assert_user_can_access :arthur, [:update, :edit], {:id => html_pages(:about_html_page).id}
-    assert_user_cant_access :editor, [:update, :edit], {:id => html_pages(:about_html_page).id}
-    assert_user_cant_access :final_editor, [:update, :edit], {:id => html_pages(:about_html_page).id}
   end
 
 protected

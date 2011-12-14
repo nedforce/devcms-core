@@ -10,7 +10,7 @@
   .weblogPostForm
     %h2= t 'weblogs.update_weblog_post'
 
-    - form_for [ @weblog_archive, @weblog, @weblog_post ], :html => { :multipart => true } do |f|
+    - form_for [ @weblog.weblog_archive, @weblog, @weblog_post ], :html => { :multipart => true } do |f|
       = error_messages_for :weblog_post
       = render :partial => 'form', :locals => { :f => f }
 

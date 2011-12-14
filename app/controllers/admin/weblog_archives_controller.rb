@@ -148,6 +148,6 @@ protected
   end
 
   def find_weblogs
-    @weblogs = @weblog_archive.weblogs.find_accessible(:all, :for => current_user, :page => { :current => 1 })
+    @weblogs = @weblog_archive.weblogs.accessible.all(:page => { :current => 1 })
   end
 end

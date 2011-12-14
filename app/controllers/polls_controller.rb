@@ -20,12 +20,12 @@ class PollsController < ApplicationController
 protected
 
   def find_poll
-    @poll = Poll.find_accessible(params[:id], :for => current_user)
+    @poll = @node.content
   end
 
   def find_poll_questions
     @question          = @poll.active_question
-    @earlier_questions = @poll.poll_questions.find_accessible(:all, :order => 'poll_questions.created_at DESC', :for => current_user) - [@question]
+    @earlier_questions = @poll.poll_questions.all(:order => 'poll_questions.created_at DESC') - [@question]
   end
 
 end

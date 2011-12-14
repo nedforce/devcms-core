@@ -13,7 +13,7 @@
     = render :partial => 'form', :locals => { :form => form, :record => record }
     = default_fields_after_form form
     
-    = render :partial => 'admin/shared/responsible_user_fields', :locals => {:content => record}
+    = render :partial => 'admin/shared/responsible_user_fields', :locals => {:form => form, :content => record}
     = category_settings_for record
     = content_box_settings_for record
   

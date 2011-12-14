@@ -45,26 +45,14 @@ class Admin::NewsViewerItemsControllerTest < ActionController::TestCase
   def test_should_xml_create_news_viewer_item
     login_as :sjoerd
     arthur = users(:arthur)
-    put :create, :news_viewer_id => @news_viewer.id, :news_item_id => create_news_item(:publication_start_date => 4.days.ago).id, :format => 'xml'
+    post :create, :news_viewer_id => @news_viewer.id, :news_item_id => create_news_item(:publication_start_date => 4.days.ago).id, :format => 'xml'
     assert_response :success
     assert assigns(:news_viewer_item)
-  end
-
-  def test_should_not_xml_create_news_viewer_item_with_invalid_news_item
-    login_as :sjoerd
-    put :create, :news_viewer_id => @news_viewer.id, :news_item_id => -1, :format => 'xml'
-    assert_response :not_found
   end
   
   def test_should_xml_delete_news_viewer_item_with_news_item_id
     login_as :sjoerd
     delete :delete_news_item, :news_viewer_id => @news_viewer.id, :news_item_id => news_items(:devcms_news_item).id, :format => 'xml'
-    assert_response :success
-  end
-
-  def test_should_not_xml_destroy_news_viewer_item_with_invalid_news_item_id
-    login_as :sjoerd
-    delete :delete_news_item, :news_viewer_id => @news_viewer.id, :news_item_id => -1, :format => 'xml'
     assert_response :success
   end
   
@@ -82,17 +70,6 @@ class Admin::NewsViewerItemsControllerTest < ActionController::TestCase
     put :update_positions, :news_viewer_id => @news_viewer.id, :items => [nve.id, @news_viewer_item.id]
     assert_equal 1, @news_viewer_item.reload.position  
     assert_equal 0, nve.reload.position      
-    
-  end
-
-  def test_should_require_roles
-    assert_user_can_access :arthur, [ :create, :delete_news_item ], {:news_viewer_id => @news_viewer.id, :news_item_id => news_items(:devcms_news_item).id }
-    assert_user_can_access :final_editor, [ :create, :delete_news_item ], {:news_viewer_id => @news_viewer.id, :news_item_id => news_items(:devcms_news_item).id }
-    assert_user_cant_access :editor, [ :create, :delete_news_item ], {:news_viewer_id => @news_viewer.id, :news_item_id => news_items(:devcms_news_item).id }
-    
-    assert_user_can_access :arthur, [ :index, :available_news_items ], :news_viewer_id => @news_viewer.id, :news_archive_id => news_archives(:devcms_news).id
-    assert_user_can_access :final_editor, [ :index, :available_news_items ], :news_viewer_id => @news_viewer.id, :news_archive_id => news_archives(:devcms_news).id
-    assert_user_cant_access :editor, [ :index, :available_news_items ], :news_viewer_id => @news_viewer.id, :news_archive_id => news_archives(:devcms_news).id
   end
 
 protected

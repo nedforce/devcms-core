@@ -1,6 +1,6 @@
 - content = node.content
 
-- header_image = Image.find_accessible(:first, :for => current_user, :include => :node, :conditions => ["nodes.ancestry = :contact_box_ancestry", { :contact_box_ancestry => node.child_ancestry }])
+- header_image = node.children.accessible.with_content_type('Image').include_content.first.try(:content)
 
 - if header_image.present?
   = image_tag(sidebox_image_path(header_image, :format => :jpg), :alt => h(header_image.title), :class => 'content_box_header')

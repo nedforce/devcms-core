@@ -29,7 +29,7 @@ Ext.onReady(function(){
     // create the Data Store
     var store = new Ext.data.Store({
         proxy: new Ext.data.HttpProxy({
-          url: '/admin/permissions.json',
+          url: '/admin/role_assignments.json',
           method: 'GET'
         }),
 
@@ -95,7 +95,7 @@ Ext.onReady(function(){
 
                 Ext.Ajax.request({
                     waitMsg: '<%= I18n.t("permissions.deleting") %>',
-                    url: 'permissions/' + item.id + '.json',
+                    url: 'role_assignments/' + item.id + '.json',
                     method: 'POST',
 
                     params: "_method=delete&authenticity_token=<%= form_authenticity_token -%>",

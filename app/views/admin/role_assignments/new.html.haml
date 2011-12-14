@@ -1,6 +1,6 @@
 .right_panel_content
   %h1== #{t 'permissions.add_to'} '#{h(@node.content.content_title) rescue nil}'
 
-  - admin_remote_form_for @role_assignment, :url => admin_permissions_path(:format => 'html', :node_id => (@node.id rescue nil)), :update => 'right_panel_body' do |f|
+  - admin_remote_form_for @role_assignment, :url => admin_role_assignments_path(:format => 'html', :node_id => (@node.id rescue nil)), :update => 'right_panel_body' do |f|
     = render :partial => 'form', :object => f
     = f.submit t('shared.save')

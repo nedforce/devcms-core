@@ -128,24 +128,10 @@ class NewsArchiveTest < ActiveSupport::TestCase
 
   def test_last_updated_at_should_return_updated_at_when_no_accessible_news_items_are_found
     na = create_news_archive
-    assert_equal na.updated_at, na.last_updated_at(users(:arthur))
+    assert_equal na.updated_at, na.last_updated_at
     ni = create_news_item na
     ni.node.update_attribute(:hidden, true)
-    assert_equal na.updated_at, na.last_updated_at(users(:editor))
-  end
-
-  def test_last_updated_at_should_return_publication_date_of_last_published_accessible_news_item
-    na = create_news_archive
-
-    ni1 = create_news_item na, :publication_start_date => 2.days.ago
-
-    ni2 = create_news_item na, :publication_start_date => 1.day.ago
-    ni2.node.update_attribute(:hidden, true)
-    
-    na.news_items
-
-    assert_equal ni2.reload.publication_start_date, na.last_updated_at(users(:arthur))
-    assert_equal ni1.reload.publication_start_date, na.last_updated_at(users(:editor))
+    assert_equal na.updated_at, na.last_updated_at
   end
 
 protected

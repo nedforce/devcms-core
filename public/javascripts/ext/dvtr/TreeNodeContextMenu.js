@@ -205,7 +205,19 @@ Ext.dvtr.TreeNodeContextMenu = function (config) {
 
     this.add('-'); // separator
 
-    if (this.tn.allowTogglePrivate) {
+    if (this.tn.allowToggleHidden && !this.tn.hasHiddenAncestor) {
+      // Add the 'Verborgen' property setting
+      this.add({
+        xtype: 'checkitem',
+        text: I18n.t('hidden', 'context_menu'),
+        checked: this.tn.isHidden,
+        scope: this.tn,
+        checkHandler: this.tn.onToggleHidden,
+        disabled: this.tn.isGlobalFrontpage || this.tn.containsGlobalFrontpage
+      });
+    }
+
+    if (this.tn.allowTogglePrivate && !this.tn.hasPrivateAncestor) {
       // Add the 'Prive' property setting
       this.add({
         xtype: 'checkitem',
@@ -213,19 +225,18 @@ Ext.dvtr.TreeNodeContextMenu = function (config) {
         checked: this.tn.isPrivate,
         scope: this.tn,
         checkHandler: this.tn.onTogglePrivate,
-        disabled: this.tn.hasPrivateAncestor || this.tn.isGlobalFrontpage || this.tn.containsGlobalFrontpage
+        disabled: this.tn.isGlobalFrontpage || this.tn.containsGlobalFrontpage
       });
     }
 
     // Add the 'Toon in menu' property setting
-    if (!this.tn.isRoot) {
+    if (!this.tn.isRoot && !(this.tn.isPrivate || this.tn.hasPrivateAncestor)) {
       this.add({
         xtype: 'checkitem',
         text: I18n.t('show_in_menu', 'context_menu'),
-        checked: this.tn.attributes.showInMenu,
+        checked:  this.tn.attributes.showInMenu,
         scope: this.tn,
-        checkHandler: this.tn.onToggleShowInMenu,
-        disabled: this.tn.isPrivate
+        checkHandler: this.tn.onToggleShowInMenu
       });
     }
 

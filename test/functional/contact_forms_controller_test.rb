@@ -11,13 +11,6 @@ class ContactFormsControllerTest < ActionController::TestCase
     assert assigns(:contact_form_fields)
   end
   
-  
-
-  def test_should_render_404_if_not_found
-    get :show, :id => -1
-    assert_response :not_found
-  end
-  
   def test_should_create_response_with_response_fields
     @help_form = contact_forms(:help_form)
     @help_form.send_method = ContactForm::SEND_METHOD_DATABASE

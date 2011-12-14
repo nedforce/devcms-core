@@ -15,10 +15,4 @@ class Admin::SettingsControllerTest < ActionController::TestCase
     assert_response :success    
   end
 
-  def test_should_require_roles
-    assert_user_can_access :arthur, :index
-    assert_user_cant_access :editor, :index
-    assert_user_cant_access :final_editor, :index
-  end
-
 end

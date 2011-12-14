@@ -103,35 +103,14 @@ class SectionTest < ActiveSupport::TestCase
 
   def test_last_updated_at_should_return_updated_at_when_no_accessible_children_are_found
     s = create_section :publication_start_date => 1.day.ago
-    assert_equal s.updated_at, s.last_updated_at(users(:arthur))
+    assert_equal s.updated_at, s.last_updated_at
 
     p = create_page s, :publication_start_date => 1.day.ago
-    p.node.update_attribute(:hidden, true)
-    assert_equal s.updated_at, s.last_updated_at(users(:editor))
-  end
-
-  def test_last_updated_at_should_return_created_at_of_last_created_accessible_child
-    s = create_section
-
-    p1 = create_page(s, :publication_start_date => 1.day.ago)
-    p1.node.update_attribute(:created_at, 2.days.ago)
-
-    p2 = create_page(s, :publication_start_date => 1.day.ago)
-    p2.node.update_attribute(:created_at, 1.day.ago)
-    p2.node.update_attribute(:hidden,     true)
-
-    assert_equal p2.node.reload.updated_at.to_s, s.last_updated_at(users(:arthur)).to_s
-    assert_equal p1.node.reload.updated_at.to_s, s.last_updated_at(users(:editor)).to_s
-  end
-
-  def test_should_have_four_columns_at_most
-    assert_equal 4, Section.max_number_of_columns
-  end
-  
-  def test_should_return_accessible_children_without_images_or_attachments
-    children = @root_section.accessible_children_for(users(:arthur))
-    assert !children.empty?
-    children.each{ |c| assert !c.is_a?(Attachment) && !c.is_a?(Image) }    
+    
+    p.node.hidden = true
+    p.node.save!
+    
+    assert_equal s.updated_at, s.last_updated_at
   end
   
 protected

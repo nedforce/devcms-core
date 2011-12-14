@@ -2,6 +2,7 @@
 nl:
   shared:
     at: om
+    cascade_expires_on: Vervaldatum onderliggende content
     commentable: Reacties toestaan?
     confirm_deletion: Bevestig verwijdering
     created: Item opgeslagen!
@@ -9,6 +10,7 @@ nl:
     download: Download
     edit: Bewerken
     editor_comment: Commentaar van betreffende redacteur
+    email: E-mailadres
     filename: Bestandsnaam
     failed: Opslaan mislukt!
     last_updated: Laatst gewijzigd
@@ -23,6 +25,7 @@ nl:
     read_more: lees meer
     "really_delete?": "Wilt u doorgaan met verwijderen?"
     save: Opslaan
+    set_email: Ingestelde E-mailadres
     size: Grootte
     submit: Versturen
     succes: Succesvol
@@ -38,6 +41,7 @@ nl:
     current_responsible_user: Ingestelde verantwoordelijke redacteur
     new_responsible_user: Nieuwe verantwoordelijke redacteur
     expires_on: Vervaldatum
+    inherit: Overerven
   abbreviations:
     abbr: Afkorting
     abbreviation: Afkorting
@@ -722,7 +726,7 @@ nl:
     expires_on_out_of_range: Ongeldige vervaldatum, kies een datum tussen nu en %{date}.
     expires_on_required: Vervaldatum is verplicht voor deze content.
     failed: mislukt
-    frontpage_cant_be_hidden: Globale frontpage mag niet privé zijn.
+    frontpage_cant_be_hidden: Globale frontpage mag niet verborgen of privé zijn en moet gepubliceerd zijn.
     frontpage_set: Globale frontpage succesvol ingesteld.
     import: Importeren
     inherit_or_drag_items: "Indeling wordt overgeërfd, sleep items in de kolommen om de indeling handmatig te bepalen."
@@ -931,6 +935,10 @@ nl:
     edit: Bewerken van sectie
     edit_site: Bewerken van site
     editor_comment: Commentaar voor eindredacteur
+    expiration_settings: "Notificatieinstellingen verourderde content"
+    expiration_email_subject: Onderwerp
+    expiration_email_body: Tekst
+    expiration_notification_sent: Notificaties verzonden!
     failed: Kon sectie niet opslaan.
     failed_site: Kon site niet opslaan
     frontpage_node: Startpagina node
@@ -939,6 +947,7 @@ nl:
     related_content: Deel van thema
     saved: Sectie opgeslagen!
     saved_site: Site opgeslagen!
+    send_expiration_notifications: Verzend notificaties
   sessions:
     already_logged_in: U bent reeds ingelogd als
     cant_log_out: Kan niet uitloggen. U bent niet ingelogd.

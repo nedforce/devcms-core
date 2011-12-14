@@ -47,11 +47,15 @@ class ContentRepresentation < ActiveRecord::Base
   validates_uniqueness_of   :content_id, :scope => :parent_id,    :unless => :custom_type
   validates_numericality_of :parent_id
   validates_numericality_of :content_id,                          :unless => :custom_type
+  
+  validate :content_should_not_be_hidden,                         :unless => :custom_type
+  validate :content_should_not_be_private,                        :unless => :custom_type
+  
   validate :content_should_be_allowed_as_content_representation,  :unless => :custom_type
   validate :content_should_be_in_same_site,                       :unless => :custom_type
   validate :custom_type_should_exist_for_parent,                  :if => :custom_type
 
-  before_validation :nillify_custom_type, :if => lambda {|cr| cr.custom_type.blank? }
+  before_validation :nillify_custom_type, :if => lambda { |cr| cr.custom_type.blank? }
 
   # Returns the name of the contentbox content partial based on node and layout
   # Can be overwitten for special cases.
@@ -59,7 +63,17 @@ class ContentRepresentation < ActiveRecord::Base
     @content_partial ||= self.parent.own_or_inherited_layout_variant[self.target]['representation'] + '_content'
   end
   
-  protected
+protected
+
+  def content_should_not_be_hidden
+    errors.add(:content, :should_not_be_hidden) if self.content && self.content.hidden?
+  end
+  
+  def content_should_not_be_private
+    if self.content && self.content.private?
+      errors.add(:content, :should_not_be_private) if self.content.top_level_private_ancestor != self.parent.top_level_private_ancestor
+    end
+  end
 
   # Checkes whether +content+ is in the same site as the content box itself
   def content_should_be_in_same_site

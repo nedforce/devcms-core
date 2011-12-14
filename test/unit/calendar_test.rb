@@ -91,43 +91,29 @@ class CalendarTest < ActiveSupport::TestCase
   
   def test_should_return_all_future_and_current_events
     time = Time.now
-    @events_calendar.calendar_items.current_and_future_for(users(:arthur)).each do |event|
+    
+    @events_calendar.calendar_items.current_and_future.each do |event|
       assert event.start_time > time || event.end_time > time
     end
     
     time = Time.now - 1.year
-    @events_calendar.calendar_items.current_and_future_for(users(:arthur), time).each do |event|
+    
+    @events_calendar.calendar_items.current_and_future(time).each do |event|
       assert event.start_time > time || event.end_time > time
     end
     
     ae = create_calendar_item({ :calendar => @events_calendar, :title => "Active event", :start_time => (DateTime.now - 1.hour).to_s(:db), :end_time => (DateTime.now + 1.hour).to_s(:db), :publication_start_date => 1.day.ago })
     pe = create_calendar_item({ :calendar => @events_calendar, :title => "Past event", :start_time => (DateTime.now - 2.hour).to_s(:db), :end_time => (DateTime.now - 1.hour).to_s(:db), :publication_start_date => 1.day.ago })
-    assert @events_calendar.calendar_items.current_and_future_for(users(:arthur)).include?(ae)
-    assert !@events_calendar.calendar_items.current_and_future_for(users(:arthur)).include?(pe)
+    assert @events_calendar.calendar_items.current_and_future.include?(ae)
+    assert !@events_calendar.calendar_items.current_and_future.include?(pe)
   end
 
   def test_last_updated_at_should_return_updated_at_when_no_accessible_calendar_items_are_found
     c = create_calendar
-    assert_equal c.updated_at, c.last_updated_at(users(:arthur))
+    assert_equal c.updated_at, c.last_updated_at
     ci = create_calendar_item :calendar => c, :publication_start_date => 1.day.ago
     ci.node.update_attribute(:hidden, true)
-    assert_equal c.updated_at, c.last_updated_at(users(:editor))
-  end
-
-  def test_last_updated_at_should_return_created_at_of_last_created_accessible_calendar_item
-    c = create_calendar
-
-    ci1 = create_calendar_item :calendar => c, :publication_start_date => 1.day.ago
-    ci1.update_attribute(:created_at, 2.days.ago)
-
-    ci2 = create_calendar_item :calendar => c, :publication_start_date => 1.day.ago
-    ci2.update_attribute(:created_at, 1.day.ago)
-    ci2.node.update_attribute(:hidden, true)
-    
-    c.calendar_items
-
-    assert_equal ci2.reload.created_at, c.last_updated_at(users(:arthur))
-    assert_equal ci1.reload.created_at, c.last_updated_at(users(:editor))
+    assert_equal c.updated_at, c.last_updated_at
   end
 
 protected

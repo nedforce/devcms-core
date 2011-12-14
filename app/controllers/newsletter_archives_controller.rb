@@ -16,11 +16,7 @@ class NewsletterArchivesController < ApplicationController
   # * GET /newsletter_archives/1
   # * GET /newsletter_archives/1.xml
   def show
-    # TODO: prefetching
-    @newsletter_editions = @newsletter_archive.newsletter_editions.find_accessible(:all, 
-                                                            :conditions => [ 'published <> ?', 'unpublished' ], 
-                                                            :for => current_user,
-                                                            :page => {:size => 25, :current => params[:page]})
+    @newsletter_editions = @newsletter_archive.newsletter_editions.accessible.all(:conditions => [ 'published <> ?', 'unpublished' ], :page => {:size => 25, :current => params[:page]})
     
     first_page = !params[:page] || params[:page]==1
     @latest_newsletter_editions    = []

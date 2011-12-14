@@ -32,11 +32,10 @@ namespace :db do
         u.give_role_on('admin', Node.root)
         u = User.create!(:login => 'redacteur', :email_address => "redacteur@example.com", :password => 'editor', :password_confirmation => 'editor')
         u.update_attribute(:verified, true)
-        u.give_role_on('editor', Node.root.children[2])
+        u.give_role_on('editor', Node.root)
         u = User.create!(:login => 'eindredacteur', :email_address => "eindredacteur@example.com", :password => 'final_editor', :password_confirmation => 'final_editor')
         u.update_attribute(:verified, true)
-        u.give_role_on('final_editor', Node.root.children[1])
-        u.give_role_on('final_editor', Node.root.children[2])
+        u.give_role_on('final_editor', Node.root)
       else
         raise 'Root node missing. A root node is required for this task.'
       end

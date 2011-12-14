@@ -19,7 +19,7 @@ protected
 
   # Finds the +ForumTopic+ object corresponding to the passed in +id+ parameter.
   def find_forum_topic
-    @forum_topic = ForumTopic.find_accessible(params[:id], :include => [ :node ], :for => current_user)
+    @forum_topic = @node.content
   end
 
   def find_forum_threads

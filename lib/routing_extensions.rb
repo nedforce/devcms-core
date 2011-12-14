@@ -19,73 +19,96 @@ module RoutingExtensions
     end
 
     def recognize_path_with_delegation_or_url_aliasing(path, environment = {})
-      if site = Site.find_by_domain(environment[:domain] || '').node
-        params = recognize_path_without_delegation_or_url_aliasing(path, environment)
-        params.update(:site_node_id => site.id )
-        case params[:controller]
-        when '_delegated_root' then
-          node = site
-        when '_delegated' then
-          node_id = params.delete(:id).to_i
-          node    = site.subtree.find(node_id)
-        when '_aliased' then
-          url_alias = params.delete(:id)
-          unless node = site.subtree.first(:conditions => [ 'url_alias = ? OR custom_url_alias = ?', url_alias, url_alias ])
-            parts           = url_alias.split('/')
-            params[:action] = parts.pop
-            url_alias       = parts.join('/')
-            node            = site.subtree.first(:conditions => [ 'url_alias = ? OR custom_url_alias = ?', url_alias, url_alias ])
+      # First we determine the Site node for the given domain
+      site = Site.find_by_domain(environment[:domain]) || raise(ActionController::RoutingError, 'No site found!')
+    
+      begin
+        # Use Rails' default path parsing
+        params = recognize_path_without_delegation_or_url_aliasing(path, environment).merge({ :site_id => site.node.id })
+              
+        controller = params[:controller]
+        
+        # What we do next depends on the 'controller'
+        # If its name starts with '_' we have a psuedo-controller
+        if controller.starts_with?('_')
+          case controller
+          # Delegation to root
+          when '_delegated_root' then
+            node = site.node
+          # Delegation to a content node
+          when '_delegated' then
+            node = Node.find(params[:id])
+          # Delegation to an aliased content node
+          else
+            url_alias = params[:id]
+      
+            unless node = Node.first(:conditions => [ 'url_alias = ? OR custom_url_alias = ?', url_alias, url_alias ])
+              parts           = url_alias.split('/')
+              params[:action] = parts.pop
+              url_alias       = parts.join('/')
+              node            = Node.first(:conditions => [ 'url_alias = ? OR custom_url_alias = ?', url_alias, url_alias ])
+            end
+          
+            node || raise(ActionController::RoutingError, 'Invalid alias specified')
           end
+        
+          # Node might point to a different node
+          node = update_to_referenced_node(node)
+        
+          params.update({ 
+            :id => node.content_id,
+            :node_id => node.id,
+            :controller => node.content_type.tableize
+          })
+        # We have a 'real' controller
         else
-          no_node_required = true
-        end
-
-        unless no_node_required
-          if node.present?
-            node = update_to_referenced_node(node)
-            controller = node.content_class.name.tableize
-            @first_try = true
-
-            begin
-              # First try with the own controller. If that
-              # fails, try with the parent class' controller.
-              if @first_try
-                "#{controller}_controller".camelize.constantize
+          if params[:id]
+            klass = controller.classify.split('::').last.constantize rescue nil
+            
+            if klass && klass.respond_to?(:is_content_node?)
+              node = Node.first(:conditions => [ 'content_type = ? AND content_id = ?', klass.base_class.name, params[:id] ]) || raise(ActionController::RoutingError, 'Invalid content node specified')
+            elsif klass.nil? || klass == Node
+              node = Node.find(params[:id])
+            end
+            
+            if node.present?
+              if controller.starts_with?('admin')
+                params[:node_id] = node.id
               else
-                controller = node.content_type.tableize
-                "#{controller}_controller".camelize.constantize
-              end
-            rescue
-              if @first_try
-                @first_try = false
-                retry
-              else
-                raise ActionController::RoutingError, "No route matches #{path.inspect} with #{environment.inspect}"
+                # Node might point to a different node
+                node = update_to_referenced_node(node)
+          
+                params.update({ 
+                  :id => node.content_id,
+                  :node_id => node.id,
+                  :controller => node.content_type.tableize
+                })
               end
             end
-
-            params.update(:controller => controller, :id => node.content_id, :node_id => node.id)
-          else
-            raise ActionController::RoutingError, "No route matches #{path.inspect} with #{environment.inspect}"
           end
         end
-
-        return params
-      else
-        raise ActionController::RoutingError, 'No site found'
+      rescue ActionController::RoutingError, ActiveRecord::RecordNotFound => e
+        raise e if Rails.env.development?
+        params = { :controller => :errors, :action => :error_404, :site_id => site.node.id }
+      end
+      
+      params.inject({}) do |hash, (key, value)|
+        hash[key] = value.to_s
+        hash
       end
     end
 
     def update_to_referenced_node(node)
       case node.content_type
-      when 'ContentCopy' then
+      when 'ContentCopy'
         node = update_to_referenced_node(node.content.copied_node)
-      when 'Section' then
+      when 'Section'
         if frontpage_node = node.content.frontpage_node
           node = update_to_referenced_node(frontpage_node)
         end
       end
-      return node
+      
+      node
     end
   end
 end

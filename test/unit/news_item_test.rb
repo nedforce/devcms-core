@@ -67,7 +67,7 @@ class NewsItemTest < ActiveSupport::TestCase
   end
 
   def test_should_not_return_news_item_children_for_menu
-    assert @devcms_news.node.accessible_children(:for_menu => true).empty?
+    assert @devcms_news.node.children.accessible.shown_in_menu.empty?
   end
   
   def test_url_alias_for_news_item_with_publication_start_date

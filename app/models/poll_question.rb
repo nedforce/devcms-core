@@ -114,22 +114,31 @@ class PollQuestion < ActiveRecord::Base
   # Checks for existing votes aswell
   def vote(option, user = nil)
     if poll.requires_login?
-      if user.present? && !has_vote_from?(user) && user_votes.create(:user => user)
-        poll_options.find(option).vote!
+      if user.present? && !has_vote_from?(user)
+        PollQuestion.transaction do
+          registration = user_votes.create(:user => user)
+          poll_options.find(option).vote! if registration
+        end
       end
     else
       poll_options.find(option).vote!
     end
   end
+  
+  def last_updated_at
+    [ self.updated_at, self.poll_options.maximum(:updated_at) ].compact.max
+  end
 
-  protected
+protected
 
   # Before save callback.
   #
   # Sets all questions for this question's poll to be inactive if this question will
   # be activated on save to ensure only one active question per poll.
   def ensure_unique_active_question
-    self.poll.poll_questions.each{|pq| pq.update_attribute(:active, false) } if self.active
+    if self.active_changed? && self.active
+      self.poll.poll_questions.each { |pq| pq.update_attribute(:active, false) }
+    end
   end
 
   # Ensures the updated +PollOption+ objects are saved.

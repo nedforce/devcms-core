@@ -52,19 +52,13 @@ class Meeting < CalendarItem
     self.meeting_category = MeetingCategory.find_or_new_by_name(name.to_s) if name.present?
   end
 
-  # Returns accessible agenda items for the given +user+.
-  def accessible_children_for(user, exclude_content_types = [])
-    self.agenda_items.find_accessible(:all, :for => user)
-  end  
-
   # Returns the OWMS type.
   def self.owms_type
     I18n.t('owms.meeting_info')
   end
 
-  protected
+protected
 
-  # TODO: Documentation
   def cloning_hash
     super.merge({ :meeting_category => self.meeting_category })
   end

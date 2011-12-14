@@ -1,9 +1,8 @@
 - content = node.content
 
-- cache(:controller => '/feeds', :action => 'sidebox', :id => content.id, :updated_at => node.updated_at.to_i) do
-  - unless content.entries.empty?
-    %ul
-      - content.entries[0..((node.content_box_number_of_items || 10) - 1)].each do |post|
-        %li= link_to h(post.title), h(post.url.strip)
+- unless content.entries.empty?
+  %ul
+    - content.entries[0..((node.content_box_number_of_items || 10) - 1)].each do |post|
+      %li= link_to h(post.title), h(post.url.strip)
 
 = read_more_link(content)

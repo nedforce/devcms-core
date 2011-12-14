@@ -1,10 +1,15 @@
-- content = node.content
-.content_box.sub_menu_content_box
-  %div{:class => "content_box_wrapper #{node.content_box_colour || 'default'}"}
-    .header
-      .corner_overlay.transparent
-      - unless content.is_a?(Poll) || content.is_a?(NewsletterArchive) || node.content_box_icon.blank?
-        = image_tag "icons/content_box_#{node.content_box_icon}.png", :class => 'icon_overlay transparent'
-      %h2= link_to_content_node content.title, content
-    .content
-      = menu
+- cache(:controller => '/nodes', :action => :sub_menu, :node => @node.id, :last_updated_at => @node.parent.self_and_children.maximum(:updated_at), :expires_in => 15.minutes, :layout => :deventer) do
+  - self_and_ancestor_ids = @node.self_and_ancestor_ids
+  - top_ancestor = Node.find(self_and_ancestor_ids[1])
+  - top_sub_menu_items = top_ancestor.children.accessible.public.shown_in_menu.all(:order => :position)
+  
+  - if top_sub_menu_items.any?
+    .content_box.sub_menu_content_box
+      %div{:class => "content_box_wrapper #{top_ancestor.content_box_colour || 'default'}"}
+        .header
+          .corner_overlay.transparent
+          - unless top_ancestor.content_box_icon.blank?
+            = image_tag "icons/content_box_#{top_ancestor.content_box_icon}.png", :class => 'icon_overlay transparent'
+          %h2= link_to_node top_ancestor.content_title, top_ancestor
+        .content
+          = create_sub_menu(self_and_ancestor_ids, top_sub_menu_items)

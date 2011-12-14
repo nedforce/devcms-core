@@ -3,13 +3,6 @@ require File.dirname(__FILE__) + '/../../test_helper'
 class Admin::NewsArchivesControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
-  def test_should_render_404_if_not_found
-    login_as :sjoerd
-
-    get :show, :id => -1
-    assert_response :not_found
-  end
-
   def test_should_show_news_archive
     login_as :sjoerd    
 
@@ -167,16 +160,6 @@ class Admin::NewsArchivesControllerTest < ActionController::TestCase
     put :update, :id => news_archives(:devcms_news).id, :news_archive => { :title => nil }
     assert_response :unprocessable_entity
     assert assigns(:news_archive).errors.on(:title)
-  end
-
-  def test_should_require_roles
-    assert_user_can_access  :arthur,       [ :new, :create ],  { :parent_node_id => nodes(:root_section_node).id }
-    assert_user_can_access  :final_editor, [ :new, :create ],  { :parent_node_id => nodes(:economie_section_node).id }
-    assert_user_cant_access :editor,       [ :new, :create ],  { :parent_node_id => nodes(:devcms_news_node).id }
-
-    assert_user_can_access  :arthur,       [ :update, :edit ], { :id => news_archives(:devcms_news).id }
-    assert_user_cant_access :final_editor, [ :update, :edit ], { :id => news_archives(:devcms_news).id }
-    assert_user_cant_access :editor,       [ :update, :edit ], { :id => news_archives(:devcms_news).id }
   end
 
 protected

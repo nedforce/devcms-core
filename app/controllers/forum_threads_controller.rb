@@ -3,8 +3,6 @@
 # to allow registered users to create, update and delete the threads they started.
 # Furthermore, this controller allows admins to open and close threads.
 class ForumThreadsController < ApplicationController
-
-  skip_before_filter :find_node
     
   # Require the user to be logged in for the +open+, +close+, +new+, +create+, +edit+, +update+ and +destroy+ actions.
   before_filter :login_required, :only => [ :open, :close, :new, :create, :edit, :update, :destroy ]
@@ -22,7 +20,7 @@ class ForumThreadsController < ApplicationController
   prepend_before_filter :find_forum_topic, :only => [ :open, :close, :show, :new, :create, :edit, :update, :destroy ]
   
   # Check whether the user is authorized to perform the +edit+, +update+ and +destroy+ actions.
-  before_filter :check_authorization, :only => [ :edit, :update, :destroy ]
+  before_filter :check_authorization_for_forum_thread, :only => [ :edit, :update, :destroy ]
   
   # * GET /forum_topics/1/forum_threads/1
   # * GET /forum_topics/1/forum_threads/1.atom
@@ -53,7 +51,6 @@ class ForumThreadsController < ApplicationController
   # * POST /forum_topics/1/forum_threads
   # * POST /forum_topics/1/forum_threads.xml
   def create
-    # Ugly code required because of DB2 gem handling nested transactions well differently.
     @forum_thread      = ForumThread.new(params[:forum_thread])
     @forum_thread.user = current_user
     @forum_thread.valid?
@@ -102,7 +99,6 @@ class ForumThreadsController < ApplicationController
   # * PUT /forum_topics/1/forum_threads/1
   # * PUT /forum_topics/1/forum_threads/1.xml
   def update
-    # Ugly code required because of DB2 gem handling nested transactions differently.
     @start_post = @forum_thread.start_post
     
     @forum_thread.attributes = params[:forum_thread]
@@ -132,7 +128,6 @@ class ForumThreadsController < ApplicationController
   # * DELETE /forum_topics/1/forum_threads/1
   # * DELETE /forum_topics/1/forum_threads/1.xml
   def destroy
-    # Scoped delete not possible due to bug in DB2 adapter.
     @forum_thread.destroy
     
     respond_to do |format|
@@ -177,12 +172,12 @@ class ForumThreadsController < ApplicationController
 
     # Finds the +ForumTopic+ object corresponding to the passed in +forum_topic_id+ parameter.
     def find_forum_topic
-      @forum_topic = ForumTopic.find_accessible(params[:forum_topic_id], :include => [ :node ], :for => current_user)
+      @forum_topic = ForumTopic.find(params[:forum_topic_id])
     end
 
     # Finds the +ForumThread+ object corresponding to the passed in +id+ parameter.
     def find_forum_thread
-      @forum_thread = @forum_topic.forum_threads.find(params[:id], :include => [:forum_posts])
+      @forum_thread = @forum_topic.forum_threads.find(params[:id])
     end
 
     def find_start_post
@@ -191,7 +186,7 @@ class ForumThreadsController < ApplicationController
     end
 
     # Checks whether the user is authorized to perform the action.
-    def check_authorization
+    def check_authorization_for_forum_thread
       unless @forum_thread.is_owned_by_user?(current_user) || current_user.has_role?('admin')
         flash[:notice] = I18n.t('application.not_authorized')
         redirect_to root_path

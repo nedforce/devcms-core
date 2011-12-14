@@ -1,7 +1,7 @@
 .forumFormPage
   %h1
     %span.prefix= t 'forums.forum_thread'
-    = link_to h(@forum_thread.title), [ @forum_topic, @forum_thread ]
+    = link_to h(@forum_thread.title), [ @forum_thread.forum_topic, @forum_thread ]
 
   .htmlField.forumThreadBody
     = w @forum_thread.start_post.body
@@ -9,7 +9,7 @@
   .forumForm
     %h2= t 'forums.update_forum_post'
 
-    - form_for [ @forum_topic, @forum_thread, @forum_post ] do |f|
+    - form_for [ @forum_thread.forum_topic, @forum_thread, @forum_post ] do |f|
       = error_messages_for :forum_post
       = render :partial => 'form', :locals => { :f => f }
       %p.clearfix

@@ -27,7 +27,7 @@ class Admin::NewsletterEditionsController < Admin::AdminController
   # * GET /admin/newsletter_editions/:id
   # * GET /admin/newsletter_editions/:id.xml
   def show
-    @approved_content_items = @newsletter_edition.approved_items
+    @approved_content_items = @newsletter_edition.items
 
     respond_to do |format|
       format.html { render :partial => 'show', :locals => { :record => @newsletter_edition }, :layout => 'admin/admin_show' }
@@ -82,7 +82,7 @@ class Admin::NewsletterEditionsController < Admin::AdminController
         format.xml  { render :xml => @newsletter_edition, :status => :created, :location => @newsletter_edition }
       else
         @item_sortlets = item_sortlet_hash_for_ids(@item_ids)
-        format.html { render :action => :new }
+        format.html { render :action => :new, :status => :unprocessable_entity }
         format.xml  { render :xml => @newsletter_edition.errors.to_xml, :status => :unprocessable_entity }
       end
     end

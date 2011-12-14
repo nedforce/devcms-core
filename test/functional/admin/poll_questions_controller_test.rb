@@ -2,13 +2,6 @@ require File.dirname(__FILE__) + '/../../test_helper'
 
 class Admin::PollQuestionsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
- 
-  def test_should_render_404_if_not_found
-    login_as :sjoerd
-        
-    get :show, :id => -1
-    assert_response :not_found
-  end
   
   def test_should_show_poll_question
     login_as :sjoerd
@@ -223,22 +216,6 @@ class Admin::PollQuestionsControllerTest < ActionController::TestCase
     put :update, :id => poll_questions(:hc_question_1).id, :poll_question => { :question => nil }
     assert_response :success
     assert assigns(:poll_question).errors.on(:question)
-  end
-  
-  def test_should_require_roles
-    # admin
-    assert_user_can_access :arthur, [:new, :create], {:parent_node_id => nodes(:healthcare_poll_node).id}
-    assert_user_can_access :arthur, [:edit, :update], {:id => poll_questions(:hc_question_1).id, :parent_node_id => nodes(:healthcare_poll_node).id}
-    
-    # final editor
-    assert_user_can_access :final_editor, [:new, :create], {:parent_node_id => nodes(:economie_poll_node).id}
-    assert_user_can_access :final_editor, [:edit, :update], {:id => poll_questions(:eco_question_1).id, :parent_node_id => nodes(:economie_poll_node).id}
-    
-    # editor
-    assert_user_can_access :editor, [:new, :create], {:parent_node_id => nodes(:healthcare_poll_node).id} 
-    assert_user_cant_access :editor, [:new, :create], {:parent_node_id => nodes(:economie_poll_node).id}
-    assert_user_can_access :editor, [:edit, :update], {:id => poll_questions(:hc_question_1).id, :parent_node_id => nodes(:healthcare_poll_node).id}
-    assert_user_cant_access :editor, [:edit, :update], {:id => poll_questions(:eco_question_1).id, :parent_node_id => nodes(:economie_poll_node).id}
   end
 
   def test_should_set_publication_start_date_on_create

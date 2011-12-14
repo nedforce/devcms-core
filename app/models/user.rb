@@ -141,7 +141,7 @@ class User < ActiveRecord::Base
   attr_readonly :login
 
   # An array of field names that are considered to be information-sensitive.
-  SECRETS = [ 'password_hash', 'password_salt', 'remember_token', 'remember_token_expires_at' ].freeze
+  SECRETS = %w( password_hash password_salt remember_token remember_token_expires_at verification_code ).freeze
 
   # The original ActiveRecord::Base.to_xml that also includes information-sensitive fields.
   alias_method :to_xml_with_secrets,  :to_xml
@@ -231,11 +231,6 @@ class User < ActiveRecord::Base
   # Checks whether a user has whatever role on whatever node.
   def has_any_role?
     self.role_assignments.count > 0
-  end
-
-  # Checks whether a user has access to any private (i.e. hidden) nodes.
-  def has_private_nodes?
-    !Node.find_accessible(:first, :for => self, :conditions => { "nodes.hidden" => true }).nil?
   end
 
   # Returns the role the user has on a Node.

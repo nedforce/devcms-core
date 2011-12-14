@@ -1,6 +1,6 @@
 %div{:style => "font-family: arial, sans-serif; font-size: 12px"}
   %p Beste #{@user.full_name},
-  %p De volgende pagina's zijn al enige tijd niet meer bijgewerkt en zijn inmiddels verlopen:
+  #{@text}
   %table
     %thead
       %th Titel
@@ -9,15 +9,13 @@
       %th Verlopen op
       %th &nbsp;
     %tbody
-      - @nodes.each do |node|
-        %tr
-          %td= link_to node.content.title, aliased_or_delegated_url(node, :host => @host)
-          %td= node.ancestors.all(:include => :content).collect{ |n| n.content.content_title }.join(" > ").to_s
-          %td= node.updated_at
-          %td= node.expires_on
-          %td= link_to I18n.t('layouts.lookup'), admin_nodes_url(:active_node_id => node.id, :host => @host)
-  %p Gelieve de inhoud van deze pagina's te controleren en bij te werken.
-  %p Neem voor meer informatie contact op met #{mail_to Settler[:mail_approvals_from_address]}.
+      %tr
+        %td= link_to @node.content.title, aliased_or_delegated_url(@node, :host => @host)
+        %td= @node.ancestors.all(:include => :content).collect{ |n| n.content.content_title }.join(" > ").to_s
+        %td= @node.updated_at
+        %td= @node.expires_on
+        %td= link_to I18n.t('layouts.lookup'), admin_nodes_url(:active_node_id => @node.id, :host => @host)
+
   %p 
     Met vriendelijke groet,
     %br

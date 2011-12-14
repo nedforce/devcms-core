@@ -38,6 +38,31 @@ class NodeExpirationTest < ActiveSupport::TestCase
     assert !page.node.valid?
     assert page.new_record?
   end
+    
+  def test_should_default_to_inherit_for_expiration_settings_notify
+    page = create_page(:expires_on => (Date.today + Settler[:default_expiration_time].days - 1.week))
+    
+    assert_equal "inherit", page.expiration_notification_method
+  end
+  
+  def test_expiration_containers_should_not_set_expires_on
+    assert Section.new.expiration_container?
+    assert_nil Section.new.cascade_expires_on
+    assert !Section.new.expirable?
+    section = sections(:root_section)
+    section.update_attributes :expires_on => 2.days.from_now.to_s
+    assert_nil section.node.expires_on
+  end
+  
+  def test_expiration_containers_should_cascade_expire_on
+    assert Section.new.expiration_container?
+    assert_nil Section.new.cascade_expires_on
+    assert !Section.new.expirable?
+    section = sections(:editor_section)
+    section.update_attributes :cascade_expires_on => 7.days.from_now.to_s
+    assert_equal 7.days.from_now.to_date, pages(:editor_section_page).expires_on
+    assert_not_equal 7.days.from_now.to_date, pages(:about_page).expires_on
+  end
   
 protected
 
@@ -48,7 +73,8 @@ protected
   def create_page(options = {})
     page = build_page(options)
     page.save
-    page
+    # assert page.valid?, page.errors.full_messages.to_sentence
+    page #.reload
   end
 
 end
