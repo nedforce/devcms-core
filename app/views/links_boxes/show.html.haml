@@ -11,12 +11,12 @@
 
     - unless @children.empty?
       %ul.section_items
-        - @children.each do |content_node|
-          - if content_node.node.content_type_configuration[:show_in_menu]
+        - @children.each do |node|
+          - if node.content_type_configuration[:show_in_menu]
             %li
-              = image_tag "icons/#{content_node.icon_filename}", :class => 'icon', :alt => h(content_node.title)
-              = link_to_content_node h(content_node.title), content_node
-              %p= content_node.description
+              = image_tag "icons/#{node.content.icon_filename}", :class => 'icon', :alt => h(node.content.title)
+              = link_to_node h(node.content.title), node
+              %p= node.content.description
 
     .buttons.clearfix
       = print_button
