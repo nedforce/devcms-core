@@ -36,11 +36,6 @@ class Calendar < ActiveRecord::Base
   validates_presence_of :title
   validates_length_of   :title, :in => 2..255, :allow_blank => true
 
-  # Returns the last update date
-  def last_updated_at
-    [ self.node.children.accessible.with_content_type(%w( Meeting CalendarItem )).maximum('nodes.created_at'), self.updated_at ].compact.max
-  end
-  
   # Returns the description as the token for indexing.
   def content_tokens
     description

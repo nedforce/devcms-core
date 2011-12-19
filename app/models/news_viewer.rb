@@ -57,7 +57,12 @@ class NewsViewer < ActiveRecord::Base
 
   # Returns the date when the +NewsViewer+ was last updated.
   def last_updated_at
-    [ self.news_items.newest.accessible.first(:order => 'nodes.publication_start_date DESC').try(:publication_start_date), self.updated_at ].compact.max
+    newest_item = self.news_items.newest.accessible.first(:order => 'nodes.updated_at DESC')
+    if newest_item.present?
+      [ newest_item.updated_at, newest_item.node.children.with_content_type("Images").try(:first).try(:updated_at), self.updated_at ].compact.max
+    else
+      self.updated_at
+    end
   end
 
   # Maintenance task for removing old news items and adding new ones.

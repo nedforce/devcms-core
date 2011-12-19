@@ -57,11 +57,6 @@ class Weblog < ActiveRecord::Base
   # See the preconditions overview for an explanation of these validations.  
   validates_presence_of :title, :weblog_archive, :user
   validates_length_of   :title, :in => 2..255, :allow_blank => true
-
-  # Returns the last update date
-  def last_updated_at
-    [ self.node.children.accessible.maximum('nodes.publication_start_date'), self.updated_at ].compact.max
-  end
   
   # Returns true if this +Weblog+ is owned by the given +User+, else false.
   def is_owned_by_user?(user)

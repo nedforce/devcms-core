@@ -63,7 +63,7 @@ class Section < ActiveRecord::Base
 
   # Returns the last update date
   def last_updated_at
-    [ self.node.children.accessible.exclude_content_types(%w( Image Attachment Site )).maximum('nodes.updated_at'), self.updated_at ].compact.max
+    self.node.self_and_descendants.accessible.exclude_content_types(%w( Image Attachment Site )).maximum(:updated_at)
   end
 
   # Returns the maximum number of sidebox (content box) columns that are allowed for this content type.

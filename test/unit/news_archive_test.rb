@@ -128,16 +128,16 @@ class NewsArchiveTest < ActiveSupport::TestCase
 
   def test_last_updated_at_should_return_updated_at_when_no_accessible_news_items_are_found
     na = create_news_archive
-    assert_equal na.updated_at, na.last_updated_at
+    assert_equal na.updated_at.to_i, na.last_updated_at.to_i
     ni = create_news_item na
     ni.node.update_attribute(:hidden, true)
-    assert_equal na.updated_at, na.last_updated_at
+    assert_equal na.updated_at.to_i, na.last_updated_at.to_i
   end
 
 protected
 
   def create_news_archive(options = {})
-    NewsArchive.create({:parent => nodes(:root_section_node), :title => "Good news, everyone!", :description => "I'm sending you all on a highly controversial mission." }.merge(options))
+    NewsArchive.create({:parent => nodes(:root_section_node), :title => "Good news, everyone!", :description => "I'm sending you all on a highly controversial mission.", :publication_start_date => 2.days.ago }.merge(options))
   end
 
   def create_news_item(news_archive, options = {})
