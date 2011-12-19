@@ -12,7 +12,7 @@ module Node::Expiration
         validates_presence_of :expires_on, :if => :expiration_required?
       end
       
-      validates_inclusion_of :expiration_notification_method, :in => ['inherit', 'responsible_user', 'email']
+      validates_inclusion_of :expiration_notification_method, :in => ['inherit', 'responsible_user', 'email'], :allow_blank => true
     
       before_validation :set_default_expires_on, :if => :expiration_required?
       
