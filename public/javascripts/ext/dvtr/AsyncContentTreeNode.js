@@ -595,7 +595,7 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
 
     onAssignRole: function () {
         rightPanel.load({
-            url: '/admin/permissions/new',
+            url: '/admin/role_assignments/new',
             params: Ext.ux.prepareParams(defaultParams, { node_id: this.id, format: 'html' }),
             method: 'GET',
             callback: function (options, success, response) {
