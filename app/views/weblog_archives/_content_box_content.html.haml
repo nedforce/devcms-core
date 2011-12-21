@@ -1,5 +1,5 @@
 - content = node.content
-- recent_weblogs = content.find_last_updated_weblogs(current_user, node.content_box_number_of_items)
+- recent_weblogs = content.find_last_updated_weblogs(node.content_box_number_of_items)
 
 - unless recent_weblogs.empty?
   %p= t 'weblogs.recent_weblogs'

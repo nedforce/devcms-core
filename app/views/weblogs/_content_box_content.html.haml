@@ -1,4 +1,4 @@
-- recent_weblog_posts = content.find_last_published_weblog_posts(current_user, node.content_box_number_of_items)
+- recent_weblog_posts = content.find_last_published_weblog_posts(node.content_box_number_of_items)
 
 - unless recent_weblog_posts.empty?
   %p= t 'weblogs.recent_posts'
