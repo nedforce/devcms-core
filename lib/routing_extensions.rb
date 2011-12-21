@@ -64,20 +64,24 @@ module RoutingExtensions
         else
           if params[:id]
             klass = controller.classify.split('::').last.constantize rescue nil
-            
+          
             if klass && klass.respond_to?(:is_content_node?)
-              node = Node.first(:conditions => [ 'content_type = ? AND content_id = ?', klass.base_class.name, params[:id] ]) || raise(ActionController::RoutingError, 'Invalid content node specified')
+              if params[:id].to_i.to_s == params[:id]
+                node = Node.first(:conditions => [ 'content_type = ? AND content_id = ?', klass.base_class.name, params[:id] ]) || raise(ActionController::RoutingError, 'Invalid content node specified')
+              else
+                raise ActionController::RoutingError, 'Invalid url'
+              end
             elsif klass.nil? || klass == Node
               node = Node.find(params[:id])
             end
-            
+          
             if node.present?
               if controller.starts_with?('admin')
                 params[:node_id] = node.id
               else
                 # Node might point to a different node
                 node = update_to_referenced_node(node)
-          
+        
                 params.update({ 
                   :id => node.content_id,
                   :node_id => node.id,

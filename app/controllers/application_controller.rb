@@ -271,8 +271,8 @@ protected
   def find_images_and_attachments
     @image_content_nodes, @attachment_content_nodes = [], []
     @node.children.accessible.with_content_type(%w(Image Attachment ContentCopy)).all.each do |child|
-      child = child.copied_node if child.content_type == "ContentCopy"
-      if child.content_type == "Image" && !child.is_for_header?
+      child = child.content.copied_node if child.content_type == "ContentCopy"
+      if child.content_type == "Image" && !child.content.is_for_header?
         @image_content_nodes << child.content
       elsif child.content_type == "Attachment"
         @attachment_content_nodes << child.content

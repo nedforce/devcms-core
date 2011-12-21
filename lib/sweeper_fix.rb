@@ -2,7 +2,7 @@ module ActionController
   module Caching
     class Sweeper
       def controller
-        Thread.current[:"#{self}_controller"]
+        Thread.current[:"#{self}_controller"] || ActionController::Base.new
       end
 
       def controller=(c)
