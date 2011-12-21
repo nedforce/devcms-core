@@ -935,7 +935,7 @@ nl:
     edit: Bewerken van sectie
     edit_site: Bewerken van site
     editor_comment: Commentaar voor eindredacteur
-    expiration_settings: "Notificatieinstellingen verourderde content"
+    expiration_settings: "Notificatie-instellingen verouderde content"
     expiration_email_subject: Onderwerp
     expiration_email_body: Tekst
     expiration_notification_sent: Notificaties verzonden!
