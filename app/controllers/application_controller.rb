@@ -269,16 +269,13 @@ protected
 
   # Find the Attachment and Image children belonging to the current Node instance.
   def find_images_and_attachments
-    @image_content_nodes = Image.accessible.all(:conditions => { :is_for_header => false, 'nodes.ancestry' => @node.child_ancestry })
-    @attachment_content_nodes = Attachment.accessible.all(:conditions => { 'nodes.ancestry' => @node.child_ancestry })
-    
-    ContentCopy.accessible.all(:conditions => { 'nodes.ancestry' => @node.child_ancestry }).each do |content_copy|
-      child = content_copy.copied_node.content
-      
-      if child.is_a?(Image) && !child.is_for_header?
-        @image_content_nodes << child
-      elsif child.is_a?(Attachment)
-        @attachment_content_nodes << child
+    @image_content_nodes, @attachment_content_nodes = [], []
+    @node.children.accessible.with_content_type(%w(Image Attachment ContentCopy)).all.each do |child|
+      child = child.copied_node if child.content_type == "ContentCopy"
+      if child.content_type == "Image" && !child.is_for_header?
+        @image_content_nodes << child.content
+      elsif child.content_type == "Attachment"
+        @attachment_content_nodes << child.content
       end
     end
   end
