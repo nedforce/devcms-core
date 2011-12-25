@@ -18,9 +18,8 @@ module Node::VisibilityAndAccessibility
       }
     end)
 
-    base.named_scope :public, { :conditions => { 'nodes.private' => false } }
-
-    base.named_scope :private, { :conditions => { 'nodes.private' => true } }
+    base.named_scope :public,  { :conditions => { 'nodes.private' => false } }
+    base.named_scope :private, { :conditions => { 'nodes.private' => true  } }
   end
   
   def has_private_ancestor?
@@ -50,17 +49,17 @@ module Node::VisibilityAndAccessibility
     elsif self.is_global_frontpage? || self.contains_global_frontpage?
       self.errors.add_to_base(I18n.t('activerecord.errors.models.node.attributes.base.cant_make_node_public_when_it_has_a_private_ancestor'))
       false
+    elsif !accessible
+      self.update_attribute(:private, true) unless self.private? || self.has_private_ancestor?
+      true
+    elsif self.has_private_ancestor?
+      self.errors.add_to_base(I18n.t('activerecord.errors.models.node.attributes.base.cant_make_node_public_when_it_has_a_private_ancestor'))
+      false
+    elsif self.private?
+      self.update_attribute(:private, false)
+      true
     else
-      if !accessible
-        self.update_attribute(:private, true) unless self.private? || self.has_private_ancestor?
-        true
-      elsif self.has_private_ancestor?
-        self.errors.add_to_base(I18n.t('activerecord.errors.models.node.attributes.base.cant_make_node_public_when_it_has_a_private_ancestor'))
-        false
-      else
-        self.update_attribute(:private, false) if self.private?
-        true
-      end
+      true
     end
   rescue Exception
     self.errors.add_to_base(I18n.t('activerecord.errors.models.node.attributes.base.set_accessibility_failed'))
@@ -71,23 +70,21 @@ module Node::VisibilityAndAccessibility
     if self.is_global_frontpage? || self.contains_global_frontpage?
       self.errors.add_to_base(I18n.t('activerecord.errors.models.node.attributes.base.cant_make_node_public_when_it_has_a_private_ancestor'))
       false
+    elsif !visible
+      Node.update_all('hidden = true', self.subtree_conditions) unless self.hidden?
+      self.hidden = true   
+      true
+    elsif self.has_hidden_ancestor?
+      self.errors.add_to_base(I18n.t('activerecord.errors.models.node.attributes.base.cant_make_node_visible_when_it_has_a_hidden_ancestor'))
+      false
     else
-      if !visible
-        Node.update_all('hidden = true', self.subtree_conditions) unless self.hidden?
-        self.hidden = true   
-        true
-      elsif self.has_hidden_ancestor?
-        self.errors.add_to_base(I18n.t('activerecord.errors.models.node.attributes.base.cant_make_node_visible_when_it_has_a_hidden_ancestor'))
-        false
-      else
-        Node.update_all('hidden = false', self.subtree_conditions) if self.hidden?
-        self.hidden = false
-        true
-      end
+      Node.update_all('hidden = false', self.subtree_conditions) if self.hidden?
+      self.hidden = false
+      true
     end
   rescue
     self.errors.add(I18n.t('activerecord.errors.models.node.attributes.base.set_visibility_failed'))
     false
   end
-  
+
 end
