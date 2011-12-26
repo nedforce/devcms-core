@@ -16,7 +16,7 @@
     - else
       .weblogs
         - @weblogs.each do |weblog|
-          %div{ :class => "#{cycle('oddWeblog', 'evenWeblog')} clearfix" }
+          .clearfix{ :class => cycle('oddWeblog', 'evenWeblog') }
             %h4= link_to h(weblog.title), '#', :title => h(weblog.title)
 
             .clearfix

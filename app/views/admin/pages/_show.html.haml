@@ -11,7 +11,8 @@
 
   .content
     - if record.preamble
-      = content_tag(:div, simple_format(white_list_preamble(record.preamble)), :class => 'preamble')
+      .preamble
+        = simple_format(white_list_preamble(record.preamble))
 
     = render_images
 

@@ -1,3 +1,5 @@
 = form.hidden_field :domain
 = form.hidden_field :description
-= form.hidden_field :frontpage_node_id if @show_frontpage_control
+
+- if @show_frontpage_control
+  = form.hidden_field :frontpage_node_id

@@ -12,7 +12,7 @@
     = f.text_area  :description,     :label => t('images.description'), :rows => 4
 
     - if current_user.has_role?('admin')
-      = f.check_box  :is_for_header,   :label => t('images.is_for_header')
+      = f.check_box :is_for_header,  :label => t('images.is_for_header')
 
     = f.text_field :url,             :label => t('images.url')
 
