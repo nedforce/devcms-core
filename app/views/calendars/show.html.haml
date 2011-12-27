@@ -4,5 +4,5 @@
     %link{ :href => tomorrow_combined_calendar_url(:id => CombinedCalendar.first.id, :format => 'atom'), :rel => "alternate", :title => t('calendars.tomorrow'), :type => "application/atom+xml" }/
 
 #calendarMain
-  = render :partial => 'calendar_header', :locals => { :date => date }
-  = render :partial => 'calendar_week', :locals => { :date => date }
+  = render :partial => '/calendars/calendar_header', :locals => { :date => date }
+  = render :partial => '/calendars/calendar_week', :locals => { :date => date }

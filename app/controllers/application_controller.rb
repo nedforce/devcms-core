@@ -179,7 +179,7 @@ protected
   # Used to find the context node (for authorization purposes)
   def find_context_node
     if @node.present?
-      if @node.content_class <= Section
+      if @node.content_type == "Section"
         @context_node = @node
       else
         @context_node = @node.self_and_ancestors.sections.include_content.last
