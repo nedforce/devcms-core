@@ -1,4 +1,4 @@
-%td{ :colspan => "6" }
+%td{ :colspan => 6 }
   = javascript_tag "treePanel.getNodeById(#{@contact_form.node.id}).setText('#{h @contact_form.tree_text(@contact_form.node)}')"
   %p
     %strong= t 'shared.updated'

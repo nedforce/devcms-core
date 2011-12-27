@@ -11,7 +11,8 @@
 
   .content
     - if record.description.present?
-      = content_tag(:div, w(record.description), :class => 'htmlField')
+      .htmlField
+        = w record.description
 
     = render_images
 

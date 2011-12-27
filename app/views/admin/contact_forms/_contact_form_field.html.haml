@@ -1,5 +1,5 @@
 - unless @contact_form.deleted_contact_form_fields && @contact_form.deleted_contact_form_fields[contact_form_field.class].include?(contact_form_field.id.to_s)
-  %div{ :class => "contact_form contact_form_field row #{cycle "even", "odd"}", :id => "#{contact_form_field.class.name.tableize}_#{contact_form_field.to_param}" }
+  .contact_form.contact_form_field.row{ :class => cycle('even', 'odd'), :id => "#{contact_form_field.class.name.tableize}_#{contact_form_field.to_param}" }
     %h4= contact_form_field.class.localized_model_name
 
     - contact_form_field.attributes.each_pair do |attr, value|

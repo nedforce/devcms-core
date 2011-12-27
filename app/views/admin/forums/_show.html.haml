@@ -14,7 +14,7 @@
     - else
       .forumTopics
         - @forum_topics.each do |forum_topic|
-          %div{ :class => "#{cycle('oddForumTopic', 'evenForumTopic')} clearfix" }
+          .clearfix{ :class => cycle('oddForumTopic', 'evenForumTopic') }
             %h4= link_to h(forum_topic.title), '#'
 
             .forumTopicDescription
