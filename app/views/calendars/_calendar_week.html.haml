@@ -1,0 +1,40 @@
+/ Days of a week and Calendar items for those days !
+.calendarWeek
+  .weekNavigation.clearfix
+    - if @calendar.calendar_items.exists_before_date?(date.start_of_week)
+      .previousWeek=  link_to_content_node('&laquo;', @calendar, { :date => (date - 1.week).start_of_week.to_s })
+    .currentWeek=   "#{t("shared.week", :week => date.cweek)}"
+    - if @calendar.calendar_items.exists_after_date?(date.end_of_week)
+      .nextWeek=      link_to_content_node('&raquo;', @calendar, { :date => (date + 1.week ).start_of_week.to_s })
+  - date.start_of_week.upto(date.end_of_week) do |day|
+    - @day_items = @calendar_items[day.mday]
+
+    - if @day_items.present? && day <= date.end_of_month
+      .calendarDay
+        / A day in a week with calendar items !
+        %h2= "#{day.mday} #{t("date.month_names")[day.month]}"
+
+        .dayName= "#{t("date.day_names")[day.wday].titleize}"
+
+        / A calendarItems for this day !
+        .calendarItems
+          - @day_items.each do |day_item|
+            - readspeaker("#{day.mday}_#{day_item.id}") do |rid|
+              .calendarItem
+                .metaInfo
+                  .time
+                    = t 'calendars.from'
+                    = day_item.start_time.strftime("%H:%M")
+                    = t 'calendars.till'
+                    = day_item.end_time.strftime("%H:%M")
+
+                .title.clearfix
+                  - if day_item.is_a?(Meeting)
+                    = image_tag 'icons/meeting.png', :class => 'icon', :alt => h(day_item.title)
+                    = link_to_content_node h(day_item.title), day_item, {}, :class => 'meeting'
+                  - else
+                    = image_tag 'icons/calendar_item.png', :class => 'icon', :alt => h(day_item.title)
+                    = link_to_content_node h(day_item.title), day_item, {}, :class => 'event'
+
+                .buttons.clearfix
+                  = readspeaker_button(:rid => rid)

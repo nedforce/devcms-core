@@ -8,20 +8,19 @@ module Node::Expiration
         { :conditions => ["nodes.expires_on IS NOT NULL AND nodes.expires_on <= ? AND nodes.content_type IN (?)", date, Node.expirable_content_types] }
       }
     
+      before_validation :set_default_expires_on, :if => :expiration_required?
+      
+      validate :expires_on_valid?, :ensure_valid_responsible_user_role, :if => lambda {|node| node.content.changed? }
       if SETTLER_LOADED
         validates_presence_of :expires_on, :if => :expiration_required?
       end
       
       validates_inclusion_of :expiration_notification_method, :in => ['inherit', 'responsible_user', 'email'], :allow_blank => true
-    
-      before_validation :set_default_expires_on, :if => :expiration_required?
+      
+      before_save :empty_expires_on!, :unless => :expirable?
       
       attr_accessor :cascade_expires_on
       after_save :cascade_expires_on!, :if => :cascade_expires_on?
-      
-      validate :expires_on_valid?
-      
-      before_save :empty_expires_on!, :unless => :expirable?
       
       extend(ClassMethods)
     end
@@ -83,6 +82,10 @@ module Node::Expiration
         errors.add_to_base(I18n.t('nodes.expires_on_out_of_range', :date => I18n.l(Date.today + Settler[:default_expiration_time])))
       end
     end
+  end
+  
+  def ensure_valid_responsible_user_role
+    errors.add_to_base(I18n.t('acts_as_content_node.responsible_user_requires_role')) unless self.responsible_user.blank? || self.responsible_user.has_role_on?(['admin', 'editor', 'final_editor'], self)
   end
   
   def cascade_expires_on!

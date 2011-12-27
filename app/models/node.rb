@@ -149,10 +149,8 @@ class Node < ActiveRecord::Base
   
   validate  :ensure_publication_start_date_is_present_when_publication_end_date_is_present,
             :ensure_publication_end_date_after_publication_start_date,
-            :ensure_content_box_number_of_items_should_be_greater_than_two,
-            :ensure_expires_on_valid,
-            :ensure_valid_responsible_user_role
-
+            :ensure_content_box_number_of_items_should_be_greater_than_two
+            
   # A private copy of the original destroy method that is used for overloading.
   alias_method :original_destroy, :destroy
 
@@ -679,16 +677,5 @@ private
     if self.content_box_number_of_items
       self.errors.add_to_base(I18n.t('acts_as_content_node.content_box_number_of_items_should_be_greater_than_two')) if self.content_box_number_of_items.to_i <= 2
     end
-  end
-  
-  def ensure_valid_responsible_user_role
-    errors.add_to_base(I18n.t('acts_as_content_node.responsible_user_requires_role')) unless self.responsible_user.blank? || self.responsible_user.has_role_on?(['admin', 'editor', 'final_editor'], self)
-  end
-  
-  def ensure_expires_on_valid
-    if expirable? && expires_on.present?
-      errors.add_to_base(I18n.t("nodes.expires_on_out_of_range")) unless (Date.today..(Date.today + Settler[:default_expiration_time].days)).include?(expires_on)
-    end
-  end
-  
+  end  
 end
