@@ -43,7 +43,7 @@ class ContentRepresentation < ActiveRecord::Base
 
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of     :parent, :target
-  validates_presence_of     :content,                          :unless => :custom_type
+  validates_presence_of     :content,                             :unless => :custom_type
   validates_uniqueness_of   :content_id, :scope => :parent_id,    :unless => :custom_type
   validates_numericality_of :parent_id
   validates_numericality_of :content_id,                          :unless => :custom_type
@@ -52,8 +52,7 @@ class ContentRepresentation < ActiveRecord::Base
   validate :content_should_not_be_private,                        :unless => :custom_type
   
   validate :content_should_be_allowed_as_content_representation,  :unless => :custom_type
-  validate :content_should_be_in_same_site,                       :unless => :custom_type
-  validate :custom_type_should_exist_for_parent,                  :if => :custom_type
+  validate :custom_type_should_exist_for_parent,                  :if     => :custom_type
 
   before_validation :nillify_custom_type, :if => lambda { |cr| cr.custom_type.blank? }
 
