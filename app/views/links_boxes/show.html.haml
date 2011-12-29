@@ -9,7 +9,7 @@
     
     - if @links_box.content_children.exists?
       .themeOverview
-        = render :partial => "/#{@links_box.controller_name}/listing", :locals => { :items => @links_box.content_children }
+        = render :partial => "/link_themes/listing", :locals => { :items => @links_box.content_children }
 
     - if @links_box.sub_themes.exists?
       %h2= t "#{@links_box.controller_name}.sub_themes"
