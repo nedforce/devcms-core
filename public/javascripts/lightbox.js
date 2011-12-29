@@ -1,8 +1,8 @@
 // -----------------------------------------------------------------------------------
 //
-//	Lightbox v2.04
+//	Lightbox v2.05
 //	by Lokesh Dhakar - http://www.lokeshdhakar.com
-//	Last Modification: 2/9/08
+//	Last Modification: 3/18/11
 //
 //	For more information, visit:
 //	http://lokeshdhakar.com/projects/lightbox2/
@@ -227,7 +227,7 @@ Lightbox.prototype = {
         this.imageArray = [];
         var imageNum = 0;       
 
-        if ((imageLink.rel == 'lightbox')){
+        if ((imageLink.getAttribute("rel") == 'lightbox')){
             // if image is NOT part of a set, add single image to imageArray
             // !!! HACK -- include the image alt
             this.imageArray.push([imageLink.href, imageLink.name, imageLink.down('img').alt]);
@@ -282,6 +282,10 @@ Lightbox.prototype = {
         // once image is preloaded, resize image container
         imgPreloader.onload = (function(){
             this.lightboxImage.src = this.imageArray[this.activeImage][0];
+            /*Bug Fixed by Andy Scott*/
+            this.lightboxImage.width = imgPreloader.width;
+            this.lightboxImage.height = imgPreloader.height;
+            /*End of Bug Fix*/
             this.resizeImageContainer(imgPreloader.width, imgPreloader.height);
         }).bind(this);
         imgPreloader.src = this.imageArray[this.activeImage][0];
@@ -355,11 +359,8 @@ Lightbox.prototype = {
     //
     updateDetails: function() {
     
-        // if caption is not null
-        if (this.imageArray[this.activeImage][1] != ""){
-            this.caption.update(this.imageArray[this.activeImage][1]).show();
-        }
-        
+        this.caption.update(this.imageArray[this.activeImage][1]).show();
+
         // if image is part of set display 'Image x of x' 
         if (this.imageArray.length > 1){
             this.numberDisplay.update( LightboxOptions.labelImage + ' ' + (this.activeImage + 1) + ' ' + LightboxOptions.labelOf + '  ' + this.imageArray.length).show();
@@ -375,7 +376,7 @@ Lightbox.prototype = {
                 afterFinish: (function() {
 	                // update overlay size and update nav
 	                var arrayPageSize = this.getPageSize();
-	                this.overlay.setStyle({ height: arrayPageSize[1] + 'px' });
+	                this.overlay.setStyle({ width: arrayPageSize[0] + 'px', height: arrayPageSize[1] + 'px' });
 	                this.updateNav();
                 }).bind(this)
             } 
