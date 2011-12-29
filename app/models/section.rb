@@ -28,8 +28,8 @@ class Section < ActiveRecord::Base
   acts_as_content_node({
     :allowed_child_content_types => %w(
       AlphabeticIndex Attachment Calendar Carrousel CombinedCalendar ContactBox ContactForm Feed Forum
-      HtmlPage Image LinksBox LegislationArchive InternalLink ExternalLink NewsArchive NewsletterArchive NewsViewer
-      Page PermitArchive PermitViewer Poll ProductCatalogue SearchPage Section SocialMediaLinksBox TopHitsPage WeblogArchive
+      HtmlPage Image LinksBox InternalLink ExternalLink NewsArchive NewsletterArchive NewsViewer
+      Page Poll SearchPage Section SocialMediaLinksBox TopHitsPage WeblogArchive
     ),
     :allowed_roles_for_create  => %w( admin final_editor ),
     :allowed_roles_for_destroy => %w( admin final_editor ),
