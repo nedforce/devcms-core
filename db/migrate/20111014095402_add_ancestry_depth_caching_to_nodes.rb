@@ -8,6 +8,7 @@ class AddAncestryDepthCachingToNodes < ActiveRecord::Migration
     Node.reset_column_information
     
     puts "Caching ancestry depth for all nodes, this might take a while..."
+
     Node.rebuild_depth_cache!
     puts "Ancestry depth cached for all nodes. Success!"
   end
