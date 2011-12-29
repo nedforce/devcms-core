@@ -58,7 +58,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.namespace(:admin) do |admin|
     admin.resources :alphabetic_indices, :except => [ :index, :destroy ]
-    admin.resources :attachments, :except => [ :index, :destroy ], :member => { :previous => :get, :preview => :get }, :collection => { :ajax => :any }
+    admin.resources :attachments, :except => [ :index, :destroy ], :member => { :previous => :get, :preview => :get }, :collection => { :categories => :any }
     admin.resources :social_media_links_boxes, :except => [ :index, :destroy ]
     admin.resources :versions, :only => :index, :member => { :approve => :put, :reject => :put }
     admin.resources :role_assignments, :only => [ :index, :new, :create, :destroy ]

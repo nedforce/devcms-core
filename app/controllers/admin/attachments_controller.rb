@@ -47,8 +47,8 @@ class Admin::AttachmentsController < Admin::AdminController
   
   # * GET /admin/attachments/ajax
   # * POST /admin/attachments/ajax
-  def ajax
-    @categories = Attachment.all(:conditions => ["category ILIKE ?", "#{params[:query]}%"]).group_by(&:category)
+  def categories
+    @categories = Attachment.all(:select => "DISTINCT(category)", :conditions => ["category ILIKE ?", "#{params[:query]}%"]).map(&:category)
     
     respond_to do |format|
       format.html
