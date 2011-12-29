@@ -18,7 +18,7 @@ require 'validates_email_format_of'
 
 require 'routing_helpers'
 require 'routing_extensions'
-require 'cache_extensions'
+require 'cache_extensions' if defined?(Memcached)
 require 'acts_as_archive_controller'
 require 'searcher'
 require 'recaptcha'

@@ -192,7 +192,7 @@ protected
       :title          => node.content.title,
       :id             => node.id,
       :nodeId         => node.id,
-      :controllerName => node.content_type_configuration[:controller_name] || node.content_class.table_name,
+      :controllerName => node.content.controller_name,
       :contentNodeId  => node.content_id,
       :xtype          => 'sortlet'
     }

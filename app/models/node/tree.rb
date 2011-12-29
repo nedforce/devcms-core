@@ -4,7 +4,6 @@ module Node::Tree
     base.class_eval do
       # Delegate tree calls to use Ancestry. Ensure this is added *after* other before/after filters.
       include TreeDelegation
-      # TODO: Move tree functionaility after performance branch has been merged
     end
   end    
   # This module delegates to both ancestry and acts_a_list to emulate
@@ -181,7 +180,7 @@ module Node::Tree
 
       # checks whether the content type is valid as a child of the parent
       def parent_should_allow_type
-        unless self.parent.nil? || self.content.own_content_class.valid_parent_class?(self.parent.content_class)
+        unless self.parent.nil? || self.content_class.valid_parent_class?(self.parent.content_class)
           errors.add_to_base "'#{self.parent.content_class.human_name}' #{I18n.t('tree_delegation.doesnt_accept')} '#{content.own_content_class.human_name}' #{:type}."
         end
       end

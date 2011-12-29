@@ -599,6 +599,13 @@ nl:
     edit: Bewerken van links box
     goto_site: Ga naar de site
     read_more: meer websites
+    sub_themes: "Alle thema's"
+  link_themes:
+    add_to: Thema toevoegen aan
+    sub_themes: "Onderliggende thema's"
+    edit: Bewerken van thema
+    failed: Kon thema niet opslaan.
+    saved: Thema opgeslagen!
   meetings:
     add_to: Vergadering toevoegen aan
     edit: Bewerken van vergadering

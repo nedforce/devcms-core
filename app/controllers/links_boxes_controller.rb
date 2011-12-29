@@ -3,7 +3,6 @@
 class LinksBoxesController < ApplicationController
 
   before_filter :find_links_box, :only => :show
-  before_filter :find_children,  :only => :show
 
   # * GET /links_boxes/:id
   # * GET /links_boxes/:id.xml
@@ -20,9 +19,4 @@ protected
   def find_links_box
     @links_box = @node.content
   end
-
-  def find_children
-    @children = @node.children.accessible.public.exclude_content_types('Image').all
-  end
-
 end

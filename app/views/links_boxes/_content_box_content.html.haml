@@ -1,5 +1,5 @@
 - content    = node.content
-- links      = node.children.accessible.exclude_content_types('Image').include_content.all(:limit => node.content_box_number_of_items).map { |n| n.content }
+- links      = node.children.accessible.with_content_type('Link').include_content.all(:limit => node.content_box_number_of_items).map { |n| n.content }
 
 - unless links.empty?  
   - header_image = node.children.with_content_type('Image').include_content.first.try(:content)

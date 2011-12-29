@@ -1,0 +1,17 @@
+.theme.regularPage
+  - readspeaker do
+    = readspeaker_button :class => 'topRightReadspeaker'
+
+    %h1= h @theme.title
+    
+    - if @theme.content_children.exists?
+      .themeOverview
+        = render :partial => "/#{@theme.controller_name}/listing", :locals => { :items => @theme.content_children }
+
+    - if @theme.sub_themes.exists?
+      %h2= t "#{@theme.controller_name}.sub_themes"
+      = render :partial => '/themes/listing', :locals => { :container => @theme, :depth => @theme.depth + 1, :max_depth => 4 }
+    
+    .buttons.clearfix
+      = print_button
+

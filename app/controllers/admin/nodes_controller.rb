@@ -195,7 +195,7 @@ class Admin::NodesController < Admin::AdminController
     @content          = content.current_version
     @previous_content = content.previous_version || @content
     @children         = content.node.children.accessible
-    @controller_path  = @node.content_type_configuration[:controller_name] || @node.content_class.table_name
+    @controller_path  = content.controller_name
   end
 
   # Used for approving content of a given node

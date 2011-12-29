@@ -273,6 +273,14 @@ module Acts #:nodoc:
           def show_in_menu
             Node.content_type_configuration(self.class.to_s)[:show_in_menu]
           end
+          
+          def controller_name
+            self.class.controller_name
+          end
+          
+          def self.controller_name
+            Node.content_type_configuration(self.to_s)[:controller_name] || self.table_name
+          end
 
         private
         

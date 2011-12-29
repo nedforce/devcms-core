@@ -18,7 +18,7 @@ protected
   def sweep(node)
     content = node.content
     
-    if Node.content_type_configuration(node.content_type)[:show_in_menu] || Node.content_type_configuration(node.sub_content_type)[:show_in_menu]
+    if node.content_type_configuration[:show_in_menu]
       controller.expire_fragment(:host => Settler[:host], :controller => '/nodes', :action => :footer, :site => node.containing_site.id) if node.ancestry_depth <= 1
       controller.expire_fragment(:host => Settler[:host], :controller => '/nodes', :action => :main_menu, :site => node.containing_site.id) if node.ancestry_depth <= 2  
     end

@@ -1,22 +1,19 @@
-.section.regularPage
+.linksBox.regularPage
   - readspeaker do
     = readspeaker_button :class => 'topRightReadspeaker'
 
     %h1= h @links_box.title
 
-    = render :partial => '/shared/metadata', :locals => { :publication_date => @links_box.publication_start_date, :last_update_date => @links_box.last_updated_at }
-
     - if @links_box.description.present?
       = content_tag(:div, w(@links_box.description), :class => 'htmlField')
+    
+    - if @links_box.content_children.exists?
+      .themeOverview
+        = render :partial => "/#{@links_box.controller_name}/listing", :locals => { :items => @links_box.content_children }
 
-    - unless @children.empty?
-      %ul.section_items
-        - @children.each do |node|
-          - if node.content_type_configuration[:show_in_menu]
-            %li
-              = image_tag "icons/#{node.content.icon_filename}", :class => 'icon', :alt => h(node.content.title)
-              = link_to_node h(node.content.title), node
-              %p= node.content.description
-
+    - if @links_box.sub_themes.exists?
+      %h2= t "#{@links_box.controller_name}.sub_themes"
+      = render :partial => '/themes/listing', :locals => { :container => @links_box, :depth => 1, :max_depth => 4 }
+    
     .buttons.clearfix
       = print_button

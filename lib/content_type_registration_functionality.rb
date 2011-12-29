@@ -44,7 +44,7 @@ module ActiveRecord
   
     module InstanceMethods
       def content_type_configuration 
-        Node.content_type_configuration(self.content_class.name)
+        Node.content_type_configuration(self.sub_content_type) || Node.content_type_configuration(self.content_type)
       end
     end
   end

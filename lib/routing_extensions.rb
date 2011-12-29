@@ -25,7 +25,7 @@ module RoutingExtensions
       begin
         # Use Rails' default path parsing
         params = recognize_path_without_delegation_or_url_aliasing(path, environment).merge({ :site_id => site.node.id })
-              
+        
         controller = params[:controller]
         
         # What we do next depends on the 'controller'

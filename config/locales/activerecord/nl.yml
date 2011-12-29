@@ -45,6 +45,7 @@ nl:
       section: Sectie
       site: Site
       social_media_links_box: Social media links box
+      theme: Thema
       top_hits_page: Top 10 pagina
       user: Gebruiker
       weblog: Weblog
@@ -149,6 +150,8 @@ nl:
         linked_node: Gelinkte node
       links_box:
         title: Titel
+      link_theme:
+        title: naam
       meeting:
         end_time: Eindtijd
         meeting_category: Categorie
@@ -210,6 +213,8 @@ nl:
         title: Titel
         twitter_url: Twitter URL
         youtube_url: YouTube URL
+      theme:
+        title: Naam
       user:
         email_address: E-mailadres
         login: Inlognaam

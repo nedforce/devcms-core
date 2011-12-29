@@ -65,11 +65,11 @@ class ContentRepresentationTest < ActiveSupport::TestCase
     end
   end
 
-  def test_should_not_allow_content_if_content_is_not_in_same_site_as_the_side_box_itself
-    assert_no_difference('ContentRepresentation.count') do
+  def test_should_allow_content_if_content_is_not_in_same_site_as_the_side_box_itself
+    assert_difference('ContentRepresentation.count', 1) do
       content_representation = create_content_representation(:parent => nodes(:sub_site_section_node), :content => @economie_section_node)
-      assert content_representation.new_record?
-      assert content_representation.errors.on(:content)
+      assert !content_representation.new_record?
+      assert !content_representation.errors.on(:content)
     end
   end
 

@@ -317,7 +317,7 @@ class Node < ActiveRecord::Base
           array << {
             :text           => klass.human_name,
             :modelName      => child_content_type,
-            :controllerName => "/admin/#{child_content_type_configuration[:controller_name] || klass.table_name}"
+            :controllerName => "/admin/#{klass.controller_name}"
           } unless self.content_class == Site && klass == Site && !self.root? # Prevent nesting of sites deeper than 1
         end
 
@@ -326,7 +326,7 @@ class Node < ActiveRecord::Base
       :allowedChildContentTypes        => content_type_configuration[:allowed_child_content_types],
       :ownContentType                  => self.content_class == ContentCopy ? self.content.copied_node.content_class.to_s : self.content_class.to_s,
       :allowEdit                       => content_type_configuration[:allowed_roles_for_update].include?(role_name),
-      :controllerName                  => "/admin/#{content_type_configuration[:controller_name] || self.content_class.table_name}",
+      :controllerName                  => "/admin/#{self.content.controller_name}",
       :parentNodeId                    => self.parent_id,
       :parentURLAlias                  => self.parent_url_alias,
       :customURLSuffix                 => self.custom_url_suffix.present? ? self.custom_url_suffix : nil,
@@ -520,12 +520,13 @@ class Node < ActiveRecord::Base
   # Returns this node's content's class without hitting the database or instantiating the content object.
   # Use this instead of +@node.content.class+.
   def content_class
-    @content_class ||= case content_type
-      # add classes that use STI
-      when 'Event':   content.class
-      when 'Link':    content.class
-      when 'Section': content.class
-      else content_type.constantize
+    @content_class ||= case sub_content_type
+    when 'ContentCopy'
+      content.copied_node.content_class if content.copied_node
+    when nil
+      content.class
+    else
+      sub_content_type.constantize
     end
   end
   

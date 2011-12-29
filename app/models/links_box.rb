@@ -3,7 +3,7 @@ class LinksBox < ActiveRecord::Base
   
   acts_as_content_node({
     :allowed_child_content_types => %w(
-      Image InternalLink ExternalLink
+      LinkTheme Image InternalLink ExternalLink
     ),
     :allowed_roles_for_create  => %w( admin ),
     :allowed_roles_for_update  => %w( admin ),
@@ -30,6 +30,14 @@ class LinksBox < ActiveRecord::Base
   # Returns the description as the token for indexing.
   def content_tokens
     description
+  end
+  
+  def sub_themes
+    node.children.with_content_type('LinkTheme').accessible
+  end
+  
+  def content_children
+    node.children.exclude_content_types(%w(Image LinkTheme)).accessible
   end
   
   # Returns the OWMS type.
