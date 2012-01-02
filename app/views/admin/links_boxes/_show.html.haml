@@ -1,1 +1,17 @@
-= render :partial => '/admin/sections/show', :locals => { :record => record }
+.regularPage
+  %h2= h record.title
+
+  .content
+    - if record.description.present?
+      .htmlField
+        = w record.description
+
+    = render_images
+
+    - if @children.present?
+      %ul.section_items
+        - @children.each do |content_node|
+          %li
+            = image_tag "icons/#{content_node.try :icon_filename}", :class => 'icon', :alt => h(content_node.title)
+            = link_to_content_node h(content_node.title), content_node, {}, :target => '_blank'
+
