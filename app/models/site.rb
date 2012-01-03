@@ -14,7 +14,7 @@ class Site < Section
   
   acts_as_content_node({
     :allowed_child_content_types => %w(
-      AlphabeticIndex Attachment Calendar Carrousel CombinedCalendar ContactBox ContactForm Feed Forum
+      AlphabeticIndex Attachment AttachmentTheme Calendar Carrousel CombinedCalendar ContactBox ContactForm Feed Forum
       HtmlPage Image LinksBox InternalLink ExternalLink NewsArchive NewsletterArchive NewsViewer
       Page Poll SearchPage Section Site SocialMediaLinksBox TopHitsPage WeblogArchive
     ),

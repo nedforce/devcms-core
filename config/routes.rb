@@ -54,6 +54,7 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :agenda_items, :except => [ :index, :destroy ], :member => { :previous => :get }
     admin.resources :alphabetic_indices, :except => [ :index, :destroy ]
     admin.resources :attachments, :except => [ :index, :destroy ], :member => { :previous => :get, :preview => :get }, :collection => { :categories => :any }
+    admin.resources :attachment_themes,   :except => :index,  :controller => :themes, :requirements => { :type => :attachment_theme }
     admin.resources :calendars, :except => :destroy
     admin.resources :calendar_items, :except => :index, :member => { :previous => :get }
     admin.resources :carrousels, :except => [ :index, :destroy ]

@@ -281,7 +281,12 @@ module Acts #:nodoc:
           def self.controller_name
             Node.content_type_configuration(self.to_s)[:controller_name] || self.table_name
           end
-
+          
+          def sub_themes
+            # Bit of a hack. Should only be defined for content classes that allow attachments as a child
+            node.children.with_content_type('AttachmentTheme').accessible
+          end
+          
         private
         
           def associate_node

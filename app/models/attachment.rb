@@ -55,7 +55,7 @@ class Attachment < ActiveRecord::Base
   validates_associated    :db_file
 
   # Clean the +filename+.
-  before_validation :clean_filename, :set_category_to_empty_string_if_nil
+  before_validation :clean_filename
 
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of :title
@@ -91,12 +91,6 @@ class Attachment < ActiveRecord::Base
   def path_for_url_alias(node)
     self.basename.gsub(/[^a-z0-9\-_]/i, '-')
   end
-  
-  def tree_text(node)
-    txt = content_title
-    txt += " (#{category})" if category.present?
-    txt
-  end
 
 protected
     
@@ -107,10 +101,5 @@ protected
       cleaned_filename = "#{cleaned_basename}.#{self.extension.downcase}" if self.extension
       self.filename    = cleaned_filename
     end
-  end
-  
-  def set_category_to_empty_string_if_nil
-    self.category = "" if self.category.nil?
-  end
-  
+  end  
 end

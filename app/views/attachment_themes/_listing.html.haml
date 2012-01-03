@@ -1,0 +1,14 @@
+%table.attachmentsTable
+  %thead
+    %tr
+      %th{ :scope => "col", :class => "title" }= t 'shared.title'
+      %th{ :scope => "col", :class => "type" }= t 'shared.type'
+      %th{ :scope => "col", :class => "size" }= t 'shared.size'
+      %th{ :scope => "col", :class => "download" }= t 'shared.download'
+  %tbody
+    - items.each do |node|
+      %tr
+        %td{ :class => "title" }= h node.title
+        %td{ :class => "type" }== #{attachment_icon(node.content)}&nbsp;#{node.content.extension}
+        %td{ :class => "size" }== #{number_with_precision(node.content.size.to_f / 1024, :precision => 1)} KB
+        %td{ :class => "download" }= link_to_node t('shared.download'), node, {:format => node.content.extension }, :title => h(node.content.title)

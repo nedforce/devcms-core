@@ -24,7 +24,7 @@
 class NewsItem < ActiveRecord::Base
   # Adds content node functionality to news items.
   acts_as_content_node({
-    :allowed_child_content_types => %w( Attachment Image ),
+    :allowed_child_content_types => %w( Attachment AttachmentTheme Image ),
     :show_in_menu => false,
     :copyable => false
   })

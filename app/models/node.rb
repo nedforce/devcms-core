@@ -522,7 +522,7 @@ class Node < ActiveRecord::Base
   def content_class
     @content_class ||= case sub_content_type
     when 'ContentCopy'
-      content.copied_node.content_class if content.copied_node
+      content.copied_content_class
     when nil
       content.class
     else

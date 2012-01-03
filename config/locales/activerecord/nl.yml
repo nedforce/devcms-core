@@ -9,6 +9,7 @@ nl:
       agenda_item_category: Categorie
       alphabetic_index: Alfabetische index
       attachment: Bijlage
+      attachment_theme: Bijlagecategorie
       calendar: Kalender
       calendar_item: Kalender item
       carrousel: Carrousel

@@ -160,7 +160,7 @@ nl:
     add: Toevoegen...
     add_attachments_to: Bijlage(n) toevoegen aan
     add_to: Bijlage(n) toevoegen aan
-    attachments_table: Dit is een overzicht van alle attachments behorende bij deze pagina.
+    attachments_table: Dit is een overzicht van alle bijlagen behorende bij deze pagina.
     data: Bestand
     done: Bijlage(n) toegevoegd
     done_btn: Klaar met uploaden
@@ -176,6 +176,12 @@ nl:
     uploaded_attachments: Toegevoegde bijlage(n)
     attachment_category: Bijlagecategorie
     uncategorized: Ongecategoriseerd
+  attachment_themes:
+    add_to: Bijlagecategorie toevoegen aan
+    sub_themes: "Onderliggende bijlagecategorieën"
+    edit: Bewerken van bijlagecategorie
+    failed: Kon bijlagecategorie niet opslaan.
+    saved: Bijlagecategorie opgeslagen!
   calendars:
     attachments: Bijlagen
     add_agenda_item_to: Agendapunt toevoegen aan

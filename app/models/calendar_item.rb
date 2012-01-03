@@ -50,7 +50,7 @@ class CalendarItem < Event
   
   # Adds content node functionality to event.
    acts_as_content_node({
-     :allowed_child_content_types => %w( Attachment ),
+     :allowed_child_content_types => %w( Attachment AttachmentTheme ),
      :show_in_menu => false,
      :copyable => false,
      :controller_name => 'calendar_items'
