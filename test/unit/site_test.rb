@@ -37,6 +37,13 @@ class SiteTest < ActiveSupport::TestCase
       assert site.errors.on(:domain)
     end
   end
+  
+  def test_should_set_default_layout
+    site = create_site
+    assert_equal Node.root.layout, site.node.layout
+    assert_equal 'default', site.node.layout_variant
+    assert_equal Hash.new, site.node.layout_configuration
+  end
 
 protected
 

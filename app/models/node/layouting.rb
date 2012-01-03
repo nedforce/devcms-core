@@ -173,7 +173,7 @@ protected
   end
   
   def set_default_layout
-    if self.content_type == 'Section' && self.content.type == 'Site'
+    if self.sub_content_type == 'Site'
       self.layout = Node.root.layout || 'default'
       self.layout_variant = 'default'
       self.layout_configuration = {}
