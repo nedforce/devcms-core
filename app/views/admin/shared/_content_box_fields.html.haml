@@ -18,7 +18,7 @@
             %ul.content_box_colour_chooser.clearfix
               - DevCMS.content_box_colours.each do |colour|
                 %li
-                  %label.colour= '&nbsp;'
+                  %label{:class => colour}= '&nbsp;'
                   = radio_button_tag "#{content.class.name.underscore}[content_box_colour]", colour, content.content_box_colour == colour || content.content_box_colour.nil? && colour == 'default'
 
         - if show_icon_field && DevCMS.content_box_icons.any?
@@ -31,5 +31,5 @@
 
               - DevCMS.content_box_icons.each do |icon|
                 %li
-                  %label.icon= '&nbsp;'
+                  %label{:class => icon}= '&nbsp;'
                   = radio_button_tag "#{content.class.name.underscore}[content_box_icon]", icon, content.content_box_icon == icon
