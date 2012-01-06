@@ -2,7 +2,7 @@
 
 - if attachments
   .themeOverview
-    = render :partial => "/attachment_themes/listing", :locals => { :items => attachments.collect(&:node) }
+    = render :partial => "/attachment_themes/listing", :locals => { :items => attachments }
 
 - if container.sub_themes.exists?
   %h2= t "attachment_themes.sub_themes"

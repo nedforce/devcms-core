@@ -2,6 +2,9 @@
   %h1= t 'users.registration_form'
 
   = error_messages_for :user
+  
+  - if Settler[:login_page_text].present?
+    %p= Settler[:login_page_text]
 
   - form_for :user, :url => secure_url(:users_url) do |f|
 
@@ -43,6 +46,6 @@
 
     = render :partial => 'newsletters'
     = render :partial => 'interests'
-
+    
     .formButtonCt
       = submit_tag t('shared.submit'), :class => 'submit'
