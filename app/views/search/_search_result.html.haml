@@ -21,19 +21,20 @@
 
   .metadata
     %table{ :cellpadding => "0", :cellspacing => "0" }
+      %caption= t "search.result_caption"
       %tr
-        %th= t 'search.path'
+        %th{ :scope => 'row' }= t 'search.path'
         %td{ :colspan => "3" }
           = node ? bread_crumbs_track_for(node) : link_to(url, url)
 
       - if node && node.last_set_category
         %tr
-          %th= t 'search.theme'
+          %th{ :scope => 'row' }= t 'search.theme'
           %td{ :colspan => "3" }
             = print_category(node.last_set_category)
 
       %tr
-        %th= t 'search.type'
+        %th{ :scope => 'row' }= t 'search.type'
         %td.type
           = print_content_type(node.try(:content_type))
 
