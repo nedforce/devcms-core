@@ -203,18 +203,8 @@ Lightbox.prototype = {
 
         document.observe('click', (function(event){
             var target = event.findElement('a[rel^=lightbox]') || event.findElement('area[rel^=lightbox]');
-            // if (target) {
-            //     event.stop();
-            //     this.start(target);
-            // }
-            // [cas] Look, IE9: workaround code. Just for you!
-            if (target && target.rel && target.rel.indexOf('lightbox') >= 0) {
-                if (window.document.documentMode >= 9) {
-                    Event.stop(window.event);
-                } else {
-                    event.stop();
-                }
-                
+            if (target) {
+                event.stop();
                 this.start(target);
             }
         }).bind(this));
