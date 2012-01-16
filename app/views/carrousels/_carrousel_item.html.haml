@@ -6,9 +6,11 @@
   - image = carrousel_item.image
   - url   = (carrousel_item.item.is_a?(Image) && carrousel_item.item.url.present? && carrousel_item.item.url) || content_node_url(carrousel_item.item.node)
 
-  = link_to(image_tag(sidebox_image_path(image, :format => :jpg), :alt => h(image.alt)), url) if image
+  - if image
+    = link_to(image_tag(sidebox_image_path(image, :format => :jpg), :alt => h(image.alt)), url)
   - unless carrousel_item.item.is_a?(Image)
     %p.excerpt
-      = h(carrousel_item.excerpt) if carrousel_item.excerpt
+      - if carrousel_item.excerpt
+        = h(carrousel_item.excerpt)
 
     = link_to t('shared.read_more'), url, :class => 'read_more_link'

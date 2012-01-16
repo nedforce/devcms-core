@@ -1,10 +1,11 @@
 #reg_form
-  %h1= t 'users.registration_form'
+  .textAboveForm.loginPageText.clearfix
+    - if Settler[:signup_page_text].present?
+      %p= Settler[:signup_page_text]
+    - else
+      %h1= t 'users.registration_form'
 
   = error_messages_for :user
-  
-  - if Settler[:login_page_text].present?
-    %p= Settler[:login_page_text]
 
   - form_for :user, :url => secure_url(:users_url) do |f|
 
