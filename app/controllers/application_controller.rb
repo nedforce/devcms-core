@@ -281,7 +281,7 @@ protected
   end
 
   ## SSL related functionality ##
-
+  
   # Returns true if SSL encryption is required, else false.
   def ssl_required?
     return false if disable_ssl?

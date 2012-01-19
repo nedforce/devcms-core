@@ -140,25 +140,29 @@ module Acts #:nodoc:
       end      
       
       # Destroys all items for the given year or month in a year
-      def destroy_items_for_year_or_month(year, month = nil)
+      def destroy_items_for_year_or_month(year, month = nil, paranoid_delete = false)
         if month.nil?
-          destroy_items_for_year(year.to_i)
+          destroy_items_for_year(year.to_i, paranoid_delete)
         else
-          destroy_items_for_month(year.to_i, month.to_i)
+          destroy_items_for_month(year.to_i, month.to_i, paranoid_delete)
         end
       end
 
       # Destroys all items for the given year
-      def destroy_items_for_year(year)
+      def destroy_items_for_year(year, paranoid_delete = false)
         (1..12).each do |month|
-          destroy_items_for_month(year, month)
+          destroy_items_for_month(year, month, paranoid_delete)
         end
       end
       
       # Destroys all items for the given month in the given year
-      def destroy_items_for_month(year, month)
+      def destroy_items_for_month(year, month, paranoid_delete = false)
         find_all_items_for_month(year, month).each do |item|
-          item.destroy
+          if paranoid_delete
+            item.node.paranoid_delete!
+          else
+            item.destroy
+          end
         end
       end
     end

@@ -80,6 +80,8 @@ class User < ActiveRecord::Base
   
   # A +User+ has many nodes it has a role assigned on
   has_many :assigned_nodes, :through => :role_assignments, :source => :node
+  
+  has_many :user_poll_question_votes, :dependent => :destroy
 
   # A +User+ has and belongs to many +NewsletterArchive+ objects (i.e., subscriptions to newsletters).
   has_and_belongs_to_many :newsletter_archives

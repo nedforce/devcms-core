@@ -47,6 +47,8 @@ class ContactForm < ActiveRecord::Base
 
   # Virtual attribute to keep track of +ContactFormField+ objects that need to be deleted.
   attr_accessor :deleted_contact_form_fields
+  
+  after_paranoid_delete :remove_associated_content
 
   # Returns an array with the ids of the +ContactFormField+ objects that are obligatory.
   def obligatory_field_ids
@@ -116,4 +118,12 @@ class ContactForm < ActiveRecord::Base
       end
     end
   end
+
+protected
+
+  def remove_associated_content
+    self.contact_form_fields.destroy_all
+    self.responses.destroy_all
+  end
+  
 end

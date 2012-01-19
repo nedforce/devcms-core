@@ -16,15 +16,15 @@ class AlphabeticIndexTest < ActiveSupport::TestCase
   end
 
   def test_should_return_descendants_of_parent_node
-    assert_equal alphabetic_indices(:subsection_alphabetic_index).items('Y'), [pages(:yet_another_page)]
-    assert_equal alphabetic_indices(:subsection_alphabetic_index).items('y'), [pages(:yet_another_page)]
-    assert_equal alphabetic_indices(:subsection_alphabetic_index).items('Q'), []
+    assert_equal [pages(:yet_another_page)], alphabetic_indices(:subsection_alphabetic_index).items('Y')
+    assert_equal [pages(:yet_another_page)], alphabetic_indices(:subsection_alphabetic_index).items('y')
+    assert_equal [], alphabetic_indices(:subsection_alphabetic_index).items('Q')
   end
   
   def test_should_include_title_alternative_tags
     pages(:yet_another_page).node.update_attributes :title_alternative_list => "Quarcks, Abnormality"
-    assert_equal alphabetic_indices(:subsection_alphabetic_index).items('q'), [pages(:yet_another_page)]
-    assert_equal alphabetic_indices(:subsection_alphabetic_index).items(), [pages(:yet_another_page)]
+    assert_equal [pages(:yet_another_page)], alphabetic_indices(:subsection_alphabetic_index).items('q')
+    assert_equal [pages(:yet_another_page)], alphabetic_indices(:subsection_alphabetic_index).items()
   end
   
   def test_should_order_by_title_or_tag

@@ -21,14 +21,14 @@ class ContentNodesTest < ActionController::TestCase
     get :show, :id => pages(:not_hidden_page).id
     assert_response :success
     assert assigns(:image_content_nodes).empty?
-    assert assigns(:attachment_content_nodes).empty?
+    assert assigns(:attachment_nodes).empty?
   end
 
   def test_should_not_show_hidden_children_to_unauthorized_user
     get :show, :id => pages(:not_hidden_page).id
     assert_response :success
     assert assigns(:image_content_nodes).empty?, "Expected assigns(:image_content_nodes) to be empty, got instead: #{assigns(:image_content_nodes).pretty_inspect}"
-    assert assigns(:attachment_content_nodes).empty?
+    assert assigns(:attachment_nodes).empty?
   end
 
   def test_should_get_changes_for_self_if_changed_feed_toggle_is_true

@@ -109,7 +109,7 @@ class Admin::UsersController < Admin::AdminController
   def accessible_newsletter_archives
     respond_to do |format|
       format.json do
-        newsletter_archives = NewsletterArchive.accessible.all(:select => [:id, :title], :order => 'newsletter_archives.title')
+        newsletter_archives = NewsletterArchive.accessible.all(:select => "#{NewsletterArchive.quoted_table_name}.id, #{NewsletterArchive.quoted_table_name}.title", :order => 'newsletter_archives.title')
         newsletter_archives = newsletter_archives.collect do |na|
           {
             :id      => na.id,

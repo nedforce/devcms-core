@@ -53,9 +53,6 @@ class Image < FlexImage::Model
   
   # Set image size to max 1024x1024 on creation.
   pre_process_image :size => '1024x1024', :quality => 95
-  
-  # Ensure +url+ is correct.
-  before_validation :prepend_http_to_url 
 
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of     :title, :data
@@ -64,13 +61,14 @@ class Image < FlexImage::Model
   validates_format_of       :url, :with => /(^$)|(^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(([0-9]{1,5})?\/.*)?$)/ix, :allow_blank => true
   validates_numericality_of :vertical_offset, :only_integer => true, :allow_blank => true, :greater_than_or_equal => 0 
 
-  default_scope :select => (self.column_names - DEFAULT_COLUMNS_TO_EXCLUDE_FROM_SELECT).map { |column| "#{self.table_name}.#{column}" }.join(', ')
+  default_scope :joins => :node, :conditions => Node.default_scope_conditions, :select => (self.column_names - DEFAULT_COLUMNS_TO_EXCLUDE_FROM_SELECT).map { |column| "#{self.table_name}.#{column}" }.join(', ')
   
   named_scope :select_all_columns, :select => self.column_names.map { |column| "#{self.table_name}.#{column}" }.join(', ')
   
-  # Override default accessible scope to join with nodes rather than preload them, ensuring the default scope
-  # will be applied.
-  named_scope :accessible, lambda { { :joins => :node }.merge(Node.accessible.current_scoped_methods[:find]) }
+  # Ensure +url+ is correct.
+  before_validation :prepend_http_to_url
+
+  after_paranoid_delete :remove_associated_content
 
   # Return generated alt if attribute isn't set.
   def alt
@@ -108,4 +106,9 @@ protected
   def prepend_http_to_url 
     self.url = "http://#{url}" unless url.blank? || url.starts_with?("http://") || url.starts_with?("https://")
   end
+  
+  def remove_associated_content
+    self.carrousel_items.destroy_all
+  end
+
 end

@@ -59,9 +59,12 @@ class NodeExpirationTest < ActiveSupport::TestCase
     assert_nil Section.new.cascade_expires_on
     assert !Section.new.expirable?
     section = sections(:editor_section)
-    section.update_attributes :cascade_expires_on => 7.days.from_now.to_s
-    assert_equal 7.days.from_now.to_date, pages(:editor_section_page).expires_on
-    assert_not_equal 7.days.from_now.to_date, pages(:about_page).expires_on
+    
+    expiration_date = 25.days.from_now
+
+    section.update_attributes :cascade_expires_on => expiration_date.to_s
+    assert_equal expiration_date.to_date, pages(:editor_section_page).reload.expires_on
+    assert_not_equal expiration_date.to_date, pages(:about_page).reload.expires_on
   end
   
 protected
@@ -73,9 +76,7 @@ protected
   def create_page(options = {})
     page = build_page(options)
     page.save
-    # assert page.valid?, page.errors.full_messages.to_sentence
-    page #.reload
+    page
   end
 
 end
-

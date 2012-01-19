@@ -1,25 +1,27 @@
 module Node::VisibilityAndAccessibility
   
   def self.included(base)
+    base.extend ClassMethods
+    
     base.validates_inclusion_of :private, :in => [ false, true ], :allow_nil => false
     
     base.validates_inclusion_of :hidden,  :in => [ false, true ], :allow_nil => false
     
-    # Do not allow these fields to be set by mass assignments, to prevent mishaps.
-    # See the set_visibility! and set_accessibility! methods instead.
     base.attr_protected :hidden, :private
     
-    base.named_scope :accessible, (lambda do 
-      { 
-        :conditions => [ 
-          'nodes.hidden = false AND nodes.publishable = true AND (:now >= nodes.publication_start_date AND (nodes.publication_end_date IS NULL OR :now <= nodes.publication_end_date))', 
-          { :now => Time.now.to_s(:db) } 
-        ] 
-      }
-    end)
+    base.named_scope :accessible, lambda { { :conditions => base.accessibility_and_visibility_conditions } }
 
     base.named_scope :public,  { :conditions => { 'nodes.private' => false } }
     base.named_scope :private, { :conditions => { 'nodes.private' => true  } }
+  end
+  
+  module ClassMethods  
+    def accessibility_and_visibility_conditions
+      [ 
+        'nodes.hidden = false AND nodes.publishable = true AND (:now >= nodes.publication_start_date AND (nodes.publication_end_date IS NULL OR :now <= nodes.publication_end_date))', 
+        { :now => Time.now.to_s(:db) } 
+      ]
+    end
   end
   
   def has_private_ancestor?

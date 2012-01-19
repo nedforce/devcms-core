@@ -24,6 +24,7 @@ class ContentCopy < ActiveRecord::Base
   # Adds content node functionality to content copies.
   acts_as_content_node({
     :allowed_roles_for_update => [],
+    :show_in_menu => false,
     :copyable => false
   })
 
@@ -39,7 +40,7 @@ class ContentCopy < ActiveRecord::Base
   validate :ensure_copied_node_is_not_associated_with_a_content_copy_content_node
   validate :ensure_copied_node_is_associated_with_a_copyable_content_node
 
-  before_save :copy_publication_dates
+  before_validation :copy_publication_and_expiration_dates
 
   # Overrides the +title+ method of the +acts_as_content_node+ mixin.
   def title
@@ -65,9 +66,12 @@ class ContentCopy < ActiveRecord::Base
     copied_node.nil? ? self.class : copied_node.content_class
   end
 
-  protected
+protected
   
-  def copy_publication_dates
+  def copy_publication_and_expiration_dates
+    return unless self.copied_node
+    
+    self.expires_on = self.copied_node.expires_on
     self.publication_start_date = self.copied_node.publication_start_date
     self.publication_end_date   = self.copied_node.publication_end_date
   end

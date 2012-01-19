@@ -55,7 +55,7 @@ class Admin::NewsViewerItemsController < Admin::AdminController
 
   def update_positions
     # Use update_all to skip callbacks
-    params[:items].each_with_index{|id, index| NewsViewerItem.update_all({ :position => index }, { :id => id }) } if params[:items].present?      
+    params[:items].each_with_index{|id, index| NewsViewerItem.update_all({ :position => index }, "#{NewsViewerItem.quoted_table_name}.id = #{id}") } if params[:items].present?      
     render :nothing => true, :status => 200
   end
 

@@ -116,7 +116,7 @@ class Admin::MeetingsController < Admin::AdminController
 
   # DELETE /admin/meetings/:id
   def destroy
-    CalendarItem.destroy_calendar_item(@meeting)
+    CalendarItem.destroy_calendar_item(@meeting, true)
 
     respond_to do |format|
       format.xml  { head :ok }

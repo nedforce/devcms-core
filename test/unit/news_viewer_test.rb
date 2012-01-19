@@ -121,8 +121,7 @@ class NewsViewerTest < ActiveSupport::TestCase
 
     @news_viewer.news_items.each{|ni| assert ni.publication_start_date >= 2.weeks.ago.beginning_of_day }
     assert @news_viewer.news_items.include?(news_item)
-  end
-      
+  end 
 
 private
 

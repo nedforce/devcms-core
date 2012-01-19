@@ -11,6 +11,7 @@ module Node::Expiration
       before_validation :set_default_expires_on, :if => :expiration_required?
       
       validate :expires_on_valid?, :ensure_valid_responsible_user_role, :if => lambda {|node| node.expires_on_changed? || node.content.changed? }
+      
       if SETTLER_LOADED
         validates_presence_of :expires_on, :if => :expiration_required?
       end
@@ -89,8 +90,7 @@ module Node::Expiration
   end
   
   def cascade_expires_on!
-    self.descendants.all(:select => "DISTINCT content_type").each {|ct| ct.content_type.constantize } # FIX: until preloading is merged..
-    self.descendants.update_all({:expires_on => Date.parse(cascade_expires_on)}, {:content_type => Node.expirable_content_types})
+    self.descendants.update_all({:expires_on => Date.parse(cascade_expires_on)}, { :content_type => Node.expirable_content_types } )
   end
   
   def cascade_expires_on?
