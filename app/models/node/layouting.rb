@@ -174,7 +174,7 @@ protected
   
   def set_default_layout
     if self.sub_content_type == 'Site'
-      self.layout = Node.root.layout || 'default'
+      self.layout = Node.root_present? ? Node.root.layout : 'default'
       self.layout_variant = 'default'
       self.layout_configuration = {}
     end
