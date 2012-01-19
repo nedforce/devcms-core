@@ -542,10 +542,6 @@ class Node < ActiveRecord::Base
   def self.root
     Node.roots.first || raise(ActiveRecord::RecordNotFound, "No root node found!")
   end
-  
-  def self.root_present?
-    !Node.roots.empty?
-  end
 
   def self.find_related_nodes(node, options = {})
     conditions = {

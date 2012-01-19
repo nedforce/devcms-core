@@ -3,8 +3,6 @@ module ActiveRecord
     def self.acts_as_content_type_registry
       extend(ClassMethods)
       include(InstanceMethods)
-    
-      self.preload_models!
     end
 
     module ClassMethods
