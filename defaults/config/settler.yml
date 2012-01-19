@@ -166,27 +166,27 @@ settings: &settings
     alt: Support user invites?
     value: true
   help_page_url:
-     alt: URL van de pagina met instructies voor de website
-     value: /hulp
-     editable: true
-     validations:
-       presence: true
+    alt: URL van de pagina met instructies voor de website
+    value: /hulp
+    editable: true
+    validations:
+     presence: true
   login_page_text:
     alt: The text above the login form on the login page
     value: "<p><a href='/privacy'>Hoe gaat de gemeente om met uw privacy?</a></p>"
     editable: true
-   proclaimer_page_url:
-     alt: URL van de pagina met de proclaimer voor de website
-     value: /proclaimer
-     editable: true
-     validations:
-       presence: true
-   contact_page_url:
-     alt: URL van de pagina met de colofon voor de website
-     value: /contact
-     editable: true
-     validations:
-       presence: true
+  proclaimer_page_url:
+    alt: URL van de pagina met de proclaimer voor de website
+    value: /proclaimer
+    editable: true
+    validations:
+      presence: true
+  contact_page_url:
+    alt: URL van de pagina met de colofon voor de website
+    value: /contact
+    editable: true
+    validations:
+      presence: true
 
 development:
   <<: *settings
