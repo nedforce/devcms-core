@@ -61,6 +61,9 @@ nl:
       time: "%H:%M"
       short: "%d %b %H:%M"
       only_second: "%S"
+      long: "%d %B %Y om %H:%M"
+      long_at: "%d %B %Y om %H:%M"
+
   datetime: 
     formats: 
       default: "%d-%m-%YT%H:%M:%S%Z"
