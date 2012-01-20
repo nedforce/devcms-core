@@ -1,7 +1,13 @@
 # Various fixes, these have to be checked for redundantness every time we upgrade Rails
 require 'form_tag_helper_style_fix'
 require 'association_preload_fix'
-require 'update_all_and_delete_all_scope_fix'
+
+# Only require this module when the deleted_at column is present, otherwise the migrations will be borked.
+conn = ActiveRecord::Base.connection
+
+if conn.table_exists?('nodes') && conn.columns('nodes').map(&:name).include?('deleted_at')
+  require 'update_all_and_delete_all_scope_fix'
+end
 
 require 'has_one_association_fix'
 require 'test_process_fix'

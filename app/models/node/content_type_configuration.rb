@@ -3,7 +3,10 @@ module Node::ContentTypeConfiguration
   def self.included(base)
     base.extend(ClassMethods)
     
-    base.preload_models!
+    # Skip model preloading for all Rake tasks
+    unless defined?(Rake)
+      base.preload_models!
+    end
   end
   
   def content_type_configuration 

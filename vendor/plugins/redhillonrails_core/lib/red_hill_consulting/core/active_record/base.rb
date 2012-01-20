@@ -27,8 +27,11 @@ module RedHillConsulting::Core::ActiveRecord
           indexes.each do |index|
             column_name = index.columns.reverse.detect { |name| name !~ /_id$/ } || index.columns.last
             column = cols[column_name]
-            column.case_sensitive = index.case_sensitive?
-            column.unique_scope = index.columns.reject { |name| name == column_name } if index.unique
+            
+            if column
+              column.case_sensitive = index.case_sensitive?
+              column.unique_scope = index.columns.reject { |name| name == column_name } if index.unique
+            end
           end
         end
         @columns

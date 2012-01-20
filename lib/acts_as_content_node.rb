@@ -107,7 +107,9 @@ module Acts
   
         has_one :node, :as => :content, :autosave => true
 
-        default_scope :joins => :node, :conditions => Node.default_scope_conditions
+        if Node.content_columns.map(&:name).include?('deleted_at')
+          default_scope :joins => :node, :conditions => Node.default_scope_conditions
+        end
 
         named_scope :with_parent, lambda { |node, options| options.merge({:conditions => [ 'nodes.ancestry = ?', node.child_ancestry ] }) }
         named_scope :accessible,  lambda { { :conditions => Node.accessibility_and_visibility_conditions } }

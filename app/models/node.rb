@@ -88,7 +88,7 @@ class Node < ActiveRecord::Base
   
   # Load paranoid delete functionality. Make sure this is loaded after Node::TreeDelegation and before any other extensions.
   include Node::ParanoidDelete
-
+  
   # Load visibility & accessibility functionality
   include Node::VisibilityAndAccessibility
   

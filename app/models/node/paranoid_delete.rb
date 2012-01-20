@@ -4,7 +4,9 @@ module Node::ParanoidDelete
     base.class_eval do
       extend(ClassMethods)
     
-      default_scope :conditions => base.default_scope_conditions
+      if base.content_columns.map(&:name).include?('deleted_at')
+        default_scope :conditions => base.default_scope_conditions
+      end
     
       define_callbacks :before_paranoid_delete, :after_paranoid_delete
     end
@@ -29,17 +31,22 @@ module Node::ParanoidDelete
     def default_scope_conditions
       "#{self.table_name}.deleted_at IS NULL"
     end
+    
+    def unscoped(&block)
+      return unless block_given?
+      self.with_exclusive_scope &block
+    end
 
     # Use this method to retrieve all node records, including the ones that have been marked as deleted
     def all_including_deleted(*args)
-      self.with_exclusive_scope do
+      self.unscoped do
         self.all(*args)
       end
     end
 
     # Use this method to count all node records, including the ones that have been marked as deleted
     def count_including_deleted(*args)
-      self.with_exclusive_scope do
+      self.unscoped do
         self.count(*args)
       end
     end
