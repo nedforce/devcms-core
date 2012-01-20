@@ -2,6 +2,8 @@ module Node::ContentTypeConfiguration
   
   def self.included(base)
     base.extend(ClassMethods)
+    
+    base.preload_models!
   end
   
   def content_type_configuration 
