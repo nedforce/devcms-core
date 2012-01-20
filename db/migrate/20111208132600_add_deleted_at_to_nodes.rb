@@ -5,7 +5,7 @@ class AddDeletedAtToNodes < ActiveRecord::Migration
 
     Node.reset_column_information
 
-    require File.join(DevCMS.core_root, 'lib', 'update_all_and_delete_scope_fix.rb')
+    require File.join(DevCMS.core_root, 'lib', 'update_all_and_delete_all_scope_fix.rb')
   end
 
   def self.down
