@@ -17,7 +17,7 @@ class SitemapsController < ApplicationController
     respond_to do |format|
       format.xml do
         raise ActionController::UnknownAction if params[:interval].blank?
-        @changes = Node.all(:conditions => ["updated_at > ?", Time.now - params[:interval].to_i])
+        @changes = Node.all_including_deleted(:conditions => ["updated_at > ?", Time.now - params[:interval].to_i], :order => "updated_at DESC" )
       end
       format.all do
         super

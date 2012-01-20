@@ -323,7 +323,7 @@ class Node < ActiveRecord::Base
         child_content_type_configuration = Node.content_type_configuration(child_content_type)
         
         klass = child_content_type.constantize
-
+        
         if child_content_type_configuration[:enabled] && child_content_type_configuration[:allowed_roles_for_create].include?(role_name)
           array << {
             :text           => klass.human_name,
