@@ -1,9 +1,6 @@
 - admin_form_for(:image, @image, :url => { :action => 'create', :format => 'js' }, :html => { :multipart => true, :target => 'upload_target', :onsubmit => 'resetTinyMCE()'}) do |f|
   = error_messages_for :image
 
-  - if current_user.has_role?('admin')
-    = f.check_box :is_for_header,  :label => t('images.is_for_header')
-
   = f.text_field :title,           :label => t('shared.title')
   = f.text_field :alt,             :label => t('images.alt')
   = f.text_field :vertical_offset, :label => t('images.vertical_offset')
@@ -14,6 +11,11 @@
 
     %div{ :style => "margin-top: -9px; margin-bottom: 15px; font-size: 9px;" }
       = t 'images.url_explanation'
+
+  = f.check_box :show_in_listing,  :label => t('images.show_in_listing')
+
+  - if current_user.has_role?('admin')
+    = f.check_box :is_for_header,  :label => t('images.is_for_header')
 
   = f.file_field :data, :label => t('images.data')
 

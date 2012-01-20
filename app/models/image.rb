@@ -56,9 +56,13 @@ class Image < FlexImage::Model
 
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of     :title, :data
+  
+  validates_inclusion_of    :show_in_listing, :in => [ false, true ], :allow_nil => false
+  
   validates_length_of       :title, :in => 2..255, :allow_blank => true
   validates_length_of       :alt,   :in => 0..255
   validates_format_of       :url, :with => /(^$)|(^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(([0-9]{1,5})?\/.*)?$)/ix, :allow_blank => true
+  
   validates_numericality_of :vertical_offset, :only_integer => true, :allow_blank => true, :greater_than_or_equal => 0 
 
   default_scope :joins => :node, :conditions => Node.default_scope_conditions, :select => (self.column_names - DEFAULT_COLUMNS_TO_EXCLUDE_FROM_SELECT).map { |column| "#{self.table_name}.#{column}" }.join(', ')

@@ -535,6 +535,7 @@ nl:
     image: Afbeelding
     image_of: Afbeelding van
     is_for_header: Is headerfoto?
+    show_in_listing: Tonen in overzicht?
     no_images: Er zijn nog geen extra afbeeldingen toegevoegd
     saved: Afbeelding(en) opgeslagen.
     thumbnail: Voorbeeld
