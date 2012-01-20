@@ -95,7 +95,7 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :poll_questions, :except => [ :index, :destroy ]
     admin.resources :role_assignments, :only => [ :index, :new, :create, :destroy ]
     admin.resources :search_pages, :except => [ :index, :destroy ]
-    admin.resources :sections, :except => [ :index, :destroy ], :member => { :previous => :get, :send_expiration_notifications => :any }
+    admin.resources :sections, :except => [ :index, :destroy ], :member => { :previous => :get, :send_expiration_notifications => :any, :import => :get, :build => :post }
     admin.resources :settings, :only => [ :index, :update ]
     admin.resources :sites, :except => [ :index, :destroy ]
     admin.resources :social_media_links_boxes, :except => [ :index, :destroy ]

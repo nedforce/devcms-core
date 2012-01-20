@@ -969,6 +969,8 @@ nl:
     saved: Sectie opgeslagen!
     saved_site: Site opgeslagen!
     send_expiration_notifications: Verzend notificaties
+    import_content_in: Content importeren in
+    import: Importeren
   sessions:
     already_logged_in: U bent reeds ingelogd als
     cant_log_out: Kan niet uitloggen. U bent niet ingelogd.

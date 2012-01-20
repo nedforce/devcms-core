@@ -41,7 +41,7 @@ Ext.dvtr.TreeNodeContextMenu = function (config) {
 
     if (this.tn.attributes.hasImport) {
         this.add({
-            text: I18n.t('import', 'nodes'),
+            text: I18n.t('import_items', 'nodes'),
             icon: '/images/icons/add.png',
             scope: this.tn,
             handler: this.tn.onImport
