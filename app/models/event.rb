@@ -53,14 +53,14 @@ class Event < ActiveRecord::Base
   end
 
   def set_start_and_end_time
-    date = self.date || self.start_time
+    target_date = self.date || self.start_time
     self.end_time = if self.end_time.nil? || self.end_time == self.start_time
-                      self.start_time.change(:year => date.year, :month => date.month, :day => date.day) + 30.minutes
+                      self.start_time.change(:year => target_date.year, :month => target_date.month, :day => target_date.day) + 30.minutes
                     elsif self.end_time < self.start_time
-                      self.end_time.change(  :year => date.year, :month => date.month, :day => date.day) + 1.day
+                      self.end_time.change(  :year => target_date.year, :month => target_date.month, :day => target_date.day) + 1.day
                     else
-                      self.end_time.change(  :year => date.year, :month => date.month, :day => date.day)
+                      self.end_time.change(  :year => target_date.year, :month => target_date.month, :day => target_date.day)
                     end
-    self.start_time = self.start_time.change(:year => date.year, :month => date.month, :day => date.day)
+    self.start_time = self.start_time.change(:year => target_date.year, :month => target_date.month, :day => target_date.day)
   end
 end
