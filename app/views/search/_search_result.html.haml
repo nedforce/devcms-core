@@ -20,17 +20,17 @@
     = highlighted_content(search_result)
 
   .metadata
-    %table{ :cellpadding => "0", :cellspacing => "0" }
-      %caption= t "search.result_caption"
+    %table{ :cellpadding => 0, :cellspacing => 0 }
+      %caption= t 'search.result_caption'
       %tr
         %th{ :scope => 'row' }= t 'search.path'
-        %td{ :colspan => "3" }
+        %td{ :colspan => 3 }
           = node ? bread_crumbs_track_for(node) : link_to(url, url)
 
       - if node && node.last_set_category
         %tr
           %th{ :scope => 'row' }= t 'search.theme'
-          %td{ :colspan => "3" }
+          %td{ :colspan => 3 }
             = print_category(node.last_set_category)
 
       %tr
@@ -43,6 +43,7 @@
           %td.relevance
             .relevance_wrapper.clearfix
               .container
-                .bar{ :style => "width: #{(100 * search_result.score).to_i rescue 0}px;" }
+                .bar
+                  = image_tag 'search_result_bar.gif', :alt => 'Resultaat percentage', :width => number_to_percentage(100 * search_result.score, :precision => 0)
               .percentage
                 = number_to_percentage(100 * search_result.score, :precision => 1, :separator => '.')
