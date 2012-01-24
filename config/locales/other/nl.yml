@@ -1128,7 +1128,7 @@ nl:
     request_password_text: Vul hieronder uw login naam of e-mailadres in. Het wachtwoord wordt u dan per e-mail toegestuurd.
     save: Wijzigingen opslaan
     saving: Bezig met opslaan
-    select_interests: Selecteer onderwerpen waarin u bent interesseerd
+    select_interests: "Selecteer onderwerpen waarin u bent geïnteresseerd"
     select_newsletter_archives: Selecteer de nieuwsbrieven waarop u zich wilt abonneren
     select_one: Kies tenminste een gebruiker
     sent_verification_email: Ter verificatie is een e-mail naar uw e-mailadres verstuurd. Volg de instructies in de e-mail.
