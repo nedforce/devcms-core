@@ -46,10 +46,10 @@ module LayoutHelper
   def text_link_toggable_section(dom_id, link_id, link)
     html = link_to_content_node(truncate(h(link.content_title), :length => 60), link, {}, {:id => link_id})
     html << javascript_tag(<<-EOS
-      Element.observe('#{link_id}', 'click', function () {
+      Element.observe('#{link_id}', 'click', function (event) {
         Effect.toggle('#{dom_id}', 'appear', {duration: 0.5})
-        Element.toggleClassName('#{link_id}', 'plus_icon')
         Element.toggleClassName('#{link_id}', 'minus_icon')
+        Event.stop(event)
       })
     document.observe('dom:loaded', function () { Element.hide('#{dom_id}') } ); 
 EOS
