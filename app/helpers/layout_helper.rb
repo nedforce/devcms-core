@@ -43,28 +43,18 @@ module LayoutHelper
     end
   end
 
-  def link_toggable_section(dom_id, link_id)
-    link_to_function(image_tag("../javascripts/ext/resources/images/default/tree/elbow-plus-nl.gif", :align => "absmiddle", :plugin => "devcms-core"), nil, :id => link_id) do |page|
-      page.visual_effect :toggle_slide, dom_id
-      page << "if($('#{dom_id}').visible()) {"
-        page.replace_html(link_id, image_tag("../javascripts/ext/resources/images/default/tree/elbow-plus-nl.gif", :align => "absmiddle", :plugin => "devcms-core"))
-      page << "} else {"
-        page.replace_html(link_id, image_tag("../javascripts/ext/resources/images/default/tree/elbow-minus-nl.gif", :align => "absmiddle", :plugin => "devcms-core"))
-      page << "}"
-    end
-  end
-
-  def text_link_toggable_section(dom_id, link_id, title)
-    link_to_function(truncate(h(title), :length => 60), nil, :id => link_id) do |page|
-      page.visual_effect :toggle_appear, dom_id, :duration => '0.5'
-      page << "if($('#{dom_id}').visible()) {"
-      page.call 'Element.addClassName',    link_id, 'plus_icon'
-      page.call 'Element.removeClassName', link_id, 'minus_icon'
-      page << "} else {"
-      page.call 'Element.addClassName',    link_id, 'minus_icon'
-      page.call 'Element.removeClassName', link_id, 'plus_icon'
-      page << "}"
-    end
+  def text_link_toggable_section(dom_id, link_id, link)
+    html = link_to_content_node(truncate(h(link.content_title), :length => 60), link, {}, {:id => link_id})
+    html << javascript_tag(<<-EOS
+      Element.observe('#{link_id}', 'click', function (event) {
+        Effect.toggle('#{dom_id}', 'appear', {duration: 0.5})
+        Element.toggleClassName('#{link_id}', 'minus_icon')
+        Event.stop(event)
+      })
+    document.observe('dom:loaded', function () { Element.hide('#{dom_id}') } ); 
+EOS
+)
+    return html
   end
 
   def unemptynize(string, default)

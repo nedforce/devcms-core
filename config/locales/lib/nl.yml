@@ -3,7 +3,6 @@ nl:
   acts_as_content_node:
     content_box_number_of_items_should_be_greater_than_two: Aantal items in content box moet groter zijn dan 2.
     could_not_create_content: Kan geen losstaande content aanmaken.
-    doesnt_accept: accepteert geen content van het
     publication_end_date_should_be_after_publication_start_date: Publicatie eindtijd moet na publicatie begintijd zijn.
     publication_start_date_should_be_present: Publicatie begintijd moet opgegeven zijn als publicatie eindtijd opgegeven is.
     responsible_user_requires_role: Verantwoordelijk gebruiker dient toegang tot de geselecteerde content te hebben.

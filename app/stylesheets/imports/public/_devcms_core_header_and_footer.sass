@@ -3,6 +3,8 @@
 #top_header
   padding: 0 0 4px
   height: 75px
+  position: absolute
+  width: 980px
 
 #logo
   float: left
@@ -15,7 +17,7 @@
   position: relative
   top: 3px
 
-#login
+div#login
   padding-right: 10px
   padding-top: 10px
   float: right
@@ -67,10 +69,9 @@
       float: right
 
 /* Main header (Main menu, search)
-
-#header, #big_header
+#header
   height: 200px
-  position: relative
+  position: absolute
   z-index: 10
   .corner
     height: 50px
@@ -78,16 +79,13 @@
     position: absolute
     top: 0
     left: 0
-    
+        
 #header-slideshow 
   img
     position: absolute
     top: 0
     left: 0
 
-#big_header
-  height: 230px
-  
 #main_menu_and_meta_links
   clear: both
   .meta_links
@@ -177,21 +175,6 @@
       left: 0
       width: 100%
       height: 159px
-#big_header
-  .big_header_photo
-    height: 190px
-    overflow: hidden
-    position: relative
-  .overlay
-    background-position: 100% 87px
-    background-repeat: no-repeat
-    position: absolute
-    top: 0
-    left: 0
-    width: 100%
-    height: 190px
-  background-position: 100% 87px
-  background-repeat: no-repeat
 /**
  * Footer styles
 
@@ -212,3 +195,11 @@
     float: left
   .menu_links
     float: right
+/* Positioning of header and columns_wrapper
+#main_container
+  #top_header
+    top: 0px
+  #header
+    top: 79px
+  #columns_wrapper
+    padding-top: 294px

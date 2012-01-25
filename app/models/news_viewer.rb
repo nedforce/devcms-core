@@ -35,6 +35,8 @@ class NewsViewer < ActiveRecord::Base
   validates_presence_of :title
   validates_length_of   :title, :in => 2..255
 
+  after_paranoid_delete :remove_associated_content
+
   # TODO: Documentation
   def self.tree_icon_class
     NewsArchive.tree_icon_class    
@@ -58,6 +60,7 @@ class NewsViewer < ActiveRecord::Base
   # Returns the date when the +NewsViewer+ was last updated.
   def last_updated_at
     newest_item = self.news_items.newest.accessible.first(:order => 'nodes.updated_at DESC')
+    
     if newest_item.present?
       [ newest_item.updated_at, newest_item.node.children.with_content_type("Images").try(:first).try(:updated_at), self.updated_at ].compact.max
     else
@@ -77,4 +80,12 @@ class NewsViewer < ActiveRecord::Base
     # Add any news items from the archives
     news_archives.each{ |news_archive| news_archive.news_items.newest.each{ |item| self.news_items << item rescue nil }}
   end
+
+protected
+
+  def remove_associated_content
+    self.news_viewer_items.destroy_all
+    self.news_viewer_archives.destroy_all
+  end
+  
 end

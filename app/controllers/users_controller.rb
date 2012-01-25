@@ -40,7 +40,7 @@ class UsersController < ApplicationController
   # * POST /users
   # * POST /users.xml
   def create
-    if params[:user][:username].present?
+    if params[:user].present? && params[:user][:username].present?
       flash[:error] = I18n.t('users.try_again')
       redirect_to new_user_path
     else

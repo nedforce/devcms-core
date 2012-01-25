@@ -11,12 +11,14 @@
     = f.text_field :vertical_offset, :label => t('images.vertical_offset')
     = f.text_area  :description,     :label => t('images.description'), :rows => 4
 
-    - if current_user.has_role?('admin')
-      = f.check_box :is_for_header,  :label => t('images.is_for_header')
-
     = f.text_field :url,             :label => t('images.url')
 
     %div{ :style => "margin-top: -9px; margin-bottom: 15px; font-size: 9px;" }
       = t 'images.url_explanation'
+    
+    = f.check_box :show_in_listing,  :label => t('images.show_in_listing')
+      
+    - if current_user.has_role?('admin')
+      = f.check_box :is_for_header,  :label => t('images.is_for_header')
 
     = f.submit t('shared.save')

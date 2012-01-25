@@ -410,11 +410,11 @@ module ApplicationHelper
     end
 
     def render_images
-      render(:partial => 'shared/images_bar', :locals => { :images => @image_content_nodes, :rel => @node.id }) unless @image_content_nodes.nil? || @image_content_nodes.empty?
+      render(:partial => 'shared/images_bar', :locals => { :images => @image_content_nodes, :rel => @node.id }) unless @image_content_nodes.blank?
     end
 
     def render_attachments
-      render(:partial => 'shared/attachments', :locals => { :attachments => @attachment_content_nodes, :rel => @node.id }) unless @attachment_content_nodes.nil? || @attachment_content_nodes.empty?
+      render(:partial => 'shared/attachments', :locals => { :container => @node.content, :attachments => @attachment_nodes, :rel => @node.id }) unless @attachment_nodes.blank?
     end
 
     # Override +error_messages_for+ to override default header message. For some reason the localization

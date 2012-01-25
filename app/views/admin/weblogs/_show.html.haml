@@ -24,8 +24,8 @@
     - else
       .clearfix.weblogPosts
         - @latest_weblog_posts.each do |weblog_post|
-          %div{ :class => "#{cycle('oddWeblogPost', 'evenWeblogPost', :name => 'latestWeblogPosts')} clearfix" }
-            %h4= link_to(h(weblog_post.title), '#')
+          .clearfix{ :class => cycle('oddWeblogPost', 'evenWeblogPost', :name => 'latestWeblogPosts') }
+            %h4= link_to h(weblog_post.title), '#'
 
             .metadata.clearfix
               %p.publicationDate
@@ -50,12 +50,12 @@
       #olderWeblogPosts
         %h3= t 'weblogs.older_weblog_posts'
 
-        %table#items{ :cellpadding => "0", :cellspacing => "0" }
+        %table#items{ :cellpadding => 0, :cellspacing => 0 }
           %thead
             %tr
-              %th.gray{ :scope => "col" }
+              %th.gray{ :scope => 'col' }
                 = t 'weblogs.message_title'
-              %th.right_sized.gray{ :scope => "col" }
+              %th.right_sized.gray{ :scope => 'col' }
                 = t 'weblogs.date'
 
           %tbody
@@ -63,4 +63,4 @@
               %tr{ :class => cycle('alt', '', :name => 'olderWeblogPosts') }
                 %td= link_to h(weblog_post.title), '#'
                 %td.right.date
-                  = l(weblog_post.publication_date, :format => :long)
+                  = l weblog_post.publication_date, :format => :long

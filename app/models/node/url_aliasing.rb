@@ -145,9 +145,10 @@ module Node::UrlAliasing
         begin
           params = ActionController::Routing::Routes.recognize_path "/#{alias_to_check}"
 
-        # if the alias is not currently matched to a route, we will be redirected to the errors controller
-        # Otherwise, if the node_id key is set, the alias already exists for an other node, and the
-        # validations will catch this.
+          # if the alias is not currently matched to a route, we will be redirected to the errors controller
+          # Otherwise, if the node_id key is set, the alias already exists for an other node, and the
+          # validations will catch this.
+
           return params[:controller] != "errors" && !params.has_key?(:node_id)
         rescue Exception
           return false

@@ -1,0 +1,14 @@
+%h1== #{t 'sections.import_content_in'} '#{h @section.title}'
+
+- if flash[:notice]
+  %h2= flash[:notice]
+
+#right_panel_form.clearfix
+  - form_tag({ :action => 'build', :format => 'js' }, { :multipart => true, :target => 'upload_target' }) do
+    = file_field_tag :data, :label => t('images.data')
+
+    = hidden_field_tag :parent_node_id, params[:parent_node_id]
+    = submit_tag(t 'sections.import')
+    
+/ hidden iframe to enable regular posts instead of ajax posts
+%iframe{:name => "upload_target", :style => "height: 1px; width: 1px; border: 0;"}

@@ -1,13 +1,10 @@
 DevCMSCore
 =============
 
-Introduction goes here.
+Installation:
 
+Generate a new Rails app, then execute:
 
-Example
-=======
+bash <(curl -s https://raw.github.com/nedforce/devcms-core/master/devcms-install.sh)
 
-Example goes here.
-
-
-Copyright (c) 2010 [name of plugin creator], released under the MIT license
+and follow the further instructions.

@@ -1,4 +1,5 @@
 <% def fixtures_to_ancestry(*names); names.collect { |name| Fixtures.identify(name) }.join("/"); end %>
+
 !!omap
 - root_section_node:
     content: root_section (Section)
@@ -583,8 +584,19 @@
     hidden: false
     private: false
 
-- no_extention_attachment_node:
+- no_extension_attachment_node:
     content: no_extension_attachment (Attachment)
+    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+    show_in_menu: true
+    publication_start_date: <%= 1.day.ago.to_s(:db) %>
+    position: 21
+    publishable: true
+    sub_content_type: Attachment
+    hidden: false
+    private: false
+
+- nested_extension_attachment_node:
+    content: nested_extension_attachment (Attachment)
     ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
     show_in_menu: true
     publication_start_date: <%= 1.day.ago.to_s(:db) %>

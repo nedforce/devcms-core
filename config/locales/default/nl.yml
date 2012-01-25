@@ -55,17 +55,20 @@ nl:
           other: "Kon dit %{model} niet opslaan: %{count} fouten."
   time: 
     am: "'s ochtends"
+    pm: "'s middags"
     formats: 
       default: "%a %d %b %Y %H:%M:%S %Z"
       time: "%H:%M"
       short: "%d %b %H:%M"
       only_second: "%S"
-      datetime: 
-        formats: 
-          default: "%d-%m-%YT%H:%M:%S%Z"
+      long: "%d %B %Y om %H:%M"
+      long_at: "%d %B %Y om %H:%M"
+
+  datetime: 
+    formats: 
+      default: "%d-%m-%YT%H:%M:%S%Z"
       long: "%d %B %Y %H:%M"
       long_day: "%A %e %B %Y %H:%M"      
-    pm: "'s middags"
   date: 
     month_names:
     - 

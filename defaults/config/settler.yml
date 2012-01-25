@@ -46,6 +46,11 @@ settings: &settings
     alt: The text above the login form on the login page
     value: ''
     editable: true
+    typecast: html
+  signup_page_text:
+    alt: The text above the signup form on the signup page
+    value: ''
+    editable: true
   logout_page_text:
     alt: The text above the logout form on the logout page
     value: '<h1>Uitloggen bevestigen</h1><p>Wilt u echt uitloggen?</p>'
@@ -160,6 +165,28 @@ settings: &settings
   user_allow_invite:
     alt: Support user invites?
     value: true
+  help_page_url:
+    alt: URL van de pagina met instructies voor de website
+    value: /hulp
+    editable: true
+    validations:
+     presence: true
+  login_page_text:
+    alt: The text above the login form on the login page
+    value: "<p><a href='/privacy'>Hoe gaat de gemeente om met uw privacy?</a></p>"
+    editable: true
+  proclaimer_page_url:
+    alt: URL van de pagina met de proclaimer voor de website
+    value: /proclaimer
+    editable: true
+    validations:
+      presence: true
+  contact_page_url:
+    alt: URL van de pagina met de colofon voor de website
+    value: /contact
+    editable: true
+    validations:
+      presence: true
 
 development:
   <<: *settings

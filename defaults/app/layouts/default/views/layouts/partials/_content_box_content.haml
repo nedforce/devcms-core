@@ -1,5 +1,5 @@
-%div{:class => "content_box #{node.content_class.name.underscore}_content_box"}
-  %div{:class => "content_box_wrapper #{node.content_box_colour || content_box_color || 'default'}"}
+.content_box{ :class => "#{node.content_class.name.underscore}_content_box" }
+  .content_box_wrapper{ :class => "#{node.content_box_colour || content_box_color || 'default'}" }
     - if content.show_content_box_header
       .header
         .corner_overlay.transparent
@@ -11,5 +11,6 @@
           %h2= link_to_content_node content_box_title_for(node), content
         - else
           %h2= content_box_title_for(node)
+
     .content.hoverable
       = render :partial => "/#{node.content.class.table_name}/#{partial}", :locals => { :node => node, :parent => parent }

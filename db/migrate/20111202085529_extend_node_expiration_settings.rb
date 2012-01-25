@@ -5,8 +5,8 @@ class ExtendNodeExpirationSettings < ActiveRecord::Migration
     add_column :nodes, :expiration_notification_method, :string, :default => "inherit"
     add_column :nodes, :expiration_email_recipient, :string
     
-    Site.reset_column_information
-    Node.root.content.update_attributes :expiration_email_subject => "Content onder uw beheer is verouderd", :expiration_email_body => "<p>De onderstaande pagina is al enige tijd niet meer bijgewerkt en is inmiddels verlopen.</p><p>Gelieve de inhoud van deze pagina's te controleren en bij te werken.</p><p>Neem voor meer informatie contact op met de webredactie.</p>"
+    Site.reset_column_information    
+    Node.root.content.update_attributes(:expiration_email_subject => "Content onder uw beheer is verouderd", :expiration_email_body => "<p>De onderstaande pagina is al enige tijd niet meer bijgewerkt en is inmiddels verlopen.</p><p>Gelieve de inhoud van deze pagina's te controleren en bij te werken.</p><p>Neem voor meer informatie contact op met de webredactie.</p>") if Node.roots.present?
   end
 
   def self.down

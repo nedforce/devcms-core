@@ -39,7 +39,7 @@ class AgendaItem < ActiveRecord::Base
 
   # Adds content node functionality to agenda items.
   acts_as_content_node({
-    :allowed_child_content_types => %w( Attachment ),
+    :allowed_child_content_types => %w( Attachment AttachmentTheme ),
     :show_in_menu                => false,
     :copyable                    => false
   })

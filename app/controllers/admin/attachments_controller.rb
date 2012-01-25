@@ -45,16 +45,6 @@ class Admin::AttachmentsController < Admin::AdminController
     @attachment = Attachment.new
   end
   
-  # * GET /admin/attachments/ajax
-  # * POST /admin/attachments/ajax
-  def categories
-    @categories = Attachment.all(:select => "DISTINCT(category)", :conditions => ["category ILIKE ?", "#{params[:query]}%"]).map(&:category)
-    
-    respond_to do |format|
-      format.html
-    end
-  end
-
   # * GET /admin/attachments/:id/edit
   def edit
   end
@@ -76,7 +66,7 @@ class Admin::AttachmentsController < Admin::AdminController
           responds_to_parent do
             render :update do |page|
               page << "if(Ext.get('no_attachments_row')) Ext.get('no_attachments_row').remove();"
-              page.insert_html(:bottom, "uploaded_attachments", "<tr id=\"uploaded_attachment_#{@attachment.id}\"><td>#{h(@attachment.title)}</td><td>#{h(@attachment.filename)}</td><td>#{(@attachment.size||0)/1024} KB</td><td>#{h(@attachment.category)}</td></tr>")
+              page.insert_html(:bottom, "uploaded_attachments", "<tr id=\"uploaded_attachment_#{@attachment.id}\"><td>#{h(@attachment.title)}</td><td>#{h(@attachment.filename)}</td><td>#{(@attachment.size||0)/1024} KB</td></tr>")
               page.call("treePanel.refreshNodesOf", @parent_node.id)
               @attachment = Attachment.new # To reset fields
               page.replace_html("right_panel_form", :partial => 'form')

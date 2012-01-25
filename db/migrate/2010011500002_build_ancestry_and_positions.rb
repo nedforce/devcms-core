@@ -1,4 +1,6 @@
 class BuildAncestryAndPositions < ActiveRecord::Migration
+
+
   def self.up
     puts "Building ancestry, this will take a while"
     Node.build_ancestry_from_parent_ids!

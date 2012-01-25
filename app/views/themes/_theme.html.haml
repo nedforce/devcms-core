@@ -1,5 +1,6 @@
-%div{:class => "theme depth_#{depth}"}
+.theme{ :class => "depth_#{depth}" }
   = link_to_node "#{theme.title} #{content_tag('span', theme.content.number_of_children)}", theme
+
 - depth += 1
-- if depth <= max_depth  
-  = render :partial => '/themes/theme', :collection => theme.content.sub_themes,  :locals => {:depth => depth, :max_depth => max_depth}
+- if depth <= max_depth
+  = render :partial => '/themes/theme', :collection => theme.content.sub_themes, :locals => { :depth => depth, :max_depth => max_depth }

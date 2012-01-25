@@ -43,6 +43,8 @@ class NewsletterEdition < ActiveRecord::Base
   validates_presence_of :title, :body, :newsletter_archive
   validates_length_of   :title, :in => 2..255, :allow_blank => true
 
+  after_paranoid_delete :remove_associated_content
+
   # Retrieves the items belonging to this newsletter edition in correct order.
   def items
     self.newsletter_edition_items.all(:order => "position ASC").map { |ed_item| ed_item.item}
@@ -83,4 +85,12 @@ class NewsletterEdition < ActiveRecord::Base
   def path_for_url_alias(node)
     "#{node.publication_start_date.year}/#{node.publication_start_date.month}/#{node.publication_start_date.day}/#{self.title}"
   end
+
+protected
+
+  def remove_associated_content
+    self.newsletter_edition_items.destroy_all
+    self.newsletter_edition_queues.destroy_all
+  end
+  
 end

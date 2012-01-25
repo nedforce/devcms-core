@@ -24,7 +24,7 @@
 class NewsItem < ActiveRecord::Base
   # Adds content node functionality to news items.
   acts_as_content_node({
-    :allowed_child_content_types => %w( Attachment Image ),
+    :allowed_child_content_types => %w( Attachment AttachmentTheme Image ),
     :show_in_menu => false,
     :copyable => false
   })
@@ -44,12 +44,14 @@ class NewsItem < ActiveRecord::Base
   
   # A +NewsItem+ has many +NewsViewerItem+ objects, destroy if this object is destroyed.
   has_many :news_viewer_items, :dependent => :destroy
-
+  
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of :title, :body, :news_archive
   validates_length_of   :title, :in => 2..255, :allow_blank => true
   
   named_scope :newest, :include => :node, :conditions => ['nodes.publication_start_date >= ?', 2.weeks.ago]
+  
+  after_paranoid_delete :remove_associated_content
 
   # Alternative text for tree nodes.
   def tree_text(node)
@@ -69,5 +71,13 @@ class NewsItem < ActiveRecord::Base
   # Returns the OWMS type.
   def self.owms_type
     I18n.t('owms.news_item')
+  end
+  
+protected
+
+  def remove_associated_content
+    self.newsletter_edition_items.destroy_all
+    self.carrousel_items.destroy_all
+    self.news_viewer_items.destroy_all
   end
 end

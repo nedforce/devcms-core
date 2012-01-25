@@ -58,7 +58,6 @@ require 'iconv'
 # * +content_box_icon+ - The icon of the content box representation of this node.
 # * +content_box_colour+ - The colour of the content box representation of this node.
 # * +content_box_number_of_items+ - The number of items of the content box representation of this node.
-# * +expires_on+ - The date after which this node should no longer be considered up-to-date.
 #
 # Preconditions
 #
@@ -75,9 +74,6 @@ require 'iconv'
 # * The content node will be destroyed before this node is.
 #
 class Node < ActiveRecord::Base
-  # Allows content types to register themselves
-  acts_as_content_type_registry
-  
   # A node is commentable
   acts_as_commentable
   
@@ -87,8 +83,11 @@ class Node < ActiveRecord::Base
   # Prevents the root +Node+ from being destroyed.
   before_destroy :prevent_root_destruction
   
-  # Load tree functionality
-  include Node::Tree
+  # Delegate tree calls to use Ancestry. Ensure this is added *after* other before/after filters.
+  include Node::TreeDelegation
+  
+  # Load paranoid delete functionality. Make sure this is loaded after Node::TreeDelegation and before any other extensions.
+  include Node::ParanoidDelete
   
   # Load visibility & accessibility functionality
   include Node::VisibilityAndAccessibility
@@ -106,6 +105,9 @@ class Node < ActiveRecord::Base
     
   # Load Url Aliasing functionality
   include Node::UrlAliasing
+  
+  # Load content type configuration functionality
+  include Node::ContentTypeConfiguration
   
   alias_method_chain :move_to, :update_url_aliases
 
@@ -133,7 +135,8 @@ class Node < ActiveRecord::Base
 
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of   :content, :sub_content_type, :publication_start_date
-  validates_presence_of   :expires_on, :if => :expiration_required?, :message => I18n.t("nodes.expires_on_required")
+  
+  validates_presence_of   :deleted_at, :if => lambda { |node| node.parent.try(:deleted_at) }
   
   validates_uniqueness_of :content_id, :scope => :content_type
 
@@ -150,9 +153,13 @@ class Node < ActiveRecord::Base
   validate  :ensure_publication_start_date_is_present_when_publication_end_date_is_present,
             :ensure_publication_end_date_after_publication_start_date,
             :ensure_content_box_number_of_items_should_be_greater_than_two
-            
+
   # A private copy of the original destroy method that is used for overloading.
   alias_method :original_destroy, :destroy
+  
+  attr_accessor :category_attributes
+  
+  attr_protected :publishable, :deleted_at
 
   before_validation :set_publication_start_date_to_current_time_if_blank
 
@@ -170,9 +177,13 @@ class Node < ActiveRecord::Base
 
   after_save :save_category_attributes
 
-  attr_accessor :category_attributes
+  # Prevents the root +Node+ from being marked as deleted.
+  before_paranoid_delete :prevent_root_destruction
+
+  # Make sure the associated content is removed (or marked as deleted) when the current node is marked as deleted
+  after_paranoid_delete :remove_associated_content
   
-  attr_protected :publishable
+  named_scope :sorted_by_position, :order => 'nodes.position'
   
   named_scope :exclude_subtrees_of, (lambda do |nodes_to_exclude|
     Node.exclude_subtrees_conditions_for(nodes_to_exclude)
@@ -235,7 +246,7 @@ class Node < ActiveRecord::Base
     return true if content_class.name == 'ProductCatalogue' && content.opus_plus_importer
     super
   end
-
+  
   # Destroys this node and its associated content node.
   #
   # The destruction of self is delegated to the content node through its
@@ -312,7 +323,7 @@ class Node < ActiveRecord::Base
         child_content_type_configuration = Node.content_type_configuration(child_content_type)
         
         klass = child_content_type.constantize
-
+        
         if child_content_type_configuration[:enabled] && child_content_type_configuration[:allowed_roles_for_create].include?(role_name)
           array << {
             :text           => klass.human_name,
@@ -323,9 +334,9 @@ class Node < ActiveRecord::Base
 
         array
       end.sort_by { |hash| hash[:text] },
-      :allowedChildContentTypes        => content_type_configuration[:allowed_child_content_types],
+      :allowedChildContentTypes        => self.content_type_configuration[:allowed_child_content_types],
       :ownContentType                  => self.content_class == ContentCopy ? self.content.copied_node.content_class.to_s : self.content_class.to_s,
-      :allowEdit                       => content_type_configuration[:allowed_roles_for_update].include?(role_name),
+      :allowEdit                       => self.content_type_configuration[:allowed_roles_for_update].include?(role_name),
       :controllerName                  => "/admin/#{self.content.controller_name}",
       :parentNodeId                    => self.parent_id,
       :parentURLAlias                  => self.parent_url_alias,
@@ -345,6 +356,7 @@ class Node < ActiveRecord::Base
       :containsGlobalFrontpage         => self.contains_global_frontpage?,
       :allowTogglePrivate              => self.content_class <= Section && user_is_admin,
       :allowToggleHidden               => user_is_final_editor || user_is_admin,
+      :allowShowInMenu                 => !Node.content_to_hide_from_menu.include?(self.sub_content_type),
       :isHidden                        => self.hidden?,
       :isPrivate                       => self.private?,
       :showInMenu                      => self.show_in_menu,
@@ -520,13 +532,23 @@ class Node < ActiveRecord::Base
   # Returns this node's content's class without hitting the database or instantiating the content object.
   # Use this instead of +@node.content.class+.
   def content_class
-    @content_class ||= case sub_content_type
-    when 'ContentCopy'
-      content.copied_node.content_class if content.copied_node
-    when nil
-      content.class
+    return @content_class if @content_class
+    
+    if self.sub_content_type.nil? || self.sub_content_type == 'ContentCopy'
+      content_class = self.sub_content_type.nil? ? self.content.class : self.content.copied_content_class
+      @content_class = content_class unless content_class == ContentCopy
+      content_class
     else
-      sub_content_type.constantize
+      @content_class = self.sub_content_type.constantize
+    end
+  end
+  
+  # This method is used to cache the titles of content nodes, so we don't have to query separately for them
+  def content_title
+    if %w( ExternalLink InternalLink Feed ContentCopy ).include?(self.sub_content_type)
+      self.content.content_title
+    else
+      self.title.blank? ? self.content.content_title : self.title
     end
   end
   
@@ -612,6 +634,19 @@ protected
   def prevent_root_destruction
     raise ActiveRecord::ActiveRecordError, I18n.t('activerecord.errors.models.node.attributes.base.cant_remove_root') if self.root?
   end
+  
+  def remove_associated_content
+    subtree_ids = self.subtree_ids
+    
+    # Also destroy all content copies and internal links that are associated with any of the nodes in the subtree
+    ContentCopy.destroy_all [ 'copied_node_id IN (?)', subtree_ids ]
+    InternalLink.destroy_all [ 'linked_node_id IN (?)', subtree_ids ]
+
+    # Destroy any node categories, role assignments, synonyms or abbreviations that are associated with any of the nodes in the subtree
+    [ NodeCategory, RoleAssignment, Synonym, Abbreviation ].each do |klass|
+      klass.destroy_all [ 'node_id IN (?)', subtree_ids ]
+    end
+  end
 
   # Determines the "content date" of the content
   # This is used to determine whether the content date is "past", "current" or "future"
@@ -680,3 +715,4 @@ private
     end
   end  
 end
+

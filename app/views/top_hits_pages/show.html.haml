@@ -4,9 +4,11 @@
 
   %h1= h @top_hits_page.title
 
-  = content_tag(:div, w(@top_hits_page.description), :class => 'htmlField') if @top_hits_page.description.present?
+  - if @top_hits_page.description.present?
+    .htmlField
+      = w @top_hits_page.description
 
-  - unless @top_hits.empty?
+  - if @top_hits.present?
     %ol.top_hits
     - @top_hits.each do |top_hit|
       - content_node = top_hit.content

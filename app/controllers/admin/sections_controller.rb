@@ -6,7 +6,7 @@ class Admin::SectionsController < Admin::AdminController
   prepend_before_filter :find_parent_node,     :only => [ :new, :create ]
 
   # The +show+, +edit+ and +update+ actions need a +Section+ object to act upon.
-  before_filter :find_section,                 :only => [ :show, :previous, :edit, :update, :send_expiration_notifications ]
+  before_filter :find_section,                 :only => [ :show, :previous, :edit, :update, :send_expiration_notifications, :import, :build ]
 
   # Parse the publication start date for the +create+ and +update+ actions.
   before_filter :parse_publication_start_date, :only => [ :create, :update ]
@@ -103,6 +103,33 @@ class Admin::SectionsController < Admin::AdminController
   def send_expiration_notifications
     NodeExpirationMailerWorker.notify_authors(@section.node)
     render :text => '<div class="rightPanelDefault" id="rightPanelDefault"><table><tr><td>' + t('sections.expiration_notification_sent') + '</td></tr></table></div>'
+  end
+  
+  def import
+    respond_to do |format|
+      format.html { render :layout => 'admin/admin_blank' }
+    end
+  end
+
+  def build
+    imported = Importer.import!(params[:data], @section)
+    
+    if imported
+      flash.now[:notice] = "#{imported.size} content items geimporteerd."
+    else
+      flash.now[:notice] = "Importeren mislukt. Controleer het formaat van het opgegeven bestand en probeer opnieuw."
+    end
+    
+    respond_to do |format|
+      format.js do
+        responds_to_parent do
+          render :update do |page|
+            page.call("treePanel.refreshNodesOf", @section.node.id)
+            page.replace_html("import_form", :partial => 'import_form')
+          end
+        end
+      end
+    end
   end
 
 protected

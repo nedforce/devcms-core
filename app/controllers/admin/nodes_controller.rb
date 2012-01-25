@@ -10,7 +10,9 @@ class Admin::NodesController < Admin::AdminController
 
   # Require a role for the current node on update, destroy and move
   require_role 'admin', :only => :set_accessibility
+  
   require_role ['admin', 'final_editor'], :except => [ :index, :update, :set_visibility, :set_accessibility, :bulk_edit, :bulk_update, :destroy ]
+
   require_role ['admin', 'final_editor', 'editor'], :only => [ :update, :bulk_edit, :bulk_update, :set_visibility, :destroy, :move, :sort_children, :count_children ]
 
   # Shows the sitemap admin page for html requests. The tree's root will be
@@ -103,7 +105,8 @@ class Admin::NodesController < Admin::AdminController
     respond_to do |format|
       return access_denied unless current_user.has_role_on?(@node.content_type_configuration[:allowed_roles_for_destroy], @node)
 
-      @node.destroy # Root destruction will raise an ActiveRecord::ActiveRecordError.
+      @node.paranoid_delete!
+      
       format.xml  { head :ok }
       format.json { render :json => { :notice => I18n.t('nodes.succesfully_destroyed')}.to_json, :status => :ok }
     end
@@ -114,7 +117,7 @@ class Admin::NodesController < Admin::AdminController
       parent_node = Node.find(params[:parent_id])
       return access_denied unless current_user.has_role_on?("admin", parent_node)
       
-      parent_node.content.destroy_items_for_year_or_month(params[:year], params[:month])
+      parent_node.content.destroy_items_for_year_or_month(params[:year], params[:month], true)
               
       format.xml  { head :ok }
       format.json { render :json => { :notice => I18n.t('nodes.succesfully_destroyed')}.to_json, :status => :ok }

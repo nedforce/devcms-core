@@ -10,6 +10,7 @@
 
 - form_tag "/contact_forms/#{@contact_form.id}/send_message", :method => :post do
   %table.contact_form_field
+    %caption= "Contact formulier velden"
     - for contact_form_field in @contact_form_fields
       %tr
         %td= label_tag "contact_form_field_#{contact_form_field.id}", contact_form_field.label

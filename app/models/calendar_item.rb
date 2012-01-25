@@ -50,7 +50,7 @@ class CalendarItem < Event
   
   # Adds content node functionality to event.
    acts_as_content_node({
-     :allowed_child_content_types => %w( Attachment ),
+     :allowed_child_content_types => %w( Attachment AttachmentTheme ),
      :show_in_menu => false,
      :copyable => false,
      :controller_name => 'calendar_items'
@@ -101,13 +101,21 @@ class CalendarItem < Event
   end
 
   # Destroy calendar item and all of its repetitions
-  def self.destroy_calendar_item(calendar_item)
+  def self.destroy_calendar_item(calendar_item, paranoid_delete = false)
     if calendar_item.has_repetitions?
       CalendarItem.all(:conditions => { :repeat_identifier => calendar_item.repeat_identifier }).each do |repetition|
-        repetition.destroy
+        if paranoid_delete
+          repetition.node.paranoid_delete!
+        else
+          repetition.destroy
+        end
       end
     else
-      calendar_item.destroy
+      if paranoid_delete
+        calendar_item.node.paranoid_delete!
+      else
+        calendar_item.destroy
+      end
     end
   end
 

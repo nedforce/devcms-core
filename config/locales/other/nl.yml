@@ -160,7 +160,7 @@ nl:
     add: Toevoegen...
     add_attachments_to: Bijlage(n) toevoegen aan
     add_to: Bijlage(n) toevoegen aan
-    attachments_table: Dit is een overzicht van alle attachments behorende bij deze pagina.
+    attachments_table: Dit is een overzicht van alle bijlagen behorende bij deze pagina.
     data: Bestand
     done: Bijlage(n) toegevoegd
     done_btn: Klaar met uploaden
@@ -176,6 +176,12 @@ nl:
     uploaded_attachments: Toegevoegde bijlage(n)
     attachment_category: Bijlagecategorie
     uncategorized: Ongecategoriseerd
+  attachment_themes:
+    add_to: Bijlagecategorie toevoegen aan
+    sub_themes: "Onderliggende bijlagecategorieën"
+    edit: Bewerken van bijlagecategorie
+    failed: Kon bijlagecategorie niet opslaan.
+    saved: Bijlagecategorie opgeslagen!
   calendars:
     attachments: Bijlagen
     add_agenda_item_to: Agendapunt toevoegen aan
@@ -442,6 +448,7 @@ nl:
     edit: Bewerken van RSS feed
     failed: Kon RSS feed niet opslaan.
     full_overview: Compleet overzicht
+    items_caption: Overzicht van berichten
     last_update: Laatst geupdate
     older_feed_items: Oudere berichten
     saved: RSS feed opgeslagen!
@@ -528,6 +535,7 @@ nl:
     image: Afbeelding
     image_of: Afbeelding van
     is_for_header: Is headerfoto?
+    show_in_listing: Tonen in overzicht?
     no_images: Er zijn nog geen extra afbeeldingen toegevoegd
     saved: Afbeelding(en) opgeslagen.
     thumbnail: Voorbeeld
@@ -609,6 +617,7 @@ nl:
   meetings:
     add_to: Vergadering toevoegen aan
     edit: Bewerken van vergadering
+    agenda_items_caption: Overzicht van alle agendapunten bij deze vergadering
   news:
     add_images: Afbeelding(en) toevoegen aan dit nieuwsbericht
     archive_failed: Kon nieuwsarchief niet opslaan.
@@ -635,6 +644,7 @@ nl:
   news_archives:
     add_to: Nieuwsarchief toevoegen aan
     edit: Bewerken van nieuwsarchief
+    older_items_caption: Overzicht van oudere nieuwsberichten
   news_items:
     add_to: Nieuwsbericht toevoegen aan
     edit: Bewerken van nieuwsbericht
@@ -697,6 +707,8 @@ nl:
     unsubscribing: Bezig met afmelden gebruiker
     unsubscription_failed: Afmelden van gebruiker mislukt
     user: Gebruiker
+    items_caption: Overzicht van items in deze editie
+    older_editions_caption: Overzicht van oudere edities van deze nieuwsbrief
   news_viewers:
     add_to: Nieuwsselectie toevoegen aan
     edit: Bewerken van nieuwsselectie
@@ -853,6 +865,7 @@ nl:
     question: Vraagstelling
     question_failed: Kon vraagstelling niet opslaan.
     question_not_active: Deze vraagstelling is niet meer actief. U kunt niet meer stemmen.
+    questions_caption: Overzciht van voorgaande vraagstellingen
     requires_login: U moet ingelogged zijn om te stemmen.
     results: Resultaten
     saved_poll: Poll opgeslagen!
@@ -911,6 +924,7 @@ nl:
     recent_year: Afgelopen jaar
     relevance: Relevantie
     relevance: relevantie %
+    result_caption: Overzicht van resultaat
     results: Resultaten
     results_1: "<strong>1</strong> resultaat gevonden"
     saved: Zoekpagina opgeslagen!
@@ -955,6 +969,8 @@ nl:
     saved: Sectie opgeslagen!
     saved_site: Site opgeslagen!
     send_expiration_notifications: Verzend notificaties
+    import_content_in: Content importeren in
+    import: Importeren
   sessions:
     already_logged_in: U bent reeds ingelogd als
     cant_log_out: Kan niet uitloggen. U bent niet ingelogd.
@@ -1100,6 +1116,7 @@ nl:
     password_confirmation: Bevestig wachtwoord
     password_sent_to: Uw wachtwoord is verstuurd naar
     privacy_explanation: Deze gegevens worden door de gemeente gebruikt om u nog beter van informatie te voorzien. Deze gegevens worden niet aan derden verstrekt.
+    privacy_statement: Hoe gaat de gemeente om met uw privacy?
     profile: Gebruikersprofiel
     profile_of: Profiel van
     really_unsubscribe?: "Weet u zeker dat zich wilt afmelden van deze nieuwsbrief?"
@@ -1111,7 +1128,7 @@ nl:
     request_password_text: Vul hieronder uw login naam of e-mailadres in. Het wachtwoord wordt u dan per e-mail toegestuurd.
     save: Wijzigingen opslaan
     saving: Bezig met opslaan
-    select_interests: Selecteer onderwerpen waarin u bent interesseerd
+    select_interests: "Selecteer onderwerpen waarin u bent geïnteresseerd"
     select_newsletter_archives: Selecteer de nieuwsbrieven waarop u zich wilt abonneren
     select_one: Kies tenminste een gebruiker
     sent_verification_email: Ter verificatie is een e-mail naar uw e-mailadres verstuurd. Volg de instructies in de e-mail.
@@ -1122,6 +1139,7 @@ nl:
     update_successful: Uw wijzigingen zijn opgeslagen!
     unsubscribe: Afmelden
     user: Gebruiker
+    user_details_caption: Overzicht van gebruikersgegevens
     user_update_succesful: De gebruiker is succesvol aangepast.
     verification_failed: Verificatie niet gelukt.
     verification_failed_heading: Verificatie niet gelukt
@@ -1130,6 +1148,7 @@ nl:
     verified?: "Geverifieerd?"
     view_weblog: Bekijken
     weblog: Weblog
+    weblogs_caption: Overzicht van weblogs
     weblog_title: Titel van het weblog
     welcome: Welkom als gebruiker van deze website. Voordat u kunt inloggen dient u uw e-mailadres te verifiëren. U kunt dit doen door de instructies te volgen in de e-mail die zojuist naar u is verstuurd.
     wrong_password: Verkeerd wachtwoord ingevoerd.
@@ -1164,6 +1183,7 @@ nl:
     last_post: Laatste bericht
     mail: Mail deze post
     message_title: Titel van het bericht
+    messages_caption: Berichten tabel
     new_weblog: Nieuwe weblog aanmaken
     new_weblog_post: Nieuw bericht schrijven
     no_posts_found: Geen berichten gevonden.

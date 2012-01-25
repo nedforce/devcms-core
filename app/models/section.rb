@@ -27,7 +27,7 @@ class Section < ActiveRecord::Base
   # Adds content node functionality to sections.
   acts_as_content_node({
     :allowed_child_content_types => %w(
-      AlphabeticIndex Attachment Calendar Carrousel CombinedCalendar ContactBox ContactForm Feed Forum
+      AlphabeticIndex Attachment AttachmentTheme Calendar Carrousel CombinedCalendar ContactBox ContactForm Feed Forum
       HtmlPage Image LinksBox InternalLink ExternalLink NewsArchive NewsletterArchive NewsViewer
       Page Poll SearchPage Section SocialMediaLinksBox TopHitsPage WeblogArchive
     ),
@@ -35,7 +35,8 @@ class Section < ActiveRecord::Base
     :allowed_roles_for_destroy => %w( admin final_editor ),
     :available_content_representations => ['content_box'],
     :has_own_content_box => true,
-    :expiration_container=> true
+    :expiration_container=> true,
+    :has_import => true
   })
 
   # This content type needs approval when created or altered by an editor.

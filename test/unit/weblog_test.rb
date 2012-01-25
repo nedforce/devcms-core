@@ -150,15 +150,6 @@ class WeblogTest < ActiveSupport::TestCase
       end
     end
   end
-
-  def test_last_updated_at_should_return_updated_at_when_no_accessible_weblog_posts_are_found
-    w = create_weblog
-    assert_equal w.updated_at.to_i, w.last_updated_at.to_i
-    wp = create_weblog_post w
-    wp.node.hidden = true
-    wp.node.save!
-    assert_equal w.updated_at.to_i, w.last_updated_at.to_i
-  end
   
 protected
   

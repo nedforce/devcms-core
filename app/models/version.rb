@@ -78,20 +78,20 @@ class Version < ActiveRecord::Base #:nodoc:
   
   # Return the next higher numbered version, or nil if this is the last version
   def next
-    versionable.versions.next_version(self.number)
+    self.versionable.versions.next_version(self.number)
   end
   
   # Return the next lower numbered version, or nil if this is the first version
   def previous
-    versionable.versions.previous_version(self.number)
+    self.versionable.versions.previous_version(self.number)
   end
 
 protected
   def set_number
-    if versionable.versions.empty?
+    if self.versionable.versions.count.zero?
       self.number = 1
     else
-      self.number = versionable.versions.maximum(:number) + 1
+      self.number = self.versionable.versions.maximum(:number) + 1
     end
   end
   

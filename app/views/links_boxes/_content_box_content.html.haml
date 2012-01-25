@@ -1,5 +1,5 @@
 - content    = node.content
-- links      = node.children.accessible.with_content_type('Link').include_content.all(:limit => node.content_box_number_of_items).map { |n| n.content }
+- links      = node.children.accessible.with_content_type(%w(InternalLink ExternalLink)).include_content.all(:limit => node.content_box_number_of_items).map { |n| n.content }
 
 - unless links.empty?  
   - header_image = node.children.with_content_type('Image').include_content.first.try(:content)
@@ -10,8 +10,8 @@
   %ul
     - links.each do |link|
       %li
-        = text_link_toggable_section("link_#{link.id}", "toggle_link_#{link.id}", link.content_title)
-        %div.link{ :id => "link_#{link.id}", :style => 'display: none' }
+        = text_link_toggable_section("link_#{link.id}", "toggle_link_#{link.id}", link)
+        %div.link{ :id => "link_#{link.id}" }
           %p= link.description
           = link_to_content_node t('links_boxes.goto_site'), link
 

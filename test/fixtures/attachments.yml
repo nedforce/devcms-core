@@ -3,7 +3,6 @@ besluit_attachment:
   size: 56832
   content_type: application/msword
   filename: 020301Besluitinformatiebeheer.doc
-  category: Category 1
   db_file: besluit_db_file
   created_at: <%= Time.parse('2002-03-01').to_s(:db) %>
 verslag_attachment:
@@ -11,7 +10,6 @@ verslag_attachment:
   size: 129536
   content_type: application/msword
   filename: 20080409VERSLAGRaadsvergadering.doc
-  category: Category 1
   db_file: verslag_db_file
   created_at: <%= Time.parse('2008-04-09').to_s(:db) %>
 hidden_attachment:
@@ -19,7 +17,6 @@ hidden_attachment:
   size: 129536
   content_type: application/msword
   filename: 20080409VERSLAGRaadsvergadering.doc
-  category: Category 1
   db_file: hidden_db_file
   created_at: <%= Time.parse('2008-04-10').to_s(:db) %>
 no_extension_attachment:
@@ -27,12 +24,10 @@ no_extension_attachment:
   size: 339968
   content_type: application/vnd.ms-powerpoint
   filename: Sloeproeien
-  category: Category 1
   db_file: no_extension_db_file
 nested_extension_attachment:
   title: I have nested extensions
   size: 65
   content_type: application/msword
   filename: snippet.css.txt
-  category: Category 1
   db_file: nested_extension_db_file

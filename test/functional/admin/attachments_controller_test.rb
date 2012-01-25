@@ -99,6 +99,6 @@ class Admin::AttachmentsControllerTest < ActionController::TestCase
   
   protected
     def create_attachment(attributes = {}, options = {})
-      post :create, {:parent_node_id => nodes(:about_page_node).id, :attachment => { :title => 'An Image', :category => "Bestanden", :uploaded_data => fixture_file_upload("files/test.jpg", 'image/jpeg', true) }.merge(attributes)}.merge(options)
+      post :create, {:parent_node_id => nodes(:about_page_node).id, :attachment => { :title => 'An Image', :uploaded_data => fixture_file_upload("files/test.jpg", 'image/jpeg', true) }.merge(attributes)}.merge(options)
     end
 end

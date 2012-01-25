@@ -5,10 +5,10 @@
   
   - if top_sub_menu_items.any?
     .content_box.sub_menu_content_box
-      %div{:class => "content_box_wrapper #{top_ancestor.content_box_colour || 'default'}"}
+      .content_box_wrapper{ :class => "#{top_ancestor.content_box_colour || 'default'}" }
         .header
           .corner_overlay.transparent
-          - unless top_ancestor.content_box_icon.blank?
+          - if top_ancestor.content_box_icon.present?
             = image_tag "icons/content_box_#{top_ancestor.content_box_icon}.png", :class => 'icon_overlay transparent'
           %h2= link_to_node top_ancestor.content_title, top_ancestor
         .content

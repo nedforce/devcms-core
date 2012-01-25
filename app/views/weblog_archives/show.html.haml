@@ -22,7 +22,7 @@
     - else
       .weblogs
         - @weblogs.each do |weblog|
-          %div{ :class => "#{cycle('oddWeblog', 'evenWeblog')} clearfix" }
+          .clearfix{ :class => cycle('oddWeblog', 'evenWeblog') }
             - readspeaker(weblog.node.id) do |rid|
               %h3= link_to_content_node h(weblog.title), weblog, {}, :title => h(weblog.title)
 

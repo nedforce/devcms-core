@@ -87,14 +87,15 @@
     <% unless @weblog_posts_for_table.empty? -%>
     <div id="olderWeblogPosts">
       <h2><%=t 'weblogs.older_weblog_posts' -%></h2>
-
+      
       <table cellpadding="0" cellspacing="0" id="items">
+        <caption><%=t 'weblogs.messages_caption' -%></caption>
         <thead>
-       		<tr>
-       			<th scope="col" class="gray"><%=t 'weblogs.message_title' -%></th>
-				<th scope="col" class="right_sized gray"><%=t 'weblogs.date' -%></th>
-			</tr>
-		  </thead>
+          <tr>
+            <th scope="col" class="gray"><%=t 'weblogs.message_title' -%></th>
+            <th scope="col" class="right_sized gray"><%=t 'weblogs.date' -%></th>
+          </tr>
+        </thead>
         <tbody>
           <% @weblog_posts_for_table.each do |weblog_post| %>
             <tr class="<%= cycle('alt', '', :name => 'olderWeblogPosts') -%>">

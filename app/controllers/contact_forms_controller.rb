@@ -64,20 +64,22 @@ class ContactFormsController < ApplicationController
     @entered_fields = get_used_fields_only(@contact_form_field)
     @entered_fields
   end
-  
+
   def get_used_fields_only(contact_fields)
     used_fields = []
-    @contact_form_fields.each do |field|
-      if contact_fields["#{field.id}"].present?
-        if field.field_type == 'multiselect'
-          value = contact_fields["#{field.id}"].join(';')
-        else
-          value = contact_fields["#{field.id}"]
+    if contact_fields.present?
+      @contact_form_fields.each do |field|
+        if contact_fields["#{field.id}"].present?
+          if field.field_type == 'multiselect'
+            value = contact_fields["#{field.id}"].join(';')
+          else
+            value = contact_fields["#{field.id}"]
+          end
+          used_fields << [ field.id, field.label, value ]
         end
-        used_fields << [ field.id, field.label, value ]
       end
     end
-    
+
     used_fields
   end
 

@@ -248,19 +248,19 @@ div.calendar_item div.buttons a {
   display: block; }
 
 /* Carrousel display */
-#carousel-wrapper {
+.carousel-wrapper {
   width: 230px;
   overflow: hidden; }
 
-#carousel-content {
+.carousel-content {
   width: 2500px; }
-  #carousel-content .slide {
+  .carousel-content .slide {
     float: left;
     width: 230px;
     padding-right: 10px; }
-    #carousel-content .slide .header {
+    .carousel-content .slide .header {
       position: static; }
-      #carousel-content .slide .header h2 {
+      .carousel-content .slide .header h2 {
         margin: 0 !important;
         padding: 0 0 0 36px !important;
         background: transparent url("../images/content_box_corner.png") no-repeat; }

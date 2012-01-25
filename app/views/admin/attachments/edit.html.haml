@@ -1,5 +1,3 @@
-= javascript_tag("new Ajax.Autocompleter('category_auto', 'autocomplete', '#{ajax_admin_attachments_path}', {frequency: 0.5, paramName: 'query'})")
-
 .right_panel_content
   %h1== #{t 'attachments.edit'} '#{h @attachment.title}'
 
@@ -8,9 +6,6 @@
 
     = f.text_field :title,    :label => t('shared.title')
     = f.text_field :filename, :label => t('attachments.filename')
-    = f.text_field :category, :label => t('attachments.attachment_category'), :id => 'category_auto'
-    
-    #autocomplete
 
     = f.submit t('shared.save')
 
