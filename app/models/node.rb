@@ -356,7 +356,7 @@ class Node < ActiveRecord::Base
       :containsGlobalFrontpage         => self.contains_global_frontpage?,
       :allowTogglePrivate              => self.content_class <= Section && user_is_admin,
       :allowToggleHidden               => user_is_final_editor || user_is_admin,
-      :allowShowInMenu                 => Node.content_to_hide_from_menu.include?(self.sub_content_type),
+      :allowShowInMenu                 => !Node.content_to_hide_from_menu.include?(self.sub_content_type),
       :isHidden                        => self.hidden?,
       :isPrivate                       => self.private?,
       :showInMenu                      => self.show_in_menu,

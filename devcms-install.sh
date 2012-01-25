@@ -6,6 +6,14 @@ if [ ! -x `which git` ]; then
   exit
 fi
 
+# Check for Git
+ruby -v | grep "1.8.7"
+if [ $? -gt 0 ]; then
+  echo "DevCMS requires Ruby 1.8.7. Please install it, using RubyVersionManager is recommended."
+  exit
+fi
+
+
 # Check for Rails version
 if [ ! "`rails -v`" = "Rails 2.3.14" ]; then
   echo "DevCMS requires Ruby on Rails version 2.3.14. Please execute 'gem install rails -v=2.3.14'"
@@ -14,7 +22,12 @@ fi
 
 # Check for Rails app
 if [ ! -f "config/boot.rb" ]; then
-  echo "Please run this installer from within a (new) Rails application."
+  echo "Please run this installer from within a (new) Rails application. You can create one by running 'rails APPLICATION NAME'"
+  exit
+fi
+
+if [ ! -x `which convert` ]; then
+  echo "DevCMS requires ImageMagick. Please install it."
   exit
 fi
 
@@ -49,7 +62,7 @@ cat <<@
 Done! Please edit config/database.yml to suit your needs. Then execute db:create
 and db:migrate to setup the database. From there you have two choices:
 
- 1. Populate the database with a small structure using 'rake db:populate:all'
+ 1. Populate the database with a small example structure using 'rake db:populate:all'
  
  2. Seed the database with a minimal structure using 'rake db:seed'
  
