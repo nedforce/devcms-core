@@ -1,6 +1,7 @@
 class MigrateAttachmentCategories < ActiveRecord::Migration
   def self.up
     Attachment.all(:conditions => "category != ''").each do |attachment|
+      next if attachment.parent.title == attachment.category && attachment.parent.sub_content_type == 'AttachmentTheme'
       p "Attachment #{attachment.id} with category #{attachment.category}..."
       if theme = attachment.parent.children.with_content_type("AttachmentTheme").find_by_title(attachment.category)
         p "Found theme: #{theme.title}"

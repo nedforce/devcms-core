@@ -16,11 +16,12 @@ carrouselItemCol = new Ext.dvtr.Sorter({
 onSortletCreate = function(e) {
   var carrouselId = "carrousel_items[" + e.sortlet.nodeId + "]";
   var panel = new Ext.Panel({ border: false })
-  if(e.dd.dragData.node.attributes.ownContentType != 'Image') {
-      panel.html = "<textarea rows=\"10\" cols = \"50\" id=\"" + carrouselId + "\" name=\"" + carrouselId + "\"></textarea>"
+  if(e.dd.dragData.node.attributes.ownContentType = 'Image') {
+      panel.html = '<img src="/'+e.dd.dragData.node.URLAlias+'/thumbnail.jpg"/>'
   } else {
-      panel.html = '<img src="/'+e.dd.dragData.node.attributes.urlAlias+'"/>'
+    panel.html = ''
   }
+  panel.html += "<textarea rows=\"10\" cols = \"50\" id=\"" + carrouselId + "\" name=\"" + carrouselId + "\"></textarea>"
   
   e.sortlet.add(panel);
   

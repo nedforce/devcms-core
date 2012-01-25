@@ -130,11 +130,10 @@ class Admin::CarrouselsController < Admin::AdminController
   end
 
   def item_sortlet_hash(element, excerpt = '')
-    if element.node.content_type == 'Image'
-      html = "<img src=\"/#{element.node.url_alias}\"/>"
-    else
-      html ="<textarea rows=\"10\" cols=\"50\" id=\"carrousel_items[#{element.node.id}]\" name=\"carrousel_items[#{element.node.id}]\">#{excerpt}</textarea>"
-    end
+    image = element.node.content_type == 'Image' ? element.node : element.node.children.with_content_type('Image').first
+    html = ""
+    html << "<img src=\"/#{image.url_alias}/thumbnail.jpg\"/>" if image.present?
+    html << "<textarea rows=\"10\" cols=\"50\" id=\"carrousel_items[#{element.node.id}]\" name=\"carrousel_items[#{element.node.id}]\">#{excerpt}</textarea>"
     {
       :title          => element.title,
       :id             => element.node.id,
