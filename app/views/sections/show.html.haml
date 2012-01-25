@@ -7,11 +7,12 @@
     = render :partial => '/shared/metadata', :locals => { :publication_date => @section.publication_start_date, :last_update_date => @section.last_updated_at }
 
     - if @section.description.present?
-      = content_tag(:div, w(@section.description), :class => 'htmlField')
+      .htmlField
+        = w @section.description
 
     = render_images
 
-    - unless @children.empty?
+    - if @children.present?
       %ul.section_items
         - @children.each do |content_node|
           - if content_node.node.content_type_configuration[:show_in_menu]

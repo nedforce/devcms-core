@@ -6,7 +6,9 @@
 
     = render :partial => '/shared/metadata', :locals => { :publication_date => @page.publication_start_date, :last_update_date => @page.updated_at }
 
-    = content_tag(:div, simple_format(white_list_preamble(@page.preamble)), :class => 'preamble') if @page.preamble
+    - if @page.preamble
+      .preamble
+        = simple_format(white_list_preamble(@page.preamble))
 
     = render_images
 

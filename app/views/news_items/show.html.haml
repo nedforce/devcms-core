@@ -7,7 +7,8 @@
     = render :partial => '/shared/metadata', :locals => { :publication_date => @news_item.publication_start_date, :last_update_date => @news_item.updated_at }
 
     - if @news_item.preamble.present?
-      = content_tag(:div, simple_format(white_list_preamble(@news_item.preamble)), :class => 'preamble')
+      .preamble
+        = simple_format(white_list_preamble(@news_item.preamble))
 
     = render_images
 

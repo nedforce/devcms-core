@@ -5,15 +5,16 @@
     %h1= h @links_box.title
 
     - if @links_box.description.present?
-      = content_tag(:div, w(@links_box.description), :class => 'htmlField')
-    
+      .htmlField
+        = w @links_box.description
+
     - if @links_box.content_children.exists?
       .themeOverview
-        = render :partial => "/link_themes/listing", :locals => { :items => @links_box.content_children }
+        = render :partial => '/link_themes/listing', :locals => { :items => @links_box.content_children }
 
     - if @links_box.sub_themes.exists?
       %h2= t "#{@links_box.controller_name}.sub_themes"
       = render :partial => '/themes/listing', :locals => { :container => @links_box, :depth => 1, :max_depth => 4 }
-    
+
     .buttons.clearfix
       = print_button

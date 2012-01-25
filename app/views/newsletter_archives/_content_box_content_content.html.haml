@@ -1,4 +1,6 @@
-= content_tag(:div, w(content.description), :class => 'description') if content.description.present?
+- if content.description.present?
+  .description
+    = w content.description
 
 - if logged_in?
   - if content.has_subscription_for?(current_user)
