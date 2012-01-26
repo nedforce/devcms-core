@@ -24,13 +24,15 @@ class Admin::UsersController < Admin::AdminController
       # a version of Rails > 2.0.2.
       @sort_field = 'users.created_at' if @sort_field == 'created_at'
       @users      = User.all(:include => [ :newsletter_archives, :interests ], :conditions => filter_conditions, :order => "#{@sort_field} #{@sort_direction}", :page => { :size => @page_limit, :current => @current_page })
+      @user_count = @user.size
     else
       @users      = User.all(:include => [ :newsletter_archives, :interests ], :conditions => filter_conditions, :order => "login #{@sort_direction}")
       @users      = @users.sort_by { |user| user.newsletter_archives.sort_by { |archive| archive.title.upcase }.map{ |archive| archive.title }.join(', ') }
       @users      = @users.reverse if @sort_direction == 'DESC'
+      @user_count = @users.size
       @users      = @users.values_at((@page_limit * (@current_page - 1))..(@page_limit * @current_page - 1)).compact
     end
-    @user_count   = @users.size
+    #@user_count   = @users.size
 
     respond_to do |format|
       format.html
