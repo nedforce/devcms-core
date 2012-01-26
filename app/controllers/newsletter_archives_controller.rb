@@ -1,23 +1,23 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of 
 # the application relating to +NewsletterArchive+ objects.
 class NewsletterArchivesController < ApplicationController
-  
+
   # All actions needs a +NewsletterArchive+ object to work with.  
-  before_filter :find_newsletter_archive
-  
+  before_filter :find_newsletter_archive, :only => [ :show, :subscribe, :unsubscribe ]
+
   # Require user to be logged in for the +subscribe+ and +unsubscribe+ actions.
   before_filter :login_required, :only => [ :subscribe, :unsubscribe ]
-  
+
   # Enable unsubscrubing using regular hyperlinks and <tt>:method => :delete</tt>.
   # See ApplicationController for more details.
   verify :method => [:get, :delete], :only => :unsubscribe
   before_filter :confirm_destroy,    :only => :unsubscribe
-  
-  # * GET /newsletter_archives/1
-  # * GET /newsletter_archives/1.xml
+
+  # * GET /newsletter_archives/:id
+  # * GET /newsletter_archives/:id.xml
   def show
     @newsletter_editions = @newsletter_archive.newsletter_editions.accessible.all(:conditions => [ 'published <> ?', 'unpublished' ], :page => {:size => 25, :current => params[:page]})
-    
+
     first_page = !params[:page] || params[:page]==1
     @latest_newsletter_editions    = []
     @newsletter_editions_for_table = @newsletter_editions.to_a 
@@ -31,7 +31,7 @@ class NewsletterArchivesController < ApplicationController
       format.xml { render :xml => @newsletter_archive }
     end
   end
-  
+
   # * POST /newsletter_archives/:id/subscribe
   # * POST /newsletter_archives/:id/subscribe.xml
   def subscribe
@@ -62,7 +62,7 @@ class NewsletterArchivesController < ApplicationController
       end
     end
   end
-  
+
   # * DELETE /newsletter_archives/:id/unsubscribe
   # * DELETE /newsletter_archives/:id/unsubscribe.xml
   def unsubscribe
@@ -93,12 +93,12 @@ class NewsletterArchivesController < ApplicationController
       end
     end
   end
- 
+
 protected
-  
+
   # Finds the +NewsletterArchive+ object corresponding to the passed in +id+ parameter.
   def find_newsletter_archive
     @newsletter_archive = @node.content
   end
-  
+
 end
