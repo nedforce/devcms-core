@@ -44,6 +44,7 @@ git submodule add git://github.com/nedforce/devcms-core.git vendor/plugins/devcm
 echo "==> Installing required gems"
 gem install faker --version "0.3.1"
 gem install pg --version "~> 0.11.0"
+gem install sqlite3
 gem install rcov --version "~> 0.9.11"
 gem install ferret --version "~> 0.11.6"
 gem install soap4r
