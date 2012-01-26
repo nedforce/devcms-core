@@ -59,13 +59,15 @@ class UsersController < ApplicationController
           end
           format.xml  { render :xml => @user.to_xml, :status => :created, :location => @user }
         else
-          format.html { render :action => 'new' }
+          # Clear the password and password confirmation fields.
+          @user.password = @user.password_confirmation = nil
+          format.html { render :action => 'new',     :status => :unprocessable_entity }
           format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
         end
       end
     end
   end
-  
+
   def profile
     @user = current_user
     render :action => 'show'
@@ -102,7 +104,7 @@ class UsersController < ApplicationController
         end
         format.xml  { head :ok }
       else
-        format.html { render :action => 'edit' }
+        format.html { render :action => 'edit',    :status => :unprocessable_entity }
         format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
       end
     end
@@ -114,7 +116,7 @@ class UsersController < ApplicationController
   def confirm_destroy
   end
 
-  # Deletes an user.
+  # Deletes a user.
   #
   # * DELETE /users/:id
   def destroy
@@ -157,7 +159,7 @@ class UsersController < ApplicationController
 
   # Generates a new verification code and sends it to the user's email address.
   # 
-  # * GET /users/1/send_verification_email
+  # * GET /users/:id/send_verification_email
   def send_verification_email
     unless @user.verified?
       @user.reset_verification_code
