@@ -58,6 +58,7 @@ module HtmlEditorHelper
           theme_advanced_buttons1 : "bold,italic,separator,#{heading},abbr,separator,strikethrough,bullist,numlist,link,add_video_button#{",code" if logged_in? && current_user.has_role?("admin", "final_editor")}",
           theme_advanced_buttons2 : "",
           theme_advanced_buttons3 : "",
+          entity_encoding : "raw",
           setup : function(ed) {
             ed.onInit.add(function(ed) {
                 ed.setContent('#{escape_javascript(value)}');
