@@ -13,7 +13,8 @@ class ImporterTest < ActiveSupport::TestCase
   
   def test_should_create_content_instances_with_correct_types
     assert_difference 'Page.count', 7 do
-      instances = Importer.import!(@pages_spreadsheet_path, @root_section)
+      importer = Importer.import!(@pages_spreadsheet_path, @root_section)
+      instances = importer.instances
       
       instances.each do |instance|
         assert !instance.new_record?
@@ -22,8 +23,9 @@ class ImporterTest < ActiveSupport::TestCase
   end
   
   def test_should_create_default_content_type_instances_when_no_content_type_is_specified
-    assert_difference "#{Importer::IMPORTABLE_CONTENT_TYPES[Importer::DEFAULT_TYPE][:type]}.count", 7 do
-      instances = Importer.import!(@pages_spreadsheet_path, @root_section)
+    assert_difference "Page.count", 7 do
+      importer = Importer.import!(@pages2_spreadsheet_path, @root_section)
+      instances = importer.instances
       
       instances.each do |instance|
         assert !instance.new_record?
@@ -32,7 +34,8 @@ class ImporterTest < ActiveSupport::TestCase
   end
   
   def test_should_set_correct_content_type_attributes_on_import
-    instances = Importer.import!(@pages_spreadsheet_path, @root_section)
+    importer = Importer.import!(@pages_spreadsheet_path, @root_section)
+    instances = importer.instances
     
     %w( foo bar baz quux mos henk def ).each_with_index do |title, index|
       assert_equal title, instances[index].title
@@ -40,7 +43,8 @@ class ImporterTest < ActiveSupport::TestCase
   end
   
   def test_should_set_correct_meta_attributes_on_import
-    instances = Importer.import!(@pages_spreadsheet_path, @root_section)
+    importer = Importer.import!(@pages_spreadsheet_path, @root_section)
+    instances = importer.instances 
     
     [ true, false, true, true, false, true, true ].each_with_index do |show_in_menu, index|
       assert_equal show_in_menu, instances[index].node.show_in_menu
@@ -49,7 +53,8 @@ class ImporterTest < ActiveSupport::TestCase
   
   def test_should_create_nested_sections_as_required
     assert_difference 'Section.count', 4 do
-      instances = Importer.import!(@pages_spreadsheet_path, @root_section)
+      importer = Importer.import!(@pages_spreadsheet_path, @root_section)
+      instances = importer.instances
     
       first_child_section = @root_section_node.children.sections.find_by_title('sectie 1')
       second_child_section = @root_section_node.children.sections.find_by_title('sectie')

@@ -175,6 +175,8 @@ nl:
         description: Beschrijving
       node:
         expires_on: Vervaldatum
+        location: Locatie
+        parent: Bovenliggende node
       page:
         body: Tekst
         preamble: Samenvatting

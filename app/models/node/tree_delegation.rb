@@ -5,7 +5,7 @@ module Node::TreeDelegation
 
       sortable :scope => :ancestry
 
-      validates_presence_of :parent, :unless => lambda {|n| Node.count.zero? || (Node.root && Node.root == n ) }
+      validate :parent_should_be_valid, :unless => lambda {|n| Node.count.zero? || (Node.root && Node.root == n ) }
 
       validate :parent_should_allow_type
 
@@ -167,7 +167,13 @@ module Node::TreeDelegation
     # checks whether the content type is valid as a child of the parent
     def parent_should_allow_type
       unless self.parent.nil? || self.content_class.valid_parent_class?(self.parent.content_class)
-        errors.add_to_base "'#{self.parent.content_class.human_name}' #{I18n.t('tree_delegation.doesnt_accept')} '#{self.content_class.human_name}' #{:type}."
+        self.errors.add_to_base "'#{self.parent.content_class.human_name}' #{I18n.t('tree_delegation.doesnt_accept')} '#{self.content_class.human_name}' #{:type}."
+      end
+    end
+
+    def parent_should_be_valid
+      if self.parent.blank?
+        self.errors.add_to_base(I18n.t('node.parent_invalid'))
       end
     end
 

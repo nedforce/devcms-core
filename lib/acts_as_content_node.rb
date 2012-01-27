@@ -105,7 +105,7 @@ module Acts
       
         define_callbacks :before_paranoid_delete, :after_paranoid_delete
   
-        has_one :node, :as => :content, :autosave => true
+        has_one :node, :as => :content, :autosave => true, :validate => true
 
         if Node.content_columns.map(&:name).include?('deleted_at')
           default_scope :joins => :node, :conditions => Node.default_scope_conditions
@@ -115,8 +115,6 @@ module Acts
         named_scope :accessible,  lambda { { :conditions => Node.accessibility_and_visibility_conditions } }
 
         validates_presence_of :node
-
-        validate :ensure_node_is_valid
 
         before_destroy do |content|
           content.node.destroy(:destroy_content_node => false)
@@ -254,27 +252,26 @@ module Acts
         # Bit of a hack. Should only be defined for content classes that allow attachments as a child
         node.children.with_content_type('AttachmentTheme').accessible
       end
-    
-      private
+      
+      # Fix error reporting when there are multiple errors on the associated node's base
+      def valid?
+        result = super
+        
+        self.errors.instance_variable_get('@errors').delete('node.base')
+        
+        if self.node.errors.on_base
+          self.node.errors.on_base.each do |error|
+            self.errors.add_to_base(error)
+          end
+        end
+        
+        result
+      end
+      
+    private
   
       def associate_node
         self.build_node :content => self
-      end
-
-      def ensure_node_is_valid
-        unless self.node.valid?            
-          self.node.errors.each do |k, v|
-            self.errors.add(k.to_sym, v)
-          end
-        end
-      end
-
-      def ensure_node_is_valid
-        unless self.node.valid?            
-          self.node.errors.each do |k, v|
-            self.errors.add(k.to_sym, v)
-          end
-        end
       end
 
       def update_url_alias_if_title_changed
