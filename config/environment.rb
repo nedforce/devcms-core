@@ -31,9 +31,7 @@ config.gem 'spreadsheet',           :version => '~> 0.6.5.2'
 config.gem "roo",                   :version => "~> 1.10.1"
 
 config.after_initialize do
-  DEVCMS_INITIALIZED = true
+  DEVCMS_CORE_INITIALIZED = true
   
-  if ActiveRecord::Base.connection.table_exists?('nodes')
-    Node.preload_models!
-  end
+  DevCMSCore.preload_models!
 end
