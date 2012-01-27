@@ -2,11 +2,6 @@ module Node::ContentTypeConfiguration
   
   def self.included(base)
     base.extend(ClassMethods)
-    
-    # Skip model preloading for all Rake tasks
-    unless defined?(Rake)
-      base.preload_models!
-    end
   end
   
   def content_type_configuration 
@@ -31,7 +26,7 @@ module Node::ContentTypeConfiguration
     # Ensures all models register themselves
     def preload_models!
       # We can only preload the models when the DevCMS framework has been fully initialized
-      return unless defined?(DEVCMS_INITIALIZED)
+      return if !defined?(DEVCMS_INITIALIZED) || defined?(Rake)
       
       puts "\"Preloading all models, this might take a while..\""
       
