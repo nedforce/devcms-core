@@ -2,6 +2,8 @@ class DevCMSCore
   
   @@modules = []
   
+  @@content_types = []
+  
   @@content_types_configuration = {}
   
   def self.root
@@ -20,8 +22,13 @@ class DevCMSCore
     @@modules
   end
   
+  def self.registered_content_types
+    @@content_types
+  end
+  
   def self.register_content_type(type, configuration)
-    name = type.is_a?(String) ? type : type.name    
+    name = type.is_a?(String) ? type : type.name
+    @@content_types << name
     @@content_types_configuration[name] = configuration.merge(DevCMS.content_types_configuration[name] || {})
   end
 
@@ -35,8 +42,8 @@ class DevCMSCore
   
   # Ensures all models register themselves
   def self.preload_models!
-    # We can only preload the models when the DevCMS framework has been fully initialized
-    return if !defined?(DEVCMS_CORE_INITIALIZED) || defined?(Rake) || !ActiveRecord::Base.connection.table_exists?('nodes')
+    # We can only preload the models when the DevCMS framework has been fully initialized and the nodes table exists
+    return unless defined?(DEVCMS_CORE_INITIALIZED) && ActiveRecord::Base.connection.table_exists?('nodes')
     
     puts "\"Preloading all models, this might take a while..\""
     

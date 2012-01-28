@@ -65,7 +65,7 @@ class Image < FlexImage::Model
   
   validates_numericality_of :vertical_offset, :only_integer => true, :allow_blank => true, :greater_than_or_equal => 0 
 
-  default_scope :joins => :node, :conditions => Node.default_scope_conditions, :select => (self.column_names - DEFAULT_COLUMNS_TO_EXCLUDE_FROM_SELECT).map { |column| "#{self.table_name}.#{column}" }.join(', ')
+  default_scope :conditions => "#{self.table_name}.deleted_at IS NULL", :select => (self.column_names - DEFAULT_COLUMNS_TO_EXCLUDE_FROM_SELECT).map { |column| "#{self.table_name}.#{column}" }.join(', ')
   
   named_scope :select_all_columns, :select => self.column_names.map { |column| "#{self.table_name}.#{column}" }.join(', ')
   

@@ -107,12 +107,12 @@ module Acts
   
         has_one :node, :as => :content, :autosave => true, :validate => true
 
-        if Node.content_columns.map(&:name).include?('deleted_at')
-          default_scope :joins => :node, :conditions => Node.default_scope_conditions
+        if base.content_columns.map(&:name).include?('deleted_at')
+          default_scope :conditions => "#{base.table_name}.deleted_at IS NULL"
         end
 
-        named_scope :with_parent, lambda { |node, options| options.merge({:conditions => [ 'nodes.ancestry = ?', node.child_ancestry ] }) }
-        named_scope :accessible,  lambda { { :conditions => Node.accessibility_and_visibility_conditions } }
+        named_scope :with_parent, lambda { |node, options| options.merge({:include => :node, :conditions => [ 'nodes.ancestry = ?', node.child_ancestry ] }) }
+        named_scope :accessible,  lambda { { :include => :node, :conditions => Node.accessibility_and_visibility_conditions } }
 
         validates_presence_of :node
 
@@ -123,6 +123,8 @@ module Acts
         before_update :update_url_alias_if_title_changed, :touch_node
 
         after_save :update_search_index
+        
+        after_paranoid_delete :copy_deleted_at_from_node
   
         delegate :update_search_index, :expirable?, :expiration_required?, :expired?, :expiration_container?, :to => :node
   
@@ -283,6 +285,13 @@ module Acts
 
       def touch_node
         self.node.updated_at = Time.now
+      end
+      
+      def copy_deleted_at_from_node
+        Node.unscoped do
+          node_deleted_at = self.node.deleted_at
+          self.class.update_all({ :deleted_at => node_deleted_at, :updated_at => node_deleted_at }, self.class.primary_key => id)
+        end
       end
     end
   

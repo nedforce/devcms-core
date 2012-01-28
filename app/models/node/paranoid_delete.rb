@@ -5,7 +5,7 @@ module Node::ParanoidDelete
       extend(ClassMethods)
     
       if base.content_columns.map(&:name).include?('deleted_at')
-        default_scope :conditions => base.default_scope_conditions
+        default_scope :conditions => "#{base.table_name}.deleted_at IS NULL"
       end
     
       define_callbacks :before_paranoid_delete, :after_paranoid_delete
@@ -28,10 +28,6 @@ module Node::ParanoidDelete
   end
   
   module ClassMethods
-    def default_scope_conditions
-      "#{self.table_name}.deleted_at IS NULL"
-    end
-    
     def unscoped(&block)
       return unless block_given?
       self.with_exclusive_scope &block
@@ -57,9 +53,11 @@ private
   def run_paranoid_delete_callbacks(callback, terminator)
     return false unless self.run_callbacks(callback, &terminator) && self.content.run_callbacks(callback, &terminator)
 
-    self.descendants.each do |descendant|
-      # No need to run the callback on descendant itself, as the callback of self takes care of the whole subtree.
-      return false unless descendant.content.run_callbacks(callback, &terminator)
+    Node.unscoped do
+      self.descendants.each do |descendant|
+        # No need to run the callback on descendant itself, as the callback of self takes care of the whole subtree.
+        return false unless descendant.content.run_callbacks(callback, &terminator)
+      end
     end
 
     true

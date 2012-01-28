@@ -638,7 +638,7 @@ protected
   def remove_associated_content
     subtree_ids = self.subtree_ids
     
-    # Also destroy all content copies and internal links that are associated with any of the nodes in the subtree
+    # Destroy all content copies and internal links that are associated with any of the nodes in the subtree
     ContentCopy.destroy_all [ 'copied_node_id IN (?)', subtree_ids ]
     InternalLink.destroy_all [ 'linked_node_id IN (?)', subtree_ids ]
 

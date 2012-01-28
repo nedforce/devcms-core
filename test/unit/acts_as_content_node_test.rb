@@ -246,33 +246,34 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
 
     assert !page.save
     assert !page.valid?
-    assert page.errors.on(:content_box_title)
+    assert page.errors.on('node.content_box_title')
 
     page = build_page :content_box_title => 'a' * 256
 
     assert !page.save
     assert !page.valid?
-    assert page.errors.on(:content_box_title)
+    assert page.errors.on('node.content_box_title')
   end
 
   def test_content_box_icon_should_be_valid
     page = build_page :content_box_icon => 'foo'
     assert !page.save
     assert !page.valid?
-    assert page.errors.on(:content_box_icon)
+    assert page.errors.on('node.content_box_icon')
   end
 
   def test_content_box_colour_should_be_valid
     page = build_page :content_box_colour => 'foo'
     assert !page.save
     assert !page.valid?
-    assert page.errors.on(:content_box_colour)
+    assert page.errors.on('node.content_box_colour')
   end
 
   def test_content_box_number_of_items_should_be_valid
     page = build_page :content_box_number_of_items => 1
     assert !page.save
     assert !page.valid?
+    puts page.errors.inspect
     assert page.errors.on_base
   end
 
