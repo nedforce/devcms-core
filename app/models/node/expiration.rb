@@ -10,7 +10,7 @@ module Node::Expiration
     
       before_validation :set_default_expires_on, :if => :expiration_required?
       
-      validate :expires_on_valid?, :ensure_valid_responsible_user_role, :if => lambda {|node| node.expires_on_changed? || node.content.changed? }
+      validate :expires_on_valid?, :ensure_valid_responsible_user_role, :if => lambda {|node| node.expires_on_changed? || (node.content && node.content.changed?) }
       
       if SETTLER_LOADED
         validates_presence_of :expires_on, :if => :expiration_required?
