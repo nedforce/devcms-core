@@ -81,7 +81,7 @@ class UsersControllerTest < ActionController::TestCase
     assert_redirected_to login_path
   end
 
-  def test_should_send_verification_email_on_creation
+  def test_should_send_verification_email_on_create
     assert_difference 'ActionMailer::Base.deliveries.size', 1 do
       create_user
     end
@@ -149,7 +149,7 @@ class UsersControllerTest < ActionController::TestCase
 
   def test_should_not_create_user_with_invalid_login
     assert_no_difference('User.count') do
-      create_user(:login => nil)
+      create_user(:login => 'invalid%login')
     end
     assert_response :unprocessable_entity
   end
