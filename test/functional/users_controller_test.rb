@@ -3,9 +3,9 @@ require File.dirname(__FILE__) + '/../test_helper'
  DevCMS.instance_eval do
     def users 
       {
-        :verify => true,
+        :verify       => true,
         :allow_invite => true,
-        :invite_only => true
+        :invite_only  => true
       }
     end
   end
@@ -96,62 +96,71 @@ class UsersControllerTest < ActionController::TestCase
   def test_should_subscribe_to_newsletter_archives_on_create
     assert_difference('User.count', 1) do
       create_user(:newsletter_archive_ids => [ newsletter_archives(:devcms_newsletter_archive).id ])
-      assert newsletter_archives(:devcms_newsletter_archive).users.include?(assigns(:user))
     end
+    assert newsletter_archives(:devcms_newsletter_archive).users.include?(assigns(:user))
   end
   
   def test_should_subscribe_to_interest_on_create
     assert_difference('User.count', 1) do
       create_user(:interest_ids => [ interests(:art_and_culture).id ])
-      assert interests(:art_and_culture).users.include?(assigns(:user))
     end
+    assert interests(:art_and_culture).users.include?(assigns(:user))
   end
   
   def test_should_require_login_on_create
     assert_no_difference 'User.count' do
       create_user(:login => nil)
-      assert assigns(:user).errors.on(:login)
-      assert_response :success
     end
+    assert assigns(:user).errors.on(:login)
+    assert_response :unprocessable_entity
   end
   
   def test_should_require_unique_login_on_create
     assert_no_difference 'User.count' do
       create_user(:login => users(:gerjan).login.upcase)
-      assert assigns(:user).errors.on(:login)
-      assert_response :success
     end
+    assert assigns(:user).errors.on(:login)
+    assert_response :unprocessable_entity
   end
   
   def test_should_require_non_reserved_login_on_create
     assert_no_difference 'User.count' do
       create_user(:login => 'burgemeester')
-      assert assigns(:user).errors.on(:login)
-      assert_response :success
     end
+    assert assigns(:user).errors.on(:login)
+    assert_response :unprocessable_entity
   end
   
   def test_should_require_password_on_create
     assert_no_difference 'User.count' do
       create_user(:password => nil)
-      assert assigns(:user).errors.on(:password)
-      assert_response :success
-    end    
+    end
+    assert assigns(:user).errors.on(:password)
+    assert_response :unprocessable_entity
   end
-  
+
   def test_should_require_password_confirmation_on_create
     assert_no_difference 'User.count' do
       create_user(:password_confirmation => nil)
-      assert assigns(:user).errors.on(:password_confirmation)
-      assert_response :success
-    end    
+    end
+    assert assigns(:user).errors.on(:password_confirmation)
+    assert_response :unprocessable_entity
   end
 
   def test_should_not_create_user_with_invalid_login
     assert_no_difference('User.count') do
       create_user(:login => nil)
     end
-    assert_response :success
+    assert_response :unprocessable_entity
+  end
+
+  def test_should_clear_password_fields_on_invalid_create
+    assert_no_difference 'User.count' do
+      create_user(:login => nil)
+    end
+    assert_nil assigns(:user).password
+    assert_nil assigns(:user).password_confirmation
+    assert_response :unprocessable_entity
   end
   
   def test_should_show_edit
@@ -183,7 +192,7 @@ class UsersControllerTest < ActionController::TestCase
   def test_should_not_update_user_with_invalid_attr
     login_as :sjoerd
     put :update, :id => users(:sjoerd).login, :user => {:email_address => 'sjoerd@invalid'}
-    assert_response :success
+    assert_response :unprocessable_entity
     assert assigns(:user).errors.on(:email_address)
   end
   
@@ -202,15 +211,15 @@ class UsersControllerTest < ActionController::TestCase
   def test_should_verify_user
     u = users(:unverified_user)
     get :verification, :id => u.login, :code => u.verification_code
-    assert assigns(:user).verified, "User not verified!"
+    assert assigns(:user).verified, 'User not verified!'
     assert_response :redirect
-    assert flash.has_key?(:notice), "Flash wasn't set."  
+    assert flash.has_key?(:notice), "Flash wasn't set."
   end
   
   def test_should_not_verify_user_on_invalid_code
     u = users(:unverified_user)
-    get :verification, :id => u.login, :code => "Some invalid code"
-    assert !assigns(:user).verified, "User still verified!"
+    get :verification, :id => u.login, :code => 'Some invalid code'
+    assert !assigns(:user).verified, 'User still verified!'
     assert_response :success
     assert_template 'verification_failed'
   end
@@ -259,7 +268,7 @@ class UsersControllerTest < ActionController::TestCase
   
   def test_should_redirect_if_user_not_found
     assert_no_difference 'ActionMailer::Base.deliveries.size' do
-      get :send_password, :login_name => "idontexist"
+      get :send_password, :login_name => 'idontexist'
       assert_response :redirect
       assert flash.has_key?(:warning), "Flash wasn't set."
     end
@@ -275,7 +284,7 @@ class UsersControllerTest < ActionController::TestCase
 
     def create_user(attributes = {}, options = {})
       invitation_email = options.has_key?(:invitation_email) ? options[:invitation_email] : 'test@test.nl'
-      invitation_code = options.has_key?(:invitation_code) ? options[:invitation_code] : User.send(:generate_invitation_code, invitation_email)
+      invitation_code  = options.has_key?(:invitation_code)  ? options[:invitation_code]  : User.send(:generate_invitation_code, invitation_email)
 
       post :create, {
         :invitation_email => invitation_email,
