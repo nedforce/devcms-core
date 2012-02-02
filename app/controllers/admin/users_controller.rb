@@ -24,7 +24,7 @@ class Admin::UsersController < Admin::AdminController
       # a version of Rails > 2.0.2.
       @sort_field = 'users.created_at' if @sort_field == 'created_at'
       @users      = User.all(:include => [ :newsletter_archives, :interests ], :conditions => filter_conditions, :order => "#{@sort_field} #{@sort_direction}", :page => { :size => @page_limit, :current => @current_page })
-      @user_count = @user.size
+      @user_count = @users.size
     else
       @users      = User.all(:include => [ :newsletter_archives, :interests ], :conditions => filter_conditions, :order => "login #{@sort_direction}")
       @users      = @users.sort_by { |user| user.newsletter_archives.sort_by { |archive| archive.title.upcase }.map{ |archive| archive.title }.join(', ') }
