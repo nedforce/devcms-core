@@ -32,14 +32,14 @@ class SessionsControllerTest < ActionController::TestCase
   def test_should_fail_login
     post :create, :login => users(:gerjan).login, :password => 'bad password'
     assert_nil session[:user_id]
-    assert_response :success
+    assert_response :unprocessable_entity
   end
   
    def test_should_fail_login_if_not_verified
     post :create, :login => users(:unverified_user).login, :password => 'pass'
     assert_nil session[:user_id]
     assert assigns(:user), "No @user"
-    assert_response :success
+    assert_response :unprocessable_entity
   end
 
   def test_should_logout

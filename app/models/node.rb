@@ -641,6 +641,8 @@ protected
     # Destroy all content copies and internal links that are associated with any of the nodes in the subtree
     ContentCopy.destroy_all [ 'copied_node_id IN (?)', subtree_ids ]
     InternalLink.destroy_all [ 'linked_node_id IN (?)', subtree_ids ]
+    ContentRepresentation.destroy_all [ 'parent_id IN (:subtree) or content_id IN (:subtree)', { :subtree => subtree_ids} ]
+    Section.update_all({:frontpage_node_id => nil}, {:frontpage_node_id => subtree_ids})
 
     # Destroy any node categories, role assignments, synonyms or abbreviations that are associated with any of the nodes in the subtree
     [ NodeCategory, RoleAssignment, Synonym, Abbreviation ].each do |klass|

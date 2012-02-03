@@ -39,6 +39,8 @@ module Node::UrlAliasing
     # Set a custom URL alias
     base.before_update :set_custom_url_alias
     
+    base.before_paranoid_delete :clear_aliases
+    
     base.extend(ClassMethods)
   end
   
@@ -135,6 +137,11 @@ module Node::UrlAliasing
     def should_not_have_reserved_custom_url_alias
       errors.add(:url_alias, :reserved_custom_url_alias) if self.class.url_alias_reserved?(self.custom_url_alias)
     end
+    
+    def clear_aliases
+      self.class.update_all({ :url_alias => nil, :custom_url_alias => nil }, [ 'id IN (?)', self.subtree_ids ])
+    end
+      
 
     module ClassMethods  
       # Class methods

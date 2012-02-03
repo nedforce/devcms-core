@@ -173,6 +173,19 @@ class NodeURLAliasTest < ActiveSupport::TestCase
     assert cn.node.errors.on(:custom_url_alias)
   end
   
+  def test_should_clear_alliases_on_paranoid_destroy
+    cn = create_page(:title => 'foobarbaz').node
+    assert 'foobarbaz', cn.url_alias
+    cn2 = create_page.node
+    cn2.url_alias = 'foobarbaz'
+    assert cn.valid?
+    assert !cn2.valid?
+    cn.paranoid_delete!
+    assert_nil cn.reload
+    assert_equal [], Node.all_including_deleted(:conditions => "url_alias = 'foobarbaz'")
+    assert cn2.valid?, cn2.errors.full_messages.to_sentence
+  end
+  
 protected
 
   def create_page(options = {})
