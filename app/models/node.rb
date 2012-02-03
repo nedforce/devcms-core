@@ -418,8 +418,8 @@ class Node < ActiveRecord::Base
     @containing_site = if self.depth.zero?
       Node.root
     else
-      node = Node.find(self.path_ids[1], :include => :content) rescue nil
-      node && node.content.is_a?(Site) ? node : Node.root
+      node = Node.find(self.path_ids[1]) rescue nil
+      node && node.sub_content_type == 'Site' ? node : Node.root
     end
   end
 

@@ -2,7 +2,7 @@ class ImporterException < RuntimeError
 end
 
 class Importer
-  
+
   def self.import!(file, target_section, save_new_content = true)
     self.new(file, target_section, save_new_content).tap do |importer|
       importer.import!
@@ -13,16 +13,13 @@ class Importer
     @target_section = target_section
     @save_new_content = save_new_content
 
-    file_path = file.is_a?(String) ? file : file.path
+    @file_path = file.is_a?(String) ? file : file.path
     
     # Filename needs to end in '.xlsx', otherwise roo will not recognize it as an Excel spreadsheet ...
-    unless File.extname(file_path) == ".xlsx"
-      File.rename(file_path, "#{file_path}.xlsx")
-      file_path += ".xlsx"
+    unless File.extname(@file_path) == ".xlsx"
+      File.rename(@file_path, "#{@file_path}.xlsx")
+      @file_path += ".xlsx"
     end
-    
-    @spreadsheet = Excelx.new(file_path)
-    @spreadsheet.default_sheet = @spreadsheet.sheets.first
   end
   
   def import!
@@ -30,11 +27,16 @@ class Importer
     @errors = []
     
     begin
+      @spreadsheet = Excelx.new(@file_path)
+      @spreadsheet.default_sheet = @spreadsheet.sheets.first
+            
       ActiveRecord::Base.transaction do
         self.parse_spreadsheet
       end
-    rescue Exception => e
+    rescue ImporterException => e
       @errors << e.message
+    rescue
+      @errors << "bestand voldoet niet aan XLSX formaat"
     end
   end
   

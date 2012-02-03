@@ -115,9 +115,9 @@ class Admin::SectionsController < Admin::AdminController
     importer = Importer.import!(params[:data], @section)
     
     if importer.success?
-      flash.now[:notice] = "#{importer.instances.size} content items geimporteerd."
+      flash.now[:notice] = "#{importer.instances.size} content items aangemaakt."
     else
-      flash.now[:notice] = "Importeren mislukt. Controleer het formaat van het opgegeven bestand en probeer opnieuw. Foutmelding: #{importer.errors.join(', ')}"
+      flash.now[:notice] = "Importeren mislukt. Controleer het formaat van het opgegeven bestand en probeer opnieuw. Foutmelding: '#{importer.errors.join(', ')}'."
     end
     
     respond_to do |format|
