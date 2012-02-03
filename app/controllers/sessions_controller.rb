@@ -5,14 +5,14 @@
 # and the +destroy+ action logs the user out.
 
 class SessionsController < ApplicationController
-  
+
   # Makes sure that users that are already logged in
   # can't request the login form, or login again.
   before_filter :redirect_logged_in_users, :only => [ :new, :create ]
-  
+
   # SSL encryption is required for the +new+ and +create+ actions.
   ssl_required :new, :create
-  
+
   # * GET /session/new
   def new
   end
@@ -21,9 +21,9 @@ class SessionsController < ApplicationController
   def create
     @user = User.authenticate(params[:login], params[:password])
     self.current_user = @user if @user && @user.verified?
-    
+
     if logged_in?
-      if params[:remember_me] == "1"
+      if params[:remember_me] == '1'
         self.current_user.remember_me unless current_user.remember_token?
         cookies[:auth_token] = { :value => self.current_user.remember_token, :expires => self.current_user.remember_token_expires_at }
       end
@@ -32,10 +32,10 @@ class SessionsController < ApplicationController
       redirect_back_or_default(profile_path, false)
     elsif @user && !@user.verified?
       flash.now[:notice] = I18n.t('sessions.not_yet_verified') + ' ' + I18n.t('sessions.no_email?') + " <a href = \"#{send_verification_email_user_path(@user)}\">#{I18n.t('sessions.request_new_code')}</a>"
-      render :action => 'new'
+      render :action => 'new', :status => :unprocessable_entity
     else
       flash.now[:warning] = I18n.t('sessions.user_or_password_error')
-      render :action => 'new'
+      render :action => 'new', :status => :unprocessable_entity
     end
   end
 
@@ -56,9 +56,9 @@ class SessionsController < ApplicationController
       redirect_back_or_default(root_path, false)
     end
   end
-  
+
   protected
-  
+
   # Redirects users that are already logged in.
   def redirect_logged_in_users
     if logged_in?

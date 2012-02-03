@@ -12,10 +12,10 @@
     .formFieldCt.clearfix
       %label.user{ :for => 'password' }
         = t 'sessions.password'
-      = password_field_tag 'password', params[:password], :class => 'textfield'
+      = password_field_tag 'password', nil, :class => 'textfield'
 
     %div
-      = check_box_tag 'remember_me', params[:password]
+      = check_box_tag 'remember_me', '1', params[:remember_me]
       %label{ :for => 'remember_me' }
         = t 'sessions.remember'
 
