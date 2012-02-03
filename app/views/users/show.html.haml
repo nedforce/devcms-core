@@ -73,6 +73,6 @@
     = render :partial => 'newsletters'
     = render :partial => 'interests'
 
-    .formButtonCt
+    .formButtonCt.clearfix
       = submit_tag t('users.save'),                  :class => 'submit left'
       = link_to    t('layouts.logout'), logout_path, :class => 'right'
