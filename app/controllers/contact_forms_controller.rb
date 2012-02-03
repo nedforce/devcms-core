@@ -12,18 +12,18 @@ class ContactFormsController < ApplicationController
     @entered_fields = []
 
     respond_to do |format|
-      format.html # show.html.erb
+      format.html # show.html.haml
     end
   end
-  
+
   # * POST /contact_forms/:id/send_message
   def send_message
     @contact_form_field = params[:contact_form_field]
-    
+
     get_entered_fields
     respond_to do |format|
       if entered_all_obligatory_fields?(@contact_form_field)
-       
+
         # Check for send method
         if @contact_form.send_method == ContactForm::SEND_METHOD_DATABASE
           # Store response to database
@@ -87,7 +87,7 @@ class ContactFormsController < ApplicationController
   # Returns +true+ if this is the case, +false+ otherwise.
   def entered_all_obligatory_fields?(array)
     @contact_form.obligatory_field_ids.each do |field_id|
-      if array["#{field_id}"].blank?
+      if array.blank? || array["#{field_id}"].blank?
         return false
       end
     end
