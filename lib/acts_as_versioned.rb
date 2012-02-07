@@ -90,7 +90,9 @@ module Acts
             if enabled
               self.new_attributes = self.attributes.dup
               # Copy deffered node attributes
-              deffered_attribute_values = Hash[deffered_attributes.map {|key| [key, self.node.send(key)]}]
+              deffered_attribute_values = deffered_attributes.inject({}){ |option, key| option.merge!(key => self.node.send(key)) }
+              # Ruby 1.8.7 syntax:
+              #deffered_attribute_values = Hash[deffered_attributes.map {|key| [key, self.node.send(key)]}]
 
               self.reload unless self.new_record?
               
