@@ -124,7 +124,7 @@ module Acts
 
         after_save :update_search_index
         
-        after_paranoid_delete :copy_deleted_at_from_node
+        after_paranoid_delete :copy_deleted_at_from_node, :destroy_all_associated_versions
   
         delegate :update_search_index, :expirable?, :expiration_required?, :expired?, :expiration_container?, :to => :node
   
@@ -292,6 +292,10 @@ module Acts
           node_deleted_at = self.node.deleted_at
           self.class.update_all({ :deleted_at => node_deleted_at, :updated_at => node_deleted_at }, self.class.primary_key => id)
         end
+      end
+
+      def destroy_all_associated_versions
+        self.versions.destroy_all
       end
     end
   

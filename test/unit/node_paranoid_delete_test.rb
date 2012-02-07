@@ -7,6 +7,7 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
     @root_section_node = nodes(:root_section_node)
     @economie_section = sections(:economie_section)
     @economie_section_node = nodes(:economie_section_node)
+    @editor = users(:editor)
   end
   
   def test_should_not_paranoid_delete_root
@@ -87,6 +88,20 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
     
     assert !InternalLink.exists?(il1)
     assert !InternalLink.exists?(il2)
+  end
+
+  def test_paranoid_delete_should_also_delete_associated_versions
+    page = Page.new(:title => 'Page title', :preamble => 'Ambule', :body => 'Version for delete', :parent => @economie_section_node, :expires_on => 1.day.from_now.to_date)
+
+    assert_difference('Page.count', 1) do
+      assert_difference('Version.count', 1) do
+        assert page.save(:user => @editor)
+      end
+    end
+
+    assert_difference('Version.count', -1) do
+      page.node.paranoid_delete!
+    end
   end
 
 protected
