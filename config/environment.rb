@@ -32,6 +32,6 @@ config.gem "roo",                   :version => "~> 1.10.1"
 
 config.after_initialize do
   DEVCMS_CORE_INITIALIZED = true
-  
+
   DevCMSCore.preload_models!
 end
