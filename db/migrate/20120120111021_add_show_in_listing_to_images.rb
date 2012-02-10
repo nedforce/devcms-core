@@ -1,4 +1,8 @@
 class AddShowInListingToImages < ActiveRecord::Migration
+  
+  class Image < ActiveRecord::Base
+  end
+  
   def self.up
     add_column :images, :show_in_listing, :boolean, :default => true, :null => false
     
