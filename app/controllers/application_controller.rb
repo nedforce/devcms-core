@@ -330,7 +330,7 @@ protected
   def set_private_menu
     if logged_in?
       @private_menu_items = find_accessible_private_items_for(current_user)
-      @private_menu_items.unshift([["Profielpagina", profile_path]])
+      @private_menu_items.unshift(['Profielpagina', profile_path])
     else
       @private_menu_items = []
     end
