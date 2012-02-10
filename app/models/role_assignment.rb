@@ -29,15 +29,15 @@ class RoleAssignment < ActiveRecord::Base
   protected
 
   def content_class
-    # TODO: Refactor "unless if"
-    unless ALLOWED_TYPES.include?(self.node.content_type)
+    if self.node && !ALLOWED_TYPES.include?(self.node.content_type)
       errors.add(:node, :invalid_node_type)
-    end if self.node
+    end
   end
 
   def root_if_admin
-    # TODO: Refactor "unless != || if"
-    errors.add(:node, :admin_requires_root) unless self.name != "admin" || self.node.root? if self.node
+    if self.node && self.name == "admin" && !self.node.root?
+      errors.add(:node, :admin_requires_root)
+    end
   end
 
   # Validator method to check whether the +User+ this +RoleAssignment+ is being created
@@ -46,15 +46,3 @@ class RoleAssignment < ActiveRecord::Base
     errors.add_to_base(:inherited_roles) if user && user.has_role_on?(user.role_assignments.map(&:name), node)
   end
 end
-
-# == Schema Information
-#
-# Table name: role_assignments
-#
-#  id         :integer         not null, primary key
-#  user_id    :integer
-#  node_id    :integer
-#  name       :string(255)     not null
-#  created_at :datetime
-#  updated_at :datetime
-#

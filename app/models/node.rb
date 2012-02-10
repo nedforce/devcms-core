@@ -636,17 +636,29 @@ protected
   end
   
   def remove_associated_content
-    subtree_ids = self.subtree_ids
+    Node.unscoped do
+      deleted_node_ids = self.subtree_ids
     
-    # Destroy all content copies and internal links that are associated with any of the nodes in the subtree
-    ContentCopy.destroy_all [ 'copied_node_id IN (?)', subtree_ids ]
-    InternalLink.destroy_all [ 'linked_node_id IN (?)', subtree_ids ]
-    ContentRepresentation.destroy_all [ 'parent_id IN (:subtree) or content_id IN (:subtree)', { :subtree => subtree_ids} ]
-    Section.update_all({:frontpage_node_id => nil}, {:frontpage_node_id => subtree_ids})
+      # Destroy all content copies that are associated with any of the nodes in the subtree and are not a descendant
+      ContentCopy.find_each(:include => :node, :conditions => [ 'copied_node_id IN (:deleted_node_ids) AND nodes.id NOT IN (:deleted_node_ids)', { :deleted_node_ids => deleted_node_ids } ]) do |content_copy|
+        content_copy.destroy
+      end
+      
+      # Destroy all internal links that are associated with any of the nodes in the subtree and are not a descendant
+      InternalLink.find_each(:include => :node, :conditions => [ 'linked_node_id IN (:deleted_node_ids) AND nodes.id NOT IN (:deleted_node_ids)', { :deleted_node_ids => deleted_node_ids } ]) do |internal_link|
+        internal_link.destroy
+      end
+            
+      # Unset frontpage for Sections
+      Section.update_all({ :frontpage_node_id => nil }, { :frontpage_node_id => deleted_node_ids })
 
-    # Destroy any node categories, role assignments, synonyms or abbreviations that are associated with any of the nodes in the subtree
-    [ NodeCategory, RoleAssignment, Synonym, Abbreviation ].each do |klass|
-      klass.destroy_all [ 'node_id IN (?)', subtree_ids ]
+      # Delete any node categories, role assignments, synonyms or abbreviations that are associated with any of the nodes in the subtree
+      [ NodeCategory, RoleAssignment, Synonym, Abbreviation ].each do |klass|
+        klass.delete_all(:node_id => deleted_node_ids)
+      end
+      
+      # Delete content representations where appropriate 
+      ContentRepresentation.delete_all [ 'parent_id IN (:deleted_node_ids) OR content_id IN (:deleted_node_ids)', { :deleted_node_ids => deleted_node_ids } ]
     end
   end
 

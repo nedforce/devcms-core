@@ -54,7 +54,7 @@ private
     return false unless self.run_callbacks(callback, &terminator) && self.content.run_callbacks(callback, &terminator)
 
     Node.unscoped do
-      self.descendants.each do |descendant|
+      self.descendants.find_each(:include => :content) do |descendant|
         # No need to run the callback on descendant itself, as the callback of self takes care of the whole subtree.
         return false unless descendant.content.run_callbacks(callback, &terminator)
       end

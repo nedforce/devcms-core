@@ -124,7 +124,7 @@ module Acts
 
         after_save :update_search_index
         
-        after_paranoid_delete :copy_deleted_at_from_node, :destroy_all_associated_versions
+        after_paranoid_delete :copy_deleted_at_from_node, :delete_all_associated_versions
   
         delegate :update_search_index, :expirable?, :expiration_required?, :expired?, :expiration_container?, :to => :node
   
@@ -294,8 +294,8 @@ module Acts
         end
       end
 
-      def destroy_all_associated_versions
-        self.versions.destroy_all
+      def delete_all_associated_versions
+        self.versions.delete_all
       end
     end
   
