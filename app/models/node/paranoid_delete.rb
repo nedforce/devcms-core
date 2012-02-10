@@ -4,7 +4,7 @@ module Node::ParanoidDelete
     base.class_eval do
       extend(ClassMethods)
     
-      if base.content_columns.map(&:name).include?('deleted_at')
+      if base.content_columns.any? { |column| column.name == 'deleted_at' }
         default_scope :conditions => "#{base.table_name}.deleted_at IS NULL"
       end
     

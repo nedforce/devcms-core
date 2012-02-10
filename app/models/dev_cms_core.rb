@@ -1,8 +1,10 @@
 class DevCMSCore
   
+  MODEL_FILES = Dir["#{RAILS_ROOT}/app/models/*.rb"] + Dir["#{RAILS_ROOT}/vendor/plugins/devcms-*/app/models/*.rb"]
+  
   @@modules = []
   
-  @@content_types = []
+  @@content_types_registered = false
   
   @@content_types_configuration = {}
   
@@ -23,39 +25,37 @@ class DevCMSCore
   end
   
   def self.registered_content_types
-    @@content_types
-  end
-  
-  def self.register_content_type(type, configuration)
-    name = type.is_a?(String) ? type : type.name
-    @@content_types << name
-    @@content_types_configuration[name] = configuration.merge(DevCMS.content_types_configuration[name] || {})
+    content_types_configuration.keys
   end
 
   def self.content_types_configuration
+    register_content_types! unless @content_types_registered
+    
     @@content_types_configuration
   end
 
   def self.content_type_configuration(class_name)
-    @@content_types_configuration[class_name]
+    content_types_configuration[class_name]
   end
   
-  # Ensures all models register themselves
-  def self.preload_models!
-    # We can only preload the models when the DevCMS framework has been fully initialized and the nodes table exists
-    return unless defined?(DEVCMS_CORE_INITIALIZED) && ActiveRecord::Base.connection.table_exists?('nodes')
-    
-    puts "\"Preloading all models, this might take a while..\""
-    
-    (Dir["#{RAILS_ROOT}/app/models/*.rb"] + Dir["#{RAILS_ROOT}/vendor/plugins/devcms-*/app/models/*.rb"]).each do |f|
-      model_type = File.basename(f, '.*').camelize
-      
-      unless model_type == self.name
-        begin
-          model_type.constantize
-        rescue Exception
-        end
+  def self.register_content_type(type, configuration)
+    name = type.is_a?(String) ? type : type.name
+    @@content_types_configuration[name] = configuration.merge(DevCMS.content_types_configuration[name] || {})
+  end
+  
+private
+  
+  # Ensures all content types register themselves
+  def self.register_content_types!
+    puts "\"Registering all content types, this might take a while..\""
+
+    MODEL_FILES.each do |model_file|
+      begin
+        File.basename(model_file, '.*').camelize.constantize
+      rescue Exception
       end
     end
+    
+    @content_types_registered = true
   end
 end

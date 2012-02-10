@@ -29,9 +29,3 @@ config.gem 'tidy',                  :version => '1.1.2'
 config.gem 'whenever',              :version => '>= 0.5.0', :lib => false
 config.gem 'spreadsheet',           :version => '~> 0.6.5.2'
 config.gem "roo",                   :version => "~> 1.10.1"
-
-config.after_initialize do
-  DEVCMS_CORE_INITIALIZED = true
-  
-  DevCMSCore.preload_models!
-end
