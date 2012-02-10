@@ -46,7 +46,6 @@ settings: &settings
     alt: The text above the login form on the login page
     value: ''
     editable: true
-    typecast: html
   signup_page_text:
     alt: The text above the signup form on the signup page
     value: ''
@@ -171,10 +170,6 @@ settings: &settings
     editable: true
     validations:
      presence: true
-  login_page_text:
-    alt: The text above the login form on the login page
-    value: "<p><a href='/privacy'>Hoe gaat de gemeente om met uw privacy?</a></p>"
-    editable: true
   proclaimer_page_url:
     alt: URL van de pagina met de proclaimer voor de website
     value: /proclaimer
