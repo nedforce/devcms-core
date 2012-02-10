@@ -29,7 +29,7 @@ class DevCMSCore
   end
 
   def self.content_types_configuration
-    register_content_types! unless @content_types_registered
+    register_content_types! unless @@content_types_registered
     
     @@content_types_configuration
   end
@@ -56,6 +56,6 @@ private
       end
     end
     
-    @content_types_registered = true
+    @@content_types_registered = true
   end
 end
