@@ -65,7 +65,7 @@ class ApplicationController < ActionController::Base
   # Include all helpers, all the time.
   helper VideoHelper, SitemapsHelper, SearchHelper, PollQuestionsHelper, OwmsMetadataHelper, HtmlEditorHelper, ContactBoxesHelper, CalendarsHelper, AttachmentsHelper, ApplicationHelper, TextHelper, LayoutHelper
 
-  helper_method :secure_url, :current_site
+  helper_method :secure_url, :current_site, :current_user_is_admin?, :current_user_is_editor?, :current_user_is_final_editor?
   
   # Renders confirm_destroy.html.erb if destroy is requested using GET.
   # Hyperlinks with <tt>:method => :delete</tt> will perform a GET request if
@@ -349,8 +349,8 @@ protected
   end
 
   # Returns true if the current user has a particular role on a given node, false otherwise.
-  def current_user_has_role?(role, node)
-    if node && node.id # does this node exist in the database?
+  def current_user_has_role?(role, node = nil)
+    if node
       @current_user.has_role_on?(role, node.new_record? ? node.parent : node)
     else
       @current_user.has_role?(role)
@@ -359,17 +359,17 @@ protected
 
   # Returns true if the current user has admin rights on a given node, false otherwise.
   def current_user_is_admin?(node)
-    current_user_has_role?('admin', node.new_record? ? node.parent : node)
+    current_user_has_role?('admin', node)
   end
 
   # Returns true if the current user has final editor rights on a given node, false otherwise.
   def current_user_is_final_editor?(node)
-    current_user_has_role?('final_editor', node.new_record? ? node.parent : node)
+    current_user_has_role?('final_editor', node)
   end
 
   # Returns true if the current user has editor rights on a given node, false otherwise.
   def current_user_is_editor?(node)
-    current_user_has_role?('editor', node.new_record? ? node.parent : node)
+    current_user_has_role?('editor', node)
   end
 
   # Login as an admin user if the request is local.

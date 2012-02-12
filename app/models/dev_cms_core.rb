@@ -50,6 +50,8 @@ private
     puts "\"Registering all content types, this might take a while..\""
 
     MODEL_FILES.each do |model_file|
+      next if model_file == __FILE__
+      
       begin
         File.basename(model_file, '.*').camelize.constantize
       rescue Exception

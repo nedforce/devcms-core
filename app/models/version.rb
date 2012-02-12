@@ -1,24 +1,9 @@
-# SimplyVersioned 0.9.3
-#
-# Simple ActiveRecord versioning
-# Copyright (c) 2007,2008 Matt Mower <self@mattmower.com>
-# Released under the MIT license (see accompany MIT-LICENSE file)
-#
-# Edited by Gerjan Stokkink
-
-# A Version represents a numbered revision of an ActiveRecord model.
-#
-# The version has two attributes +number+ and +yaml+ where the yaml attribute
-# holds the representation of the ActiveRecord model attributes. To access
-# these call +model+ which will return an instantiated model of the original
-# class with those attributes.
-#
 class Version < ActiveRecord::Base #:nodoc:
   STATUSES = {
     :drafted => 'drafted',
     :unapproved => 'unapproved',
     :rejected => 'rejected'
-  }.freeze
+  }
   
   belongs_to :versionable, :polymorphic => true
   belongs_to :editor, :class_name => 'User'
@@ -69,21 +54,11 @@ class Version < ActiveRecord::Base #:nodoc:
       klass.find(original.id)
     end
     
-    attributes_to_overwrite.except(*original.simply_versioned_excluded_columns).each do |name, value|
+    attributes_to_overwrite.except(*klass.acts_as_versioned_excluded_columns).each do |name, value|
       record.send("#{name}=", value) rescue nil
     end
 
     record
-  end
-  
-  # Return the next higher numbered version, or nil if this is the last version
-  def next
-    self.versionable.versions.next_version(self.number)
-  end
-  
-  # Return the next lower numbered version, or nil if this is the first version
-  def previous
-    self.versionable.versions.previous_version(self.number)
   end
 
 protected

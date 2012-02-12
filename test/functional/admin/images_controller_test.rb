@@ -15,6 +15,7 @@ class Admin::ImagesControllerTest < ActionController::TestCase
   end
 
   def test_should_get_previous
+    @image = Image.select_all_columns.find(@image.id)
     @image.save :user => User.find_by_login('editor')
     
     login_as :sjoerd

@@ -32,13 +32,13 @@ class Event < ActiveRecord::Base
   # Adds support for optional attributes
   has_dynamic_attributes
   
+  attr_accessor :date
+  
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of :title, :calendar
   validates_length_of   :title, :in => 2..255, :allow_blank => true
   
   before_validation :set_start_and_end_time, :if => :start_time
-  
-  composed_of :date, :class_name => 'Date', :mapping => [ :to_date ], :allow_nil => true
   
   has_parent :calendar
   
@@ -51,6 +51,8 @@ class Event < ActiveRecord::Base
   def self.owms_type
     I18n.t('owms.meeting_info')
   end
+  
+protected
 
   def set_start_and_end_time
     target_date = self.date || self.start_time

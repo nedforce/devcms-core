@@ -58,11 +58,7 @@ class ActiveRecord::Base
     # Register content type and configuration
     Node.register_content_type(self, Acts::ContentNode::DEFAULT_CONTENT_TYPE_CONFIGURATION.merge(configuration))
   
-    versioning_configuration.reverse_merge!({
-      :keep => 1,
-      :automatic => false,
-      :exclude => [ :id, :created_at, :updated_at ]
-    })
+    versioning_configuration.reverse_merge!(:exclude => [ :id, :created_at, :updated_at ])
   
     acts_as_versioned versioning_configuration
     
@@ -98,8 +94,6 @@ module Acts
     
     def self.included(base)
       base.class_eval do
-        alias_method :original_save, :save
-      
         include InstanceMethods
         extend ClassMethods
       
@@ -160,25 +154,25 @@ module Acts
       def path_for_url_alias(node)
         content_title
       end
-    
-      def draft=(value)
-        @draft = (value == '1' || value == true) ? true : false
-      end
+      
+      attr_accessor :draft
 
-      def draft
-        @draft || false
-      end
-    
       def draft?
-        draft == '1' || draft == true
+        !!draft
       end
     
       def save(*args)
-        self.with_versioning(self.draft?, :status => Version::STATUSES[:drafted]) do
-          self.original_save(*args)
+        versioning_options = args.extract_options!
+        
+        versioning_options[:should_create_version] = versioning_options[:should_create_version] || self.draft?
+        versioning_options[:extra_version_attributes] ||= {}
+        versioning_options[:extra_version_attributes][:status] = Version::STATUSES[:drafted] if self.draft?
+        
+        self.with_versioning(versioning_options) do
+          super(*args)
         end
       end
-    
+      
       def save!(*args)
         self.save(*args) || raise(ActiveRecord::RecordNotSaved, self.errors.full_messages.join(', '))
       end

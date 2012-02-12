@@ -16,7 +16,7 @@ class EditorApprovalRequirementTest < ActiveSupport::TestCase
   end
   
   def test_save_for_user_for_editor_on_new_node_created_by_editor
-    page = Page.new(:title => "Page title", :preamble => "Ambule", :body => "Version 1", :parent => @editor_section_node, :expires_on => 1.day.from_now.to_date)
+    page = Page.new(:title => "Page title", :preamble => "Ambule", :body => "Version 1", :parent => @editor_section_node)
     
     assert_difference('Page.count', 1) do
       assert page.save(:user => @editor)
@@ -64,8 +64,8 @@ class EditorApprovalRequirementTest < ActiveSupport::TestCase
     assert_equal 'Version 1', page.previous_version.body
   end
 
-  def test_save_for_user_for_admin_on_new_node_created_by_editor_without_skip_approval
-    page = Page.new(:title => "Page title", :preamble => "Ambule", :body => "Version 1", :parent => @editor_section_node, :expires_on => 1.day.from_now.to_date)
+  def test_save_for_user_for_admin_on_new_node_created_by_editor_without_approval_required
+    page = Page.new(:title => "Page title", :preamble => "Ambule", :body => "Version 1", :parent => @editor_section_node)
 
     assert_difference('Page.count', 1) do
       assert page.save(:user => @editor)
@@ -86,8 +86,8 @@ class EditorApprovalRequirementTest < ActiveSupport::TestCase
     end
   end
 
-  def test_save_for_user_for_admin_on_new_node_created_by_editor_with_skip_approval
-    page = Page.new(:title => "Page title", :preamble => "Ambule", :body => "Version 1", :parent => @editor_section_node, :expires_on => 1.day.from_now.to_date)
+  def test_save_for_user_for_admin_on_new_node_created_by_editor_with_approval_required
+    page = Page.new(:title => "Page title", :preamble => "Ambule", :body => "Version 1", :parent => @editor_section_node)
 
     assert_difference('Page.count', 1) do
       assert page.save(:user => @editor)
@@ -105,7 +105,7 @@ class EditorApprovalRequirementTest < ActiveSupport::TestCase
     end
   end
 
-  def test_save_for_user_for_admin_on_already_versioned_node_without_skip_approval
+  def test_save_for_user_for_admin_on_already_versioned_node_without_approval_required
     page = create_page :body => 'Version 1'
     
     assert page.node.publishable?
@@ -132,7 +132,7 @@ class EditorApprovalRequirementTest < ActiveSupport::TestCase
     assert page.previous_version.nil?
   end
   
-  def test_save_for_user_for_final_editor_on_already_versioned_node_without_skip_approval
+  def test_save_for_user_for_final_editor_on_already_versioned_node_without_approval_required
     page = create_page :body => 'Version 1'
     
     assert page.node.publishable?
@@ -160,7 +160,7 @@ class EditorApprovalRequirementTest < ActiveSupport::TestCase
   end
   
 
-  def test_save_for_user_for_admin_on_already_versioned_node_with_skip_approval
+  def test_save_for_user_for_admin_on_already_versioned_node_with_approval_required
     page = create_page :body => 'Version 1'
     
     assert page.node.publishable?
@@ -188,7 +188,7 @@ class EditorApprovalRequirementTest < ActiveSupport::TestCase
   end
 
   def test_save_for_user_for_admin_on_new_node_created_by_admin
-    page = Page.new(:title => "Page title", :preamble => "Ambule", :body => "Version 1", :parent => @editor_section_node, :expires_on => 1.day.from_now.to_date)
+    page = Page.new(:title => "Page title", :preamble => "Ambule", :body => "Version 1", :parent => @editor_section_node)
 
     assert_difference('Page.count', 1) do
       assert page.save(:user => @arthur)
@@ -221,7 +221,7 @@ class EditorApprovalRequirementTest < ActiveSupport::TestCase
     assert page.previous_version.nil?
   end
 
-  def test_update_attributes_for_user_without_skip_approval
+  def test_update_attributes_for_user_without_approval_required
     page = create_page :body => 'Version 1'
     
     assert page.node.publishable?
@@ -244,7 +244,7 @@ class EditorApprovalRequirementTest < ActiveSupport::TestCase
     assert page.previous_version.nil?
   end
 
-  def test_update_attributes_for_user_with_skip_approval
+  def test_update_attributes_for_user_with_approval_required
     page = create_page :body => 'Version 1'
 
     assert page.node.publishable?
@@ -296,7 +296,7 @@ class EditorApprovalRequirementTest < ActiveSupport::TestCase
 protected
 
   def create_page(options = {})
-    Page.create({ :user => @arthur, :parent => nodes(:editor_section_node), :title => "Page title", :preamble => "Ambule", :body => "Page body", :expires_on => 1.day.from_now.to_date }.merge(options)).reload
+    Page.create({ :user => @arthur, :parent => nodes(:editor_section_node), :title => "Page title", :preamble => "Ambule", :body => "Page body" }.merge(options))
   end
   
 end
