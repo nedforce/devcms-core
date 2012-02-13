@@ -1378,7 +1378,7 @@ div.searchResults {
           width: 165px; }
         .searchPage .search_result .metadata table td .container .bar {
           height: 6px;
-          background-color: #9f9f9f; }
+          line-height: 6px; }
   .searchPage h2 {
     float: left;
     font-size: 12px;
