@@ -59,6 +59,7 @@ class Admin::ImagesController < Admin::AdminController
   # * GET /admin/images/new
   def new
     @image = Image.new
+    @image.parent           = @parent_node    
     @show_image_url_control = can_set_image_url?
   end
 
@@ -72,9 +73,9 @@ class Admin::ImagesController < Admin::AdminController
   # * POST /admin/images.xml
   def create
     @image                  = Image.new(params[:image])
+    @image.parent           = @parent_node
     @show_image_url_control = can_set_image_url?
     @image.url              = nil if !@show_image_url_control
-    @image.parent           = @parent_node
 
     respond_to do |format|
       if @image.save(:user => current_user)

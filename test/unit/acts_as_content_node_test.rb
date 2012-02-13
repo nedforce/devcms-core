@@ -273,7 +273,6 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
     page = build_page :content_box_number_of_items => 1
     assert !page.save
     assert !page.valid?
-    puts page.errors.inspect
     assert page.errors.on_base
   end
 
