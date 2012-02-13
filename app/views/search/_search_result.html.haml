@@ -44,6 +44,6 @@
             .relevance_wrapper.clearfix
               .container
                 .bar
-                  = image_tag 'search_result_bar.gif', :alt => 'Resultaat percentage', :width => number_to_percentage(100 * search_result.score, :precision => 0)
+                  = image_tag 'search_result_bar.gif', :alt => 'Resultaat percentage', :width => number_to_percentage(100 * search_result.score, :precision => 0, :height => '7px')
               .percentage
                 = number_to_percentage(100 * search_result.score, :precision => 1, :separator => '.')
