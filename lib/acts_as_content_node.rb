@@ -158,9 +158,9 @@ module Acts
       attr_accessor :draft
 
       def draft?
-        !!draft
+        draft == '1' || draft == true
       end
-    
+
       def save(*args)
         versioning_options = args.extract_options!
         
