@@ -28,7 +28,7 @@ if ARGV.grep(/--run-rake-task=/).empty?
   # Define all our Rake tasks
 
   require 'rake/clean'
-  require 'rcov/rcovtask'
+  #require 'rcov/rcovtask'
 
   def to_rcov_task_sym(s)
     s = s.gsub(/(test:)/,'')

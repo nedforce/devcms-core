@@ -128,8 +128,8 @@ nl:
     array: 
       words_connector: ", "
       last_word_connector: ", en "
-      two_words_connector: en 
-      sentence_connector: en 
+      two_words_connector: " en " 
+      sentence_connector: " en " 
       skip_last_comma: true
   datetime: 
     format: 

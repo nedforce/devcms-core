@@ -129,7 +129,7 @@ module Acts
                           :publication_start_date, :publication_end_date,
                           :responsible_user, :responsible_user_id, :expires_on,
                           :expiration_notification_method, :expiration_email_recipient, :cascade_expires_on,
-                          :title_alternative_list, :title_alternatives, :location, :to => :node
+                          :title_alternative_list, :title_alternatives, :location, :pin_id, :to => :node
       end
     end
       

@@ -141,6 +141,11 @@ protected
 
   # Renders a custom 500 page. Also makes sure a notification mail is sent.
   def handle_500(exception)
+    if Rails.env.test?
+      puts "\n#{exception.message}"
+      puts exception.backtrace.join("\n") 
+    end
+    
     if Rails.env.development?
       raise exception
     elsif controller_name == "errors"
@@ -245,11 +250,11 @@ protected
       @layout_configuration = node.own_or_inherited_layout_configuration
       layout                = node.own_or_inherited_layout
       variant               = node.own_or_inherited_layout_variant
-      prepend_view_path("app/layouts/#{layout.parent.id}/views") if layout.parent.present?
-      prepend_view_path("app/layouts/#{layout.id}/views")
+      prepend_view_path((Rails.root + "app/layouts/#{layout.parent.id}/views").to_s) if layout.parent.present?
+      prepend_view_path((Rails.root + "app/layouts/#{layout.id}/views").to_s)
       if variant
-        prepend_view_path("app/layouts/#{layout.parent.id}/#{variant[:id]}/views") if layout.parent.present?
-        prepend_view_path("app/layouts/#{layout.id}/#{variant[:id]}/views")
+        prepend_view_path((Rails.root + "app/layouts/#{layout.parent.id}/#{variant[:id]}/views").to_s) if layout.parent.present?
+        prepend_view_path((Rails.root + "app/layouts/#{layout.id}/#{variant[:id]}/views").to_s)
       end  
       return 'default'
     end
