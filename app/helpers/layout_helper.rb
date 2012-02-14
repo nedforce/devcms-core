@@ -7,6 +7,8 @@ module LayoutHelper
     representations = node.find_content_representations(target, inheritable)
 
     representations.each do |element|
+      next unless element.content_partial.present?
+      
       if element.custom_type.present?
         render_helper = node.own_or_inherited_layout.custom_representations[element.custom_type]["helper"]
         partials += send(render_helper || "render_#{element.custom_type}") || ""
@@ -43,17 +45,15 @@ module LayoutHelper
     end
   end
 
-  def text_link_toggable_section(dom_id, link_id, link)
-    html = link_to_content_node(truncate(h(link.content_title), :length => 60), link, {}, {:id => link_id})
-    html << javascript_tag(<<-EOS
-      Element.observe('#{link_id}', 'click', function (event) {
-        Effect.toggle('#{dom_id}', 'appear', {duration: 0.5})
-        Element.toggleClassName('#{link_id}', 'minus_icon')
-        Event.stop(event)
-      })
-    document.observe('dom:loaded', function () { Element.hide('#{dom_id}') } ); 
-EOS
-)
+  def toggable_section_link(dom_id, link_or_link_title, options = {})
+    link_options = {:id => "toggle_section_#{dom_id}", :class => 'toggable_section_link' }
+
+    if link_or_link_title.is_a?(Link)
+      html = link_to_content_node(truncate(h(link_or_link_title.content_title), :length => 60), link_or_link_title, {}, link_options)
+    else
+      html = content_tag options[:element_type] || :span, link_or_link_title, link_options
+    end
+
     return html
   end
 
