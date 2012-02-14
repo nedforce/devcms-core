@@ -81,7 +81,7 @@ module Node::Layouting
       # Move or create representations for each target
       layout_config[:targets].each do |target, content_ids|
         content_ids = content_ids.select { |cid| cid.present? }          
-        if variant[target]["main_content"] && self.content_type == 'Section'
+        if variant[target].try(:[], 'main_content') && self.content_type == 'Section'
           content.update_attribute(:frontpage_node_id, content_ids.first)
         else
           content_ids.each_with_index do |content_id, i|

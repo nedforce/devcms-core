@@ -10,7 +10,7 @@
   %ul
     - links.each do |link|
       %li
-        = text_link_toggable_section("link_#{link.id}", "toggle_link_#{link.id}", link)
+        = toggable_section_link("link_#{link.id}", link)
         %div.link{ :id => "link_#{link.id}" }
           %p= link.description
           = link_to_content_node t('links_boxes.goto_site'), link

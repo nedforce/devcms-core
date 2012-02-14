@@ -59,7 +59,10 @@ class ContentRepresentation < ActiveRecord::Base
   # Returns the name of the contentbox content partial based on node and layout
   # Can be overwitten for special cases.
   def content_partial
-    @content_partial ||= self.parent.own_or_inherited_layout_variant[self.target]['representation'] + '_content'
+    @content_partial ||= begin
+      layout_variant = self.parent.own_or_inherited_layout_variant[self.target]
+      layout_variant['representation'] + '_content' if layout_variant
+    end
   end
   
 protected
