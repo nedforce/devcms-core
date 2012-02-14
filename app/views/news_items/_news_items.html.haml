@@ -1,0 +1,53 @@
+- latest_news_items    ||= []
+- news_items_for_table ||= []
+- show_bread_crumbs    ||= false
+
+.newsItems
+  - if news_items.empty?
+    %p= t 'news.no_news_items'
+
+  - latest_news_items.each do |news_item|
+    - readspeaker(news_item.node.id) do |readspeaker_id|
+      .newsItem
+        %h2= link_to_content_node h(news_item.title), news_item
+
+        - if show_bread_crumbs
+          %span.bread_crumbs
+            == #{NewsArchive.human_name}:
+          = bread_crumbs_track_for(news_item.news_archive.node, :include_root => false)
+
+        = render :partial => '/shared/metadata', :locals => { :publication_date => news_item.publication_start_date, :last_update_date => news_item.updated_at }
+
+        .content.clearfix
+          - if (image_node = news_item.node.children.accessible.with_content_type('Image').first)
+            = link_to_node(image_tag(content_node_path(image_node, :action => :thumbnail), :alt => h(image_node.content.title)), image_node, { :action => :full }, { :rel => "lightbox[#{news_item.node.id}]", :title => h(image_node.content.title), :class => 'right' })
+          - if news_item.preamble.present?
+            = simple_format(h(news_item.preamble))
+
+        .buttons.clearfix
+          - news_item_button t('news.full_article') do
+            = link_to_content_node t('news.full_article'), news_item, { :type => :url, :host => news_item.node.containing_site.content.domain }, :title => h(news_item.title)
+            - if news_item.node.comments.count > 0
+              == (#{pluralize(news_item.node.comments.count, t('news.comment'), t('news.comments'))})
+          = readspeaker_button(:rid => readspeaker_id, :title => h(news_item.title))
+
+  - if news_items_for_table.present?
+    %h2= t 'news.older_news_items'
+
+    %table#items{ :cellpadding => 0, :cellspacing => 0 }
+      %caption= t 'news_archives.older_items_caption'
+      %thead
+        %tr
+          %th.gray{ :scope => 'col' }
+            = t 'news.title'
+          %th.right_sized.gray
+            = t 'news.date'
+      %tbody
+        - news_items_for_table.each_with_index do |news_item, i|
+          %tr{ :class => "#{'alt' if i.even?}" }
+            %td
+              = link_to_content_node h(truncate(news_item.title, :length => 54)), news_item
+            %td.right_sized.gray
+              = l news_item.publication_start_date, :format => :long
+
+    = pagination_links(news_items)
