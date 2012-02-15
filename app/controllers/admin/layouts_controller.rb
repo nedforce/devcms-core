@@ -24,7 +24,7 @@ class Admin::LayoutsController < Admin::AdminController
   end
   
   def variants_settings_and_targets
-    unless @layout.blank?
+    if @layout.present?
       render :partial => 'variants_settings_and_targets'
     else
       render :nothing => true
@@ -76,7 +76,7 @@ class Admin::LayoutsController < Admin::AdminController
         end
       end
 
-      if config["main_content"] == true && @node.content_type == "Section" && @node.content.frontpage_node_id
+      if config["main_content"] == true && @node.content_type == 'Section' && @node.content.frontpage_node.present?
         front_page_node = @node.content.frontpage_node
         @current_sortlets[target] = [{ :title => front_page_node.content.content_title, :id => front_page_node.id, :nodeId => front_page_node.id, :data => { :node => front_page_node.to_tree_node_for(current_user) }, :xtype => 'sortlet' }] 
       end
