@@ -1,7 +1,17 @@
-- cache(:controller => '/nodes', :action => :sub_menu, :node => @node.id, :last_updated_at => @node.parent.self_and_children.maximum(:updated_at), :expires_in => 15.minutes, :layout => :deventer) do
+- show_private_items_in_sub_menu = @node.is_private_or_has_private_ancestor? && current_user_has_any_role?(@node)
+
+- cache({ :controller => '/nodes', :action => :sub_menu, :node => @node.id, :last_updated_at => @node.parent.self_and_children.maximum(:updated_at), :expires_in => 15.minutes, :layout => :deventer }, { :enabled => !show_private_items_in_sub_menu }) do
   - self_and_ancestor_ids = @node.self_and_ancestor_ids
   - top_ancestor = Node.find(self_and_ancestor_ids[1])
-  - top_sub_menu_items = top_ancestor.children.accessible.public.shown_in_menu.all(:order => :position)
+  
+  - if show_private_items_in_sub_menu
+    - if current_user_has_any_role?(top_ancestor)
+      - top_sub_menu_items = top_ancestor.children.accessible.shown_in_menu
+    - else
+      - top_sub_menu_items = top_ancestor.children.accessible.shown_in_menu.select do |top_sub_menu_item|
+        - top_sub_menu_item.public? || current_user_has_any_role?(top_sub_menu_item)
+  - else
+    - top_sub_menu_items = top_ancestor.children.accessible.public.shown_in_menu
   
   - if top_sub_menu_items.any?
     .content_box.sub_menu_content_box
@@ -12,4 +22,4 @@
             = image_tag "icons/content_box_#{top_ancestor.content_box_icon}.png", :class => 'icon_overlay transparent'
           %h2= link_to_node top_ancestor.content_title, top_ancestor
         .content
-          = create_sub_menu(self_and_ancestor_ids, top_sub_menu_items)
+          = create_sub_menu(self_and_ancestor_ids, top_sub_menu_items, show_private_items_in_sub_menu)

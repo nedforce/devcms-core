@@ -5,7 +5,9 @@ module Node::ParanoidDelete
       extend(ClassMethods)
     
       if base.content_columns.any? { |column| column.name == 'deleted_at' }
-        default_scope :conditions => "#{base.table_name}.deleted_at IS NULL"
+        default_scope :order => :position, :conditions => "#{base.table_name}.deleted_at IS NULL"
+      else
+        default_scope :order => :position
       end
     
       define_callbacks :before_paranoid_delete, :after_paranoid_delete

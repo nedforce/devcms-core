@@ -234,6 +234,18 @@ class User < ActiveRecord::Base
   def has_any_role?
     self.role_assignments.count > 0
   end
+  
+  # Checks whether this user has a +RoleAssignment+ for the given node or one of its ancestors.
+  # Faster than the other 'has_*_role* methods because of memoizing.
+  # If no node is supplied, checks whether a user has whatever role on whatever node.
+  def has_any_role?(node = nil)
+    if node
+      node = node.new_record? ? node.parent : node
+      fetch_role_assignments.any? { |ra| node.self_and_ancestor_ids.include?(ra.node_id) }
+    else
+      fetch_role_assignments.any?
+    end
+  end
 
   # Returns the role the user has on a Node.
   def role_on(node)
@@ -349,7 +361,12 @@ class User < ActiveRecord::Base
     full_name.present? ? "#{full_name} (#{login})" : login
   end
 
-  protected
+protected
+
+  # Memoized reader for the role_assignments association
+  def fetch_role_assignments
+    @role_assignments ||= user.role_assignments.all
+  end
 
   # Set a new verification_code for the user.
   def set_verification_code

@@ -24,6 +24,14 @@ module Node::VisibilityAndAccessibility
     end
   end
   
+  def public?
+    !self.private?
+  end
+  
+  def is_private_or_has_private_ancestor?
+    self.self_and_ancestors.exists?(:private => true)
+  end
+  
   def has_private_ancestor?
     self.ancestors.exists?(:private => true)
   end

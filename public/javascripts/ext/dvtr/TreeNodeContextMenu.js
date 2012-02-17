@@ -230,7 +230,7 @@ Ext.dvtr.TreeNodeContextMenu = function (config) {
     }
 
     // Add the 'Toon in menu' property setting
-    if (this.tn.allowShowInMenu && (!this.tn.isRoot && !(this.tn.isPrivate || this.tn.hasPrivateAncestor))) {
+    if (this.tn.allowShowInMenu && !this.tn.isRoot) {
       this.add({
         xtype: 'checkitem',
         text: I18n.t('show_in_menu', 'context_menu'),

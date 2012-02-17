@@ -102,7 +102,7 @@ module ApplicationHelper
 
   # Returns the html for the double-level main menu.
   def create_main_menu
-    top_level_main_menu_items = current_site.closure_for(current_site.descendants(:to_depth => 2).accessible.public.shown_in_menu.all(:order => 'nodes.position ASC')).values.first
+    top_level_main_menu_items = current_site.closure_for(current_site.descendants(:to_depth => 2).accessible.public.shown_in_menu).values.first
     
     if top_level_main_menu_items.any?
       content_tag(:ul, top_level_main_menu_items.map { |item, sub_items| create_main_menu_item(item, sub_items.keys) }.join("\n"), :id => 'main_menu', :class => 'clearfix')
@@ -112,9 +112,9 @@ module ApplicationHelper
   end
 
   # Returns the HTML for the multi-level sub menu.
-  def create_sub_menu(self_and_ancestor_ids, top_sub_menu_items)
+  def create_sub_menu(self_and_ancestor_ids, top_sub_menu_items, show_private_items_in_sub_menu)
     sub_menu_content = top_sub_menu_items.map do |item|
-      create_sub_menu_item(item, self_and_ancestor_ids[1..-1], :class => 'top_level')
+      create_sub_menu_item(item, self_and_ancestor_ids[1..-1], show_private_items_in_sub_menu, :class => 'top_level')
     end.join("\n")
 
     content_tag(:ul, sub_menu_content, :id => 'sub_menu')
@@ -350,9 +350,21 @@ module ApplicationHelper
     # +node+ - The node to create a sub menu item for.
     # +self_and_ancestors_except_root_ids+ - The list of ids of nodes that are ancestors of (except the root node) or equal to the node
     # for which the submenu is being built.
+    # +show_private_items_in_sub_menu+ - True if private items should be shown, otherwise false.
     # +options+ - Additional HTML attributes to be set on the sub menu item.
-    def create_sub_menu_item(node, self_and_ancestors_except_root_ids, options = {})
-      sub_menu_items = node.children.accessible.public.shown_in_menu
+    def create_sub_menu_item(node, self_and_ancestors_except_root_ids, show_private_items_in_sub_menu, options = {})
+      if show_private_items_in_sub_menu
+        if current_user_has_any_role?(node)
+          sub_menu_items = node.children.accessible.shown_in_menu
+        else
+          sub_menu_items = node.children.accessible.shown_in_menu.select do |sub_menu_item|
+            sub_menu_item.public? || current_user_has_any_role?(sub_menu_item) 
+          end
+        end
+      else
+        sub_menu_items = node.children.accessible.public.shown_in_menu
+      end
+      
       has_sub_menu_items = sub_menu_items.any?
 
       options[:class] = options[:class] ? "#{options[:class]} parent" : "parent" if has_sub_menu_items
@@ -366,7 +378,7 @@ module ApplicationHelper
         content = create_menu_link(node, :class => classes.join(' '))
 
         if has_sub_menu_items
-          content += content_tag(:ul, sub_menu_items.all(:order => 'position').map { |item| create_sub_menu_item(item, self_and_ancestors_except_root_ids) }.join("\n"))
+          content += content_tag(:ul, sub_menu_items.all(:order => 'position').map { |item| create_sub_menu_item(item, self_and_ancestors_except_root_ids, show_private_items_in_sub_menu) }.join("\n"))
         end
 
         options[:class] = options[:class] ? "#{options[:class]} expanded" : "expanded" 

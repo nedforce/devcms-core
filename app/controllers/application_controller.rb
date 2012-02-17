@@ -65,7 +65,7 @@ class ApplicationController < ActionController::Base
   # Include all helpers, all the time.
   helper VideoHelper, SitemapsHelper, SearchHelper, PollQuestionsHelper, OwmsMetadataHelper, HtmlEditorHelper, ContactBoxesHelper, CalendarsHelper, AttachmentsHelper, ApplicationHelper, TextHelper, LayoutHelper
 
-  helper_method :secure_url, :current_site, :current_user_is_admin?, :current_user_is_editor?, :current_user_is_final_editor?
+  helper_method :secure_url, :current_site, :current_user_has_any_role?, :current_user_is_admin?, :current_user_is_editor?, :current_user_is_final_editor?
   
   # Renders confirm_destroy.html.erb if destroy is requested using GET.
   # Hyperlinks with <tt>:method => :delete</tt> will perform a GET request if
@@ -351,6 +351,11 @@ protected
 
   def set_page_title
     @page_title ||= @node ? @node.content_title : nil
+  end
+
+  # Returns true if the current user has any role on a given node, false otherwise.
+  def current_user_has_any_role?(node)
+    current_user.has_any_role?(node)
   end
 
   # Returns true if the current user has a particular role on a given node, false otherwise.
