@@ -134,11 +134,14 @@ class Admin::NodesController < Admin::AdminController
         format.xml  { head :precondition_failed }
       end
     else
-      Node.root.content.set_frontpage!(@node)
-
-      respond_to do |format|
-        format.json { render :json => { :notice => I18n.t('nodes.frontpage_set')}.to_json, :status => :ok }
-        format.xml  { head :ok }
+      if Node.root.content.set_frontpage!(@node)
+        respond_to do |format|
+          format.json { render :json => { :notice => I18n.t('nodes.frontpage_set')}.to_json, :status => :ok }
+          format.xml  { head :ok }
+        end
+      else
+        format.json { render :json => { :error => I18n.t('nodes.frontpage_cant_be_set')}.to_json, :status => :precondition_failed }
+        format.xml  { head :precondition_failed }
       end
     end
   end

@@ -64,28 +64,28 @@ class SectionTest < ActiveSupport::TestCase
     assert !@root_section.has_frontpage?
     assert_equal nil, @root_section.frontpage_node
   end
-
-  def test_should_accept_descendant_as_frontpage_node
-    @root_section.set_frontpage!(@news_archive_node)
-    assert @root_section.valid?
-    assert !@root_section.errors.on(:frontpage_node)
-    assert_equal @news_archive_node, @root_section.frontpage_node
-  end
-
-  def test_should_not_accept_ancestor_as_frontpage_node
-    section = create_section
-    section.set_frontpage!(@root_node)
-    assert !section.valid?
-    assert section.errors.on_base
-  end
-
-  def test_should_not_accept_sibling_as_frontpage_node
-    section = create_section
-    sibling = create_section
-    section.set_frontpage!(sibling.node)
-    assert !section.valid?
-    assert section.errors.on_base
-  end
+  # 
+  # def test_should_accept_descendant_as_frontpage_node
+  #   @root_section.set_frontpage!(@news_archive_node)
+  #   assert @root_section.valid?
+  #   assert !@root_section.errors.on(:frontpage_node)
+  #   assert_equal @news_archive_node, @root_section.frontpage_node
+  # end
+  # 
+  # def test_should_not_accept_ancestor_as_frontpage_node
+  #   section = create_section
+  #   section.set_frontpage!(@root_node)
+  #   assert !section.valid?
+  #   assert section.errors.on_base
+  # end
+  # 
+  # def test_should_not_accept_sibling_as_frontpage_node
+  #   section = create_section
+  #   sibling = create_section
+  #   section.set_frontpage!(sibling.node)
+  #   assert !section.valid?
+  #   assert section.errors.on_base
+  # end
 
   def test_should_not_accept_section_with_frontpage_node_as_frontpage_node
     @root_section.set_frontpage!(@section_with_frontpage.node)

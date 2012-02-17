@@ -51,14 +51,14 @@ class Section < ActiveRecord::Base
   validates_numericality_of :frontpage_node_id, :allow_nil => true,                                            :on => :update
   validates_presence_of     :frontpage_node, :unless => Proc.new { |section| section.frontpage_node_id.nil? }, :on => :update
 
-  # Ensures +frontpage_node+ should be nil if the +Section+ object has a frontpage.
-  validate_on_create :frontpage_node_is_nil
-
-  # Sets +frontpage_node+ to nil if the +Section+ is the frontpage node.
   before_validation_on_update :set_frontpage_node_to_nil_if_frontpage_node_is_own_node
 
+  # Ensures +frontpage_node+ should be nil when the +Section+ is created.
+  validate_on_create :frontpage_node_is_nil
+  
   # Ensures the +frontpage_node+ should be a descendant.
-  validate_on_update :frontpage_node_is_a_descendant
+  # validate_on_update :frontpage_node_is_a_descendant
+    
   # Ensures the +frontpage_node+ is no +Section+ with a frontpage node.
   validate_on_update :frontpage_node_is_no_section_with_frontpage_node
 
@@ -79,7 +79,7 @@ class Section < ActiveRecord::Base
 
   # Returns true if the section has a frontpage.
   def has_frontpage?
-    !self.frontpage_node.nil?
+    self.frontpage_node.present?
   end
 
   # Returns the frontpage if one is present.
@@ -99,29 +99,26 @@ class Section < ActiveRecord::Base
 
 protected
 
-  # Ensures +frontpage_node+ should be nil if the +Section+ object has a frontpage.
+  def set_frontpage_node_to_nil_if_frontpage_node_is_own_node
+    self.frontpage_node = nil if self.frontpage_node == self.node
+  end
+
+  # Ensures +frontpage_node+ should be nil when the +Section+ is created
   def frontpage_node_is_nil
     errors.add_to_base(:frontpage_node_should_be_nil) if self.has_frontpage?
   end
 
-  # Sets +frontpage_node+ to nil if the +Section+ is the frontpage node.
-  def set_frontpage_node_to_nil_if_frontpage_node_is_own_node
-    if has_frontpage?
-      self.frontpage_node = nil if self.frontpage_node == self.node
-    end
-  end
-
   # Ensures the +frontpage_node+ should be a descendant.
-  def frontpage_node_is_a_descendant
-    if has_frontpage?
-      errors.add_to_base(:frontpage_node_should_be_descendant) unless self.frontpage_node.is_descendant_of?(self.node)
-    end
-  end
+  # def frontpage_node_is_a_descendant
+  #   if has_frontpage?
+  #     errors.add_to_base(:frontpage_node_should_be_descendant) unless self.frontpage_node.is_descendant_of?(self.node)
+  #   end
+  # end
 
   # Ensures the +frontpage_node+ is no +Section+ with a frontpage node.
   def frontpage_node_is_no_section_with_frontpage_node
-    if has_frontpage?
-      errors.add_to_base(:frontpage_node_cannot_be_a_section_with_a_frontpage) if self.frontpage_node.content.is_a?(Section) && !self.frontpage_node.content.frontpage_node.nil?
+    if self.has_frontpage?
+      errors.add_to_base(:frontpage_node_cannot_be_a_section_with_a_frontpage) if self.frontpage_node.content_class == Section && self.frontpage_node.content.frontpage_node.present?
     end
   end
 end
