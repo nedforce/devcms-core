@@ -50,7 +50,7 @@ class Admin::LayoutsController < Admin::AdminController
     # Setup the custom representations
     @current_sortlets[:custom_representations] = @node.own_or_inherited_layout.custom_representations.collect do |type, config|
       { 
-        :title                 => config["name"],
+        :title                 => I18n.t("#{@node.content_type.tableize}.#{type}", :default => config["name"]),
         :representation        => config["representation"],
         :custom_representation => true,
         :nodeId                => type,
