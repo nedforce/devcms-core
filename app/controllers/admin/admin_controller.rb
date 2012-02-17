@@ -141,8 +141,12 @@ protected
   def set_actions
     @actions = []
 
-    unless params[:show_actions] && params[:show_actions] == 'false'
-      @actions << { :url => { :action => :edit }, :text => I18n.t('admin.edit'), :method => :get } if @node.present? && current_user.role_on(@node).present?
+    unless params[:show_actions] == 'false' || @node.blank?
+      role = current_user.role_on(@node)
+      
+      if role && @node.content_type_configuration[:allowed_roles_for_update].include?(role.name)
+        @actions << { :url => { :action => :edit }, :text => I18n.t('admin.edit'), :method => :get }
+      end
     end
   end
 

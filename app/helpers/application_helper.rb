@@ -102,7 +102,7 @@ module ApplicationHelper
 
   # Returns the html for the double-level main menu.
   def create_main_menu
-    top_level_main_menu_items = current_site.closure_for(current_site.descendants(:to_depth => 2).accessible.public.shown_in_menu).values.first
+    top_level_main_menu_items = current_site.closure_for(current_site.descendants(:to_depth => 2).accessible.public.shown_in_menu.all(:order => :position)).values.first
     
     if top_level_main_menu_items.any?
       content_tag(:ul, top_level_main_menu_items.map { |item, sub_items| create_main_menu_item(item, sub_items.keys) }.join("\n"), :id => 'main_menu', :class => 'clearfix')

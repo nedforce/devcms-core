@@ -5,7 +5,7 @@ module Node::ContentTypeConfiguration
   end
   
   def content_type_configuration 
-    Node.content_type_configuration(self.content_class.name)
+    Node.content_type_configuration(self.content_type)
   end
   
   module ClassMethods

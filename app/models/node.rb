@@ -335,7 +335,7 @@ class Node < ActiveRecord::Base
         array
       end.sort_by { |hash| hash[:text] },
       :allowedChildContentTypes        => self.content_type_configuration[:allowed_child_content_types],
-      :ownContentType                  => self.content_class == ContentCopy ? self.content.copied_node.content_class.to_s : self.content_class.to_s,
+      :ownContentType                  => self.content_class.name,
       :allowEdit                       => self.content_type_configuration[:allowed_roles_for_update].include?(role_name),
       :controllerName                  => "/admin/#{self.content.controller_name}",
       :parentNodeId                    => self.parent_id,
@@ -349,7 +349,7 @@ class Node < ActiveRecord::Base
       :userRole                        => role ? role_name : nil,
       :undeletable                     => self.root? || !content_type_configuration[:allowed_roles_for_destroy].include?(role_name) || (!user_is_admin && self.content_class == Image && self.content.is_for_header?),
       :allowGlobalFrontpageSetting     => user_is_admin,
-      :isContentCopy                   => self.content_class == ContentCopy,
+      :isContentCopy                   => self.content_type == ContentCopy.name,
       :isFrontpage                     => self.is_frontpage?,
       :isGlobalFrontpage               => self.is_global_frontpage?,
       :isRepeatingCalendarItem         => self.content_class <= CalendarItem && self.content.has_repetitions?,

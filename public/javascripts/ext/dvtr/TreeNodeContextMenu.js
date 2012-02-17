@@ -115,7 +115,6 @@ Ext.dvtr.TreeNodeContextMenu = function (config) {
         });
     }
 
-    // Add the 'Bewerken' menu item:
     if (this.tn.userRole == 'admin' && this.tn.attributes.ownContentType == 'Site') {
 		this.add('-'); //separator
 
