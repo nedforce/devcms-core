@@ -243,24 +243,24 @@ module ApplicationHelper
 
   def header_image(node = nil, big_header = false)
     random_image = (node || current_site).random_header_image
-    
+
     if random_image.nil?
       header_title = t('application.default_header_photo_alt')
       image_url    = '/images/default_header_photo.jpg'
       image_tag    = image_tag(image_url, :alt => header_title, :title => header_title)
     elsif (big_header)
       header_title = random_image.title
-      image_tag    = image_tag big_header_image_path(random_image, :format => :jpg), :alt => random_image.alt, :title => random_image.title 
+      image_tag    = image_tag big_header_image_path(random_image, :format => :jpg), :alt => random_image.alt, :title => header_title
       image_url    = big_header_image_path(random_image, :format => :jpg)
     else
       header_title = random_image.title
-      image_tag    = image_tag header_image_path(random_image, :format => :jpg), :alt => random_image.alt, :title => random_image.title
+      image_tag    = image_tag header_image_path(random_image, :format => :jpg), :alt => random_image.alt, :title => header_title
       image_url    = header_image_path(random_image, :format => :jpg)
     end
 
     return { :title => header_title, :image_tag => image_tag, :url => image_url }
   end
-  
+
   def header_slideshow(node, big_header = false)
     available_header_images_nodes = node.present? ? node.header_images : []
     available_header_images_nodes << header_image(node, big_header)[:url] if available_header_images_nodes.empty?
