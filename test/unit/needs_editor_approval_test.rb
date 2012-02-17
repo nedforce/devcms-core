@@ -287,10 +287,26 @@ class EditorApprovalRequirementTest < ActiveSupport::TestCase
     assert_equal 'Version 1', page.previous_version.body
   end
 
-  def test_editor_comment_accessors
-    page = pages(:about_page)
-    page.editor_comment = 'test'
-    assert_equal 'test', page.editor_comment
+  def test_should_copy_editor_and_editor_comment_on_admin_edit
+    page = create_page
+    
+    page.title = "Version 1"
+    page.editor_comment = 'Version 1 comment'
+    assert page.save(:user => @editor)
+    
+    current_version = page.versions.last
+    assert_equal 'Version 1', current_version.model.title
+    assert_equal @editor, current_version.editor
+    assert_equal 'Version 1 comment', current_version.editor_comment
+    
+    page.title = "Version 2"
+    page.editor_comment = 'Version 2 comment' # This editor comment will be ignored
+    
+    assert page.save(:user => @arthur, :approval_required => true)
+    current_version = page.versions.last
+    assert_equal 'Version 2', current_version.model.title
+    assert_equal @editor, current_version.editor
+    assert_equal 'Version 1 comment', current_version.editor_comment
   end
   
 protected

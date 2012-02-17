@@ -25,7 +25,13 @@ module NeedsEditorApproval
       should_create_version = user_is_editor || approval_required
       
       extra_version_attributes = { :status => Version::STATUSES[:unapproved] }
-      extra_version_attributes.update(:editor => user, :editor_comment => self.editor_comment) if user_is_editor
+      
+      if user_is_editor
+        extra_version_attributes.update(:editor => user, :editor_comment => self.editor_comment)
+      elsif approval_required
+        last_version = self.versions.last
+        extra_version_attributes.update(:editor => last_version.editor, :editor_comment => last_version.editor_comment) if last_version
+      end
 
       super(*(args << { :should_create_version => should_create_version, :extra_version_attributes => extra_version_attributes }))
     end
