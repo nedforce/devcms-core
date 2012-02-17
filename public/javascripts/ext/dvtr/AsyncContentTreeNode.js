@@ -194,7 +194,7 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
 
     onShow: function () {
         rightPanel.load({
-            url: this.attributes.controllerName + '/show/' + this.attributes.contentNodeId,
+            url: this.attributes.controllerName + '/' + this.attributes.contentNodeId,
             params: Ext.ux.prepareParams(defaultParams, { parent_node_id: this.attributes.parentNodeId, format: 'html' }),
             method: 'GET',
             callback: function (options, success, response) {

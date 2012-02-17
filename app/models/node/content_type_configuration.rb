@@ -5,12 +5,12 @@ module Node::ContentTypeConfiguration
   end
   
   def content_type_configuration 
-    Node.content_type_configuration(self.content_type)
+    Node.content_type_configuration(self.content.class.name)
   end
   
   module ClassMethods
-    def register_content_type(type, configuration)
-      DevCMSCore.register_content_type(type, configuration)
+    def register_content_type(class_name, configuration)
+      DevCMSCore.register_content_type(class_name, configuration)
     end
 
     def content_types_configuration

@@ -42,11 +42,10 @@ class ContentCopy < ActiveRecord::Base
 
   before_validation :copy_publication_and_expiration_dates
 
-  # Overrides the +title+ method of the +acts_as_content_node+ mixin.
   def title
     self.copied_node.content.title
   end
-  
+
   def title_changed?
     self.copied_node.content.title_changed?
   end
@@ -63,13 +62,31 @@ class ContentCopy < ActiveRecord::Base
 
   # Returns the content class of the copied node.
   def copied_content_class
-    copied_node.nil? ? self.class : copied_node.content_class
+    self.copied_node.blank? ? self.class : copied_node.content_class
+  end
+  
+  # Try to delegate unknown methods to the copied node's content
+  def method_missing(method_name, *args)
+    if self.copied_node.present? && self.copied_node.content.respond_to?(method_name)
+      self.copied_node.content.send(method_name, *args)
+    else
+      super
+    end
+  end
+  
+  # Necessary because we override method_missing
+  def respond_to?(method_name)
+    if self.copied_node.present? && self.copied_node.content.respond_to?(method_name)
+      true
+    else
+      super
+    end
   end
 
 protected
   
   def copy_publication_and_expiration_dates
-    return unless self.copied_node
+    return unless self.copied_node.present?
     
     self.expires_on = self.copied_node.expires_on
     self.publication_start_date = self.copied_node.publication_start_date

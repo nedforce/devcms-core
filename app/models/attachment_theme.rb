@@ -6,5 +6,4 @@ class AttachmentTheme < Theme
     :allowed_roles_for_destroy    => %w( admin final_editor editor ),
     :controller_name              => 'attachment_themes'
   })
-  
 end

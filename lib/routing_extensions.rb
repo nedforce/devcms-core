@@ -48,7 +48,7 @@ module RoutingExtensions
               node            = Node.first(:conditions => [ 'url_alias = ? OR custom_url_alias = ?', url_alias, url_alias ])
             end
           
-            node || raise(ActionController::RoutingError, 'Invalid alias specified')
+            node || raise(ActionController::RoutingError, "Invalid alias #{url_alias} specified for path #{path}")
           end
         
           # Node might point to a different node
@@ -68,7 +68,7 @@ module RoutingExtensions
               if params[:id].to_i.to_s == params[:id]
                 node = Node.first(:conditions => [ 'content_type = ? AND content_id = ?', klass.base_class.name, params[:id] ]) || raise(ActionController::RoutingError, 'Invalid content node specified')
               else
-                raise ActionController::RoutingError, 'Invalid url'
+                raise ActionController::RoutingError, "Invalid path specified: #{path}"
               end
             elsif klass.nil? || klass == Node
               node = Node.find(params[:id])
