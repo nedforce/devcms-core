@@ -79,9 +79,17 @@ private
       onclick : function() {
         id = window.prompt('#{escape_javascript(t('video.insert_video'))}', '#{escape_javascript(t('video.enter_video_id'))}')
         if (id) {
+          ed.selection.moveToBookmark(ed.updatedSelectionBookmark);
           ed.selection.setContent('[[youtube:'+ id +']]');
         }
       }
-    });"
+    });
+    ed.onEvent.add(function (ed, e) {
+      ed.updatedSelectionBookmark = ed.selection.getBookmark(1);
+    });
+    ed.onInit.add(function(ed, e) {
+      ed.updatedSelectionBookmark = ed.selection.getBookmark(1);
+    });
+    "
   end
 end
