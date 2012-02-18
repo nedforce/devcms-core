@@ -15,12 +15,14 @@ module Node::ParanoidDelete
   end
   
   def paranoid_delete!
+    return true if self.deleted_at.present?
+    
     time = Time.now
     terminator = Proc.new { |result, object| result == false }
     
     self.class.transaction do
       return false unless run_paranoid_delete_callbacks(:before_paranoid_delete, terminator)
-      
+
       self.class.update_all({ :updated_at => time, :deleted_at => time }, [ 'id IN (?)', self.subtree_ids ])
       
       return false unless run_paranoid_delete_callbacks(:after_paranoid_delete, terminator)
@@ -52,17 +54,19 @@ module Node::ParanoidDelete
   
 private
 
-  def run_paranoid_delete_callbacks(callback, terminator)
-    return false unless self.run_callbacks(callback, &terminator) && self.content.run_callbacks(callback, &terminator)
-
+  def run_paranoid_delete_callbacks(callback, terminator)    
     Node.unscoped do
+      return false unless self.run_callbacks(callback, &terminator) && self.content.run_callbacks(callback, &terminator)
+
       self.descendants.find_each(:include => :content) do |descendant|
+        next if descendant.content.blank?
+        
         # No need to run the callback on descendant itself, as the callback of self takes care of the whole subtree.
         return false unless descendant.content.run_callbacks(callback, &terminator)
       end
-    end
 
-    true
+      true
+    end
   end
   
 end

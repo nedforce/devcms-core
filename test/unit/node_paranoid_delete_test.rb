@@ -31,7 +31,7 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
   def test_should_set_deleted_at_on_paranoid_delete
     now = Time.now
     Time.stubs(:now => now)
-    @economie_section_node.paranoid_delete!
+    assert @economie_section_node.paranoid_delete!
     assert_equal now, @economie_section_node.reload.deleted_at
   end
   
@@ -52,6 +52,20 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
     
     assert !Node.exists?(@economie_section_node)
     assert !Node.exists?(node)
+  end
+  
+  def test_paranoid_delete_should_skip_previously_deleted_descendants
+    node = create_node(@economie_section_node)
+    
+    assert Node.exists?(node)
+    
+    node.paranoid_delete!
+    
+    assert !Node.exists?(node)
+    
+    @economie_section_node.paranoid_delete!
+    
+    assert !Node.exists?(@economie_section_node)
   end
   
   def test_acts_as_content_node_default_scope_should_filter_out_paranoid_deleted_nodes
