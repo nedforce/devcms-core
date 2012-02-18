@@ -1,5 +1,5 @@
 module VideoHelper
-  # Return HTML to embed a youtube video based on a given +youtube_id+.
+  # Return HTML to embed a YouTube video based on a given +youtube_id+.
   def youtube_object_for_id(youtube_id)  
     case Settler[:display_videos_as_images]
       when true

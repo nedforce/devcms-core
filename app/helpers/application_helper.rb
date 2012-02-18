@@ -39,9 +39,9 @@ module ApplicationHelper
   # :suffix: A tree that follows the node, e.g. a category of a product catalogue
   def bread_crumbs_track_for(node, options = {})
     options = { :minimum_crumbs => 1, :separator => ' &gt; ', :include_root => true }.merge(options)
-    
+
     host = options.delete :host
-    
+
     crumb_track = String.new
     crumb_nodes = node.self_and_ancestors
     crumb_nodes.shift unless node.containing_site.root?
@@ -103,7 +103,7 @@ module ApplicationHelper
   # Returns the html for the double-level main menu.
   def create_main_menu
     top_level_main_menu_items = current_site.closure_for(current_site.descendants(:to_depth => 2).accessible.public.shown_in_menu.all(:order => :position)).values.first
-    
+
     if top_level_main_menu_items.any?
       content_tag(:ul, top_level_main_menu_items.map { |item, sub_items| create_main_menu_item(item, sub_items.keys) }.join("\n"), :id => 'main_menu', :class => 'clearfix')
     else
@@ -250,12 +250,12 @@ module ApplicationHelper
       image_tag    = image_tag(image_url, :alt => header_title, :title => header_title)
     elsif (big_header)
       header_title = random_image.title
-      image_tag    = image_tag big_header_image_path(random_image, :format => :jpg), :alt => random_image.alt, :title => header_title
       image_url    = big_header_image_path(random_image, :format => :jpg)
+      image_tag    = image_tag big_header_image_path(random_image, :format => :jpg), :alt => random_image.alt, :title => header_title
     else
       header_title = random_image.title
-      image_tag    = image_tag header_image_path(random_image, :format => :jpg), :alt => random_image.alt, :title => header_title
       image_url    = header_image_path(random_image, :format => :jpg)
+      image_tag    = image_tag header_image_path(random_image, :format => :jpg), :alt => random_image.alt, :title => header_title
     end
 
     return { :title => header_title, :image_tag => image_tag, :url => image_url }
@@ -415,7 +415,7 @@ module ApplicationHelper
         objects = params.collect {|object_name| instance_variable_get("@#{object_name}") }.compact
       end
 
-      count  = objects.inject(0) {|sum, object| sum + object.errors.count }
+      count = objects.inject(0) {|sum, object| sum + object.errors.count }
 
       unless count.zero?
         html = {}
