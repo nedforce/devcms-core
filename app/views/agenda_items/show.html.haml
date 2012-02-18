@@ -25,6 +25,7 @@
       .htmlField.body
         = process_video_tags(@agenda_item.body)
 
-    = render_images_and_attachments
+    = render_images
+    = render_attachments
     .buttons.clearfix
       = print_button

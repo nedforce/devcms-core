@@ -27,16 +27,16 @@
   %h3= t 'calendars.agenda_items'
   - agenda_items = event.agenda_items.accessible
   
-  - unless agenda_items.empty?
+  - if agenda_items.present?
     .agendaItems
-      %table.items{ :cellpadding => "0", :cellspacing => "0" }
+      %table.items{ :cellpadding => 0, :cellspacing => 0 }
         %caption= "Overzicht van agenda punten"
         %thead.ISI_IGNORE
           %tr
-            %th.spacer{ :scope => "col" }
-            %th{ :scope => "col" }
+            %th.spacer{ :scope => 'col' }
+            %th{ :scope => 'col' }
               = t 'calendars.agenda_item'
-            %th{ :scope => "col" }
+            %th{ :scope => 'col' }
               = t 'calendars.category'
         %tbody
           - agenda_items.each_with_index do |agenda_item, i|
@@ -50,4 +50,5 @@
     %p= t 'calendars.no_agenda_items'
 
 - else
-  = render_images_and_attachments
+  = render_images
+  = render_attachments
