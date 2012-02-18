@@ -82,7 +82,7 @@ module Node::Layouting
       layout_config[:targets].each do |target, content_ids|
         content_ids = content_ids.select { |cid| cid.present? }          
         if variant[target].try(:[], 'main_content') && self.content_type == 'Section'
-          content.update_attribute(:frontpage_node_id, content_ids.first)
+          content.update_attributes(:frontpage_node_id => content_ids.first.blank? ? nil : content_ids.first)
         else
           content_ids.each_with_index do |content_id, i|
             # Check wether this is a custom rep. or a normal content representation and handle accordingly
