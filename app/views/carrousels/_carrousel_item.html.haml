@@ -9,8 +9,8 @@
 
   - if image
     = link_to(image_tag(sidebox_image_path(image, :format => :jpg), :alt => h(image.alt)), url)
-  - if carrousel_item.excerpt
+  - if carrousel_item.excerpt.present?
     %p.excerpt
-      = h(carrousel_item.excerpt)
+      = h carrousel_item.excerpt
 
     = link_to t('shared.read_more'), url, :class => 'read_more_link'
