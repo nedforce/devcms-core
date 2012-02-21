@@ -104,6 +104,6 @@ protected
   end
 
   def find_children
-    @children = @links_box.node.children.accessible.public.exclude_content_types('Image').all
+    @children = @links_box.node.children.accessible.public.exclude_content_types('Image').include_content.all.map { |n| n.content }
   end
 end
