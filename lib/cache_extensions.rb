@@ -2,12 +2,16 @@ module ActionView #:nodoc:
   class Base #:nodoc:
     # adds support for expiring of cached fragment
     def cache(key, options = {}, &block)
-      enabled = options.delete(:enabled)
+      enabled = !options.keys.include?(:enabled) || options.delete(:enabled)
       
       if enabled
-        expires_in = key.delete(:expires_in)
         key[:host] = Settler[:host]
-        options[:expires_in] = expires_in.to_i if expires_in.present?
+        expires_in = options.delete(:expires_in)         
+        if ActionController::Base.cache_store.is_a?(ActiveSupport::Cache::MemCacheStore)
+          options[:expires_in] = expires_in.to_i if expires_in.present?
+        else
+          options.update(:ttl => (Time.now.to_i / expires_in.to_i)) if expires_in.present?
+        end
         
         begin
           super(key, options, &block) 
