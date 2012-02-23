@@ -6,7 +6,7 @@
 
     = render :partial => '/shared/metadata', :locals => { :publication_date => @page.publication_start_date, :last_update_date => @page.updated_at }
 
-    - if @page.preamble
+    - if @page.preamble.present?
       .preamble
         = simple_format(white_list_preamble(@page.preamble))
 

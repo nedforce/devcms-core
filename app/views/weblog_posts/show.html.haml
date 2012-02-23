@@ -9,7 +9,7 @@
 
     = render :partial => '/shared/metadata', :locals => { :publication_date => @weblog_post.publication_start_date, :last_update_date => @weblog_post.updated_at }
 
-    - if @weblog_post.preamble
+    - if @weblog_post.preamble.present?
       .preamble
         = simple_format(h(@weblog_post.preamble))
 
