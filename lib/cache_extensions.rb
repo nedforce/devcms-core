@@ -16,7 +16,7 @@ module ActionView #:nodoc:
         begin
           super(key, options, &block) 
         rescue Memcached::ServerIsMarkedDead => e
-          BackgroundNotifier.deliver_exception_notification(e, "Caching", nil)
+          # BackgroundNotifier.deliver_exception_notification(e, "Caching", nil)
           yield
         end
       else

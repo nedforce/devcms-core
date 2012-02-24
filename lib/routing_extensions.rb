@@ -8,14 +8,7 @@ module RoutingExtensions
 
     # Override default path recognition method by our own through aliasing
     def self.included(base)
-      base.alias_method_chain :extract_request_environment, :domain_extraction
       base.alias_method_chain :recognize_path, :delegation_or_url_aliasing
-    end
-
-    def extract_request_environment_with_domain_extraction(request)
-      parts = request.host.split('.')
-      parts.shift if parts.first == 'www'
-      extract_request_environment_without_domain_extraction(request).merge({ :domain => parts.join('.') })
     end
 
     def recognize_path_with_delegation_or_url_aliasing(path, environment = {})
@@ -90,9 +83,9 @@ module RoutingExtensions
             end
           end
         end
-      rescue ActionController::RoutingError, ActiveRecord::RecordNotFound => e
-        raise e if Rails.env.development?
-        params = { :controller => :errors, :action => :error_404, :site_id => site.node.id }
+      # rescue ActionController::RoutingError, ActiveRecord::RecordNotFound => e
+      #         params.update({ :site_id => site.node.id })
+      #         raise e
       end
       
       params.inject({}) do |hash, (key, value)|

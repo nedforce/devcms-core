@@ -18,13 +18,15 @@ class ApplicationController < ActionController::Base
   # Catch all exceptions (except 404 errors, which are handled below) to render
   # a custom 500 page. Also makes sure a notification mail is sent.
   # 404 exceptions are handled below.
-  rescue_from Exception, :with => :handle_500
+  rescue_from Exception, :with => :handle_500 unless Rails.env.development?
 
   # Catches all 404 errors to render a 404 page.
   # Note that this rescue_from statement has precedence over the one above.
   # UnknownAction and RecordNotFound exceptions are given a special treatment, so you don't have to worry about
   # catching them in the +find_[resource]+ methods throughout all controllers.
-  rescue_from ActionController::RoutingError, ActionController::UnknownController, ActionController::UnknownAction, ActiveRecord::RecordNotFound, :with => :handle_404
+  rescue_from ActionController::RoutingError, ActionController::UnknownController, ActionController::UnknownAction, ActiveRecord::RecordNotFound, :with => :handle_404 unless Rails.env.development?
+  
+  before_filter :redirect_to_full_domain
   
   # Try retrieve the +Node+ object for the current request.
   # This needs to be done before any authorization attempts, a +Node+ might be needed.
@@ -117,25 +119,25 @@ protected
 
   # Renders a custom 404 page.
   def handle_404(exception)
-    if Rails.env.development?
-      raise exception
-    elsif controller_name == "errors"
-      render :text => 'Internal server error.'
-    else
-      respond_to do |f|
-        f.html do 
-          if request.xhr?
-            render :json => { :error => I18n.t('application.page_not_found') }.to_json, :status => 404
+    @page_title = t('errors.page_not_found')
+    respond_to do |f|
+      f.html do 
+        if request.xhr?
+          render :json => { :error => I18n.t('application.page_not_found') }.to_json, :status => 404
+        else
+          if (error_404_url_alias = Settler[:error_page_404]).present? && @node = Node.find_by_url_alias(error_404_url_alias)
+            @page = @node.content
+            render :template => 'pages/show', :status => :not_found
           else
-            redirect_to error_404_path
+            render :template => "errors/404", :status => :not_found
           end
         end
-        f.xml  { head 404 }
-        f.json { render :json => { :error => I18n.t('application.page_not_found')}.to_json, :status => 404 }
-        f.js   { head 404 }
-        f.atom { head 404 }
-        f.all  { render :nothing => true, :status => :not_found }
       end
+      f.xml  { head 404 }
+      f.json { render :json => { :error => I18n.t('application.page_not_found')}.to_json, :status => 404 }
+      f.js   { head 404 }
+      f.atom { head 404 }
+      f.all  { render :nothing => true, :status => :not_found }
     end
   end
 
@@ -146,34 +148,34 @@ protected
       puts exception.backtrace.join("\n") 
     end
     
-    if Rails.env.development?
-      raise exception
-    elsif controller_name == "errors"
-      render :text => 'Internal server error.'
-    else
-      send_exception_notification(exception)
-      error = {:error => "#{exception} (#{exception.class})", :backtrace => exception.backtrace.join('\n')}
-  
-      respond_to do |f|
-        f.html do
-          if request.xhr?
-            render :json => error.to_json, :status => :internal_server_error
+    send_exception_notification(exception)
+    error = {:error => "#{exception} (#{exception.class})", :backtrace => exception.backtrace.join('\n')}
+    @page_title = t('errors.internal_server_error')
+
+    respond_to do |f|
+      f.html do
+        if request.xhr?
+          render :json => error.to_json, :status => :internal_server_error
+        else
+          if (error_500_url_alias = Settler[:error_page_500]).present? && @node = Node.find_by_url_alias(error_500_url_alias)
+            @page = @node.content
+            render :template => 'pages/show', :status => :internal_server_error
           else
-            redirect_to error_500_path
+            render :template => "errors/500", :status => :internal_server_error
           end
         end
-        f.xml  { render :xml  => error.to_xml,  :status => :internal_server_error }
-        f.json { render :json => error.to_json, :status => :internal_server_error }
-        f.js   { render :json => error.to_json, :status => :internal_server_error }
-        f.atom { render :xml  => error.to_xml,  :status => :internal_server_error, :layout => false }
-        f.all  { render :nothing => true,       :status => :internal_server_error }
       end
+      f.xml  { render :xml  => error.to_xml,  :status => :internal_server_error }
+      f.json { render :json => error.to_json, :status => :internal_server_error }
+      f.js   { render :json => error.to_json, :status => :internal_server_error }
+      f.atom { render :xml  => error.to_xml,  :status => :internal_server_error, :layout => false }
+      f.all  { render :nothing => true,       :status => :internal_server_error }
     end
   end
 
   # Used to scope the content (menu's etc) to the current site node
   def current_site
-    @current_site ||= Node.with_content_type('Site').find_by_id(params[:site_id]) || raise(ActionController::RoutingError, "No root site found!")
+    @current_site ||= Node.with_content_type('Site').find_by_id(params[:site_id]) || Site.find_by_domain(request.domain).try(:node) || raise(ActionController::RoutingError, "No root site found!")
   end
   
   # Used to find the operated node (if present and accessible)
@@ -440,5 +442,9 @@ protected
   
   def find_accessible_children_for_menus
     @accessible_children_for_menu = current_site.children.accessible.public.shown_in_menu.all(:order => 'nodes.position ASC')
+  end
+  
+  def redirect_to_full_domain
+    redirect_to "#{request.protocol}#{current_site.content.domain}:#{request.port}#{request.request_uri}" unless request.host == current_site.content.domain rescue false
   end
 end
