@@ -9,16 +9,16 @@ document.observe('dom:loaded', function () {
   showFontResizeBox();
 });
 
-function javascriptifyToggableSectionLinks(){
-  $$('.toggable_section_link').each(function(link){
+function javascriptifyToggableSectionLinks() {
+  $$('.toggable_section_link').each(function (link) {
     link.addClassName('activated');
-    $(link.id.replace('toggle_section_','')).hide();
-  
-    link.observe('click', function(event){
-      section_id = $(this).id.replace('toggle_section_','');      
-      Effect.toggle(section_id, 'appear', {duration: 0.5})
-      Element.toggleClassName(link.id, 'minus_icon')
-      Event.stop(event)      
+    $(link.id.replace('toggle_section_', '')).hide();
+
+    link.observe('click', function (event) {
+      section_id = $(this).id.replace('toggle_section_', '');
+      Effect.toggle(section_id, 'appear', { duration: 0.5 });
+      Element.toggleClassName(link.id, 'minus_icon');
+      Event.stop(event);
     });
   });
 }

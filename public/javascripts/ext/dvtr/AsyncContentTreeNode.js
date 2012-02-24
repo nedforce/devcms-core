@@ -40,10 +40,10 @@ Ext.dvtr.AsyncContentTreeNode = function (config) {
         this.URLAlias                        = config.URLAlias;
         this.noChildNodes                    = config.noChildNodes;
         this.numberChildren                  = config.numberChildren;
-				this.isHidden												 = config.isHidden;
+        this.isHidden						 = config.isHidden;
         this.isPrivate                       = config.isPrivate;
-				this.hasPrivateAncestor              = config.hasPrivateAncestor;
-				this.hasHiddenAncestor               = config.hasHiddenAncestor;
+        this.hasPrivateAncestor              = config.hasPrivateAncestor;
+        this.hasHiddenAncestor               = config.hasHiddenAncestor;
         this.category                        = config.category;
         this.hasImport                       = config.hasImport;
         this.hasSync                         = config.hasSync;
@@ -54,7 +54,7 @@ Ext.dvtr.AsyncContentTreeNode = function (config) {
         this.undeletable                     = config.undeletable;
         this.allowGlobalFrontpageSetting     = config.allowGlobalFrontpageSetting;
         this.allowShowInMenu                 = config.allowShowInMenu;
-				this.allowToggleHidden               = config.allowToggleHidden;
+        this.allowToggleHidden               = config.allowToggleHidden;
         this.allowTogglePrivate              = config.allowTogglePrivate;
         this.allowToggleChangedFeed          = config.allowToggleChangedFeed;
         this.allowUrlAliasSetting            = config.allowUrlAliasSetting;
@@ -67,13 +67,13 @@ Ext.dvtr.AsyncContentTreeNode = function (config) {
         // Save initial text for re-use
         this.originalText                    = config.text;
 
-				if (this.isPrivate || this.hasPrivateAncestor) {
-        	config.cls = 'privateNode';
+        if (this.isPrivate || this.hasPrivateAncestor) {
+            config.cls = 'privateNode';
         }
 
-				if (this.isHidden) {
-					config.cls = 'hiddenNode'
-				}
+        if (this.isHidden) {
+            config.cls = 'hiddenNode';
+        }
     }
 
     Ext.dvtr.AsyncContentTreeNode.superclass.constructor.call(this, config);
@@ -89,30 +89,30 @@ Ext.dvtr.AsyncContentTreeNode = function (config) {
     this.constructMenu = function () {
         // Create and assign a new context menu
         if (this.userHasRole()) {
-        	this.contextMenu = new Ext.dvtr.TreeNodeContextMenu({ tn: this });
+            this.contextMenu = new Ext.dvtr.TreeNodeContextMenu({ tn: this });
         }
     };
 
     this.constructMenu(true);
 
     this.constructText = function () {
-      var txt = this.originalText;
+        var txt = this.originalText;
 
-			if (this.isHidden) { 
-				txt += ' (verborgen)'; 
-			}
-			
-			if (this.isPrivate || this.hasPrivateAncestor) { 
-				txt += ' (priv&eacute;)'; 
-			}
-			
-			return txt;
+        if (this.isHidden) {
+            txt += ' (verborgen)';
+        }
+
+        if (this.isPrivate || this.hasPrivateAncestor) {
+            txt += ' (priv&eacute;)';
+        }
+
+        return txt;
     };
 
     this.renumberChildren = function () {
-      Ext.each(this.childNodes, function (tn, i) {
-    		tn.setText((i + 1) + '. ' + this.constructText());
-      });
+        Ext.each(this.childNodes, function (tn, i) {
+            tn.setText((i + 1) + '. ' + this.constructText());
+        });
     };
 
     /**
@@ -120,42 +120,42 @@ Ext.dvtr.AsyncContentTreeNode = function (config) {
     * makes sure a reload is triggered when de children are expanded.
     */
     this.reset = function () {
-      this.constructMenu();
-      this.setText(this.constructText());
+        this.constructMenu();
+        this.setText(this.constructText());
 
-      if (this.parentNode && this.parentNode.numberChildren) { 
-				this.parentNode.renumberChildren(); 
-			}
+        if (this.parentNode && this.parentNode.numberChildren) {
+            this.parentNode.renumberChildren();
+        }
 
-      if (this.expanded) {
-        this.reload();
-      } else {
-        this.loaded = false;
-      }
+        if (this.expanded) {
+            this.reload();
+        } else {
+            this.loaded = false;
+        }
     };
 
     this.makePrivate = function () {
-      this.isPrivate = true;
-      this.getUI().addClass('privateNode'); // Doesnt work on initialize, therefore its style is set through the config object as well.
-      this.reset();
+        this.isPrivate = true;
+        this.getUI().addClass('privateNode'); // Doesnt work on initialize, therefore its style is set through the config object as well.
+        this.reset();
     };
 
     this.makePublic = function () {
-      this.isPrivate = false;
- 			this.getUI().removeClass('privateNode');
-      this.reset();
+        this.isPrivate = false;
+        this.getUI().removeClass('privateNode');
+        this.reset();
     };
 
-		this.makeHidden = function () {
-      this.isHidden = true;
-      this.getUI().addClass('hiddenNode'); // Doesnt work on initialize, therefore its style is set through the config object as well.
-      this.reset();
+    this.makeHidden = function () {
+        this.isHidden = true;
+        this.getUI().addClass('hiddenNode'); // Doesnt work on initialize, therefore its style is set through the config object as well.
+        this.reset();
     };
 
     this.makeVisible = function () {
-      this.isHidden = false;
- 			this.getUI().removeClass('hiddenNode');
-      this.reset();
+        this.isHidden = false;
+        this.getUI().removeClass('hiddenNode');
+        this.reset();
     };
 
     // Add listeners:
@@ -164,32 +164,33 @@ Ext.dvtr.AsyncContentTreeNode = function (config) {
     this.on('dblclick',   this.onShow);
 
     Ext.each(['insert', 'append', 'remove'], function (event) {
-      this.on(event, function (t, n) {
-				n.childCountChanged = true;
-	    	n.constructMenu();
+        this.on(event, function (t, n) {
+            n.childCountChanged = true;
+            n.constructMenu();
 	    });
     }, this);
 
     if (this.numberChildren) { this.on('beforechildrenrendered', this.renumberChildren, this); }
 
-		this.setText(this.constructText());
+    this.setText(this.constructText());
 };
+
 // Extend the original TreeLoader class
 Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
     isEditable: function () {
-      return this.userHasRole() && this.attributes.allowEdit;
+        return this.userHasRole() && this.attributes.allowEdit;
     },
 
     hasChildNodes: function () {
-      return !this.leaf && ((this.loaded && this.childNodes.length > 0) || !this.noChildNodes);
+        return !this.leaf && ((this.loaded && this.childNodes.length > 0) || !this.noChildNodes);
     },
 
     userHasRole: function () {
-      return this.userRole ? true : false;
+        return this.userRole ? true : false;
     },
 
     onContextmenu: function () {
-      this.contextMenu.show();
+        this.contextMenu.show();
     },
 
     onShow: function () {
@@ -208,7 +209,7 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
     },
 
     onBeforeMove: function (tree, node, oldParent, newParent, index) {
-        return newParent.allowedChildContentTypes.indexOf(this.ownContentType) != -1;
+        return newParent.allowedChildContentTypes.indexOf(this.ownContentType) !== -1;
     }, // end onBeforeMove
 
     onMove: function (tree, node, oldParent, newParent, index) {
@@ -426,49 +427,49 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
             }
         });
     },
-    
+
     onToggleHidden: function (item, checked) {
-      Ext.Ajax.request({
-        url: '/admin/nodes/' + this.id + '/set_visibility',
-        method: 'POST', // overridden with delete by the _method parameter
-        params: Ext.ux.prepareParams(defaultParams, { _method: 'put', 'hidden': (checked ? 'true' : 'false') }),
-        scope: this,
-        success: function () {
-          checked ? this.makeHidden() : this.makeVisible();
-        },
-        callback: function (options, success, response) {
-          if (!success && response.status == 422) {
-            item.setChecked(!checked, true); // reset checked state
-            var responseJson = Ext.util.JSON.decode(response.responseText);
-            Ext.Msg.alert('Error', responseJson.errors[0]);
-          } else if (!success) {
-            item.setChecked(!checked, true); // reset checked state
-            Ext.ux.alertResponseError(response, I18n.t('hidden_failed', 'nodes'));
-          }
-        }
-      });
+        Ext.Ajax.request({
+            url: '/admin/nodes/' + this.id + '/set_visibility',
+            method: 'POST', // overridden with delete by the _method parameter
+            params: Ext.ux.prepareParams(defaultParams, { _method: 'put', 'hidden': (checked ? 'true' : 'false') }),
+            scope: this,
+            success: function () {
+                checked ? this.makeHidden() : this.makeVisible();
+            },
+            callback: function (options, success, response) {
+                if (!success && response.status === 422) {
+                    item.setChecked(!checked, true); // reset checked state
+                    var responseJson = Ext.util.JSON.decode(response.responseText);
+                    Ext.Msg.alert('Error', responseJson.errors[0]);
+                } else if (!success) {
+                    item.setChecked(!checked, true); // reset checked state
+                    Ext.ux.alertResponseError(response, I18n.t('hidden_failed', 'nodes'));
+                }
+            }
+        });
     },
 
     onTogglePrivate: function (item, checked) {
-      Ext.Ajax.request({
-        url: '/admin/nodes/' + this.id + '/set_accessibility',
-        method: 'POST', // overridden with delete by the _method parameter
-        params: Ext.ux.prepareParams(defaultParams, { _method: 'put', 'private': (checked ? 'true' : 'false') }),
-        scope: this,
-        success: function () {
-          checked ? this.makePrivate() : this.makePublic();
-        },
-        callback: function (options, success, response) {
-          if (!success && response.status == 422) {
-            item.setChecked(!checked, true); // reset checked state
-            var responseJson = Ext.util.JSON.decode(response.responseText);
-            Ext.Msg.alert('Error', responseJson.errors[0]);
-          } else if (!success) {
-            item.setChecked(!checked, true); // reset checked state
-            Ext.ux.alertResponseError(response, I18n.t('private_failed', 'nodes'));
-          }
-        }
-      });
+        Ext.Ajax.request({
+            url: '/admin/nodes/' + this.id + '/set_accessibility',
+            method: 'POST', // overridden with delete by the _method parameter
+            params: Ext.ux.prepareParams(defaultParams, { _method: 'put', 'private': (checked ? 'true' : 'false') }),
+            scope: this,
+            success: function () {
+                checked ? this.makePrivate() : this.makePublic();
+            },
+            callback: function (options, success, response) {
+                if (!success && response.status === 422) {
+                    item.setChecked(!checked, true); // reset checked state
+                    var responseJson = Ext.util.JSON.decode(response.responseText);
+                    Ext.Msg.alert('Error', responseJson.errors[0]);
+                } else if (!success) {
+                    item.setChecked(!checked, true); // reset checked state
+                    Ext.ux.alertResponseError(response, I18n.t('private_failed', 'nodes'));
+                }
+            }
+        });
     },
 
     onToggleShowInMenu: function (item, checked) {

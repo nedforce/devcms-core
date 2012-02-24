@@ -19,9 +19,9 @@ Ext.dvtr.TreeNodeContextMenu = function (config) {
     });
 
     if (this.tn.attributes.creatableChildContentTypes.length > 0 ||
-        this.tn.attributes.allowEdit ||
-        !this.tn.undeletable) {
-      this.add('-'); // separator if more menu items are to be added.
+            this.tn.attributes.allowEdit ||
+            !this.tn.undeletable) {
+        this.add('-'); // separator if more menu items are to be added.
     }
 
     // Add the 'Toevoegen' menu item:
@@ -85,82 +85,82 @@ Ext.dvtr.TreeNodeContextMenu = function (config) {
             icon: '/images/icons/delete.png',
             scope: this,
             handler: function () {
-              if (this.tn.isRepeatingCalendarItem) {
-                Ext.Msg.show({
-                  title: I18n.t('repeating_calendar_delete_title', 'calendar_items'),
-                  msg: I18n.t('repeating_calendar_delete_message', 'calendar_items'),
-                  buttons: Ext.Msg.YESNOCANCEL,
-                  scope: this,
-                  fn: function (btn) {
-                    if (btn == 'yes') {
-                      this.tn.onRepeatingCalendarItemDelete();
-                    } else if (btn == 'no') {
-                      this.tn.onDelete();
-                    }
-                  },
-                  icon: Ext.MessageBox.QUESTION
-                });
-              } else {
-               Ext.Msg.show({
-                 title: I18n.t('delete_content', 'generic'),
-                 msg: ((this.tn.isFrontpage) ? I18n.t('delete_frontpage_node', 'nodes') : I18n.t('delete_node', 'nodes')),
-                 buttons: Ext.Msg.YESNO,
-                 scope: this,
-                 fn: function (btn) { if (btn == 'yes') { this.tn.onDelete(); }},
-                 icon: Ext.MessageBox.QUESTION
-               });
-              }
+                if (this.tn.isRepeatingCalendarItem) {
+                    Ext.Msg.show({
+                        title: I18n.t('repeating_calendar_delete_title', 'calendar_items'),
+                        msg: I18n.t('repeating_calendar_delete_message', 'calendar_items'),
+                        buttons: Ext.Msg.YESNOCANCEL,
+                        scope: this,
+                        fn: function (btn) {
+                            if (btn === 'yes') {
+                                this.tn.onRepeatingCalendarItemDelete();
+                            } else if (btn === 'no') {
+                                this.tn.onDelete();
+                            }
+                        },
+                        icon: Ext.MessageBox.QUESTION
+                    });
+                } else {
+                    Ext.Msg.show({
+                        title: I18n.t('delete_content', 'generic'),
+                        msg: ((this.tn.isFrontpage) ? I18n.t('delete_frontpage_node', 'nodes') : I18n.t('delete_node', 'nodes')),
+                        buttons: Ext.Msg.YESNO,
+                        scope: this,
+                        fn: function (btn) { if (btn === 'yes') { this.tn.onDelete(); } },
+                        icon: Ext.MessageBox.QUESTION
+                    });
+                }
             },
             disabled: this.tn.isGlobalFrontpage || this.tn.isRoot || this.tn.containsGlobalFrontpage
         });
     }
 
-    if (this.tn.userRole == 'admin' && this.tn.attributes.ownContentType == 'Site') {
+    if (this.tn.userRole === 'admin' && this.tn.attributes.ownContentType === 'Site') {
 		this.add('-'); //separator
 
         this.add({
-              text: I18n.t('show', 'abbreviations'),
-              icon: '/images/icons/table_lightning.png',
-              scope: this.tn,
-              handler: this.tn.onAbbreviations
+            text: I18n.t('show', 'abbreviations'),
+            icon: '/images/icons/table_lightning.png',
+            scope: this.tn,
+            handler: this.tn.onAbbreviations
         });
 
 		this.add({
-              text: I18n.t('show', 'synonyms'),
-              icon: '/images/icons/table_relationship.png',
-              scope: this.tn,
-              handler: this.tn.onSynonyms
+            text: I18n.t('show', 'synonyms'),
+            icon: '/images/icons/table_relationship.png',
+            scope: this.tn,
+            handler: this.tn.onSynonyms
         });
     }
 
     if (this.tn.allowLayoutConfig || this.tn.allowGlobalFrontpageSetting || this.tn.allowContentCopyCreation ||
-        this.tn.allowUrlAliasSetting || this.tn.allowSortChildren) {
+            this.tn.allowUrlAliasSetting || this.tn.allowSortChildren) {
 
-      this.add('-'); // separator
+        this.add('-'); // separator
 
-      if (this.tn.allowSortChildren) {
-          this.sortItem = this.add({
-            text: I18n.t('sort_content', 'context_menu'),
-            menu: new Ext.menu.Menu({
-                items: [
-                    itemForSortMenu(I18n.t('sort_by_title', 'nodes'), 'title', this.tn),
-                    itemForSortMenu(I18n.t('sort_by_created_at', 'nodes'), 'date', this.tn)
-                ]
-            })
-          });
-          var cnt = this.tn.childCountChanged ? this.tn.childNodes.length : this.tn.initialChildCount;
-          if (cnt < 2) {
-              this.sortItem.disable();
-          }
-      }
+        if (this.tn.allowSortChildren) {
+            this.sortItem = this.add({
+                text: I18n.t('sort_content', 'context_menu'),
+                menu: new Ext.menu.Menu({
+                    items: [
+                        itemForSortMenu(I18n.t('sort_by_title', 'nodes'), 'title', this.tn),
+                        itemForSortMenu(I18n.t('sort_by_created_at', 'nodes'), 'date', this.tn)
+                    ]
+                })
+            });
+            var cnt = this.tn.childCountChanged ? this.tn.childNodes.length : this.tn.initialChildCount;
+            if (cnt < 2) {
+                this.sortItem.disable();
+            }
+        }
 
-      if (this.tn.allowLayoutConfig) {
-        this.add({
-            text: I18n.t('layout_settings', 'context_menu'),
-            scope: this.tn,
-            handler: this.tn.onLayoutConfig
-        });
-      }
+        if (this.tn.allowLayoutConfig) {
+            this.add({
+                text: I18n.t('layout_settings', 'context_menu'),
+                scope: this.tn,
+                handler: this.tn.onLayoutConfig
+            });
+        }
 
       // Add the 'Maak globale frontpage' item
       if (this.tn.allowGlobalFrontpageSetting) {
@@ -192,7 +192,7 @@ Ext.dvtr.TreeNodeContextMenu = function (config) {
     }
 
     // Add the 'Rol toewijzen' menu item:
-    if (this.tn.userRole == 'admin' && this.tn.allowRoleAssignment) {
+    if (this.tn.userRole === 'admin' && this.tn.allowRoleAssignment) {
       this.add('-'); // separator
 
       this.add({

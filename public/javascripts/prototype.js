@@ -5830,7 +5830,9 @@ Form.EventObserver = Class.create(Abstract.EventObserver, {
   function pollDoScroll() {
     try { document.documentElement.doScroll('left'); }
     catch(e) {
-      timer = pollDoScroll.defer();
+      // 2012.02.24 fix: https://prototype.lighthouseapp.com/projects/8886/tickets/1018-prototype-161-conflict-with-ext-js-causing-stack-overflow-error
+      // timer = pollDoScroll.defer();
+      timer = pollDoScroll.delay(0.01);
       return;
     }
     fireContentLoadedEvent();
@@ -5841,7 +5843,9 @@ Form.EventObserver = Class.create(Abstract.EventObserver, {
   } else {
     document.observe('readystatechange', checkReadyState);
     if (window == top)
-      timer = pollDoScroll.defer();
+      // 2012.02.24 fix: https://prototype.lighthouseapp.com/projects/8886/tickets/1018-prototype-161-conflict-with-ext-js-causing-stack-overflow-error
+      // timer = pollDoScroll.defer();
+      timer = pollDoScroll.delay(0.01);
   }
 
   Event.observe(window, 'load', fireContentLoadedEvent);
