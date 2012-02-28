@@ -64,7 +64,7 @@ html[xmlns] .clearfix {
   .calendarContainer .calendar a {
     color: white; }
   .calendarContainer .calendar abbr {
-    border: 0px; }
+    border: 0; }
   .calendarContainer .calendar th, .calendarContainer .calendar td {
     width: 30px; }
   .calendarContainer .calendar .monthInfo th {
@@ -106,7 +106,7 @@ html[xmlns] .clearfix {
 
 #calendarMain .monthInfo {
   width: 248px;
-  padding: 0px;
+  padding: 0;
   float: right;
   text-align: center;
   font-size: 11px;
@@ -121,7 +121,7 @@ html[xmlns] .clearfix {
   font-family: "Trebuchet MS", sans-serif;
   font-size: 17px;
   font-weight: normal;
-  margin: 0pt 0pt 10px; }
+  margin: 0 0 10px; }
 
 .calendarDay {
   font-size: 13px;
@@ -134,7 +134,7 @@ html[xmlns] .clearfix {
     color: black;
     font-weight: normal;
     line-height: 16px;
-    margin: 0px;
+    margin: 0;
     font-family: arial, sans-serif; }
   .calendarDay .dayName {
     padding-bottom: 3px;
@@ -169,7 +169,7 @@ html[xmlns] .clearfix {
     margin-bottom: 10px; }
     #calendarItemMain .details .dynamic_attributes div, #calendarItemMain .details .category, #calendarItemMain .details .start_time, #calendarItemMain .details .end_time, #calendarItemMain .details .location {
       font-size: 10px;
-      color: #666666; }
+      color: #666; }
   #calendarItemMain .body, #calendarItemMain .agendaItems {
     margin-bottom: 10px; }
   #calendarItemMain h3 {
@@ -188,7 +188,7 @@ div.calendar_item div.buttons a {
   background-position: center left; }
 
 .calendarItems .buttons {
-  margin-top: 0px;
+  margin-top: 0;
   padding-top: 2px;
   padding-left: 2px;
   font-size: 11px; }
@@ -229,7 +229,7 @@ div.calendar_item div.buttons a {
     .carrousel_content_box .carrousel_item a:hover {
       text-decoration: none; }
 .carrousel_content_box .header {
-  padding-bottom: 0px !important; }
+  padding-bottom: 0 !important; }
 .carrousel_content_box .carrousel_item h2 {
   font-size: 14px;
   margin-bottom: 3px;
@@ -278,7 +278,7 @@ div.comments {
     color: #9f9f9f; }
   div.comments .publicationDate {
     float: left;
-    margin: 0px;
+    margin: 0;
     padding-left: 2px; }
   div.comments .text {
     float: left;
@@ -293,13 +293,13 @@ div.comments {
 div.comments_content {
   padding-bottom: 8px; }
 div.newComment div.userName {
-  padding: 8px 0px; }
+  padding: 8px 0; }
   div.newComment div.userName label {
-    padding: 4px 0px;
+    padding: 4px 0;
     float: left;
     width: 50px; }
 div.newComment div.submit {
-  padding: 8px 0px; }
+  padding: 8px 0; }
 div.width_20 {
   width: 20px; }
 div .authenticity_token {
@@ -341,7 +341,7 @@ div .authenticity_token {
   padding: 5px; }
   .contact_form .buttons a {
     color: #0076af;
-    margin: 0px 0px 0px 0px;
+    margin: 0 0 0 0;
     /*edited was 0 6 0 6 */ }
 
 /* Generic content box stuff */
@@ -407,7 +407,7 @@ div .authenticity_token {
     text-decoration: none;
     color: black; }
   .content_box .content .read_more_link {
-    color: #666666;
+    color: #666;
     font-weight: bold;
     text-decoration: none;
     margin-left: 30px;
@@ -456,7 +456,7 @@ div.forumThread h1.closed .prefix {
   padding-left: 20px; }
 div.forumThread p.forumThreadDetails {
   color: #9f9f9f;
-  margin: 0px; }
+  margin: 0; }
 div.forumThread div.forumThreadBody {
   overflow: hidden; }
 div.forum div.forumDescription, div.forumTopic div.forumTopicDescription, div.forumFormPage div.forumTopicDescription {
@@ -510,7 +510,7 @@ div.forum div.forumTopics div.forumTopicDetails, div.forumTopic div.forumThreads
   float: right;
   text-align: right; }
 div.forumThread div.forumPosts p.forumPostDetails, div.forum div.forumTopics div.forumTopicDetails p, div.forumTopic div.forumThreads div.forumThreadDetails p {
-  margin: 0px; }
+  margin: 0; }
 div.forum div.forumTopics h3, div.forumTopic div.forumThreads h3 {
   font-family: "Trebuchet MS", sans-serif;
   font-size: 15px;
@@ -523,7 +523,7 @@ div.forumFormPage div.forumForm {
   border-top: 1px solid #0076af;
   margin-top: 10px; }
   div.forumFormPage div.forumForm div.userName label {
-    padding: 4px 0px;
+    padding: 4px 0;
     float: left;
     width: 50px; }
 div.forumFormPage h1 a {
@@ -557,7 +557,7 @@ div.forumFormPage h1 a {
 
 /* Upper header (Logo, language selection, login) */
 #top_header {
-  padding: 0px 0 4px;
+  padding: 0 0 4px;
   height: 75px; }
 
 #logo {
@@ -565,7 +565,7 @@ div.forumFormPage h1 a {
 
 #language_selection_and_rss {
   float: left;
-  padding: 5px 0px 0px 60px; }
+  padding: 5px 0 0 60px; }
 
 #rss img {
   position: relative;
@@ -575,9 +575,9 @@ div.forumFormPage h1 a {
   padding-right: 10px;
   padding-top: 10px;
   float: right;
-  /* color: #9F9F9F; */
-  color: #666666;
-  font-family: "Trebuchet MS", arial, sans-serif;
+  /* color: #9f9f9f; */
+  color: #666;
+  font-family: "Trebuchet MS", Arial, sans-serif;
   w\idth: 365px;
   width: 355px; }
   #login label {
@@ -588,13 +588,13 @@ div.forumFormPage h1 a {
   #login div.field_wrapper {
     float: right;
     display: inline;
-    border: 1px solid #cccccc; }
+    border: 1px solid #ccc; }
   #login input {
     width: 128px;
-    border: 0px;
-    padding: 0px;
-    /* color: #9F9F9F; */
-    color: #666666;
+    border: 0;
+    padding: 0;
+    /* color: #9f9f9f; */
+    color: #666;
     font-size: 11px; }
     #login input.submit {
       width: 70px;
@@ -609,11 +609,11 @@ div.forumFormPage h1 a {
     float: left;
     width: 230px; }
     #login .links a {
-      /* color: #9F9F9F; */
+      /* color: #9f9f9f; */
       color: #666666;
       font-size: 10px;
       text-decoration: none;
-      padding: 4px 10px 0px 20px;
+      padding: 4px 10px 0 20px;
       background: transparent url(../images/arrow_black.png) no-repeat scroll 9px 10px; }
       #login .links a:hover {
         text-decoration: underline; }
@@ -666,7 +666,7 @@ div.forumFormPage h1 a {
 
 #meta_links_and_search {
   float: left;
-  padding: 35px 27px 0px;
+  padding: 35px 27px 0;
   w\idth: 254px;
   width: 200px; }
   #meta_links_and_search .meta_links {
@@ -682,9 +682,9 @@ div.forumFormPage h1 a {
 #fontsize {
   display: inline;
   vertical-align: bottom;
-  border: 0px;
-  margin: 0px;
-  padding: 0px; }
+  border: 0;
+  margin: 0;
+  padding: 0; }
   #fontsize img {
     cursor: pointer; }
 
@@ -705,7 +705,7 @@ div.forumFormPage h1 a {
     width: 200px; }
   #search form .submit {
     margin: 8px 0 0 0;
-    padding: 0px;
+    padding: 0;
     border: 0;
     cursor: pointer;
     float: right;
@@ -751,14 +751,14 @@ div.forumFormPage h1 a {
  * Footer styles */
 #footer {
   background: #f0f0f0 repeat-y;
-  color: #999999;
+  color: #999;
   margin: auto;
-  padding: 20px 25px 0px;
+  padding: 20px 25px 0;
   width: 970px;
   height: 35px; }
   #footer a {
-    padding: 0px 5px;
-    color: #999999;
+    padding: 0 5px;
+    color: #999;
     text-decoration: none; }
     #footer a:hover {
       text-decoration: underline; }
@@ -901,7 +901,7 @@ div.forumFormPage h1 a {
     height: 31px; }
     #main_menu li .main_menu_link {
       color: white;
-      font-family: "Trebuchet MS", arial, sans-serif;
+      font-family: "Trebuchet MS", Arial, sans-serif;
       font-size: 13px;
       font-weight: bold;
       text-decoration: none;
@@ -946,7 +946,7 @@ div.forumFormPage h1 a {
     #main_menu li.green .sub_menu {
       background-color: #edf3cb; }
     #main_menu li.turquoise:hover, #main_menu li.turquoise .sub_menu_wrapper {
-      background-color: #009999; }
+      background-color: #099; }
     #main_menu li.turquoise .sub_menu {
       background-color: #e8f4f2; }
     #main_menu li.orange:hover, #main_menu li.orange .sub_menu_wrapper {
@@ -1019,8 +1019,8 @@ div.newsItems div.newsItem h2 a {
   .news_archive_content_box .firstNewsItem a:hover {
     text-decoration: none; }
 .news_archive_content_box .firstNewsItem p.publicationDate {
-  /* color: #9F9F9F; */
-  color: #666666; }
+  /* color: #9f9f9f; */
+  color: #666; }
 .news_archive_content_box .firstNewsItem a.body {
   color: black; }
   .news_archive_content_box .firstNewsItem a.body img {
@@ -1098,7 +1098,7 @@ div.newsletterArchive #subscription_box {
       top: 3px; }
   #poll_question_main div.button input {
     margin-top: 5px;
-    margin-left: 0px;
+    margin-left: 0;
     background: #bfdde9;
     float: left;
     border: 1px solid #0076af; }
@@ -1123,8 +1123,8 @@ div.newsletterArchive #subscription_box {
     margin-bottom: 7px; }
   #poll_results_main div.number_of_votes {
     float: left;
-    /* color: #9F9F9F; */
-    color: #666666; }
+    /* color: #9f9f9f; */
+    color: #666; }
   #poll_results_main div.results, #poll_results_main div.option {
     float: left; }
   #poll_results_main div.answer {
@@ -1203,8 +1203,8 @@ div.newsletterArchive #subscription_box {
     .poll_content_box .content .poll_results .bar img {
       height: 6px;
       position: absolute;
-      top: 0px;
-      left: 0px; }
+      top: 0;
+      left: 0; }
 .poll_content_box .content .number_of_votes {
   margin-top: 8px; }
 
@@ -1225,8 +1225,8 @@ a.topRightReadspeaker {
 /* search styling */
 ul#search-tabs {
   list-style: none;
-  padding: 0px;
-  margin: 0px 0px 10px 0px;
+  padding: 0;
+  margin: 0 0 10px 0;
   border-bottom: 1px solid #186294;
   padding-left: 10px; }
   ul#search-tabs li {
@@ -1242,11 +1242,11 @@ ul#search-tabs {
       text-decoration: none; }
     ul#search-tabs li.selected a {
       background-color: #186294;
-      /*#D9EAF2; */
+      /*#d9eaf2; */
       color: white; }
 
 form#main_search_form {
-  padding: 10px 0px 20px 0px; }
+  padding: 10px 0 20px 0; }
 
 div.searchResults {
   margin-top: 10px;
@@ -1263,20 +1263,20 @@ div.searchResults {
 /* search_pages styling */
 /* Search side box */
 .search_page_content_box {
-  font-family: "Trebuchet MS", "Arial", sans-serif; }
+  font-family: "Trebuchet MS", Arial, sans-serif; }
   .search_page_content_box form .search_terms input {
-    border: 0px;
-    /* color: #9F9F9F; */
+    border: 0;
+    /* color: #9f9f9f; */
     color: #666666;
     font-size: 11px;
-    padding: 3px 0px 3px 10px;
+    padding: 3px 0 3px 10px;
     margin: 15px;
     w\idth: 200px;
     width: 190px; }
   .search_page_content_box form .submit {
-    border: 0px;
+    border: 0;
     margin: 0 8px 8px 0;
-    padding: 0px;
+    padding: 0;
     cursor: pointer;
     float: right;
     color: white;
@@ -1288,7 +1288,7 @@ div.searchResults {
 
 /* Search page */
 .searchPage {
-  border-bottom: 0px !important; }
+  border-bottom: 0 !important; }
   .searchPage #controls p {
     display: block;
     margin: 0 5px;
@@ -1335,12 +1335,12 @@ div.searchResults {
     text-decoration: underline; }
   .searchPage .number_of_results {
     /* color: #9F9F9F; */
-    color: #666666; }
+    color: #666; }
     .searchPage .number_of_results .query {
       font-weight: bold;
       color: #025e99; }
   .searchPage .search_results {
-    border: 0px !important;
+    border: 0 !important;
     margin-top: 10px; }
   .searchPage .search_result {
     padding: 5px 0;
@@ -1445,7 +1445,7 @@ ul.section_items {
   padding-left: 7px;
   list-style-type: none; }
   ul.section_items li {
-    padding: 2px 0px 2px 10px; }
+    padding: 2px 0 2px 10px; }
 
 /* Content boxes */
 .section_content_box .description {
@@ -1459,12 +1459,12 @@ div.social_media_links_box_icons {
 
 /* top_hits_pages styling */
 ol.top_hits {
-  margin: 0px 0px 0px 16px;
+  margin: 0 0 0 16px;
   padding: 8px;
   padding-right: 3px; }
   ol.top_hits li {
-    padding: 0px 0px 0px 0px;
-    margin: 0px 0px 0px 0px; }
+    padding: 0 0 0 0;
+    margin: 0 0 0 0; }
     ol.top_hits li a {
       position: relative;
       left: -5px;
@@ -1554,7 +1554,7 @@ table#user_details td {
   float: left;
   width: 200px; }
   #reg_form .form_checkbox input {
-    margin-left: 0px;
+    margin-left: 0;
     float: left; }
   #reg_form .form_checkbox label {
     width: 175px;
@@ -1587,7 +1587,7 @@ div.weblogArchive h1 .prefix, div.weblog h1 .prefix, div.weblogPost h1 .prefix, 
   line-height: 18px; }
 div.weblog p.weblogDetails {
   color: #9f9f9f;
-  margin: 0px; }
+  margin: 0; }
 div.weblog div.weblogDescription {
   overflow: hidden; }
 div.weblog .preamble {
@@ -1629,7 +1629,7 @@ div.weblogArchive div.weblogs div.weblogDetails {
   float: right;
   text-align: right; }
   div.weblogArchive div.weblogs div.weblogDetails p {
-    margin: 0px; }
+    margin: 0; }
 div.weblogArchive div.weblogs h3 {
   font-family: "Trebuchet MS", sans-serif;
   font-size: 15px;
@@ -1678,8 +1678,8 @@ div.weblogPostImage {
 
 .weblog_content_box .content li .date, .weblog_archive_content_box .content li .date {
   width: 80px;
-  /* color: #9F9F9F; */
-  color: #666666;
+  /* color: #9f9f9f; */
+  color: #666;
   font-weight: bold; }
 
 .weblog_content_box .content li .link, .weblog_archive_content_box .content li .link {
@@ -1694,12 +1694,12 @@ body {
   padding: 5px 15px 0 15px;
   background-color: #b4b4b4;
   text-align: center;
-  font-family: arial, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   font-size: 11px;
   line-height: 16px; }
 
 td, th {
-  font-family: arial, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   font-size: 11px;
   line-height: 16px; }
 
@@ -1708,7 +1708,7 @@ img {
   img.icon {
     position: relative;
     top: 3px;
-    padding: 0px 4px 0px 0px; }
+    padding: 0 4px 0 0; }
 
 div, td {
   text-align: left;
@@ -1752,12 +1752,12 @@ div.htmlField h2, div.htmlField h3 {
   font-family: inherit;
   font-size: 11px;
   font-weight: bold;
-  margin-top: 0px;
-  margin-bottom: 0px;
+  margin-top: 0;
+  margin-bottom: 0;
   line-height: normal;
   color: black; }
 div.htmlField abbr, div.htmlField html\:abbr {
-  border-bottom: 1px dashed #cccccc;
+  border-bottom: 1px dashed #ccc;
   cursor: help; }
 
 /*Default form styles */
@@ -1786,7 +1786,7 @@ input.submit_pink {
 /*Other stuff */
 #main_container {
   margin: auto;
-  padding: 0px 20px 15px;
+  padding: 0 20px 15px;
   background: white repeat-y;
   w\idth: 1020px;
   width: 980px; }
@@ -1797,7 +1797,7 @@ input.submit_pink {
 
 /* Content area (3 columns) */
 #columns_wrapper {
-  background-position: 267px 0px;
+  background-position: 267px 0;
   padding-top: 15px;
   position: relative; }
 
@@ -1856,14 +1856,14 @@ a.leftColumn, div.leftColumn, a.rightColumn, div.rightColumn {
   margin-bottom: 15px; }
 
 li.privateSections {
-  margin: 5px 0px 15px 0px; }
+  margin: 5px 0 15px 0; }
   li.privateSections ul li {
     padding-left: 10px; }
 
 #images_bar {
   border: 1px solid #dfdfdf;
   padding: 5px 5px 2px 5px;
-  margin: 10px 0px 10px 0px; }
+  margin: 10px 0 10px 0; }
 
 /* Metadata */
 .page .metadata .publicationDate, .section .metadata .publicationDate, .pollQuestion .metadata .publicationDate, .newsItem .metadata .publicationDate, .newsletterEdition .metadata .publicationDate, .weblogPost .metadata .publicationDate {
@@ -1927,8 +1927,8 @@ table#items td.right_sized, th.right_sized {
   float: right !important; }
 
 .buttons.right {
-  padding-right: 0px !important;
-  margin-right: 0px !important; }
+  padding-right: 0 !important;
+  margin-right: 0 !important; }
 .buttons input.hidden, .buttons .hidden {
   display: none !important; }
 
@@ -1941,12 +1941,12 @@ table#items td.right_sized, th.right_sized {
   z-index: 1000;
   top: 20px;
   right: 20px;
-  padding: 0px 5px 2px 5px;
-  border: 2px solid #cccccc;
+  padding: 0 5px 2px 5px;
+  border: 2px solid #ccc;
   background-color: white; }
   #admin_tools ul {
     list-style-type: none;
-    padding: 0px; }
+    padding: 0; }
 
 * html #admin_tools {
   position: absolute;
@@ -1954,12 +1954,12 @@ table#items td.right_sized, th.right_sized {
 
 /* bread crumb styles */
 .bread_crumbs {
-  color: #cccccc;
+  color: #ccc;
   padding-bottom: 3px;
   margin-bottom: 2px; }
   .bread_crumbs a {
     /* color: #888; */
-    color: #666666;
+    color: #666;
     line-height: 14px; }
 
 /* extra styles */
@@ -1992,7 +1992,7 @@ div.flash {
   background-position: 4px 4px;
   margin-bottom: 5px; }
   div.flash p {
-    margin: 0px; }
+    margin: 0; }
 div.notice {
   background-color: #7cdaff;
   border: 1px solid #0076af; }
@@ -2011,14 +2011,14 @@ div.error {
   background-repeat: no-repeat;
   background-position: 5px 5px;
   border: 1px solid #0076af;
-  padding-left: 0px;
+  padding-left: 0;
   margin-bottom: 5px;
   color: #0076af; }
   .errorExplanation h2 {
     padding-left: 25px;
     padding-top: 6px;
     padding-bottom: 3px;
-    margin: 0px;
+    margin: 0;
     line-height: 15px;
     font-size: 14px;
     font-weight: bold;

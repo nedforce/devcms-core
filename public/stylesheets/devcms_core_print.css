@@ -106,7 +106,7 @@ html[xmlns] .clearfix {
 
 #calendarMain .monthInfo {
   width: 248px;
-  padding: 0px;
+  padding: 0;
   float: right;
   text-align: center;
   font-size: 11px;
@@ -121,7 +121,7 @@ html[xmlns] .clearfix {
   font-family: "Trebuchet MS", sans-serif;
   font-size: 17px;
   font-weight: normal;
-  margin: 0pt 0pt 10px; }
+  margin: 0 0 10px; }
 
 .calendarDay {
   font-size: 13px;
@@ -134,8 +134,8 @@ html[xmlns] .clearfix {
     color: black;
     font-weight: normal;
     line-height: 16px;
-    margin: 0px;
-    font-family: arial, sans-serif; }
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif; }
   .calendarDay .dayName {
     padding-bottom: 3px;
     border: 1px solid #0076af;

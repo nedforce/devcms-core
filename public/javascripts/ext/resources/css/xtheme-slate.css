@@ -197,7 +197,7 @@ ul.x-tab-strip-bottom{
 	background:transparent url(../images/slate/toolbar/btn-arrow.gif) no-repeat scroll right 3px;
 }
 .x-btn-with-menu .x-btn-center em{
-	background:transparent url(../images/slate/toolbar/btn-arrow.gif) no-repeat scroll right 0pt;
+	background:transparent url(../images/slate/toolbar/btn-arrow.gif) no-repeat scroll right 0;
 }
 .x-btn-menu-arrow-wrap .x-btn-center button{
 	background:transparent url(../images/slate/button/btn-arrow.gif) no-repeat left 3px;

@@ -135,7 +135,7 @@ html[xmlns] .clearfix {
   padding: 14px 10px 10px 10px; }
 
 #content p {
-  margin: 0px 0px 4px 0px; }
+  margin: 0 0 4px 0; }
 
 #approve_content {
   padding: 20px; }
@@ -157,8 +157,8 @@ html[xmlns] .clearfix {
 
 h2 .diff, .content .diff {
   display: inline;
-  margin: 0px 1px;
-  padding: 0px 2px; }
+  margin: 0 1px;
+  padding: 0 2px; }
 
 h2 .diff-ins {
   background-color: lightgreen; }
@@ -185,10 +185,10 @@ h2 .diff-del {
 
 /*Category selection config */
 #geo_data {
-  margin: 0 0 20px 0px; }
+  margin: 0 0 20px 0; }
 
 #category_settings {
-  margin: 0 0 20px 0px; }
+  margin: 0 0 20px 0; }
   #category_settings .category_selection_fields .formFieldCt {
     margin: 0; }
     #category_settings .category_selection_fields .formFieldCt label {
@@ -274,12 +274,12 @@ h2 .diff-del {
   font-family: inherit;
   font-size: 11px;
   font-weight: bold;
-  margin: 0px;
+  margin: 0;
   line-height: normal;
   color: black; }
 
 #preview {
-  padding: 15px 15px 0px 15px; }
+  padding: 15px 15px 0 15px; }
   #preview #preview-content .forms {
     margin-top: 10px; }
     #preview #preview-content .forms form {
@@ -338,7 +338,7 @@ h2 .diff-del {
   font-family: inherit;
   font-size: 11px;
   font-weight: bold;
-  margin: 0px;
+  margin: 0;
   line-height: normal;
   color: black; }
 
@@ -367,13 +367,13 @@ h2 .diff-del {
   padding-left: 7px !important; }
 
 #show ol.top_hits li, #preview ol.top_hits li {
-  padding: 2px 0px 2px 5px !important; }
+  padding: 2px 0 2px 5px !important; }
 
 #show ol.top_hits li .hits, #preview ol.top_hits li .hits {
   font-weight: bold; }
 
 #show ul.section_items li, #preview ul.section_items li {
-  padding: 2px 0px 2px 10px !important; }
+  padding: 2px 0 2px 10px !important; }
 
 #show .calendarDay h3, #preview .calendarDay h3 {
   color: black;
@@ -382,7 +382,7 @@ h2 .diff-del {
   font-size: 13px;
   font-weight: normal;
   line-height: 16px;
-  margin: 0px;
+  margin: 0;
   padding: 3px 6px 3px 3px; }
 
 #show div.weblogArchive div.weblogs div.weblogDetails p, #preview div.weblogArchive div.weblogs div.weblogDetails p {
@@ -419,7 +419,7 @@ h2 .diff-del {
   right: auto !important; }
 
 abbr, html\:abbr {
-  border-bottom: 1px dashed #cccccc;
+  border-bottom: 1px dashed #ccc;
   cursor: help; }
 
 /*node styles */
@@ -485,7 +485,7 @@ h2 {
   color: #456ea4;
   font-weight: normal;
   margin: 0;
-  padding: 8px 0px 0px 10px; }
+  padding: 8px 0 0 10px; }
 .top_bar a {
   float: left;
   margin-top: 3px;
@@ -504,7 +504,7 @@ h2 {
     background-position: bottom left; }
   .top_bar a.align_right {
     float: right;
-    margin-left: 0px;
+    margin-left: 0;
     margin-right: 4px; }
 
 #show {
@@ -563,7 +563,7 @@ fieldset {
     margin-bottom: 5px;
     padding: 4px; }
   .errorExplanation p {
-    padding: 0px 4px 4px 4px; }
+    padding: 0 4px 4px 4px; }
   .errorExplanation ul {
     list-style-type: disc;
     padding: 0 0 0 20px;
@@ -694,7 +694,7 @@ fieldset {
 
 .videoBtn {
   float: left;
-  margin: 5px 0px 10px 90px; }
+  margin: 5px 0 10px 90px; }
 
 .admin_form_text_field, .admin_form_text_area, .admin_form_select {
   width: 250px;
@@ -714,7 +714,7 @@ fieldset {
 
 .helpText {
   padding-left: 120px;
-  /*    background: url('/images/icons/information.png') no-repeat 98px 0px; */
+  /*    background: url('/images/icons/information.png') no-repeat 98px 0; */
   font-size: small; }
 
 .fieldWithErrors input, .fieldWithErrors select, .fieldWithErrors textarea, .fieldWithErrors .x-html-editor-wrap {
@@ -761,7 +761,7 @@ input.small {
 
 /*Content box fields */
 #content_box_settings {
-  margin: 10px 0 20px 0px; }
+  margin: 10px 0 20px 0; }
   #content_box_settings .content_box_icon_chooser {
     margin-left: 120px;
     list-style: square outside none; }

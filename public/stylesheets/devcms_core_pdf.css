@@ -64,7 +64,7 @@ html[xmlns] .clearfix {
   .calendarContainer .calendar a {
     color: white; }
   .calendarContainer .calendar abbr {
-    border: 0px; }
+    border: 0; }
   .calendarContainer .calendar th, .calendarContainer .calendar td {
     width: 30px; }
   .calendarContainer .calendar .monthInfo th {
@@ -106,7 +106,7 @@ html[xmlns] .clearfix {
 
 #calendarMain .monthInfo {
   width: 248px;
-  padding: 0px;
+  padding: 0;
   float: right;
   text-align: center;
   font-size: 11px;
@@ -121,7 +121,7 @@ html[xmlns] .clearfix {
   font-family: "Trebuchet MS", sans-serif;
   font-size: 17px;
   font-weight: normal;
-  margin: 0pt 0pt 10px; }
+  margin: 0 0 10px; }
 
 .calendarDay {
   font-size: 13px;
@@ -134,7 +134,7 @@ html[xmlns] .clearfix {
     color: black;
     font-weight: normal;
     line-height: 16px;
-    margin: 0px;
+    margin: 0;
     font-family: arial, sans-serif; }
   .calendarDay .dayName {
     padding-bottom: 3px;
@@ -169,7 +169,7 @@ html[xmlns] .clearfix {
     margin-bottom: 10px; }
     #calendarItemMain .details .dynamic_attributes div, #calendarItemMain .details .category, #calendarItemMain .details .start_time, #calendarItemMain .details .end_time, #calendarItemMain .details .location {
       font-size: 10px;
-      color: #666666; }
+      color: #666; }
   #calendarItemMain .body, #calendarItemMain .agendaItems {
     margin-bottom: 10px; }
   #calendarItemMain h3 {
@@ -188,7 +188,7 @@ div.calendar_item div.buttons a {
   background-position: center left; }
 
 .calendarItems .buttons {
-  margin-top: 0px;
+  margin-top: 0;
   padding-top: 2px;
   padding-left: 2px;
   font-size: 11px; }
@@ -209,8 +209,8 @@ div.calendar_item div.buttons a {
 
 .calendar_content_box .content li .date, .combined_calendar_content_box .content li .date {
   width: 50px;
-  /* color: #9F9F9F; */
-  color: #666666;
+  /* color: #9f9f9f; */
+  color: #666;
   font-weight: bold; }
 
 .calendar_content_box .content li .link, .combined_calendar_content_box .content li .link {
@@ -229,7 +229,7 @@ div.calendar_item div.buttons a {
     .carrousel_content_box .carrousel_item a:hover {
       text-decoration: none; }
 .carrousel_content_box .header {
-  padding-bottom: 0px !important; }
+  padding-bottom: 0 !important; }
 .carrousel_content_box .carrousel_item h2 {
   font-size: 14px;
   margin-bottom: 3px;
@@ -293,13 +293,13 @@ div.comments {
 div.comments_content {
   padding-bottom: 8px; }
 div.newComment div.userName {
-  padding: 8px 0px; }
+  padding: 8px 0; }
   div.newComment div.userName label {
-    padding: 4px 0px;
+    padding: 4px 0;
     float: left;
     width: 50px; }
 div.newComment div.submit {
-  padding: 8px 0px; }
+  padding: 8px 0; }
 div.width_20 {
   width: 20px; }
 div .authenticity_token {
@@ -341,7 +341,7 @@ div .authenticity_token {
   padding: 5px; }
   .contact_form .buttons a {
     color: #0076af;
-    margin: 0px 0px 0px 0px;
+    margin: 0 0 0 0;
     /*edited was 0 6 0 6 */ }
 
 /* Generic content box stuff */
