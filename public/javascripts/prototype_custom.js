@@ -4,31 +4,28 @@
  *
  *--------------------------------------------------------------------------*/
 
-Element.Methods.update = function(element, content) {
-    element = $(element);
+Element.Methods.update = function (element, content) {
+  element = $(element);
 
-    if (content && content.toElement) content = content.toElement();
-    if (Object.isElement(content)) return element.update().insert(content);
+  if (content && content.toElement) { content = content.toElement(); }
+  if (Object.isElement(content)) { return element.update().insert(content); }
 
-    content = Object.toHTML(content);
+  content = Object.toHTML(content);
 
-    // createContextualFragment is broken in WebKit and Opera, so we have to fall back to innerHTML for WebKit-based browsers and Opera
-    if(document.createRange && !Prototype.Browser.WebKit && !Prototype.Browser.Opera)
-	{
-		var DOMrng = document.createRange();
-		var DOMhtmlFrag = DOMrng.createContextualFragment(content.stripScripts());
-		while (element.hasChildNodes())
-		{
-			element.removeChild(element.lastChild);
-		}
-		element.appendChild(DOMhtmlFrag);
-	}
-	else
-	{
-		element.innerHTML = content.stripScripts();
-	}
+  // createContextualFragment is broken in WebKit and Opera, so we have to fall back to innerHTML for WebKit-based browsers and Opera
+  if (document.createRange && !Prototype.Browser.WebKit && !Prototype.Browser.Opera) {
+    var DOMrng, DOMhtmlFrag;
 
-    content.evalScripts.bind(content).defer();
-    return element;
+    DOMrng = document.createRange();
+    DOMhtmlFrag = DOMrng.createContextualFragment(content.stripScripts());
+    while (element.hasChildNodes()) {
+      element.removeChild(element.lastChild);
+    }
+    element.appendChild(DOMhtmlFrag);
+  } else {
+    element.innerHTML = content.stripScripts();
+  }
+
+  content.evalScripts.bind(content).defer();
+  return element;
 };
-
