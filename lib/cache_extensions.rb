@@ -6,11 +6,11 @@ module ActionView #:nodoc:
       
       if enabled
         key[:host] = Settler[:host]
-        expires_in = options.delete(:expires_in)         
+        expires_in = key.delete(:expires_in)         
         if ActionController::Base.cache_store.is_a?(ActiveSupport::Cache::MemCacheStore)
           options[:expires_in] = expires_in.to_i if expires_in.present?
         else
-          options.update(:ttl => (Time.now.to_i / expires_in.to_i)) if expires_in.present?
+          key.update(:ttl => (Time.now.to_i / expires_in.to_i)) if expires_in.present?
         end
         
         begin
