@@ -1,11 +1,3 @@
-function javascriptifyCategoryFields() {
-  observeRootCategorySelectionFields();
-  observeCategorySelectionFields();
-  activateRemoveCategoryCombinationLinks();
-  activateAddCategoryCombinationToFavoritesLinks();
-  activateRemoveCategoryCombinationFromFavoritesLinks();
-}
-
 function getSynonymsForCategory(category_id, field) {
   new Ajax.Updater(field.down('.category_synonyms_field_wrapper'), '/admin/categories/' + category_id + '/synonyms', {
     method: 'get'
@@ -107,4 +99,12 @@ function activateAddCategoryCombinationToFavoritesLinks() {
       event.stop();
     });
   });
+}
+
+function javascriptifyCategoryFields() {
+  observeRootCategorySelectionFields();
+  observeCategorySelectionFields();
+  activateRemoveCategoryCombinationLinks();
+  activateAddCategoryCombinationToFavoritesLinks();
+  activateRemoveCategoryCombinationFromFavoritesLinks();
 }
