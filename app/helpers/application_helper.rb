@@ -355,14 +355,14 @@ module ApplicationHelper
     def create_sub_menu_item(node, self_and_ancestors_except_root_ids, show_private_items_in_sub_menu, options = {})
       if show_private_items_in_sub_menu
         if current_user_has_any_role?(node)
-          sub_menu_items = node.children.accessible.shown_in_menu
+          sub_menu_items = node.children.accessible.shown_in_menu.all(:order => 'position')
         else
-          sub_menu_items = node.children.accessible.shown_in_menu.select do |sub_menu_item|
+          sub_menu_items = node.children.accessible.shown_in_menu.all(:order => 'position').select do |sub_menu_item|
             sub_menu_item.public? || current_user_has_any_role?(sub_menu_item) 
           end
         end
       else
-        sub_menu_items = node.children.accessible.public.shown_in_menu
+        sub_menu_items = node.children.accessible.public.shown_in_menu.all(:order => 'position')
       end
       
       has_sub_menu_items = sub_menu_items.any?
@@ -378,7 +378,7 @@ module ApplicationHelper
         content = create_menu_link(node, :class => classes.join(' '))
 
         if has_sub_menu_items
-          content += content_tag(:ul, sub_menu_items.all(:order => 'position').map { |item| create_sub_menu_item(item, self_and_ancestors_except_root_ids, show_private_items_in_sub_menu) }.join("\n"))
+          content += content_tag(:ul, sub_menu_items.map { |item| create_sub_menu_item(item, self_and_ancestors_except_root_ids, show_private_items_in_sub_menu) }.join("\n"))
         end
 
         options[:class] = options[:class] ? "#{options[:class]} expanded" : "expanded" 
