@@ -43,11 +43,7 @@ class ImagesController < ApplicationController
   end
 
   def thumbnail
-    if @image.orientation == :vertical 
-      @image.resize!(:size => "100x100", :crop => true, :quality => 80, :offset => @image.offset, :upsample => true)
-    else
-      @image.resize!(:size => "100x100", :crop => true, :quality => 80)
-    end
+    @image.resize!(:size => "100x100", :crop => true, :quality => 80, :offset => @image.offset, :upsample => true)
     render_image
   end
 
