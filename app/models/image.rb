@@ -7,7 +7,7 @@
 # 
 # * +title+ - The title of the image.
 # * +data+ - The binary image data.
-# * +vertical_offset+ - The vertical offset used when cropping the image to function as a header image for a context box.
+# * +offset+ - The offset used when cropping the image to function as a header image for a context box.
 # * +alt+ - The alt text (HTML attribute)
 # * +description+ - The description of the image.
 # * +url+ - The URL of the image.
@@ -63,7 +63,7 @@ class Image < FlexImage::Model
   validates_length_of       :alt,   :in => 0..255
   validates_format_of       :url, :with => /(^$)|(^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(([0-9]{1,5})?\/.*)?$)/ix, :allow_blank => true
   
-  validates_numericality_of :vertical_offset, :only_integer => true, :allow_blank => true, :greater_than_or_equal => 0 
+  validates_numericality_of :offset, :only_integer => true, :allow_blank => true, :greater_than_or_equal => 0 
 
   default_scope :conditions => "#{self.table_name}.deleted_at IS NULL", :select => (self.column_names - DEFAULT_COLUMNS_TO_EXCLUDE_FROM_SELECT).map { |column| "#{self.table_name}.#{column}" }.join(', ')
   

@@ -10,7 +10,7 @@ end
 %>
 <% resized_height = image.height_at_width(width) %>
 <% slider_top = resized_height - height %>
-<% vertical_offset = image.vertical_offset || slider_top / 2 %>
+<% offset = image.offset || slider_top / 2 %>
 <style>
     
     .cropper {
@@ -34,7 +34,7 @@ end
 	}
 
 	#overlay_top_<%= image.id %> {
-	  height: <%= vertical_offset %>px;
+	  height: <%= offset %>px;
 	}
 
 	#overlay_center_<%= image.id %> {
@@ -43,7 +43,7 @@ end
 	}
 
 	#overlay_bottom_<%= image.id %> {
-	  height: <%= slider_top - vertical_offset %>px;
+	  height: <%= slider_top - offset %>px;
 	}
 
 	#slider_<%= image.id %> {
@@ -70,12 +70,12 @@ end
 	<div class="overlay" id="overlay_bottom_<%= image.id %>"></div>
 	</div>
 	<div id="slider_<%= image.id %>"></div>
-	<%= hidden_field_tag "vertical_offset_#{image.id}", image.vertical_offset %>
-	<%= observe_field( "vertical_offset_#{image.id}",
+	<%= hidden_field_tag "offset_#{image.id}", image.offset %>
+	<%= observe_field( "offset_#{image.id}",
 	      :url => admin_image_path(image, :format => :jpg),
 	      :frequency => 1,
 	      :method => :put,
-	      :with => "'image[vertical_offset]=' + encodeURIComponent($F('vertical_offset_#{image.id}'))") -%>
+	      :with => "'image[offset]=' + encodeURIComponent($F('offset_#{image.id}'))") -%>
 </p>
 <% javascript_tag do %>
 
@@ -86,12 +86,12 @@ end
       vertical: true,
       minValue: 0,
       maxValue: <%= slider_top -%>,
-      value: <%= image.vertical_offset.nil? ? slider_top / 2 : slider_top - image.vertical_offset -%>,
+      value: <%= image.offset.nil? ? slider_top / 2 : slider_top - image.offset -%>,
       listeners: {
         change: function(slider, value) { 
             $('overlay_top_<%= image.id %>').style.height = (<%= slider_top -%> - value)+'px';
             $('overlay_bottom_<%= image.id %>').style.height = value+'px';
-            $('<%= "vertical_offset_#{image.id}" %>').value = (<%= slider_top -%> - value);
+            $('<%= "offset_#{image.id}" %>').value = (<%= slider_top -%> - value);
         }
       }
     });

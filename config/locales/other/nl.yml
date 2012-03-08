@@ -520,7 +520,7 @@ nl:
     saved: HTML pagina opgeslagen!
   images:
     add: Toevoegen...
-    vertical_offset: Verticale offset (px)
+    offset: Offset (px)
     add_images_to: Afbeelding(en) toevoegen aan
     add_to: Afbeelding(en) toevoegen aan
     alt: ALT tekst (optioneel)

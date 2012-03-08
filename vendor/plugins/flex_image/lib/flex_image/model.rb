@@ -324,7 +324,7 @@ module FlexImage
       case
       when options[:crop] && !options[:crop].is_a?(Hash) && img.respond_to?(:crop_resized!)
         # perform resize and crop
-        scale_and_crop(img, [x, y], options[:vertical_offset])
+        scale_and_crop(img, [x, y], options[:offset])
         
       when options[:stretch]
         # stretch the image, ignoring aspect ratio
@@ -743,7 +743,7 @@ module FlexImage
         end
       end
       
-      def scale_and_crop(img, size, vertical_offset)
+      def scale_and_crop(img, size, offset)
         width, height = size_to_xy(size)
         columns = img.columns
         rows = img.rows
@@ -754,10 +754,14 @@ module FlexImage
         end
 
         if width != columns || height != rows
-          if vertical_offset.blank?
+          if offset.blank?
             img.crop!(Magick::CenterGravity, width, height, true)
           else
-            img.crop!(0, vertical_offset, width, height, true)
+            if columns > rows
+              img.crop!(offset, 0, width, height, true)
+            else
+              img.crop!(0, offset, width, height, true)
+            end
           end
         end
 

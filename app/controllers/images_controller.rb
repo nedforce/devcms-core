@@ -38,13 +38,13 @@ class ImagesController < ApplicationController
   end
 
   def content_box_header
-    @image.resize!(:size => "#{Image::CONTENT_BOX_SIZE[:width]}x#{Image::CONTENT_BOX_SIZE[:height]}", :vertical_offset => @image.vertical_offset, :crop => true, :upsample => false, :quality => 80)
+    @image.resize!(:size => "#{Image::CONTENT_BOX_SIZE[:width]}x#{Image::CONTENT_BOX_SIZE[:height]}", :offset => @image.offset, :crop => true, :upsample => false, :quality => 80)
     render_image
   end
 
   def thumbnail
     if @image.orientation == :vertical 
-      @image.resize!(:size => "100x100", :crop => true, :quality => 80, :vertical_offset => @image.vertical_offset, :upsample => true)
+      @image.resize!(:size => "100x100", :crop => true, :quality => 80, :offset => @image.offset, :upsample => true)
     else
       @image.resize!(:size => "100x100", :crop => true, :quality => 80)
     end
