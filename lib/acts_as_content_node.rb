@@ -114,7 +114,8 @@ module Acts
           content.node.destroy(:destroy_content_node => false)
         end
   
-        before_update :update_url_alias_if_title_changed, :touch_node
+        before_update :touch_node
+        after_update  :update_url_alias_if_title_changed
 
         after_save :update_search_index
         
@@ -272,8 +273,7 @@ module Acts
 
       def update_url_alias_if_title_changed
         if self.respond_to?(:title) && self.title_changed?
-          node.content = self
-          node.set_url_alias(true)
+          Node.sort_by_ancestry(node.self_and_descendants).each { |n| n.update_attribute :url_alias, n.generate_unique_url_alias }
         end
       end
 
