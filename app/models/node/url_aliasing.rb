@@ -48,8 +48,11 @@ module Node::UrlAliasing
   # Update after move
   def move_to_with_update_url_aliases(*args)
     self.move_to_without_update_url_aliases(*args)
-    self.update_attribute(:url_alias, self.generate_unique_url_alias)
-    self.update_attribute(:custom_url_alias, self.generate_unique_custom_url_alias) if self.custom_url_suffix.present?
+
+    Node.sort_by_ancestry(self_and_descendants).each do |node|
+      node.update_attribute(:url_alias, node.generate_unique_url_alias)
+      node.update_attribute(:custom_url_alias, node.generate_unique_custom_url_alias) if node.custom_url_suffix.present?
+    end
   end
   
   # Generates an URL alias based on the ancestors of this node and a path
