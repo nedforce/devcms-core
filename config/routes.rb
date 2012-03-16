@@ -157,9 +157,6 @@ ActionController::Routing::Routes.draw do |map|
   map.profile '/profile', :controller => 'users', :action => 'profile'
   map.synonyms '/synonyms.txt', :controller => :application, :action => :synonyms, :format => :txt
   
-  map.error_404 '/404', :controller => :errors, :action => :error_404
-  map.error_500 '/500', :controller => :errors, :action => :error_500
-
   # Dynamic root route
   map.root :controller => '_delegated_root', :action => 'show'
 

@@ -35,19 +35,16 @@ class Site < Section
   validates_format_of     :domain, :with => VALID_DOMAIN_REGEXP, :unless => Proc.new { |s| s.original_domain.nil? }
   validates_uniqueness_of :domain, :case_sensitive => false, :unless => Proc.new { |s| s.original_domain.nil? }
   
-  validates_format_of :analytics_code, :allow_nil => true, :with => /^(|UA-\d*-\d*)$/i
+  validates_format_of     :analytics_code, :allow_nil => true, :with => /^(|UA-\d*-\d*)$/i
 
   validate :ensure_parent_is_root
 
   def self.find_by_domain(domain)
-    if domain.blank?
-      Node.root.content
-    else
-      site = Site.first(:include => :node, :conditions => [ 'lower(sections.domain) = ? OR lower(sections.domain) = ?', domain.downcase, 'www.' + domain.downcase ])
-      site ||= Node.root.content unless Rails.env.production?
-
-      site
-    end
+    domain ||= ""
+    parts = domain.split(".")
+    parts.shift if parts.first == "www"
+    domain = parts.join(".")
+    Site.first(:include => :node, :conditions => [ 'lower(sections.domain) = ? OR lower(sections.domain) = ?', domain.downcase, 'www.' + domain.downcase ]) || Node.root.content
   end
   
   def original_domain
