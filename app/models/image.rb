@@ -96,12 +96,18 @@ class Image < FlexImage::Model
     (send(:rmagick_image).rows > send(:rmagick_image).columns) ? :vertical : :horizontal
   end
 
-  # TODO: Documentation
-  def height_at_width(width)
+  def calculate_other_dimension_with(options)
+    options.symbolize_keys!
+    raise ArgumentError, 'either :width or :height need to be specified' unless options[:width] || options[:height]
+    
     h = send(:rmagick_image).rows
     w = send(:rmagick_image).columns
-    width ||= w
-    return (h * width) / w
+
+    if options[:width]
+      (h * options[:width]) / w
+    elsif options[:height]
+      (w * options[:height]) / h
+    end
   end
 
 protected

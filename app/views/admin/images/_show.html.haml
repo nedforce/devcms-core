@@ -9,8 +9,7 @@
   %hr/
 
   - if params[:action] == 'show'
-    %h1 Thumbnail uitsnede (Alleen voor portret foto's!)
+    %h1 Thumbnail uitsnede
 
-    .cropper{ :id => "image_cropper_\#{record.id}" }
-      - if record.orientation == :vertical
-        = render :partial => 'cropper', :locals => { :image => record, :is_header => record.node.parent.content_type == "NewsItem" }
+    .cropper{ :id => "image_cropper_#{record.id}" }
+      = render_cropper record

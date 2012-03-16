@@ -46,7 +46,7 @@ class Admin::ImagesController < Admin::AdminController
     if @image.orientation == :vertical 
       @image.resize!(:size => "100x", :upsample => true, :quality => 80)
     else
-      @image.resize!(:size => "100x100", :crop => true, :quality => 80)
+      @image.resize!(:size => [nil, 100], :upsample => true, :quality => 80)
     end
     render_image
   end
@@ -103,8 +103,8 @@ class Admin::ImagesController < Admin::AdminController
               end
               
               page.call("treePanel.refreshNodesOf", @parent_node.id)
-
-              page.replace_html("image_cropper_#{@image.id}", :partial => 'cropper', :locals => { :image => @image }) if @image.orientation == :vertical
+              page.replace_html("image_cropper_#{@image.id}", :partial => "cropper_#{@image.orientation}", :locals => { :image => @image })
+              
               @image = Image.new # To reset fields
               page.replace_html("right_panel_form", :partial => 'form')
             end

@@ -757,10 +757,20 @@ module FlexImage
           if offset.blank?
             img.crop!(Magick::CenterGravity, width, height, true)
           else
-            if columns > rows
-              img.crop!(offset, 0, width, height, true)
+            if height == width
+              # Crop based on original
+              if columns > rows
+                img.crop!(offset, 0, width, height, true) # Chop left/right
+              else
+                img.crop!(0, offset, width, height, true) # Chop up/down
+              end              
             else
-              img.crop!(0, offset, width, height, true)
+              # Crop based on new dimensions
+              if height > width
+                img.crop!(offset, 0, width, height, true) # Chop left/right
+              else
+                img.crop!(0, offset, width, height, true) # Chop up/down
+              end
             end
           end
         end

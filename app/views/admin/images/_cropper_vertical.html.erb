@@ -1,0 +1,80 @@
+<%
+is_header ||= nil
+
+if is_header
+    width, height = Image::CONTENT_BOX_SIZE[:width], Image::CONTENT_BOX_SIZE[:height]
+    preview_url   = content_box_header_preview_admin_image_path(image, :format => :jpg)
+else
+    width, height = 100, 100
+    preview_url   = thumbnail_preview_admin_image_path(image, :format => :jpg)
+end
+
+resized_height    = image.calculate_other_dimension_with :width => width
+slider_top        = resized_height - height
+offset            = image.offset || slider_top / 2
+%>
+<style>
+#preview_<%= image.id %> {
+  width: <%= width %>px;
+  background: url(<%= preview_url %>);
+}
+
+.overlay {
+  background-color: #CCC;
+  opacity: 0.85;
+  filter: alpha(opacity=85);    
+}
+
+#slider_<%= image.id %> {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
+#slider_<%= image.id %> .x-slider-thumb {
+  height: <%= height %>px;
+  width: <%= width %>px;
+  background: none;
+  cursor: move;
+  left: 0;
+  margin-bottom: -43px;
+}
+
+#slider_<%= image.id %> .x-slider-vert, #slider_<%= image.id %> .x-slider-vert div {
+  background: none;
+}
+</style>
+<div style="position: relative">
+  <div id="preview_<%= image.id %>">
+  	<div id="overlay_top_<%= image.id %>" class="overlay" style="height: <%= offset %>px"></div>
+  	<div id="overlay_mid_<%= image.id %>"                 style="height: <%= height %>px"></div>
+  	<div id="overlay_end_<%= image.id %>" class="overlay" style="height: <%= slider_top - offset %>px"></div>
+  </div>
+  <div id="slider_<%= image.id %>"></div>
+</div>
+<%= hidden_field_tag "offset_#{image.id}", image.offset %>
+<%= observe_field( "offset_#{image.id}",
+      :url => admin_image_path(image, :format => :jpg),
+      :frequency => 1,
+      :method => :put,
+      :with => "'image[offset]=' + encodeURIComponent($F('offset_#{image.id}'))") -%>
+<% javascript_tag do %>
+Ext.onReady(function() {
+  new Ext.Slider({
+    renderTo: 'slider_<%= image.id %>',
+    height: <%= slider_top + 13 %>,
+    vertical: true,
+    minValue: 0,
+    maxValue: <%= slider_top %>,
+    value: <%= image.offset.nil? ? slider_top / 2 : slider_top - image.offset %>,
+    listeners: {
+      change: function(slider, value) { 
+          $('overlay_top_<%= image.id %>').style.height = (<%= slider_top %> - value)+'px';
+          $('overlay_end_<%= image.id %>').style.height = value+'px';
+          $('offset_<%= image.id %>').value = (<%= slider_top %> - value);
+      }
+    }
+  });
+});
+<% end %>

@@ -39,11 +39,12 @@
 		            <% end %>
 		            <td>
 		              <div id="image_cropper_<%= image.id -%>" class="cropper">
-		              <% is_header = (i==0 && @parent_node.content_type == 'NewsItem') %>
-                  	  <% if image.orientation == :vertical || is_header %>
-                  		<%= render :partial => 'cropper', :locals => {:image => image, :is_header => is_header } %>
-                  	  <% end %>
-                  	  </div>
+  		              <% if (i==0 && @parent_node.content_type == 'NewsItem') %>
+                		  <%= render :partial => "cropper_vertical", :locals => { :image => image, :is_header => true } %>
+                		<% else %>
+              		    <%= render :partial => "cropper_#{image.orientation}", :locals => { :image => image } %>
+                    <% end %>
+              	  </div>
 	              </td>
 		          </tr>
 		        <% end %>

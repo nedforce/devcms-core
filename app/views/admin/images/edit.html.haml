@@ -1,18 +1,17 @@
 .right_panel_content
   %h1== #{t 'images.edit'} '#{h @image.title}'
-
+  
   - admin_remote_form_for @image, :url => admin_image_path(@image, :format => 'html'), :update => 'right_panel_body' do |f|
     = error_messages_for :image
-
-    = wrap_with_label image_tag(thumbnail_admin_image_path(@image, :format => :jpg), :alt => h(@image.title)), :text => t('images.image'), :for => "image_#{@image.id}"
-
+  
+    = wrap_with_label render_cropper(@image, :style => 'margin-left: 120px'), :text => t('images.image'), :for => "image_#{@image.id}"
+  
     = f.text_field :title,           :label => t('shared.title')
     = f.text_field :alt,             :label => t('images.alt')
-    = f.text_field :offset,          :label => t('images.offset')
     = f.text_area  :description,     :label => t('images.description'), :rows => 4
-
+  
     = f.text_field :url,             :label => t('images.url')
-
+  
     %div{ :style => "margin-top: -9px; margin-bottom: 15px; font-size: 9px;" }
       = t 'images.url_explanation'
     
@@ -20,5 +19,5 @@
       
     - if current_user.has_role?('admin')
       = f.check_box :is_for_header,  :label => t('images.is_for_header')
-
+  
     = f.submit t('shared.save')

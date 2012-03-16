@@ -42,7 +42,7 @@ class Admin::AdminController < ApplicationController
 
   layout :layout?
 
-  helper Admin::PermitsHelper, Admin::NewsletterArchiveHelper, Admin::AgendaItemsHelper, Admin::AdminHelper, Admin::AdminFormBuilderHelper, Admin::CategoriesHelper, Admin::DiffHelper
+  helper Admin::PermitsHelper, Admin::NewsletterArchiveHelper, Admin::AgendaItemsHelper, Admin::AdminHelper, Admin::AdminFormBuilderHelper, Admin::CategoriesHelper, Admin::DiffHelper, Admin::CropperHelper
   
   cache_sweeper :node_sweeper, :only => [ :create, :update, :destroy, :approve, :set_visibility, :set_accessibility, :move, :bulk_update, :bulk_destroy, :sort_children ]
   
