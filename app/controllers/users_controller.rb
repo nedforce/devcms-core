@@ -179,6 +179,10 @@ class UsersController < ApplicationController
   # * GET  /users/request_password
   def request_password
     @page_title = I18n.t('users.request_password')
+
+    respond_to do |format|
+      format.html # request_password.html.haml
+    end
   end
 
   # Resets a user's password and sends the new password by email.
