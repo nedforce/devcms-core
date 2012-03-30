@@ -40,7 +40,7 @@ Ext.dvtr.AsyncContentTreeNode = function (config) {
         this.URLAlias                        = config.URLAlias;
         this.noChildNodes                    = config.noChildNodes;
         this.numberChildren                  = config.numberChildren;
-        this.isHidden						 = config.isHidden;
+        this.isHidden                        = config.isHidden;
         this.isPrivate                       = config.isPrivate;
         this.hasPrivateAncestor              = config.hasPrivateAncestor;
         this.hasHiddenAncestor               = config.hasHiddenAncestor;
@@ -167,7 +167,7 @@ Ext.dvtr.AsyncContentTreeNode = function (config) {
         this.on(event, function (t, n) {
             n.childCountChanged = true;
             n.constructMenu();
-	    });
+        });
     }, this);
 
     if (this.numberChildren) { this.on('beforechildrenrendered', this.renumberChildren, this); }
@@ -213,11 +213,15 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
     }, // end onBeforeMove
 
     onMove: function (tree, node, oldParent, newParent, index) {
+        /* disable node */
+        tree.disable();
+        /* adds the load mask if it does not exist, can be moved to TreePanel.js */
+        if(tree.loadMask == undefined) { tree.loadMask = new Ext.LoadMask(tree.body, {msg: I18n.t('loading','generic')}); }
+        tree.loadMask.show();
         /* renumber if necessary */
         Ext.each([oldParent, newParent], function (prt) {
             if (prt.numberChildren) { prt.renumberChildren(); }
         });
-
         /* post ajax request */
         if (this.nextSibling) {
             var customParams = { next_sibling: this.nextSibling.id };
@@ -231,12 +235,16 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
             params: Ext.ux.prepareParams(this.baseParams, Ext.apply(customParams, { _method: 'put' })),
             scope: this,
             failure: function (response, options) {
+                tree.enable(); // renenable node
+                tree.loadMask.hide();
                 Ext.ux.alertResponseError(response, I18n.t('move_failed', 'nodes'), false);
                 // reset structure:
                 this.remove(); // remove node from its old parent
                 oldParent.reload(); // reload its old parent
             },
             success: function (response, options) {
+                tree.enable(); // renenable node
+                tree.loadMask.hide();
                 newParent.leaf = false;
                 newParent.renderIndent();
 
@@ -314,31 +322,31 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
         });
     },
 
-	onAbbreviations: function () {
-		rightPanel.load({
-			url: '/admin/abbreviations/',
-			params: Ext.ux.prepareParams(defaultParams, { node_id: this.attributes.id, format: 'html' }),
-			method: 'GET',
-			callback: function (options, success, response) {
-				if (!success) {
-					Ext.ux.alertResponseError(response, I18n.t('form_load_failed', 'errors'));
-				}
-			}
-		});
-	},
+    onAbbreviations: function () {
+        rightPanel.load({
+            url: '/admin/abbreviations/',
+            params: Ext.ux.prepareParams(defaultParams, { node_id: this.attributes.id, format: 'html' }),
+            method: 'GET',
+            callback: function (options, success, response) {
+                if (!success) {
+                    Ext.ux.alertResponseError(response, I18n.t('form_load_failed', 'errors'));
+                }
+            }
+        });
+    },
 
-	onSynonyms: function () {
-		rightPanel.load({
-			url: '/admin/synonyms/',
-			params: Ext.ux.prepareParams(defaultParams, { node_id: this.attributes.id, format: 'html' }),
-			method: 'GET',
-			callback: function (options, success, response) {
-				if (!success) {
-					Ext.ux.alertResponseError(response, I18n.t('form_load_failed', 'errors'));
-				}
-			}
-		});
-	},
+    onSynonyms: function () {
+        rightPanel.load({
+            url: '/admin/synonyms/',
+            params: Ext.ux.prepareParams(defaultParams, { node_id: this.attributes.id, format: 'html' }),
+            method: 'GET',
+            callback: function (options, success, response) {
+                if (!success) {
+                    Ext.ux.alertResponseError(response, I18n.t('form_load_failed', 'errors'));
+                }
+            }
+        });
+    },
 
     onImport: function () {
         rightPanel.load({
@@ -572,25 +580,25 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
             buttons: Ext.MessageBox.OKCANCEL,
             fn: function (btn, text) {
                 if (btn == 'ok') {
-	                Ext.Ajax.request({
-	                    url: '/admin/nodes/' + this.id,
-	                    method: 'POST', // overridden with delete by the _method parameter
-	                    params: Ext.ux.prepareParams(defaultParams, { _method: 'put', 'node[custom_url_suffix]': text }),
-	                    scope: this,
-	                    success: function () {
-	                        this.urlAlias = text;
-	                        //Ext.Msg.alert('Succes', 'Webadres instellen gelukt!');
-	                    },
-	                    failure: function (response, options) {
-	                        if (response.status === 422) { // unprocessable entity
-	                            var responseJson = Ext.util.JSON.decode(response.responseText);
-	                            Ext.Msg.alert('Error', responseJson.errors[0]);
-	                        } else { // unhandled error statuses
-	                            Ext.ux.alertResponseError(response, I18n.t('url_alias_failed', 'nodes'));
-	                        }
-	                    }
-	                });
-	            }
+                    Ext.Ajax.request({
+                        url: '/admin/nodes/' + this.id,
+                        method: 'POST', // overridden with delete by the _method parameter
+                        params: Ext.ux.prepareParams(defaultParams, { _method: 'put', 'node[custom_url_suffix]': text }),
+                        scope: this,
+                        success: function () {
+                            this.urlAlias = text;
+                            //Ext.Msg.alert('Succes', 'Webadres instellen gelukt!');
+                        },
+                        failure: function (response, options) {
+                            if (response.status === 422) { // unprocessable entity
+                                var responseJson = Ext.util.JSON.decode(response.responseText);
+                                Ext.Msg.alert('Error', responseJson.errors[0]);
+                            } else { // unhandled error statuses
+                                Ext.ux.alertResponseError(response, I18n.t('url_alias_failed', 'nodes'));
+                            }
+                        }
+                    });
+                }
             }
         }); // End Ext.Msg.prompt
     },

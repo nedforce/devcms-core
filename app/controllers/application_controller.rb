@@ -293,6 +293,7 @@ protected
   # Returns true if SSL encryption is required, else false.
   def ssl_required?
     return false if disable_ssl?
+    return true if logged_in?
     super
   end
 
@@ -445,6 +446,6 @@ protected
   end
   
   def redirect_to_full_domain
-    redirect_to "#{request.protocol}#{current_site.content.domain}:#{request.port}#{request.request_uri}" unless request.host == current_site.content.domain rescue false
+    redirect_to "#{request.protocol}#{current_site.content.domain}:#{request.port}#{request.request_uri}" unless request.local? || request.host == current_site.content.domain rescue false
   end
 end

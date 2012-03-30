@@ -48,8 +48,11 @@ module Node::UrlAliasing
   # Update after move
   def move_to_with_update_url_aliases(*args)
     self.move_to_without_update_url_aliases(*args)
-    self.update_attribute(:url_alias, self.generate_unique_url_alias)
-    self.update_attribute(:custom_url_alias, self.generate_unique_custom_url_alias) if self.custom_url_suffix.present?
+
+    Node.sort_by_ancestry(self_and_descendants).each do |node|
+      node.update_attribute(:url_alias, node.generate_unique_url_alias)
+      node.update_attribute(:custom_url_alias, node.generate_unique_custom_url_alias) if node.custom_url_suffix.present?
+    end
   end
   
   # Generates an URL alias based on the ancestors of this node and a path
@@ -84,6 +87,14 @@ module Node::UrlAliasing
     parent.url_alias if self.parent && !self.parent.is_global_frontpage? && !self.parent.root?
   end
   
+  def generate_unique_url_alias
+    uniqify_url_alias(self.generate_url_alias[0..(MAXIMUM_URL_ALIAS_LENGTH - 6)])
+  end
+
+  def generate_unique_custom_url_alias
+    uniqify_url_alias(self.generate_custom_url_alias[0..(MAXIMUM_URL_ALIAS_LENGTH - 6)])
+  end
+  
   protected
     # Sets an URL alias if none has been specified on create or +force+ is true.
     def set_url_alias(force = false)
@@ -92,14 +103,6 @@ module Node::UrlAliasing
   
     def set_custom_url_alias
       self.custom_url_alias = (self.custom_url_suffix.present? ? self.generate_unique_custom_url_alias : nil) if custom_url_suffix_changed?
-    end
-
-    def generate_unique_url_alias
-      uniqify_url_alias(self.generate_url_alias[0..(MAXIMUM_URL_ALIAS_LENGTH - 6)])
-    end
-  
-    def generate_unique_custom_url_alias
-      uniqify_url_alias(self.generate_custom_url_alias[0..(MAXIMUM_URL_ALIAS_LENGTH - 6)])
     end
   
     def uniqify_url_alias(generated_url_alias)
