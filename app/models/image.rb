@@ -67,6 +67,9 @@ class Image < FlexImage::Model
 
   default_scope :conditions => "#{self.table_name}.deleted_at IS NULL", :select => (self.column_names - DEFAULT_COLUMNS_TO_EXCLUDE_FROM_SELECT).map { |column| "#{self.table_name}.#{column}" }.join(', ')
   
+  # Join instead of include to ensure the default scopes select is still applied.
+  named_scope :accessible,  lambda { { :joins => :node, :conditions => Node.accessibility_and_visibility_conditions } }
+  
   named_scope :select_all_columns, :select => self.column_names.map { |column| "#{self.table_name}.#{column}" }.join(', ')
   
   # Ensure +url+ is correct.
