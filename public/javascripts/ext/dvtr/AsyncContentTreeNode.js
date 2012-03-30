@@ -387,55 +387,6 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
         });
     },
 
-    onSetGlobalFrontpage: function () {
-        Ext.Ajax.request({
-            url: '/admin/nodes/' + this.id + '/make_global_frontpage',
-            method: 'POST', // overridden with delete by the _method parameter
-            params: Ext.ux.prepareParams(defaultParams, { _method: 'put' }),
-            scope: this,
-            success: function () {
-                if (Ext.dvtr.AsyncContentTreeNode.current_global_frontpage_node) {
-                    var prev_fp = Ext.dvtr.AsyncContentTreeNode.current_global_frontpage_node;
-
-                    if (prev_fp.isContentCopy) {
-                        prev_fp.ui.getIconEl().src = Ext.COPY_INDICATOR_PATH;
-                    } else {
-                        prev_fp.ui.getIconEl().src = Ext.BLANK_IMAGE_URL;
-                    }
-
-                    prev_fp.isGlobalFrontpage = false;
-
-                    if (!prev_fp.isRoot) {
-                        prev_fp.parentNode.SetContainsGlobalFrontpage(false); // Notify parent as it does not contain the global frontpage any longer
-                    }
-
-                    prev_fp.constructMenu();
-                }
-
-                this.isGlobalFrontpage = true;
-
-                if (!this.isRoot) {
-                    this.parentNode.SetContainsGlobalFrontpage(true); // Notify parent as it now contains the global frontpage
-                }
-
-                Ext.dvtr.AsyncContentTreeNode.current_global_frontpage_node = this;
-
-                this.constructMenu();
-
-                if (this.isContentCopy) {
-                    this.ui.getIconEl().src = Ext.GLOBAL_FRONTPAGE_AND_COPY_INDICATOR_PATH;
-                } else {
-                    this.ui.getIconEl().src = Ext.GLOBAL_FRONTPAGE_INDICATOR_PATH;
-                }
-
-                Ext.Msg.alert('Succes', I18n.t('global_frontpage_success', 'nodes'));
-            },
-            failure: function (response, options) {
-                Ext.ux.alertResponseError(response, I18n.t('global_frontpage_failed', 'nodes'));
-            }
-        });
-    },
-
     onToggleHidden: function (item, checked) {
         Ext.Ajax.request({
             url: '/admin/nodes/' + this.id + '/set_visibility',
