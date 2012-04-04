@@ -116,7 +116,7 @@ Ext.dvtr.TreeNodeContextMenu = function (config) {
     }
 
     if (this.tn.userRole === 'admin' && this.tn.attributes.ownContentType === 'Site') {
-		this.add('-'); //separator
+        this.add('-'); //separator
 
         this.add({
             text: I18n.t('show', 'abbreviations'),
@@ -125,7 +125,7 @@ Ext.dvtr.TreeNodeContextMenu = function (config) {
             handler: this.tn.onAbbreviations
         });
 
-		this.add({
+        this.add({
             text: I18n.t('show', 'synonyms'),
             icon: '/images/icons/table_relationship.png',
             scope: this.tn,
@@ -162,15 +162,6 @@ Ext.dvtr.TreeNodeContextMenu = function (config) {
             });
         }
 
-      // Add the 'Maak globale frontpage' item
-      if (this.tn.allowGlobalFrontpageSetting) {
-          this.add({
-              text: I18n.t('make_global', 'context_menu'),
-              scope: this.tn,
-              handler: this.tn.onSetGlobalFrontpage,
-              disabled: this.tn.isGlobalFrontpage || this.tn.isPrivate || this.tn.hasPrivateAncestor
-          });
-      }
 
       // Add the 'Maak kopie' item
       if (this.tn.allowContentCopyCreation) {
