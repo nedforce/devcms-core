@@ -37,9 +37,14 @@ module RoutingExtensions
             node = Node.find(params[:id])
           # Delegation to an aliased content node
           else
-            url_alias = params[:id]
+            url_alias         = params[:id]
+            subsite_url_alias = "#{site.node.url_alias}/#{url_alias}"
 
-            unless node = Node.first(:conditions => [ 'url_alias = ? OR custom_url_alias = ?', url_alias, url_alias ])
+            unless node = Node.first(:conditions => [ 'url_alias = ? OR custom_url_alias = ?', subsite_url_alias, subsite_url_alias ])
+              node = Node.first(:conditions => [ 'url_alias = ? OR custom_url_alias = ?', url_alias, url_alias ])
+            end
+
+            unless node
               parts           = url_alias.split('/')
               params[:action] = parts.pop
               url_alias       = parts.join('/')
