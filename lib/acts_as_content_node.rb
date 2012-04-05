@@ -273,7 +273,13 @@ module Acts
 
       def update_url_alias_if_title_changed
         if self.respond_to?(:title) && self.title_changed?
+          # Update self and descendants
           Node.sort_by_ancestry(node.self_and_descendants).each { |n| n.update_attribute :url_alias, n.generate_unique_url_alias }
+          # Save base_url_alias for later use
+          base_url_alias = node.url_alias.sub(/-\d+\Z/, '') # chomp off -1, -2, etc.
+          # Search in same depth
+          dupe = Node.at_depth(node.depth).first(:conditions => ["url_alias like ?", base_url_alias + '-%'])
+          Node.sort_by_ancestry(dupe.self_and_descendants).each { |n| n.update_attribute :url_alias, n.generate_unique_url_alias } if dupe
         end
       end
 
