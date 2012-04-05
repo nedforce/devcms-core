@@ -40,7 +40,7 @@ class NodeURLAliasTest < ActiveSupport::TestCase
     cn = create_page
     assert_equal 'foo', cn.node.url_alias
     cn.update_attributes(:title => 'foobar')
-    assert_equal 'foobar', cn.node.url_alias
+    assert_equal 'foobar', cn.node.reload.url_alias
   end
   
   def test_should_change_url_alias_when_title_changes_for_non_unique_title
@@ -49,7 +49,7 @@ class NodeURLAliasTest < ActiveSupport::TestCase
     cn2 = create_page :title => 'bar'
     assert_equal 'bar', cn2.node.url_alias
     cn2.update_attributes(:title => 'foo')
-    assert_equal 'foo-1', cn2.node.url_alias
+    assert_equal 'foo-1', cn2.node.reload.url_alias
   end
   
   def test_should_always_generate_unique_custom_url_alias
@@ -120,7 +120,7 @@ class NodeURLAliasTest < ActiveSupport::TestCase
     assert_equal(@root_node, n.parent)
     assert_equal 'foo', n.url_alias
     n.move_to_child_of @economie_section_node
-    assert_equal "#{@economie_section_node.url_alias}/foo", n.url_alias
+    assert_equal "#{@economie_section_node.url_alias}/foo", n.reload.url_alias
   end
 
   def test_should_reappend_custom_url_suffix_after_moving_node
@@ -129,7 +129,7 @@ class NodeURLAliasTest < ActiveSupport::TestCase
     n.update_attributes(:custom_url_suffix => 'bar')
     assert_equal 'bar', n.custom_url_alias
     n.move_to_child_of @economie_section_node
-    assert_equal "#{@economie_section_node.url_alias}/bar", n.custom_url_alias
+    assert_equal "#{@economie_section_node.url_alias}/bar", n.reload.custom_url_alias
   end
   
   def test_should_set_custom_url_alias_to_custom_url_suffix_after_moving_node_if_custom_url_suffix_starts_with_forward_slash
