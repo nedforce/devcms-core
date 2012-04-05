@@ -9,12 +9,11 @@ module RoutingExtensions
     # Override default path recognition method by our own through aliasing
     def self.included(base)
       base.alias_method_chain :recognize_path, :delegation_or_url_aliasing
+      base.alias_method_chain :extract_request_environment, :domain_extraction
     end
 
     def extract_request_environment_with_domain_extraction(request)
-      parts = request.host.split('.')
-      parts.shift if parts.first == 'www'
-      extract_request_environment_without_domain_extraction(request).merge({ :domain => parts.join('.') })
+      extract_request_environment_without_domain_extraction(request).merge({ :domain => request.host })
     end
 
     def recognize_path_with_delegation_or_url_aliasing(path, environment = {})
