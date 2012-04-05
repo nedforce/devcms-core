@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
   # catching them in the +find_[resource]+ methods throughout all controllers.
   rescue_from ActionController::RoutingError, ActionController::UnknownController, ActionController::UnknownAction, ActiveRecord::RecordNotFound, :with => :handle_404 unless Rails.env.development?
   
-  before_filter :redirect_to_full_domain
+  #before_filter :redirect_to_full_domain
   
   # Try retrieve the +Node+ object for the current request.
   # This needs to be done before any authorization attempts, a +Node+ might be needed.
@@ -175,7 +175,8 @@ protected
 
   # Used to scope the content (menu's etc) to the current site node
   def current_site
-    @current_site ||= Node.with_content_type('Site').find_by_id(params[:site_id]) || Site.find_by_domain(request.domain).try(:node) || raise(ActionController::RoutingError, "No root site found!")
+    #@current_site ||= Node.with_content_type('Site').find_by_id(params[:site_id]) || Site.find_by_domain(request.domain).try(:node) || raise(ActionController::RoutingError, 'No root site found!')
+    @current_site ||= Node.with_content_type('Site').find_by_id(params[:site_id]) || raise(ActionController::RoutingError, 'No root site found!')
   end
   
   # Used to find the operated node (if present and accessible)

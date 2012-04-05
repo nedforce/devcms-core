@@ -40,11 +40,20 @@ class Site < Section
   validate :ensure_parent_is_root
 
   def self.find_by_domain(domain)
-    domain ||= ""
-    parts = domain.split(".")
-    parts.shift if parts.first == "www"
-    domain = parts.join(".")
-    Site.first(:include => :node, :conditions => [ 'lower(sections.domain) = ? OR lower(sections.domain) = ?', domain.downcase, 'www.' + domain.downcase ]) || Node.root.content
+    if domain.blank?
+      Node.root.content
+    else
+      site = Site.first(:include => :node, :conditions => [ 'lower(sections.domain) = ? OR lower(sections.domain) = ?', domain.downcase, 'www.' + domain.downcase ])
+      site ||= Node.root.content unless Rails.env.production?
+
+      site
+    end
+    
+    #domain ||= ""
+    #parts = domain.split(".")
+    #parts.shift if parts.first == "www"
+    #domain = parts.join(".")
+    #Site.first(:include => :node, :conditions => [ 'lower(sections.domain) = ? OR lower(sections.domain) = ?', domain.downcase, 'www.' + domain.downcase ]) || Node.root.content
   end
   
   def original_domain
