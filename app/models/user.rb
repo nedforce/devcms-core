@@ -117,8 +117,8 @@ class User < ActiveRecord::Base
   validates_format_of       :login, :with => /\A[a-z0-9_\-]+\z/i, :on => :create, :unless => Proc.new { |user| user.login.blank? }
 
   validates_presence_of     :email_address
-  validates_uniqueness_of   :email_address, :case_sensitive => false
   validates_email_format_of :email_address, :allow_blank => true
+
 
   validates_presence_of     :verification_code
 
@@ -129,6 +129,9 @@ class User < ActiveRecord::Base
   # Make sure the user's password (stored in the virtual attribute +password+)
   # is stored as a hash after the user is created/updatedRoleAssignment.
   before_save :encrypt_password
+
+  # Make sure the email is unique and no error is shown
+  before_create :validate_uniquenessof_email
 
   # Make sure a verification code is set when a user first registers.
   before_validation_on_create :set_verification_code
@@ -390,6 +393,13 @@ protected
   def should_not_allow_reserved_login
     # TODO: Move to global setting & generalize unit test
     errors.add(:login, :reserved_login) if self.login =~ DevCMS.reserved_logins_regex
+  end
+
+  # Prevents information leakage, validates the email and returns false to prevent a save
+  def validate_uniquenessof_email
+    user = User.first(:conditions => ["upper(email_address) = upper(?)", email_address])
+    UserMailer.deliver_email_used_to_create_account(user) if user
+    return !user
   end
 
   # Returns an invitation code for a user, based on the user's +email_address+.

@@ -9,6 +9,12 @@ class UserMailer < ActionMailer::Base
     @body[:user]  = user
   end
   
+  def email_used_to_create_account(user, options = {})
+    set_defaults(user, options)
+    @subject      = "Uw e-mail is gebruikt om een account te maken bij #{Settler[:host]}"
+    @body[:user]  = user
+  end
+  
   def invitation_email(email_address, invitation_code, options = {})
     @recipients              = email_address
     @from                    = Settler[:mail_from_address]
@@ -24,6 +30,15 @@ class UserMailer < ActionMailer::Base
     @subject         = "Uw #{Settler[:host]} wachtwoord."
     @body[:user]     = user
     @body[:password] = new_password
+  end
+
+  def account_does_not_exist(email_address, options = {})
+    @recipients              = email_address
+    @from                    = Settler[:mail_from_address]
+    @sent_on                 = Time.now
+    @subject                 = "Uw #{Settler[:host]} account."
+    @body[:host]             = options[:host] || Settler[:host]
+    @body[:invitation_email] = email_address
   end
 
   def rejection_notification(user, node, editor, reason, options = {})

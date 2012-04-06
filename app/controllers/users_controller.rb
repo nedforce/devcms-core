@@ -48,7 +48,8 @@ class UsersController < ApplicationController
       @user = User.new(params[:user])
 
       respond_to do |format|
-        if @user.save
+        save = @user.save
+        if save || (@user.errors.count == 0 && @user.valid?)
           format.html do
             if Settler[:after_signup_path].present?
               redirect_to Settler[:after_signup_path]
@@ -199,15 +200,12 @@ class UsersController < ApplicationController
       if @user  
         pw = @user.reset_password
         UserMailer.deliver_password_reminder(@user, pw, :host => request.host)
-        format.html do
-          flash[:notice] = "#{I18n.t('users.password_sent_to')} #{@user.email_address}"
-          redirect_to login_path
-        end
       else
-        format.html do
-          flash[:warning] = I18n.t('users.couldnt_find_user')
-          redirect_to request_password_users_path
-        end
+        UserMailer.deliver_account_does_not_exist(params[:login_email], :host => request.host)
+      end
+      format.html do
+        flash[:notice] = "#{I18n.t('users.password_sent_to')} #{params[:login_email]}"
+        redirect_to login_path
       end
     end
   end
