@@ -78,6 +78,10 @@ module Node::UrlAliasing
       generated_custom_url_alias << "#{parent_url_alias}/"
     end
     
+    if containing_site != Node.root
+      generated_custom_url_alias << "#{containing_site.url_alias}/"
+    end
+
     generated_custom_url_alias << clean_for_url(self.custom_url_suffix.starts_with?('/') ? self.custom_url_suffix[1..-1] : self.custom_url_suffix)
 
     generated_custom_url_alias

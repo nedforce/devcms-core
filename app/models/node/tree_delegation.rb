@@ -208,17 +208,17 @@ module Node::TreeDelegation
       node_ids = nodes.map { |n| n.id }
       node_child_ancestries = nodes.map { |n| n.child_ancestry }
 
-      sql += "NOT (nodes.id IN (:node_ids) OR (nodes.ancestry IS NOT NULL AND nodes.ancestry IN (:node_child_ancestries))"
+      sql += "nodes.id NOT IN (:node_ids) AND nodes.ancestry NOT IN (:node_child_ancestries)"
       values.update(:node_ids => node_ids, :node_child_ancestries => node_child_ancestries)
 
       node_child_ancestries.each_with_index do |child_ancestry, index|
         symbol = :"node_child_ancestry_#{index}"
 
-        sql += " OR (nodes.ancestry IS NOT NULL AND nodes.ancestry LIKE :#{symbol})"
+        sql += " AND nodes.ancestry NOT LIKE :#{symbol}"
         values.update(symbol => "#{child_ancestry}/%")
       end
-
-      sql += ")"
+      
+      sql += " OR nodes.ancestry IS NULL"
 
       { :conditions => [ sql, values ] }
     end

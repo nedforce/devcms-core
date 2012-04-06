@@ -9,17 +9,22 @@ module RoutingExtensions
     # Override default path recognition method by our own through aliasing
     def self.included(base)
       base.alias_method_chain :recognize_path, :delegation_or_url_aliasing
+      base.alias_method_chain :extract_request_environment, :domain_extraction
+    end
+
+    def extract_request_environment_with_domain_extraction(request)
+      extract_request_environment_without_domain_extraction(request).merge({ :domain => request.host })
     end
 
     def recognize_path_with_delegation_or_url_aliasing(path, environment = {})
       # First we determine the Site node for the given domain
       site = Site.find_by_domain(environment[:domain]) || raise(ActionController::RoutingError, 'No site found!')
-    
+
       begin
         # Use Rails' default path parsing
         params = recognize_path_without_delegation_or_url_aliasing(path, environment).merge({ :site_id => site.node.id })
         controller = params[:controller]
-        
+
         # What we do next depends on the 'controller'
         # If its name starts with '_' we have a psuedo-controller
         if controller.starts_with?('_')
@@ -32,21 +37,26 @@ module RoutingExtensions
             node = Node.find(params[:id])
           # Delegation to an aliased content node
           else
-            url_alias = params[:id]
-      
-            unless node = Node.first(:conditions => [ 'url_alias = ? OR custom_url_alias = ?', url_alias, url_alias ])
+            url_alias         = params[:id]
+            subsite_url_alias = "#{site.node.url_alias}/#{url_alias}"
+
+            unless node = Node.first(:conditions => [ 'url_alias = ? OR custom_url_alias = ?', subsite_url_alias, subsite_url_alias ])
+              node = Node.first(:conditions => [ 'url_alias = ? OR custom_url_alias = ?', url_alias, url_alias ])
+            end
+
+            unless node
               parts           = url_alias.split('/')
               params[:action] = parts.pop
               url_alias       = parts.join('/')
               node            = Node.first(:conditions => [ 'url_alias = ? OR custom_url_alias = ?', url_alias, url_alias ])
             end
-          
+
             node || raise(ActionController::RoutingError, "Invalid alias #{url_alias} specified for path #{path}")
           end
-        
+
           # Node might point to a different node
           node = update_to_referenced_node(node)
-        
+
           params.update({ 
             :id => node.content_id,
             :node_id => node.id,
@@ -87,7 +97,7 @@ module RoutingExtensions
       #         params.update({ :site_id => site.node.id })
       #         raise e
       end
-      
+
       params.inject({}) do |hash, (key, value)|
         hash[key] = value.to_s
         hash
@@ -103,7 +113,7 @@ module RoutingExtensions
           node = update_to_referenced_node(frontpage_node)
         end
       end
-      
+
       node
     end
   end

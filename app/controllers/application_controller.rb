@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
   # a custom 500 page. Also makes sure a notification mail is sent.
   # 404 exceptions are handled below.
   rescue_from Exception, :with => :handle_500 unless Rails.env.development?
-
+   
   # Catches all 404 errors to render a 404 page.
   # Note that this rescue_from statement has precedence over the one above.
   # UnknownAction and RecordNotFound exceptions are given a special treatment, so you don't have to worry about
@@ -175,7 +175,7 @@ protected
 
   # Used to scope the content (menu's etc) to the current site node
   def current_site
-    @current_site ||= Node.with_content_type('Site').find_by_id(params[:site_id]) || Site.find_by_domain(request.domain).try(:node) || raise(ActionController::RoutingError, "No root site found!")
+    @current_site ||= Node.with_content_type('Site').find_by_id(params[:site_id]) || Site.find_by_domain(request.domain).try(:node) || raise(ActionController::RoutingError, 'No root site found!')
   end
   
   # Used to find the operated node (if present and accessible)
