@@ -118,6 +118,8 @@ class User < ActiveRecord::Base
 
   validates_presence_of     :email_address
   validates_email_format_of :email_address, :allow_blank => true
+  # To make sure editing still checks uniqueness
+  validates_uniqueness_of   :email_address, :case_sensitive => false, :if => Proc.new { |user| !user.new_record? }
 
 
   validates_presence_of     :verification_code
