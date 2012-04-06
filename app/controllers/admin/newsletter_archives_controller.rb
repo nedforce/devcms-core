@@ -22,6 +22,19 @@ class Admin::NewsletterArchivesController < Admin::AdminController
     end
   end
 
+
+  def show
+    respond_to do |format|
+      format.csv do
+        require 'csv'
+        @newsletter = NewsletterArchive.find(params[:id])
+        render :action => :show, :layout => false
+      end
+      # Default to index method from ActsAsArchiveController module
+      format.any { super }
+    end
+  end
+
 protected
 
   def find_newsletter_editions

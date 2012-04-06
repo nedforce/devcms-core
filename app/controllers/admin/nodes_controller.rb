@@ -2,7 +2,7 @@
 class Admin::NodesController < Admin::AdminController
 
   # Only allow XHMLHttpRequests some actions.
-  verify :xhr => true, :only => [ :move, :count_children, :sort_children, :set_visibility, :set_accessibility ]
+  verify :xhr => true, :only => [ :move, :count_children, :sort_children, :set_visibility, :set_accessibility, :export_newsletter ]
 
   before_filter :find_nodes, :only => [ :bulk_edit, :bulk_update ]
 
@@ -11,7 +11,7 @@ class Admin::NodesController < Admin::AdminController
   # Require a role for the current node on update, destroy and move
   require_role 'admin', :only => :set_accessibility
   
-  require_role ['admin', 'final_editor'], :except => [ :index, :update, :set_visibility, :set_accessibility, :bulk_edit, :bulk_update, :destroy ]
+  require_role ['admin', 'final_editor'], :except => [ :index, :update, :set_visibility, :set_accessibility, :bulk_edit, :bulk_update, :destroy, :export_newsletter ]
 
   require_role ['admin', 'final_editor', 'editor'], :only => [ :update, :bulk_edit, :bulk_update, :set_visibility, :destroy, :move, :sort_children, :count_children ]
 
@@ -122,6 +122,16 @@ class Admin::NodesController < Admin::AdminController
       format.xml  { head :ok }
       format.json { render :json => { :notice => I18n.t('nodes.succesfully_destroyed')}.to_json, :status => :ok }
     end    
+  end
+
+
+  def export_newsletter
+    puts @node
+    p @node
+    puts "node\n"*10
+    if @node.content.is_a?(NewsletterArchive)
+      redirect(@node.content)
+    end
   end
 
   # Sets this node to be the website's (global) frontpage

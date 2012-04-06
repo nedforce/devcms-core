@@ -554,6 +554,11 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
         }); // End Ext.Msg.prompt
     },
 
+    onExportSubscribers: function (item) {
+        console.log(this);
+        window.open('/admin/newsletter_archives/'+this.id+'.csv');
+    },
+
     onAssignRole: function () {
         rightPanel.load({
             url: '/admin/role_assignments/new',
