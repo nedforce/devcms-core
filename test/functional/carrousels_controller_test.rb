@@ -17,7 +17,7 @@ class CarrouselsControllerTest < ActionController::TestCase
   def test_should_not_show_unpublished_carrousel
     carroussel = create_carrousel :publication_start_date => 1.day.from_now
     get :show, :id => carroussel.id
-    assert_redirected_to :controller => :errors, :action => :error_404
+    assert_response :not_found
   end
   
   def test_should_cycle_carrousel_items

@@ -8,12 +8,12 @@ class ContentNodesTest < ActionController::TestCase
 
   def test_should_not_show_hidden_page
     get :show, :id => pages(:hidden_page).id
-    assert_redirected_to :controller => :errors, :action => :error_404
+    assert_response :not_found
   end
 
   def test_should_not_show_page_in_hidden_section
     get :show, :id => pages(:nested_page).id
-    assert_redirected_to :controller => :errors, :action => :error_404
+    assert_response :not_found
   end
 
   def test_should_not_show_hidden_children_to_authorized_user
@@ -49,11 +49,6 @@ class ContentNodesTest < ActionController::TestCase
     get :show, :id => pages(:not_hidden_page).id
     assert_response :success
     assert assigns(:image_content_nodes).empty?
-  end
-  
-  def test_should_handle_invalid_ids
-    get :show, :id => -1
-    assert_response :not_found
   end
 end
 

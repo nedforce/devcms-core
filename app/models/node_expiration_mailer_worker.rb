@@ -8,7 +8,6 @@ class NodeExpirationMailerWorker
   
     def notify_authors(node = Node.root)
       logger.info "Notifying responsible authors of expired content..."
-      node.descendants.all(:select => "DISTINCT content_type").each {|ct| ct.content_type.constantize } # FIX: until preloading is merged..
       node.descendants.expired.all.each do |node|
         send_author_notification(node)
       end
@@ -16,7 +15,7 @@ class NodeExpirationMailerWorker
     
     def notify_final_editors
       logger.info "Notifying responsible final editors of expired content..."
-      User.final_editors.each do |user|
+      PrivilegedUser.final_editors.each do |user|
         nodes = user.assigned_nodes.collect { |node| node.self_and_descendants.expired(1.week.ago) }.flatten.compact
         logger.debug "Notifying #{user.login} of #{nodes.size} expired nodes."
         send_final_editor_notification(user, nodes) if nodes.present?

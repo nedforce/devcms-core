@@ -312,6 +312,8 @@ nl:
             node:
               admin_requires_root: Er kan alleen webmaster toegang op de websiteroot toegewezen worden.
               invalid_node_type: Er kan geen recht toegewezen worden op dit contenttype.
+            user:
+              role_requires_priviliged_user: Deze rol vereist een beveiligde gebruiker.
         section:
           attributes:
             base:

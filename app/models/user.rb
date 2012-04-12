@@ -76,11 +76,8 @@ class User < ActiveRecord::Base
   has_many :weblogs, :dependent => :destroy
 
   # A +User+ has many +RoleAssignment+ objects (i.e., roles).
-  has_many :role_assignments, :dependent => :destroy
-  
-  # A +User+ has many nodes it has a role assigned on
-  has_many :assigned_nodes, :through => :role_assignments, :source => :node
-  
+  has_many :role_assignments, :dependent => :destroy, :conditions => { :name => %w(read_access indexer)}
+    
   has_many :user_poll_question_votes, :dependent => :destroy
 
   # A +User+ has and belongs to many +NewsletterArchive+ objects (i.e., subscriptions to newsletters).
@@ -101,10 +98,6 @@ class User < ActiveRecord::Base
   
   has_many :versions,        :foreign_key => :editor_id, :dependent => :destroy
   
-  named_scope :admins,        :include => :role_assignments, :conditions => "role_assignments.name = 'admin'"
-  named_scope :final_editors, :include => :role_assignments, :conditions => "role_assignments.name = 'final_editor'"
-  named_scope :editors,       :include => :role_assignments, :conditions => "role_assignments.name = 'editor'"
-
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of     :password,                :if => :password_required?
   validates_presence_of     :password_confirmation,   :if => :password_required?
@@ -215,6 +208,10 @@ class User < ActiveRecord::Base
     save(false)
   end
 
+  def is_privileged?
+    self.type.to_s == 'PrivilegedUser'
+  end
+
   # Determins whether this user has a +RoleAssignment+ with (one of) the given name(s) for the given node or one of its ancestors.
   # If no node is given, the +Node.root+ is used.
   # Arguments
@@ -237,7 +234,7 @@ class User < ActiveRecord::Base
 
   # Checks whether a user has whatever role on whatever node.
   def has_any_role?
-    self.role_assignments.count > 0
+    self.role_assignments.exists?
   end
   
   # Checks whether this user has a +RoleAssignment+ for the given node or one of its ancestors.
@@ -364,6 +361,10 @@ class User < ActiveRecord::Base
 
   def to_s
     full_name.present? ? "#{full_name} (#{login})" : login
+  end
+  
+  def promote!
+	  self.update_attribute :type, 'PrivilegedUser'
   end
 
 protected

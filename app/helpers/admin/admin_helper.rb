@@ -7,6 +7,11 @@ module Admin::AdminHelper
       :url  => { :controller => 'admin/nodes', :action => :index },
       :text => I18n.t('admin.sitemap')
     }
+    privileged_users = {
+      :page => :privileged_users,
+      :url  => { :controller => 'admin/users', :action => :privileged },
+      :text => I18n.t('admin.privileged_users_button')
+    }
     users = {
       :page => :users,
       :url  => { :controller => 'admin/users', :action => :index },
@@ -39,7 +44,7 @@ module Admin::AdminHelper
     }    
 
     menu_items = [sitemap]
-    menu_items.concat [users, permissions, categories, settings] if current_user.has_role?('admin')
+    menu_items.concat [privileged_users, users, permissions, categories, settings] if current_user.has_role?('admin')
 
     if current_user.has_role?('admin', 'final_editor')
       menu_items << comments

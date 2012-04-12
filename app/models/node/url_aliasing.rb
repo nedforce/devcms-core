@@ -99,12 +99,12 @@ module Node::UrlAliasing
     uniqify_url_alias(self.generate_custom_url_alias[0..(MAXIMUM_URL_ALIAS_LENGTH - 6)])
   end
   
-  protected
-    # Sets an URL alias if none has been specified on create or +force+ is true.
-    def set_url_alias(force = false)
-      self.url_alias = generate_unique_url_alias if self.url_alias.blank? || force
-    end
+  # Sets an URL alias if none has been specified on create or +force+ is true.
+  def set_url_alias(force = false)
+    self.url_alias = generate_unique_url_alias if self.url_alias.blank? || force
+  end
   
+  protected
     def set_custom_url_alias
       self.custom_url_alias = (self.custom_url_suffix.present? ? self.generate_unique_custom_url_alias : nil) if custom_url_suffix_changed?
     end

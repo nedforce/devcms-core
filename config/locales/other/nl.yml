@@ -79,6 +79,7 @@ nl:
     succesfully_deleted: Kolomelement succesvol verwijderd.
     synonyms_button: Synoniemen
     users_button: Gebruikers
+    privileged_users_button: Beheerders
   agenda_items:
     add_to: Item toevoegen aan
   alphabetic_indices:
@@ -1072,6 +1073,8 @@ nl:
     cant_destroy_yourself: U kan uzelf niet verwijderen.
     confirm_deletion: "Weet u zeker dat u deze gebruiker(s) wilt verwijderen? Ook de discussies, reacties en weblogs van deze gebruiker(s) zullen verwijderd worden."
     confirm_user_deletion: "Weet u zeker dat u uw profiel wilt verwijderen? Ook de uw discussies, reacties en weblogs zullen verwijderd worden. Bevestig het verwijderen met uw wachtwoord."
+    confirm_demote: "Weet u zeker dat u deze gebruiker wil degraderen? Al zijn rechten worden bevroren en zijn dan niet meer bruikbaar tot (her)promotie."
+    confirm_promote: "Weet u zeker dat u deze gebruiker wil promoten?"
     could_not_delete: "Sorry, kon de gebruiker(s) niet verwijderen."
     couldnt_find_user: Login naam / E-mailadres niet gevonden
     count_msg: "Gebruikers {0} tot {1} van {2} worden weergegeven"
@@ -1082,6 +1085,9 @@ nl:
     delete_user: Profiel verwijderen
     deleting: Bezig met verwijderen
     deletion_of: Profiel verwijderen van
+    demote: Degraderen
+    demote_tooltip: Deze gebruiker ontdoen van zijn beheerdersrechten
+    demoting: Bezig met degraderen
     edit: Bewerken
     edit_tooltip: Klik hier om het gebruikersprofiel van de geselecteerde gebruiker te bewerken
     edit_details: Gegevens wijzigen
@@ -1123,6 +1129,9 @@ nl:
     privacy_statement: Hoe gaat de gemeente om met uw privacy?
     profile: Gebruikersprofiel
     profile_of: Profiel van
+    promote: Promoveren
+    promote_tooltip: Deze gebruiker toestaan beheerdersrechten te bezitten
+    promoting: Bezig met promoveren
     really_unsubscribe?: "Weet u zeker dat zich wilt afmelden van deze nieuwsbrief?"
     register: Registreren
     registration_form: Registratieformulier

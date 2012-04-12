@@ -88,7 +88,7 @@ Ext.onReady(function(){
     // create the Data Store
     var store = new Ext.data.Store({
         // load using HTTP
-        url: 'users.xml',
+        url: '<%= @privileged ? admin_users_path(:format => :xml, :privileged => true) : admin_users_path(:format => :xml) %>',
         remoteSort: true,
 
         // the return will be XML, so lets set up a reader
@@ -157,6 +157,18 @@ Ext.onReady(function(){
                   tooltip: '<%= I18n.t("users.export_newsletter_counts_tooltip") %>',
                   handler: handleNewsletterExport,
                   iconCls: 'attachment_icon'
+              }, {
+                  <% if @privileged %>
+                    text: '<%= I18n.t("users.demote") %>',
+                    tooltip: '<%= I18n.t("users.demote_tooltip") %>',
+                    handler: handleDemote,
+                    iconCls: 'menu_item_delete'
+                  <% else %>
+                    text: '<%= I18n.t("users.promote") %>',
+                    tooltip: '<%= I18n.t("users.promote_tooltip") %>',
+                    handler: handlePromote,
+                    iconCls: 'menu_item_create'
+                  <% end %>
               }
               <% if Settler[:user_allow_invite] -%>, '->', {
                   text: '<%= I18n.t("users.invite") %>',
@@ -274,7 +286,7 @@ Ext.onReady(function(){
                   type: 'submit',
                   handler: function(e){
                       wnd.getComponent('edit_user').getForm().submit({
-                          url: 'users/' + item.id + '.json',
+                          url: '/admin/users/' + item.id + '.json',
                           method: 'PUT',
                           failure: function(form,action) {
                               Ext.MessageBox.alert('<%= I18n.t("users.error") %>',action.response.responseText);
@@ -320,7 +332,7 @@ Ext.onReady(function(){
 
                 Ext.Ajax.request({
                     waitMsg: '<%= I18n.t("users.deleting") %>',
-                    url: 'users/' + item.id + '.json',
+                    url: '/admin/users/' + item.id + '.json',
                     method: 'POST',
 
                     params: "_method=delete&authenticity_token=<%= form_authenticity_token -%>",
@@ -347,7 +359,7 @@ Ext.onReady(function(){
     function handleEdit(editEvent) {
         Ext.Ajax.request({
             waitMsg: '<%= I18n.t("users.saving")%>',
-            url: 'users/' + editEvent.record.id + '.xml',
+            url: '/admin/users/' + editEvent.record.id + '.xml',
             method: 'POST',
 
             params: "_method=put&authenticity_token=<%= form_authenticity_token -%>" +
@@ -430,6 +442,58 @@ Ext.onReady(function(){
         wnd.show();
     }
     
+    function handleDemote(e) {
+      var selectedItems = grid.selModel.getSelections();
+      
+      if(selectedItems.length > 0)
+      {
+        Ext.MessageBox.confirm('<%= I18n.t("users.message") %>','<%= I18n.t("users.confirm_demote") %>', demoteUsers);
+      }
+      else
+      {
+        Ext.MessageBox.alert('<%= I18n.t("users.message") %>','<%= I18n.t("users.select_one") %>');
+      }
+    }
+    
+    function demoteUsers(button) {
+      if(button == 'yes') switchUserTypes('<%= I18n.t("users.demoting") %>');
+    }
+    
+    function handlePromote(e) {
+      var selectedItems = grid.selModel.getSelections();
+      
+      if(selectedItems.length > 0)
+      {
+        Ext.MessageBox.confirm('<%= I18n.t("users.message") %>','<%= I18n.t("users.confirm_promote") %>', promoteUsers);
+      }
+      else
+      {
+        Ext.MessageBox.alert('<%= I18n.t("users.message") %>','<%= I18n.t("users.select_one") %>');
+      }
+    }
+    
+    function promoteUsers(button) {
+      if(button == 'yes') switchUserTypes('<%= I18n.t("users.promoting") %>');
+    }
+    
+    function switchUserTypes(message) {
+      grid.selModel.getSelections().each(function(item) {
+        Ext.Ajax.request({
+          waitMsg: message,
+          url: '/admin/users/' + item.id + '/switch_user_type.json',
+          method: 'POST',
+          params: 'authenticity_token=<%= form_authenticity_token %>',
+          callback: function(options, success, response) {
+            if(success) {
+              store.reload();
+            } else {
+              Ext.ux.alertResponseError(response);
+            }
+          }
+        });
+      });
+    };
+        
     initViewport(grid); // render admin layout using the viewport.
 });
 

@@ -3,6 +3,13 @@ require File.dirname(__FILE__) + '/../../test_helper'
 class Admin::NodesControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
+  def test_should_deny_access_after_demote
+    users(:sjoerd).demote!
+    login_as :sjoerd
+    get :index
+    assert_response :redirect
+  end
+  
   def test_should_show_tree_from_root
     login_as :sjoerd
     get :index

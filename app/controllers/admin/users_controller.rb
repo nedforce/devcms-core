@@ -16,6 +16,7 @@ class Admin::UsersController < Admin::AdminController
   # * GET /admin/users.json
   def index
     @active_page = :users
+    user_class = params[:privileged] ? PrivilegedUser : User
 
     # Sort the polymorphic node relationship separately if necessary.
     if !@sort_by_newsletter_archives
@@ -23,10 +24,10 @@ class Admin::UsersController < Admin::AdminController
       # This may be resolved by transforming this controller into JSON or in
       # a version of Rails > 2.0.2.
       @sort_field = 'users.created_at' if @sort_field == 'created_at'
-      @users      = User.all(:include => [ :newsletter_archives, :interests ], :conditions => filter_conditions, :order => "#{@sort_field} #{@sort_direction}", :page => { :size => @page_limit, :current => @current_page })
+      @users      = user_class.all(:include => [ :newsletter_archives, :interests ], :conditions => filter_conditions, :order => "#{@sort_field} #{@sort_direction}", :page => { :size => @page_limit, :current => @current_page })
       @user_count = @users.size
     else
-      @users      = User.all(:include => [ :newsletter_archives, :interests ], :conditions => filter_conditions, :order => "login #{@sort_direction}")
+      @users      = user_class.all(:include => [ :newsletter_archives, :interests ], :conditions => filter_conditions, :order => "login #{@sort_direction}")
       @users      = @users.sort_by { |user| user.newsletter_archives.sort_by { |archive| archive.title.upcase }.map{ |archive| archive.title }.join(', ') }
       @users      = @users.reverse if @sort_direction == 'DESC'
       @user_count = @users.size
@@ -52,9 +53,13 @@ class Admin::UsersController < Admin::AdminController
   # * GET /admin/users/privileged.json
   def privileged
     respond_to do |format|
+      format.html do
+        @privileged = true
+        render :action => :index
+      end
       format.json do
         node = Node.find(params[:node])
-        users = User.all(:select => 'users.login, users.id', :include => :role_assignments, :conditions => ["users.login LIKE ? AND role_assignments.node_id IN (?) AND role_assignments.name in (?)", "#{params[:query]}%", node.path_ids, ['editor', 'final_editor']] )
+        users = PrivilegedUser.all(:select => 'users.login, users.id', :include => :role_assignments, :conditions => ["users.login LIKE ? AND role_assignments.node_id IN (?) AND role_assignments.name in (?)", "#{params[:query]}%", node.path_ids, ['editor', 'final_editor']] )
         render :json => { :users => users }.to_json, :status => :ok
       end
     end
@@ -160,6 +165,20 @@ class Admin::UsersController < Admin::AdminController
   def create
     if extjs_paging? || extjs_sorting?
       index
+    end
+  end
+  
+  def switch_user_type
+    respond_to do |format|
+      format.json do
+        if @user.is_privileged?
+          @user.demote!
+          render :json => { :success => 'true' }
+        else
+          @user.promote!
+          render :json => { :success => 'true' }
+        end
+      end
     end
   end
 

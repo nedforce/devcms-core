@@ -21,7 +21,7 @@ class UsersControllerTest < ActionController::TestCase
   def test_should_not_get_show_logged_in_as_different_user
     login_as :arthur
     get :show, :id => users(:sjoerd).login
-    assert_redirected_to :controller => :errors, :action => :error_404
+    assert_response :not_found
   end
   
   def test_should_get_show_logged_in_as_owner
@@ -178,7 +178,7 @@ class UsersControllerTest < ActionController::TestCase
   def test_should_require_owner_on_edit
     login_as :arthur
     get :edit, :id => users(:sjoerd).login
-    assert_redirected_to :controller => :errors, :action => :error_404
+    assert_response :not_found
   end
   
   def test_should_update_user
@@ -205,7 +205,7 @@ class UsersControllerTest < ActionController::TestCase
   def test_update_should_require_owner
     login_as :arthur
     put :update, :id => users(:sjoerd).login, :user => {:email_address => 'sjoerd@nedforce.nl'}
-    assert_redirected_to :controller => :errors, :action => :error_404
+    assert_response :not_found
   end
   
   def test_should_verify_user

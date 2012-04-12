@@ -21,14 +21,15 @@ class RoleAssignmentTest < ActiveSupport::TestCase
   def test_should_require_fixed_node_types
     [nodes(:test_image_two_node), nodes(:devcms_news_item_node), nodes(:events_calendar_item_one_node)].each do |node|
       assert_no_difference 'RoleAssignment.count' do
-        role_assignment = create_role_assignment(:name => 'editor', :node => node)
+       role_assignment = create_role_assignment(:name => 'editor', :node => node)
        assert "#{role_assignment.errors.full_messages.to_sentence}"
      end
     end
     [nodes(:about_page_node), nodes(:devcms_news_node), nodes(:events_calendar_node)].each do |node|
       assert_difference 'RoleAssignment.count', 1 do
+        users(:klaas).promote!
         role_assignment = create_role_assignment(:name => 'editor', :node => node, :user => users(:klaas))
-       assert role_assignment.errors.empty?
+        assert role_assignment.errors.empty?, role_assignment.errors.full_messages.to_sentence
      end
     end
   end
@@ -68,9 +69,16 @@ class RoleAssignmentTest < ActiveSupport::TestCase
     end
   end
   
-    def test_should_require_user
+  def test_should_require_user
     assert_no_difference 'RoleAssignment.count' do
       role_assignment = create_role_assignment(:user => nil)
+      assert role_assignment.errors.on(:user)
+    end
+  end
+
+  def test_should_require_privileged_user
+    assert_no_difference 'RoleAssignment.count' do
+      role_assignment = create_role_assignment(:user => users(:klaas))
       assert role_assignment.errors.on(:user)
     end
   end

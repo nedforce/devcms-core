@@ -16,19 +16,19 @@ class ForumPostsControllerTest < ActionController::TestCase
   def test_should_redirect_for_invalid_forum_topic
     login_as :henk
     get :edit, :forum_topic_id => nil, :forum_thread_id => forum_threads(:bewoners_forum_thread_one).id, :id => forum_posts(:bewoners_forum_post_five).id
-    assert_redirected_to :controller => :errors, :action => :error_404
+    assert_response :not_found
   end
   
   def test_should_redirect_for_invalid_forum_thread
     login_as :henk
     get :edit, :forum_topic_id => forum_topics(:bewoners_forum_topic_wonen).id, :forum_thread_id => nil, :id => forum_posts(:bewoners_forum_post_five).id
-    assert_redirected_to :controller => :errors, :action => :error_404
+    assert_response :not_found
   end
 
   def test_should_redirect_for_invalid_forum_post
     login_as :henk
     get :edit, :forum_topic_id => forum_topics(:bewoners_forum_topic_wonen).id, :forum_thread_id => forum_threads(:bewoners_forum_thread_one), :id => nil
-    assert_redirected_to :controller => :errors, :action => :error_404
+    assert_response :not_found
   end
  
   def test_should_get_new_for_user

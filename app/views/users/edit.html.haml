@@ -45,4 +45,4 @@
 
   .formButtonCt
     = submit_tag t('users.save'), :class => 'left submit'
-    = link_to    t('users.back'), @user, :class => 'right'
+    = link_to    t('users.back'), user_path(@user), :class => 'right'

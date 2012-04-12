@@ -12,7 +12,7 @@ class NewsletterEditionsControllerTest < ActionController::TestCase
   
   def test_should_not_show_unpublished_newsletter_edition
     get :show, :id => newsletter_editions(:example_newsletter_edition).id
-    assert_redirected_to :controller => :errors, :action => :error_404
+    assert_response :not_found
   end
   
 end

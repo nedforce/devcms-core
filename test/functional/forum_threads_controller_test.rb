@@ -230,7 +230,7 @@ class ForumThreadsControllerTest < ActionController::TestCase
     ForumPost.delete_all
     assert_nil forum_threads(:bewoners_forum_thread_one).forum_posts.first
     get :show, :forum_topic_id => forum_topics(:bewoners_forum_topic_wonen).id, :id => forum_threads(:bewoners_forum_thread_one).id
-    assert_redirected_to :controller => :errors, :action => :error_404
+    assert_response :not_found
   end
   
   protected

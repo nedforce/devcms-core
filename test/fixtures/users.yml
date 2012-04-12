@@ -7,12 +7,14 @@ gerjan:
   password_hash: <%= User.encrypt('gerjan', SALT) %>
   verification_code: <%= User.generate_verification_code_for(User.new(:login => 'gerjan')) %>
   verified: true
+  type: PrivilegedUser
 arthur:
   email_address: a.holstvoogd@nedforce.nl
   login: arthur
   password_salt: <%= SALT %>
   password_hash: <%= User.encrypt('arthur', SALT) %>
   verification_code: <%= User.generate_verification_code_for(User.new(:login => 'arthur')) %>
+  type: PrivilegedUser
 sjoerd:
   email_address: s.andringa@nedforce.nl
   login: sjoerd
@@ -22,30 +24,35 @@ sjoerd:
   password_hash: <%= User.encrypt('sjoerd', SALT) %>
   verification_code: <%= User.generate_verification_code_for(User.new(:login => 'sjoerd')) %>
   verified: true
+  type: PrivilegedUser
 roderick:
   email_address: r.s.a.vandomburg@nedforce.nl
   login: roderick
   password_salt: <%= SALT %>
   password_hash: <%= User.encrypt('roderick', SALT) %>
   verification_code: <%= User.generate_verification_code_for(User.new(:login => 'roderick')) %>
+  type: PrivilegedUser
 root_editor:
   email_address: root_editor@nedforce.nl
   login: root_editor
   password_salt: <%= SALT %>
   password_hash: <%= User.encrypt('root_editor', SALT) %>
   verification_code: <%= User.generate_verification_code_for(User.new(:login => 'root_editor')) %>
+  type: PrivilegedUser
 editor:
   email_address: editor@nedforce.nl
   login: editor
   password_salt: <%= SALT %>
   password_hash: <%= User.encrypt('editor', SALT) %>
   verification_code: <%= User.generate_verification_code_for(User.new(:login => 'editor')) %>
+  type: PrivilegedUser
 final_editor:
   email_address: final_editor@nedforce.nl
   login: final_editor
   password_salt: <%= SALT %>
   password_hash: <%= User.encrypt('final_editor', SALT) %>
   verification_code: <%= User.generate_verification_code_for(User.new(:login => 'final_editor')) %>
+  type: PrivilegedUser
 normal_user:
   email_address: normal_user@nedforce.nl
   login: normal_user
@@ -76,6 +83,7 @@ klaas:
   password_salt: <%= SALT %>
   password_hash: <%= User.encrypt('klaas', SALT) %>
   verification_code: <%= User.generate_verification_code_for(User.new(:login => 'klaas')) %>
+  type: User
 unverified_user:
   email_address: unverified@user.nl
   login: im_not_verified
@@ -96,3 +104,12 @@ indexer:
   password_hash: <%= User.encrypt('indexer', SALT) %>
   verification_code: <%= User.generate_verification_code_for(User.new(:login => 'indexer')) %>
   verified: true
+privileged_user:
+  email_address: privileged_user@privileged_user.nl
+  login: privileged_user
+  password_salt: <%= SALT %>
+  password_hash: <%= User.encrypt('privileged_user', SALT) %>
+  verification_code: <%= User.generate_verification_code_for(User.new(:login => 'privileged_user')) %>
+  verified: true
+  type: PrivilegedUser
+  

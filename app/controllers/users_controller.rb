@@ -104,7 +104,7 @@ class UsersController < ApplicationController
       if @user.update_attributes(params[:user])
         format.html do
           flash[:notice] = I18n.t('users.update_successful')
-          redirect_to @user
+          redirect_to user_path(@user)
         end
         format.xml  { head :ok }
       else

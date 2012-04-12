@@ -20,7 +20,7 @@ class PagesControllerTest < ActionController::TestCase
   
   def test_should_render_404_if_hidden_for_user
     get :show, :id => pages(:hidden_page).id
-    assert_redirected_to :controller => :errors, :action => :error_404
+    assert_response :not_found
   end
   
 end

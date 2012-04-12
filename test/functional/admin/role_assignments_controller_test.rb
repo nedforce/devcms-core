@@ -109,6 +109,6 @@ class Admin::RoleAssignmentsControllerTest < ActionController::TestCase
   protected
 
   def create_role_assignment(options = {})
-    post :create, :node_id => nodes(:economie_section_node).id, :role_assignment => { :user_login => users(:normal_user).login, :name => 'editor' }.merge(options)
+    post :create, :node_id => nodes(:economie_section_node).id, :role_assignment => { :user_login => users(:privileged_user).login, :name => 'editor' }.merge(options)
   end
 end
