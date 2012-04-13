@@ -2,7 +2,7 @@
 class Admin::NodesController < Admin::AdminController
 
   # Only allow XHMLHttpRequests some actions.
-  verify :xhr => true, :only => [ :move, :count_children, :sort_children, :set_visibility, :set_accessibility ]
+  verify :xhr => true, :only => [ :move, :count_children, :sort_children, :set_visibility, :set_accessibility, :export_newsletter ]
 
   before_filter :find_nodes, :only => [ :bulk_edit, :bulk_update ]
 
