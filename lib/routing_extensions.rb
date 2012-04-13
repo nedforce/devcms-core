@@ -73,7 +73,7 @@ module RoutingExtensions
               else
                 raise ActionController::RoutingError, "Invalid path specified: #{path}"
               end
-            elsif klass.nil? || klass == Node
+            elsif klass == Node
               node = Node.find(params[:id])
             end
 

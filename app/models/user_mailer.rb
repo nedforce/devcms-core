@@ -25,11 +25,10 @@ class UserMailer < ActionMailer::Base
     @body[:invitation_code]  = invitation_code
   end
 
-  def password_reminder(user, new_password, options = {})
+  def password_reset(user, options = {})
     set_defaults(user, options)
-    @subject         = "Uw #{Settler[:host]} wachtwoord."
+    @subject         = "Uw #{Settler[:host]} wachtwoord opnieuw instellen"
     @body[:user]     = user
-    @body[:password] = new_password
   end
 
   def account_does_not_exist(email_address, options = {})

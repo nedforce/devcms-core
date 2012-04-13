@@ -22,11 +22,11 @@ class UserMailerTest < ActionMailer::TestCase
     assert email.body =~ /#{user.verification_code}/
   end
 
-  def test_password_reminder
+  def test_password_reset
     user = users(:sjoerd)
-    response = UserMailer.create_password_reminder(user, 'newpass')
+    response = UserMailer.create_password_reset(user)
     assert response.to.to_s =~ /#{user.email_address}/
-    assert response.body =~ /newpass/
+    assert response.body =~ /e5e9fa1ba31ecd1ae84f75caaa474f3a663f05f4/
   end
 
   def test_rejection_notification

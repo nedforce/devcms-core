@@ -25,6 +25,8 @@ sjoerd:
   verification_code: <%= User.generate_verification_code_for(User.new(:login => 'sjoerd')) %>
   verified: true
   type: PrivilegedUser
+  password_reset_token: e5e9fa1ba31ecd1ae84f75caaa474f3a663f05f4
+  password_reset_expiration: <%= Time.now + 6.hours %>
 roderick:
   email_address: r.s.a.vandomburg@nedforce.nl
   login: roderick

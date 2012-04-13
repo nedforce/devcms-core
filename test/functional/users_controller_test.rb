@@ -244,36 +244,6 @@ class UsersControllerTest < ActionController::TestCase
     end
   end
   
-  def test_should_reset_and_send_password_by_login
-    assert_difference 'ActionMailer::Base.deliveries.size', 1 do
-      prev_pw_hash = users(:sjoerd).password_hash
-      put :send_password, :login_email => users(:sjoerd).login
-      assert_response :redirect
-      assert_equal users(:sjoerd), assigns(:user)
-      assert_not_equal prev_pw_hash, assigns(:user).reload.password_hash
-      assert flash.has_key?(:notice), "Flash wasn't set."
-    end
-  end
-  
-  def test_should_reset_and_send_password_by_email_address
-    assert_difference 'ActionMailer::Base.deliveries.size', 1 do
-      prev_pw_hash = users(:sjoerd).password_hash
-      put :send_password, :login_email => users(:sjoerd).email_address
-      assert_response :redirect
-      assert_equal users(:sjoerd), assigns(:user)
-      assert_not_equal prev_pw_hash, assigns(:user).reload.password_hash
-      assert flash.has_key?(:notice), "Flash wasn't set."
-    end
-  end
-  
-  def test_should_redirect_if_user_not_found
-    assert_no_difference 'ActionMailer::Base.deliveries.size' do
-      get :send_password, :login_name => 'idontexist'
-      assert_response :redirect
-      assert flash.has_key?(:warning), "Flash wasn't set."
-    end
-  end
-  
   def test_should_not_register_for_spambots
     assert_no_difference 'User.count' do
       create_user(:username => 'not-empty')

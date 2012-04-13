@@ -196,7 +196,7 @@ Ext.onReady(function(){
             animateTarget: editEvent.getEl(),
             modal: true,
             layout: 'fit',
-            height: 375,
+            height: <%= @privileged ? '435' : '375' %>,
             width: 385,
             resizable: false,
             title: '<%= I18n.t("users.edit") %>',
@@ -237,7 +237,7 @@ Ext.onReady(function(){
                     {boxLabel: '<%= I18n.t("users.male") %>', name: 'user[sex]', inputValue: 'm', checked: item.get('sex') == 'm'},
                     {boxLabel: '<%= I18n.t("users.female") %>', name: 'user[sex]', inputValue: 'f', checked: item.get('sex') == 'f'}
                 ]
-            },{
+              },{
                   xtype : 'remotecheckboxgroup',
                   fieldLabel: '<%= I18n.t("users.newsletter_subscriptions") %>',
                   url: '/admin/users/' + item.id + '/accessible_newsletter_archives.json',
@@ -273,7 +273,19 @@ Ext.onReady(function(){
                   cbFieldLabel: 'title',
                   cbFieldValue: 'id',
                   cbFieldChecked: 'checked'
-                },{
+              }<% if @privileged %>,{
+                xtype: 'textfield',
+                fieldLabel: '<%= I18n.t("users.password") %>',
+                width: 250,
+                name: 'user[password]',
+                value: item.get('password')
+              },{
+                xtype: 'textfield',
+                fieldLabel: '<%= I18n.t("users.password_confirmation") %>',
+                width: 250,
+                name: 'user[password_confirmation]',
+                value: item.get('password_confirmation')
+              }<% end %>,{
                   xtype: 'hidden',
                   name: 'authenticity_token',
                   value: '<%= form_authenticity_token -%>'

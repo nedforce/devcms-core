@@ -1,0 +1,11 @@
+%h1= t 'users.password_reset'
+%p= t 'users.password_reset_text'
+
+- form_tag password_resets_path, :method => :post do
+  .formFieldCt.clearfix
+    %label.reminder{ :for => 'login_email' }
+      = t 'users.login_email'
+    = text_field_tag 'login_email', params[:login_email], :class => 'textfield reminder'
+
+  .formButtonCt
+    = submit_tag t('shared.submit'), :class => 'submit'

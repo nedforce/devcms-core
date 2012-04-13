@@ -52,6 +52,8 @@ class Admin::UsersController < Admin::AdminController
   
   # * GET /admin/users/privileged.json
   def privileged
+    @active_page = :privileged_users
+    
     respond_to do |format|
       format.html do
         @privileged = true

@@ -319,17 +319,11 @@ class UserTest < ActiveSupport::TestCase
     assert_not_equal u.reload.verification_code, prev_code
   end
 
-  def test_should_generate_password_of_5_alnum_chars
-    pw = User.generate_password_for(users(:sjoerd))
-    assert pw.is_a?(String)
-    assert pw =~ /\A[[:alnum:]]{5}\z/, "'#{pw}' is invalid."
-  end
-
-  def test_should_reset_password
+  def test_should_generate_password_reset_token
     u = users(:sjoerd)
-    prev_hash = u.password_hash
-    u.reset_password
-    assert_not_equal prev_hash, u.reload.password_hash
+    prev_token = u.password_reset_token
+    u.create_password_reset_token
+    assert_not_equal prev_token, u.reload.password_reset_token
   end
 
   def test_should_get_full_name

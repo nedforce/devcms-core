@@ -1115,6 +1115,7 @@ nl:
     login_information: Kies uw inloggegevens
     male: Man
     message: Bericht
+    new_password_reset: Nieuw wachtwoord instellen
     new_verification_email: Vraag een nieuwe verificatie-e-mail aan
     newsletter_subscriptions: Nieuwsbrief abonnementen
     newsletter_title: Titel van de nieuwsbrief
@@ -1124,7 +1125,11 @@ nl:
     page: Pagina
     password: Wachtwoord
     password_confirmation: Bevestig wachtwoord
-    password_sent_to: Uw wachtwoord is verstuurd naar
+    password_reset: Wachtwoord opnieuw instellen
+    password_reset_expired: Uw wachtwoord herstel-link is verlopen!
+    password_reset_text: Vul hieronder uw login naam of e-mailadres in. U krijgt per e-mail een link om een nieuw wachtwoord in te stellen.
+    password_reset_sent: Er is een mail naar u gestuurd om uw wachtwoord opnieuw in te stellen.
+    password_reset_succesful: Uw wachtwoord is succesvol aangepast. U kunt nu met uw nieuwe wachtwoord inloggen.
     privacy_explanation: Deze gegevens worden door de gemeente gebruikt om u nog beter van informatie te voorzien. Deze gegevens worden niet aan derden verstrekt.
     privacy_statement: Hoe gaat de gemeente om met uw privacy?
     profile: Gebruikersprofiel
@@ -1136,9 +1141,6 @@ nl:
     register: Registreren
     registration_form: Registratieformulier
     request: Opvragen
-    request_password: Wachtwoord opvragen
-    request_password_heading: Wachtwoord opvragen
-    request_password_text: Vul hieronder uw login naam of e-mailadres in. Het wachtwoord wordt u dan per e-mail toegestuurd.
     save: Wijzigingen opslaan
     saving: Bezig met opslaan
     select_interests: "Selecteer onderwerpen waarin u bent geïnteresseerd"

@@ -294,11 +294,6 @@ class User < ActiveRecord::Base
     self.save!
   end
 
-  # Generates and returns a password.
-  def self.generate_password_for(user)
-    generate_verification_code_for(user)[0..4]
-  end
-
   # Sends an invitation email to the given email_address.
   # Returns +true+ if the email has been successfully sent, otherwise +false+.
   def self.send_invitation_email!(email_address)
@@ -325,13 +320,14 @@ class User < ActiveRecord::Base
     self.generate_invitation_code(email_address) == invitation_code
   end
 
-  # Generates and saves a new password for this user.
-  # Returns the new password.
-  def reset_password
-    self.password = User.generate_password_for(self)
-    self.password_confirmation = self.password
-    self.save!
-    return self.password
+  # Generates a token for use with the password reset form
+  # Returns the generated token
+  def create_password_reset_token
+    begin
+      self.password_reset_token = Digest::SHA1.hexdigest("--#{Time.now}--#{self.object_id}--")
+    end while User.exists?(:password_reset_token => self.password_reset_token) # must be unique
+    self.password_reset_expiration = Time.now + 6.hours
+    save!
   end
 
   # Returns first and surname (String).

@@ -178,41 +178,6 @@ class UsersController < ApplicationController
     end
   end
 
-  # Renders the request password view
-  #
-  # * GET  /users/request_password
-  def request_password
-    @page_title = I18n.t('users.request_password')
-
-    respond_to do |format|
-      format.html # request_password.html.haml
-    end
-  end
-
-  # Resets a user's password and sends the new password by email.
-  # 
-  # * GET /users/send_password?login_email=arthur
-  # * GET /users/send_password?login_email=arthur@nedforce.nl
-  #
-  # <b>parameters</b>
-  # * login_email - String. The login name or email address of the user that is requesting his password.
-  def send_password
-    @user = User.find_by_login(params[:login_email]) || User.find_by_email_address(params[:login_email])
-    
-    respond_to do |format|
-      if @user  
-        pw = @user.reset_password
-        UserMailer.deliver_password_reminder(@user, pw, :host => request.host)
-      else
-        UserMailer.deliver_account_does_not_exist(params[:login_email], :host => request.host)
-      end
-      format.html do
-        flash[:notice] = "#{I18n.t('users.password_sent_to')} #{params[:login_email]}"
-        redirect_to login_path
-      end
-    end
-  end
-
 protected
 
   # Finds the requested user and saves it to the <tt>@user</tt> instance variable.

@@ -32,6 +32,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :news_items,          :only => :show
   map.resources :news_viewers,        :only => :show
   map.resources :pages,               :only => :show
+  map.resources :password_resets,     :only => [:new, :create, :edit, :update]
   map.resources :polls,               :only => :show
   map.resources :poll_questions,      :only => :show,             :member => { :vote => :put, :results => :get }
   map.resources :sections,            :only => :show
@@ -39,7 +40,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :social_media_links_boxes, :only => :show
   map.resources :themes, :only => :show
   map.resources :top_hits_pages, :only => :show
-  map.resources :users, :except => :index, :member => { :send_verification_email => :get, :verification => :get, :profile => :get, :confirm_destroy => :get }, :collection => { :send_password => :put, :request_password => :get }
+  map.resources :users, :except => :index, :member => { :send_verification_email => :get, :verification => :get, :profile => :get, :confirm_destroy => :get }
   map.resources :weblogs, :except => :index, :member => { :destroy => :any } # JS fallback; See ApplicationController for more info.
   map.resources :weblog_archives, :only => :show do |weblog_archive|
     weblog_archive.resources :weblogs, :except => :index, :member => { :destroy => :any } do |weblog|
