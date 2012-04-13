@@ -55,6 +55,9 @@ class ApplicationController < ActionController::Base
   
   before_filter :confirm_destroy, :only => :destroy
 
+  # Limit the session time
+  before_filter :extend_and_limit_session_time
+
   # Set the rss feed url if needed
   before_filter :set_rss_feed_url, :only => :show
 
@@ -79,6 +82,13 @@ class ApplicationController < ActionController::Base
   # Also remember to add <tt>:member => {:destroy => :any}</tt> to the resource mapping
   # in routes.rb.
   verify :method => [ :get, :delete ], :only => :destroy
+
+  # Limits the session time to a certain amount
+  def extend_and_limit_session_time
+      if Settler[:user_session_time_limit_enabled]
+        request.session_options[:expire_after] = current_user && current_user.is_privileged? ? Settler[:user_session_privileged_timeout].minutes : Settler[:user_session_timeout].minutes
+      end
+  end
 
   # Called when we need to include hidden nodes on local requests
   # Before filter sets current user to admin on local requests to this method

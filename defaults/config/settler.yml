@@ -169,6 +169,21 @@ settings: &settings
     value: true
     editable: true
     typecast: boolean
+  user_session_time_limit_enabled:
+    alt: Enable time limited sessions
+    value: true
+    editable: true
+    typecast: boolean
+  user_session_timeout:
+    alt: Limit of sesion time of normal users in minutes
+    value: 60
+    editable: true
+    typecast: integer
+  user_session_privileged_timeout:
+    alt: Limit of sesion time of priviliged users in minutes
+    value: 30
+    editable: true
+    typecast: integer
   user_verify:
     alt: Verify the e-mail address of new users by sending an activation e-mail?
     value: true

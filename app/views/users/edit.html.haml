@@ -2,7 +2,7 @@
 
 = error_messages_for :user
 
-- form_for @user, :url => secure_url(:url_for, { :action => 'update', :id => @user }) do |f|
+- form_for :user, @user, :url => secure_url(:url_for, { :action => 'update', :id => @user }), :html => { :method => :put, :id => "edit_user_"+@user.id.to_s } do |f|
 
   .formFieldCt.clearfix
     %label{ :for => "user_first_name" }
