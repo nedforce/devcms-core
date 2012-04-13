@@ -181,6 +181,15 @@ Ext.dvtr.TreeNodeContextMenu = function (config) {
         });
       }
     }
+    
+    // Add the 'Exporteer abonnementen' item
+    if (this.tn.attributes.ownContentType === 'NewsletterArchive') {
+        this.add({
+          text: I18n.t('export_subscribers', 'context_menu'),
+          scope: this.tn,
+          handler: this.tn.onExportSubscribers
+        });
+    }
 
     // Add the 'Rol toewijzen' menu item:
     if (this.tn.userRole === 'admin' && this.tn.allowRoleAssignment) {

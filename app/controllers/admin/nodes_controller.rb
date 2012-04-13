@@ -11,7 +11,7 @@ class Admin::NodesController < Admin::AdminController
   # Require a role for the current node on update, destroy and move
   require_role 'admin', :only => :set_accessibility
   
-  require_role ['admin', 'final_editor'], :except => [ :index, :update, :set_visibility, :set_accessibility, :bulk_edit, :bulk_update, :destroy ]
+  require_role ['admin', 'final_editor'], :except => [ :index, :update, :set_visibility, :set_accessibility, :bulk_edit, :bulk_update, :destroy, :export_newsletter ]
 
   require_role ['admin', 'final_editor', 'editor'], :only => [ :update, :bulk_edit, :bulk_update, :set_visibility, :destroy, :move, :sort_children, :count_children ]
 
@@ -122,6 +122,20 @@ class Admin::NodesController < Admin::AdminController
       format.xml  { head :ok }
       format.json { render :json => { :notice => I18n.t('nodes.succesfully_destroyed')}.to_json, :status => :ok }
     end    
+  end
+
+
+  def export_newsletter
+    if @node.content.is_a?(NewsletterArchive)
+      #redirect_to @node.content, :action => 'show', :id => @node.content.id
+      respond_to do |format|
+          format.json { render :json => { :id => @node.content.id,:notice => I18n.t('nodes.newsletter_subscribers_export')}.to_json, :status => :ok }
+      end
+    else
+      respond_to do |format|
+        format.json { render :json => { :error => I18n.t('nodes.newsletter_not_found')}.to_json, :status => :precondition_failed }
+      end
+    end
   end
 
   # Sets this node to be the website's (global) frontpage

@@ -386,6 +386,38 @@ class UserTest < ActiveSupport::TestCase
     email_address = 'test@test.nl'
     assert User.verify_invitation_code(email_address, User.send(:generate_invitation_code, email_address))
   end
+
+  # An email notice is send if an email is already in use. This of course
+  # should not be send when it is not in use.
+  def test_should_not_send_email_notice_if_email_is_not_in_use
+    email_address = "abc@example.com"
+
+    ActionMailer::Base.deliveries.clear
+
+    create_user(:login => "user_b", :email_address => email_address)
+
+    assert_equal 1, ActionMailer::Base.deliveries.size
+
+    email = ActionMailer::Base.deliveries.first
+
+    assert email.to.include?(email_address)
+    assert !email.body.include?(I18n.t('layouts.forgot_password'))
+  end
+
+  def test_should_send_email_notice_if_email_is_already_in_use
+    email_address = "test123@example.com"
+    create_user(:login => "user_a", :email_address => email_address)
+
+    ActionMailer::Base.deliveries.clear
+
+    create_user(:login => "user_b", :email_address => email_address)
+
+    assert_equal 1, ActionMailer::Base.deliveries.size
+
+    email = ActionMailer::Base.deliveries.first
+    assert email.to.include?(email_address)
+    assert email.body.include?(I18n.t('layouts.forgot_password'))
+  end
   
 protected
 
