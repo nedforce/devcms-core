@@ -35,6 +35,7 @@
       = t 'users.password'
     .left
       = f.password_field :password, :class => 'textfield'
+      = render :partial => 'password_rater'
       %br/
       %small= t 'users.leave_blank_to_preserve_password'
 

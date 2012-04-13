@@ -121,6 +121,8 @@ class User < ActiveRecord::Base
 
   validate :should_not_allow_reserved_login
 
+  validate :privileged_users_password_should_be_strong
+
   # Make sure the user's password (stored in the virtual attribute +password+)
   # is stored as a hash after the user is created/updatedRoleAssignment.
   before_save :encrypt_password
@@ -399,6 +401,48 @@ protected
     user = User.first(:conditions => ["upper(email_address) = upper(?)", email_address])
     UserMailer.deliver_email_used_to_create_account(user) if user
     return !user
+  end
+
+  def privileged_users_password_should_be_strong
+    return if password.blank?
+    errors.add(:password, :password_not_strong_enough) if is_privileged? && User.password_entropy(password) < (Settler[:password_required_entropy] ? Settler[:password_required_entropy] : 66)
+  end
+
+  # Password entropy based on: http://blog.shay.co/password-entropy/
+  def self.password_entropy(password)
+    password.length == 0 ? 0 : password.length * Math.log(self.password_alphabet(password)) / Math.log(2)
+  end
+
+  # Determens the password alphabet size
+  def self.password_alphabet(password)
+    alphabet = 0
+    lower = false
+    upper = false
+    numbers = false
+    symbols1 = false
+    symbols2 = false
+    other = ""
+    password.each_char do |c|
+      if !lower && c.match('[a-z]') != nil
+        lower = true
+        alphabet += 26
+      elsif !upper && c.match('[A-Z]') != nil
+        upper = true
+        alphabet += 26
+      elsif !numbers && c.match('[0-9]') != nil
+        numbers = true
+        alphabet += 10
+      elsif !symbols1 && '!@#$%^&*()'.include?(c)
+        symbols1 = true
+        alphabet += 10
+      elsif !symbols2 && '~`-_=+[]{}\\|;:\'",.<>?/'.include?(c)
+        symbols2 = true
+        alphabet += 22
+      else
+        alphabet += 1
+      end
+    end
+    return alphabet
   end
 
   # Returns an invitation code for a user, based on the user's +email_address+.

@@ -206,6 +206,16 @@ settings: &settings
     editable: true
     validations:
      presence: true
+  password_required_entropy:
+    alt: De vereiste sterkte van een wachtwoord
+    value: 66
+    editable: true
+    typecast: integer
+  password_good_entropy:
+    alt: De gewenste sterkte van een wachtwoord
+    value: 156
+    editable: true
+    typecast: integer
   proclaimer_page_url:
     alt: URL van de pagina met de proclaimer voor de website
     value: /proclaimer
@@ -218,7 +228,6 @@ settings: &settings
     editable: true
     validations:
       presence: true
-
 development:
   <<: *settings
 

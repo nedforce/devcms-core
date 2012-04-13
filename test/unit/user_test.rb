@@ -75,9 +75,14 @@ class UserTest < ActiveSupport::TestCase
     assert_equal "sjoerd", users(:sjoerd).reload.login
   end
 
-  def test_should_reset_password
+  def test_should_not_reset_password_if_entropy_is_too_low
     users(:gerjan).update_attributes(:password => 'new password', :password_confirmation => 'new password')
-    assert_equal users(:gerjan), User.authenticate('gerjan', 'new password')
+    assert_equal nil, User.authenticate('gerjan', 'new password')
+  end
+
+  def test_should_reset_password
+    users(:gerjan).update_attributes(:password => 'new password 1234', :password_confirmation => 'new password 1234')
+    assert_equal users(:gerjan), User.authenticate('gerjan', 'new password 1234')
   end
 
   def test_should_not_rehash_password

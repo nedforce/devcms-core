@@ -1,0 +1,21 @@
+<div style="font-family: arial, sans-serif; font-size: 12px">
+  <p>
+      Beste <%=@user.login-%>,
+  </p>
+  <p>
+      U ontvangt deze e-mail omdat er een poging gedaan is om met uw e-mailadres
+      een account aan te maken bij <%= @host %>. Aangezien er voor uw e-mailadres
+      al een account bestaat bij <%= @host %>. Is dit verzoek niet uitgevoerd.
+      Als u dit zelf niet heeft gedaan kunt u dit bericht negeren.
+  </p>
+  <p>
+      Als u geen toegang heeft tot uw account, dan kunt u een nieuw wachtwoord aanvragen:
+      <%= link_to I18n.t('layouts.forgot_password'), new_password_reset_path(:host => @host) %><br/>
+      Uw gebruikersnaam is: <%=@user.login-%>
+  </p>
+  <p>
+      Met vriendelijke groet,
+      <br/><br/>
+      Het <%= @host %> team
+  </p>
+</div>

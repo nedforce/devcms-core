@@ -343,3 +343,5 @@ nl:
             login:
               invalid: "kan alleen letters, cijfers en '-' bevatten."
               reserved_login: "is een gereserveerde login, gelieve een andere te kiezen."
+            password:
+              password_not_strong_enough: is niet sterk genoeg. U kunt uw wachtwoord sterker maken door het langer te maken, door meer verschillende tekens te gebruiken of hoofdletters te gebruiken.
