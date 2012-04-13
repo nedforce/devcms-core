@@ -358,7 +358,7 @@ protected
 
   # Returns true if the current user has any role on a given node, false otherwise.
   def current_user_has_any_role?(node)
-    current_user.has_any_role?(node)
+    current_user.present? && current_user.has_any_role?(node)
   end
 
   # Returns true if the current user has a particular role on a given node, false otherwise.
