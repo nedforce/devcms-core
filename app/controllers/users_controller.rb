@@ -48,8 +48,11 @@ class UsersController < ApplicationController
       @user = User.new(params[:user])
 
       respond_to do |format|
-        save = @user.save
-        if save || (@user.errors.count == 0 && @user.valid?)
+        # user.save will fail if the e-mail has already been used, but we because
+        # we do not want to leak this information. It still will show a success page.
+        # An e-mail notice will be send with the before_create statement in the user
+        # model.
+        if @user.save || @user.valid?
           format.html do
             if Settler[:after_signup_path].present?
               redirect_to Settler[:after_signup_path]

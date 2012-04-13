@@ -43,8 +43,7 @@ class Admin::UsersController < Admin::AdminController
       end
       format.csv do
         require 'csv'
-        general_newsletter_archive = NewsletterArchive.first
-        @users = general_newsletter_archive.present? ? general_newsletter_archive.users.all(:include => :interests) : []
+        @users = User.all
         render :action => :index, :layout => false
       end
     end

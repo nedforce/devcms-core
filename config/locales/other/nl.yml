@@ -765,6 +765,8 @@ nl:
     not_found: Node niet gevonden. Mogelijk is hij inmiddels verwijderd.
     page_load_failed: "Sorry, de pagina kon niet worden geladen."
     new_version: nieuwe versie
+    newsletter_subscribers_export: Met de link hieronder kunt u de nieuwsbrief abonnementen exporteren.
+    newslttter_not_found: Nieuwsbrief bestaat niet
     previous_version: vorige versie
     diff: diff
     rejected: Afgekeurd

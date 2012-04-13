@@ -118,7 +118,8 @@ ActionController::Routing::Routes.draw do |map|
                               :audit_edit => :get,
                               :count_children => :get,
                               :sort_children => :put,
-                              :previous_diffed => :get
+                              :previous_diffed => :get,
+                              :export_newsletter => :get
                             },
                             :collection => {
                               :bulk_edit => :get,
