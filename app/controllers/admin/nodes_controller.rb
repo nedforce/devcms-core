@@ -2,7 +2,7 @@
 class Admin::NodesController < Admin::AdminController
 
   # Only allow XHMLHttpRequests some actions.
-  verify :xhr => true, :only => [ :move, :count_children, :sort_children, :set_visibility, :set_accessibility, :export_newsletter ]
+  verify :xhr => true, :only => [ :move, :count_children, :sort_children, :set_visibility, :set_accessibility ]
 
   before_filter :find_nodes, :only => [ :bulk_edit, :bulk_update ]
 
@@ -126,11 +126,15 @@ class Admin::NodesController < Admin::AdminController
 
 
   def export_newsletter
-    puts @node
-    p @node
-    puts "node\n"*10
     if @node.content.is_a?(NewsletterArchive)
-      redirect(@node.content)
+      #redirect_to @node.content, :action => 'show', :id => @node.content.id
+      respond_to do |format|
+          format.json { render :json => { :id => @node.content.id,:notice => I18n.t('nodes.newsletter_subscribers_export')}.to_json, :status => :ok }
+      end
+    else
+      respond_to do |format|
+        format.json { render :json => { :error => I18n.t('nodes.newsletter_not_found')}.to_json, :status => :precondition_failed }
+      end
     end
   end
 

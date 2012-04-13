@@ -555,8 +555,18 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
     },
 
     onExportSubscribers: function (item) {
-        console.log(this);
-        window.open('/admin/newsletter_archives/'+this.id+'.csv');
+        Ext.Ajax.request({
+            url: '/admin/nodes/' + this.id + '/export_newsletter/',
+            method: 'GET', // overridden with delete by the _method parameter
+            scope: this,
+            success: function (response) {
+                var responseJson = Ext.util.JSON.decode(response.responseText);
+                Ext.Msg.alert(I18n.t('newsletter_export_title', 'nodes'), responseJson.notice+'<br /><a href="/admin/newsletter_archives/'+responseJson.id+'.csv">'+I18n.t('newsletter_export_open', 'nodes')+'</a>');
+            },
+            failure: function (response) {
+                Ext.ux.alertResponseError(response);
+            }
+        });
     },
 
     onAssignRole: function () {

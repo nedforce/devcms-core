@@ -131,7 +131,7 @@ class User < ActiveRecord::Base
   before_save :encrypt_password
 
   # Make sure the email is unique and no error is shown
-  before_create :validate_uniquenessof_email
+  before_create :validate_uniqueness_of_email
 
   # Make sure a verification code is set when a user first registers.
   before_validation_on_create :set_verification_code
@@ -396,7 +396,7 @@ protected
   end
 
   # Prevents information leakage, validates the email and returns false to prevent a save
-  def validate_uniquenessof_email
+  def validate_uniqueness_of_email
     user = User.first(:conditions => ["upper(email_address) = upper(?)", email_address])
     UserMailer.deliver_email_used_to_create_account(user) if user
     return !user
