@@ -2,6 +2,9 @@ module LayoutHelper
   def render_representations(target)
     partials        = ''
     node            = (@node || current_site)
+
+    return unless node.own_or_inherited_layout_variant[target].present?  
+    
     partial         = '/layouts/partials/' + node.own_or_inherited_layout_variant[target]['representation']
     inheritable     = node.own_or_inherited_layout_variant[target]['inheritable'].nil? || node.own_or_inherited_layout_variant[target]['inheritable']
     representations = node.find_content_representations(target, inheritable)

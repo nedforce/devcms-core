@@ -17,5 +17,5 @@ function observeProgrammeSelectionField() {
 }
 
 document.observe('dom:loaded', function () {
-  observeProgrammeSelectionField();
+  // observeProgrammeSelectionField();
 });

@@ -76,7 +76,8 @@ I18n.locale['nl'] = {
 		'delete': 'Verwijderen',
 		delete_content: 'Content verwijderen',
 		edit: 'Bewerken',
-		show: 'Bekijken'		
+		show: 'Bekijken',
+		loading: 'Bezig met verwerken...'						
 	},
 	'NewsViewer': {
 		edit_items: 'Items bewerken'

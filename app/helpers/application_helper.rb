@@ -373,8 +373,8 @@ module ApplicationHelper
         content_tag(:li, create_menu_link(node, :class => 'sub_menu_link'), options)
       else
         classes = %w( sub_menu_link expanded )
-        classes << 'current' if node == @node
-
+        classes << 'current' if node == @node || (node.content.is_a?(Section) && node.content.frontpage_node_id == @node.id)
+        
         content = create_menu_link(node, :class => classes.join(' '))
 
         if has_sub_menu_items
