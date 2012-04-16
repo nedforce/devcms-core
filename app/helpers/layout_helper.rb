@@ -16,7 +16,7 @@ module LayoutHelper
         render_helper = node.own_or_inherited_layout.custom_representations[element.custom_type]["helper"]
         partials += send(render_helper || "render_#{element.custom_type}") || ""
       else
-        partials << render(:partial =>  partial, :locals => {  :node => element.content, :parent => element.parent, :partial => element.content_partial, :sidebox_title => element.title, :content_box_color => nil })
+        partials << render(:partial =>  partial, :locals => {  :node => element.content, :parent => element.parent, :partial => element.content_partial, :sidebox_title => element.title, :content_box_color => nil, :last => element == representations.last })
       end
     end
     partials
