@@ -63,6 +63,7 @@ nl:
       only_second: "%S"
       long: "%d %B %Y om %H:%M"
       long_at: "%d %B %Y om %H:%M"
+      full: "%d-%m-%YT%H:%M:%S%Z"
 
   datetime: 
     formats: 
