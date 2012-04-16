@@ -26,6 +26,6 @@ config.gem 'settler',               :version => '~> 1.2.0'
 config.gem 'shuber-sortable',       :version => "~> 1.0.6", :lib => 'sortable',       :source => "http://gems.github.com"
 # use the plugin instead, shuber isn't available as gem anymore
 config.gem 'tidy',                  :version => '1.1.2'
-config.gem 'whenever',              :version => '>= 0.5.0', :lib => false
+config.gem 'whenever',              :version => '>= 0.4', :lib => false
 config.gem 'spreadsheet',           :version => '~> 0.6.5.2'
 config.gem "roo",                   :version => "~> 1.10.1"
