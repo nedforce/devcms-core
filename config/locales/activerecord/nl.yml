@@ -119,7 +119,7 @@ nl:
         dates: Data
         details: Bijzonderheden
         goal: Doelstelling
-        location_adres: Adres
+        location_address: Adres
         location_name: Naam
         organization_name: Naam organisatie
         organization_website: Website organisatie
