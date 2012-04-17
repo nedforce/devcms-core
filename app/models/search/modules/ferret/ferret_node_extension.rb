@@ -43,7 +43,7 @@ module Search::Modules::Ferret::FerretNodeExtension
         hidden_from_index = hidden_from_index || self.path_ids.include?(nid.to_i)
       end if Settler[:ferret_exclude_node_ids].present?
 
-      self.hidden? || self.private? || hidden_from_index ? 'true' : 'false'
+      self.hidden? || self.is_private_or_has_private_ancestor? || hidden_from_index ? 'true' : 'false'
     end
 
     # Returns the latest approved content title for indexing.
