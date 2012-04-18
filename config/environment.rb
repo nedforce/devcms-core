@@ -22,7 +22,7 @@ config.gem 'feed-normalizer',       :version => '~> 1.5.2'
 config.gem 'haml',                  :version => '~> 3.0'
 config.gem 'libxml-ruby',           :version => "~> 2.2.0", :lib => 'libxml'
 config.gem 'pg',                    :version => '~> 0.11.0'
-config.gem 'settler',               :version => '~> 1.2.0'
+config.gem 'settler',               :version => '~> 1.2.3'
 config.gem 'shuber-sortable',       :version => "~> 1.0.6", :lib => 'sortable',       :source => "http://gems.github.com"
 # use the plugin instead, shuber isn't available as gem anymore
 config.gem 'tidy',                  :version => '1.1.2'
