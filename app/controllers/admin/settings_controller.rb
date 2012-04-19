@@ -23,6 +23,7 @@ class Admin::SettingsController < Admin::AdminController
           { :key   => s.key,
             :alt   => s.alt,
             :value => s.value,
+            :type  => s.type,
             :id    => s.id
           }
         end
