@@ -9,7 +9,7 @@ class Importer
         importer.import!
       end
     else
-      @errors << 'geen bestand gevonden'
+      nil
     end
   end
   
