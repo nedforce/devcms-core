@@ -220,6 +220,8 @@ class Node < ActiveRecord::Base
   named_scope :sections, { :conditions => [ 'nodes.sub_content_type IN (?)', %w( Section Site ) ] }
   
   named_scope :include_content, { :include => :content }
+  
+  named_scope :path_children_by_depth, lambda{|node| { :order => 'nodes.ancestry_depth desc, nodes.position asc', :conditions => { :ancestry => node.path_child_ancestries } } }
 
   def move_to_with_reindexing(*args)
     self.move_to_without_reindexing(*args)

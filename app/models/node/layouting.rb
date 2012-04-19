@@ -137,11 +137,11 @@ module Node::Layouting
   # Find header image(s) for this node, either those set on this node or on one of its parents.
   def header_images
     images = Image.accessible.all(:conditions => { :is_for_header => true, 'nodes.ancestry' => self.child_ancestry })
-    
+  
     if images.empty? && !self.root?
       images = self.parent.header_images
     end
-    
+
     images
   end
 
