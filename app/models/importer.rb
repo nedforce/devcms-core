@@ -4,8 +4,12 @@ end
 class Importer
 
   def self.import!(file, target_section, save_new_content = true)
-    self.new(file, target_section, save_new_content).tap do |importer|
-      importer.import!
+    if file.present?
+      self.new(file, target_section, save_new_content).tap do |importer|
+        importer.import!
+      end
+    else
+      @errors << 'geen bestand gevonden'
     end
   end
   
@@ -14,22 +18,22 @@ class Importer
     @save_new_content = save_new_content
 
     @file_path = file.is_a?(String) ? file : file.path
-    
+
     # Filename needs to end in '.xlsx', otherwise roo will not recognize it as an Excel spreadsheet ...
-    unless File.extname(@file_path) == ".xlsx"
+    if File.extname(@file_path) != '.xlsx'
       File.rename(@file_path, "#{@file_path}.xlsx")
-      @file_path += ".xlsx"
+      @file_path += '.xlsx'
     end
   end
-  
+
   def import!
     @instances = []
-    @errors = []
-    
+    @errors    = []
+
     begin
       @spreadsheet = Excelx.new(@file_path)
       @spreadsheet.default_sheet = @spreadsheet.sheets.first
-            
+
       ActiveRecord::Base.transaction do
         self.parse_spreadsheet
       end
@@ -39,21 +43,21 @@ class Importer
       @errors << "bestand voldoet niet aan XLSX formaat"
     end
   end
-  
+
   def success?
     @errors.empty?
   end
-  
+
   def instances
     @instances
   end
-  
+
   def errors
     @errors
   end
-      
+
 protected
-  
+
   def self.default_attribute_information
     {
       :required => true,
@@ -77,10 +81,10 @@ protected
   def self.importable_content_types
     {
       'Pagina' => {
-        :type => 'Page',
-        'Titel' => 'title',
+        :type          => 'Page',
+        'Titel'        => 'title',
         'Samenvatting' => 'preamble',
-        'Tekst' => 'body'
+        'Tekst'        => 'body'
       }
     }
   end
@@ -192,6 +196,5 @@ protected
   
   def parse_attribute_information(attribute_information)
     self.class.default_attribute_information.merge(attribute_information.is_a?(String) ? { :mapping => attribute_information } : attribute_information)
-  end
-  
+  end  
 end
