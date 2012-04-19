@@ -4,25 +4,23 @@ end
 class Importer
 
   def self.import!(file, target_section, save_new_content = true)
-    if file.present?
-      self.new(file, target_section, save_new_content).tap do |importer|
-        importer.import!
-      end
-    else
-      nil
+    self.new(file, target_section, save_new_content).tap do |importer|
+      importer.import!
     end
   end
   
   def initialize(file, target_section, save_new_content)
-    @target_section = target_section
+    @target_section   = target_section
     @save_new_content = save_new_content
 
-    @file_path = file.is_a?(String) ? file : file.path
+    if file.present?
+      @file_path = file.is_a?(String) ? file : file.path
 
-    # Filename needs to end in '.xlsx', otherwise roo will not recognize it as an Excel spreadsheet ...
-    if File.extname(@file_path) != '.xlsx'
-      File.rename(@file_path, "#{@file_path}.xlsx")
-      @file_path += '.xlsx'
+      # Filename needs to end in '.xlsx', otherwise roo will not recognize it as an Excel spreadsheet ...
+      if File.extname(@file_path) != '.xlsx'
+        File.rename(@file_path, "#{@file_path}.xlsx")
+        @file_path += '.xlsx'
+      end
     end
   end
 
@@ -30,17 +28,21 @@ class Importer
     @instances = []
     @errors    = []
 
-    begin
-      @spreadsheet = Excelx.new(@file_path)
-      @spreadsheet.default_sheet = @spreadsheet.sheets.first
+    if @file_path.present?
+      begin
+        @spreadsheet = Excelx.new(@file_path)
+        @spreadsheet.default_sheet = @spreadsheet.sheets.first
 
-      ActiveRecord::Base.transaction do
-        self.parse_spreadsheet
+        ActiveRecord::Base.transaction do
+          self.parse_spreadsheet
+        end
+      rescue ImporterException => e
+        @errors << e.message
+      rescue
+        @errors << 'bestand voldoet niet aan XLSX formaat'
       end
-    rescue ImporterException => e
-      @errors << e.message
-    rescue
-      @errors << "bestand voldoet niet aan XLSX formaat"
+    else
+      @errors << 'geen bestand opgegeven'
     end
   end
 
@@ -61,13 +63,13 @@ protected
   def self.default_attribute_information
     {
       :required => true,
-      :default => nil
+      :default  => nil
     }
   end
 
   def self.meta_attributes
     {
-      'Type' => { :mapping => :type, :required => false, :default => 'Pagina' },
+      'Type'   => { :mapping => :type,           :required => false, :default => 'Pagina' },
       'Sectie' => { :mapping => :target_section, :required => false }
     }
   end
