@@ -29,7 +29,7 @@ class Site < Section
     :expiration_container=> true
   })
   
-  VALID_DOMAIN_REGEXP = /\A(?:[A-Z0-9\-]+\.)+(?:[A-Z]{2,4}|museum|travel)\Z/i
+  VALID_DOMAIN_REGEXP = /\A(?:[A-Z0-9\-]+\.)+(?:[A-Z]{2,4}|museum|travel|local)(\:\d+)?\Z/i
 
   validates_presence_of   :original_domain, :unless => Proc.new { |s| s.parent.blank? }
   validates_format_of     :domain, :with => VALID_DOMAIN_REGEXP, :unless => Proc.new { |s| s.original_domain.nil? }
