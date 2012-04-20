@@ -214,7 +214,6 @@ class Admin::NodesController < Admin::AdminController
     content = @node.content
     @content          = content.current_version
     @previous_content = content.previous_version || @content
-    @children         = content.node.children.accessible
     @controller_path  = content.controller_name
   end
 
