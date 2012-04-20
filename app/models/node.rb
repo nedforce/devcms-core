@@ -659,6 +659,9 @@ protected
         klass.delete_all(:node_id => deleted_node_ids)
       end
       
+      # Do the same for all comments
+      Comment.delete_all(:commentable_id => deleted_node_ids)
+      
       # Delete content representations where appropriate 
       ContentRepresentation.delete_all [ 'parent_id IN (:deleted_node_ids) OR content_id IN (:deleted_node_ids)', { :deleted_node_ids => deleted_node_ids } ]
     end

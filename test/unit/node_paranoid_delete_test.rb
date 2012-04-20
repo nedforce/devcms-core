@@ -103,6 +103,9 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
     a1 = create_abbreviation(@economie_section_node)
     a2 = create_abbreviation(node)
     
+    c1 = create_comment(@economie_section_node)
+    c2 = create_comment(node)
+    
     nc1 = create_node_category(@economie_section_node)
     nc2 = create_node_category(node)
     
@@ -132,6 +135,9 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
     
     assert Abbreviation.exists?(a1)
     assert Abbreviation.exists?(a2)
+    
+    assert Comment.exists?(c1)
+    assert Comment.exists?(c2)
     
     assert NodeCategory.exists?(nc1)
     assert NodeCategory.exists?(nc2)
@@ -164,6 +170,9 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
     
     assert !Abbreviation.exists?(a1)
     assert !Abbreviation.exists?(a2)
+    
+    assert !Comment.exists?(c1)
+    assert !Comment.exists?(c2)
     
     assert !NodeCategory.exists?(nc1)
     assert !NodeCategory.exists?(nc2)
@@ -216,6 +225,10 @@ protected
   
   def create_node_category(target_node)
     NodeCategory.create({ :node => target_node, :category => @category })
+  end
+  
+  def create_comment(target_node)
+    Comment.create({ :user => users(:arthur), :commentable => target_node, :comment => "I don't like it!" })
   end
 
 end
