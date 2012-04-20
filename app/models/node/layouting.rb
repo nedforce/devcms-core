@@ -61,6 +61,11 @@ module Node::Layouting
   # TODO: Refactor to use setters and a writer for the representations
   def update_layout(layout_config = {})
     without_search_reindex do
+      # Delete any empty settings from the configuration and save everything
+      layout_config[:node][:layout_configuration].delete_if { |k,v| v.blank? } unless layout_config[:node][:layout_configuration].blank?
+      
+      return false unless update_attributes(layout_config[:node])
+      
       # Find the layout and variant used to set the representations
       layout  = Layout.find(layout_config[:node][:layout]) || self.inherited_layout
       variant = layout.find_variant(layout_config[:node][:layout_variant]) || self.inherited_layout_variant
@@ -104,10 +109,6 @@ module Node::Layouting
           end
         end
       end
-      
-      # Delete any empty settings from the configuration and save everything
-      layout_config[:node][:layout_configuration].delete_if { |k,v| v.blank? } unless layout_config[:node][:layout_configuration].blank?
-      update_attributes(layout_config[:node])
     end
   end
   
