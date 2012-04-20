@@ -7,7 +7,7 @@
       :update => 'right_panel_body' do %>
         <% 
           # Required to have all fields be named 'link[attr]' instead of 'ex/internal_link[attr]'
-          admin_fields_for :link do |form|    
+          admin_fields_for :link, @link do |form|    
         %>
            
           <%= error_messages_for :link %>
