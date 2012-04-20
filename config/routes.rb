@@ -103,7 +103,7 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :synonyms, :only => [ :index, :create, :update, :destroy ]
     admin.resources :link_themes,   :except => :index,  :controller => :themes, :requirements => { :type => :link_theme }
     admin.resources :top_hits_pages, :except => [ :index, :destroy ]
-    admin.resources :users, :member => { :accessible_newsletter_archives => :get, :interests => :get, :switch_user_type => :post }, :collection => { :invite => :post, :privileged => :get }
+    admin.resources :users, :member => { :accessible_newsletter_archives => :get, :interests => :get, :switch_user_type => :post, :revoke => :post }, :collection => { :invite => :post, :privileged => :get }
     admin.resources :versions, :only => :index, :member => { :approve => :put, :reject => :put }
     admin.resources :weblogs, :only => [ :index, :show, :edit, :update ]
     admin.resources :weblog_archives, :except => :destroy

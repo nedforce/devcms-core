@@ -183,6 +183,18 @@ class Admin::UsersController < Admin::AdminController
       end
     end
   end
+  
+  def revoke
+    respond_to do |format|
+      format.json do
+        if @user.update_attribute :blocked, false
+          render :json => { :success => 'true' }
+        else
+          render :json => { :status => :unprocessable_entity }
+        end
+      end
+    end
+  end
 
   protected
 

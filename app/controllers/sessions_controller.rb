@@ -19,23 +19,37 @@ class SessionsController < ApplicationController
 
   # * POST /session
   def create
-    @user = User.authenticate(params[:login], params[:password])
-    self.current_user = @user if @user && @user.verified?
-
-    if logged_in?
-      if params[:remember_me] == '1'
-        self.current_user.remember_me unless current_user.remember_token?
-        cookies[:auth_token] = { :value => self.current_user.remember_token, :expires => self.current_user.remember_token_expires_at }
-      end
-
-      flash[:notice] = "#{I18n.t('sessions.logged_in_as')} '#{self.current_user.login}'."
-      redirect_back_or_default(profile_path, false)
-    elsif @user && !@user.verified?
-      flash.now[:notice] = I18n.t('sessions.not_yet_verified') + ' ' + I18n.t('sessions.no_email?') + " <a href = \"#{send_verification_email_user_path(@user)}\">#{I18n.t('sessions.request_new_code')}</a>"
-      render :action => 'new', :status => :unprocessable_entity
+    trusted_user = Settler[:whitelisted_ips].split(',').include?(request.remote_ip)
+    
+    if !trusted_user && login_enabled_at = LoginAttempt.is_ip_blocked?(request.remote_ip)
+      flash[:warning] = I18n.t('sessions.logins_disabled') + ' ' + I18n.l(login_enabled_at, :format => :long) + '.'
+      render_login_form
+    elsif !trusted_user && LoginAttempt.last_attempt_was_not_ten_seconds_ago(request.remote_ip)
+      flash[:warning] = I18n.t('sessions.logins_throttled')
+      render_login_form
     else
-      flash.now[:warning] = I18n.t('sessions.user_or_password_error')
-      render :action => 'new', :status => :unprocessable_entity
+      @user = User.authenticate(params[:login], params[:password])
+      self.current_user = @user if @user && @user.verified? && !@user.blocked?
+      LoginAttempt.create! :ip => request.remote_ip, :user_login => params[:login], :success => !@user.nil?
+
+      if logged_in?
+        if params[:remember_me] == '1'
+          self.current_user.remember_me unless current_user.remember_token?
+          cookies[:auth_token] = { :value => self.current_user.remember_token, :expires => self.current_user.remember_token_expires_at }
+        end
+
+        flash[:notice] = "#{I18n.t('sessions.logged_in_as')} '#{self.current_user.login}'."
+        redirect_back_or_default(profile_path, false)
+      elsif @user && !@user.verified?
+        flash.now[:notice] = I18n.t('sessions.not_yet_verified') + ' ' + I18n.t('sessions.no_email?') + " <a href = \"#{send_verification_email_user_path(@user)}\">#{I18n.t('sessions.request_new_code')}</a>"
+        render_login_form
+      elsif @user && @user.blocked?
+        flash[:warning] = I18n.t('sessions.account_blocked')
+        render_login_form
+      else
+        flash.now[:warning] = I18n.t('sessions.user_or_password_error')
+        render_login_form
+      end
     end
   end
 
@@ -70,5 +84,9 @@ class SessionsController < ApplicationController
 
   def set_page_title
     @page_title = I18n.t('sessions.log_in')
+  end
+  
+  def render_login_form
+    render :action => 'new', :status => :unprocessable_entity
   end
 end

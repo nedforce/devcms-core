@@ -977,6 +977,7 @@ nl:
     import_content_in: Content importeren in
     import: Importeren
   sessions:
+    account_blocked: Dit account is vergrendeld. Neem contact op met de beheerder om dit account te ontgrendelen.
     already_logged_in: U bent reeds ingelogd als
     cant_log_out: Kan niet uitloggen. U bent niet ingelogd.
     confirm_logout: Uitloggen bevestigen
@@ -985,6 +986,8 @@ nl:
     logged_in_as: U bent nu ingelogd als
     logged_out: U bent succesvol uitgelogd.
     login: Loginnaam
+    logins_disabled: Er zijn vanaf uw IP-adres teveel foutieve loginpogingen geweest. U kunt weer inloggen vanaf
+    logins_throttled: U kunt eens per 10 seconden een inlogpoging doen.
     no_email?: "Geen e-mail ontvangen?"
     not_yet_verified: U hebt uw e-mailadres nog niet geverifieerd. Volg hiertoe de instructies in de e-mail die u hebt ontvangen.
     password: Wachtwoord
@@ -1075,6 +1078,7 @@ nl:
     confirm_user_deletion: "Weet u zeker dat u uw profiel wilt verwijderen? Ook de uw discussies, reacties en weblogs zullen verwijderd worden. Bevestig het verwijderen met uw wachtwoord."
     confirm_demote: "Weet u zeker dat u deze gebruiker wil degraderen? Al zijn rechten worden bevroren en zijn dan niet meer bruikbaar tot (her)promotie."
     confirm_promote: "Weet u zeker dat u deze gebruiker wil promoten?"
+    confirm_revoke: "Weet u zeker dat u deze gebruiker wil ontgrendelen?"
     could_not_delete: "Sorry, kon de gebruiker(s) niet verwijderen."
     couldnt_find_user: Login naam / E-mailadres niet gevonden
     count_msg: "Gebruikers {0} tot {1} van {2} worden weergegeven"
@@ -1140,6 +1144,9 @@ nl:
     really_unsubscribe?: "Weet u zeker dat zich wilt afmelden van deze nieuwsbrief?"
     register: Registreren
     registration_form: Registratieformulier
+    revoke: Ontgrendelen
+    revoke_tooltip: Vergrendelde accounts ontgrendelen zodat hier weer op ingelogd kan worden.
+    revoking: Bezig met ontgrendelen
     request: Opvragen
     save: Wijzigingen opslaan
     saving: Bezig met opslaan
@@ -1148,6 +1155,7 @@ nl:
     select_one: Kies tenminste een gebruiker
     sent_verification_email: Ter verificatie is een e-mail naar uw e-mailadres verstuurd. Volg de instructies in de e-mail.
     sex: Geslacht
+    status: Status
     successfully_verified: Bedankt voor het verifiëren van uw e-mailadres! U kunt nu inloggen met uw gebruikersnaam en wachtwoord.
     surname: Achternaam
     try_again: Het formulier is onjuist ingevoerd. Probeert u het nog eens.

@@ -163,7 +163,19 @@ class User < ActiveRecord::Base
   # Authenticates a user by their login and unencrypted password. Returns the user if successfully authenticated, elsen nil.
   def self.authenticate(login, password)
     user = first(:conditions => ['LOWER(login) = LOWER(?)', login.downcase]) if login
-    user && user.authenticated?(password) ? user : nil
+    if user && user.authenticated?(password)
+      user.update_attribute :failed_logins, 0
+      user
+    elsif user
+      if user.is_privileged? && user.failed_logins == 9 # 10th failed attempt on a privileged user...
+        user.blocked = true
+        user.failed_logins = 10
+        user.save!
+      else
+        user.increment! :failed_logins if user.failed_logins < 10
+      end
+      nil
+    end
   end
 
   # Encrypts the given password with the given salt, using the SHA-256 hash algorithm.

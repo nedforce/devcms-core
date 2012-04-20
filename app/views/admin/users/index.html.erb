@@ -30,7 +30,14 @@ Ext.onReady(function(){
            header: "<%= I18n.t('users.login') %>",
            dataIndex: 'login',
            width: 150
-        },{
+        },
+        <% if @privileged %>
+        {
+          header: "<%= I18n.t('users.status') %>",
+          dataIndex: 'status'
+        },
+        <% end %>
+        {
            header: "<%= I18n.t('users.first_name') %>",
            dataIndex: 'first_name',
            width: 100,
@@ -99,7 +106,7 @@ Ext.onReady(function(){
                totalRecords: 'total_count'
            }, [
                // set up the fields mapping into the xml doc
-               'login', 'first_name', 'surname', 'sex', 'created_at', 'email_address', 'newsletter_archives', 'interests'
+               'login', 'first_name', 'surname', 'sex', 'created_at', 'email_address', 'newsletter_archives', 'interests', 'status'
            ]),
         autoLoad: {params: {start: 0, limit: perPage}}
     });
@@ -163,6 +170,11 @@ Ext.onReady(function(){
                     tooltip: '<%= I18n.t("users.demote_tooltip") %>',
                     handler: handleDemote,
                     iconCls: 'menu_item_delete'
+                  },{
+                    text: '<%= I18n.t("users.revoke") %>',
+                    tooltip: '<%= I18n.t("users.revoke_tooltip") %>',
+                    handler: handleRevoke,
+                    iconCls: 'menu_item_revoke'
                   <% else %>
                     text: '<%= I18n.t("users.promote") %>',
                     tooltip: '<%= I18n.t("users.promote_tooltip") %>',
@@ -505,6 +517,28 @@ Ext.onReady(function(){
         });
       });
     };
+    
+    function handleRevoke(e) {
+      Ext.MessageBox.confirm('<%= I18n.t("users.message") %>', '<%= I18n.t("users.confirm_revoke") %>', function(button) {
+        if(button == 'yes') {
+          grid.selModel.getSelections().each(function(item) {
+            Ext.Ajax.request({
+              waitMsg: '<%= I18n.t("users.revoking") %>',
+              url: '/admin/users/' + item.id + '/revoke.json',
+              method: 'POST',
+              params: "authenticity_token=<%= form_authenticity_token %>",
+              callback: function(option, success, response) {
+                if(success) {
+                  store.reload();
+                } else {
+                  Ext.ux.alertResponseError(response);
+                }
+              }
+            })
+          });
+        }
+      });
+    }
         
     initViewport(grid); // render admin layout using the viewport.
 });

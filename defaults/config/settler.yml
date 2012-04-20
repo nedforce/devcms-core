@@ -228,6 +228,10 @@ settings: &settings
     editable: true
     validations:
       presence: true
+  whitelisted_ips:
+    alt: Kommagescheiden IP-adressen die vrijgesteld zijn van loginbeveiliging
+    value: 127.0.0.1
+    editable: true
 development:
   <<: *settings
 
