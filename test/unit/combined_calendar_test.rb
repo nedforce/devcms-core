@@ -66,6 +66,20 @@ class CombinedCalendarTest < ActiveSupport::TestCase
     ci.node.update_attribute(:hidden, true)
     assert_equal c.updated_at, c.last_updated_at
   end
+  
+  def test_should_exclude_sites
+    own_site = @combined_calendar.node.containing_site
+    subsite = own_site.descendants.with_content_type('Site').first
+    
+    subsite_calendar = create_calendar :parent => subsite
+    subsite_calendar_item = create_calendar_item subsite_calendar
+    
+    assert !@combined_calendar.calendar_items.include?(subsite_calendar_item)
+
+    @combined_calendar.sites << subsite    
+    @combined_calendar.instance_variable_set :@calendar_items_scope, nil
+    assert @combined_calendar.calendar_items.include?(subsite_calendar_item)
+  end
 
 protected
   
@@ -76,6 +90,10 @@ protected
   def create_calendar_item(calendar, options = {})
     CalendarItem.create({:parent => calendar.node, :repeating => false, :title => "New event", :start_time => DateTime.now.to_s(:db), :end_time => (DateTime.now + 1.hour).to_s(:db) }.merge(options))
   end
+  
+  def create_calendar(options = {})
+    Calendar.create({:parent => nodes(:root_section_node), :title => "New calendar", :description => "This is a new calendar.", :publication_start_date => 2.days.ago }.merge(options))
+  end  
 
 end
 

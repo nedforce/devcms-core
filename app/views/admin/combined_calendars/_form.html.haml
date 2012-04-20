@@ -2,3 +2,13 @@
   = t 'calendars.explanation'
 
 = form.html_editor :description, :label => t('shared.description'), :height => 100
+
+%fieldset#subsites
+  %legend Subsites
+
+  - (@combined_calendar.node || @parent_node).containing_site.descendants.with_content_type('Site').each do |site|      
+    .formFieldCb.clearfix
+      = check_box_tag "combined_calendar[site_ids][]", site.id, @combined_calendar.sites.include?(site)
+      = label_tag 'combined_calendar_site_ids_', site.title
+
+

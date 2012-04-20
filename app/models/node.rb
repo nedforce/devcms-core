@@ -123,6 +123,9 @@ class Node < ActiveRecord::Base
   has_many :node_categories, :dependent => :destroy
   has_many :categories, :through => :node_categories
 
+  has_many :combined_calendar_nodes, :dependent => :destroy
+  has_many :combined_calendars, :through => :combined_calendar_nodes
+
   belongs_to :content, :polymorphic => true
   belongs_to :responsible_user, :class_name => 'User'
 

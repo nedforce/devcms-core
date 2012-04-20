@@ -1,1 +1,4 @@
 = form.hidden_field :description
+
+- @combined_calendar.sites.each do |site|      
+  = hidden_field_tag "combined_calendar[site_ids][]", site.id
