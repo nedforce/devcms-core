@@ -370,7 +370,7 @@ protected
 
   # Memoized reader for the role_assignments association
   def fetch_role_assignments
-    @role_assignments ||= user.role_assignments.all
+    @role_assignments ||= self.role_assignments.all
   end
 
   # Set a new verification_code for the user.
