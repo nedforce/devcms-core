@@ -64,7 +64,7 @@ module Acts #:nodoc:
 
           @weeks = record_node.content.find_weeks_with_items_for_year(@year).map do |w|
             active_node_date = active_node.content.send(self.class.date_attribute) if archive_includes_active_node
-            week_includes_active_node = archive_includes_active_node && (active_node_date.year == @year && active_node_date.cweek == w)
+            week_includes_active_node = archive_includes_active_node && (active_node_date.year == @year && active_node_date.to_date.cweek == w)
             {
               :text        => I18n.t('shared.week', :week => w).capitalize,
               :expanded    => week_includes_active_node || (!archive_includes_active_node && (@year == now.year && w == now.cweek)),
