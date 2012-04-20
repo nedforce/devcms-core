@@ -108,7 +108,6 @@ module Node::Layouting
       # Delete any empty settings from the configuration and save everything
       layout_config[:node][:layout_configuration].delete_if { |k,v| v.blank? } unless layout_config[:node][:layout_configuration].blank?
       update_attributes(layout_config[:node])
-      false
     end
   end
   

@@ -14,7 +14,7 @@
                 Ext.Msg.alert("", '<%= I18n.t("nodes.layout_update_successful") %>');
             },
             onFailure: function(response) {
-                Ext.ux.alertResponseError(response, '<%= I18n.t("nodes.layout_update_failed") %>');
+                Ext.Msg.alert("", '<%= I18n.t("nodes.layout_update_failed") %>');
             },
             onComplete:  function() { 
                 $('layout_submit').enable();

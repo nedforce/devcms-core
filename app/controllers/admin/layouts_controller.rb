@@ -13,13 +13,15 @@ class Admin::LayoutsController < Admin::AdminController
     # Parameters: { "node"=>{"layout"=>"deventer", "layout_variant"=>"default", "template_color"=>"default"}, 
     #               "targets"=>{"primary_column"=>["1"], "main_content_column"=>["4","5"], "secondary_column"=>[nil]}}
     if params['node'].present?
-      if @node.update_layout(:node => params['node'], :targets => params['targets'])
-        render :nothing => 'ok', :head => :success
+      success = @node.update_layout(:node => params['node'], :targets => params['targets']) rescue false
+      
+      if success
+        render :text => 'ok', :status => :ok
       else
-        render :text => 'nok', :head => :failure
+        render :text => 'not ok', :status => :precondition_failed
       end
     else
-      render :nothing => 'ok', :head => :success if @node.reset_layout
+      render :text => 'ok', :status => :ok if @node.reset_layout
     end
   end
   

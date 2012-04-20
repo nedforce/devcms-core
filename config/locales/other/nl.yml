@@ -758,7 +758,7 @@ nl:
     intro_no_root: Wanneer beide kolommen leeg worden gelaten zal de weergave worden overgeërfd van het bovenliggende item
     intro1: Sleep items om de weergave van de kolommen van de pagina
     intro2: te configureren
-    layout_update_failed: Kon layout niet opslaan.
+    layout_update_failed: Kon layout niet opslaan. Controleer dat er geen privécontent in de paginadelen staat.
     layout_update_successful: Layout succesvol opgeslagen!
     move_failed: "Sorry, verplaatsen van element"
     no_parent_or_sibling: Geen parent of sibling ID gegeven.
