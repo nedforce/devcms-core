@@ -76,7 +76,7 @@ class NewsViewer < ActiveRecord::Base
   # Update the news items.
   def update_news_items
     # Destroy old items
-    news_items.delete(news_items.all(:include => :node, :conditions => ['nodes.publication_start_date < ?', Settler[:news_viewer_time_period].to_i.weeks.ago]))
+    news_items.delete(news_items.all(:include => :node, :conditions => ['nodes.publication_start_date < ?', (Settler['news_viewer_time_period'] ? Settler['news_viewer_time_period'].to_i : 2).weeks.ago]))
     # Add any news items from the archives
     news_archives.each{ |news_archive| news_archive.news_items.newest.each{ |item| self.news_items << item rescue nil }}
   end

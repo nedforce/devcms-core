@@ -68,14 +68,14 @@ settings: &settings
       presence: true
   news_items_max:
     alt: Maximaal aantal items op een nieuwspagina
-    value: 20
+    value: 25
     editable: true
     typecast: integer
     validations:
       presence: true
   news_items_featured:
     alt: Het aantal nieuwsitems dat prominent op de nieuwspagina te zien is
-    value: 4
+    value: 7
     editable: true
     typecast: integer
     validations:
