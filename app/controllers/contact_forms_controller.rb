@@ -6,6 +6,9 @@ class ContactFormsController < ApplicationController
   # each need a +ContactForm+ object to work with/act on.
   before_filter :find_contact_form
   before_filter :find_contact_form_fields
+  
+  # SSL is obligatory here for the authenticity token.
+  ssl_required :show, :send_message
 
   # * GET /contact_forms/:id
   def show
