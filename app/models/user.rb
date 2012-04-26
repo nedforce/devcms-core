@@ -172,7 +172,7 @@ class User < ActiveRecord::Base
         user.failed_logins = 10
         user.save!
       else
-        user.increment! :failed_logins if user.failed_logins < 10
+        user.increment! :failed_logins
       end
       nil
     end

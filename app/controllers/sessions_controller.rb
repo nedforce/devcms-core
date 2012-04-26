@@ -19,7 +19,7 @@ class SessionsController < ApplicationController
 
   # * POST /session
   def create
-    trusted_user = Settler[:whitelisted_ips].split(',').include?(request.remote_ip)
+    trusted_user = Settler[:whitelisted_ips].present? && Settler[:whitelisted_ips].split(',').include?(request.remote_ip)
     
     if !trusted_user && login_enabled_at = LoginAttempt.is_ip_blocked?(request.remote_ip)
       flash[:warning] = I18n.t('sessions.logins_disabled') + ' ' + I18n.l(login_enabled_at, :format => :long) + '.'
