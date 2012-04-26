@@ -49,7 +49,7 @@ class NewsItem < ActiveRecord::Base
   validates_presence_of :title, :body, :news_archive
   validates_length_of   :title, :in => 2..255, :allow_blank => true
   
-  named_scope :newest, :include => :node, :conditions => ['nodes.publication_start_date >= ?', 2.weeks.ago]
+  named_scope :newest, :include => :node, :conditions => ['nodes.publication_start_date >= ?', Settler[:news_viewer_time_period].to_i.weeks.ago]
   
   after_paranoid_delete :remove_associated_content
 

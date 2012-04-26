@@ -66,6 +66,27 @@ settings: &settings
     editable: true
     validations:
       presence: true
+  news_items_max:
+    alt: Maximaal aantal items op een nieuwspagina
+    value: 20
+    editable: true
+    typecast: integer
+    validations:
+      presence: true
+  news_items_featured:
+    alt: Het aantal nieuwsitems dat prominent op de nieuwspagina te zien is
+    value: 4
+    editable: true
+    typecast: integer
+    validations:
+      presence: true
+  news_viewer_time_period:
+    alt: De periode in weken waarin een nieuwsbericht bij het nieuws staat
+    value: 2
+    editable: true
+    typecast: integer
+    validations:
+      presence: true
   newsletter_archive_logo:
     alt: 'An image to your logo, which will be used in newsletters'
     value: 'logo.png'
