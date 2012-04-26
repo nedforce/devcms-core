@@ -1,0 +1,5 @@
+De volgende velden zijn ingevuld in het <%= @title -%>:
+
+<% @entered_fields.each do |field| %>
+	<%= field[:label] -%>: <%= field[:value].is_a?(Tempfile) ? field[:value].original_filename : field[:value] -%>
+<% end %>

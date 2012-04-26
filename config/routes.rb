@@ -67,10 +67,14 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :combined_calendars, :except => [ :index, :destroy ]
     admin.resources :comments, :only => [ :index, :update, :destroy ]
     admin.resources :contact_boxes, :except => [ :index, :destroy ]
+    
     admin.resources :contact_forms do |contact_form|
       contact_form.resources :contact_form_fields
-      contact_form.resources :responses, :only => [ :index, :update, :destroy ], :member => { :import_csv => :any, :upload_csv => :any }
+      contact_form.resources :responses, :only => [ :index, :update, :destroy ], :member => { :import_csv => :any, :upload_csv => :any } do |response|
+        response.resources :response_fields, :only => [], :member => { :file => :get }
+      end
     end
+    
     admin.resources :content_copies, :only => [ :show, :create ], :member => { :previous => :get }
     admin.resources :feeds, :except => [ :index, :destroy ]
     admin.resources :forums, :except => [ :index, :destroy ]

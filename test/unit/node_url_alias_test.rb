@@ -60,7 +60,7 @@ class NodeURLAliasTest < ActiveSupport::TestCase
     cn2.node.update_attributes(:custom_url_suffix => 'test')
     assert_equal 'test-1', cn2.node.custom_url_alias
   end
-  
+
   def test_should_protect_url_alias
     cn = create_page
     assert_equal 'foo', cn.node.url_alias
@@ -173,7 +173,7 @@ class NodeURLAliasTest < ActiveSupport::TestCase
     assert cn.node.errors.on(:custom_url_alias)
   end
   
-  def test_should_clear_alliases_on_paranoid_destroy
+  def test_should_clear_aliases_on_paranoid_destroy
     cn = create_page(:title => 'foobarbaz').node
     assert 'foobarbaz', cn.url_alias
     cn2 = create_page.node

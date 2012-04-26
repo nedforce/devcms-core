@@ -12,14 +12,13 @@ iframe.ie6_blocker {
 }
 
 .calendar_date_select thead th {
-  background-color: #025E99;
-  color: white !important;
+  color: black !important;
   font-weight:bold;
 }
 
 .calendar_date_select .cds_buttons {
   text-align:center;
-  padding:5px 0;
+  padding:5px 0px;
 }
 
 .calendar_date_select .cds_footer {
@@ -29,20 +28,18 @@ iframe.ie6_blocker {
 }
 
 .calendar_date_select table {
-  margin: 0;
-  padding: 0;
+  margin: 0px;
+  padding: 0px;
 }
 
-.calendar_date_select table td {
-  border-top: 1px solid gray;
-}
 
 .calendar_date_select .cds_header {
   text-align:center;
 }
 
 .calendar_date_select .cds_header * {
-  border:0;
+  border:0px;
+  background-color:white;  
 }
 
 .calendar_date_select .cds_header span {
@@ -53,18 +50,15 @@ iframe.ie6_blocker {
 
 .calendar_date_select select { font-size:11px;}
 
-.calendar_date_select .cds_header {
-  background-color: black;
-}
-
 .calendar_date_select .cds_header a:hover {
   color: white;
 }
 .calendar_date_select .cds_header a {
   width:22px;
+  height:20px;
   text-decoration: none;
   font-size:14px;
-  color:white !important;
+  color:black !important;
 }
 
 .calendar_date_select .cds_header a.prev {
@@ -86,15 +80,9 @@ iframe.ie6_blocker {
   width:61px;
 }
 
-.calendar_date_select .cds_buttons {
-  background-color: #025E99;
-}
-
 .calendar_date_select .cds_buttons a {
-  color: white;
+  color: black;
   font-size: 9px;
-  font-weight: bold;
-  text-decoration: none;
 }
 .calendar_date_select td {
   font-size:12px;
@@ -108,15 +96,19 @@ iframe.ie6_blocker {
 }
 
 .calendar_date_select td div {
-  width: 100%;
-  text-align: center;
   color: #000;
 }
 .calendar_date_select td div.other {
   color: #ccc;
 }
+.calendar_date_select td.selected div {
+  color:white;
+}
 
 .calendar_date_select tbody td {
+}
+.calendar_date_select td.selected {
+  background-color:#777;
 }
 
 .calendar_date_select td:hover {
@@ -124,7 +116,7 @@ iframe.ie6_blocker {
 }
 
 .calendar_date_select td.today {
-  font-weight: bold;
+  border: 1px dashed #999;
 }
 
 .calendar_date_select td.disabled div {

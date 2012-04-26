@@ -15,6 +15,7 @@ Ext.onReady(function() {
     }, [
       'id',
       'ip',
+      'email', 
       'created_at',
 <% @contact_form.contact_form_fields.each do |contact_form_field| -%>
 <%= contact_form_field == @contact_form.contact_form_fields.last ? "'field_#{contact_form_field.id}'" : "'field_#{contact_form_field.id}'," %>
@@ -31,6 +32,9 @@ Ext.onReady(function() {
       header: 'IP-adres',
       dataIndex: 'ip'
     },{
+      header: 'Emailadres',
+      dataIndex: 'email'
+    },{
       header: 'Gemaakt op',
       dataIndex: 'created_at'
     },
@@ -38,7 +42,7 @@ Ext.onReady(function() {
     {
       header: '<%= contact_form_field.label %>',
       dataIndex: 'field_<%= contact_form_field.id %>',
-<% if contact_form_field.field_type == 'textfield' -%>
+<% if contact_form_field.field_type == 'textfield' || contact_form_field.field_type == 'date' -%>
       editor: new Ext.form.TextField()
 <% elsif contact_form_field.field_type == 'textarea' -%>
       editor: new Ext.form.TextArea()
@@ -72,6 +76,8 @@ Ext.onReady(function() {
   
   var grid = new Ext.grid.EditorGridPanel({
     title: 'Inzendingen voor <%= @contact_form.title %>',
+    border: false,
+    frame: false,
     id: 'ResponsesEditorGrid',
     store: ds,
     cm: cm,
@@ -110,7 +116,9 @@ Ext.onReady(function() {
   
   var panel = new Ext.Panel({
     layout: 'fit',
-    items: grid
+    items: grid,
+    border: false,
+    frame: false
   });
   
   panel.applyToMarkup('right_panel_body');

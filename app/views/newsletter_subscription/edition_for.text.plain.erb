@@ -7,7 +7,7 @@
   <%= item.title %>
   <% item.title.size.times do %>-<% end %>
 
-  <% if item.respond_to?(:preamble) && item.preamble.present? -%>
+  <% if item.respond_to?(:preamble) && !item.preamble.blank? -%>
 <%= strip_tags(item.preamble) %>
   <% else -%>
 <%= strip_tags(item.body) %>

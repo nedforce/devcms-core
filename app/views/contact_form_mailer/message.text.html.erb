@@ -2,9 +2,9 @@
   <p>
     De volgende velden zijn ingevuld in het <%= @title -%>:
   </p>
-  <% @entered_fields.each do |id, label, value| %>
+  <% @entered_fields.each do |field| %>
   <p>
-	<%= label -%>: <%= value -%>
+	<%= field[:label] -%>: <%= field[:value].is_a?(Tempfile) ? field[:value].original_filename : field[:value] -%>
   </p>
   <% end %>
 </div>

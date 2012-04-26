@@ -8,6 +8,8 @@
     = text_area_tag contact_form_field.id, contact_form_field.default_value, :readonly => true, :rows => 7, :class => 'contact_field'
   - elsif contact_form_field.field_type == 'dropdown'
     = select_tag contact_form_field.id, options_for_select(contact_form_field.default_value.split(',')), :class => 'contact_field'
+  - elsif contact_form_field.field_type == 'date'
+    = calendar_date_select_tag contact_form_field.id, contact_form_field.default_value, :readonly => true, :class => 'contact_field'
   - elsif contact_form_field.field_type == 'multiselect'
     - contact_form_field.default_value.split(',').each do |choice|
       #{check_box_tag contact_form_field.id, 1, false, :disabled => true} #{label_tag contact_form_field.id, choice}

@@ -1,5 +1,5 @@
 module CalendarDateSelect
-  VERSION = '1.16.1'
+  VERSION = '1.16.2'
 
   FORMATS = {
     :natural => {
@@ -41,11 +41,6 @@ module CalendarDateSelect
       :time => " %H:%M",
       :javascript_include => "format_euro_24hr_ymd"
     },
-    :dutch => {
-      :date => "%d-%m-%Y",
-      :time => " %H:%M",
-      :javascript_include => "format_dutch"
-    },
     :italian => {
       :date => "%d/%m/%Y",
       :time => " %H:%M",
@@ -83,7 +78,7 @@ module CalendarDateSelect
   #   puts CalendarDateSelect.format[:date]
   #     => "%d/%m/%Y"
   def self.format
-    @calendar_date_select_format ||= FORMATS[:dutch]
+    @calendar_date_select_format ||= FORMATS[:natural]
   end
 
   # Set the format.  To see a list of available formats, CalendarDateSelect::FORMATS.keys, or open lib/calendar_date_select/calendar_date_select.rb

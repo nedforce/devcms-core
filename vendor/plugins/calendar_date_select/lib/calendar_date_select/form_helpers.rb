@@ -177,7 +177,7 @@ module CalendarDateSelect::FormHelpers
       # if we are forcing the popup, automatically set the readonly property on the input control.
       if javascript_options[:popup].to_s == "force"
         javascript_options[:popup] = "'force'"
-        #options[:readonly] = true
+        options[:readonly] = true
       end
 
       if (vdc=javascript_options.delete(:valid_date_check))
@@ -212,7 +212,7 @@ module CalendarDateSelect::FormHelpers
         out << " "
         out << image_tag(image,
             :onclick => "new CalendarDateSelect( $(this).previous(), #{options_for_javascript(javascript_options)} );",
-            :style => 'border:0; cursor:pointer;',
+            :style => 'border:0px; cursor:pointer;',
 			:class=>'calendar_date_select_popup_icon')
       end
       out

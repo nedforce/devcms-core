@@ -33,7 +33,7 @@
                       <tbody>
                         <tr>
                           <td height="118">
-                            <img src="<%='http://'+@host+'/images/newsletter/' + @newsletter_edition.newsletter_archive.header -%>" alt="Foto's van <%= Settler[:site_name] %>" align="left" border="0" style="margin-right:0;">
+                            <img src="<%='http://'+@host+'/images/newsletter/' + @newsletter_edition.newsletter_archive.header -%>" alt="Foto's van de gemeente" align="left" border="0" style="margin-right:0;">
                           </td>
                         </tr>
                       </tbody>
@@ -47,7 +47,7 @@
                  <td style="font-size: 11px; line-height: 15px; color: rgb(0, 0, 0); font-family: arial; padding-left: 30px; padding-right: 30px;padding-bottom:10px;" valign="top" bgcolor="#ffffff">
                    
                   <h1 style="font-family:trebuchet ms;font-size:22px;color:#0076af;">
-                    <%= h(@newsletter_edition.title) -%>
+                    <%=h @newsletter_edition.title -%>
                   </h1>
                    
                   <p>

@@ -22,17 +22,25 @@
 # * Requires +position+ to be unique for a certain +ContactForm+ object.
 #
 class ContactFormField < ActiveRecord::Base
+  FIELD_TYPES = ['textfield', 'textarea', 'dropdown', 'multiselect', 'date', 'file']
+  
   # A +ContactFormField+ belongs to a +ContactForm+.
   belongs_to :contact_form
   
   has_many :response_fields
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of     :label, :field_type, :position
+  validates_presence_of     :label, :position
   # We set :allow_blank => true on the validations below,
   # to make sure validates_presence_of is the only message displayed if the validation fails.
   validates_length_of       :label, :in => 1..255, :allow_blank => true
   validates_numericality_of :position,             :allow_blank => true
 
+  validates_inclusion_of    :field_type, :in => ContactFormField::FIELD_TYPES
   validates_uniqueness_of   :position, :scope => :contact_form_id, :message => I18n.t('activerecord.errors.models.contact_form_field.attributes.position.must_be_unique')
+  
+  def self.human_field_type_for(field_type)
+    I18n.t(field_type, :scope => 'contact_form_fields')
+  end
+  
 end

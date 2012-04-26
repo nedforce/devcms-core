@@ -31,11 +31,20 @@ class ContactFormsController < ApplicationController
         if @contact_form.send_method == ContactForm::SEND_METHOD_DATABASE
           # Store response to database
           # Create a new response object
-          @response_row = Response.create!(:contact_form => @contact_form, :ip => request.remote_ip, :time => Time.now)
+          @response_row = Response.create!(:contact_form => @contact_form, :ip => request.remote_ip, :time => Time.now, :email => current_user.try(:email_address))
           @response_row.save
           # Create response_field objects
           @entered_fields.each do |field|
-            ResponseField.create!(:response => @response_row, :contact_form_field_id => field[0], :value => field[2])
+            response_field = ResponseField.new(:response => @response_row, :contact_form_field_id => field[:id])
+            
+            if field[:type] == 'file'
+              response_field.file = field[:value]
+              response_field.value = field[:value].try(:original_filename)
+            else
+              response_field.value = field[:value]
+            end
+            
+            response_field.save!
           end
         else
           # Send response over e-mail
@@ -78,7 +87,8 @@ class ContactFormsController < ApplicationController
           else
             value = contact_fields["#{field.id}"]
           end
-          used_fields << [ field.id, field.label, value ]
+
+          used_fields << { :id => field.id, :label => field.label, :value => value, :type => field.field_type }
         end
       end
     end

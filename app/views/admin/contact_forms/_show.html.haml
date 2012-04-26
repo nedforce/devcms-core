@@ -10,9 +10,12 @@
     - if @contact_form.contact_form_fields.present?
       = render :partial => '/admin/contact_form_fields/index', :object => @contact_form.contact_form_fields
     - else
-      %p= t 'contact_forms.no_contact_fields'
+      %p
+        = t 'contact_forms.no_contact_fields'
+        = t('contact_forms.add_after_save') if @contact_form.new_record?
+      
 
-  = render :partial => '/admin/contact_form_fields/new_contact_form_field', :object => @contact_form
+  = render(:partial => '/admin/contact_form_fields/new_contact_form_field', :object => @contact_form) unless @contact_form.new_record?
 
   - if @contact_form.description_after_contact_fields
     %p= w @contact_form.description_after_contact_fields

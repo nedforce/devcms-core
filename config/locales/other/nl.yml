@@ -404,6 +404,7 @@ nl:
     message: Bericht
     new_contact_field: Nieuw invoerveld
     no_contact_fields: Er zijn momenteel (nog) geen invoervelden.
+    add_after_save: U kunt deze toevoegen na het opslaan van het contactformulier door te klikken op het nieuwe formulier en vervolgens 'Nieuw invoerveld' te kiezen.
     of_page: "van {0}"
     page: Pagina
     responses: Inzendingen
@@ -422,6 +423,7 @@ nl:
     title: Titel
   contact_form_fields:
     contact_field: Invoerveld
+    date: Datum
     default_value: Standaardwaarde
     destroy_contact_form_field: Verwijderen
     dropdown: Dropdown
@@ -429,6 +431,7 @@ nl:
     edit: Bewerken van invoerveld
     edit_contact_form_field: Bewerken
     field_type: Veldtype
+    file: Bestand
     label: Label
     new_contact_field: Nieuw invoerveld
     obligatory: Verplicht?

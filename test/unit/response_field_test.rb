@@ -16,6 +16,13 @@ class ResponseFieldTest < ActiveSupport::TestCase
     end
   end
   
+  test "should allow file uploads" do
+    assert_difference('ResponseField.count') do
+      response = create_response_field(:file => fixture_file_upload('files/ParkZandweerdMatrixplannen.doc', 'application/msword'))
+      assert !response.new_record?
+      assert response.file?
+    end    
+  end 
   
   protected
 

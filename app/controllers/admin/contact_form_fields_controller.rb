@@ -145,11 +145,7 @@ class Admin::ContactFormFieldsController < Admin::AdminController
   end
 
   def set_field_types
-    @field_types = [
-      [ I18n.t('contact_form_fields.textfield'), 'textfield' ],
-      [ I18n.t('contact_form_fields.textarea'), 'textarea' ],
-      [ I18n.t('contact_form_fields.dropdown'), 'dropdown' ],
-      [ I18n.t('contact_form_fields.multiselect'), 'multiselect' ]
-    ]
+    @field_types = ContactFormField::FIELD_TYPES.map{|field| [ContactFormField.human_field_type_for(field), field] }
   end
+  
 end

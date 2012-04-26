@@ -1,3 +1,6 @@
+- content_for :javascript do
+  = calendar_date_select_includes :locale => :nl
+  
 %h1= h @contact_form.title
 
 - if @contact_form.description_before_contact_fields
@@ -8,10 +11,10 @@
   %p
     %b= t 'contact_forms.should_enter_obligatory_fields'
 
-- form_tag "/contact_forms/#{@contact_form.id}/send_message", :method => :post do
+- form_tag "/contact_forms/#{@contact_form.id}/send_message", :method => :post, :multipart => @contact_form_fields.any?{|field| field.field_type == 'file' } do
   %table.contact_form_field
     %caption= "Contact formulier velden"
-    - for contact_form_field in @contact_form_fields
+    - @contact_form_fields.each do |contact_form_field|
       %tr
         %td= label_tag "contact_form_field_#{contact_form_field.id}", contact_form_field.label
         %td
@@ -28,6 +31,10 @@
             - contact_form_field.default_value.split(',').each do |choice|
               #{check_box_tag "contact_form_field[#{contact_form_field.id}][]", choice.to_s, values[choice.parameterize.to_s] == '1'} #{label_tag "contact_form_field[#{contact_form_field.id}][#{choice.parameterize}]", choice}
               %br
+          - elsif contact_form_field.field_type == 'date'
+            = calendar_date_select_tag "contact_form_field_#{contact_form_field.id}", value, :name => "contact_form_field[#{contact_form_field.id}]", :class => 'contact_field'
+          - elsif contact_form_field.field_type == 'file'
+            = file_field_tag "contact_form_field_#{contact_form_field.id}", :name => "contact_form_field[#{contact_form_field.id}]", :class => 'contact_field'
         %td.obligatory
           = contact_form_field.obligatory? ? '*' : ''
 

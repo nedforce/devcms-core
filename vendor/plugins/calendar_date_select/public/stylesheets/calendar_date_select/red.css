@@ -20,7 +20,7 @@ iframe.ie6_blocker {
 
 .calendar_date_select .cds_buttons {
   text-align:center;
-  padding:5px 0;
+  padding:5px 0px;
   background-color: #5f0000;
 }
 
@@ -31,8 +31,8 @@ iframe.ie6_blocker {
 }
 
 .calendar_date_select table {
-  margin: 0;
-  padding: 0;
+  margin: 0px;
+  padding: 0px;
 }
 
 
