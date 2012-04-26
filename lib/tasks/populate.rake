@@ -27,13 +27,13 @@ namespace :db do
             one with final_editor permissions on the business section node and the inhabitants section node (login: \'eindredacteur\', password: \'final_editor\')'
     task(:privileged_users => :environment) do
       if Node.root
-        u = User.create!(:login => 'webmaster', :email_address => "webmaster@example.com", :password => 'admin', :password_confirmation => 'admin')
+        u = PrivilegedUser.create!(:login => 'webmaster', :email_address => "webmaster@example.com", :password => 'admin', :password_confirmation => 'admin')
         u.update_attribute(:verified, true)
         u.give_role_on('admin', Node.root)
-        u = User.create!(:login => 'redacteur', :email_address => "redacteur@example.com", :password => 'editor', :password_confirmation => 'editor')
+        u = PrivilegedUser.create!(:login => 'redacteur', :email_address => "redacteur@example.com", :password => 'editor', :password_confirmation => 'editor')
         u.update_attribute(:verified, true)
         u.give_role_on('editor', Node.root)
-        u = User.create!(:login => 'eindredacteur', :email_address => "eindredacteur@example.com", :password => 'final_editor', :password_confirmation => 'final_editor')
+        u = PrivilegedUser.create!(:login => 'eindredacteur', :email_address => "eindredacteur@example.com", :password => 'final_editor', :password_confirmation => 'final_editor')
         u.update_attribute(:verified, true)
         u.give_role_on('final_editor', Node.root)
       else
