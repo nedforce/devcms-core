@@ -6,8 +6,8 @@ class Admin::UsersController < Admin::AdminController
   before_filter :set_sorting, :only => [ :index, :create ]
 
   skip_before_filter :set_actions
-  skip_before_filter :find_node    
-
+  skip_before_filter :find_node
+  
   require_role 'admin', :except => :privileged
   require_role ['admin', 'final_editor', 'editor'], :only => :privileged
 
@@ -16,15 +16,13 @@ class Admin::UsersController < Admin::AdminController
   # * GET /admin/users.json
   def index
     @active_page = :users
-    user_class = params[:privileged] ? PrivilegedUser : User
-
     # Sort the polymorphic node relationship separately if necessary.
     if !@sort_by_newsletter_archives
       # Don't eager load newsletter_archives lest the XML builder will fail.
       # This may be resolved by transforming this controller into JSON or in
       # a version of Rails > 2.0.2.
       @sort_field = 'users.created_at' if @sort_field == 'created_at'
-      @users      = user_class.all(:include => [ :newsletter_archives, :interests ], :conditions => filter_conditions, :order => "#{@sort_field} #{@sort_direction}", :page => { :size => @page_limit, :current => @current_page })
+      @users      = User.all(:include => [ :newsletter_archives, :interests ], :conditions => filter_conditions, :order => "#{@sort_field} #{@sort_direction}", :page => { :size => @page_limit, :current => @current_page })
       @user_count = @users.size
     else
       @users      = user_class.all(:include => [ :newsletter_archives, :interests ], :conditions => filter_conditions, :order => "login #{@sort_direction}")

@@ -38,7 +38,7 @@ class Admin::AdminController < ApplicationController
   skip_after_filter :increment_hits
   
   # Politely ask browsers to not cache anything in the admin namespace..
-  before_filter :set_cache_buster
+  before_filter :set_cache_buster, :only => [:show, :edit, :update, :previous ]
 
   layout :layout?
 
