@@ -84,34 +84,29 @@ class Node < ActiveRecord::Base
   before_destroy :prevent_root_destruction
     
   # Delegate tree calls to use Ancestry. Ensure this is added *after* other before/after filters.
-  include Node::TreeDelegation
+  include NodeExtensions::TreeDelegation
   
   # Load paranoid delete functionality. Make sure this is loaded after Node::TreeDelegation and before any other extensions.
-  include Node::ParanoidDelete
-  
-  # Load visibility & accessibility functionality
-  include Node::VisibilityAndAccessibility
-  
+  include NodeExtensions::ParanoidDelete
+
+  # # Load visibility & accessibility functionality
+  include NodeExtensions::VisibilityAndAccessibility
+
   # Load expiration functionality
-  include Node::Expiration
+  include NodeExtensions::Expiration
   
   # Load layout & template functionality
-  include Node::Layouting
-  
-  # It seems serialize has broken...
-  def layout_configuration
-    self.attributes["layout_configuration"] || {}
-  end
+  include NodeExtensions::Layouting
     
   # Load Url Aliasing functionality
-  include Node::UrlAliasing
+  include NodeExtensions::UrlAliasing
   
   # Load content type configuration functionality
-  include Node::ContentTypeConfiguration
+  include NodeExtensions::ContentTypeConfiguration
   
   alias_method_chain :move_to, :update_url_aliases
 
-  if SETTLER_LOADED && DevCMS.search_configuration[:enabled_search_engines].include?('ferret')
+  if SETTLER_LOADED && Devcms.search_configuration[:enabled_search_engines].try(:include?, 'ferret')
     self.extend Search::Modules::Ferret::FerretNodeExtension
     acts_as_searchable
   end
@@ -151,8 +146,8 @@ class Node < ActiveRecord::Base
   validates_inclusion_of :commentable,       :in => [ false, true ], :allow_nil => true
   validates_inclusion_of :hide_right_column, :in => [ false, true ], :allow_nil => true
   
-  validates_inclusion_of :content_box_colour, :in => DevCMS.content_box_colours, :allow_blank => true
-  validates_inclusion_of :content_box_icon, :in => DevCMS.content_box_icons, :allow_blank => true
+  validates_inclusion_of :content_box_colour, :in => Devcms.content_box_colours, :allow_blank => true
+  validates_inclusion_of :content_box_icon, :in => Devcms.content_box_icons, :allow_blank => true
   
   validates_length_of    :content_box_title, :in => 2..255, :allow_blank => true
   
@@ -187,13 +182,13 @@ class Node < ActiveRecord::Base
   # Make sure the associated meta content is removed (or marked as deleted) for the entire subtree when the current node is marked as deleted
   before_paranoid_delete :remove_associated_meta_content
   
-  named_scope :sorted_by_position, :order => 'nodes.position'
+  scope :sorted_by_position, :order => 'nodes.position'
   
-  named_scope :exclude_subtrees_of, (lambda do |nodes_to_exclude|
+  scope :exclude_subtrees_of, (lambda do |nodes_to_exclude|
     Node.exclude_subtrees_conditions_for(nodes_to_exclude)
   end)
   
-  named_scope :shown_in_menu, (lambda do
+  scope :shown_in_menu, (lambda do
     if Node.content_to_hide_from_menu.present?
       { :conditions => [ 'nodes.show_in_menu = true AND nodes.sub_content_type NOT IN (?)', Node.content_to_hide_from_menu ] }
     else
@@ -201,7 +196,7 @@ class Node < ActiveRecord::Base
     end
   end)
   
-  named_scope :with_content_type, (lambda do |content_types_to_include|
+  scope :with_content_type, (lambda do |content_types_to_include|
     content_types_to_include = Array(content_types_to_include)
     
     if content_types_to_include.present?
@@ -211,7 +206,7 @@ class Node < ActiveRecord::Base
     end
   end)
 
-  named_scope :exclude_content_types, (lambda do |content_types_to_exclude|
+  scope :exclude_content_types, (lambda do |content_types_to_exclude|
     content_types_to_exclude = Array(content_types_to_exclude)
     
     if content_types_to_exclude.present?
@@ -221,12 +216,12 @@ class Node < ActiveRecord::Base
     end
   end)
   
-  named_scope :sections, { :conditions => [ 'nodes.sub_content_type IN (?)', %w( Section Site ) ] }
+  scope :sections, { :conditions => [ 'nodes.sub_content_type IN (?)', %w( Section Site ) ] }
   
-  named_scope :include_content, { :include => :content }
+  scope :include_content, { :include => :content }
   
-  named_scope :path_children_by_depth, lambda{|node| { :order => 'nodes.ancestry_depth desc, nodes.position asc', :conditions => { :ancestry => node.path_child_ancestries } } }
-
+  scope :path_children_by_depth, lambda{|node| { :order => 'nodes.ancestry_depth desc, nodes.position asc', :conditions => { :ancestry => node.path_child_ancestries } } }
+  
   def move_to_with_reindexing(*args)
     self.move_to_without_reindexing(*args)
     self.reindex_self_and_children
@@ -327,7 +322,6 @@ class Node < ActiveRecord::Base
       :expanded      => active_node && active_node.ancestry.present? ? active_node.ancestry.starts_with?(self.child_ancestry) : false,
       :creatableChildContentTypes => self.content_type_configuration[:allowed_child_content_types].inject([]) do |array, child_content_type|        
         child_content_type_configuration = Node.content_type_configuration(child_content_type)
-        
         klass = child_content_type.constantize
         
         if child_content_type_configuration[:enabled] && child_content_type_configuration[:allowed_roles_for_create].include?(role_name)
@@ -385,7 +379,7 @@ class Node < ActiveRecord::Base
       :availableContentRepresentations => content_type_configuration[:available_content_representations]
     }
 
-    hash.merge(DevCMS.tree_node_for(self, user, options))
+    hash.merge(Devcms.tree_node_for(self, user, options))
   end
 
   # Checks whether the node is expandable (in the admin view) for the given user.
@@ -462,7 +456,6 @@ class Node < ActiveRecord::Base
 
       # Exclude private sections
       nodes_to_exclude += self.descendants.sections.private
-        
       self.self_and_descendants.accessible.exclude_subtrees_of(nodes_to_exclude).with_content_type(%w( Page Section NewsItem )).include_content.all({ :order => 'updated_at DESC' }.merge(conditions))
     elsif on == :self
       self.self_and_descendants(:to_depth => 0).accessible.public.exclude_content_types('Site').include_content.all({ :order => 'updated_at DESC' }.merge(conditions))
@@ -487,6 +480,7 @@ class Node < ActiveRecord::Base
 
   def update_search_index
     self.update_index if self.respond_to?(:update_index)
+    true
   end
 
   def without_search_reindex(&block)
@@ -571,18 +565,8 @@ class Node < ActiveRecord::Base
     Node.roots.first || raise(ActiveRecord::RecordNotFound, "No root node found!")
   end
 
-  def self.find_related_nodes(node, options = {})
-    conditions = {
-      :conditions => [ 'node_categories.category_id in (?) AND nodes.id <> ?', node.category_ids, node.id ],
-      :include    => :node_categories,
-      :limit      => options[:limit] || 5
-    }
-    
-    if options[:top_node]
-      options[:top_node].children.accessible.public.all(conditions)
-    else
-      Node.accessible.public.all(conditions)
-    end
+  def self.find_related_nodes(node, options = {})    
+    (options[:top_node] ? options[:top_node].children : Node.scoped).accessible.public.includes(:node_categories).limit(options[:limit] || 5).where([ 'node_categories.category_id in (?) AND nodes.id <> ?', node.category_ids, node.id ])
   end
 
   def self.bulk_update(nodes, attributes, user = nil)
@@ -628,6 +612,36 @@ class Node < ActiveRecord::Base
     sortable_scope_changes << :ancestry unless sortable_scope_changes.include?(:ancestry) || new_record? || (send(:ancestry).present? && value.to_s.split("/").last == send(:ancestry).to_s.split("/").last) || !self.class.sortable_lists.any? { |list_name, configuration| configuration[:scope].include?(:ancestry) }
     self.ancestry_without_sortable = value
   end
+  
+  # Determines the "content date" of the content
+  # This is used to determine whether the content date is "past", "current" or "future"
+  def determine_content_date(today)
+    # For NewsItem and NewsletterEdition instance, we only look at the publication date
+    if content_class == NewsItem || content_class == NewsletterEdition
+      content_date = self.publication_start_date.to_date
+    # For CalendarItem and Meeting instances, we look at both the start and end times
+    else
+      start_date = content.start_time.to_date
+      end_date   = content.end_time.to_date
+
+      # The event has already ended
+      if end_date < today
+        content_date = end_date
+      # The event has yet to start
+      elsif start_date > today
+        content_date = start_date
+      # Either the event ends or starts today, or is still taking place today
+      else
+        content_date = today
+      end
+    end
+
+    content_date
+  end  
+  
+  def title_alternatives
+    super.map(&:name).join(',')
+  end
 
 protected
 
@@ -670,32 +684,6 @@ protected
       ContentRepresentation.delete_all [ 'parent_id IN (:nodes_to_be_paranoid_deleted_ids) OR content_id IN (:nodes_to_be_paranoid_deleted_ids)', { :nodes_to_be_paranoid_deleted_ids => nodes_to_be_paranoid_deleted_ids } ]
     end
   end
-
-  # Determines the "content date" of the content
-  # This is used to determine whether the content date is "past", "current" or "future"
-  def determine_content_date(today)
-    # For NewsItem and NewsletterEdition instance, we only look at the publication date
-    if content_class == NewsItem || content_class == NewsletterEdition
-      content_date = self.publication_start_date.to_date
-    # For CalendarItem and Meeting instances, we look at both the start and end times
-    else
-      start_date = content.start_time.to_date
-      end_date   = content.end_time.to_date
-
-      # The event has already ended
-      if end_date < today
-        content_date = end_date
-      # The event has yet to start
-      elsif start_date > today
-        content_date = start_date
-      # Either the event ends or starts today, or is still taking place today
-      else
-        content_date = today
-      end
-    end
-
-    content_date
-  end
   
   def save_category_attributes
     if self.category_attributes.present?
@@ -710,26 +698,28 @@ protected
     self.publication_start_date = Time.now unless self.publication_start_date
   end
 
-private
+  private
 
   # Validation methods
   
   def ensure_publication_start_date_is_present_when_publication_end_date_is_present
     if self.publication_end_date
-      self.errors.add_to_base(I18n.t('acts_as_content_node.publication_start_date_should_be_present')) unless self.publication_start_date
+      self.errors.add(:base, I18n.t('acts_as_content_node.publication_start_date_should_be_present')) unless self.publication_start_date
     end
   end
 
   def ensure_publication_end_date_after_publication_start_date
     if self.publication_start_date && self.publication_end_date
-      self.errors.add_to_base(I18n.t('acts_as_content_node.publication_end_date_should_be_after_publication_start_date')) if self.publication_start_date >= self.publication_end_date
+      self.errors.add(:base, I18n.t('acts_as_content_node.publication_end_date_should_be_after_publication_start_date')) if self.publication_start_date >= self.publication_end_date
     end
   end
 
   def ensure_content_box_number_of_items_should_be_greater_than_two
     if self.content_box_number_of_items
-      self.errors.add_to_base(I18n.t('acts_as_content_node.content_box_number_of_items_should_be_greater_than_two')) if self.content_box_number_of_items.to_i <= 2
+      self.errors.add(:base, I18n.t('acts_as_content_node.content_box_number_of_items_should_be_greater_than_two')) if self.content_box_number_of_items.to_i <= 2
     end
-  end  
+  end
+  
+  ActiveSupport.run_load_hooks(:node, self)  
 end
 

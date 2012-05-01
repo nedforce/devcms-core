@@ -19,7 +19,8 @@ module LayoutHelper
         partials << render(:partial =>  partial, :locals => {  :node => element.content, :parent => element.parent, :partial => element.content_partial, :sidebox_title => element.title, :content_box_color => nil, :last => element == representations.last })
       end
     end
-    partials
+    
+    raw partials
   end
 
   def render_sub_menu

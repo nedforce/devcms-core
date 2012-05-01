@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class ExternalLinkTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -23,7 +23,7 @@ class ExternalLinkTest < ActiveSupport::TestCase
   def test_should_require_url
     assert_no_difference 'ExternalLink.count' do
       external_link = create_external_link(:url => nil)
-      assert external_link.errors.on(:url)
+      assert external_link.errors[:url].any?
     end
   end
 
@@ -48,7 +48,7 @@ class ExternalLinkTest < ActiveSupport::TestCase
     [ ' ', 'blaat', 'http://www. blaat.nl', 'http://www.bla_at.nl', 'http://a.b.c' ].each do |url|
       assert_no_difference 'ExternalLink.count' do
         external_link = create_external_link(:url => url)
-        assert external_link.errors.on(:url)
+        assert external_link.errors[:url].any?
       end
     end
   end
@@ -66,7 +66,7 @@ class ExternalLinkTest < ActiveSupport::TestCase
     assert_difference 'ExternalLink.count', 2 do
       2.times do
         external_link = create_external_link(:title => 'Non-unique title')
-        assert !external_link.errors.on(:title)
+        assert !external_link.errors[:title].any?
       end
     end
   end

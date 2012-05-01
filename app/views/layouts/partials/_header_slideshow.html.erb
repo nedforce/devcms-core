@@ -1,7 +1,7 @@
 <% content_for :javascript do %>
-  <% javascript_tag do %>
+  <%= javascript_tag do %>
     document.observe('dom:loaded', function() {
-      var slides = <%= available_header_images.to_json %>;
+      var slides = <%= available_header_images.to_json.html_safe %>;
       headerSlideShow = new SlideShow(slides, {
         fadeDuration: 3000,
         displayDuration: 6000,

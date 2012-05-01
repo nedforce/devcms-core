@@ -41,9 +41,9 @@
 
   - if current_user == @user
     .buttons.clearfix
-      - edit_button t('users.edit_details') do
+      = edit_button t('users.edit_details') do
         = link_to t('users.edit_details'), secure_url(:url_for, { :action => 'edit', :id => @user })
-      - delete_button t('users.delete_user') do
+      = delete_button t('users.delete_user') do
         = link_to t('users.delete_user'), secure_url(:url_for, { :action => 'confirm_destroy', :id => @user })
 
   - if @user.weblogs.present?
@@ -67,7 +67,7 @@
               %td.gray= h wl.last_updated_at.to_s(:short)
               %td.right.gray= link_to_content_node t('users.view_weblog'), wl, {}, :title => h(wl.title)
 
-  - form_for @user, :url => secure_url(:url_for, { :action => 'update', :id => @user }) do |f|
+  = form_for @user, :url => secure_url(:url_for, { :action => 'update', :id => @user }) do |f|
     %div= hidden_field_tag(:update_newsletters_and_interests, 1)
 
     = render :partial => 'newsletters'

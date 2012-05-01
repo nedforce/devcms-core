@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class UserCategoryTest < ActiveSupport::TestCase
   def setup
@@ -16,14 +16,14 @@ class UserCategoryTest < ActiveSupport::TestCase
   def test_should_require_user
     assert_no_difference 'UserCategory.count' do
       uc = create_user_category(:user => nil)
-      assert uc.errors.on(:user)
+      assert uc.errors[:user].any?
     end
   end
 
   def test_should_require_category
     assert_no_difference 'UserCategory.count' do
       uc = create_user_category(:category => nil)
-      assert uc.errors.on(:category)
+      assert uc.errors[:category].any?
     end
   end
 
@@ -35,7 +35,7 @@ class UserCategoryTest < ActiveSupport::TestCase
 
     assert_no_difference 'UserCategory.count' do
       uc = create_user_category
-      assert uc.errors.on(:category_id)
+      assert uc.errors[:category_id].any?
     end
   end
   

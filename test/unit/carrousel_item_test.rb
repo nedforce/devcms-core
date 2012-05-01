@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class CarrouselItemTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -15,7 +15,7 @@ class CarrouselItemTest < ActiveSupport::TestCase
   def test_should_require_item
     assert_no_difference 'CarrouselItem.count' do
       carrousel_item = create_carrousel_item(@carrousel, :item => nil)
-      assert carrousel_item.errors.on(:item)
+      assert carrousel_item.errors[:item].any?
     end
   end
 

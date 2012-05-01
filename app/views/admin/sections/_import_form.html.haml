@@ -4,7 +4,7 @@
   %h2= flash[:notice]
 
 #right_panel_form.clearfix
-  - form_tag({ :action => 'build', :format => 'js' }, { :multipart => true, :target => 'upload_target' }) do
+  = form_tag({ :action => 'build', :format => 'js' }, { :multipart => true, :target => 'upload_target' }) do
     = file_field_tag :data
 
     = hidden_field_tag :parent_node_id, params[:parent_node_id]

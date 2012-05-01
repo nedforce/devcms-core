@@ -2,6 +2,7 @@
 # the application relating to +Comment+ objects.
 class CommentsController < ApplicationController
 
+  prepend_before_filter :find_commentable_node, :only => :create
   before_filter :find_comment, :only => :destroy
 
   # Only admins and final editors are allowed to delete comments
@@ -53,6 +54,10 @@ class CommentsController < ApplicationController
   end
 
 protected
+
+  def find_commentable_node
+    @node = current_site.self_and_descendants.accessible.include_content.find(params[:node_id])
+  end
 
   def find_comment
     @comment = @node.comments.find(params[:id])

@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::AlphabeticIndicesControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -38,7 +38,7 @@ class Admin::AlphabeticIndicesControllerTest < ActionController::TestCase
     assert_difference('AlphabeticIndex.count') do
       create_alphabetic_index
       assert_response :success
-      assert !assigns(:alphabetic_index).new_record?, :message => assigns(:alphabetic_index).errors.full_messages.join('; ')
+      assert !assigns(:alphabetic_index).new_record?, assigns(:alphabetic_index).errors.full_messages.join('; ')
     end
   end
 
@@ -51,7 +51,7 @@ class Admin::AlphabeticIndicesControllerTest < ActionController::TestCase
 
     assert_response :unprocessable_entity
     assert assigns(:alphabetic_index).new_record?
-    assert assigns(:alphabetic_index).errors.on(:title)
+    assert assigns(:alphabetic_index).errors[:title].any?
   end
 
   def test_should_get_edit
@@ -85,7 +85,7 @@ class Admin::AlphabeticIndicesControllerTest < ActionController::TestCase
 
     put :update, :id => alphabetic_indices(:subsection_alphabetic_index).id, :alphabetic_index => { :title => nil }
     assert_response :unprocessable_entity
-    assert assigns(:alphabetic_index).errors.on(:title)
+    assert assigns(:alphabetic_index).errors[:title].any?
   end
 
 protected

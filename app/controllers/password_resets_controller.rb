@@ -17,9 +17,9 @@ class PasswordResetsController < ApplicationController
 
     if @user
       token = @user.create_password_reset_token
-      UserMailer.deliver_password_reset(@user, :host => request.host)
+      UserMailer.password_reset(@user, :host => request.host).deliver
     elsif validate_email_address(params[:login_email])
-      UserMailer.deliver_account_does_not_exist(params[:login_email], :host => request.host)
+      UserMailer.account_does_not_exist(params[:login_email], :host => request.host).deliver
     end
 
     redirect_to login_path, :notice => I18n.t('users.password_reset_sent')
@@ -30,7 +30,6 @@ class PasswordResetsController < ApplicationController
 
   def update
     @user.password_reset_token = nil # Kill reset when we succeed
-
     if @user.password_reset_expiration < Time.now
       redirect_to new_password_reset_path, :notice => I18n.t('users.password_reset_expired')
     elsif @user.update_attributes(params[:user])
@@ -47,6 +46,6 @@ class PasswordResetsController < ApplicationController
   end
 
   def validate_email_address(email_address)
-    email_address =~ ValidatesEmailFormatOf::Regex
+    email_address =~ EmailValidator::REGEX
   end
 end

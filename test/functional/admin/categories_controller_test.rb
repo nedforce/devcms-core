@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::CategoriesControllerTest < ActionController::TestCase
 
@@ -38,7 +38,7 @@ class Admin::CategoriesControllerTest < ActionController::TestCase
     assert_difference 'Category.count' do
       post :create, :category => { :name => 'Test category' }
       assert_response :success
-      assert !assigns(:category).new_record?, :message => assigns(:category).errors.full_messages.join('; ')
+      assert !assigns(:category).new_record?, assigns(:category).errors.full_messages.join('; ')
     end
   end
 
@@ -48,7 +48,7 @@ class Admin::CategoriesControllerTest < ActionController::TestCase
     assert_no_difference 'Category.count' do
       put :update, :id => @category.id, :category => { :name => 'Test category' }
       assert_response :success
-      assert !assigns(:category).new_record?, :message => assigns(:category).errors.full_messages.join('; ')
+      assert !assigns(:category).new_record?, assigns(:category).errors.full_messages.join('; ')
     end
   end
 

@@ -9,7 +9,7 @@
   .forumForm
     %h2= t 'forums.create_forum_thread'
 
-    - form_for [ @forum_topic, @forum_thread ], :url => forum_topic_forum_threads_path(@forum_topic), :method => :post do |f|
+    = form_for [ @forum_topic, @forum_thread ], :url => forum_topic_forum_threads_path(@forum_topic), :method => :post do |f|
       = render :partial => 'form', :locals => { :f => f }
       %p.clearfix
         = submit_tag t('forums.submit'), :class => 'submit'

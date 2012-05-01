@@ -1,9 +1,10 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::AttachmentsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
   
   def setup
+    AttachmentUploader.any_instance.stubs(:path).returns(File.join(File.dirname(__FILE__), '../../fixtures/files/snippet.css.txt'))
     @attachment = attachments(:besluit_attachment)
   end
 
@@ -17,8 +18,8 @@ class Admin::AttachmentsControllerTest < ActionController::TestCase
 
   def test_should_get_previous
     @attachment.title = 'foo'
-    @attachment.save :user => User.find_by_login('editor')
-    
+    @attachment.save! :user => User.find_by_login('editor')
+
     login_as :sjoerd
     get :previous, :id => @attachment
     assert_response :success
@@ -38,7 +39,7 @@ class Admin::AttachmentsControllerTest < ActionController::TestCase
       create_attachment
       assert_response :success
       assert 'test.jpg', assigns(:attachment).filename
-      assert !assigns(:attachment).new_record?, :message => assigns(:attachment).errors.full_messages.join('; ')
+      assert !assigns(:attachment).new_record?, assigns(:attachment).errors.full_messages.join('; ')
     end
   end
 
@@ -47,7 +48,7 @@ class Admin::AttachmentsControllerTest < ActionController::TestCase
     assert_no_difference('Attachment.count') do
       create_attachment(:title => nil)
       assert_response :unprocessable_entity
-      assert assigns(:attachment).errors.on(:title)
+      assert assigns(:attachment).errors[:title].any?
     end   
   end
   
@@ -94,11 +95,11 @@ class Admin::AttachmentsControllerTest < ActionController::TestCase
     login_as :sjoerd
     put :update, :id => attachments(:besluit_attachment).id, :attachment => { :title => nil }
     assert_response :unprocessable_entity
-    assert assigns(:attachment).errors.on(:title)
+    assert assigns(:attachment).errors[:title].any?
   end
   
   protected
     def create_attachment(attributes = {}, options = {})
-      post :create, {:parent_node_id => nodes(:about_page_node).id, :attachment => { :title => 'An Image', :uploaded_data => fixture_file_upload("files/test.jpg", 'image/jpeg', true) }.merge(attributes)}.merge(options)
+      post :create, {:parent_node_id => nodes(:about_page_node).id, :attachment => { :title => 'An Image', :file => fixture_file_upload("files/test.jpg", 'image/jpeg', true) }.merge(attributes)}.merge(options)
     end
 end

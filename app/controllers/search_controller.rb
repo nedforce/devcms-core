@@ -46,7 +46,7 @@ protected
   
   def set_search_engine
     @engine = params[:search_engine] if params[:search_engine].present?
-    @engine = DevCMS.search_configuration[:default_search_engine] unless DevCMS.search_configuration[:enabled_search_engines].include?(@engine)
+    @engine = Devcms.search_configuration[:default_search_engine] unless Devcms.search_configuration[:enabled_search_engines].include?(@engine)
   end
 
 end

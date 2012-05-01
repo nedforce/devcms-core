@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::PollQuestionsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -38,7 +38,7 @@ class Admin::PollQuestionsControllerTest < ActionController::TestCase
         create_poll_question
         assert_response :success
         assert assigns(:poll_question)
-        assert !assigns(:poll_question).new_record?, :message => assigns(:poll_question).errors.full_messages.join('; ')
+        assert !assigns(:poll_question).new_record?, assigns(:poll_question).errors.full_messages.join('; ')
         
         assert_equal 3, assigns(:poll_question).reload.poll_options.count 
       end
@@ -52,7 +52,7 @@ class Admin::PollQuestionsControllerTest < ActionController::TestCase
       assert_no_difference('PollOption.count') do
         create_poll_question(:new_poll_option_attributes => nil)
         assert_response :success
-        assert !assigns(:poll_question).new_record?, :message => assigns(:poll_question).errors.full_messages.join('; ')
+        assert !assigns(:poll_question).new_record?, assigns(:poll_question).errors.full_messages.join('; ')
       end
     end    
   end
@@ -66,7 +66,7 @@ class Admin::PollQuestionsControllerTest < ActionController::TestCase
     
     assert_response :success
     assert assigns(:poll_question).new_record?
-    assert assigns(:poll_question).errors.on(:question)
+    assert assigns(:poll_question).errors[:question].any?
   end
   
   def test_create_should_require_valid_option_text
@@ -81,7 +81,7 @@ class Admin::PollQuestionsControllerTest < ActionController::TestCase
       
         assert_response :success
         assert assigns(:poll_question).new_record?, "Poll question was saved with invalid option!"
-        assert assigns(:poll_question).errors.on(:poll_options), "No errors were found on poll_options!"
+        assert assigns(:poll_question).errors[:poll_options].any?, "No errors were found on poll_options!"
       end
     end
   end
@@ -215,7 +215,7 @@ class Admin::PollQuestionsControllerTest < ActionController::TestCase
     
     put :update, :id => poll_questions(:hc_question_1).id, :poll_question => { :question => nil }
     assert_response :success
-    assert assigns(:poll_question).errors.on(:question)
+    assert assigns(:poll_question).errors[:question].any?
   end
 
   def test_should_set_publication_start_date_on_create

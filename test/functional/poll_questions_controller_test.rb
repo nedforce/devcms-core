@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class PollQuestionsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -40,7 +40,7 @@ class PollQuestionsControllerTest < ActionController::TestCase
       assert_difference 'po.reload.number_of_votes', 1 do
         put :vote, :id => q.id, :poll_option_id => po.id
         assert_redirected_to results_poll_question_url(q)
-        assert flash.has_key?(:notice)
+        assert flash.key?(:notice)
       end
     end
   end
@@ -86,7 +86,7 @@ class PollQuestionsControllerTest < ActionController::TestCase
         assert_no_difference 'q.user_votes.count' do
           put :vote, :id => q.id, :poll_option_id => po.id
           assert_redirected_to results_poll_question_url(q)
-          assert flash.has_key?(:warning)
+          assert flash.key?(:warning)
         end
       end
     end
@@ -97,7 +97,7 @@ class PollQuestionsControllerTest < ActionController::TestCase
     assert_no_difference 'q.number_of_votes' do
       put :vote, :id => q.id, :poll_option_id => q.poll_options.first.id
       assert_redirected_to results_poll_question_url(q)
-      assert flash.has_key?(:warning)
+      assert flash.key?(:warning)
     end
   end
 
@@ -111,7 +111,7 @@ class PollQuestionsControllerTest < ActionController::TestCase
     assert_no_difference 'q.number_of_votes' do
       put :vote, :id => q.id, :poll_option_id => q.poll_options.last.id
       assert_redirected_to results_poll_question_url(q)
-      assert flash.has_key?(:warning) # not okay
+      assert flash.key?(:warning) # not okay
     end
   end
 

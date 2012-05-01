@@ -46,6 +46,10 @@ class Event < ActiveRecord::Base
   has_many :event_registrations, :dependent => :destroy
   has_many :users, :through => :event_registrations
   
+  scope :with_ancestry, lambda{|ancestry| includes(:node).where('nodes.ancestry' => ancestry).order('start_time DESC') }  do
+    include DevcmsCore::CalendarItemsAssociationExtensions
+  end
+  
   # Returns a URL alias for a given +node+.
   def path_for_url_alias(node)
     "#{self.start_time.year}/#{self.start_time.month}/#{self.start_time.day}/#{self.title}"
@@ -59,9 +63,9 @@ class Event < ActiveRecord::Base
   def self.send_registration_notifications
     all(:conditions => ["start_time <= ? AND subscription_enabled = ?", Time.now + 1.day, true]).each do |event|
       event.update_attribute :subscription_enabled, false
-      EventRegistrationMailer.deliver_registrations_notification(event) unless event.event_registrations.count == 0
+      EventMailer.event_registrations(event).deliver if event.event_registrations.any?
     end
-  end
+  end  
   
 protected
 

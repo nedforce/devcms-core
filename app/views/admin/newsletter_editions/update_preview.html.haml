@@ -1,10 +1,10 @@
 = render :partial => 'show', :locals => { :record => @newsletter_edition }
 
 .forms
-  - remote_form_for @newsletter_edition, :method => :get, :url => edit_admin_newsletter_edition_path(@newsletter_edition, :format => 'html'), :update => 'right_panel_body' do |form|
+  = remote_form_for @newsletter_edition, :method => :get, :url => edit_admin_newsletter_edition_path(@newsletter_edition, :format => 'html'), :update => 'right_panel_body' do |form|
     = render :partial => 'preview_form', :locals => { :form => form, :record => @newsletter_edition }
     = form.submit t('shared.edit')
 
-  - remote_form_for @newsletter_edition, :url => admin_newsletter_edition_path(@newsletter_edition, :format => 'html'), :update => 'right_panel_body' do |form|
+  = remote_form_for @newsletter_edition, :url => admin_newsletter_edition_path(@newsletter_edition, :format => 'html'), :update => 'right_panel_body' do |form|
     = render :partial => 'preview_form', :locals => { :form => form, :record => @newsletter_edition }
     = form.submit t('shared.save')

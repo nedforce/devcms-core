@@ -1,0 +1,7 @@
+- content = node.content
+
+- if [ Poll, NewsletterArchive, TopHitsPage, CombinedCalendar ].any? { |klass| content.is_a?(klass) }
+  = render :partial => '/layouts/partials/content_box_content', :locals => { :node => node, :content => content, :parent => parent, :sidebox_title => sidebox_title, :partial => partial, :content_box_color => content_box_color }
+- else
+  - cache(:content_type => content.class.name, :content_id => content.id, :controller => '/nodes', :action => :content_box, :last_updated_at => content.last_updated_at, :expires_in => 15.minutes) do
+    = render :partial => '/layouts/partials/content_box_content', :locals => { :node => node, :content => content, :parent => parent, :sidebox_title => sidebox_title, :partial => partial, :content_box_color => content_box_color }

@@ -4,12 +4,12 @@
 
 - if logged_in?
   - if content.has_subscription_for?(current_user)
-    - form_tag unsubscribe_newsletter_archive_path(content), :method => :delete, :id => "newsletter_archive_content_box_form_#{content.id}", :class => 'newsletter_archive_content_box_form unsubscribe' do
+    = form_tag unsubscribe_newsletter_archive_path(content), :method => :delete, :id => "newsletter_archive_content_box_form_#{content.id}", :class => 'newsletter_archive_content_box_form unsubscribe' do
       .buttons.clearfix
         = submit_tag t('newsletters.unsubscribe'), :class => 'unsubscribe_button submit'
 
   - else
-    - form_tag subscribe_newsletter_archive_path(content), :method => :post, :id => "newsletter_archive_content_box_form_#{content.id}", :class => 'newsletter_archive_content_box_form subscribe' do
+    = form_tag subscribe_newsletter_archive_path(content), :method => :post, :id => "newsletter_archive_content_box_form_#{content.id}", :class => 'newsletter_archive_content_box_form subscribe' do
       .buttons.clearfix
         = submit_tag t('newsletters.subscribe'), :class => 'subscribe_button submit'
 

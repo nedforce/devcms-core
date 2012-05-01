@@ -1,5 +1,3 @@
-require 'diff'    
-
 module Admin::DiffHelper
 
   def diff(page1, page2)

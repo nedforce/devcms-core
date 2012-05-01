@@ -3,7 +3,7 @@
 class NewsletterEditionMailerWorker
   # Returns the used logger.
   def logger
-    RAILS_DEFAULT_LOGGER
+    Rails.logger
   end
 
   # Send all newsletter editions.
@@ -35,7 +35,7 @@ class NewsletterEditionMailerWorker
     # crash or bail out.
     if queued_subscription.destroy
       begin
-        NewsletterSubscription.deliver_edition_for(queued_subscription.newsletter_edition, queued_subscription.user)
+        NewsletterSubscription.edition_for(queued_subscription.newsletter_edition, queued_subscription.user).deliver
       rescue Exception => e
         logger.info "#{queued_subscription.newsletter_edition.id}: Could not send to user #{queued_subscription.user.id}."
         logger.info "#{queued_subscription.newsletter_edition.id}: #{e.message}."

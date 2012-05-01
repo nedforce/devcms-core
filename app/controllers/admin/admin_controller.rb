@@ -42,11 +42,18 @@ class Admin::AdminController < ApplicationController
 
   layout :layout?
 
-  helper Admin::PermitsHelper, Admin::NewsletterArchiveHelper, Admin::AgendaItemsHelper, Admin::AdminHelper, Admin::AdminFormBuilderHelper, Admin::CategoriesHelper, Admin::DiffHelper, Admin::CropperHelper
+  helper Admin::NewsletterArchiveHelper, Admin::AgendaItemsHelper, Admin::AdminHelper, Admin::AdminFormBuilderHelper, Admin::CategoriesHelper, Admin::DiffHelper, Admin::CropperHelper
   
   cache_sweeper :node_sweeper, :only => [ :create, :update, :destroy, :approve, :set_visibility, :set_accessibility, :move, :bulk_update, :bulk_destroy, :sort_children ]
   
 protected
+
+  def default_format_json
+    if(request.headers["HTTP_ACCEPT"].nil? &&
+       params[:format].nil?)
+      request.format = "json"
+    end
+  end
 
   def set_cache_buster
     response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
@@ -55,7 +62,8 @@ protected
   end
 
   def find_node
-    @node ||= Node.find(params[:node_id]) if params[:node_id]
+    return unless params[:id].present? && controller_model.respond_to?(:is_content_node?) && controller_model.is_content_node?
+    @node = Node.include_content.where([ 'content_type = ? AND content_id = ?', controller_model.base_class.name, params[:id] ]).first!    
   end
   
   # Finds the Node object corresponding to the passed in +parent_node_id+ parameter.

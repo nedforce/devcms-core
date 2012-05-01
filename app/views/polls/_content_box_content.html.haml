@@ -11,7 +11,7 @@
         - cache(:content_type => content.class.name, :content_id => content.id, :controller => '/nodes', :action => :content_box, :type => :results, :expires_in => 15.minutes) do
           = render :partial => '/poll_questions/results_side_box', :locals => { :question => active_question }
       - else
-        - form_tag vote_poll_question_url(active_question), :method => :put, :id => "poll_content_box_form_#{content.id}", :class => 'poll_content_box_form' do
+        = form_tag vote_poll_question_url(active_question), :method => :put, :id => "poll_content_box_form_#{content.id}", :class => 'poll_content_box_form' do
           - cache(:content_type => content.class.name, :content_id => content.id, :controller => '/nodes', :action => :content_box, :type => :options, :last_updated_at => content.last_updated_at) do
             - active_question.poll_options.each do |o|
               .option.transparent
@@ -24,7 +24,7 @@
               = link_to t('polls.login_link'), login_path, :class => 'results_link login_link'
             - else
               = submit_tag t('polls.vote'), :class => 'submit_orange vote_button'
-              - arrow_block_button t('polls.view_results'), :class => 'results' do
+              = arrow_block_button t('polls.view_results'), :class => 'results' do
                 = link_to t('polls.results'), results_poll_question_url(active_question), :class => 'results_link', :id => "poll_results_link_#{content.id}"
 
   - else

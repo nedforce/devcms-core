@@ -14,7 +14,7 @@ class Admin::RoleAssignmentsController < Admin::AdminController
     
     # Sort the polymorphic node relationship separately if necessary.
     if !@sort_by_node
-      @role_assignments = RoleAssignment.all(:include => [ :user, :node ], :order => "#{@sort_field} #{@sort_direction}", :page => { :size => @page_limit, :current => @current_page })
+      @role_assignments = RoleAssignment.includes([ :user, :node ]).order("#{@sort_field} #{@sort_direction}").page(@current_page).per(@page_limit)
     else
       @role_assignments = RoleAssignment.all(:include => [ :node, :user ], :order => "users.login #{@sort_direction}")
       @role_assignments = @role_assignments.sort_by { |role_assignment| role_assignment.node.content.content_title.upcase }
@@ -70,7 +70,7 @@ class Admin::RoleAssignmentsController < Admin::AdminController
     respond_to do |format| 
       if @ra.user == current_user
         error = I18n.t('permissions.cant_destroy_from_yourself')
-        @ra.errors.add_to_base(error)
+        @ra.errors.add(:base, error)
         format.json { render :json => { :errors => @ra.errors.full_messages }.to_json, :status => :unprocessable_entity }
       else
         @ra.destroy

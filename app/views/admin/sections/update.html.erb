@@ -1,7 +1,7 @@
 <% if @for_approval %>
   <%= javascript_tag "Ext.getCmp('approvals-grid').getStore().reload();" -%>
 <% else %>
-  <% javascript_tag do -%>
+  <%= javascript_tag do -%>
     var section = treePanel.getNodeById('<%= @section.node.id -%>')
     section.setText('<%= @section.node.tree_text -%>')
     section.reload();

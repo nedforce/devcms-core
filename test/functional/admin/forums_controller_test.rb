@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::ForumsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -35,7 +35,7 @@ class Admin::ForumsControllerTest < ActionController::TestCase
     assert_difference('Forum.count') do
       create_forum
       assert_response :success
-      assert !assigns(:forum).new_record?, :message => assigns(:forum).errors.full_messages.join('; ')
+      assert !assigns(:forum).new_record?, assigns(:forum).errors.full_messages.join('; ')
     end
   end
 
@@ -58,7 +58,7 @@ class Admin::ForumsControllerTest < ActionController::TestCase
       create_forum({ :title => nil }, { :commit_type => 'preview' })
       assert_response :unprocessable_entity
       assert assigns(:forum).new_record?
-      assert assigns(:forum).errors.on(:title)
+      assert assigns(:forum).errors[:title].any?
       assert_template 'new'
     end
   end
@@ -72,7 +72,7 @@ class Admin::ForumsControllerTest < ActionController::TestCase
 
     assert_response :unprocessable_entity
     assert assigns(:forum).new_record?
-    assert assigns(:forum).errors.on(:title)
+    assert assigns(:forum).errors[:title].any?
   end
 
   def test_should_get_edit
@@ -122,7 +122,7 @@ class Admin::ForumsControllerTest < ActionController::TestCase
     put :update, :id => forum, :forum => { :title => nil, :description => 'updated_body'}, :commit_type => 'preview'
 
     assert_response :unprocessable_entity
-    assert assigns(:forum).errors.on(:title)
+    assert assigns(:forum).errors[:title].any?
     assert_equal old_title, forum.reload.title
     assert_template 'edit'
   end
@@ -132,7 +132,7 @@ class Admin::ForumsControllerTest < ActionController::TestCase
 
     put :update, :id => forums(:bewoners_forum).id, :forum => {:title => nil}
     assert_response :unprocessable_entity
-    assert assigns(:forum).errors.on(:title)
+    assert assigns(:forum).errors[:title].any?
   end
 
 protected

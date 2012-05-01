@@ -106,7 +106,7 @@ class UsersController < ApplicationController
       # Password check when there's a email/password change
       if (@user.changed.include?('email_address') || params[:user][:password].present?) && !@user.authenticated?(params[:old_password])
         format.html do
-          @user.errors.add_to_base I18n.t('users.wrong_password')
+          @user.errors.add :base, I18n.t('users.wrong_password')
           render :action => 'edit', :status => :unprocessable_entity
         end
         format.xml  { head :unprocessable_entity }
@@ -176,7 +176,7 @@ class UsersController < ApplicationController
   def send_verification_email
     unless @user.verified?
       @user.reset_verification_code
-      UserMailer.deliver_verification_email(@user)      
+      UserMailer.verification_email(@user).deliver
       flash[:notice]  = I18n.t('users.sent_verification_email')
     else
       flash[:warning] = I18n.t('users.already_verified')
@@ -191,13 +191,11 @@ protected
 
   # Finds the requested user and saves it to the <tt>@user</tt> instance variable.
   def find_user
-    @user = User.find_by_login(params[:id])
-    raise ActiveRecord::RecordNotFound unless @user
+    @user = User.find_by_login!(params[:id])
   end
 
   def set_user
-    @user = User.find_by_id_and_login(current_user.id, params[:id])
-    raise ActiveRecord::RecordNotFound unless @user
+    @user = User.find_by_id_and_login!(current_user.id, params[:id])
   end
 
   def get_newsletters
@@ -223,7 +221,7 @@ protected
   def verify_invitation_code
     @invitation_email = params[:invitation_email]
     @invitation_code  = params[:invitation_code]
-    
+
     unless User.verify_invitation_code(@invitation_email, @invitation_code) || (@invitation_code.blank? && @invitation_email.blank? && !Settler[:user_invite_only])
       flash[:warning] = I18n.t('users.invalid_invitation_code_or_invitation_email')
       redirect_to root_path

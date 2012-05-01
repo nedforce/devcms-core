@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class WeblogsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -58,7 +58,7 @@ class WeblogsControllerTest < ActionController::TestCase
     assert_difference('Weblog.count', 1) do
       create_weblog
       assert_response :redirect
-      assert !assigns(:weblog).new_record?, :message => assigns(:weblog).errors.full_messages.join('; ')
+      assert assigns(:weblog).persisted?, assigns(:weblog).errors.full_messages.join('; ')
       assert_equal users(:sjoerd), assigns(:weblog).user
     end
   end
@@ -68,7 +68,7 @@ class WeblogsControllerTest < ActionController::TestCase
     assert_no_difference('Weblog.count') do
       create_weblog(:title => nil)
       assert_response :success
-      assert assigns(:weblog).errors.on(:title)
+      assert assigns(:weblog).errors[:title].any?
     end
   end
   
@@ -131,7 +131,7 @@ class WeblogsControllerTest < ActionController::TestCase
     old_title = weblogs(:henk_weblog).title
     put :update, :weblog_archive_id => weblog_archives(:devcms_weblog_archive).id, :id => weblogs(:henk_weblog).id, :weblog => { :title => nil }
     assert_response :success
-    assert assigns(:weblog).errors.on(:title)
+    assert assigns(:weblog).errors[:title].any?
     assert_equal old_title, weblogs(:henk_weblog).reload.title
   end
   

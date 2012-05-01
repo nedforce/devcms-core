@@ -1,1 +1,1 @@
-CalendarDateSelect.format = :euro_24hr
+CalendarDateSelect.format = :euro_24hr if defined?(CalendarDateSelect)

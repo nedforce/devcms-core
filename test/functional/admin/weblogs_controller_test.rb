@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::WeblogsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -85,7 +85,7 @@ class Admin::WeblogsControllerTest < ActionController::TestCase
     put :update, :id => weblog, :weblog => {:title => nil, :description => 'updated description' }, :commit_type => 'preview'
 
     assert_response :unprocessable_entity
-    assert assigns(:weblog).errors.on(:title)
+    assert assigns(:weblog).errors[:title].any?
     assert_equal old_title, weblog.reload.title
     assert_template 'edit'
   end
@@ -95,7 +95,7 @@ class Admin::WeblogsControllerTest < ActionController::TestCase
     
     put :update, :id => weblogs(:henk_weblog).id, :weblog => {:title => nil}
     assert_response :unprocessable_entity
-    assert assigns(:weblog).errors.on(:title)
+    assert assigns(:weblog).errors[:title].any?
   end
  
 end

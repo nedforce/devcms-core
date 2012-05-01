@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class ShareMailerTest < ActionMailer::TestCase
   self.use_transactional_fixtures = true
@@ -9,11 +9,12 @@ class ShareMailerTest < ActionMailer::TestCase
     share = Share.new(:from_email_address => 'test@nedforce.nl', :from_name => 'Nedforce',
                       :to_email_address => 'testor@nedforce.nl', :to_name => 'Nedforce Testor',
                       :message => 'Test message', :node => nodes(:yet_another_page_node))
-    email = ShareMailer.create_recommendation_email(share)
+    email = ShareMailer.recommendation_email(share)
+    body = email.parts.first.body
 
     assert email.to.to_s =~ /#{share.to_email_address}/
-    assert email.body =~ /#{share.from_email_address}/
-    assert email.body =~ /#{share.from_name}/
     assert email.subject =~ /#{share.subject}/
+    assert body =~ /#{share.from_email_address}/
+    assert body =~ /#{share.from_name}/
   end
 end

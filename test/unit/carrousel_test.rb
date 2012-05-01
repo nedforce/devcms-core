@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class CarrouselTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -14,12 +14,12 @@ class CarrouselTest < ActiveSupport::TestCase
   def test_should_require_title
     assert_no_difference 'Carrousel.count' do
       carrousel = create_carrousel :title => nil
-      assert carrousel.errors.on(:title)
+      assert carrousel.errors[:title].any?
     end
     
     assert_no_difference 'Carrousel.count' do
       carrousel = create_carrousel(:title => "  ")
-      assert carrousel.errors.on(:title)
+      assert carrousel.errors[:title].any?
     end
   end
 
@@ -27,7 +27,7 @@ class CarrouselTest < ActiveSupport::TestCase
     assert_difference 'Carrousel.count', 2 do
       2.times do
         carrousel = create_carrousel(:title => 'Non-unique title')
-        assert !carrousel.errors.on(:title)
+        assert !carrousel.errors[:title].any?
       end
     end
   end

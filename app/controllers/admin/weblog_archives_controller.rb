@@ -1,6 +1,7 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +WeblogArchive+ objects.
 class Admin::WeblogArchivesController < Admin::AdminController
+  before_filter :default_format_json,  :only => :index  
 
   # The +create+ action needs the parent +Node+ object to link the new +WeblogArchive+ content node to.
   prepend_before_filter :find_parent_node, :only => [ :new, :create ]
@@ -148,6 +149,6 @@ protected
   end
 
   def find_weblogs
-    @weblogs = @weblog_archive.weblogs.accessible.all(:page => { :current => 1 })
+    @weblogs = @weblog_archive.weblogs.accessible.page(1)
   end
 end

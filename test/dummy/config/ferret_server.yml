@@ -1,0 +1,12 @@
+acceptance:
+  host: 10.0.3.21
+  port: 9010
+  pid_file: tmp/pids/ferret.pid
+  log_file: log/ferret_server.log
+  log_level: warn
+production:
+  host: 10.0.3.20
+  port: 9010
+  pid_file: tmp/pids/ferret.pid
+  log_file: log/ferret_server.log
+  log_level: warn

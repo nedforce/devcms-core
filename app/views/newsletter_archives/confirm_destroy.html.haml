@@ -1,6 +1,6 @@
 %h1= t 'newsletters.confirm_unsubscribe'
 
-- form_tag unsubscribe_newsletter_archive_path(@node.content), :method => :delete do
+= form_tag unsubscribe_newsletter_archive_path(@node.content), :method => :delete do
   = hidden_field_tag 'return_to', request.referer
   %p= t 'newsletters.really_unsubscribe?'
 

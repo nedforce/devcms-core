@@ -1,5 +1,5 @@
 .right_panel_content
   %h4= t 'contact_form_fields.new_contact_field'
 
-  - admin_remote_form_for @contact_form_field, :url => admin_contact_form_contact_form_fields_path(@contact_form, :format => 'js') do |f|
+  = admin_remote_form_for @contact_form_field, :url => admin_contact_form_contact_form_fields_path(@contact_form, :format => 'js') do |f|
     = render :partial => 'form', :object => f

@@ -1,7 +1,7 @@
 .right_panel_content
   %h1== #{t 'edit', :scope => record.controller_name} '#{h record.title}'
 
-  - admin_remote_form_for record, :url => url_for(:controller => record.controller_name, :action => :update, :format => 'html'), :update => 'right_panel_body' do |form|
+  = admin_remote_form_for record, :url => url_for(:controller => record.controller_name, :action => :update, :format => 'html'), :update => 'right_panel_body' do |form|
     = error_messages_for record.class.name.downcase
     
     = javascript_tag("document.getElementById('right_panel_body').scrollTop = 0;")
@@ -12,7 +12,7 @@
     
     - if current_user_is_admin?(record.node) || current_user_is_final_editor?(record.node)
       = render :partial => 'admin/shared/responsible_user_fields', :locals => {:form => form, :content => record}
-      
+
     = category_settings_for record
     = content_box_settings_for record
     

@@ -1,6 +1,6 @@
 %h1= t 'shared.confirm_deletion'
 
-- form_tag [@node.content.weblog_archive, @node.content], :method => :delete do
+= form_tag [@node.content.weblog_archive, @node.content], :method => :delete do
   %p= t 'weblogs.really_delete?'
 
   .formButtonCt

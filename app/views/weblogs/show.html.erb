@@ -1,9 +1,9 @@
 <div class="regularPage weblog">
-  <% readspeaker(@weblog.node.id) do |rid| %>
+  <%= readspeaker(@weblog.node.id) do |rid| %>
     <h1><span class="prefix"><%=t 'weblogs.weblog' -%></span><%=h @weblog.title -%></h1>
 
     <div class="metadata clearfix">
-      <p class="weblogDetails"><%= "#{t 'weblogs.created_on'} #{l @weblog.created_at, :format => :long} #{t 'weblogs.by'} <span class='userLogin'>#{truncate(@weblog.user.screen_name, :length => 12)}</span>, #{@weblog.weblog_posts.count} #{t((@weblog.weblog_posts.count == 1) ? 'weblogs.weblog_post' : 'weblogs.weblog_posts')}" -%></p>
+      <p class="weblogDetails"><%= "#{t 'weblogs.created_on'} #{l @weblog.created_at, :format => :long} #{t 'weblogs.by'} <span class='userLogin'>#{truncate(@weblog.user.screen_name, :length => 12)}</span>, #{@weblog.weblog_posts.count} #{t((@weblog.weblog_posts.count == 1) ? 'weblogs.weblog_post' : 'weblogs.weblog_posts')}".html_safe -%></p>
       <p class="lastUpdateDate"><%=t 'shared.last_updated' -%>: <%=l @weblog.last_updated_at, :format => :long -%></p>
     </div>
 
@@ -12,10 +12,10 @@
     <% end %>
    <div class="buttons clearfix">
     <% if logged_in? && (@weblog.is_owned_by_user?(current_user) || current_user.has_role?('admin')) %>
-      <% delete_button t('weblogs.delete_weblog') do %>
-        <%= link_to t('weblogs.delete_weblog'), destroy_weblog_archive_weblog_path(@weblog.weblog_archive, @weblog) -%>
+      <%= delete_button t('weblogs.delete_weblog') do %>
+        <%= link_to t('weblogs.delete_weblog'), weblog_archive_weblog_path(@weblog.weblog_archive, @weblog), :method => :delete %>
       <% end %>
-      <% edit_button t('weblogs.edit_weblog') do %>
+      <%= edit_button t('weblogs.edit_weblog') do %>
         <%= link_to t('weblogs.edit_weblog'), edit_weblog_archive_weblog_path(@weblog.weblog_archive, @weblog) -%>
       <% end %>
     <% end %>
@@ -26,7 +26,7 @@
     <div class="clearfix">
       <h2><%= t('weblogs.weblog_posts').titleize -%></h2>
       <% if logged_in? && @weblog.is_owned_by_user?(current_user) %>
-      <% right_new_button t('weblogs.new_weblog_post') do %>
+      <%= right_new_button t('weblogs.new_weblog_post') do %>
         <%= link_to t('weblogs.new_weblog_post'), new_weblog_archive_weblog_weblog_post_path(@weblog.weblog_archive, @weblog) -%>
       <% end %>
       <% end %>
@@ -36,7 +36,7 @@
     <% else %>
     <div class="clearfix weblogPosts">
     <% @latest_weblog_posts.each do |weblog_post| %>
-      <% readspeaker(weblog_post.node.id) do |readspeaker_id|%>
+      <%= readspeaker(weblog_post.node.id) do |readspeaker_id|%>
       <div class="weblogPost <%= cycle('oddWeblogPost', 'evenWeblogPost', :name => 'latestWeblogPosts') -%> clearfix">
         <h3><%= link_to_content_node( h(weblog_post.title), weblog_post) -%></h3>
 
@@ -66,15 +66,15 @@
         <div class="clearfix buttons">
 
           <%= readspeaker_button(:rid => readspeaker_id, :title => h(weblog_post.title)) %>
-          <% news_item_button t('weblogs.show_post') do %>
+          <%= news_item_button t('weblogs.show_post') do %>
             <%= link_to_content_node t('weblogs.show_post'), weblog_post, {}, :title => h(weblog_post.title) -%>
           <% end %>
           <% if logged_in? && (@weblog.is_owned_by_user?(current_user) || current_user.has_role?('admin')) %>
-            <% edit_button t('weblogs.edit_post') do %>
+            <%= edit_button t('weblogs.edit_post') do %>
               <%= link_to t('weblogs.edit_post'), edit_weblog_archive_weblog_weblog_post_path(@weblog.weblog_archive, @weblog, weblog_post) -%>
             <% end %>
-            <% delete_button t('weblogs.delete_post') do %>
-              <%= link_to t('weblogs.delete_post'), destroy_weblog_archive_weblog_weblog_post_path(@weblog.weblog_archive, @weblog, weblog_post) -%>
+            <%= delete_button t('weblogs.delete_post') do %>
+              <%= link_to t('weblogs.delete_post'), weblog_archive_weblog_weblog_post_path(@weblog.weblog_archive, @weblog, weblog_post), :method => :delete -%>
             <% end %>
           <% end %>
         </div>
@@ -109,7 +109,7 @@
    <% end %>
 
    <% if logged_in? && @weblog.is_owned_by_user?(current_user) && !@weblog_posts.empty? %>
-     <% right_new_button t('weblogs.new_weblog_post') do %>
+     <%= right_new_button t('weblogs.new_weblog_post') do %>
        <%= link_to t('weblogs.new_weblog_post'), new_weblog_archive_weblog_weblog_post_path(@weblog.weblog_archive, @weblog) -%>
      <% end %>
    <% end %>

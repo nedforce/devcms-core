@@ -2,7 +2,7 @@ class LoginAttempt < ActiveRecord::Base
 
   validates_presence_of :ip
 
-  named_scope :failed, :conditions => { :success => false }
+  scope :failed, :conditions => { :success => false }
 
   # Checks if the given +ip+ is blocked. If so, returns
   # the date of unblock. If not, returns +nil+.

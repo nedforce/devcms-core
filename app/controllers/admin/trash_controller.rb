@@ -15,7 +15,7 @@ class Admin::TrashController < Admin::AdminController
     @active_page = :trash
     
     @trash_items_count = Node.top_level_deleted_count
-    @trash_items = Node.top_level_deleted(:all, { :order => "#{@sort_field} #{@sort_direction}", :page => { :size => @page_limit, :current => @current_page, :skip_scoping => true, :count => @trash_items_count } })
+    @trash_items = Node.top_level_deleted(:all, { :order => "#{@sort_field} #{@sort_direction}" }).page(@current_page).per(@page_limit)
 
     respond_to do |format|
       format.html { render :layout => 'admin' }

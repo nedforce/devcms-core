@@ -41,7 +41,7 @@ private
       search_results << res
    end
 
-   PagingEnumerator.new(options[:page_size], count, false, options[:current], 1) { search_results }
+   search_results.paginate(options[:current], options[:page_size], count)   
   end
 
   # Takes an existing search string and expands it with related words from the thesaurus.
@@ -98,7 +98,7 @@ private
 
   # Returns the Ferret configuration.
   def self.ferret_configuration
-    config = DevCMS.search_configuration[:ferret]
+    config = Devcms.search_configuration[:ferret]
     Rails.logger.warn "[#{Time.now.to_s}][FerretSearcher] No ferret configuration directives found in treehouse.rb! Should this module be enabled? Using default values instead..." if config.nil?
     config || { :synonym_weight => 0.25, :proximity => 0.8 }
   end

@@ -24,7 +24,7 @@ module SearchHelper
     result = "#{prefix} <strong>"    
     result << first_page_record.to_s + ' - '
     result <<  last_page_record.to_s + '</strong>'
-    result
+    raw result
   end
 
   def print_category(category)

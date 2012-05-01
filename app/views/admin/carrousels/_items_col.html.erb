@@ -8,7 +8,7 @@ carrouselItemColPanel = new Ext.Panel({
 carrouselItemCol = new Ext.dvtr.Sorter({
   width: 510,
   ddGroup: 'TreeAndSorterDD',
-  items: <%= @item_sortlets.to_json %>,
+  items: <%= raw @item_sortlets.to_json %>,
   border: false,
   collapsed: false
 });

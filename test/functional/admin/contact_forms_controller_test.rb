@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::ContactFormsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -31,7 +31,7 @@ class Admin::ContactFormsControllerTest < ActionController::TestCase
       create_contact_form
       assert_response :success
       assert assigns(:contact_form)
-      assert !assigns(:contact_form).new_record?, :message => assigns(:contact_form).errors.full_messages.join('; ')
+      assert !assigns(:contact_form).new_record?, assigns(:contact_form).errors.full_messages.join('; ')
     end
   end
 
@@ -56,7 +56,7 @@ class Admin::ContactFormsControllerTest < ActionController::TestCase
     end
 
     assert assigns(:contact_form).new_record?
-    assert assigns(:contact_form).errors.on(:title)
+    assert assigns(:contact_form).errors[:title].any?
     assert_template 'new'
   end
 
@@ -69,7 +69,7 @@ class Admin::ContactFormsControllerTest < ActionController::TestCase
 
     assert_response :unprocessable_entity
     assert assigns(:contact_form).new_record?
-    assert assigns(:contact_form).errors.on(:title)
+    assert assigns(:contact_form).errors[:title].any?
   end
 
   def test_should_get_edit
@@ -120,7 +120,7 @@ class Admin::ContactFormsControllerTest < ActionController::TestCase
     put :update, :id => contact_form, :contact_form => { :title => nil }, :commit_type => 'preview'
 
     assert_response :unprocessable_entity
-    assert assigns(:contact_form).errors.on(:title)
+    assert assigns(:contact_form).errors[:title].any?
     assert_equal old_title, contact_form.reload.title
     assert_template 'edit'
   end
@@ -130,7 +130,7 @@ class Admin::ContactFormsControllerTest < ActionController::TestCase
 
     put :update, :id => contact_forms(:help_form).id, :contact_form => {:title => nil}
     assert_response :unprocessable_entity
-    assert assigns(:contact_form).errors.on(:title)
+    assert assigns(:contact_form).errors[:title].any?
   end
 
   protected

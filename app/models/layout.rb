@@ -64,9 +64,11 @@ class Layout
   def self.all
     if @all_layouts.blank?
       configs = {}
-      Dir[File.join(Rails.root, 'app', 'layouts', '*'), File.join(DevCMS.core_root, 'app', 'layouts', '*')].each do |layout_path|
+
+      Rails.application.config.layout_paths.collect(&:existent).flatten.each do |layout_path|
         configs[layout_path.split('/').last] = YAML.load_file( File.join(layout_path, 'config.yml')).merge({'path' => layout_path})
       end
+
       @all_layouts = configs.collect do |id, config|
         if parent = config['extends']
           config = configs[parent].merge(config) 

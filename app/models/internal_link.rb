@@ -49,12 +49,12 @@ protected
   # that the linked +Node+ instance (as identified by +linked_node+) is not
   # with a +Link+ content node.
   def linked_node_is_not_associated_with_a_link_content_node
-    errors.add_to_base(:not_linked_node) if self.linked_node && self.linked_node.content.is_a?(Link)
+    errors.add(:base, :not_linked_node) if self.linked_node && self.linked_node.content.is_a?(Link)
   end
 
   # Ensure the linked node is contained in the same site node, so that inter-site links are impossible.
   def linked_node_is_contained_in_same_site
-    errors.add_to_base(:linked_node_must_be_contained_in_same_site) if self.linked_node && self.parent && !self.parent.containing_site.self_and_descendants.include?(self.linked_node)
+    errors.add(:base, :linked_node_must_be_contained_in_same_site) if self.linked_node && self.parent && !self.parent.containing_site.self_and_descendants.include?(self.linked_node)
   end
 
 end

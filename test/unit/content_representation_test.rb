@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class ContentRepresentationTest < ActiveSupport::TestCase
 
@@ -14,7 +14,7 @@ class ContentRepresentationTest < ActiveSupport::TestCase
   def test_should_create_content_representation
     assert_difference('ContentRepresentation.count') do
       content_representation = create_content_representation
-      assert !content_representation.new_record?, content_representation.errors.full_messages
+      assert !content_representation.new_record?, content_representation.errors.full_messages.to_sentence
     end
   end
 
@@ -22,7 +22,7 @@ class ContentRepresentationTest < ActiveSupport::TestCase
     assert_no_difference('ContentRepresentation.count') do
       content_representation = create_content_representation(:parent => nil)
       assert content_representation.new_record?
-      assert content_representation.errors.on(:parent_id)
+      assert content_representation.errors[:parent_id].any?
     end
   end
 
@@ -30,7 +30,7 @@ class ContentRepresentationTest < ActiveSupport::TestCase
     assert_no_difference('ContentRepresentation.count') do
       content_representation = create_content_representation(:content => nil)
       assert content_representation.new_record?
-      assert content_representation.errors.on(:content_id)
+      assert content_representation.errors[:content_id].any?
     end
   end
 
@@ -38,7 +38,7 @@ class ContentRepresentationTest < ActiveSupport::TestCase
     assert_no_difference('ContentRepresentation.count') do
       content_representation = create_content_representation(:parent => @first_root_content_representation.parent, :content => @first_root_content_representation.content)
       assert content_representation.new_record?
-      assert content_representation.errors.on(:content_id)
+      assert content_representation.errors[:content_id].any?
     end
   end
 
@@ -47,7 +47,7 @@ class ContentRepresentationTest < ActiveSupport::TestCase
       assert_no_difference('ContentRepresentation.count') do
         content_representation = create_content_representation(:target => target)
         assert content_representation.new_record?
-        assert content_representation.errors.on(:content)
+        assert content_representation.errors[:content].any?
       end
     end
   end
@@ -61,7 +61,7 @@ class ContentRepresentationTest < ActiveSupport::TestCase
     assert_no_difference('ContentRepresentation.count') do
       content_representation = create_content_representation(:parent => @root_section_node, :content => @devcms_news_item_node)
       assert content_representation.new_record?
-      assert content_representation.errors.on(:content)
+      assert content_representation.errors[:content].any?
     end
   end
 
@@ -69,7 +69,7 @@ class ContentRepresentationTest < ActiveSupport::TestCase
     assert_difference('ContentRepresentation.count', 1) do
       content_representation = create_content_representation(:parent => nodes(:sub_site_section_node), :content => @economie_section_node)
       assert !content_representation.new_record?
-      assert !content_representation.errors.on(:content)
+      assert !content_representation.errors[:content].any?
     end
   end
 

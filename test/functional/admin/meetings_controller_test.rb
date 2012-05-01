@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::MeetingsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -72,7 +72,7 @@ class Admin::MeetingsControllerTest < ActionController::TestCase
       create_meeting_request({ :title => nil }, { :commit_type => 'preview' })
       assert_response :unprocessable_entity
       assert assigns(:meeting).new_record?
-      assert assigns(:meeting).errors.on(:title)
+      assert assigns(:meeting).errors[:title].any?
       assert_template 'new'
     end
   end
@@ -86,7 +86,7 @@ class Admin::MeetingsControllerTest < ActionController::TestCase
 
     assert_response :unprocessable_entity
     assert assigns(:meeting).new_record?
-    assert assigns(:meeting).errors.on(:title)
+    assert assigns(:meeting).errors[:title].any?
   end
 
   def test_should_get_edit
@@ -134,7 +134,7 @@ class Admin::MeetingsControllerTest < ActionController::TestCase
     put :update, :id => @meeting, :meeting => { :title => nil }, :commit_type => 'preview'
 
     assert_response :unprocessable_entity
-    assert assigns(:meeting).errors.on(:title)
+    assert assigns(:meeting).errors[:title].any?
     assert_equal old_title, @meeting.reload.title
     assert_template 'edit'
   end
@@ -145,7 +145,7 @@ class Admin::MeetingsControllerTest < ActionController::TestCase
     old_title = @meeting.title
     put :update, :id => @meeting, :meeting => { :title => nil }
     assert_response :unprocessable_entity
-    assert assigns(:meeting).errors.on(:title)
+    assert assigns(:meeting).errors[:title].any?
     assert_equal old_title, @meeting.reload.title
   end
 

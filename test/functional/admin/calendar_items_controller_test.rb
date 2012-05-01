@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::CalendarItemsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -51,7 +51,7 @@ class Admin::CalendarItemsControllerTest < ActionController::TestCase
     assert_difference('CalendarItem.count', 1) do
       create_calendar_item_request
       assert_response :success
-      assert !assigns(:calendar_item).new_record?, :message => assigns(:calendar_item).errors.full_messages.join('; ')
+      assert !assigns(:calendar_item).new_record?, assigns(:calendar_item).errors.full_messages.join('; ')
     end
   end
 
@@ -74,7 +74,7 @@ class Admin::CalendarItemsControllerTest < ActionController::TestCase
       create_calendar_item_request({ :title => nil }, { :commit_type => 'preview' })
       assert_response :unprocessable_entity
       assert assigns(:calendar_item).new_record?
-      assert assigns(:calendar_item).errors.on(:title)
+      assert assigns(:calendar_item).errors[:title].any?
       assert_template 'new'
     end
   end
@@ -88,7 +88,7 @@ class Admin::CalendarItemsControllerTest < ActionController::TestCase
     
     assert_response :unprocessable_entity
     assert assigns(:calendar_item).new_record?
-    assert assigns(:calendar_item).errors.on(:title)
+    assert assigns(:calendar_item).errors[:title].any?
   end
   
   def test_should_get_edit
@@ -138,7 +138,7 @@ class Admin::CalendarItemsControllerTest < ActionController::TestCase
     put :update, :id => calendar_item, :calendar_item => { :title => nil }, :commit_type => 'preview'
 
     assert_response :unprocessable_entity
-    assert assigns(:calendar_item).errors.on(:title)
+    assert assigns(:calendar_item).errors[:title].any?
     assert_equal old_title, calendar_item.reload.title
     assert_template 'edit'
   end
@@ -149,7 +149,7 @@ class Admin::CalendarItemsControllerTest < ActionController::TestCase
     old_title = events(:events_calendar_item_one).title
     put :update, :id => events(:events_calendar_item_one).id, :calendar_item => { :title => nil }
     assert_response :unprocessable_entity
-    assert assigns(:calendar_item).errors.on(:title)
+    assert assigns(:calendar_item).errors[:title].any?
     assert_equal old_title, events(:events_calendar_item_one).reload.title
   end
 

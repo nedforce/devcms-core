@@ -32,28 +32,24 @@ class Admin::ImagesController < Admin::AdminController
 
   # * GET /admin/images/:id/preview.jpg
   def preview
-    @image.resize!(:size => '800x500')
-    render_image
+    render_jpg_image_data @image.resize!(:size => '800x500', :format => 'jpg')
   end
 
   # * GET /admin/images/:id/thumbnail.jpg
   def thumbnail
-    @image.resize!(:size => '100x100')
-    render_image
+    render_jpg_image_data @image.resize!(:size => '100x100', :format => 'jpg')
   end
 
   def thumbnail_preview
     if @image.orientation == :vertical 
-      @image.resize!(:size => "100x", :upsample => true, :quality => 80)
+      render_jpg_image_data @image.resize!(:size => "100x", :upsample => true, :quality => 80, :format => 'jpg')
     else
-      @image.resize!(:size => [nil, 100], :upsample => true, :quality => 80)
+      render_jpg_image_data @image.resize!(:size => [nil, 100], :upsample => true, :quality => 80, :format => 'jpg')
     end
-    render_image
   end
   
   def content_box_header_preview
-    @image.resize!(:size => "#{Image::CONTENT_BOX_SIZE[:width]}x", :upsample => true, :quality => 80)
-    render_image
+    render_jpg_image_data @image.resize!(:size => "#{Image::CONTENT_BOX_SIZE[:width]}x", :upsample => true, :quality => 80, :format => 'jpg')
   end
 
   # * GET /admin/images/new
@@ -83,42 +79,38 @@ class Admin::ImagesController < Admin::AdminController
         format.html # create.html.erb
         format.xml  { render :xml => @image, :status => :created, :location => @image }
         format.js do
-          responds_to_parent do
-            render :update do |page|
-              page << "if(Ext.get('no_images_row')) Ext.get('no_images_row').remove();"
-              
-              if current_user.has_role?('admin')
-                page.insert_html(:bottom, "uploaded_images", "<tr id=\"uploaded_image_#{@image.id}\">
-                  <td>#{h(@image.title)}</td>
-                  <td>#{image_tag(thumbnail_admin_image_path(@image, :format => :jpg), :alt => h(@image.alt))}</td>
-                  <td>#{check_box_tag("image_is_for_header_#{@image.id}", "1", @image.is_for_header?, :onchange => "this.disable();" + remote_function(:url => admin_image_path(@image, :format => :jpg), :method => :put, :complete => "$('image_is_for_header_#{@image.id}').enable();", :with => "'image[is_for_header]='+$F('image_is_for_header_#{@image.id}')")+"; return false;")}</td>
-                  <td><div id='image_cropper_#{@image.id}'></div> </td>
-                </tr>")
-              else
-                page.insert_html(:bottom, "uploaded_images", "<tr id=\"uploaded_image_#{@image.id}\">
-                  <td>#{h(@image.title)}</td>
-                  <td>#{image_tag(thumbnail_admin_image_path(@image, :format => :jpg), :alt => h(@image.alt))}</td>
-                  <td><div id='image_cropper_#{@image.id}'></div> </td>
-                </tr>")           
-              end
-              
-              page.call("treePanel.refreshNodesOf", @parent_node.id)
-              page.replace_html("image_cropper_#{@image.id}", :partial => "cropper_#{@image.orientation}", :locals => { :image => @image })
-              
-              @image = Image.new # To reset fields
-              page.replace_html("right_panel_form", :partial => 'form')
+          responds_to_parent do |page|
+            page << "if(Ext.get('no_images_row')) Ext.get('no_images_row').remove();"
+            
+            if current_user.has_role?('admin')
+              page.insert_html(:bottom, "uploaded_images", "<tr id=\"uploaded_image_#{@image.id}\">
+                <td>#{h(@image.title)}</td>
+                <td>#{image_tag(thumbnail_admin_image_path(@image, :format => :jpg), :alt => h(@image.alt))}</td>
+                <td>#{check_box_tag("image_is_for_header_#{@image.id}", "1", @image.is_for_header?, :onchange => "this.disable();" + remote_function(:url => admin_image_path(@image, :format => :jpg), :method => :put, :complete => "$('image_is_for_header_#{@image.id}').enable();", :with => "'image[is_for_header]='+$F('image_is_for_header_#{@image.id}')")+"; return false;")}</td>
+                <td><div id='image_cropper_#{@image.id}'></div> </td>
+              </tr>")
+            else
+              page.insert_html(:bottom, "uploaded_images", "<tr id=\"uploaded_image_#{@image.id}\">
+                <td>#{h(@image.title)}</td>
+                <td>#{image_tag(thumbnail_admin_image_path(@image, :format => :jpg), :alt => h(@image.alt))}</td>
+                <td><div id='image_cropper_#{@image.id}'></div> </td>
+              </tr>")           
             end
+            
+            page.call("treePanel.refreshNodesOf", @parent_node.id)
+            page.replace_html("image_cropper_#{@image.id}", :partial => "cropper_#{@image.orientation}", :locals => { :image => @image })
+            
+            @image = Image.new # To reset fields
+            page.replace_html("right_panel_form", :partial => 'form')
           end
         end
       else
         format.html { render :action => 'new' }
         format.xml  { render :xml => @image.errors, :status => :unprocessable_entity }
         format.js do
-          responds_to_parent do
-            render :update do |page|
-              # rerender form with error messages:
-              page.replace_html("right_panel_form", :partial => 'form')
-            end
+          responds_to_parent do |page|
+            # rerender form with error messages:
+            page.replace_html("right_panel_form", :partial => 'form')
           end
         end
       end
@@ -146,16 +138,18 @@ class Admin::ImagesController < Admin::AdminController
   protected
 
     def find_image
-      @image = Image.select_all_columns.find(params[:id])
+      @image = Image.find(params[:id])
     end
 
     def find_sibling_images
-      @sibling_images = Image.accessible.select_all_columns.all(:conditions => ["nodes.ancestry = :parent_child_ancestry", {:parent_child_ancestry => @parent_node.child_ancestry }])
+      @sibling_images = Image.accessible.all(:conditions => ["nodes.ancestry = :parent_child_ancestry", {:parent_child_ancestry => @parent_node.child_ancestry }])
     end
 
-    def render_image
+    def render_jpg_image_data(image_data)
       respond_to do |format|
-        format.jpg { render_flex_image(@image) }
+        format.any do
+          send_data(image_data, :type => 'image/jpeg', :disposition => 'inline')   
+        end      
       end
     end
 

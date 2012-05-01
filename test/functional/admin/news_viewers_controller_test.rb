@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::NewsViewersControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -42,7 +42,7 @@ class Admin::NewsViewersControllerTest < ActionController::TestCase
     assert_difference('NewsViewer.count') do
       create_news_viewer
       assert_response :success
-      assert !assigns(:news_viewer).new_record?, :message => assigns(:news_viewer).errors.full_messages.join('; ')
+      assert !assigns(:news_viewer).new_record?, assigns(:news_viewer).errors.full_messages.join('; ')
     end
   end
 
@@ -65,7 +65,7 @@ class Admin::NewsViewersControllerTest < ActionController::TestCase
       create_news_viewer({ :title => nil }, { :commit_type => 'preview' })
       assert_response :unprocessable_entity
       assert assigns(:news_viewer).new_record?
-      assert assigns(:news_viewer).errors.on(:title)
+      assert assigns(:news_viewer).errors[:title].any?
       assert_template 'new'
     end
   end
@@ -79,7 +79,7 @@ class Admin::NewsViewersControllerTest < ActionController::TestCase
 
     assert_response :unprocessable_entity
     assert assigns(:news_viewer).new_record?
-    assert assigns(:news_viewer).errors.on(:title)
+    assert assigns(:news_viewer).errors[:title].any?
   end
 
   def test_should_get_edit
@@ -126,7 +126,7 @@ class Admin::NewsViewersControllerTest < ActionController::TestCase
     put :update, :id => @news_viewer, :news_viewer => { :title => nil, :description => 'updated description' }, :commit_type => 'preview'
 
     assert_response :unprocessable_entity
-    assert assigns(:news_viewer).errors.on(:title)
+    assert assigns(:news_viewer).errors[:title].any?
     assert_equal old_title, @news_viewer.reload.title
     assert_template 'edit'
   end
@@ -136,7 +136,7 @@ class Admin::NewsViewersControllerTest < ActionController::TestCase
 
     put :update, :id => @news_viewer.id, :news_viewer => { :title => nil }
     assert_response :unprocessable_entity
-    assert assigns(:news_viewer).errors.on(:title)
+    assert assigns(:news_viewer).errors[:title].any?
   end
 
 protected

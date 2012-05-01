@@ -1,6 +1,6 @@
 <div id="right_panel_form"></div>
 
-<% javascript_tag do %>
+<%= javascript_tag do %>
 Ext.QuickTips.init();
 
 var carrouselForm = new Ext.dvtr.ContentNodeFormPanel({
@@ -86,7 +86,7 @@ carrouselForm.addButton({
 });
 
 // Show validation errors and handle marking of invalid fields.
-var errors = <%= @carrousel.errors.to_json -%>;
+var errors = <%= raw @carrousel.errors.to_json -%>;
 if (errors.length > 0) {
     carrouselForm.insertErrorMessages('<%= error_messages_for :carrousel %>', '<%= @carrousel.class.to_s.underscore -%>');
 }

@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::AgendaItemsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -36,7 +36,7 @@ class Admin::AgendaItemsControllerTest < ActionController::TestCase
     assert_difference('AgendaItem.count') do
       create_agenda_item
       assert_response :success
-      assert !assigns(:agenda_item).new_record?, :message => assigns(:agenda_item).errors.full_messages.join('; ')
+      assert !assigns(:agenda_item).new_record?, assigns(:agenda_item).errors.full_messages.join('; ')
     end
   end
 
@@ -59,7 +59,7 @@ class Admin::AgendaItemsControllerTest < ActionController::TestCase
       create_agenda_item({ :description => nil }, { :commit_type => 'preview' })
       assert_response :unprocessable_entity
       assert assigns(:agenda_item).new_record?
-      assert assigns(:agenda_item).errors.on(:description)
+      assert assigns(:agenda_item).errors[:description].any?
       assert_template 'new'
     end
   end
@@ -73,7 +73,7 @@ class Admin::AgendaItemsControllerTest < ActionController::TestCase
     
     assert_response :unprocessable_entity
     assert assigns(:agenda_item).new_record?
-    assert assigns(:agenda_item).errors.on(:description)
+    assert assigns(:agenda_item).errors[:description].any?
   end
   
   def test_should_get_edit
@@ -123,7 +123,7 @@ class Admin::AgendaItemsControllerTest < ActionController::TestCase
     put :update, :id => agenda_item, :agenda_item => { :description => nil }, :commit_type => 'preview'
 
     assert_response :unprocessable_entity
-    assert assigns(:agenda_item).errors.on(:description)
+    assert assigns(:agenda_item).errors[:description].any?
     assert_equal old_description, agenda_item.reload.description
     assert_template 'edit'
   end
@@ -133,7 +133,7 @@ class Admin::AgendaItemsControllerTest < ActionController::TestCase
     
     put :update, :id => agenda_items(:agenda_item_one).id, :agenda_item => { :description => nil }
     assert_response :unprocessable_entity
-    assert assigns(:agenda_item).errors.on(:description)
+    assert assigns(:agenda_item).errors[:description].any?
   end
 
 protected

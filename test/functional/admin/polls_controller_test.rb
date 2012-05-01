@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::PollsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -27,7 +27,7 @@ class Admin::PollsControllerTest < ActionController::TestCase
       create_poll
       assert_response :success
       assert assigns(:poll)
-      assert !assigns(:poll).new_record?, :message => assigns(:poll).errors.full_messages.join('; ')
+      assert !assigns(:poll).new_record?, assigns(:poll).errors.full_messages.join('; ')
     end
   end
 
@@ -50,7 +50,7 @@ class Admin::PollsControllerTest < ActionController::TestCase
       create_poll({ :title => nil }, { :commit_type => 'preview' })
       assert_response :unprocessable_entity
       assert assigns(:poll).new_record?
-      assert assigns(:poll).errors.on(:title)
+      assert assigns(:poll).errors[:title].any?
       assert_template 'new'
     end
   end
@@ -63,7 +63,7 @@ class Admin::PollsControllerTest < ActionController::TestCase
     end
     assert_response :unprocessable_entity
     assert assigns(:poll).new_record?
-    assert assigns(:poll).errors.on(:title)
+    assert assigns(:poll).errors[:title].any?
   end
   
   def test_should_get_edit
@@ -113,7 +113,7 @@ class Admin::PollsControllerTest < ActionController::TestCase
     put :update, :id => poll, :poll => { :title => nil }, :commit_type => 'preview'
 
     assert_response :unprocessable_entity
-    assert assigns(:poll).errors.on(:title)
+    assert assigns(:poll).errors[:title].any?
     assert_equal old_title, poll.reload.title
     assert_template 'edit'
   end
@@ -123,7 +123,7 @@ class Admin::PollsControllerTest < ActionController::TestCase
 
     put :update, :id => polls(:healthcare_poll).id, :poll => { :title => nil }
     assert_response :unprocessable_entity
-    assert assigns(:poll).errors.on(:title)
+    assert assigns(:poll).errors[:title].any?
   end
 
   protected

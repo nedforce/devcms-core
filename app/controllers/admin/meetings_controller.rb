@@ -1,6 +1,7 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of 
 # the application relating to +Meeting+ objects.
 class Admin::MeetingsController < Admin::AdminController
+  before_filter :default_format_json,  :only => :destroy 
 
   # The +new+ and +create+ actions needs a parent +Node+ object.
   prepend_before_filter :find_parent_node,  :only => [ :new, :create ]

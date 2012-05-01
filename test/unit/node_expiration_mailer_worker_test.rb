@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class NodeExpirationMailerWorkerTest < ActionMailer::TestCase
   self.use_transactional_fixtures = true
@@ -7,17 +7,17 @@ class NodeExpirationMailerWorkerTest < ActionMailer::TestCase
     n1 = nodes(:editor_section_page_node)
     n1.responsible_user = users(:editor)
     n1.expires_on = 5.days.ago
-    n1.save(false)
+    n1.save(:validate => false)
     
     n2 = nodes(:help_page_node)
     n2.responsible_user = users(:editor)
     n2.expires_on = 2.days.ago
-    n2.save(false)
+    n2.save(:validate => false)
     
     n4 = nodes(:contact_page_node)
     n4.responsible_user = users(:final_editor)
     n4.expires_on = 2.weeks.ago
-    n4.save(false)
+    n4.save(:validate => false)
   end
 
   def test_notify_authors

@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::LinksControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -40,7 +40,7 @@ class Admin::LinksControllerTest < ActionController::TestCase
     assert_difference('InternalLink.count') do
       create_link(:linked_node_id => nodes(:root_section_node).id, :type => 'InternalLink')
       assert_response :success
-      assert !assigns(:link).new_record?, :message => assigns(:link).errors.full_messages.join('; ')
+      assert !assigns(:link).new_record?, assigns(:link).errors.full_messages.join('; ')
     end
   end
   
@@ -50,7 +50,7 @@ class Admin::LinksControllerTest < ActionController::TestCase
     assert_difference('ExternalLink.count') do
       create_link(:url => 'http://www.google.com', :type => 'ExternalLink')
       assert_response :success
-      assert !assigns(:link).new_record?, :message => assigns(:link).errors.full_messages.join('; ')
+      assert !assigns(:link).new_record?, assigns(:link).errors.full_messages.join('; ')
     end
   end
   
@@ -63,7 +63,7 @@ class Admin::LinksControllerTest < ActionController::TestCase
     
     assert_response :unprocessable_entity
     assert assigns(:link).new_record?
-    assert assigns(:link).errors.on_base
+    assert assigns(:link).errors[:type].any?
   end
   
   def test_should_require_url_for_external_link
@@ -75,7 +75,7 @@ class Admin::LinksControllerTest < ActionController::TestCase
     
     assert_response :unprocessable_entity
     assert assigns(:link).new_record?
-    assert assigns(:link).errors.on(:url)
+    assert assigns(:link).errors[:url].any?
   end
   
   def test_should_require_linked_node_id_for_internal_link
@@ -87,7 +87,7 @@ class Admin::LinksControllerTest < ActionController::TestCase
     
     assert_response :unprocessable_entity
     assert assigns(:link).new_record?
-    assert assigns(:link).errors.on(:linked_node)
+    assert assigns(:link).errors[:linked_node].any?
   end
   
   def test_should_get_edit
@@ -112,7 +112,7 @@ class Admin::LinksControllerTest < ActionController::TestCase
     
     put :update, :id => links(:internal_link).id, :link => { :linked_node_id => nil }
     assert_response :unprocessable_entity
-    assert assigns(:link).errors.on(:linked_node)
+    assert assigns(:link).errors[:linked_node].any?
   end
 
 protected

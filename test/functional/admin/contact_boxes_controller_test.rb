@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::ContactBoxesControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -29,7 +29,7 @@ class Admin::ContactBoxesControllerTest < ActionController::TestCase
     assert_difference('ContactBox.count') do
       create_contact_box
       assert_response :success
-      assert !assigns(:contact_box).new_record?, :message => assigns(:contact_box).errors.full_messages.join('; ')
+      assert !assigns(:contact_box).new_record?, assigns(:contact_box).errors.full_messages.join('; ')
     end
   end
 
@@ -42,7 +42,7 @@ class Admin::ContactBoxesControllerTest < ActionController::TestCase
     
     assert_response :unprocessable_entity
     assert assigns(:contact_box).new_record?
-    assert assigns(:contact_box).errors.on(:title)
+    assert assigns(:contact_box).errors[:title].any?
   end
 
   def test_should_get_edit
@@ -67,7 +67,7 @@ class Admin::ContactBoxesControllerTest < ActionController::TestCase
 
     put :update, :id => @contact_box.id, :contact_box => { :title => nil }
     assert_response :unprocessable_entity
-    assert assigns(:contact_box).errors.on(:title)
+    assert assigns(:contact_box).errors[:title].any?
   end
 
   protected

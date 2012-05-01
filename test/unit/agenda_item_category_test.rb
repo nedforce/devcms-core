@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class AgendaItemCategoryTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -16,14 +16,14 @@ class AgendaItemCategoryTest < ActiveSupport::TestCase
   def test_should_require_name
     assert_no_difference 'AgendaItemCategory.count' do
       agenda_item_category = create_agenda_item_category(:name => nil)
-      assert agenda_item_category.errors.on(:name)
+      assert agenda_item_category.errors[:name].any?
     end
   end
   
   def test_should_require_unique_name
     assert_no_difference 'AgendaItemCategory.count' do
       agenda_item_category = create_agenda_item_category(:name => @agenda_item_category.name)
-      assert agenda_item_category.errors.on(:name)
+      assert agenda_item_category.errors[:name].any?
     end
   end
   

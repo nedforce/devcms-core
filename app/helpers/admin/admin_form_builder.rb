@@ -6,7 +6,7 @@ class Admin::AdminFormBuilder < ActionView::Helpers::FormBuilder
       args              = (args << options)
       id, name          = id_and_name(attr)
       @template.wrap_with_label(
-        super,
+        super(attr, *args),
         { :text          => (options[:label] || @object.class.human_attribute_name(attr)),
           :for           => "#{@object_name}_#{attr}",
           :for_check_box => options[:for_check_box] },
@@ -18,14 +18,14 @@ class Admin::AdminFormBuilder < ActionView::Helpers::FormBuilder
   def html_editor(attr, options = {})
     id, name = id_and_name(attr)
     html     = @template.html_editor_tag(name, @object.send(attr), {:id => id}.merge(options))
-    html     = @template.content_tag(:div, html, :class => 'fieldWithErrors') if @object.errors.on(attr)
+    html     = @template.content_tag(:div, html, :class => 'fieldWithErrors') if @object.errors[attr].any?
     @template.wrap_with_label(html, { :text => (options[:label] || attr.to_s.humanize), :for => id }, { :id => "#{id}_wrapper" }.merge(options[:wrapper]||{}))
   end
 
   def select_field(attr, values, options = {}, html_options = {})
     id, name = id_and_name(attr)
     html     = @template.select(@object_name, attr, values, {:id => id}.merge(options), html_options)
-    html     = @template.content_tag(:div, html, :class => 'fieldWithErrors') if @object.errors.on(attr)
+    html     = @template.content_tag(:div, html, :class => 'fieldWithErrors') if @object.errors[attr].any?
     @template.wrap_with_label(html, { :text => (options[:label] || attr.to_s.humanize), :for => id }, { :id => "#{id}_wrapper" }.merge(options[:wrapper]||{}))
   end
 
@@ -33,7 +33,7 @@ class Admin::AdminFormBuilder < ActionView::Helpers::FormBuilder
     id, name = id_and_name(attr)
     label    = options.delete(:label)
     html     = @template.select_tag(attr, values, { :id => id }.merge(options))
-    html     = @template.content_tag(:div, html, :class => 'fieldWithErrors') if @object.errors.on(attr)
+    html     = @template.content_tag(:div, html, :class => 'fieldWithErrors') if @object.errors[attr].any?
     @template.wrap_with_label(html, { :text => label, :for => id }, { :id => "#{id}_wrapper" }.merge(options[:wrapper]||{}))
   end
   

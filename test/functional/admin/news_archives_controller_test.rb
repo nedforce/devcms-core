@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::NewsArchivesControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -62,7 +62,7 @@ class Admin::NewsArchivesControllerTest < ActionController::TestCase
     assert_difference('NewsArchive.count') do
       create_news_archive
       assert_response :success
-      assert !assigns(:news_archive).new_record?, :message => assigns(:news_archive).errors.full_messages.join('; ')
+      assert !assigns(:news_archive).new_record?, assigns(:news_archive).errors.full_messages.join('; ')
     end
   end
 
@@ -85,7 +85,7 @@ class Admin::NewsArchivesControllerTest < ActionController::TestCase
       create_news_archive({ :title => nil }, { :commit_type => 'preview' })
       assert_response :unprocessable_entity
       assert assigns(:news_archive).new_record?
-      assert assigns(:news_archive).errors.on(:title)
+      assert assigns(:news_archive).errors[:title].any?
       assert_template 'new'
     end
   end
@@ -99,7 +99,7 @@ class Admin::NewsArchivesControllerTest < ActionController::TestCase
 
     assert_response :unprocessable_entity
     assert assigns(:news_archive).new_record?
-    assert assigns(:news_archive).errors.on(:title)
+    assert assigns(:news_archive).errors[:title].any?
   end
 
   def test_should_get_edit
@@ -149,7 +149,7 @@ class Admin::NewsArchivesControllerTest < ActionController::TestCase
     put :update, :id => news_archive, :news_archive => { :title => nil, :description => 'updated description' }, :commit_type => 'preview'
 
     assert_response :unprocessable_entity
-    assert assigns(:news_archive).errors.on(:title)
+    assert assigns(:news_archive).errors[:title].any?
     assert_equal old_title, news_archive.reload.title
     assert_template 'edit'
   end
@@ -159,7 +159,7 @@ class Admin::NewsArchivesControllerTest < ActionController::TestCase
 
     put :update, :id => news_archives(:devcms_news).id, :news_archive => { :title => nil }
     assert_response :unprocessable_entity
-    assert assigns(:news_archive).errors.on(:title)
+    assert assigns(:news_archive).errors[:title].any?
   end
 
 protected

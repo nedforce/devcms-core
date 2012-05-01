@@ -29,7 +29,7 @@ class Site < Section
     :expiration_container=> true
   })
   
-  VALID_DOMAIN_REGEXP = /\A(?:[A-Z0-9\-]+\.)+(?:[A-Z]{2,4}|museum|travel|local)(\:\d+)?\Z/i
+  VALID_DOMAIN_REGEXP = /\A((?:[A-Z0-9\-]+\.)+(?:[A-Z]{2,4}|museum|travel|local)|localhost)\Z/i
 
   validates_presence_of   :original_domain, :unless => Proc.new { |s| s.parent.blank? }
   validates_format_of     :domain, :with => VALID_DOMAIN_REGEXP, :unless => Proc.new { |s| s.original_domain.nil? }
@@ -58,6 +58,6 @@ class Site < Section
 protected
 
   def ensure_parent_is_root
-    self.errors.add_to_base(:parent_must_be_root_or_not_a_site) if self.parent && !self.parent.root?
+    self.errors.add(:base, :parent_must_be_root_or_not_a_site) if self.parent && !self.parent.root?
   end
 end

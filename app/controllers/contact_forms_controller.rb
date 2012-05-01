@@ -48,7 +48,7 @@ class ContactFormsController < ApplicationController
           end
         else
           # Send response over e-mail
-          ContactFormMailer.deliver_message(@contact_form, @entered_fields)
+          ContactFormMailer.contact_message(@contact_form, @entered_fields).deliver
         end
         format.html # send_message.html.erb
       else

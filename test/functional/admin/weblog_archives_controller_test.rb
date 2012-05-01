@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::WeblogArchivesControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -96,7 +96,7 @@ class Admin::WeblogArchivesControllerTest < ActionController::TestCase
     assert_difference('WeblogArchive.count') do
       create_weblog_archive
       assert_response :success
-      assert !assigns(:weblog_archive).new_record?, :message => assigns(:weblog_archive).errors.full_messages.join('; ')
+      assert !assigns(:weblog_archive).new_record?, assigns(:weblog_archive).errors.full_messages.join('; ')
     end
   end
 
@@ -119,7 +119,7 @@ class Admin::WeblogArchivesControllerTest < ActionController::TestCase
       create_weblog_archive({ :title => nil }, { :commit_type => 'preview' })
       assert_response :unprocessable_entity
       assert assigns(:weblog_archive).new_record?
-      assert assigns(:weblog_archive).errors.on(:title)
+      assert assigns(:weblog_archive).errors[:title].any?
       assert_template 'new'
     end
   end
@@ -133,7 +133,7 @@ class Admin::WeblogArchivesControllerTest < ActionController::TestCase
 
     assert_response :unprocessable_entity
     assert assigns(:weblog_archive).new_record?
-    assert assigns(:weblog_archive).errors.on(:title)
+    assert assigns(:weblog_archive).errors[:title].any?
   end
 
   def test_should_get_edit
@@ -183,7 +183,7 @@ class Admin::WeblogArchivesControllerTest < ActionController::TestCase
     put :update, :id => weblog_archive, :weblog_archive => { :title => nil, :description => 'updated_body'}, :commit_type => 'preview'
 
     assert_response :unprocessable_entity
-    assert assigns(:weblog_archive).errors.on(:title)
+    assert assigns(:weblog_archive).errors[:title].any?
     assert_equal old_title, weblog_archive.reload.title
     assert_template 'edit'
   end
@@ -193,7 +193,7 @@ class Admin::WeblogArchivesControllerTest < ActionController::TestCase
 
     put :update, :id => weblog_archives(:devcms_weblog_archive).id, :weblog_archive => {:title => nil}
     assert_response :unprocessable_entity
-    assert assigns(:weblog_archive).errors.on(:title)
+    assert assigns(:weblog_archive).errors[:title].any?
   end
 
 protected

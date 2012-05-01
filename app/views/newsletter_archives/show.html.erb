@@ -3,17 +3,17 @@
   <% if logged_in? %>
   <div id="subscription_box">
     <% if @newsletter_archive.has_subscription_for?(current_user) %>
-    <% form_tag unsubscribe_newsletter_archive_path(@newsletter_archive), :method => :delete do %>
+    <%= form_tag unsubscribe_newsletter_archive_path(@newsletter_archive), :method => :delete do %>
       <div><%= submit_tag t('newsletters.unsubscribe_from_this_newsletter'), :class => 'submit' -%></div>
     <% end %>
     <% else %>
-    <% form_tag subscribe_newsletter_archive_path(@newsletter_archive), :method => :post do %>
+    <%= form_tag subscribe_newsletter_archive_path(@newsletter_archive), :method => :post do %>
       <div><%= submit_tag t('newsletters.subscribe_to_this_newsletter'), :class => 'submit' -%></div>
     <% end %>
     <% end %>
   </div>
   <% end %>
-<% readspeaker(@newsletter_archive.node.id) do |rid|%>
+<%= readspeaker(@newsletter_archive.node.id) do |rid|%>
   <h1><%=h @newsletter_archive.title -%></h1>
 
   <%= render :partial => '/shared/metadata', :locals => { :last_update_date => @newsletter_archive.last_updated_at } %>
@@ -30,7 +30,7 @@
 
   <% @latest_newsletter_editions.each do |newsletter_edition| %>
     <div class="newsletterEdition">
-      <% readspeaker(newsletter_edition.node.id) do |readspeaker_id| %>
+      <%= readspeaker(newsletter_edition.node.id) do |readspeaker_id| %>
       <h2><%= link_to_content_node h(newsletter_edition.title), newsletter_edition -%></h2>
 
       <%= render :partial => '/shared/metadata', :locals => { :publication_date => newsletter_edition.publication_start_date, :last_update_date => newsletter_edition.updated_at } %>
@@ -40,7 +40,7 @@
       </div>
 
       <div class="buttons clearfix">
-        <% news_item_button t('newsletters.full_edition') do %>
+        <%= news_item_button t('newsletters.full_edition') do %>
           <%= link_to_content_node t('newsletters.full_edition'), newsletter_edition, {}, :class => 'article', :title => h(newsletter_edition.title) -%>
         <% end %>
         <%= readspeaker_button(:rid => readspeaker_id, :title => h(newsletter_edition.title)) %>

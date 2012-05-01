@@ -47,7 +47,6 @@
 # * Requires uniqueness of +login+.
 # * Requires uniqueness of +email_address+.
 # * Requires +password_confirmation+ to confirm (i.e., be equal to) +password+, if no password is set yet
-# * Requires syntactic validity of +email_address+ (see the +README+ of the +validates_email_format_of+ for details).
 # * Requires that +login+ is not a reserved login.
 # * Requires +sex+ to be either male ('m') or female ('f')
 #
@@ -115,10 +114,11 @@ class User < ActiveRecord::Base
   validates_format_of       :login, :with => /\A[a-z0-9_\-]+\z/i, :on => :create, :unless => Proc.new { |user| user.login.blank? }
 
   validates_presence_of     :email_address
-  validates_email_format_of :email_address, :allow_blank => true
-  # To make sure editing still checks uniqueness
-  validates_uniqueness_of   :email_address, :case_sensitive => false, :if => Proc.new { |user| !user.new_record? }
 
+  validates :email_address, :email => { :allow_blank => true }  
+    
+  # To make sure editing still checks uniqueness
+  validates_uniqueness_of   :email_address, :case_sensitive => false, :if => :persisted?
 
   validates_presence_of     :verification_code
 
@@ -136,7 +136,7 @@ class User < ActiveRecord::Base
   before_create :validate_uniqueness_of_email
 
   # Make sure a verification code is set when a user first registers.
-  before_validation_on_create :set_verification_code
+  before_validation :set_verification_code, :on => :create
   
   after_create :send_verification_email_or_verify
 
@@ -217,14 +217,14 @@ class User < ActiveRecord::Base
   def remember_me_until(time)
     self.remember_token_expires_at = time
     self.remember_token            = encrypt("#{email_address}--#{remember_token_expires_at}")
-    save(false)
+    save(:validate => false)
   end
 
   # Forgets the user, if the user is currently being remembered.
   def forget_me
     self.remember_token_expires_at = nil
     self.remember_token            = nil
-    save(false)
+    save(:validate => false)
   end
 
   def is_privileged?
@@ -277,7 +277,7 @@ class User < ActiveRecord::Base
   # Returns true on success, false if the role is invalid.
   def give_role_on(role_name, node)
     ra = self.role_assignments.create(:node => node, :name => role_name)
-    return !ra.new_record?
+    return ra.persisted?
   end
 
   # Removes any role assigned to the given node.
@@ -318,7 +318,7 @@ class User < ActiveRecord::Base
   def self.send_invitation_email!(email_address)
     return false if email_address.blank?
 
-    UserMailer.deliver_invitation_email(email_address, self.generate_invitation_code(email_address))
+    UserMailer.invitation_email(email_address, self.generate_invitation_code(email_address)).deliver
 
     true
   rescue
@@ -327,7 +327,7 @@ class User < ActiveRecord::Base
 
   # TODO: Documentation
   def send_verification_email_or_verify
-    Settler[:user_verify] ? UserMailer.deliver_verification_email(self) : self.verify!
+    Settler[:user_verify] ? UserMailer.verification_email(self).deliver : self.verify!
   end
 
   # Verify a given +invitation_code+ based on the supplied +email_address+.
@@ -410,13 +410,13 @@ protected
   # Prevents users from registering reserved logins.
   def should_not_allow_reserved_login
     # TODO: Move to global setting & generalize unit test
-    errors.add(:login, :reserved_login) if self.login =~ DevCMS.reserved_logins_regex
+    errors.add(:login, :reserved_login) if self.login =~ Devcms.reserved_logins_regex
   end
 
   # Prevents information leakage, validates the email and returns false to prevent a save
   def validate_uniqueness_of_email
     user = User.first(:conditions => ["upper(email_address) = upper(?)", email_address])
-    UserMailer.deliver_email_used_to_create_account(user) if user
+    UserMailer.email_used_to_create_account(user).deliver if user
     return !user
   end
 

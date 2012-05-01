@@ -1,24 +1,28 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class LinkTest < ActiveSupport::TestCase
   def test_should_not_create_link_without_type
     assert_no_difference 'Link.count' do
-      l = create_link
-      assert l.errors.on_base
+      l = build_link
+      l.type = nil
+      l.valid?
+      assert l.errors[:type].any?
     end
   end
   
   def test_should_not_create_link_with_invalid_type
     assert_no_difference 'Link.count' do
-      l = create_link(:type => 'FooBarBazQuux')
-      assert l.errors.on_base
+      l = build_link
+      l.type = 'FooBarBazQuux'
+      l.valid?      
+      assert l.errors[:type].any?
     end
   end
   
 protected
   
-  def create_link(options = {})
-    Link.create({:parent => nodes(:root_section_node), :title => "Dit is een link.", :description => "Geen fratsen!" }.merge(options))
+  def build_link(options = {})
+    Link.new({:parent => nodes(:root_section_node), :title => "Dit is een link.", :description => "Geen fratsen!" }.merge(options))
   end
   
 end

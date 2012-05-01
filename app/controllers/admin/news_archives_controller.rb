@@ -12,9 +12,7 @@ protected
 
   # Finds recent news items.
   def find_recent_news_items
-    @news_items = @news_archive.news_items.accessible.all( :include => [ :node ],
-                                                           :page => { :size => 25, :current => 1 }
-                                                          )
+    @news_items = @news_archive.news_items.accessible.includes(:node).page(1).per(25)
     @news_items_for_table  = @news_items.to_a
     @latest_news_items     = @news_items_for_table[0..7]
     @news_items_for_table -= @latest_news_items

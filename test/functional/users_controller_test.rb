@@ -1,14 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
-
- DevCMS.instance_eval do
-    def users 
-      {
-        :verify       => true,
-        :allow_invite => true,
-        :invite_only  => true
-      }
-    end
-  end
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class UsersControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -41,7 +31,7 @@ class UsersControllerTest < ActionController::TestCase
     assert_equal users(:sjoerd), assigns(:user)
     assert_select "#email_address"
     assert_select "[href=?]", "http://#{@request.host}/users/#{users(:sjoerd).login}/edit"
-    assert_select ".reg_form_additional_info_header"
+    assert_select ".reg_form_additional_info_header"    
   end
 
   def test_should_not_get_new_for_invalid_invitation_code_or_invitation_email
@@ -111,7 +101,7 @@ class UsersControllerTest < ActionController::TestCase
     assert_no_difference 'User.count' do
       create_user(:login => nil)
     end
-    assert assigns(:user).errors.on(:login)
+    assert assigns(:user).errors[:login].any?
     assert_response :unprocessable_entity
   end
   
@@ -119,7 +109,7 @@ class UsersControllerTest < ActionController::TestCase
     assert_no_difference 'User.count' do
       create_user(:login => users(:gerjan).login.upcase)
     end
-    assert assigns(:user).errors.on(:login)
+    assert assigns(:user).errors[:login].any?
     assert_response :unprocessable_entity
   end
   
@@ -127,7 +117,7 @@ class UsersControllerTest < ActionController::TestCase
     assert_no_difference 'User.count' do
       create_user(:login => 'burgemeester')
     end
-    assert assigns(:user).errors.on(:login)
+    assert assigns(:user).errors[:login].any?
     assert_response :unprocessable_entity
   end
   
@@ -135,7 +125,7 @@ class UsersControllerTest < ActionController::TestCase
     assert_no_difference 'User.count' do
       create_user(:password => nil)
     end
-    assert assigns(:user).errors.on(:password)
+    assert assigns(:user).errors[:password].any?
     assert_response :unprocessable_entity
   end
 
@@ -143,7 +133,7 @@ class UsersControllerTest < ActionController::TestCase
     assert_no_difference 'User.count' do
       create_user(:password_confirmation => nil)
     end
-    assert assigns(:user).errors.on(:password_confirmation)
+    assert assigns(:user).errors[:password_confirmation].any?
     assert_response :unprocessable_entity
   end
 
@@ -185,21 +175,21 @@ class UsersControllerTest < ActionController::TestCase
     login_as :sjoerd
     put :update, :id => users(:sjoerd).login, :user => {:first_name => 'Sjors'}
     assert_redirected_to user_path(users(:sjoerd))
-    assert flash.has_key?(:notice)
+    assert flash.key?(:notice)
     assert_equal 'Sjors', assigns(:user).first_name
   end
   
   def test_should_not_update_user_with_invalid_attr
     login_as :sjoerd
-    put :update, :id => users(:sjoerd).login, :user => {:email_address => 'sjoerd@invalid'}
+    put :update, :id => users(:sjoerd).login, :user => {:email_address => 'sjoerd@invalid'}, :old_password => 'sjoerd'
     assert_response :unprocessable_entity
-    assert assigns(:user).errors.on(:email_address)
+    assert assigns(:user).errors[:email_address].any?
   end
   
   def test_update_should_require_login
     put :update, :id => users(:sjoerd).login, :user => {:email_address => 'sjoerd@nedforce.nl'}
     assert_response :redirect
-    assert flash.has_key?(:warning)
+    assert flash.key?(:warning)
   end
   
   def test_update_should_require_owner
@@ -213,7 +203,7 @@ class UsersControllerTest < ActionController::TestCase
     get :verification, :id => u.login, :code => u.verification_code
     assert assigns(:user).verified, 'User not verified!'
     assert_response :redirect
-    assert flash.has_key?(:notice), "Flash wasn't set."
+    assert flash.key?(:notice), "Flash wasn't set."
   end
   
   def test_should_not_verify_user_on_invalid_code
@@ -230,7 +220,7 @@ class UsersControllerTest < ActionController::TestCase
       get :send_verification_email, :id => users(:unverified_user).login
       assert_not_equal prev_code, assigns(:user).reload.verification_code
       assert_response :redirect
-      assert flash.has_key?(:notice), "Flash wasn't set."
+      assert flash.key?(:notice), "Flash wasn't set."
     end
   end
   
@@ -240,7 +230,7 @@ class UsersControllerTest < ActionController::TestCase
       get :send_verification_email, :id => users(:sjoerd).login
       assert_equal prev_code, assigns(:user).reload.verification_code
       assert_response :redirect
-      assert flash.has_key?(:warning), "Flash wasn't set."
+      assert flash.key?(:warning), "Flash wasn't set."
     end
   end
   
@@ -253,13 +243,13 @@ class UsersControllerTest < ActionController::TestCase
   protected
 
     def create_user(attributes = {}, options = {})
-      invitation_email = options.has_key?(:invitation_email) ? options[:invitation_email] : 'test@test.nl'
-      invitation_code  = options.has_key?(:invitation_code)  ? options[:invitation_code]  : User.send(:generate_invitation_code, invitation_email)
+      invitation_email = options.key?(:invitation_email) ? options[:invitation_email] : 'test@test.nl'
+      invitation_code  = options.key?(:invitation_code)  ? options[:invitation_code]  : User.send(:generate_invitation_code, invitation_email)
 
       post :create, {
         :invitation_email => invitation_email,
         :invitation_code => invitation_code,
-        :user => { :name => 'Easter bunny', :email_address => 'e.bunny@nedforce.nl', :login => 'bunny', :password => 'bunny', :password_confirmation => 'bunny' }.merge(attributes)
+        :user => { :first_name => 'Easter bunny', :email_address => 'e.bunny@nedforce.nl', :login => 'bunny', :password => 'bunny', :password_confirmation => 'bunny' }.merge(attributes)
       }
     end
 end

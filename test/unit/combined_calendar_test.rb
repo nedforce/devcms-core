@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class CombinedCalendarTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -16,12 +16,12 @@ class CombinedCalendarTest < ActiveSupport::TestCase
   def test_should_require_title
     assert_no_difference 'CombinedCalendar.count' do
       combined_calendar = create_combined_calendar(:title => nil)
-      assert combined_calendar.errors.on(:title)
+      assert combined_calendar.errors[:title].any?
     end
     
     assert_no_difference 'CombinedCalendar.count' do
       combined_calendar = create_combined_calendar(:title => "  ")
-      assert combined_calendar.errors.on(:title)
+      assert combined_calendar.errors[:title].any?
     end
   end
 
@@ -29,7 +29,7 @@ class CombinedCalendarTest < ActiveSupport::TestCase
     assert_difference 'CombinedCalendar.count', 2 do
       2.times do
         combined_calendar = create_combined_calendar(:title => 'Non-unique title')
-        assert !combined_calendar.errors.on(:title)
+        assert !combined_calendar.errors[:title].any?
       end
     end
   end
@@ -38,7 +38,7 @@ class CombinedCalendarTest < ActiveSupport::TestCase
     assert_no_difference 'CombinedCalendar.count' do
       @combined_calendar.title = 'New title'
       @combined_calendar.description = 'New description'
-      assert @combined_calendar.send(:save)
+      assert @combined_calendar.save
     end
   end
   

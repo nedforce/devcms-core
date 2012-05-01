@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::ForumTopicsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -35,7 +35,7 @@ class Admin::ForumTopicsControllerTest < ActionController::TestCase
     assert_difference('ForumTopic.count') do
       create_forum_topic
       #assert_response :success
-      assert !assigns(:forum_topic).new_record?, :message => assigns(:forum_topic).errors.full_messages.join('; ')
+      assert !assigns(:forum_topic).new_record?, assigns(:forum_topic).errors.full_messages.join('; ')
     end
   end
 
@@ -58,7 +58,7 @@ class Admin::ForumTopicsControllerTest < ActionController::TestCase
       create_forum_topic({ :title => nil }, { :commit_type => 'preview' })
       assert_response :unprocessable_entity
       assert assigns(:forum_topic).new_record?
-      assert assigns(:forum_topic).errors.on(:title)
+      assert assigns(:forum_topic).errors[:title].any?
       assert_template 'new'
     end
   end
@@ -72,7 +72,7 @@ class Admin::ForumTopicsControllerTest < ActionController::TestCase
 
     assert_response :unprocessable_entity
     assert assigns(:forum_topic).new_record?
-    assert assigns(:forum_topic).errors.on(:title)
+    assert assigns(:forum_topic).errors[:title].any?
   end
 
   def test_should_get_edit
@@ -122,7 +122,7 @@ class Admin::ForumTopicsControllerTest < ActionController::TestCase
     put :update, :id => forum_topic, :forum_topic => { :title => nil, :description => 'updated_body'}, :commit_type => 'preview'
 
     assert_response :unprocessable_entity
-    assert assigns(:forum_topic).errors.on(:title)
+    assert assigns(:forum_topic).errors[:title].any?
     assert_equal old_title, forum_topic.reload.title
     assert_template 'edit'
   end
@@ -132,7 +132,7 @@ class Admin::ForumTopicsControllerTest < ActionController::TestCase
 
     put :update, :id => forum_topics(:bewoners_forum_topic_wonen).id, :forum_topic => {:title => nil}
     assert_response :unprocessable_entity
-    assert assigns(:forum_topic).errors.on(:title)
+    assert assigns(:forum_topic).errors[:title].any?
   end
 
 protected

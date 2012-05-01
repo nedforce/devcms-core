@@ -40,7 +40,8 @@ class ContactForm < ActiveRecord::Base
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of     :title, :email_address
   validates_length_of       :title, :in => 2..255, :allow_blank => true
-  validates_email_format_of :email_address,        :allow_blank => true
+
+  validates :email_address, :email => { :allow_blank => true }
 
   # Virtual attribute to keep track of submitted +ContactFormField+ objects.
   attr_accessor :contact_form_fields_before_save
@@ -112,7 +113,7 @@ class ContactForm < ActiveRecord::Base
   def set_error_messages_for_contact_form_fields
     message = I18n.t 'activerecord.errors.models.contact_form.attributes.contact_form_fields.invalid_contact_form_field'
 
-    if self.errors.on("contact_form_fields").present?
+    if self.errors["contact_form_fields"].present?
       self.errors.instance_eval do
         @errors["contact_form_fields"] = [message]
       end

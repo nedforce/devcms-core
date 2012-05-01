@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class ForumTopicTest < ActiveSupport::TestCase
   def setup
@@ -22,21 +22,21 @@ class ForumTopicTest < ActiveSupport::TestCase
   def test_should_require_title
     assert_no_difference 'ForumTopic.count' do
       forum_topic = create_forum_topic(:title => nil)
-      assert forum_topic.errors.on(:title)
+      assert forum_topic.errors[:title].any?
     end
   end
 
   def test_should_require_unique_title
     assert_no_difference 'ForumTopic.count' do
       forum_topic = create_forum_topic(:title => @bewoners_forum_topic_wonen.title)
-      assert forum_topic.errors.on(:title)
+      assert forum_topic.errors[:title].any?
     end
   end
   
   def test_should_require_description
     assert_no_difference 'ForumTopic.count' do
       forum_topic = create_forum_topic(:description => nil)
-      assert forum_topic.errors.on(:description)
+      assert forum_topic.errors[:description].any?
     end
   end
   
@@ -44,7 +44,7 @@ class ForumTopicTest < ActiveSupport::TestCase
     assert_no_difference 'ForumTopic.count' do
       @bewoners_forum_topic_wonen.title = 'New title'
       @bewoners_forum_topic_wonen.description = 'New description'
-      assert @bewoners_forum_topic_wonen.send(:save)
+      assert @bewoners_forum_topic_wonen.save
     end
   end
   
@@ -73,8 +73,8 @@ class ForumTopicTest < ActiveSupport::TestCase
     second_thread = @bewoners_forum_topic_wonen.forum_threads.create(:title => 'foobar', :user => users(:henk))
     second_thread.forum_posts.create(:body => 'bazquux', :user => users(:henk), :created_at => Time.now + 2.hour)
     found_forum_threads = @bewoners_forum_topic_wonen.forum_threads_by_last_update_date
-    
-    assert @bewoners_forum_topic_wonen.forum_threads.set_equals?(found_forum_threads)
+
+    assert @bewoners_forum_topic_wonen.forum_threads.map(&:id).set_equals?(found_forum_threads.map(&:id))
     
     i = 0;
     

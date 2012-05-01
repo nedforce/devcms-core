@@ -122,11 +122,9 @@ class Admin::SectionsController < Admin::AdminController
     
     respond_to do |format|
       format.js do
-        responds_to_parent do
-          render :update do |page|
-            page.call("treePanel.refreshNodesOf", @section.node.id)
-            page.replace_html("import_form", :partial => 'import_form')
-          end
+        responds_to_parent do |page|
+          page.call("treePanel.refreshNodesOf", @section.node.id)
+          page.replace_html("import_form", :partial => 'import_form')
         end
       end
     end

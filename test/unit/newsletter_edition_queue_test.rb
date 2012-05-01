@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class NewsletterEditionQueueTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -12,14 +12,14 @@ class NewsletterEditionQueueTest < ActiveSupport::TestCase
   def test_should_require_newsletter_edition
     assert_no_difference 'NewsletterEditionQueue.count' do
       neq = create_newsletter_edition_queue(:newsletter_edition => nil)
-      assert neq.errors.on(:newsletter_edition)
+      assert neq.errors[:newsletter_edition].any?
     end
   end
 
   def test_should_require_user
     assert_no_difference 'NewsletterEditionQueue.count' do
       neq = create_newsletter_edition_queue(:user => nil)
-      assert neq.errors.on(:user)
+      assert neq.errors[:user].any?
     end
   end
 
@@ -27,7 +27,7 @@ class NewsletterEditionQueueTest < ActiveSupport::TestCase
     assert_difference 'NewsletterEditionQueue.count', 1 do
       neq1 = create_newsletter_edition_queue
       neq2 = create_newsletter_edition_queue
-      assert neq2.errors.on(:user_id)
+      assert neq2.errors[:user_id].any?
     end
   end
 

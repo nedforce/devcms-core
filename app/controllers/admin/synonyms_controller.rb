@@ -1,4 +1,6 @@
 class Admin::SynonymsController < Admin::AdminController
+  before_filter :default_format_json,  :only => [ :create, :update, :destroy ]  
+    
   before_filter :set_paging,  :only => [ :index, :create ]
   before_filter :set_sorting, :only => [ :index, :create ]
 
@@ -12,7 +14,7 @@ class Admin::SynonymsController < Admin::AdminController
   # * GET /admin/synonyms
   # * GET /admin/synonyms.json
   def index
-    @synonyms       = @node.synonyms.all(:order => "#{@sort_field} #{@sort_direction}", :page => { :size => @page_limit, :current => @current_page })
+    @synonyms       = @node.synonyms.order("#{@sort_field} #{@sort_direction}").page(@current_page).per(@page_limit)
     @synonyms_count = @node.synonyms.size
 
     respond_to do |format|

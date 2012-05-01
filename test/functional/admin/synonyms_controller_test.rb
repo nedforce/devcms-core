@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::SynonymsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -19,7 +19,7 @@ class Admin::SynonymsControllerTest < ActionController::TestCase
     assert_difference 'Synonym.count' do
       create_synonym
       assert_response :success
-      assert !assigns(:synonym).new_record?, :message => assigns(:synonym).errors.full_messages.join('; ')
+      assert !assigns(:synonym).new_record?, assigns(:synonym).errors.full_messages.join('; ')
     end
   end
 

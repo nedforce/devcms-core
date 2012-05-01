@@ -44,9 +44,7 @@ class CombinedCalendar < ActiveRecord::Base
     # Scope within all accessible calendars
     accessible_calendar_node_child_ancestries = containing_site.descendants.accessible.exclude_subtrees_of(nodes_to_exclude).with_content_type('Calendar').all.map { |n| n.child_ancestry }
     
-    @calendar_items_scope = Event.scoped(:include => :node, :conditions => { 'nodes.ancestry' => accessible_calendar_node_child_ancestries }, :order => 'start_time DESC') do
-      include CalendarItemsAssociationExtensions
-    end
+    @calendar_items_scope = Event.with_ancestry(accessible_calendar_node_child_ancestries)
   end
     
   # Returns the last update date

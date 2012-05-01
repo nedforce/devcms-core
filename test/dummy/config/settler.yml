@@ -1,0 +1,261 @@
+settings: &settings     
+  display_videos_as_images:
+    alt: YouTube video screenshot weergeven i.p.v. video object
+    value: true
+    editable: true
+    typecast: boolean
+  error_page_404:
+    alt: URL van de 404 (pagina niet gevonden) pagina
+    value: '404'
+    editable: true
+    validations:
+      presence: true       
+  error_page_500:
+    alt: URL van de 500 (interne fout) pagina
+    value: '500'
+    editable: true
+    validations:
+      presence: true
+  default_expiration_time:
+    alt: Standaard levensduur voor vaste content in dagen. Tevens het minimum.
+    value: 28
+    editable: true
+    validations:
+      presence: true
+    typecast: integer
+  geocode_bias:
+    alt: Voorkeursgebied (in coordinaten)
+    value: [[52.2071891, 6.0874344], [52.3164578, 6.3435532]]
+    editable: false
+  google_analytics_key:
+    alt: Google analytics sleutel
+    value: 'UA-2001352-1'
+    editable: true
+    validations:
+      format: !ruby/regexp /^(|UA-\d*-\d*)$/i
+  google_maps_key: &google_maps_key
+    alt: Google maps API sleutel
+    value: ''
+    editable: true
+  host: &host
+    alt: De hostnaam van de website
+    value: 'localhost:3000'    
+    validations:
+      presence: true       
+  mail_from_address: &mail_from
+    alt: De standaard afzender voor automatisch gegenereerde e-mails
+    value: 'Gemeente Dummy <no-reply@localhost>'
+    editable: true
+    validations:
+      presence: true       
+  mail_approvals_from_address: &mail_from_approval
+    alt: De standaard afzender van goedkeurings-e-mails
+    value: 'redactie@localhost'
+    editable: true    
+    validations:
+      presence: true
+  make_appointment_url:
+    alt: URL voor link naar maken afspraak
+    value: 'www.deventer.nl'
+    editable: true
+    validations:
+      presence: true
+  news_items_max:
+    alt: Maximaal aantal items op een nieuwspagina
+    value: 25
+    editable: true
+    typecast: integer
+    validations:
+      presence: true
+  news_items_featured:
+    alt: Het aantal nieuwsitems dat prominent op de nieuwspagina te zien is
+    value: 7
+    editable: true
+    typecast: integer
+    validations:
+      presence: true
+  news_viewer_time_period:
+    alt: De periode in weken waarin een nieuwsbericht bij het nieuws staat
+    value: 2
+    editable: true
+    typecast: integer
+    validations:
+      presence: true
+  newsletter_archive_logo:
+    alt: Afbeelding van het logo dat terug zal komen in nieuwsbrieven
+    value: 'gemeente_deventer_logo.png'
+    editable: true    
+  newsletter_archive_header_default:
+    alt: Afbeelding van de header die terug zal komen in nieuwsbrieven
+    value: 'balk_standaard.png'
+    editable: true    
+  newsletter_archive_header_prefix:
+    alt: 'Prefix van headerafbeeldingen in /images/newsletter/'
+    value: 'balk' 
+    editable: true
+  products_with_skype_box:
+    alt: external IDs (GUIDs) van de producten die het Skype-contactblok moeten tonen
+    value: []
+    editable: true
+    validations:
+      presence: true
+  recaptcha_public_key: &recaptcha_public_key
+    alt: Recaptcha public key
+    value: 'public-key'
+    editable: false
+  recaptcha_private_key: &recaptcha_private_key
+    alt: Recaptcha private key
+    value: 'private-key'
+    editable: false
+  search_enabled_engines:
+    alt: Beschikbare zoekmachines
+    value: ['luminis']
+  search_default_engine: &search
+    alt: Standaard zoekmachine
+    value: 'ferret'
+    editable: true
+    validations:
+      inclusion: [ 'ferret' , 'luminis' ]     
+  search_default_page_size:
+    alt: Standaard aantal zoekresultaten per pagina
+    value: 5
+    editable: true
+    typecast: integer
+  search_ferret_synonym_weight:
+    alt: 'Ferret instelling: gewicht van synoniemen'
+    value: 0.25
+    editable: true
+    typecast: float    
+  search_ferret_proximity:
+    alt: 'Ferret instelling: proximity waarde voor fuzzy zoeken'
+    value: 0.8
+    editable: true   
+    typecast: float      
+  search_luminis_connection_timeout:
+    alt: De timeout in seconden voor een query verstuurd naar Luminis
+    value: 20
+    editable: true
+    typecast: integer    
+  search_luminis_crawler_ips:
+    alt: 'Luminis crawler IPs die toegang zullen hebben tot verborgen nodes'
+    value: ['62.129.149.150', '62.129.149.151']
+  search_luminis_solr_base_url:
+    alt: URL naar de Luminis service
+    value: 'http://gdv-sea01-pro.hosting.nl/solr/core0/'
+    editable: true
+  search_luminis_date_boost:
+    alt: 'De Luminis datum boost, standaard ingesteld op 1 jaar (in seconden)'
+    value: <%= 1.year.to_i %>
+    editable: true    
+    typecast: integer      
+  search_luminis_title_boost:
+    alt: De Luminis titel boostwaarde
+    value: 100
+    editable: true
+    typecast: integer      
+  search_luminis_synonyms_boost:
+    alt: De Luminis synoniem boostwaarde
+    value: 100
+    editable: true
+    typecast: integer    
+  site_name:
+    alt: De naam van de website
+    value: 'Gemeente Dummy'
+    editable: true
+    validations:
+      presence: true
+  skype_box_help_url:
+    alt: URL van de pagina met uitleg over Skype
+    value: /wat-is-skype
+    editable: true
+    validations:
+      presence: true
+  skype_box_call_url:
+    alt: Call URL van het Skype-contactblok voor producten
+    value: http://deventer.nl/admin/skype:TH85GemDummy7411?call
+    editable: true
+    validations:
+      presence: true
+  help_page_url:
+    alt: URL van de pagina met instructies voor de website
+    value: /hulp
+    editable: true
+    validations:
+      presence: true
+  password_required_entropy:
+    alt: De vereiste sterkte van een wachtwoord
+    value: 66
+    editable: true
+    typecast: integer
+  password_good_entropy:
+    alt: De gewenste sterkte van een wachtwoord
+    value: 156
+    editable: true
+    typecast: integer   
+  proclaimer_page_url:
+    alt: URL van de pagina met de proclaimer voor de website
+    value: /proclaimer
+    editable: true
+    validations:
+      presence: true
+  contact_page_url:
+    alt: URL van de pagina met de colofon voor de website
+    value: /contact
+    editable: true
+    validations:
+      presence: true
+  ssl_enabled:
+    alt: SSL ondersteuning beschikbaar?
+    value: true
+    editable: true     
+    typecast: boolean       
+  user_verify:
+    alt: E-mail adressen van nieuwe gebruikers verifieren?
+    value: true
+    editable: true 
+    typecast: boolean        
+  user_invite_only: &invite_only
+    alt: Alleen nieuwe gebruikers toestaan via uitnodigingen?
+    value: true
+    editable: true
+    typecast: boolean    
+  user_allow_export:
+    alt: Gebruikers export ondersteuning?
+    value: true  
+  user_allow_invite:
+    alt: Gebruikers uitnodigingen ondersteuning?
+    value: true
+  user_session_timeout:
+    alt: Limit of sesion time of normal users in minutes
+    value: 60
+    editable: true
+    typecast: integer
+  user_session_privileged_timeout:
+    alt: Limit of sesion time of priviliged users in minutes
+    value: 30
+    editable: true
+    typecast: integer
+  login_page_text:
+    alt: The text above the login form on the login page
+    value: "<p><a href='/privacy'>Hoe gaat de gemeente om met uw privacy?</a></p>"
+    editable: true
+  whitelisted_ips:
+    alt: Kommagescheiden IP-adressen die vrijgesteld zijn van loginbeveiliging
+    value: 195.35.241.197
+  signup_page_text:
+    alt: The text above the signup form on the signup page      
+  after_logout_path:
+    alt: Path where a user is redirected to after logout
+    value: ''
+    editable: true
+  after_signup_path:
+    alt: Path where a user is redirected to after signup
+    value: ''
+    editable: true    
+    
+development:
+  <<: *settings
+
+test:
+  <<: *settings
+

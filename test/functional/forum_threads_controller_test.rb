@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class ForumThreadsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -31,8 +31,8 @@ class ForumThreadsControllerTest < ActionController::TestCase
     assert_difference('ForumThread.count', 1) do
       assert_difference('ForumPost.count', 1) do
         create_forum_thread
-        assert !assigns(:forum_thread).new_record?, :message => assigns(:forum_thread).errors.full_messages.join('; ')
-        assert !assigns(:start_post).new_record?, :message => assigns(:start_post).errors.full_messages.join('; ')
+        assert !assigns(:forum_thread).new_record?, assigns(:forum_thread).errors.full_messages.join('; ')
+        assert !assigns(:start_post).new_record?, assigns(:start_post).errors.full_messages.join('; ')
         assert_equal users(:gerjan), assigns(:forum_thread).user
         assert_equal users(:gerjan), assigns(:start_post).user
         assert_response :redirect
@@ -46,7 +46,7 @@ class ForumThreadsControllerTest < ActionController::TestCase
       assert_no_difference('ForumPost.count') do
         create_forum_thread(:title => nil)
         assert_response :success
-        assert assigns(:forum_thread).errors.on(:title)
+        assert assigns(:forum_thread).errors[:title].any?
       end
     end
   end
@@ -58,7 +58,7 @@ class ForumThreadsControllerTest < ActionController::TestCase
         create_forum_thread({}, { :body => nil })
         assert_response :success
         assert assigns(:start_post).new_record?
-        assert assigns(:start_post).errors.on(:body)
+        assert assigns(:start_post).errors[:body].any?
       end
     end
   end
@@ -116,7 +116,7 @@ class ForumThreadsControllerTest < ActionController::TestCase
     old_title = forum_threads(:bewoners_forum_thread_one).title
     put :update, :forum_topic_id => forum_topics(:bewoners_forum_topic_wonen).id, :id => forum_threads(:bewoners_forum_thread_one).id, :forum_thread => { :title => nil }
     assert_response :success
-    assert assigns(:forum_thread).errors.on(:title)
+    assert assigns(:forum_thread).errors[:title].any?
     assert_equal old_title, forum_threads(:bewoners_forum_thread_one).reload.title
   end
 

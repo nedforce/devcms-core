@@ -2,7 +2,7 @@
   .question
     = h question.question
 
-  - form_tag '#' do
+  = form_tag '#' do
     .answers
       - question.poll_options.each do |o|
         .poll_option
@@ -15,5 +15,5 @@
       = submit_tag t('polls.vote'), :disabled => true
 
       .view_results
-        - blue_arrow_button t('polls.view_results') do
+        = blue_arrow_button t('polls.view_results') do
           = link_to t('polls.view_results'), '#'

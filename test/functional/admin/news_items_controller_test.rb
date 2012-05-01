@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::NewsItemsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -49,7 +49,7 @@ class Admin::NewsItemsControllerTest < ActionController::TestCase
     assert_difference('NewsItem.count') do
       create_news_item
       assert_response :success
-      assert !assigns(:news_item).new_record?, :message => assigns(:news_item).errors.full_messages.join('; ')
+      assert !assigns(:news_item).new_record?, assigns(:news_item).errors.full_messages.join('; ')
     end
   end
 
@@ -72,7 +72,7 @@ class Admin::NewsItemsControllerTest < ActionController::TestCase
       create_news_item({ :title => nil }, { :commit_type => 'preview' })
       assert_response :unprocessable_entity
       assert assigns(:news_item).new_record?
-      assert assigns(:news_item).errors.on(:title)
+      assert assigns(:news_item).errors[:title].any?
       assert_template 'new'
     end
   end
@@ -86,7 +86,7 @@ class Admin::NewsItemsControllerTest < ActionController::TestCase
     
     assert_response :unprocessable_entity
     assert assigns(:news_item).new_record?
-    assert assigns(:news_item).errors.on(:title)
+    assert assigns(:news_item).errors[:title].any?
   end
   
   def test_should_get_edit
@@ -134,7 +134,7 @@ class Admin::NewsItemsControllerTest < ActionController::TestCase
     old_title = news_item.title
     put :update, :id => news_item.id, :news_item => { :title => nil }, :commit_type => 'preview'
     assert_response :unprocessable_entity
-    assert assigns(:news_item).errors.on(:title)
+    assert assigns(:news_item).errors[:title].any?
     assert_equal old_title, news_item.reload.title
     assert_template 'edit'
   end
@@ -144,7 +144,7 @@ class Admin::NewsItemsControllerTest < ActionController::TestCase
     
     put :update, :id => news_items(:devcms_news_item).id, :news_item => { :title => nil }
     assert_response :unprocessable_entity
-    assert assigns(:news_item).errors.on(:title)
+    assert assigns(:news_item).errors[:title].any?
   end
 
   def test_should_set_publication_start_date_on_create

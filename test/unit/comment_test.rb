@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class CommentTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -24,7 +24,7 @@ class CommentTest < ActiveSupport::TestCase
   def test_should_require_user
     assert_no_difference 'Comment.count' do
       comment = create_comment(:user => nil)
-      assert comment.errors.on(:user)
+      assert comment.errors[:user].any?
     end
   end
 
@@ -36,19 +36,19 @@ class CommentTest < ActiveSupport::TestCase
   def test_should_require_commentable
     assert_no_difference 'Comment.count' do
       comment = create_comment(:commentable => nil)
-      assert comment.errors.on(:commentable)
+      assert comment.errors[:commentable].any?
     end
   end
 
   def test_should_require_comment_body
     assert_no_difference 'Comment.count' do
       comment = create_comment(:comment => nil)
-      assert comment.errors.on(:comment)
+      assert comment.errors[:comment].any?
     end
 
     assert_no_difference 'Comment.count' do
       comment = create_comment(:comment => '')
-      assert comment.errors.on(:comment)
+      assert comment.errors[:comment].any?
     end
   end
 
@@ -56,7 +56,7 @@ class CommentTest < ActiveSupport::TestCase
     assert_difference 'Comment.count', 2 do
       2.times do
         comment = create_comment(:title => 'Non-unique title')
-        assert !comment.errors.on(:title)
+        assert !comment.errors[:title].any?
       end
     end
   end

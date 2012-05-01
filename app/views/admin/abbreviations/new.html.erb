@@ -2,14 +2,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<title>{#xhtmlxtras_dlg.title_abbr_element}</title>
-	<%= javascript_include_tag "tiny_mce/tiny_mce_popup.js",                       :plugin => 'devcms-core' %>
-	<%= javascript_include_tag "tiny_mce/utils/mctabs.js",                         :plugin => 'devcms-core' %>
-	<%= javascript_include_tag "tiny_mce/utils/form_utils.js",                     :plugin => 'devcms-core' %>
-	<%= javascript_include_tag "tiny_mce/utils/editable_selects.js",               :plugin => 'devcms-core' %>
-	<%= javascript_include_tag "tiny_mce/plugins/xhtmlxtras/js/element_common.js", :plugin => 'devcms-core' %>
-	<%= javascript_include_tag "tiny_mce/plugins/xhtmlxtras/js/abbr.js",           :plugin => 'devcms-core' %>
-    <%= javascript_include_tag 'prototype.js',                                     :plugin => 'devcms-core' %>
-	<link rel="stylesheet" type="text/css" href="/javascripts/tiny_mce/plugins/xhtmlxtras/css/popup.css?v=307" />
+	<%= javascript_include_tag "tiny_mce/tiny_mce_popup.js" %>
+	<%= javascript_include_tag "tiny_mce/utils/mctabs.js" %>
+	<%= javascript_include_tag "tiny_mce/utils/form_utils.js" %>
+	<%= javascript_include_tag "tiny_mce/utils/editable_selects.js" %>
+	<%= javascript_include_tag "tiny_mce/plugins/xhtmlxtras/js/element_common.js" %>
+	<%= javascript_include_tag "tiny_mce/plugins/xhtmlxtras/js/abbr.js" %>
+  <%= javascript_include_tag 'prototype.js' %>
+  <%= stylesheet_link_tag    'tiny_mce/plugins/xhtmlxtras/css/popup.css?v=307' %>
+  
 	<base target="_self" />
 </head>
 <body style="display: none">

@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class WeblogArchiveTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -16,7 +16,7 @@ class WeblogArchiveTest < ActiveSupport::TestCase
   def test_should_require_title
     assert_no_difference 'WeblogArchive.count' do
       weblog_archive = create_weblog_archive(:title => nil)
-      assert weblog_archive.errors.on(:title)
+      assert weblog_archive.errors[:title].any?
     end
   end
 
@@ -24,7 +24,7 @@ class WeblogArchiveTest < ActiveSupport::TestCase
     assert_difference 'WeblogArchive.count', 2 do
       2.times do
         weblog_archive = create_weblog_archive(:title => 'Non-unique title')
-        assert !weblog_archive.errors.on(:title)
+        assert !weblog_archive.errors[:title].any?
       end
     end
   end
@@ -33,7 +33,7 @@ class WeblogArchiveTest < ActiveSupport::TestCase
     assert_no_difference 'WeblogArchive.count' do
       @devcms_weblog_archive.title = 'New title'
       @devcms_weblog_archive.description = 'New description'
-      assert @devcms_weblog_archive.send(:save)
+      assert @devcms_weblog_archive.save
     end
   end
   

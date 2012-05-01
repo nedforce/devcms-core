@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class NodeTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -49,7 +49,7 @@ class NodeTest < ActiveSupport::TestCase
     assert_raises ActiveRecord::ActiveRecordError do
       @about_page_node.move_to_left_of @root_node
     end
-    assert @root_node, @about_page_node.reload.parent
+    assert_equal @root_node, @about_page_node.reload.parent
   end
 
   def test_should_raise_on_move_to_sibling_of_child
@@ -70,7 +70,7 @@ class NodeTest < ActiveSupport::TestCase
     assert_raises ActiveRecord::ActiveRecordError do
       @about_page_node.move_to_child_of @about_page_node
     end
-    assert @root_node, @about_page_node.reload.parent
+    assert_equal @root_node, @about_page_node.reload.parent
   end
 
   def test_should_move_to_left
@@ -188,7 +188,7 @@ class NodeTest < ActiveSupport::TestCase
    def test_should_destroy_descendants_correctly
      section = Section.create!(:parent => @economie_section_node, :title => 'foo', :description => 'bar')
      page = Page.create!(:parent => section.node, :title => 'baz', :body => "Page body", :expires_on => 1.day.from_now.to_date)
-     Attachment.create!(:parent => page.node, :title => 'Park Zandweerd Matrix plannen', :uploaded_data => fixture_file_upload("files/ParkZandweerdMatrixplannen.doc", 'application/msword'))
+     Attachment.create!(:parent => page.node, :title => 'Park Zandweerd Matrix plannen', :file => fixture_file_upload("files/ParkZandweerdMatrixplannen.doc", 'application/msword'))
      
      assert page.reload.node.reload.destroy # the tree calls destroy on node, not on content!
      assert_equal 0, section.node.children.count
@@ -277,9 +277,10 @@ class NodeTest < ActiveSupport::TestCase
        create_meeting(:start_time => start_time, :end_time => end_time)
      ].each do |item|
        assert_equal end_time.to_date, item.node.determine_content_date(today.to_date)
-       new_end_time = Time.local(2010, 1, 2, 2 )
-       item.update_attribute(:end_time, new_end_time)
-       assert_equal new_end_time.to_date, item.reload.node.reload.determine_content_date(today.to_date)
+       new_end_time = Time.local(2010, 1, 1, 22)
+
+       assert item.update_attributes!(:end_time => new_end_time)
+       assert_equal new_end_time.to_date, item.node.determine_content_date(today.to_date)
      end
    end
 
@@ -309,10 +310,11 @@ class NodeTest < ActiveSupport::TestCase
 
    def test_changes_should_not_include_unpublished_new_items
      size = nodes(:devcms_news_node).last_changes(:all).size
-     create_news_item(:publication_start_date => 2.days.ago, :publication_end_date => 1.day.from_now, :title => "Beschikbaar")
+     n1= create_news_item(:publication_start_date => 2.days.ago, :publication_end_date => 1.day.from_now, :title => "Beschikbaar")
      create_news_item(:publication_start_date => 2.days.from_now, :publication_end_date => 3.day.from_now , :title => "Nog niet beschikbaar")
      create_news_item(:publication_start_date => 2.days.ago, :publication_end_date => 1.day.ago, :title => "Niet meer beschikbaar")
      changes = nodes(:devcms_news_node).last_changes(:all)
+
      assert_equal size+1, changes.size
      assert_nil(    changes.reject! { |node| !node.content.respond_to?(:title) || node.content.title == "Nog niet beschikbaar"  }, "Not yet published items should not be shown")
      assert_nil(    changes.reject! { |node| !node.content.respond_to?(:title) || node.content.title == "Niet meer beschikbaar" }, "No longer published items should not be shown")
@@ -336,7 +338,7 @@ class NodeTest < ActiveSupport::TestCase
   def test_changes_should_return_self
     ni = create_news_item(:publication_start_date => 2.days.ago, :publication_end_date => 1.day.from_now, :title => "Beschikbaar")
     changes = nodes(:devcms_news_node).last_changes(:self)
-    assert_equal nodes(:devcms_news_node), changes.first
+    assert changes.include?(nodes(:devcms_news_node))
   end
 
    def test_increment_hits
@@ -349,8 +351,10 @@ class NodeTest < ActiveSupport::TestCase
    def test_should_protect_hits_attribute
      node = create_page.node
      assert_equal 0, node.hits
-     node.update_attributes(:hits => 1)
-     assert_equal 0, node.reload.hits
+     
+     assert_raises ActiveModel::MassAssignmentSecurity::Error do
+       node.update_attributes(:hits => 1)
+     end
    end
 
    def test_find_accessible_should_only_find_published_nodes

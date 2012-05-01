@@ -24,9 +24,8 @@
 # * An Image does not accept any child nodes.
 # * An Image can only be inserted into Page or NewsItem nodes.
 #
-class Image < FlexImage::Model
-
-  DEFAULT_COLUMNS_TO_EXCLUDE_FROM_SELECT = %w( data )
+class Image < ActiveRecord::Base
+  include DevcmsCore::ImageProcessingExtensions
 
   CONTENT_BOX_SIZE      = { :height =>  93, :width => 230 }
   HEADER_IMAGE_SIZE     = { :height => 135, :width => 726 }
@@ -35,9 +34,8 @@ class Image < FlexImage::Model
   # An +Image+ can be a carrousel item
   has_many :carrousel_items, :as => :item, :dependent => :destroy  
   
-  # This is needed to be able to load images from a YAML-ized version of the ActiveRecord,
-  # otherwise FlexImage won't recognize it.
-  self.require_image_data = false
+  # Carrierwave uploader
+  mount_uploader :file, ImageUploader  
   
   # Adds content node functionality to images.
   acts_as_content_node({
@@ -50,12 +48,9 @@ class Image < FlexImage::Model
 
   # This content type needs approval when created or altered by an editor.
   needs_editor_approval
-  
-  # Set image size to max 1024x1024 on creation.
-  pre_process_image :size => '1024x1024', :quality => 95
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of     :title, :data
+  validates_presence_of     :title
   
   validates_inclusion_of    :show_in_listing, :in => [ false, true ], :allow_nil => false
   
@@ -64,14 +59,10 @@ class Image < FlexImage::Model
   validates_format_of       :url, :with => /(^$)|(^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(([0-9]{1,5})?\/.*)?$)/ix, :allow_blank => true
   
   validates_numericality_of :offset, :only_integer => true, :allow_blank => true, :greater_than_or_equal => 0 
-
-  default_scope :conditions => "#{self.table_name}.deleted_at IS NULL", :select => (self.column_names - DEFAULT_COLUMNS_TO_EXCLUDE_FROM_SELECT).map { |column| "#{self.table_name}.#{column}" }.join(', ')
   
   # Join instead of include to ensure the default scopes select is still applied.
-  named_scope :accessible,  lambda { { :joins => :node, :conditions => Node.accessibility_and_visibility_conditions } }
-  
-  named_scope :select_all_columns, :select => self.column_names.map { |column| "#{self.table_name}.#{column}" }.join(', ')
-  
+  scope :accessible,  lambda { { :joins => :node, :conditions => Node.accessibility_and_visibility_conditions } }
+
   # Ensure +url+ is correct.
   before_validation :prepend_http_to_url
 
@@ -87,30 +78,12 @@ class Image < FlexImage::Model
 
   def to_xml(options = {})
     except = options[:except].nil? ? [] : [options[:except]].flatten
-    to_xml_with_data(options.merge(:except => (except << :data)))
+    to_xml_with_data(options)
   end
 
   # Returns the alt value as the token for indexing.
   def content_tokens
     alt
-  end
-
-  def orientation
-    (send(:rmagick_image).rows > send(:rmagick_image).columns) ? :vertical : :horizontal
-  end
-
-  def calculate_other_dimension_with(options)
-    options.symbolize_keys!
-    raise ArgumentError, 'either :width or :height need to be specified' unless options[:width] || options[:height]
-    
-    h = send(:rmagick_image).rows
-    w = send(:rmagick_image).columns
-
-    if options[:width]
-      (h * options[:width]) / w
-    elsif options[:height]
-      (w * options[:height]) / h
-    end
   end
 
 protected

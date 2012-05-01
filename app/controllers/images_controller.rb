@@ -23,33 +23,27 @@ class ImagesController < ApplicationController
   caches_page :full, :sidebox, :header, :thumbnail, :content_box_header, :big_header
 
   def full
-    @image.resize!(:size => '800x500', :quality => 90)
-    render_image
+    render_jpg_image @image.file.full.path
   end
 
   def header
-    @image.resize!(:size => "#{Image::HEADER_IMAGE_SIZE[:width]}x#{Image::HEADER_IMAGE_SIZE[:height]}", :crop => true, :upsample => true, :quality => 90)
-    render_image
+    render_jpg_image_data @image.resize!(:size => "#{Image::HEADER_IMAGE_SIZE[:width]}x#{Image::HEADER_IMAGE_SIZE[:height]}", :crop => true, :upsample => true, :quality => 90, :format => 'jpg')
   end
   
   def big_header
-    @image.resize!(:size => "#{Image::HEADER_BIG_IMAGE_SIZE[:width]}x#{Image::HEADER_BIG_IMAGE_SIZE[:height]}", :crop => true, :upsample => true, :quality => 90)
-    render_image
+    render_jpg_image_data @image.resize!(:size => "#{Image::HEADER_BIG_IMAGE_SIZE[:width]}x#{Image::HEADER_BIG_IMAGE_SIZE[:height]}", :crop => true, :upsample => true, :quality => 90, :format => 'jpg')
   end
 
   def content_box_header
-    @image.resize!(:size => "#{Image::CONTENT_BOX_SIZE[:width]}x#{Image::CONTENT_BOX_SIZE[:height]}", :offset => @image.offset, :crop => true, :upsample => false, :quality => 80)
-    render_image
+    render_jpg_image_data @image.resize!(:size => "#{Image::CONTENT_BOX_SIZE[:width]}x#{Image::CONTENT_BOX_SIZE[:height]}", :offset => @image.offset, :crop => true, :upsample => false, :quality => 80, :format => 'jpg')
   end
 
   def thumbnail
-    @image.resize!(:size => "100x100", :crop => true, :quality => 80, :offset => @image.offset, :upsample => true)
-    render_image
+    render_jpg_image_data @image.resize!(:size => "100x100", :crop => true, :quality => 80, :offset => @image.offset, :upsample => true, :format => 'jpg')
   end
 
   def sidebox
-    @image.resize!(:size => "#{Image::CONTENT_BOX_SIZE[:width]}x1024", :quality => 90)
-    render_image
+    render_jpg_image_data @image.resize!(:size => "#{Image::CONTENT_BOX_SIZE[:width]}x1024", :quality => 90, :format => 'jpg')
   end
 
   def private_full
@@ -80,7 +74,7 @@ class ImagesController < ApplicationController
 protected
 
   def find_image
-    @image = Image.select_all_columns.find(params[:id])
+    @image = Image.accessible.find(params[:id])
   end
 
   def redirect_to_jpg
@@ -94,11 +88,22 @@ protected
       redirect_to url_for(:id => @image.id, :action => "private_#{params[:action]}", :format => 'jpg' )
     end
   end
-
-  def render_image
+  
+  def render_jpg_image(image_path)
     respond_to do |format|
       headers['Cache-Control'] = (@image.node.private? ? 'private' : 'public') # this can be cached by proxy servers
-      format.jpg { render_flex_image(@image) }
+      format.any do
+        send_file(image_path, :type => 'image/jpeg', :disposition => 'inline')   
+      end      
+    end
+  end  
+
+  def render_jpg_image_data(image_data)
+    respond_to do |format|
+      headers['Cache-Control'] = (@image.node.private? ? 'private' : 'public') # this can be cached by proxy servers
+      format.jpg do
+        send_data(image_data, :type => 'image/jpeg', :disposition => 'inline')   
+      end      
     end
   end
 end

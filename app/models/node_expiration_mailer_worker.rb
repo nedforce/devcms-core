@@ -3,7 +3,7 @@ class NodeExpirationMailerWorker
   class << self
     # Returns the used logger.
     def logger
-      RAILS_DEFAULT_LOGGER
+      Rails.logger
     end
   
     def notify_authors(node = Node.root)
@@ -24,17 +24,19 @@ class NodeExpirationMailerWorker
   
     def send_author_notification(node)
       begin
-        NodeExpirationMailer.deliver_author_notification(node)
+        NodeExpirationMailer.author_notification(node).deliver
       rescue Exception => exception
-        BackgroundNotifier.deliver_exception_notification(exception, "Notifying authors of expired content.", node)
+        raise exception unless Rails.env.production?
+        ExceptionNotifier::Notifier.background_exception_notification(exception, :data => { :message => "Notifying authors of expired content.", :node => node }).deliver
       end
     end
     
     def send_final_editor_notification(final_editor,nodes)
       begin
-        NodeExpirationMailer.deliver_final_editor_notification(final_editor,nodes)
+        NodeExpirationMailer.final_editor_notification(final_editor,nodes).deliver
       rescue Exception => exception
-        BackgroundNotifier.deliver_exception_notification(exception, "Notifying final editor of expired content.", final_editor)
+        raise exception unless Rails.env.production?        
+        ExceptionNotifier::Notifier.background_exception_notification(exception, :data => { :message => "Notifying final editor of expired content.", :final_editor => final_editor }).deliver
       end
     end
   end

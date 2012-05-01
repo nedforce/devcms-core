@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
  
 class RepeatingCalendarItemTest < ActiveSupport::TestCase
 #   self.use_transactional_fixtures = true
@@ -70,7 +70,7 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
 #   def test_should_assign_repeating_to_virtual_attribute
 #     [ [ true, true ], [ false, false ], [ nil, nil ], [ ' ', nil ], [ '0', false ], [ '1', true ]].each do |k, v|
 #       ci = create_repeating_calendar_item :repeating => k
-#       assert_equal v, ci.repeating, :message => " #{v.inspect} expected but was #{ci.repeating.inspect} for #{k.inspect}"
+#       assert_equal v, ci.repeating, " #{v.inspect} expected but was #{ci.repeating.inspect} for #{k.inspect}"
 #     end
 #   end
 # 
@@ -80,7 +80,7 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
 #       ci.repeating = repeating
 #       assert ci.save(:user => @arthur)
 #       assert ci.valid?
-#       assert !ci.errors.on(:repeating)
+#       assert !ci.errors[:repeating].any?
 #     end
 #   end
 # 
@@ -94,7 +94,7 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
 #     [ nil, CalendarItem::REPEAT_INTERVAL_GRANULARITIES_VALUES.min - 1, 'foo', CalendarItem::REPEAT_INTERVAL_GRANULARITIES_VALUES.max + 1 ].each do |repeat_interval_granularity|
 #       ci = create_repeating_calendar_item :repeat_interval_granularity => repeat_interval_granularity
 #       assert !ci.valid?
-#       assert ci.errors.on(:repeat_interval_granularity)
+#       assert ci.errors[:repeat_interval_granularity].any?
 #     end
 #   end
 # 
@@ -105,7 +105,7 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
 #       ci.repeat_interval_granularity = repeat_interval_granularity
 #       assert ci.save(:user => @arthur)
 #       assert ci.valid?
-#       assert !ci.errors.on(:repeat_interval_granularity)
+#       assert !ci.errors[:repeat_interval_granularity].any?
 #     end
 #   end
 # 
@@ -113,7 +113,7 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
 #     [ nil, CalendarItem::REPEAT_INTERVAL_GRANULARITIES_VALUES.min - 1, 'foo', CalendarItem::REPEAT_INTERVAL_GRANULARITIES_VALUES.max + 1 ].each do |repeat_interval_granularity|
 #       ci = create_repeating_calendar_item :repeating => false, :repeat_interval_granularity => repeat_interval_granularity
 #       assert ci.valid?
-#       assert !ci.errors.on(:repeat_interval_granularity)
+#       assert !ci.errors[:repeat_interval_granularity].any?
 #     end
 #   end
 # 
@@ -127,7 +127,7 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
 #     [ nil, CalendarItem::REPEAT_INTERVAL_MULTIPLIER_RANGE.min - 1, 'foo', CalendarItem::REPEAT_INTERVAL_MULTIPLIER_RANGE.max + 1 ].each do |repeat_interval_multiplier|
 #       ci = create_repeating_calendar_item :repeating => true, :repeat_interval_multiplier => repeat_interval_multiplier
 #       assert !ci.valid?
-#       assert ci.errors.on(:repeat_interval_multiplier)
+#       assert ci.errors[:repeat_interval_multiplier].any?
 #     end
 #   end
 # 
@@ -138,7 +138,7 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
 #       ci.repeat_interval_multiplier = repeat_interval_multiplier
 #       assert ci.save(:user => @arthur)
 #       assert ci.valid?
-#       assert !ci.errors.on(:repeat_interval_multiplier)
+#       assert !ci.errors[:repeat_interval_multiplier].any?
 #     end
 #   end
 # 
@@ -146,7 +146,7 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
 #     [ nil, CalendarItem::REPEAT_INTERVAL_MULTIPLIER_RANGE.min - 1, 'foo', CalendarItem::REPEAT_INTERVAL_MULTIPLIER_RANGE.max + 1 ].each do |repeat_interval_multiplier|
 #       ci = create_repeating_calendar_item :repeating => false, :repeat_interval_multiplier => repeat_interval_multiplier
 #       assert ci.valid?
-#       assert !ci.errors.on(:repeat_interval_multiplier)
+#       assert !ci.errors[:repeat_interval_multiplier].any?
 #     end
 #   end
 # 
@@ -159,7 +159,7 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
 #   def test_should_require_repeat_end_on_create_if_repeating_is_true
 #     ci = create_repeating_calendar_item :repeating => true, :repeat_end => nil
 #     assert !ci.valid?
-#     assert ci.errors.on(:repeat_end)
+#     assert ci.errors[:repeat_end].any?
 #   end
 # 
 #   def test_should_not_require_repeat_end_on_update
@@ -168,19 +168,19 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
 #     ci.instance_variable_set(:@repeat_end, nil)
 #     assert ci.save(:user => @arthur)
 #     assert ci.valid?
-#     assert !ci.errors.on(:repeat_end)
+#     assert !ci.errors[:repeat_end].any?
 #   end
 # 
 #   def test_should_not_require_repeat_end_on_create_if_repeating_is_false
 #     ci = create_repeating_calendar_item :repeating => false
 #     assert ci.valid?
-#     assert !ci.errors.on(:repeat_end)
+#     assert !ci.errors[:repeat_end].any?
 #   end
 # 
 #   def test_should_require_repeat_end_to_be_in_the_future_on_create_if_repeating_is_true
 #     ci = create_repeating_calendar_item :repeating => true, :repeat_end => 1.day.ago.to_date
 #     assert !ci.valid?
-#     assert ci.errors.on(:repeat_end)
+#     assert ci.errors[:repeat_end].any?
 #   end
 # 
 #   def test_should_not_require_repeat_end_to_be_in_the_future_on_update
@@ -189,13 +189,13 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
 #     ci.instance_variable_set(:@repeat_end, 1.day.ago.to_date)
 #     assert ci.save(:user => @arthur)
 #     assert ci.valid?
-#     assert !ci.errors.on(:repeat_end)
+#     assert !ci.errors[:repeat_end].any?
 #   end
 # 
 #   def test_should_not_require_repeat_end_to_be_in_the_future_on_create_if_repeating_is_false
 #     ci = create_repeating_calendar_item :repeating => false, :repeat_end => 1.day.ago.to_date
 #     assert ci.valid?
-#     assert !ci.errors.on(:repeat_end)
+#     assert !ci.errors[:repeat_end].any?
 #   end
 # 
 #   def test_should_assign_repeat_identifier_after_create_if_repeating_is_true

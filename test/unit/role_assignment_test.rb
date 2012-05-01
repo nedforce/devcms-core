@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class RoleAssignmentTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -51,35 +51,35 @@ class RoleAssignmentTest < ActiveSupport::TestCase
   def test_should_require_node
     assert_no_difference 'RoleAssignment.count' do
       role_assignment = create_role_assignment(:node => nil)
-      assert role_assignment.errors.on(:node)
+      assert role_assignment.errors[:node].any?
     end
   end
   
   def test_should_require_name
     assert_no_difference 'RoleAssignment.count' do
       role_assignment = create_role_assignment(:name => nil)
-      assert role_assignment.errors.on(:name)
+      assert role_assignment.errors[:name].any?
     end
   end
   
   def test_should_require_valid_name
     assert_no_difference 'RoleAssignment.count' do
       role_assignment = create_role_assignment(:name => 'this_is_not_a_role')
-      assert role_assignment.errors.on(:name)
+      assert role_assignment.errors[:name].any?
     end
   end
   
   def test_should_require_user
     assert_no_difference 'RoleAssignment.count' do
       role_assignment = create_role_assignment(:user => nil)
-      assert role_assignment.errors.on(:user)
+      assert role_assignment.errors[:user].any?
     end
   end
 
   def test_should_require_privileged_user
     assert_no_difference 'RoleAssignment.count' do
       role_assignment = create_role_assignment(:user => users(:klaas))
-      assert role_assignment.errors.on(:user)
+      assert role_assignment.errors[:user].any?
     end
   end
   

@@ -1,15 +1,14 @@
-ENV['RAILS_ENV'] = 'test'
-ENV['RAILS_ROOT'] ||= File.dirname(__FILE__) + '/../../../..'
+ENV["RAILS_ENV"] = "test"
 
-
-require 'test/unit'
-require File.expand_path(File.join(ENV['RAILS_ROOT'], 'config/environment.rb'))
-require 'test_help'
-require File.expand_path(File.dirname(__FILE__) + '/../vendor/plugins/flex_image/test/mock_file')
+require File.expand_path('../dummy/config/environment.rb', __FILE__)
+require 'rails/test_help'
+require 'mocha'
+require 'html_test'
 
 Rails.backtrace_cleaner.remove_silencers!
+Debugger.settings[:autoeval] = true
 
-include ActionController::TestProcess # Required to make fixture_file_upload work
+include ActionDispatch::TestProcess # Required to make fixture_file_upload work
 
 begin
   require 'turn'
@@ -17,13 +16,13 @@ rescue LoadError
   puts 'Install the Turn gem for prettier test output.'
 end
 
-module I18n 
-  def self.just_raise(*args) 
-    raise args.first 
-  end 
-end 
-
-I18n.exception_handler = :just_raise
+# module I18n 
+#   def self.just_raise(*args) 
+#     raise args.first 
+#   end 
+# end 
+# 
+# I18n.exception_handler = :just_raise
 
 # Truncate all tables first
 ActiveRecord::Base.connection.tables.each{ |table| ActiveRecord::Base.connection.execute("TRUNCATE #{table} CASCADE") }
@@ -63,11 +62,13 @@ class ActiveSupport::TestCase
   # Note: You'll currently still have to declare fixtures explicitly in integration tests
   # -- they do not yet inherit this setting
   self.fixture_path = File.dirname(__FILE__) + "/fixtures/"
+  
   fixtures :all
             
   # Add more helper methods to be used by all tests here...
-  include AuthenticatedTestHelper
-  include RoleRequirementTestHelper
+  include DevcmsCore::AuthenticatedTestHelper
+  include DevcmsCore::RoleRequirementTestHelper
+  include DevcmsCore::RoutingHelpers  
   
   # Validates all controller and integration test requests if set to true:
   ApplicationController.validate_all = false
@@ -96,6 +97,17 @@ class ActiveSupport::TestCase
     constants.each do |constant, val|
       Object.send(:remove_const, constant)
     end
+  end
+end
+
+class ActionController::IntegrationTest
+  self.fixture_path = File.dirname(__FILE__) + "/fixtures/" 
+  
+  setup     :enable_show_exceptions
+
+  def enable_show_exceptions
+    Rails.application.config.consider_all_requests_local = false
+    Rails.application.config.action_dispatch.show_exceptions = true    
   end
 
 end

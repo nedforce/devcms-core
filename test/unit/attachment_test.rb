@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class AttachmentTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -10,7 +10,7 @@ class AttachmentTest < ActiveSupport::TestCase
 
     f = File.open(File.dirname(__FILE__) + "/../fixtures/#{FIXTURE_FILE}")
     f.binmode
-    assert_equal f.read, @attachment.current_data
+    assert_equal f.read, @attachment.file.file.read
   end
   
   def test_should_require_title
@@ -19,22 +19,12 @@ class AttachmentTest < ActiveSupport::TestCase
   end
 
   def test_should_require_uploaded_file
-    assert_no_attachment_difference { create_attachment(:uploaded_data => nil) }
-  end
-  
-  def test_should_require_unique_db_file
-    assert_no_attachment_difference { create_attachment(:db_file => db_files(:verslag_db_file)) }
-  end
-
-  def test_should_require_valid_db_file
-    assert_no_attachment_difference { create_attachment(:db_file => DbFile.new) }
+    assert_no_attachment_difference { create_attachment(:file => nil) }
   end
   
   def test_should_destroy_attachment
     assert_difference 'Attachment.count', -1 do
-      assert_difference 'DbFile.count', -1 do
-        attachments(:verslag_attachment).destroy
-      end
+      attachments(:verslag_attachment).destroy
     end
   end
   
@@ -58,39 +48,20 @@ class AttachmentTest < ActiveSupport::TestCase
     assert_equal '2008-68936_Bijlage_Startnotitie_procesaanpak_Toekomstvisie_2030.pdf', attachment.filename
   end
   
-  def test_should_remove_lo_on_destroy
-    @attachment = create_attachment
-    conn = ActiveRecord::Base.connection.raw_connection
-    loid = @attachment.db_file.loid
-    Attachment.transaction do
-      assert_equal 0, conn.lo_open(loid)
-    end
-    @attachment.destroy
-    assert_raises PGError do
-      Attachment.transaction do
-        conn.lo_open(loid)
-      end
-    end
-  end
-  
   protected
     def assert_attachment_difference
       assert_difference 'Attachment.count' do
-        assert_difference 'DbFile.count' do
-          yield
-        end
+        yield
       end
     end
 
     def assert_no_attachment_difference
       assert_no_difference 'Attachment.count' do
-        assert_no_difference 'DbFile.count' do
-          yield
-        end
+        yield
       end
     end
     
     def create_attachment(options = {})
-      Attachment.create({:parent => nodes(:downloads_page_node), :title => 'Park Zandweerd Matrix plannen', :uploaded_data => fixture_file_upload(FIXTURE_FILE, 'application/msword') }.merge(options))
+      Attachment.create({:parent => nodes(:downloads_page_node), :title => 'Park Zandweerd Matrix plannen', :file => fixture_file_upload(FIXTURE_FILE, 'application/msword') }.merge(options))
     end
 end

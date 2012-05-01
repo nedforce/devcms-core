@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class NewsArchiveTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -19,12 +19,12 @@ class NewsArchiveTest < ActiveSupport::TestCase
   def test_should_require_title
     assert_no_difference 'NewsArchive.count' do
       news_archive = create_news_archive(:title => nil)
-      assert news_archive.errors.on(:title)
+      assert news_archive.errors[:title].any?
     end
 
     assert_no_difference 'NewsArchive.count' do
       news_archive = create_news_archive(:title => "  ")
-      assert news_archive.errors.on(:title)
+      assert news_archive.errors[:title].any?
     end
   end
 
@@ -32,7 +32,7 @@ class NewsArchiveTest < ActiveSupport::TestCase
     assert_difference 'NewsArchive.count', 2 do
       2.times do
         news_archive = create_news_archive(:title => 'Non-unique title')
-        assert !news_archive.errors.on(:title)
+        assert !news_archive.errors[:title].any?
       end
     end
   end
@@ -41,7 +41,7 @@ class NewsArchiveTest < ActiveSupport::TestCase
     assert_no_difference 'NewsArchive.count' do
       @devcms_news.title = 'New title'
       @devcms_news.description = 'New description'
-      assert @devcms_news.send(:save)
+      assert @devcms_news.save
     end
   end
 

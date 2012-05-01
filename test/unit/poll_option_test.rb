@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class PollOptionTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -17,14 +17,14 @@ class PollOptionTest < ActiveSupport::TestCase
 
   def test_should_require_text
     @o.update_attributes(:text => nil)
-    assert @o.errors.on(:text)
+    assert @o.errors[:text].any?
     assert !@o.reload.text.blank?
   end
 
   def test_should_not_allow_duplicate_options
     assert_no_difference 'PollOption.count' do
       o = @q.poll_options.create(:text => @o.text)
-      assert o.errors.on(:text)
+      assert o.errors[:text].any?
     end
   end
 

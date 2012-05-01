@@ -25,12 +25,11 @@ class Link < ActiveRecord::Base
   # Ensure that +title+ and +description+ are set to nil if they are blank.
   before_validation :set_title_and_description_to_nil_if_blank
 
-  # Prevent a +Link+ from being directly instantiated.
-  validate :should_not_be_directly_instantiated
-
   # Check the length of the +title+ and +description+ attributes, if they exist.
   validates_length_of :title,       :in => 2..255, :allow_nil => true
   validates_length_of :description, :in => 2..255, :allow_nil => true
+  
+  validates_inclusion_of :type, :in => ['InternalLink', 'ExternalLink'], :allow_blank => false
 
   # Returns the description as the token for indexing.
   def content_tokens
@@ -38,11 +37,6 @@ class Link < ActiveRecord::Base
   end
 
   protected
-
-  # Prevents a +Link+ from being directly instantiated.
-  def should_not_be_directly_instantiated
-    errors.add_to_base(:not_direct) unless self[:type]
-  end
 
   # Ensures that +title+ and +description+ are set to nil if they are blank.
   def set_title_and_description_to_nil_if_blank

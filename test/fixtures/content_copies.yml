@@ -1,5 +1,5 @@
 test_image_copy:
-  copied_node_id: <%= Fixtures.identify(:test_image_node) %>
+  copied_node_id: <%= ActiveRecord::Fixtures.identify(:test_image_node) %>
 
 bewoners_forum_copy:
-  copied_node_id: <%= Fixtures.identify(:bewoners_forum_node) %>
+  copied_node_id: <%= ActiveRecord::Fixtures.identify(:bewoners_forum_node) %>

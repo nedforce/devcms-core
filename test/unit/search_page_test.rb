@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class SearchPageTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -6,14 +6,14 @@ class SearchPageTest < ActiveSupport::TestCase
   def test_should_create_search_page
     assert_difference('SearchPage.count') do
       sp = create_search_page
-      assert !sp.new_record?, sp.errors.full_messages
+      assert !sp.new_record?, sp.errors.full_messages.to_sentence
     end
   end
 
   def test_should_require_title
     assert_no_difference 'SearchPage.count' do
       sp = create_search_page(:title => nil)
-      assert sp.errors.on(:title)
+      assert sp.errors[:title].any?
     end
   end
 

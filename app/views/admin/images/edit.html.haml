@@ -1,7 +1,7 @@
 .right_panel_content
   %h1== #{t 'images.edit'} '#{h @image.title}'
   
-  - admin_remote_form_for @image, :url => admin_image_path(@image, :format => 'html'), :update => 'right_panel_body' do |f|
+  = admin_remote_form_for @image, :url => admin_image_path(@image, :format => 'html'), :update => 'right_panel_body' do |f|
     = error_messages_for :image
   
     = wrap_with_label render_cropper(@image, :style => 'margin-left: 120px'), :text => t('images.image'), :for => "image_#{@image.id}"

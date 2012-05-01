@@ -41,12 +41,10 @@ class Forum < ActiveRecord::Base
   def find_last_updated_forum_threads(limit = 5, args = {})
     return [] if limit <= 0
     # Custom SQL query to minimize performance hit
-    # TODO: Not too keen on the INNER JOINs here, any way to avoid these? DB caching of created_at?
     ForumThread.all(
       {
         :select     => 'forum_threads.id, forum_threads.title, forum_threads.forum_topic_id, MAX(forum_posts.created_at) AS forum_threads_last_update_date', 
-        :from       => '(forum_threads ',
-        :joins      => 'INNER JOIN forum_topics ON forum_threads.forum_topic_id = forum_topics.id) INNER JOIN forum_posts ON forum_posts.forum_thread_id = forum_threads.id',
+        :joins      => [{ :forum_topic => :node }, :forum_posts],
         :conditions => { :forum_topic_id => forum_topics },
         :group      => 'forum_threads.id, forum_threads.title, forum_threads.forum_topic_id', 
         :limit      => limit,

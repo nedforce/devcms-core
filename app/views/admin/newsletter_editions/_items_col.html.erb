@@ -8,7 +8,7 @@ newsItemColPanel = new Ext.Panel({
 newsItemCol = new Ext.dvtr.Sorter({
       width: 400,
       ddGroup: 'TreeAndSorterDD',
-      items: <%= @item_sortlets.to_json -%>,
+      items: <%= raw @item_sortlets.to_json -%>,
       border: false
   });
 

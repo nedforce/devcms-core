@@ -25,7 +25,7 @@
   </div>
 </div>
 
-    <% javascript_tag do %>
+    <%= javascript_tag do %>
       var existingMeetingCategoryFieldWrapper = Ext.get('existing_meeting_category_wrapper');
       var newMeetingCategoryFieldWrapper      = Ext.get('new_meeting_category_wrapper');
       var meetingCategoryNameField            = Ext.getDom('meeting_category_name')
@@ -55,7 +55,7 @@
 
 <%- now = Time.now -%>
 
-<%= record.errors.full_messages %>
+<div class="formFieldCt"><%= record.errors.full_messages.to_sentence %></div>
 
 <%= form.date_field  :date,                 :label => t('calendars.date'),            :value => record.start_time || now %>
 <%= form.time_field  :start_time,           :label => t('calendars.start_time_time'), :value => record.start_time || now %>
@@ -67,7 +67,7 @@
 <%= form.check_box   :commentable,          :label => t('shared.commentable') -%>
 <%= form.check_box   :subscription_enabled %>
 
-<% javascript_tag do %>
+<%= javascript_tag do %>
   var repeatingCalendarItemFields = Ext.get('repeatingCalendarItemFields');
 
   repeatingCalendarItemFields.setVisibilityMode(Ext.Element.DISPLAY);

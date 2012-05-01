@@ -75,8 +75,8 @@ class ContentCopy < ActiveRecord::Base
   end
   
   # Necessary because we override method_missing
-  def respond_to?(method_name)
-    if self.copied_node.present? && self.copied_node.content.respond_to?(method_name)
+  def respond_to?(*args)
+    if self.copied_node.present? && self.copied_node.content.respond_to?(*args)
       true
     else
       super
@@ -97,12 +97,12 @@ protected
   # (as identified by +copied_node+) is not associated with a ContentCopy content 
   # node.
   def ensure_copied_node_is_not_associated_with_a_content_copy_content_node
-    errors.add_to_base(:copied_content_cannot_be_content_copy) if self.copied_node && self.copied_node.content.is_a?(ContentCopy)
+    errors.add(:base, :copied_content_cannot_be_content_copy) if self.copied_node && self.copied_node.content.is_a?(ContentCopy)
   end
 
   # Ensure the copied node is associated with a content node that allows to be copied.
   def ensure_copied_node_is_associated_with_a_copyable_content_node
-    errors.add_to_base(:copied_content_must_be_copyable) if self.copied_node && !self.copied_node.content_type_configuration[:copyable]
+    errors.add(:base, :copied_content_must_be_copyable) if self.copied_node && !self.copied_node.content_type_configuration[:copyable]
   end
 
 end

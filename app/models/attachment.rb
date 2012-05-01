@@ -41,21 +41,20 @@ class Attachment < ActiveRecord::Base
 
   # This content type needs approval when created or altered by an editor.
   needs_editor_approval
+  
+  mount_uploader :file, AttachmentUploader
 
-  # Windows can't correctly determine the file size and thus needs
-  # the minimum size set to 0 bytes.
-  has_attachment :size => 1.byte..1.gigabyte
-  validates_as_attachment
-
+  # Clean the +filename+.
+  before_validation :clean_filename
+  
+  # Store metadata  
+  before_validation :set_metadata
+  
+  validates_presence_of     :content_type, :size
   validates_numericality_of :size, :height, :width, :allow_nil => true
 
   # The binary data of the attachment is stored in a separate +db_file+ model.
   belongs_to              :db_file
-  validates_uniqueness_of :db_file_id
-  validates_associated    :db_file
-
-  # Clean the +filename+.
-  before_validation :clean_filename
 
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of :title
@@ -96,10 +95,18 @@ protected
     
   # Clean up the +filename+ for storage.
   def clean_filename
-    if self.filename
-      cleaned_filename = cleaned_basename = self.basename.gsub(/[^a-z0-9\-_]/i, '-')
-      cleaned_filename = "#{cleaned_basename}.#{self.extension.downcase}" if self.extension
+    if filename.present?
+      cleaned_filename = cleaned_basename = basename.gsub(/[^a-z0-9\-_]/i, '-')
+      cleaned_filename = "#{cleaned_basename}.#{extension.downcase}" if extension
       self.filename    = cleaned_filename
     end
   end  
+  
+  def set_metadata
+    if file?
+      self.content_type ||= file.file.content_type || Mime::Type.lookup_by_extension(file.file.extension)
+      self.size ||= file.file.size
+      self.filename ||= file.file.original_filename
+    end
+  end
 end

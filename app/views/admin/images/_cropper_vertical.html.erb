@@ -59,7 +59,7 @@ offset            = image.offset || slider_top / 2
       :frequency => 1,
       :method => :put,
       :with => "'image[offset]=' + encodeURIComponent($F('offset_#{image.id}'))") -%>
-<% javascript_tag do %>
+<%= javascript_tag do %>
 Ext.onReady(function() {
   new Ext.Slider({
     renderTo: 'slider_<%= image.id %>',

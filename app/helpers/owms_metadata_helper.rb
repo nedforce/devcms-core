@@ -22,7 +22,7 @@ module OwmsMetadataHelper
     
     metadata << meta_tag('DCTERMS.alternative', node.title_alternative_list.to_s) if node.title_alternative_list.present?
     
-    metadata.flatten.join('')
+    metadata.flatten.join('').html_safe
   end
 
   # For content to be OWMS-conform, 8 core OWMS properties must be specified:

@@ -30,7 +30,7 @@ class Comment < ActiveRecord::Base
   validates_presence_of :user # Remove this validation to allow unauthenticated comments.
 
   # Set the +user_name+ to the login of the +user+.
-  before_validation_on_create :set_user_name
+  before_validation :set_user_name, :on => :create
 
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of :commentable, :comment, :user_name

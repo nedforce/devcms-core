@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::CombinedCalendarsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -35,7 +35,7 @@ class Admin::CombinedCalendarsControllerTest < ActionController::TestCase
     assert_difference('CombinedCalendar.count') do
       create_combined_calendar
       assert_response :success
-      assert !assigns(:combined_calendar).new_record?, :message => assigns(:combined_calendar).errors.full_messages.join('; ')
+      assert !assigns(:combined_calendar).new_record?, assigns(:combined_calendar).errors.full_messages.join('; ')
     end
   end
 
@@ -58,7 +58,7 @@ class Admin::CombinedCalendarsControllerTest < ActionController::TestCase
       create_combined_calendar({ :title => nil }, { :commit_type => 'preview' })
       assert_response :unprocessable_entity
       assert assigns(:combined_calendar).new_record?
-      assert assigns(:combined_calendar).errors.on(:title)
+      assert assigns(:combined_calendar).errors[:title].any?
       assert_template 'new'
     end
   end
@@ -72,7 +72,7 @@ class Admin::CombinedCalendarsControllerTest < ActionController::TestCase
     
     assert_response :unprocessable_entity
     assert assigns(:combined_calendar).new_record?
-    assert assigns(:combined_calendar).errors.on(:title)
+    assert assigns(:combined_calendar).errors[:title].any?
   end
   
   def test_should_get_edit
@@ -122,7 +122,7 @@ class Admin::CombinedCalendarsControllerTest < ActionController::TestCase
     put :update, :id => combined_calendar, :combined_calendar => { :title => nil }, :commit_type => 'preview'
 
     assert_response :unprocessable_entity
-    assert assigns(:combined_calendar).errors.on(:title)
+    assert assigns(:combined_calendar).errors[:title].any?
     assert_equal old_title, combined_calendar.reload.title
     assert_template 'edit'
   end
@@ -132,7 +132,7 @@ class Admin::CombinedCalendarsControllerTest < ActionController::TestCase
     
     put :update, :id => combined_calendars(:combined_calendar).id, :combined_calendar => {:title => nil}
     assert_response :unprocessable_entity
-    assert assigns(:combined_calendar).errors.on(:title)
+    assert assigns(:combined_calendar).errors[:title].any?
   end
 
 protected

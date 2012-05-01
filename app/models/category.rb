@@ -36,13 +36,13 @@ class Category < ActiveRecord::Base
   validate :root_category_unique
 
   # Root categories are categories without a parent category.
-  named_scope :root_categories, :conditions => 'parent_id is NULL'
+  scope :root_categories, :conditions => 'parent_id is NULL'
 
   # Regular categories are categories with a parent category.
-  named_scope :categories, :conditions => 'parent_id is NOT NULL'
+  scope :categories, :conditions => 'parent_id is NOT NULL'
 
   # Default sort by name.
-  default_scope :order => 'name ASC'
+  default_scope :order => 'categories.name ASC'
 
   # Returns true when this category has no parent category.
   def is_root_category?
@@ -60,7 +60,7 @@ class Category < ActiveRecord::Base
   # Prevents destruction if there are still nodes referencing this category.
   def check_for_children
     if nodes.any?
-      errors.add_to_base(:elements_still_present)
+      errors.add(:base, :elements_still_present)
       false
     end
   end

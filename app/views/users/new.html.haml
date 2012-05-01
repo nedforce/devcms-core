@@ -7,7 +7,7 @@
 
   = error_messages_for :user
 
-  - form_for :user, :url => secure_url(:users_url) do |f|
+  = form_for :user, :url => secure_url(:users_url) do |f|
 
     %div= hidden_field_tag :invitation_email, @invitation_email
     %div= hidden_field_tag :invitation_code,  @invitation_code

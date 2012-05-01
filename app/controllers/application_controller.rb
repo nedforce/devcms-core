@@ -2,19 +2,12 @@
 # Likewise, all the methods added will be available for all controllers.
 
 class ApplicationController < ActionController::Base
-  include AuthenticatedSystem
-  include ExceptionNotifiable
-  include RoleRequirementSystem
-  include SslRequirement
-  
-  self.mod_porter_secret = "h6UGA7Hn9N4D8Jsu2SbX"
-  
+  include DevcmsCore::AuthenticatedSystem
+  include DevcmsCore::RoleRequirementSystem
+  include ::SslRequirement
+
   protect_from_forgery
-  
-  # Ensures the values for the +password+ and +password_confirmation+
-  # attributes of users are not logged, for security reasons.
-  filter_parameter_logging :password
-  
+
   # Catch all exceptions (except 404 errors, which are handled below) to render
   # a custom 500 page. Also makes sure a notification mail is sent.
   # 404 exceptions are handled below.
@@ -22,9 +15,9 @@ class ApplicationController < ActionController::Base
    
   # Catches all 404 errors to render a 404 page.
   # Note that this rescue_from statement has precedence over the one above.
-  # UnknownAction and RecordNotFound exceptions are given a special treatment, so you don't have to worry about
+  # ActionNotFound and RecordNotFound exceptions are given a special treatment, so you don't have to worry about
   # catching them in the +find_[resource]+ methods throughout all controllers.
-  rescue_from ActionController::RoutingError, ActionController::UnknownController, ActionController::UnknownAction, ActiveRecord::RecordNotFound, :with => :handle_404 unless Rails.env.development?
+  rescue_from ActionController::RoutingError, ActionController::UnknownController, ::AbstractController::ActionNotFound, ActiveRecord::RecordNotFound, :with => :handle_404 unless Rails.env.development?
   
   before_filter :redirect_to_full_domain
   
@@ -36,8 +29,6 @@ class ApplicationController < ActionController::Base
 
   # Attempt to login the user from a cookie, if it's set.
   before_filter :login_from_cookie
-
-  before_filter :login_as_admin_on_local_request_to_changes, :only => :all_changes
   
   # Performs the actual authorization procedure
   before_filter :check_authorization
@@ -52,8 +43,6 @@ class ApplicationController < ActionController::Base
   before_filter :set_search_scopes
   
   before_filter :set_page_title
-  
-  before_filter :confirm_destroy, :only => :destroy
 
   # Limit the session time
   before_filter :extend_and_limit_session_time
@@ -70,50 +59,15 @@ class ApplicationController < ActionController::Base
   # Include all helpers, all the time.
   helper VideoHelper, SitemapsHelper, SearchHelper, PollQuestionsHelper, OwmsMetadataHelper, HtmlEditorHelper, ContactBoxesHelper, CalendarsHelper, AttachmentsHelper, ApplicationHelper, TextHelper, LayoutHelper
 
-  helper_method :secure_url, :current_site, :current_user_has_any_role?, :current_user_is_admin?, :current_user_is_editor?, :current_user_is_final_editor?
-  
-  # Renders confirm_destroy.html.erb if destroy is requested using GET.
-  # Hyperlinks with <tt>:method => :delete</tt> will perform a GET request if
-  # the browser is not JS enabled.
-  #
-  # NOTE: Make sure confirm_destroy.html.erb exists for all controllers where you need to
-  # make DELETE requests using normal hyperlinks. It will usually display a form
-  # asking for confirmation of deletion, and post to the resource path using DELETE.
-  # Also remember to add <tt>:member => {:destroy => :any}</tt> to the resource mapping
-  # in routes.rb.
-  verify :method => [ :get, :delete ], :only => :destroy
+  helper_method :layout_configuration, :secure_url, :current_site, :current_user_has_any_role?, :current_user_is_admin?, :current_user_is_editor?, :current_user_is_final_editor?
 
   # Limits the session time to a certain amount
   def extend_and_limit_session_time
-      if Settler[:user_session_time_limit_enabled]
-        request.session_options[:expire_after] = current_user && current_user.is_privileged? ? Settler[:user_session_privileged_timeout].minutes : Settler[:user_session_timeout].minutes
-      end
-  end
-
-  # Called when we need to include hidden nodes on local requests
-  # Before filter sets current user to admin on local requests to this method
-  def all_changes
-    changes
-  end
-
-  def changes
-    if @node.present? && @node.content_class != Feed && params[:format] == 'atom'
-      if @node.has_changed_feed
-        @nodes = @node.last_changes(:self)
-      elsif @node.content_class <= Section
-        @nodes = @node.last_changes(:all, { :limit => 25 })
-      else
-        raise ActionController::UnknownAction
-      end
-      
-      respond_to do |format|
-        format.atom { render :template => '/shared/changes', :layout => false }
-      end
-    else
-      raise ActionController::UnknownAction
+    if Settler[:user_session_time_limit_enabled]
+      request.session_options[:expire_after] = current_user && current_user.is_privileged? ? Settler[:user_session_privileged_timeout].minutes : Settler[:user_session_timeout].minutes
     end
   end
-  
+
   # GET /synonyms.txt
   def synonyms
     synonyms = {}
@@ -125,10 +79,8 @@ class ApplicationController < ActionController::Base
     send_data synonyms.join("\n"), :filename => 'synonyms.txt', :type => 'text/plain', :disposition => 'attachment'
   end
   
-protected
-
   # Renders a custom 404 page.
-  def handle_404(exception)
+  def handle_404(exception = env["action_dispatch.exception"])
     @page_title = t('errors.page_not_found')
     respond_to do |f|
       f.html do 
@@ -152,7 +104,7 @@ protected
   end
 
   # Renders a custom 500 page. Also makes sure a notification mail is sent.
-  def handle_500(exception)
+  def handle_500(exception = env["action_dispatch.exception"])
     if Rails.env.test?
       puts "\n#{exception.message}"
       puts exception.backtrace.join("\n") 
@@ -182,15 +134,22 @@ protected
       f.all  { render :nothing => true,       :status => :internal_server_error }
     end
   end
+  
+  def fullpath
+    request.env['ORIGINAL_FULLPATH'] || request.fullpath
+  end
+
+protected
 
   # Used to scope the content (menu's etc) to the current site node
   def current_site
     @current_site ||= Node.with_content_type('Site').find_by_id(params[:site_id]) || Site.find_by_domain(request.domain).try(:node) || raise(ActionController::RoutingError, 'No root site found!')
   end
   
-  # Used to find the operated node (if present and accessible)
+  # Used to find the operated node. Should be used for content nodes only
   def find_node
-    @node = current_site.self_and_descendants.accessible.include_content.find(params[:node_id]) if params[:node_id]
+    return unless params[:id].present? && controller_model.respond_to?(:is_content_node?) && controller_model.is_content_node?
+    @node = current_site.self_and_descendants.accessible.include_content.where([ 'content_type = ? AND content_id = ?', controller_model.base_class.name, params[:id].to_i ]).first!
   end
   
   # Used to find the context node (for authorization purposes)
@@ -202,15 +161,13 @@ protected
         @context_node = @node.self_and_ancestors.sections.include_content.last
       end
     else
-      resource_type = params[:controller].classify.constantize rescue nil
-      
-      if resource_type
-        parent_resource_type = resource_type.parent_type rescue nil
+      if controller_model
+        parent_resource_type = controller_model.parent_type rescue nil
         
         # Nested controller access
         if parent_resource_type
           name = parent_resource_type.name
-          node = current_site.self_and_descendants.accessible.with_content_type(name).include_content.first(:conditions => { :content_id => params["#{name.underscore}_id"] })
+          node = current_site.self_and_descendants.accessible.with_content_type(name).include_content.first(:conditions => { :content_id => params["#{name.underscore}_id"].to_i })
           @context_node = node.self_and_ancestors.sections.last if node
         else
           @context_node = current_site
@@ -271,6 +228,10 @@ protected
       return 'default'
     end
   end
+  
+  def layout_configuration
+    @layout_configuration
+  end
 
   # Set default GET parameter for layout to plain if current layout is plain.
   # This ensures that all outgoing internal links from a 'plain' page also
@@ -318,7 +279,7 @@ protected
   # Returns true if SSL should be disabled, else false.
   def disable_ssl?
     # We don't need/want SSL encryption in a development environment, or when testing.
-    !Settler[:ssl_enabled] || consider_all_requests_local || local_request?
+    Rails.application.config.consider_all_requests_local || !Settler[:ssl_enabled]
   end
 
   # Overrides +verify_authenticity_token+ from +RequestForgeryProtection+ to prevent
@@ -329,20 +290,12 @@ protected
 
   # Renders the general deletion confirmation form, and cancels the chain.
   def confirm_destroy
-    render :action => 'confirm_destroy' if request.get?
+    render :action => 'confirm_destroy'
   end
 
   # Delivers the exception notification email.
   def send_exception_notification(exception)
-    deliverer = self.class.exception_data
-
-    data = case deliverer
-      when nil    then {}
-      when Symbol then send(deliverer)
-      when Proc   then deliverer.call(self)
-    end
-
-    ExceptionNotifier.deliver_exception_notification(exception, self, request, data)
+    ExceptionNotifier::Notifier.exception_notification(request.env, exception).deliver
   end
 
   def set_private_menu
@@ -393,11 +346,6 @@ protected
   # Returns true if the current user has editor rights on a given node, false otherwise.
   def current_user_is_editor?(node)
     current_user_has_role?('editor', node)
-  end
-
-  # Login as an admin user if the request is local.
-  def login_as_admin_on_local_request_to_changes
-    @current_user = RoleAssignment.first(:conditions => { :name => 'admin' }, :include => :user).user if local_request?
   end
 
   # Parse the publication start date corresponding to the passed in +publication_start_date_day+ and +publication_start_date_time+ parameters.
@@ -451,6 +399,18 @@ protected
   end
   
   def redirect_to_full_domain
-    redirect_to "#{request.protocol}#{current_site.content.domain}:#{request.port}#{request.request_uri}" unless request.local? || request.host == current_site.content.domain rescue false
+    redirect_to "#{request.protocol}#{current_site.content.domain}:#{request.port}#{fullpath}" unless Rails.application.config.consider_all_requests_local || request.host == current_site.content.domain rescue false
   end
+
+  def controller_model
+    @controller_model ||= controller_name.classify.split('::').last.constantize rescue nil
+  end
+
+private
+  
+  def determine_redirect_url(request, ssl)
+    protocol = ssl ? "https" : "http"
+    "#{protocol}://#{determine_host_and_port(request, ssl)}#{fullpath}"
+  end 
+
 end

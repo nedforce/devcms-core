@@ -3,18 +3,18 @@
   - query_string += " #{t 'search.of_type'} '#{@search_scope.first}'"
 
 - if @results.blank?
-  %p.number_of_results= t('search.no_results') + query_string
+  %p.number_of_results= raw t('search.no_results') + query_string
 
 - else
   - if @results.size > 1
     .number_of_results
-      = show_search_results_index(t('search.results')) + " #{t 'search.of'} " + content_tag(:strong, @results.size.to_s) + query_string
+      = raw(show_search_results_index(t('search.results')) + " #{t 'search.of'} " + content_tag(:strong, @results.size.to_s) + query_string)
 
   - else
-    %p.number_of_results= t('search.results_1') + query_string
+    %p.number_of_results= raw(t('search.results_1') + query_string)
 
   .search_results
     - @results.each do |result|
       = render :partial => 'search_result', :object => result
     .pageNumber
-      = pagination_links(@results)
+      = paginate(@results)

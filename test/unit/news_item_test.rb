@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class NewsItemTest < ActiveSupport::TestCase
   def setup
@@ -16,26 +16,26 @@ class NewsItemTest < ActiveSupport::TestCase
   def test_should_require_title
     assert_no_difference 'NewsItem.count' do
       news_item = create_news_item(:title => nil)
-      assert news_item.errors.on(:title)
+      assert news_item.errors[:title].any?
     end
     
     assert_no_difference 'NewsItem.count' do
       news_item = create_news_item(:title => "   ")
-      assert news_item.errors.on(:title)
+      assert news_item.errors[:title].any?
     end
   end
 
   def test_should_require_body
     assert_no_difference 'NewsItem.count' do
       news_item = create_news_item(:body => nil)
-      assert news_item.errors.on(:body)
+      assert news_item.errors[:body].any?
     end
   end
 
   def test_should_require_parent
     assert_no_difference 'NewsItem.count' do
       news_item = create_news_item(:parent => nil)
-      assert news_item.errors.on(:news_archive)
+      assert news_item.errors[:news_archive].any?
     end
   end
 
@@ -43,7 +43,7 @@ class NewsItemTest < ActiveSupport::TestCase
     assert_difference 'NewsItem.count', 2 do
       2.times do
         news_item = create_news_item(:title => 'Non-unique title')
-        assert !news_item.errors.on(:title)
+        assert !news_item.errors[:title].any?
       end
     end
   end

@@ -1,4 +1,4 @@
- require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class NodeParanoidDeleteTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -69,10 +69,8 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
   end
   
   def test_acts_as_content_node_default_scope_should_filter_out_paranoid_deleted_nodes
-    assert_equal @economie_section, Section.find(@economie_section)
-    
-    @economie_section_node.paranoid_delete!
-    
+    assert_equal @economie_section, Section.find(@economie_section)    
+    assert @economie_section_node.paranoid_delete!
     assert !Section.exists?(@economie_section)
   end
   
@@ -148,9 +146,8 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
     
     assert !Node.exists?(@economie_section_node)
     assert !Node.exists?(node)
-    
-    assert !@economie_section_node.content.reload.present?
-    assert !node.content.reload.present?
+    assert !Section.where(:id => @economie_section_node.content.id).first.present?
+    assert !Page.where(:id => node.content.id).first.present?
     
     assert !ContentCopy.exists?(cc1)
     assert !ContentCopy.exists?(cc2)

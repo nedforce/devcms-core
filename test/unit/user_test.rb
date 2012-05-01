@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class UserTest < ActiveSupport::TestCase
 
@@ -12,38 +12,38 @@ class UserTest < ActiveSupport::TestCase
   def test_should_require_login
     assert_no_difference 'User.count' do
       u = create_user(:login => nil)
-      assert u.errors.on(:login)
+      assert u.errors[:login].any?
     end
 
     assert_no_difference 'User.count' do
       u = create_user(:login => "   ")
-      assert u.errors.on(:login)
+      assert u.errors[:login].any?
     end
   end
 
   def test_should_require_password
     assert_no_difference 'User.count' do
       u = create_user(:password => nil)
-      assert u.errors.on(:password)
+      assert u.errors[:password].any?
     end
 
     assert_no_difference 'User.count' do
       u = create_user(:password => "   ")
-      assert u.errors.on(:password)
+      assert u.errors[:password].any?
     end
   end
 
   def test_should_require_password_confirmation
     assert_no_difference 'User.count' do
       u = create_user(:password_confirmation => nil)
-      assert u.errors.on(:password_confirmation)
+      assert u.errors[:password_confirmation].any?
     end
   end
 
   def test_should_require_email_address
     assert_no_difference 'User.count' do
       u = create_user(:email_address => nil)
-      assert u.errors.on(:email_address)
+      assert u.errors[:email_address].any?
     end
   end
 
@@ -51,27 +51,30 @@ class UserTest < ActiveSupport::TestCase
     assert_no_difference 'User.count' do
       ["email@test,org", "email@domain", "a@a@domain.com", "bla.,@bla.com", "@bla.com", "@", "bla@bla.,org", "foo@localhost"].each do |address|
         u = create_user(:email_address => address)
-        assert u.errors.on(:email_address)
+        assert u.errors[:email_address].any?
       end
     end
   end
 
   def test_should_require_valid_login
     u = create_user(:login => "A") # TOO SHORT
-    assert u.errors.on(:login)
+    assert u.errors[:login].any?
 
     u = create_user(:login => "A"*256) # TOO LONG
-    assert u.errors.on(:login)
+    assert u.errors[:login].any?
 
     u = create_user(:login => "no%crazy)stuff*allowed")
-    assert u.errors.on(:login)
+    assert u.errors[:login].any?
 
     u = create_user(:login => "numbers_123_underscores_and-dashes-are-OK")
-    assert !u.errors.on(:login)
+    assert !u.errors[:login].any?
   end
 
   def test_should_not_update_login
-    users(:sjoerd).update_attribute(:login, "henk")
+    assert_raises ActiveRecord::ActiveRecordError do
+      users(:sjoerd).update_attribute(:login, "henk")
+    end
+    
     assert_equal "sjoerd", users(:sjoerd).reload.login
   end
 
@@ -291,7 +294,11 @@ class UserTest < ActiveSupport::TestCase
   def test_should_not_update_attrs_on_mass_assign
     u = users(:unverified_user)
     u.update_attribute(:verification_code, '12345')
-    u.update_attributes(:verified => true, :verification_code => 'XXX')
+    
+    assert_raises ActiveModel::MassAssignmentSecurity::Error do    
+      u.update_attributes(:verified => true, :verification_code => 'XXX')
+    end
+    
     assert !u.verified?
     assert_not_equal 'XXX', u.verification_code
   end
@@ -308,7 +315,7 @@ class UserTest < ActiveSupport::TestCase
     u = users(:sjoerd)
     u.verification_code = nil
     assert !u.valid?
-    assert u.errors.on(:verification_code)
+    assert u.errors[:verification_code].any?
   end
 
   def test_should_auto_set_attrs_on_create
@@ -336,11 +343,11 @@ class UserTest < ActiveSupport::TestCase
   end
 
   def test_should_not_allow_reserved_logins
-    DevCMS.stubs(:reserved_logins_regex).returns(/(burger?meester|wethouder|gemeente|voorlichting)/i)
+    Devcms.stubs(:reserved_logins_regex).returns(/(burger?meester|wethouder|gemeente|voorlichting)/i)
     [ 'Burgemeester', 'Wethouder', 'Gemeente', 'Voorlichting'].each do |login|
       [ login, login.downcase, login.upcase ].each do |l|
         u = create_user(:login => l)
-        assert u.errors.on(:login)
+        assert u.errors[:login].any?
       end
     end
   end
@@ -448,7 +455,7 @@ class UserTest < ActiveSupport::TestCase
 
     email = ActionMailer::Base.deliveries.first
     assert email.to.include?(email_address)
-    assert email.body.include?(I18n.t('layouts.forgot_password'))
+    assert email.parts.first.body.include?('nieuw wachtwoord aanvragen')
   end
   
 protected

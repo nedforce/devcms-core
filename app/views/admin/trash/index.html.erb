@@ -116,7 +116,7 @@ Ext.onReady(function(){
             var selectedRow = grid.selModel.getSelected();
             
             Ext.Ajax.request({
-              url: 'trash/restore/' + selectedRow.id + '.json',
+              url: 'trash/' + selectedRow.id + '/restore.json',
               method: 'POST',
               params: "_method=put&authenticity_token=<%= form_authenticity_token -%>",
               

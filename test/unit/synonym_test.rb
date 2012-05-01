@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class SynonymTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -12,28 +12,28 @@ class SynonymTest < ActiveSupport::TestCase
   def test_should_require_name
     assert_no_difference 'Synonym.count' do
       s = create_synonym(:name => nil)
-      assert s.errors.on(:name)
+      assert s.errors[:name].any?
     end
   end
 
   def test_should_require_original
     assert_no_difference 'Synonym.count' do
       s = create_synonym(:original => nil)
-      assert s.errors.on(:original)
+      assert s.errors[:original].any?
     end
   end
 
   def test_should_require_weight
     assert_no_difference 'Synonym.count' do
       s = create_synonym(:weight => nil)
-      assert s.errors.on(:weight)
+      assert s.errors[:weight].any?
     end
   end
 
   def test_should_require_unique_name_within_scope
     assert_no_difference 'Synonym.count' do
       s = create_synonym(:original => synonyms(:afval_vuilnis).original, :name => synonyms(:afval_vuilnis).name)
-      assert s.errors.on(:name)
+      assert s.errors[:name].any?
     end
   end
 
@@ -46,14 +46,14 @@ class SynonymTest < ActiveSupport::TestCase
   def test_should_require_numerical_weight
     assert_no_difference 'Synonym.count' do
       s = create_synonym(:weight => "quux")
-      assert s.errors.on(:weight)
+      assert s.errors[:weight].any?
     end
   end
 
   def test_should_require_positive_weight
     assert_no_difference 'Synonym.count' do
       s = create_synonym(:weight => -1)
-      assert s.errors.on(:weight)
+      assert s.errors[:weight].any?
     end
   end
 

@@ -49,7 +49,7 @@ class RoleAssignment < ActiveRecord::Base
   # Validator method to check whether the +User+ this +RoleAssignment+ is being created
   # for has no inherited rights from its ancestor +Nodes+.
   def no_inherited_roles
-    errors.add_to_base(:inherited_roles) if user && user.has_role_on?(user.role_assignments.map(&:name), node)
+    errors.add(:base, :inherited_roles) if user && user.has_role_on?(user.role_assignments.map(&:name), node)
   end
   
   def secure_user_for_write_access

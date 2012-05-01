@@ -1,0 +1,91 @@
+#header
+  background: transparent url(image_path('header_background_default.png')) repeat-x
+
+#main_menu_and_header_photo .header_photo .overlay
+
+h1, h2, h3, a
+  color: #8d0101
+h2
+  font-size: 14px !important
+div.htmlField h2, div.htmlField h3
+  color: #8d0101
+  font-size: 14px !important
+  font-family: 'Trebuchet MS', sans-serif
+  
+.background_base, .hover_background_base:hover
+  background-color: #436677 !important
+
+.background_highlight, .hover_background_highlight:hover
+  background-color: #385466 !important
+
+.font_base, .hover_font_base:hover
+  color: #025E99 !important
+
+.font_highlight, .hover_font_highlight:hover
+  color: #D9EAF2 !important
+
+.border_base
+  border-color: #025E99
+  *
+    border-color: #025E99
+
+.border_highlight
+  border-color: #D9EAF2
+  *
+    border-color: #D9EAF2
+
+#logo
+  margin-top: 22px
+
+#footer
+  width: 980px
+  padding-left: 20px
+  padding-right: 20px
+  background-color: #AAA
+  color: #888
+  a
+    color: #FFF
+
+body
+  background-image: url(image_path('stripe.png'))
+  background-color: #333
+  font-size: 12px
+  #content
+    .metadata, .buttons
+      font-size: 10px
+      color: #AAA
+      a
+        color: #AAA
+
+#header
+  background-image: url(image_path('header_bg.png'))
+  position: absolute
+  width: 980px
+  .header_photo
+    position: absolute
+    top: 20px
+    left: 20px
+  .meta_links
+    position: absolute
+    top: 20px
+    right: 20px
+  #main_menu
+    position: absolute
+    top: 20px
+    left: 766px
+    li
+      padding: 0
+      float: none
+      height: auto
+      margin-bottom: 10px
+      &:hover
+        background-color: transparent
+      a
+        font-size: 18px
+        &:before
+          content: "» "
+        &:hover
+          color: #CCC
+
+p
+  margin-top: 0.5em

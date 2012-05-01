@@ -14,7 +14,7 @@ Ext.onReady(function(){
 
     // Create initial root node
     root = new Ext.dvtr.AsyncContentTreeNode(
-        Ext.util.JSON.decode('<%= @root_node.to_tree_node_for(current_user).to_json -%>')
+        Ext.util.JSON.decode('<%= raw @root_node.to_tree_node_for(current_user).to_json -%>')
     );
 
     <% if params[:active_node_id] -%>

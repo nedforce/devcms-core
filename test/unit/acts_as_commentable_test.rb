@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class ActsAsCommentableTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -33,14 +33,14 @@ class ActsAsCommentableTest < ActiveSupport::TestCase
     comment = new_comment(:user => nil, :user_name => nil)
     @news_item.add_comment comment
     
-    assert comment.errors.on(:user_name)
+    assert comment.errors[:user_name].any?
   end
   
   def test_should_require_non_empty_comment
     comment = new_comment(:comment => '')
     @news_item.add_comment comment
     
-    assert comment.errors.on(:comment)
+    assert comment.errors[:comment].any?
   end
     
   protected

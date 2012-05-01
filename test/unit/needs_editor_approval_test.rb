@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class EditorApprovalRequirementTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -231,6 +231,7 @@ class EditorApprovalRequirementTest < ActiveSupport::TestCase
 
     assert page.update_attributes(:user => @editor, :body => 'Version 2')
 
+    page.node.reload
     page = page.reload
 
     assert_equal 'Version 1', page.body

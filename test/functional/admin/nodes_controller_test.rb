@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::NodesControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -85,7 +85,7 @@ class Admin::NodesControllerTest < ActionController::TestCase
   def test_privileged_user_should_be_redirected_to_admin_root
     login_as :editor
     delete :destroy, :id => nodes(:root_section_node).id
-    assert_redirected_to admin_nodes_path
+    assert_response 403
   end
 
   def test_normal_user_should_be_redirected_to_site_root

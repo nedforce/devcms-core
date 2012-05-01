@@ -1,11 +1,12 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::ImagesControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
   def setup
+    ImageUploader.any_instance.stubs(:path).returns(File.join(File.dirname(__FILE__), '../../fixtures/files/test.jpg'))    
     @image = images(:test_image)
-  end
+  end  
 
   def test_should_get_show
     login_as :sjoerd
@@ -15,7 +16,7 @@ class Admin::ImagesControllerTest < ActionController::TestCase
   end
 
   def test_should_get_previous
-    @image = Image.select_all_columns.find(@image.id)
+    @image = Image.find(@image.id)
     @image.save :user => User.find_by_login('editor')
     
     login_as :sjoerd
@@ -37,7 +38,7 @@ class Admin::ImagesControllerTest < ActionController::TestCase
     assert_difference('Image.count', 1) do
       create_image
       assert_response :success
-      assert !assigns(:image).new_record?, :message => assigns(:image).errors.full_messages.join('; ')
+      assert !assigns(:image).new_record?, assigns(:image).errors.full_messages.join('; ')
     end
   end
 
@@ -47,7 +48,7 @@ class Admin::ImagesControllerTest < ActionController::TestCase
     assert_difference 'Image.count' do
       create_image(:parent_node_id => nodes(:help_page_node).id)
       assert_response :success
-      assert !assigns(:image).new_record?, :message => assigns(:image).errors.full_messages.join('; ')
+      assert !assigns(:image).new_record?, assigns(:image).errors.full_messages.join('; ')
     end
   end
 
@@ -67,7 +68,7 @@ class Admin::ImagesControllerTest < ActionController::TestCase
     assert_no_difference('Image.count') do
       create_image(:image => { :title => nil })
       assert_response :success
-      assert assigns(:image).errors.on(:title)
+      assert assigns(:image).errors[:title].any?
     end
 
   end
@@ -110,7 +111,7 @@ class Admin::ImagesControllerTest < ActionController::TestCase
 
     put :update, :id => images(:test_image).id, :image => {:title => nil}
     assert_response :unprocessable_entity
-    assert assigns(:image).errors.on(:title)
+    assert assigns(:image).errors[:title].any?
   end
 
   def test_should_not_show_image_url_controls_to_editors
@@ -172,8 +173,7 @@ class Admin::ImagesControllerTest < ActionController::TestCase
   protected
 
     def create_image(attributes = {}, options = {})
-      image = fixture_file_upload("files/test.jpg")
-      post :create, {:parent_node_id => nodes(:about_page_node).id, :image => { :title => 'An Image', :data => image }}.merge(attributes).merge(options)
+      post :create, {:parent_node_id => nodes(:about_page_node).id, :image => { :title => 'An Image', :file => fixture_file_upload("files/test.jpg") }}.merge(attributes).merge(options)
     end
 
 end

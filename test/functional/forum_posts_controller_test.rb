@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class ForumPostsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -48,7 +48,7 @@ class ForumPostsControllerTest < ActionController::TestCase
     assert_difference('ForumPost.count', 1) do
       create_forum_post
       assert_response :redirect
-      assert !assigns(:forum_post).new_record?, :message => assigns(:forum_post).errors.full_messages.join('; ')
+      assert !assigns(:forum_post).new_record?, assigns(:forum_post).errors.full_messages.join('; ')
       assert_equal users(:gerjan), assigns(:forum_post).user
     end
   end
@@ -58,7 +58,7 @@ class ForumPostsControllerTest < ActionController::TestCase
     assert_no_difference('ForumPost.count') do
       create_forum_post(:body => nil)
       assert_response :success
-      assert assigns(:forum_post).errors.on(:body)
+      assert assigns(:forum_post).errors[:body].any?
     end
   end
     
@@ -120,7 +120,7 @@ class ForumPostsControllerTest < ActionController::TestCase
     old_body = forum_posts(:bewoners_forum_post_five).body
     put :update, :forum_topic_id => forum_topics(:bewoners_forum_topic_wonen).id, :forum_thread_id => forum_threads(:bewoners_forum_thread_one).id, :id => forum_posts(:bewoners_forum_post_five).id, :forum_post => { :body => nil }
     assert_response :success
-    assert assigns(:forum_post).errors.on(:body)
+    assert assigns(:forum_post).errors[:body].any?
     assert_equal old_body, forum_posts(:bewoners_forum_post_five).reload.body
   end
     

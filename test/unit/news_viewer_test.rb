@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class NewsViewerTest < ActiveSupport::TestCase
 
@@ -15,12 +15,12 @@ class NewsViewerTest < ActiveSupport::TestCase
   def test_should_require_title
     assert_no_difference 'NewsViewer.count' do
       news_viewer = create_news_viewer(:title => nil)
-      assert news_viewer.errors.on(:title)
+      assert news_viewer.errors[:title].any?
     end
 
     assert_no_difference 'NewsViewer.count' do
       news_viewer = create_news_viewer(:title => "  ")
-      assert news_viewer.errors.on(:title)
+      assert news_viewer.errors[:title].any?
     end
   end
   
@@ -28,7 +28,7 @@ class NewsViewerTest < ActiveSupport::TestCase
     assert_difference 'NewsViewer.count', 2 do
       2.times do
         news_viewer = create_news_viewer(:title => 'Non-unique title')
-        assert !news_viewer.errors.on(:title)
+        assert !news_viewer.errors[:title].any?
       end
     end
   end
@@ -119,7 +119,7 @@ class NewsViewerTest < ActiveSupport::TestCase
       NewsViewer.update_news_items
     end
 
-    @news_viewer.news_items.each{|ni| assert ni.publication_start_date >= 2.weeks.ago.beginning_of_day }
+    @news_viewer.news_items.reload.each{|ni| assert ni.publication_start_date >= 2.weeks.ago.beginning_of_day }
     assert @news_viewer.news_items.include?(news_item)
   end 
 

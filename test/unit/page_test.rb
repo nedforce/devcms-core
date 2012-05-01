@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class PageTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -17,19 +17,19 @@ class PageTest < ActiveSupport::TestCase
   def test_should_require_title
     assert_no_difference 'Page.count' do
       page = create_page(:title => nil)
-      assert page.errors.on(:title)
+      assert page.errors[:title].any?
     end
 
     assert_no_difference 'Page.count' do
       page = create_page(:title => "  ")
-      assert page.errors.on(:title)
+      assert page.errors[:title].any?
     end
   end
 
   def test_should_require_body
     assert_no_difference 'Page.count' do
       page = create_page(:body => nil)
-      assert page.errors.on(:body)
+      assert page.errors[:body].any?
     end
   end
 
@@ -37,7 +37,7 @@ class PageTest < ActiveSupport::TestCase
     assert_difference 'Page.count', 2 do
       2.times do
         page = create_page(:title => 'Non-unique title')
-        assert !page.errors.on(:title)
+        assert !page.errors[:title].any?
       end
     end
   end

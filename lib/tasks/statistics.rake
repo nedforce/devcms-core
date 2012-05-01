@@ -8,7 +8,7 @@ STATS_DIRECTORIES = [
   %w(Functional\ tests  test/functional),
   %w(Unit\ tests        test/unit)
 
-].collect { |name, dir| [ name, "#{RAILS_ROOT}/vendor/plugins/devcms-core/#{dir}" ] }.select { |name, dir| File.directory?(dir) }
+].collect { |name, dir| [ name, "#{Rails.root}/vendor/plugins/devcms_core/#{dir}" ] }.select { |name, dir| File.directory?(dir) }
 
 namespace :treehouse do
   desc "Report code statistics (KLOCs, etc) from the application"

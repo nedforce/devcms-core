@@ -43,7 +43,7 @@
               = w weblog_post.body
 
             .clearfix.buttons
-              - news_item_button t('weblogs.show_post') do
+              = news_item_button t('weblogs.show_post') do
                 = link_to_content_node t('weblogs.show_post'), weblog_post, {}, :title => h(weblog_post.title)
 
     - if @weblog_posts_for_table.present?

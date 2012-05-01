@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::FeedsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -16,7 +16,7 @@ class Admin::FeedsControllerTest < ActionController::TestCase
 
     assert_difference('Feed.count') do
       create_feed
-      assert !assigns(:feed).new_record?, :message => assigns(:feed).errors.full_messages.join('; ')
+      assert !assigns(:feed).new_record?, assigns(:feed).errors.full_messages.join('; ')
       assert_response :success
     end
   end
@@ -30,7 +30,7 @@ class Admin::FeedsControllerTest < ActionController::TestCase
     
     assert_response :unprocessable_entity
     assert assigns(:feed).new_record?
-    assert assigns(:feed).errors.on(:url)
+    assert assigns(:feed).errors[:url].any?
   end
 
   def test_should_get_edit

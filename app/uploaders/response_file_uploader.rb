@@ -17,7 +17,7 @@ class ResponseFileUploader < CarrierWave::Uploader::Base
   end
   
   def root
-    Rails.root
+    Rails.env.test? ? File.join(Rails.root, 'tmp') : Rails.root
   end   
 
   # Provide a default URL as a default if there hasn't been a file uploaded

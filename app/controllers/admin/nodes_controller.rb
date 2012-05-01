@@ -1,8 +1,9 @@
 # This administrative controller is used to manage the website's nodes.
 class Admin::NodesController < Admin::AdminController
+  before_filter :default_format_json,  :only => :destroy  
 
   # Only allow XHMLHttpRequests some actions.
-  verify :xhr => true, :only => [ :move, :count_children, :sort_children, :set_visibility, :set_accessibility, :export_newsletter ]
+  before_filter :verify_xhr, :only => [ :move, :count_children, :sort_children, :set_visibility, :set_accessibility, :export_newsletter ]
 
   before_filter :find_nodes, :only => [ :bulk_edit, :bulk_update ]
 
@@ -80,7 +81,7 @@ class Admin::NodesController < Admin::AdminController
         format.json { render :json => { :success => 'true' } }
       else
         format.xml  { render :xml => @node.errors.to_xml, :status => :unprocessable_entity }
-        format.json { render :json => {:errors => @node.errors.map{|e|e.join(' ')}}.to_json, :status => :unprocessable_entity }
+        format.json { render :json => { :errors => @node.errors.full_messages }.to_json, :status => :unprocessable_entity }
       end
     end
   end
@@ -267,7 +268,7 @@ class Admin::NodesController < Admin::AdminController
 
   def set_visibility
     respond_to do |format|
-      if @node.set_visibility!(!params[:hidden].to_bool)
+      if @node.set_visibility!(!params[:hidden].to_boolean)
         format.xml  { head :ok }
         format.json { render :json => { :success => 'true' } }
       else
@@ -279,7 +280,7 @@ class Admin::NodesController < Admin::AdminController
   
   def set_accessibility
     respond_to do |format|
-      if @node.set_accessibility!(!params[:private].to_bool)
+      if @node.set_accessibility!(!params[:private].to_boolean)
         format.xml  { head :ok }
         format.json { render :json => { :success => 'true' } }
       else
@@ -291,7 +292,17 @@ class Admin::NodesController < Admin::AdminController
   
 protected
 
+  def find_node
+    @node = Node.find(params[:id]) if params[:id].present?
+  end
+
   def find_nodes
     @nodes = Node.find(params[:ids])
+  end
+  
+private
+
+  def verify_xhr  
+    render(:text => '400 Bad Request', :status => 400) unless request.xhr?
   end
 end

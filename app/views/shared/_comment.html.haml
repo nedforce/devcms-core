@@ -8,5 +8,5 @@
   = w comment.comment
 
 - if logged_in? && (current_user.has_role?('admin', 'final_editor'))
-  - delete_button(t('comments.delete')) do
+  = delete_button(t('comments.delete')) do
     = link_to t('comments.delete'), { :url => [ comment.commentable, comment ], :method => :delete, :confirm => t('comments.really_delete?') }, { :href => destroy_node_comment_path(comment.commentable, comment) }

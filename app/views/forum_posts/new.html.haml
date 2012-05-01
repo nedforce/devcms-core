@@ -9,7 +9,7 @@
   .forumForm
     %h2= t 'forums.create_forum_post'
 
-    - form_for [ @forum_thread.forum_topic, @forum_thread, @forum_post ] do |f|
+    = form_for [ @forum_thread.forum_topic, @forum_thread, @forum_post ] do |f|
       = error_messages_for :forum_post
       = render :partial => 'form', :locals => { :f => f }
       %p.clearfix

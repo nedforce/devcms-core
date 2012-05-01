@@ -5,6 +5,8 @@
 # and the +destroy+ action logs the user out.
 
 class SessionsController < ApplicationController
+  
+  before_filter :confirm_destroy, :only => :destroy, :unless => lambda{ request.delete? } 
 
   # Makes sure that users that are already logged in
   # can't request the login form, or login again.

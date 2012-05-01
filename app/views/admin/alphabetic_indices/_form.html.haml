@@ -1,1 +1,1 @@
-= form.select_field :content_type, AlphabeticIndex::ALLOWED_CONTENT_TYPES.collect { |ct| [ct.constantize.human_name, ct] }, :label => t('alphabetic_indices.content_type')
+= form.select_field :content_type, DevcmsCore::Engine.config.allowed_content_types_for_alphabetic_index.collect { |ct| [ct.constantize.human_name, ct] }, :label => t('alphabetic_indices.content_type')

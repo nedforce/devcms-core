@@ -1,7 +1,9 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
+# This test might not work when running all tests using 'rake test' due to the fact that 
+# the exceptions middleware is not properly initialized in that case.
 class ErrorPagesTest < ActionController::IntegrationTest
-  fixtures :nodes, :pages
+  fixtures :nodes, :pages 
 
   def test_should_render_custom_404
     Settler.error_page_404.update_attribute(:value, nodes(:help_page_node).url_alias)
@@ -26,4 +28,5 @@ class ErrorPagesTest < ActionController::IntegrationTest
     assert_response :not_found
     assert_template 'errors/404'
   end
+
 end

@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class WeblogTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -18,26 +18,26 @@ class WeblogTest < ActiveSupport::TestCase
   def test_should_require_title
     assert_no_difference 'Weblog.count' do
       weblog = create_weblog(:title => nil)
-      assert weblog.errors.on(:title)
+      assert weblog.errors[:title].any?
     end
 
     assert_no_difference 'Weblog.count' do
       weblog = create_weblog(:title => "  ")
-      assert weblog.errors.on(:title)
+      assert weblog.errors[:title].any?
     end
   end
 
   def test_should_require_parent
     assert_no_difference 'Weblog.count' do
       weblog = create_weblog(:parent => nil)
-      assert weblog.errors.on(:weblog_archive)
+      assert weblog.errors[:weblog_archive].any?
     end
   end
 
   def test_should_require_user
     assert_no_difference 'Weblog.count' do
       weblog = create_weblog(:user => nil)
-      assert weblog.errors.on(:user)
+      assert weblog.errors[:user].any?
     end
   end
 
@@ -45,7 +45,7 @@ class WeblogTest < ActiveSupport::TestCase
     assert_no_difference 'Weblog.count' do
       @henk_weblog.title       = 'New title'
       @henk_weblog.description = 'New description'
-      assert @henk_weblog.send(:save)
+      assert @henk_weblog.save
     end
   end
 

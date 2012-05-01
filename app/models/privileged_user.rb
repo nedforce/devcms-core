@@ -8,9 +8,9 @@ class PrivilegedUser < User
   has_many :assigned_nodes, :through => :role_assignments, :source => :node
   
 	
-	named_scope :admins,        :include => :role_assignments, :conditions => "role_assignments.name = 'admin'"
-  named_scope :final_editors, :include => :role_assignments, :conditions => "role_assignments.name = 'final_editor'"
-  named_scope :editors,       :include => :role_assignments, :conditions => "role_assignments.name = 'editor'"
+	scope :admins,        :include => :role_assignments, :conditions => "role_assignments.name = 'admin'"
+  scope :final_editors, :include => :role_assignments, :conditions => "role_assignments.name = 'final_editor'"
+  scope :editors,       :include => :role_assignments, :conditions => "role_assignments.name = 'editor'"
   
 	
 	def demote!

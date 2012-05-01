@@ -1,0 +1,21 @@
+nl:
+  acts_as_content_node:
+    content_box_number_of_items_should_be_greater_than_two: Aantal items in content box moet groter zijn dan 2.
+    could_not_create_content: Kan geen losstaande content aanmaken.
+    publication_end_date_should_be_after_publication_start_date: Publicatie eindtijd moet na publicatie begintijd zijn.
+    publication_start_date_should_be_present: Publicatie begintijd moet opgegeven zijn als publicatie eindtijd opgegeven is.
+    responsible_user_requires_role: Verantwoordelijk gebruiker dient toegang tot de geselecteerde content te hebben.
+  authenticated_system:
+    not_authenticated: U moet ingelogd zijn om deze pagina te kunnen bekijken.
+  recaptcha:
+    could_not_validate_word_verification_response: We konden uw woord verificatie niet valideren. Graag opnieuw proberen.
+    incorrect_word_verification_response: Incorrecte woord verificatie. Graag opnieuw proberen.
+    no_private_key_specified: Geen private key beschikbaar.
+    no_public_key_specified: Geen public key beschikbaar.
+  role_requirement_system:
+    node_not_found: Node niet gevonden.
+    not_authorized: U heeft niet voldoende rechten om deze pagina te kunnen bekijken.
+  tree_delegation:
+    doesnt_accept: accepteert geen content van het
+  node:
+    parent_invalid: Bovenliggende node is ongeldig.

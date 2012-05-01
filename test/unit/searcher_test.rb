@@ -1,11 +1,11 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class SearcherTest < ActiveSupport::TestCase
 
   require 'rsolr'
 
   def setup
-    DevCMS.stubs(:search_configuration).returns(
+    Devcms.stubs(:search_configuration).returns(
       {
         :enabled_search_engines => [ 'ferret', 'luminis' ], 
         :default_search_engine => 'ferret',
@@ -24,8 +24,8 @@ class SearcherTest < ActiveSupport::TestCase
   def test_should_use_default_engine  
     assert_equal Search::FerretSearch, Searcher.new.engine
     
-    new_config = DevCMS.search_configuration.merge({ :default_search_engine => 'luminis' })
-    DevCMS.expects(:search_configuration).at_least(1).returns(new_config)        
+    new_config = Devcms.search_configuration.merge({ :default_search_engine => 'luminis' })
+    Devcms.expects(:search_configuration).at_least(1).returns(new_config)        
     assert_equal Search::LuminisSearch, Searcher.new.engine
   end
 

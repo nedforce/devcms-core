@@ -59,30 +59,14 @@ class ForumThreadsController < ApplicationController
     @start_post.user = current_user
     @start_post.valid?
     
-    @forum_thread_valid = @forum_thread.errors.size == 2 && @forum_thread.errors.on(:forum_topic) && @forum_thread.errors.on(:forum_topic_id)
-    @start_post_valid   = @start_post.errors.size   == 2 && @start_post.errors.on(:forum_thread)  && @start_post.errors.on(:forum_thread_id)
+    @forum_thread_valid = @forum_thread.errors.size == 2 && @forum_thread.errors[:forum_topic].any? && @forum_thread.errors[:forum_topic_id].any?
+    @start_post_valid   = @start_post.errors.size   == 2 && @start_post.errors[:forum_thread].any? && @start_post.errors[:forum_thread_id].any?
     
     if @forum_thread_valid && @start_post_valid
       ActiveRecord::Base.transaction do
         @forum_topic.forum_threads << @forum_thread
         @forum_thread.forum_posts  << @start_post
       end
-    end
-        
-    # Suppress association errors, as they aren't particularly user-friendly.
-    unless @forum_thread.errors.empty?
-      errors = @forum_thread.errors.instance_variable_get(:@errors)
-      errors.delete('forum_topic')
-      errors.delete('forum_topic_id')
-      @forum_thread.errors.instance_variable_set(:@errors, errors)
-    end
-    
-    # Suppress association errors, as they aren't particularly user-friendly.
-    unless @start_post.errors.empty?
-      errors = @start_post.errors.instance_variable_get(:@errors)
-      errors.delete('forum_thread')
-      errors.delete('forum_thread_id')
-      @start_post.errors.instance_variable_set(:@errors, errors)
     end
        
     respond_to do |format|

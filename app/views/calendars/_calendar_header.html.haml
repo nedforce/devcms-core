@@ -1,6 +1,6 @@
 / Header contains H1, description and calendarElement !
 .header.clearfix
-  - readspeaker do
+  = readspeaker do
     = readspeaker_button(:class => 'topRightReadspeaker', :title => h(@calendar.title))
 
     %h1= h @calendar.title

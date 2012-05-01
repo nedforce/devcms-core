@@ -1,5 +1,7 @@
 class SharesController < ApplicationController
-  before_filter :find_page, :only => [ :new, :create ]
+  skip_before_filter :find_node
+  before_filter :find_share_node
+  before_filter :find_page
 
   def new
     @share = Share.new(:message => "#{@page.title}: http://#{request.host}/#{@page.node.url_alias}")
@@ -21,12 +23,12 @@ class SharesController < ApplicationController
   end
 
   protected
+  
+  def find_share_node
+    @node = current_site.self_and_descendants.accessible.include_content.where(:id => params[:node_id]).first!
+  end
 
   def find_page
-    if @node.present?
-      @page = @node.content
-    else
-      raise ActiveRecord::RecordNotFound
-    end
+    @page = @node.content
   end
 end

@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::WeblogPostsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -59,7 +59,7 @@ class Admin::WeblogPostsControllerTest < ActionController::TestCase
     put :update, :id => weblog_post, :weblog_post => { :title => nil, :body => 'updated body' }, :commit_type => 'preview'
 
     assert_response :unprocessable_entity
-    assert assigns(:weblog_post).errors.on(:title)
+    assert assigns(:weblog_post).errors[:title].any?
     assert_equal old_title, weblog_post.reload.title
     assert_template 'edit'
   end
@@ -69,7 +69,7 @@ class Admin::WeblogPostsControllerTest < ActionController::TestCase
     
     put :update, :id => weblog_posts(:henk_weblog_post_one), :weblog_post => { :title => nil }
     assert_response :unprocessable_entity
-    assert assigns(:weblog_post).errors.on(:title)
+    assert assigns(:weblog_post).errors[:title].any?
   end
 
   def test_should_set_publication_start_date_on_update

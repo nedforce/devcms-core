@@ -2,10 +2,10 @@
 .calendarWeek
   .weekNavigation.clearfix
     - if @calendar.calendar_items.exists_before_date?(date.start_of_week)
-      .previousWeek=  link_to_content_node('&laquo;', @calendar, { :date => (date - 1.week).start_of_week.to_s })
+      .previousWeek=  link_to_content_node('«', @calendar, { :date => (date - 1.week).start_of_week.to_s })
     .currentWeek=   "#{t("shared.week", :week => date.cweek)}"
     - if @calendar.calendar_items.exists_after_date?(date.end_of_week)
-      .nextWeek=      link_to_content_node('&raquo;', @calendar, { :date => (date + 1.week ).start_of_week.to_s })
+      .nextWeek=      link_to_content_node('»', @calendar, { :date => (date + 1.week ).start_of_week.to_s })
   - date.start_of_week.upto(date.end_of_week) do |day|
     - @day_items = @calendar_items[day.mday]
 
@@ -19,7 +19,7 @@
         / A calendarItems for this day !
         .calendarItems
           - @day_items.each do |day_item|
-            - readspeaker("#{day.mday}_#{day_item.id}") do |rid|
+            = readspeaker("#{day.mday}_#{day_item.id}") do |rid|
               .calendarItem
                 .metaInfo
                   .time

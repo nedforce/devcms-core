@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class ForumPostTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -17,7 +17,7 @@ class ForumPostTest < ActiveSupport::TestCase
 
   def test_should_not_destroy_start_post
     assert_no_difference "ForumPost.count" do
-      @bewoners_forum_post_one.destroy
+      assert !@bewoners_forum_post_one.destroy      
     end
     assert_equal 5, @bewoners_forum_thread_one.forum_posts.size
     assert_not_nil  @bewoners_forum_thread_one.start_post
@@ -27,7 +27,7 @@ class ForumPostTest < ActiveSupport::TestCase
    def test_should_require_user
     assert_no_difference 'ForumPost.count' do
       forum_post = create_forum_post(:user => nil)
-      assert forum_post.errors.on(:user)
+      assert forum_post.errors[:user].any?
     end
   end
 
@@ -39,19 +39,19 @@ class ForumPostTest < ActiveSupport::TestCase
   def test_should_require_forum_thread
     assert_no_difference 'ForumPost.count' do
       forum_post = create_forum_post(:forum_thread => nil)
-      assert forum_post.errors.on(:forum_thread)
+      assert forum_post.errors[:forum_thread].any?
     end
   end
 
   def test_should_require_body
     assert_no_difference 'ForumPost.count' do
       forum_post = create_forum_post(:body => nil)
-      assert forum_post.errors.on(:body)
+      assert forum_post.errors[:body].any?
     end
 
     assert_no_difference 'ForumPost.count' do
       forum_post = create_forum_post(:body => "  ")
-      assert forum_post.errors.on(:body)
+      assert forum_post.errors[:body].any?
     end
   end
 
@@ -60,14 +60,14 @@ class ForumPostTest < ActiveSupport::TestCase
 
     assert_no_difference 'ForumPost.count' do
       forum_post = create_forum_post()
-      assert forum_post.errors.on_base
+      assert forum_post.errors[:base].any?
     end
 
     @bewoners_forum_thread_one.open
 
     assert_difference 'ForumPost.count', 1 do
       forum_post = create_forum_post()
-      assert_nil forum_post.errors.on_base
+      assert forum_post.errors[:base].empty?
     end
 
   end
@@ -99,7 +99,7 @@ class ForumPostTest < ActiveSupport::TestCase
     end
   end
 
-  def test_is_start_post?
+  def test_is_start_post
     forum_threads = ForumThread.all
 
     forum_threads.each do |thread|
@@ -116,10 +116,13 @@ class ForumPostTest < ActiveSupport::TestCase
 
     assert_equal 1, ActionMailer::Base.deliveries.size
     email = ActionMailer::Base.deliveries.first
+    body = email.parts.first.body
+    
     assert email.to.include?(@bewoners_forum_thread_one.user.email_address)
     assert email.subject.include?('Nieuwe reactie op forum')
-    assert email.body.include?('Enjoy!')
-    assert email.body.include?(@jan.full_name)
+
+    assert body.include?('Enjoy!')
+    assert body.include?(@jan.full_name)
   end
 
   def test_should_not_return_start_posts

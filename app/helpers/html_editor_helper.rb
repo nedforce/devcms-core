@@ -75,7 +75,7 @@ private
   def insert_video_button
     "ed.addButton('add_video_button', {
       title : 'Video invoegen',
-      image : '/images/icons/film_add.png',
+      image : '#{image_path 'icons/film_add.png'}',
       onclick : function() {
         id = window.prompt('#{escape_javascript(t('video.insert_video'))}', '#{escape_javascript(t('video.enter_video_id'))}')
         if (id) {

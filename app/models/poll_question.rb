@@ -146,7 +146,7 @@ protected
   # Ensures the updated +PollOption+ objects are saved.
   def save_poll_options
     self.poll_options.each do |poll_option|
-      poll_option.save(false)
+      poll_option.save(:validate => false)
     end
   end
 

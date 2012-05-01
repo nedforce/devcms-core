@@ -4,7 +4,7 @@
 .right_panel_content
   %h1== #{t 'add_to', :scope => record.controller_name} '#{h @parent_node.content.content_title}'.
 
-  - admin_remote_form_for record, :url => url_for(:controller => record.controller_name, :format => 'html', :parent_node_id => @parent_node.id), :update => 'right_panel_body' do |form|
+  = admin_remote_form_for record, :url => url_for(:controller => record.controller_name, :action => :create, :parent_node_id => @parent_node.id), :update => 'right_panel_body' do |form|
     = error_messages_for record.class.name.downcase
   
     = javascript_tag("document.getElementById('right_panel_body').scrollTop = 0;")

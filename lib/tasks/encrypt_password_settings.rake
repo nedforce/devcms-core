@@ -6,7 +6,7 @@ namespace :devcms do
       begin
         setting.value
         false      
-      rescue ActiveSupport::MessageVerifier::InvalidSignature
+      rescue ActiveSupport::MessageEncryptor::InvalidMessage
         # setting is not encoded yet!
         setting.value = setting.untypecasted_value
         setting.save!

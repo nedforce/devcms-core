@@ -1,1006 +1,1005 @@
-<% def fixtures_to_ancestry(*names); names.collect { |name| Fixtures.identify(name) }.join("/"); end %>
-
-!!omap
-- root_section_node:
-    content: root_section (Section)
-    layout: deventer
-    layout_variant: default
-    layout_configuration: "<%= {'template_color'=>'default'}.to_yaml %>"
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 1
-    publishable: true
-    sub_content_type: Site
-    hidden: false
-    private: false
-    expiration_notification_method: email
-    expiration_email_recipient: test@example.com
-
-- help_page_node:
-    content: help_page (Page)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    url_alias: help
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
-    expiration_notification_method: responsible_user
-    position: 1
-    publishable: true
-    sub_content_type: Page
-    hidden: false
-    private: false
-
-- contact_page_node:
-    content: contact_page (Page)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
-    position: 2
-    expiration_notification_method: responsible_user
-    publishable: true
-    sub_content_type: Page
-    hidden: false
-    private: false
-
-- feedback_page_node:
-    content: feedback_page (Page)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
-    position: 3
-    publishable: false
-    sub_content_type: Page
-    hidden: false
-    private: false
-
-- devcms_news_node:
-    content: devcms_news (NewsArchive)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 4
-    publishable: true
-    sub_content_type: NewsArchive
-    hidden: false
-    private: false
-
-- devcms_news_item_node:
-    content: devcms_news_item (NewsItem)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_news_node) %>
-    url_alias: nieuws-voor-iedereen
-    commentable: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 1
-    publishable: true
-    sub_content_type: NewsItem
-    hidden: false
-    private: false
-
-- test_image_two_node:
-    content: test_image_two (Image)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_news_node, :devcms_news_item_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 1
-    publishable: true
-    sub_content_type: Image
-    hidden: false
-    private: false
-
-- devcms_news_item_voor_vorige_maand_node:
-    content: devcms_news_item_voor_vorige_maand (NewsItem)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_news_node) %>
-    commentable: false
-    publication_start_date: <%= 1.month.ago.to_s(:db) %>
-    position: 2
-    publishable: true
-    sub_content_type: NewsItem
-    hidden: false
-    private: false
-
-- devcms_news_item_voor_vorig_jaar_node:
-    content: devcms_news_item_voor_vorig_jaar (NewsItem)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_news_node) %>
-    publication_start_date: <%= 1.year.ago.to_s(:db) %>
-    position: 3
-    publishable: true
-    sub_content_type: NewsItem
-    hidden: false
-    private: false
-
-- economie_section_node:
-    content: economie_section (Section)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    url_alias: economie
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 5
-    publishable: true
-    sub_content_type: Section
-    hidden: false
-    private: false
-
-- economie_poll_node:
-    content: economy_poll (Poll)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :economie_section_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 1
-    publishable: true
-    sub_content_type: Poll
-    hidden: false
-    private: false
-
-- eco_question_1_node:
-    content: eco_question_1 (PollQuestion)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :economie_section_node, :economie_poll_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 1
-    publishable: true
-    sub_content_type: PollQuestion
-    hidden: false
-    private: false
-
-- healthcare_poll_node:
-    content: healthcare_poll (Poll)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :economie_section_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 2
-    publishable: true
-    sub_content_type: Poll
-    hidden: false
-    private: false
-    
-- hc_question_1_node:
-    content: hc_question_1 (PollQuestion)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :economie_section_node, :healthcare_poll_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 1
-    publishable: true
-    sub_content_type: PollQuestion
-    hidden: false
-    private: false
-
-- hc_question_2_node:
-    content: hc_question_2 (PollQuestion)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :economie_section_node, :healthcare_poll_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 2
-    publishable: true
-    sub_content_type: PollQuestion
-    hidden: false
-    private: false
-
-- about_page_node:
-    content: about_page (Page)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    url_alias: about
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
-    position: 6
-    publishable: true
-    sub_content_type: Page
-    hidden: false
-    private: false
-
-- test_image_node:
-    content: test_image (Image)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :about_page_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 1
-    publishable: true
-    sub_content_type: Image
-    hidden: false
-    private: false
-
-- internal_link_node:
-    content: internal_link (Link)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 7
-    publishable: true
-    sub_content_type: InternalLink
-    hidden: false
-    private: false
-
-- external_link_node:
-    content: external_link (Link)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 8
-    publishable: true
-    sub_content_type: ExternalLink
-    hidden: false
-    private: false
-
-- newsletter_archive_node:
-    content: devcms_newsletter_archive (NewsletterArchive)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 9
-    publishable: true
-    sub_content_type: NewsletterArchive
-    hidden: false
-    private: false
-
-- newsletter_edition_node:
-    content: devcms_newsletter_edition (NewsletterEdition)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :newsletter_archive_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 1
-    publishable: true
-    sub_content_type: NewsletterEdition
-    hidden: false
-    private: false
-
-- newsletter_edition_volgend_jaar_node:
-    content: devcms_newsletter_edition_volgend_jaar (NewsletterEdition)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :newsletter_archive_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 2
-    publishable: true
-    sub_content_type: NewsletterEdition
-    hidden: false
-    private: false
-
-- events_calendar_node:
-    content: events_calendar (Calendar)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 12
-    publishable: true
-    sub_content_type: Calendar
-    hidden: false
-    private: false
-
-- events_calendar_item_one_node:
-    content: events_calendar_item_one (Event)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :events_calendar_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 1
-    publishable: true
-    sub_content_type: CalendarItem
-    hidden: false
-    private: false
-
-- events_calendar_item_two_node:
-    content: events_calendar_item_two (Event)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :events_calendar_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 2
-    publishable: true
-    sub_content_type: CalendarItem
-    hidden: false
-    private: false
-
-- events_calendar_item_three_node:
-    content: events_calendar_item_three (Event)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :events_calendar_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 3
-    publishable: true
-    sub_content_type: CalendarItem
-    hidden: false
-    private: false
-
-- events_calendar_item_four_node:
-    content: events_calendar_item_four (Event)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :events_calendar_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 4
-    publishable: true
-    sub_content_type: CalendarItem
-    hidden: false
-    private: false
-
-- devcms_weblog_archive_node:
-    content: devcms_weblog_archive (WeblogArchive)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 13
-    publishable: true
-    sub_content_type: WeblogArchive
-    hidden: false
-    private: false
-
-- henk_weblog_node:
-    content: henk_weblog (Weblog)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 1
-    publishable: true
-    sub_content_type: Weblog
-    hidden: false
-    private: false
-
-- henk_weblog_post_one_node:
-    content: henk_weblog_post_one (WeblogPost)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node, :henk_weblog_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 1
-    publishable: true
-    sub_content_type: WeblogPost
-    hidden: false
-    private: false
-
-- henks_weblog_image_node:
-    content: henks_weblog_image (Image)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node, :henk_weblog_node, :henk_weblog_post_one_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 1
-    publishable: true
-    sub_content_type: Image
-    hidden: false
-    private: false
-
-- henk_weblog_post_two_node:
-    content: henk_weblog_post_two (WeblogPost)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node, :henk_weblog_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 2
-    publishable: true
-    sub_content_type: WeblogPost
-    hidden: false
-    private: false
-
-- piet_weblog_node:
-    content: piet_weblog (Weblog)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 2
-    publishable: true
-    sub_content_type: Weblog
-    hidden: false
-    private: false
-
-- piet_weblog_post_one_node:
-    content: piet_weblog_post_one (WeblogPost)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node, :piet_weblog_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 1
-    publishable: true
-    sub_content_type: WeblogPost
-    hidden: false
-    private: false
-
-- piet_weblog_post_two_node:
-    content: piet_weblog_post_two (WeblogPost)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node, :piet_weblog_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 2
-    publishable: true
-    sub_content_type: WeblogPost
-    hidden: false
-    private: false
-
-- jan_weblog_node:
-    content: jan_weblog (Weblog)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 3
-    publishable: true
-    sub_content_type: Weblog
-    hidden: false
-    private: false
-
-- klaas_weblog_node:
-    content: klaas_weblog (Weblog)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 4
-    publishable: true
-    sub_content_type: Weblog
-    hidden: false
-    private: false
-
-- example_weblog_archive_node:
-    content: example_weblog_archive (WeblogArchive)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 14
-    publishable: true
-    sub_content_type: WeblogArchive
-    hidden: false
-    private: false
-
-- downloads_page_node:
-    content: downloads_page (Page)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
-    position: 15
-    publishable: true
-    sub_content_type: Page
-    hidden: false
-    private: false
-
-- besluit_attachment_node:
-    content: besluit_attachment (Attachment)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :downloads_page_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 1
-    publishable: true
-    sub_content_type: Attachment
-    hidden: false
-    private: false
-
-- verslag_attachment_node:
-    content: verslag_attachment (Attachment)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :downloads_page_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 2
-    publishable: true
-    sub_content_type: Attachment
-    hidden: false
-    private: false
-
-- hidden_section_node:
-    content: hidden_section (Section)
-    hidden: true
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 16
-    publishable: true
-    sub_content_type: Section
-    hidden: true
-    private: false
-
-- hidden_page_node:
-    content: hidden_page (Page)
-    hidden: true
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :hidden_section_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
-    position: 1
-    publishable: true
-    sub_content_type: Page
-    hidden: true
-    private: false
-
-- nested_page_node:
-    content: nested_page (Page)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :hidden_section_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
-    position: 1
-    publishable: true
-    sub_content_type: Page
-    hidden: true
-    private: false
-
-- not_hidden_section_node:
-    content: not_hidden_section (Section)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 17
-    publishable: true
-    sub_content_type: Section
-    hidden: false
-    private: false
-
-- not_hidden_page_node:
-    content: not_hidden_page (Page)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :not_hidden_section_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
-    position: 1
-    publishable: true
-    sub_content_type: Page
-    hidden: false
-    private: false
-
-- hidden_image_node:
-    content: hidden_image (Image)
-    hidden: true
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :not_hidden_section_node, :not_hidden_page_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 1
-    publishable: true
-    sub_content_type: Image
-    hidden: true
-    private: false
-
-- hidden_attachment_node:
-    content: hidden_attachment (Attachment)
-    hidden: true
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :not_hidden_section_node, :not_hidden_page_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 2
-    publishable: true
-    sub_content_type: Attachment
-    hidden: true
-    private: false
-
-- bewoners_forum_node:
-    content: bewoners_forum (Forum)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 18
-    publishable: true
-    sub_content_type: Forum
-    hidden: false
-    private: false
-
-- bewoners_forum_topic_wonen_node:
-    content: bewoners_forum_topic_wonen (ForumTopic)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :bewoners_forum_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 1
-    publishable: true
-    sub_content_type: ForumTopic
-    hidden: false
-    private: false
-
-- bewoners_forum_topic_werken_node:
-    content: bewoners_forum_topic_werken (ForumTopic)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :bewoners_forum_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 2
-    publishable: true
-    sub_content_type: ForumTopic
-    hidden: false
-    private: false
-
-- bedrijven_forum_node:
-    content: bedrijven_forum (Forum)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 19
-    publishable: true
-    sub_content_type: Forum
-    hidden: false
-    private: false
-
-- example_newsletter_archive_node:
-    content: example_newsletter_archive (NewsletterArchive)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 20
-    publishable: true
-    sub_content_type: NewsletterArchive
-    hidden: false
-    private: false
-
-- example_newsletter_edition_node:
-    content: example_newsletter_edition (NewsletterEdition)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :example_newsletter_archive_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 1
-    publishable: true
-    sub_content_type: NewsletterEdition
-    hidden: false
-    private: false
-
-- no_extension_attachment_node:
-    content: no_extension_attachment (Attachment)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 21
-    publishable: true
-    sub_content_type: Attachment
-    hidden: false
-    private: false
-
-- nested_extension_attachment_node:
-    content: nested_extension_attachment (Attachment)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 21
-    publishable: true
-    sub_content_type: Attachment
-    hidden: false
-    private: false
-
-- meetings_calendar_node:
-    content: meetings_calendar (Calendar)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 22
-    publishable: true
-    sub_content_type: Calendar
-    hidden: false
-    private: false
-
-- meetings_calendar_meeting_one_node:
-    content: meetings_calendar_meeting_one (Event)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :meetings_calendar_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 1
-    publishable: true
-    sub_content_type: Meeting
-    hidden: false
-    private: false
-
-- agenda_item_one_node:
-    content: agenda_item_one (AgendaItem)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :meetings_calendar_node, :meetings_calendar_meeting_one_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 1
-    publishable: true
-    sub_content_type: AgendaItem
-    hidden: false
-    private: false
-
-- agenda_item_two_node:
-    content: agenda_item_two (AgendaItem)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :meetings_calendar_node, :meetings_calendar_meeting_one_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 2
-    publishable: true
-    sub_content_type: AgendaItem
-    hidden: false
-    private: false
-
-- agenda_item_three_node:
-    content: agenda_item_three (AgendaItem)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :meetings_calendar_node, :meetings_calendar_meeting_one_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 3
-    publishable: true
-    sub_content_type: AgendaItem
-    hidden: false
-    private: false
-
-- meetings_calendar_meeting_two_node:
-    content: meetings_calendar_meeting_two (Event)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :meetings_calendar_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 2
-    publishable: true
-    sub_content_type: Meeting
-    hidden: false
-    private: false
-
-- meetings_calendar_meeting_three_node:
-    content: meetings_calendar_meeting_three (Event)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :meetings_calendar_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 3
-    publishable: true
-    sub_content_type: Meeting
-    hidden: false
-    private: false
-
-- meetings_calendar_meeting_four_node:
-    content: meetings_calendar_meeting_four (Event)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :meetings_calendar_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 4
-    publishable: true
-    sub_content_type: Meeting
-    hidden: false
-    private: false
-
-- editor_section_node:
-    content: editor_section (Section)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 23
-    publishable: true
-    sub_content_type: Section
-    hidden: false
-    private: false
-
-- editor_section_page_node:
-    content: editor_section_page (Page)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :editor_section_node) %>
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
-    position: 1
-    expiration_notification_method: responsible_user
-    publishable: true
-    sub_content_type: Page
-    hidden: false
-    private: false
-
-- test_image_copy_node:
-    content: test_image_copy (ContentCopy)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 24
-    publishable: true
-    sub_content_type: ContentCopy
-    hidden: false
-    private: false
-
-- bewoners_forum_copy_node:
-    content: bewoners_forum_copy (ContentCopy)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 25
-    publishable: true
-    sub_content_type: ContentCopy
-    hidden: false
-    private: false
-
-- root_section_image_node:
-    content: root_section_image (Image)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 26
-    publishable: true
-    sub_content_type: Image
-    hidden: false
-    private: false
-
-- node_for_sorting:
-    content: section_for_sorting (Section)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 27
-    publishable: true
-    sub_content_type: Section
-    hidden: false
-    private: false
-
-- ccc_node:
-    content: page_for_sorting_ccc (Page)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :node_for_sorting) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
-    position: 1
-    publishable: true
-    sub_content_type: Page
-    hidden: false
-    private: false
-
-- aaa_node:
-    content: page_for_sorting_aaa (Page)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :node_for_sorting) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
-    position: 2
-    publishable: true
-    sub_content_type: Page
-    hidden: false
-    private: false
-
-- bbb_node:
-    content: page_for_sorting_bbb (Page)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :node_for_sorting) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
-    position: 3
-    publishable: true
-    sub_content_type: Page
-    hidden: false
-    private: false
-
-- combined_calendar_node:
-    content: combined_calendar (CombinedCalendar)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 28
-    publishable: true
-    sub_content_type: CombinedCalendar
-    hidden: false
-    private: false
-
-- without_header_image:
-    content: no_header_image (Page)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
-    position: 29
-    publishable: true
-    sub_content_type: Page
-    hidden: false
-    private: false
-
-- section_with_frontpage_node:
-    content: section_with_frontpage (Section)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 30
-    publishable: true
-    sub_content_type: Section
-    hidden: false
-    private: false
-
-- frontpage_for_section_node:
-    content: frontpage_for_section (Page)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :section_with_frontpage_node) %>
-    show_in_menu: false
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
-    position: 1
-    publishable: true
-    sub_content_type: Page
-    hidden: false
-    private: false
-
-- bis_section_node:
-    content: bis_section (Section)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :section_with_frontpage_node) %>
-    url_alias: bestuur/bestuursinformatie
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 2
-    publishable: true
-    sub_content_type: Section
-    hidden: false
-    private: false
-
-- bis_page_node:
-    content: bis_page (Page)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :section_with_frontpage_node, :bis_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
-    position: 1
-    publishable: true
-    sub_content_type: Page
-    hidden: false
-    private: false
-
-- about_html_page_node:
-    content: about_html_page (HtmlPage)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    url_alias: html_about
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 31
-    publishable: true
-    sub_content_type: HtmlPage
-    hidden: false
-    private: false
-
-- yet_another_calendar_node:
-    content: yet_another_calendar (Calendar)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 32
-    publishable: true
-    sub_content_type: Calendar
-    hidden: false
-    private: false
-
-- top_ten_page_node:
-    content: top_ten_page (TopHitsPage)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 35
-    publishable: true
-    sub_content_type: TopHitsPage
-    hidden: false
-    private: false
-
-- contact_box_node:
-    content: contact_box (ContactBox)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 36
-    publishable: true
-    sub_content_type: ContactBox
-    hidden: false
-    private: false
-
-- standard_search_page_node:
-    content: standard_search_page (SearchPage)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 37
-    publishable: true
-    sub_content_type: SearchPage
-    hidden: false
-    private: false
-
-- nedforce_feed_node:
-    content: nedforce_feed (Feed)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 38
-    publishable: true
-    sub_content_type: Feed
-    hidden: false
-    private: false
-
-- contact_form_node:
-    content: help_form (ContactForm)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 39
-    publishable: true
-    sub_content_type: ContactForm
-    hidden: false
-    private: false
-
-- info_form_node:
-    content: info_form (ContactForm)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 40
-    publishable: true
-    sub_content_type: ContactForm
-    hidden: false
-    private: false
-
-- sub_site_section_node:
-    content: sub_site_section (Section)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 41
-    publishable: true
-    sub_content_type: Site
-    hidden: false
-    private: false
-
-- yet_another_page_node:
-    content: yet_another_page (Page)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :sub_site_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
-    position: 1
-    publishable: true
-    sub_content_type: Page
-    hidden: false
-    private: false
-
-- subsection_alphabetic_index_node:
-    content: subsection_alphabetic_index (AlphabeticIndex)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node, :sub_site_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 2
-    publishable: true
-    sub_content_type: AlphabeticIndex
-    hidden: false
-    private: false
-
-- root_alphabetic_index_node:
-    content: root_alphabetic_index (AlphabeticIndex)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 42
-    publishable: true
-    sub_content_type: AlphabeticIndex
-    hidden: false
-    private: false
-
-- test_social_media_links_box_node:
-    content: test_social_media_links_box (SocialMediaLinksBox)
-    ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
-    show_in_menu: true
-    publication_start_date: <%= 1.day.ago.to_s(:db) %>
-    position: 43
-    publishable: true
-    sub_content_type: SocialMediaLinksBox
-    hidden: false
-    private: false
+<% def fixtures_to_ancestry(*names); names.collect { |name| ActiveRecord::Fixtures.identify(name) }.join("/"); end %>
+
+root_section_node:
+  content: root_section (Section)
+  layout: default
+  layout_variant: default
+  layout_configuration: { template_color: 'default' }
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 1
+  publishable: true
+  sub_content_type: Site
+  hidden: false
+  private: false
+  expiration_notification_method: email
+  expiration_email_recipient: test@example.com
+
+help_page_node:
+  content: help_page (Page)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  url_alias: help
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
+  expiration_notification_method: responsible_user
+  position: 1
+  publishable: true
+  sub_content_type: Page
+  hidden: false
+  private: false
+
+contact_page_node:
+  content: contact_page (Page)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
+  position: 2
+  expiration_notification_method: responsible_user
+  publishable: true
+  sub_content_type: Page
+  hidden: false
+  private: false
+
+feedback_page_node:
+  content: feedback_page (Page)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
+  position: 3
+  publishable: false
+  sub_content_type: Page
+  hidden: false
+  private: false
+
+devcms_news_node:
+  content: devcms_news (NewsArchive)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 4
+  publishable: true
+  sub_content_type: NewsArchive
+  hidden: false
+  private: false
+
+devcms_news_item_node:
+  content: devcms_news_item (NewsItem)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_news_node) %>
+  url_alias: nieuws-voor-iedereen
+  commentable: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 1
+  publishable: true
+  sub_content_type: NewsItem
+  hidden: false
+  private: false
+
+test_image_two_node:
+  content: test_image_two (Image)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_news_node, :devcms_news_item_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 1
+  publishable: true
+  sub_content_type: Image
+  hidden: false
+  private: false
+
+devcms_news_item_voor_vorige_maand_node:
+  content: devcms_news_item_voor_vorige_maand (NewsItem)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_news_node) %>
+  commentable: false
+  publication_start_date: <%= 1.month.ago.to_s(:db) %>
+  position: 2
+  publishable: true
+  sub_content_type: NewsItem
+  hidden: false
+  private: false
+
+devcms_news_item_voor_vorig_jaar_node:
+  content: devcms_news_item_voor_vorig_jaar (NewsItem)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_news_node) %>
+  publication_start_date: <%= 1.year.ago.to_s(:db) %>
+  position: 3
+  publishable: true
+  sub_content_type: NewsItem
+  hidden: false
+  private: false
+
+economie_section_node:
+  content: economie_section (Section)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  url_alias: economie
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 5
+  publishable: true
+  sub_content_type: Section
+  hidden: false
+  private: false
+
+economie_poll_node:
+  content: economy_poll (Poll)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :economie_section_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 1
+  publishable: true
+  sub_content_type: Poll
+  hidden: false
+  private: false
+
+eco_question_1_node:
+  content: eco_question_1 (PollQuestion)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :economie_section_node, :economie_poll_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 1
+  publishable: true
+  sub_content_type: PollQuestion
+  hidden: false
+  private: false
+
+healthcare_poll_node:
+  content: healthcare_poll (Poll)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :economie_section_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 2
+  publishable: true
+  sub_content_type: Poll
+  hidden: false
+  private: false
+  
+hc_question_1_node:
+  content: hc_question_1 (PollQuestion)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :economie_section_node, :healthcare_poll_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 1
+  publishable: true
+  sub_content_type: PollQuestion
+  hidden: false
+  private: false
+
+hc_question_2_node:
+  content: hc_question_2 (PollQuestion)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :economie_section_node, :healthcare_poll_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 2
+  publishable: true
+  sub_content_type: PollQuestion
+  hidden: false
+  private: false
+
+about_page_node:
+  content: about_page (Page)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  url_alias: about
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
+  position: 6
+  publishable: true
+  sub_content_type: Page
+  hidden: false
+  private: false
+
+test_image_node:
+  content: test_image (Image)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :about_page_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 1
+  publishable: true
+  sub_content_type: Image
+  hidden: false
+  private: false
+
+internal_link_node:
+  content: internal_link (Link)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 7
+  publishable: true
+  sub_content_type: InternalLink
+  hidden: false
+  private: false
+
+external_link_node:
+  content: external_link (Link)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 8
+  publishable: true
+  sub_content_type: ExternalLink
+  hidden: false
+  private: false
+
+newsletter_archive_node:
+  content: devcms_newsletter_archive (NewsletterArchive)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 9
+  publishable: true
+  sub_content_type: NewsletterArchive
+  hidden: false
+  private: false
+
+newsletter_edition_node:
+  content: devcms_newsletter_edition (NewsletterEdition)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :newsletter_archive_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 1
+  publishable: true
+  sub_content_type: NewsletterEdition
+  hidden: false
+  private: false
+
+newsletter_edition_volgend_jaar_node:
+  content: devcms_newsletter_edition_volgend_jaar (NewsletterEdition)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :newsletter_archive_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 2
+  publishable: true
+  sub_content_type: NewsletterEdition
+  hidden: false
+  private: false
+
+events_calendar_node:
+  content: events_calendar (Calendar)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 12
+  publishable: true
+  sub_content_type: Calendar
+  hidden: false
+  private: false
+
+events_calendar_item_one_node:
+  content: events_calendar_item_one (Event)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :events_calendar_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 1
+  publishable: true
+  sub_content_type: CalendarItem
+  hidden: false
+  private: false
+
+events_calendar_item_two_node:
+  content: events_calendar_item_two (Event)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :events_calendar_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 2
+  publishable: true
+  sub_content_type: CalendarItem
+  hidden: false
+  private: false
+
+events_calendar_item_three_node:
+  content: events_calendar_item_three (Event)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :events_calendar_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 3
+  publishable: true
+  sub_content_type: CalendarItem
+  hidden: false
+  private: false
+
+events_calendar_item_four_node:
+  content: events_calendar_item_four (Event)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :events_calendar_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 4
+  publishable: true
+  sub_content_type: CalendarItem
+  hidden: false
+  private: false
+
+devcms_weblog_archive_node:
+  content: devcms_weblog_archive (WeblogArchive)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 13
+  publishable: true
+  sub_content_type: WeblogArchive
+  hidden: false
+  private: false
+
+henk_weblog_node:
+  content: henk_weblog (Weblog)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 1
+  publishable: true
+  sub_content_type: Weblog
+  hidden: false
+  private: false
+
+henk_weblog_post_one_node:
+  content: henk_weblog_post_one (WeblogPost)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node, :henk_weblog_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 1
+  publishable: true
+  sub_content_type: WeblogPost
+  hidden: false
+  private: false
+
+henks_weblog_image_node:
+  content: henks_weblog_image (Image)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node, :henk_weblog_node, :henk_weblog_post_one_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 1
+  publishable: true
+  sub_content_type: Image
+  hidden: false
+  private: false
+
+henk_weblog_post_two_node:
+  content: henk_weblog_post_two (WeblogPost)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node, :henk_weblog_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 2
+  publishable: true
+  sub_content_type: WeblogPost
+  hidden: false
+  private: false
+
+piet_weblog_node:
+  content: piet_weblog (Weblog)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 2
+  publishable: true
+  sub_content_type: Weblog
+  hidden: false
+  private: false
+
+piet_weblog_post_one_node:
+  content: piet_weblog_post_one (WeblogPost)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node, :piet_weblog_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 1
+  publishable: true
+  sub_content_type: WeblogPost
+  hidden: false
+  private: false
+
+piet_weblog_post_two_node:
+  content: piet_weblog_post_two (WeblogPost)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node, :piet_weblog_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 2
+  publishable: true
+  sub_content_type: WeblogPost
+  hidden: false
+  private: false
+
+jan_weblog_node:
+  content: jan_weblog (Weblog)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 3
+  publishable: true
+  sub_content_type: Weblog
+  hidden: false
+  private: false
+
+klaas_weblog_node:
+  content: klaas_weblog (Weblog)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 4
+  publishable: true
+  sub_content_type: Weblog
+  hidden: false
+  private: false
+
+example_weblog_archive_node:
+  content: example_weblog_archive (WeblogArchive)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 14
+  publishable: true
+  sub_content_type: WeblogArchive
+  hidden: false
+  private: false
+
+downloads_page_node:
+  content: downloads_page (Page)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
+  position: 15
+  publishable: true
+  sub_content_type: Page
+  hidden: false
+  private: false
+
+besluit_attachment_node:
+  content: besluit_attachment (Attachment)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :downloads_page_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 1
+  publishable: true
+  sub_content_type: Attachment
+  hidden: false
+  private: false
+
+verslag_attachment_node:
+  content: verslag_attachment (Attachment)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :downloads_page_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 2
+  publishable: true
+  sub_content_type: Attachment
+  hidden: false
+  private: false
+
+hidden_section_node:
+  content: hidden_section (Section)
+  hidden: true
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 16
+  publishable: true
+  sub_content_type: Section
+  hidden: true
+  private: false
+
+hidden_page_node:
+  content: hidden_page (Page)
+  hidden: true
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :hidden_section_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
+  position: 1
+  publishable: true
+  sub_content_type: Page
+  hidden: true
+  private: false
+
+nested_page_node:
+  content: nested_page (Page)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :hidden_section_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
+  position: 1
+  publishable: true
+  sub_content_type: Page
+  hidden: true
+  private: false
+
+not_hidden_section_node:
+  content: not_hidden_section (Section)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 17
+  publishable: true
+  sub_content_type: Section
+  hidden: false
+  private: false
+
+not_hidden_page_node:
+  content: not_hidden_page (Page)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :not_hidden_section_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
+  position: 1
+  publishable: true
+  sub_content_type: Page
+  hidden: false
+  private: false
+
+hidden_image_node:
+  content: hidden_image (Image)
+  hidden: true
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :not_hidden_section_node, :not_hidden_page_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 1
+  publishable: true
+  sub_content_type: Image
+  hidden: true
+  private: false
+
+hidden_attachment_node:
+  content: hidden_attachment (Attachment)
+  hidden: true
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :not_hidden_section_node, :not_hidden_page_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 2
+  publishable: true
+  sub_content_type: Attachment
+  hidden: true
+  private: false
+
+bewoners_forum_node:
+  content: bewoners_forum (Forum)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 18
+  publishable: true
+  sub_content_type: Forum
+  hidden: false
+  private: false
+
+bewoners_forum_topic_wonen_node:
+  content: bewoners_forum_topic_wonen (ForumTopic)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :bewoners_forum_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 1
+  publishable: true
+  sub_content_type: ForumTopic
+  hidden: false
+  private: false
+
+bewoners_forum_topic_werken_node:
+  content: bewoners_forum_topic_werken (ForumTopic)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :bewoners_forum_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 2
+  publishable: true
+  sub_content_type: ForumTopic
+  hidden: false
+  private: false
+
+bedrijven_forum_node:
+  content: bedrijven_forum (Forum)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 19
+  publishable: true
+  sub_content_type: Forum
+  hidden: false
+  private: false
+
+example_newsletter_archive_node:
+  content: example_newsletter_archive (NewsletterArchive)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 20
+  publishable: true
+  sub_content_type: NewsletterArchive
+  hidden: false
+  private: false
+
+example_newsletter_edition_node:
+  content: example_newsletter_edition (NewsletterEdition)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :example_newsletter_archive_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 1
+  publishable: true
+  sub_content_type: NewsletterEdition
+  hidden: false
+  private: false
+
+no_extension_attachment_node:
+  content: no_extension_attachment (Attachment)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 21
+  publishable: true
+  sub_content_type: Attachment
+  hidden: false
+  private: false
+
+nested_extension_attachment_node:
+  content: nested_extension_attachment (Attachment)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 21
+  publishable: true
+  sub_content_type: Attachment
+  hidden: false
+  private: false
+
+meetings_calendar_node:
+  content: meetings_calendar (Calendar)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 22
+  publishable: true
+  sub_content_type: Calendar
+  hidden: false
+  private: false
+
+meetings_calendar_meeting_one_node:
+  content: meetings_calendar_meeting_one (Event)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :meetings_calendar_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 1
+  publishable: true
+  sub_content_type: Meeting
+  hidden: false
+  private: false
+
+agenda_item_one_node:
+  content: agenda_item_one (AgendaItem)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :meetings_calendar_node, :meetings_calendar_meeting_one_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 1
+  publishable: true
+  sub_content_type: AgendaItem
+  hidden: false
+  private: false
+
+agenda_item_two_node:
+  content: agenda_item_two (AgendaItem)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :meetings_calendar_node, :meetings_calendar_meeting_one_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 2
+  publishable: true
+  sub_content_type: AgendaItem
+  hidden: false
+  private: false
+
+agenda_item_three_node:
+  content: agenda_item_three (AgendaItem)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :meetings_calendar_node, :meetings_calendar_meeting_one_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 3
+  publishable: true
+  sub_content_type: AgendaItem
+  hidden: false
+  private: false
+
+meetings_calendar_meeting_two_node:
+  content: meetings_calendar_meeting_two (Event)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :meetings_calendar_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 2
+  publishable: true
+  sub_content_type: Meeting
+  hidden: false
+  private: false
+
+meetings_calendar_meeting_three_node:
+  content: meetings_calendar_meeting_three (Event)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :meetings_calendar_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 3
+  publishable: true
+  sub_content_type: Meeting
+  hidden: false
+  private: false
+
+meetings_calendar_meeting_four_node:
+  content: meetings_calendar_meeting_four (Event)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :meetings_calendar_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 4
+  publishable: true
+  sub_content_type: Meeting
+  hidden: false
+  private: false
+
+editor_section_node:
+  content: editor_section (Section)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 23
+  publishable: true
+  sub_content_type: Section
+  hidden: false
+  private: false
+
+editor_section_page_node:
+  content: editor_section_page (Page)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :editor_section_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
+  position: 1
+  expiration_notification_method: responsible_user
+  publishable: true
+  sub_content_type: Page
+  hidden: false
+  private: false
+
+test_image_copy_node:
+  content: test_image_copy (ContentCopy)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 24
+  publishable: true
+  sub_content_type: ContentCopy
+  hidden: false
+  private: false
+
+bewoners_forum_copy_node:
+  content: bewoners_forum_copy (ContentCopy)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 25
+  publishable: true
+  sub_content_type: ContentCopy
+  hidden: false
+  private: false
+
+root_section_image_node:
+  content: root_section_image (Image)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 26
+  publishable: true
+  sub_content_type: Image
+  hidden: false
+  private: false
+
+node_for_sorting:
+  content: section_for_sorting (Section)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 27
+  publishable: true
+  sub_content_type: Section
+  hidden: false
+  private: false
+
+ccc_node:
+  content: page_for_sorting_ccc (Page)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :node_for_sorting) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
+  position: 1
+  publishable: true
+  sub_content_type: Page
+  hidden: false
+  private: false
+
+aaa_node:
+  content: page_for_sorting_aaa (Page)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :node_for_sorting) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
+  position: 2
+  publishable: true
+  sub_content_type: Page
+  hidden: false
+  private: false
+
+bbb_node:
+  content: page_for_sorting_bbb (Page)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :node_for_sorting) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
+  position: 3
+  publishable: true
+  sub_content_type: Page
+  hidden: false
+  private: false
+
+combined_calendar_node:
+  content: combined_calendar (CombinedCalendar)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 28
+  publishable: true
+  sub_content_type: CombinedCalendar
+  hidden: false
+  private: false
+
+without_header_image:
+  content: no_header_image (Page)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
+  position: 29
+  publishable: true
+  sub_content_type: Page
+  hidden: false
+  private: false
+
+section_with_frontpage_node:
+  content: section_with_frontpage (Section)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 30
+  publishable: true
+  sub_content_type: Section
+  hidden: false
+  private: false
+
+frontpage_for_section_node:
+  content: frontpage_for_section (Page)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :section_with_frontpage_node) %>
+  show_in_menu: false
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
+  position: 1
+  publishable: true
+  sub_content_type: Page
+  hidden: false
+  private: false
+
+bis_section_node:
+  content: bis_section (Section)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :section_with_frontpage_node) %>
+  url_alias: bestuur/bestuursinformatie
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 2
+  publishable: true
+  sub_content_type: Section
+  hidden: false
+  private: false
+
+bis_page_node:
+  content: bis_page (Page)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :section_with_frontpage_node, :bis_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
+  position: 1
+  publishable: true
+  sub_content_type: Page
+  hidden: false
+  private: false
+
+about_html_page_node:
+  content: about_html_page (HtmlPage)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  url_alias: html_about
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 31
+  publishable: true
+  sub_content_type: HtmlPage
+  hidden: false
+  private: false
+
+yet_another_calendar_node:
+  content: yet_another_calendar (Calendar)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 32
+  publishable: true
+  sub_content_type: Calendar
+  hidden: false
+  private: false
+
+top_ten_page_node:
+  content: top_ten_page (TopHitsPage)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 35
+  publishable: true
+  sub_content_type: TopHitsPage
+  hidden: false
+  private: false
+
+contact_box_node:
+  content: contact_box (ContactBox)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 36
+  publishable: true
+  sub_content_type: ContactBox
+  hidden: false
+  private: false
+
+standard_search_page_node:
+  content: standard_search_page (SearchPage)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 37
+  publishable: true
+  sub_content_type: SearchPage
+  hidden: false
+  private: false
+
+nedforce_feed_node:
+  content: nedforce_feed (Feed)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 38
+  publishable: true
+  sub_content_type: Feed
+  hidden: false
+  private: false
+
+contact_form_node:
+  content: help_form (ContactForm)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 39
+  publishable: true
+  sub_content_type: ContactForm
+  hidden: false
+  private: false
+
+info_form_node:
+  content: info_form (ContactForm)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 40
+  publishable: true
+  sub_content_type: ContactForm
+  hidden: false
+  private: false
+
+sub_site_section_node:
+  content: sub_site_section (Section)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 41
+  publishable: true
+  sub_content_type: Site
+  hidden: false
+  private: false
+
+yet_another_page_node:
+  content: yet_another_page (Page)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :sub_site_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  expires_on: <%= 1.day.from_now.to_date.to_s(:db) %>
+  position: 1
+  publishable: true
+  sub_content_type: Page
+  hidden: false
+  private: false
+
+subsection_alphabetic_index_node:
+  content: subsection_alphabetic_index (AlphabeticIndex)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :sub_site_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 2
+  publishable: true
+  sub_content_type: AlphabeticIndex
+  hidden: false
+  private: false
+
+root_alphabetic_index_node:
+  content: root_alphabetic_index (AlphabeticIndex)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 42
+  publishable: true
+  sub_content_type: AlphabeticIndex
+  hidden: false
+  private: false
+
+test_social_media_links_box_node:
+  content: test_social_media_links_box (SocialMediaLinksBox)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 43
+  publishable: true
+  sub_content_type: SocialMediaLinksBox
+  hidden: false
+  private: false

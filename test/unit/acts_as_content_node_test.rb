@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class ActsAsContentNodeTestTransactional < ActiveSupport::TestCase
   self.use_transactional_fixtures = false
@@ -14,7 +14,7 @@ class ActsAsContentNodeTestTransactional < ActiveSupport::TestCase
     
     assert_no_difference 'Page.count' do
       assert !page.save
-      assert page.errors.on_base
+      assert page.errors[:'node.base'].any?
     end
 
     page = build_page(:parent => nodes(:henk_weblog_post_one_node))
@@ -29,7 +29,7 @@ class ActsAsContentNodeTestTransactional < ActiveSupport::TestCase
   def test_create_with_parent_should_fail_for_invalid_parent
     assert_no_difference 'Page.count' do
       page = Page.create(:parent => nodes(:henk_weblog_post_one_node), :title => "Page title", :preamble => "Ambule", :body => "Page body", :expires_on => 1.day.from_now.to_date)
-      assert page.errors.on_base
+      assert page.errors[:'node.base'].any?
     end
 
     assert_no_difference 'Page.count' do
@@ -76,7 +76,7 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
 
     assert_no_difference 'Page.count' do
       assert !page.save
-      assert page.errors.on(:body)
+      assert page.errors[:body].any?
     end
 
     page = build_page :body => nil
@@ -97,7 +97,7 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
   def test_create_with_parent_should_fail_for_invalid_content
     assert_no_difference 'Page.count' do
       page = create_page :body => nil
-      assert page.errors.on(:body)
+      assert page.errors[:body].any?
     end
   end
 
@@ -176,7 +176,7 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
 
     assert !page.save
     assert !page.valid?
-    assert page.errors.on_base
+    assert page.errors[:'node.base'].any?
   end
 
   def test_publication_start_date_should_be_set_to_current_time_after_save_if_blank
@@ -198,7 +198,7 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
   def test_publication_start_date_should_be_required_if_publication_end_date_is_present
     page = build_page(:publication_end_date => Time.now)
     assert !page.save
-    assert page.errors.on_base
+    assert page.errors[:'node.base'].any?
   end
 
   def test_should_set_commentable_to_node_after_update
@@ -246,34 +246,34 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
 
     assert !page.save
     assert !page.valid?
-    assert page.errors.on('node.content_box_title')
+    assert page.errors[:"node.content_box_title"].any?
 
     page = build_page :content_box_title => 'a' * 256
 
     assert !page.save
     assert !page.valid?
-    assert page.errors.on('node.content_box_title')
+    assert page.errors[:'node.content_box_title'].any?
   end
 
   def test_content_box_icon_should_be_valid
     page = build_page :content_box_icon => 'foo'
     assert !page.save
     assert !page.valid?
-    assert page.errors.on('node.content_box_icon')
+    assert page.errors[:'node.content_box_icon'].any?
   end
 
   def test_content_box_colour_should_be_valid
     page = build_page :content_box_colour => 'foo'
     assert !page.save
     assert !page.valid?
-    assert page.errors.on('node.content_box_colour')
+    assert page.errors[:'node.content_box_colour'].any?
   end
 
   def test_content_box_number_of_items_should_be_valid
     page = build_page :content_box_number_of_items => 1
     assert !page.save
     assert !page.valid?
-    assert page.errors.on_base
+    assert page.errors[:'node.base'].any?
   end
 
   def test_should_save_categories_to_node_while_keeping_existing_categories

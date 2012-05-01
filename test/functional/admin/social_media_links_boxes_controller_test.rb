@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::SocialMediaLinksBoxesControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -38,7 +38,7 @@ class Admin::SocialMediaLinksBoxesControllerTest < ActionController::TestCase
     assert_difference('SocialMediaLinksBox.count') do
       smlb = create_social_media_links_box
       assert_response :success
-      assert !assigns(:social_media_links_box).new_record?, :message => assigns(:social_media_links_box).errors.full_messages.join('; ')
+      assert !assigns(:social_media_links_box).new_record?, assigns(:social_media_links_box).errors.full_messages.join('; ')
     end
     
   end
@@ -63,7 +63,7 @@ class Admin::SocialMediaLinksBoxesControllerTest < ActionController::TestCase
       create_social_media_links_box({ :title => nil }, { :commit_type => 'preview' })
       assert_response :unprocessable_entity
       assert assigns(:social_media_links_box).new_record?
-      assert assigns(:social_media_links_box).errors.on(:title)
+      assert assigns(:social_media_links_box).errors[:title].any?
       assert_template 'new'
     end
 
@@ -77,7 +77,7 @@ class Admin::SocialMediaLinksBoxesControllerTest < ActionController::TestCase
     end
     assert_response :unprocessable_entity
     assert assigns(:social_media_links_box).new_record?
-    assert assigns(:social_media_links_box).errors.on(:title)
+    assert assigns(:social_media_links_box).errors[:title].any?
   end
 
   def test_should_get_edit
@@ -125,7 +125,7 @@ class Admin::SocialMediaLinksBoxesControllerTest < ActionController::TestCase
     old_title = smlb.title
     put :update, :id => smlb.id, :social_media_links_box => {:title => nil, :twitter_url => 'http://www.twitter.com/nedforce'}, :commit_type => 'preview'
     assert_response :unprocessable_entity
-    assert assigns(:social_media_links_box).errors.on(:title)
+    assert assigns(:social_media_links_box).errors[:title].any?
     assert_equal old_title, smlb.reload.title
     assert_template 'edit'
   end
@@ -135,7 +135,7 @@ class Admin::SocialMediaLinksBoxesControllerTest < ActionController::TestCase
 
     put :update, :id => @social_media_links_box.id, :social_media_links_box => {:title => nil}
     assert_response :unprocessable_entity
-    assert assigns(:social_media_links_box).errors.on(:title)
+    assert assigns(:social_media_links_box).errors[:title].any?
   end
 
   protected

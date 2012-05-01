@@ -30,7 +30,7 @@ class Calendar < ActiveRecord::Base
   acts_as_archive :date_field_model_name =>  :start_time, :date_field_database_name => 'start_time', :items_name => :calendar_items, :sql_options => nil
   
   # A +Calendar+ can have many +Event+ children.
-  has_children :calendar_items, :class_name => 'Event', :order => 'start_time DESC', :extend => CalendarItemsAssociationExtensions
+  has_children :calendar_items, :class_name => 'Event', :order => 'start_time DESC', :extend => DevcmsCore::CalendarItemsAssociationExtensions
   
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of :title

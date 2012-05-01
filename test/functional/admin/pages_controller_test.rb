@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::PagesControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -55,7 +55,7 @@ class Admin::PagesControllerTest < ActionController::TestCase
     assert_difference('Page.count') do
       create_page
       assert_response :success
-      assert !assigns(:page).new_record?, :message => assigns(:page).errors.full_messages.join('; ')
+      assert !assigns(:page).new_record?, assigns(:page).errors.full_messages.join('; ')
     end
   end
 
@@ -78,7 +78,7 @@ class Admin::PagesControllerTest < ActionController::TestCase
       create_page({ :title => nil }, { :commit_type => 'preview' })
       assert_response :unprocessable_entity
       assert assigns(:page).new_record?
-      assert assigns(:page).errors.on(:title)
+      assert assigns(:page).errors[:title].any?
       assert_template 'new'
     end
   end
@@ -91,7 +91,7 @@ class Admin::PagesControllerTest < ActionController::TestCase
     end
     assert_response :unprocessable_entity
     assert assigns(:page).new_record?
-    assert assigns(:page).errors.on(:title)
+    assert assigns(:page).errors[:title].any?
   end
 
   def test_should_get_edit
@@ -139,7 +139,7 @@ class Admin::PagesControllerTest < ActionController::TestCase
     old_title = page.title
     put :update, :id => page.id, :page => { :title => nil, :body => 'updated_body' }, :commit_type => 'preview'
     assert_response :unprocessable_entity
-    assert assigns(:page).errors.on(:title)
+    assert assigns(:page).errors[:title].any?
     assert_equal old_title, page.reload.title
     assert_template 'edit'
   end
@@ -149,7 +149,7 @@ class Admin::PagesControllerTest < ActionController::TestCase
 
     put :update, :id => pages(:help_page).id, :page => { :title => nil }
     assert_response :unprocessable_entity
-    assert assigns(:page).errors.on(:title)
+    assert assigns(:page).errors[:title].any?
   end
 
   def test_should_set_publication_start_date_on_create

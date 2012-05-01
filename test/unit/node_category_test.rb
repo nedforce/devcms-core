@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class NodeCategoryTest < ActiveSupport::TestCase
   def setup
@@ -16,14 +16,14 @@ class NodeCategoryTest < ActiveSupport::TestCase
   def test_should_require_node
     assert_no_difference 'NodeCategory.count' do
       nc = create_node_category(:node => nil)
-      assert nc.errors.on(:node)
+      assert nc.errors[:node].any?
     end
   end
 
   def test_should_require_category
     assert_no_difference 'NodeCategory.count' do
       nc = create_node_category(:category => nil)
-      assert nc.errors.on(:category)
+      assert nc.errors[:category].any?
     end
   end
 
@@ -35,7 +35,7 @@ class NodeCategoryTest < ActiveSupport::TestCase
 
     assert_no_difference 'NodeCategory.count' do
       nc = create_node_category
-      assert nc.errors.on(:category_id)
+      assert nc.errors[:category_id].any?
     end
   end
   

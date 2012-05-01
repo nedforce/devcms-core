@@ -1,7 +1,8 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of 
 # the application relating to +Calendar+ objects.
 class Admin::CalendarsController < Admin::AdminController
-
+  before_filter :default_format_json,  :only => :index
+  
   # The +create+ action needs the parent +Node+ object to link the new +Calendar+ content node to.
   prepend_before_filter :find_parent_node,    :only => [ :new, :create ]
 

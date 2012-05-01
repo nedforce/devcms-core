@@ -25,7 +25,7 @@
                                             :weblog_archive_id => @weblog_post.weblog.weblog_archive.id,
                                             :weblog_id         => @weblog_post.weblog.id})})%>
     <% else %>
-      <% javascript_tag do %>
+      <%= javascript_tag do %>
         document.write (
         "<%= escape_javascript(link_to_remote( 'Verwijderen', 
                         :update => "weblog_post_image_#{image.id}", 

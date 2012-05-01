@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class WeblogPostsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -45,7 +45,7 @@ class WeblogPostsControllerTest < ActionController::TestCase
     assert_difference('WeblogPost.count', 1) do
       create_weblog_post
       assert_response :redirect
-      assert !assigns(:weblog_post).new_record?, :message => assigns(:weblog_post).errors.full_messages.join('; ')
+      assert !assigns(:weblog_post).new_record?, assigns(:weblog_post).errors.full_messages.join('; ')
     end
   end
 
@@ -54,7 +54,7 @@ class WeblogPostsControllerTest < ActionController::TestCase
     assert_difference('WeblogPost.count', 1) do
       create_weblog_post
       assert_response :redirect
-      assert !assigns(:weblog_post).new_record?, :message => assigns(:weblog_post).errors.full_messages.join('; ')
+      assert !assigns(:weblog_post).new_record?, assigns(:weblog_post).errors.full_messages.join('; ')
     end
   end
 
@@ -63,7 +63,7 @@ class WeblogPostsControllerTest < ActionController::TestCase
     assert_no_difference('WeblogPost.count') do
       create_weblog_post(:title => nil)
       assert_response :success
-      assert assigns(:weblog_post).errors.on(:title)
+      assert assigns(:weblog_post).errors[:title].any?
     end
   end
 
@@ -126,7 +126,7 @@ class WeblogPostsControllerTest < ActionController::TestCase
     old_title = weblog_posts(:henk_weblog_post_one).title
     put :update, :weblog_archive_id => weblog_archives(:devcms_weblog_archive).id, :weblog_id => weblogs(:henk_weblog).id, :id => weblog_posts(:henk_weblog_post_one).id, :weblog_post => { :title => nil }
     assert_response :success
-    assert assigns(:weblog_post).errors.on(:title)
+    assert assigns(:weblog_post).errors[:title].any?
     assert_equal old_title, weblog_posts(:henk_weblog_post_one).reload.title
   end
 
@@ -181,9 +181,9 @@ class WeblogPostsControllerTest < ActionController::TestCase
     image = fixture_file_upload("files/test.jpg")
     assert_difference('WeblogPost.count', 1) do
       assert_difference('Image.count', 2) do
-        create_weblog_post({},{:images => { :image_0 => { :title => 'An Image', :data => image },:image_1 => { :title => 'Another Image', :data => image }}})
+        create_weblog_post({},{:images => { :image_0 => { :title => 'An Image', :file => image },:image_1 => { :title => 'Another Image', :file => image }}})
         assert_response :redirect
-        assert !assigns(:weblog_post).new_record?, :message => assigns(:weblog_post).errors.full_messages.join('; ')
+        assert !assigns(:weblog_post).new_record?, assigns(:weblog_post).errors.full_messages.join('; ')
       end
     end
     images = assigns(:weblog_post).node.children
@@ -197,11 +197,11 @@ class WeblogPostsControllerTest < ActionController::TestCase
     image = fixture_file_upload("files/test.jpg")
     assert_difference('WeblogPost.count', 1) do
       assert_difference('Image.count', 4) do
-        create_weblog_post({}, { :images => {:image_0 => { :data => image },
-                    :image_1 => { :data => image },
-                    :image_2 => { :data => image },
-                    :image_4 => { :data => image },
-                    :image_3 => { :data => image}}})
+        create_weblog_post({}, { :images => {:image_0 => { :file => image },
+                    :image_1 => { :file => image },
+                    :image_2 => { :file => image },
+                    :image_4 => { :file => image },
+                    :image_3 => { :file => image}}})
 
         assert_response :redirect
         assert_equal 4, assigns(:weblog_post).node.children.size
@@ -216,10 +216,10 @@ class WeblogPostsControllerTest < ActionController::TestCase
       put :update,  :weblog_archive_id => weblog_archives(:devcms_weblog_archive).id,
                     :weblog_id => weblogs(:henk_weblog).id,
                     :id => weblog_posts(:henk_weblog_post_one).id,
-                    :images => {:image_0 => { :data => image },
-                                :image_1 => { :data => image },
-                                :image_2 => { :data => image },
-                                :image_3 => { :data => image}}
+                    :images => {:image_0 => { :file => image },
+                                :image_1 => { :file => image },
+                                :image_2 => { :file => image },
+                                :image_3 => { :file => image}}
     end
     assert_response :redirect
   end

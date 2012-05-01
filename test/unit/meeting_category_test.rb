@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class MeetingCategoryTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -16,14 +16,14 @@ class MeetingCategoryTest < ActiveSupport::TestCase
   def test_should_require_name
     assert_no_difference 'MeetingCategory.count' do
       meeting_category = create_meeting_category(:name => nil)
-      assert meeting_category.errors.on(:name)
+      assert meeting_category.errors[:name].any?
     end
   end
   
   def test_should_require_unique_name
     assert_no_difference 'MeetingCategory.count' do
       meeting_category = create_meeting_category(:name => @meeting_category.name)
-      assert meeting_category.errors.on(:name)
+      assert meeting_category.errors[:name].any?
     end
   end
   

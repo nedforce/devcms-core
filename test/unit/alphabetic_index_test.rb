@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class AlphabeticIndexTest < ActiveSupport::TestCase
 
@@ -11,7 +11,7 @@ class AlphabeticIndexTest < ActiveSupport::TestCase
   def test_should_require_title
     assert_no_difference 'AlphabeticIndex.count' do
       ai = create_alphabetic_index(:title => nil)
-      assert ai.errors.on(:title)
+      assert ai.errors[:title].any?
     end
   end
 

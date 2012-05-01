@@ -1,11 +1,9 @@
-require 'faker'
-
 namespace :db do
   namespace :populate do
 
     desc 'Create synonym data. The thesaurus should be delimited with semi-collons and linebreaks'
     task :synonyms => :environment do
-      thesaurus = File.join(RAILS_ROOT, 'thesaurus', 'basis-nl.txt')
+      thesaurus = File.join(Rails.root, 'thesaurus', 'basis-nl.txt')
       f = File.open(thesaurus)
       begin
         while l = f.readline
@@ -54,6 +52,8 @@ namespace :db do
 
     desc 'Create approximately 1000 User instances with random data'
     task(:users => :environment) do
+      require 'faker'
+      
       ActiveRecord::Base.transaction do
         1000.times do
           login = Faker::Name.name
@@ -78,6 +78,8 @@ namespace :db do
 
     desc 'Create a node structure with semi-random content'
     task(:nodes => :environment) do
+      require 'faker'
+      
       ActiveRecord::Base.transaction do
         root_section = Site.create!(:title => 'Website', :description => Faker::Lorem.sentence, :expiration_email_subject => "Content onder uw beheer is verouderd", :expiration_email_body => "<p>De onderstaande pagina is al enige tijd niet meer bijgewerkt en is inmiddels verlopen.</p><p>Gelieve de inhoud van deze pagina's te controleren en bij te werken.</p><p>Neem voor meer informatie contact op met de webredactie.</p>")
         root_section.node.update_attributes!(:layout => "deventer", :layout_variant => 'four_columns', :layout_configuration => {'template_color'=>'default'})

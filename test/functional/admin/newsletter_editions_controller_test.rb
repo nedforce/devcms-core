@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::NewsletterEditionsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -60,7 +60,7 @@ class Admin::NewsletterEditionsControllerTest < ActionController::TestCase
       create_newsletter_edition({ :title => nil }, { :commit_type => 'preview' })
       assert_response :unprocessable_entity
       assert assigns(:newsletter_edition).new_record?
-      assert assigns(:newsletter_edition).errors.on(:title)
+      assert assigns(:newsletter_edition).errors[:title].any?
       assert_template 'new'
     end
   end
@@ -74,7 +74,7 @@ class Admin::NewsletterEditionsControllerTest < ActionController::TestCase
     
     assert_response :unprocessable_entity
     assert assigns(:newsletter_edition).new_record?
-    assert assigns(:newsletter_edition).errors.on(:title)
+    assert assigns(:newsletter_edition).errors[:title].any?
   end
   
   def test_should_get_edit
@@ -124,7 +124,7 @@ class Admin::NewsletterEditionsControllerTest < ActionController::TestCase
     put :update, :id => newsletter_edition, :newsletter_edition => { :title => nil }, :commit_type => 'preview'
 
     assert_response :unprocessable_entity
-    assert assigns(:newsletter_edition).errors.on(:title)
+    assert assigns(:newsletter_edition).errors[:title].any?
     assert_equal old_title, newsletter_edition.reload.title
     assert_template 'edit'
   end
@@ -134,7 +134,7 @@ class Admin::NewsletterEditionsControllerTest < ActionController::TestCase
     
     put :update, :id => newsletter_editions(:devcms_newsletter_edition), :newsletter_edition => { :title => nil }
     assert_response :unprocessable_entity
-    assert assigns(:newsletter_edition).errors.on(:title)
+    assert assigns(:newsletter_edition).errors[:title].any?
   end
   
   def test_should_create_newsletter_edition_with_items

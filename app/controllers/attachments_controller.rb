@@ -8,7 +8,7 @@ class AttachmentsController < ApplicationController
   # Uploads an attachment to the user if the filename matches. If no filename is
   # given, then redirect to the correct filename for caching purposes.
   def show
-    if DevCMS.search_configuration[:luminis].try(:has_key?, :luminis_crawler_ips) and DevCMS.search_configuration[:luminis][:luminis_crawler_ips].include?(request.remote_ip)
+    if Devcms.search_configuration[:luminis].try(:has_key?, :luminis_crawler_ips) and Devcms.search_configuration[:luminis][:luminis_crawler_ips].include?(request.remote_ip)
       render :file => '/attachments/show.html.haml'
     else
       # Upload file to user
@@ -20,7 +20,7 @@ class AttachmentsController < ApplicationController
 
   def upload_file(cache_control = 'public')
     headers['Cache-Control'] = cache_control # This can be cached by proxy servers
-    send_file(@attachment.create_temp_file, 
+    send_file(@attachment.file.path, 
               :type        => @attachment.content_type, 
               :filename    => @attachment.filename, 
               :length      => @attachment.size, 

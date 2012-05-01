@@ -1,6 +1,6 @@
 %h1= t 'shared.confirm_deletion'
 
-- form_tag [@node, @comment], :method => :delete do
+= form_tag [@node, @comment], :method => :delete do
   %p= t 'comments.really_delete?'
 
   .formButtonCt

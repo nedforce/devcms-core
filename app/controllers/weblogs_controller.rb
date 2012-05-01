@@ -101,7 +101,7 @@ protected
   end
 
   def find_weblog_posts
-    @weblog_posts = @weblog.weblog_posts.accessible.all(:page => { :size => 25, :current => params[:page] })
+    @weblog_posts = @weblog.weblog_posts.accessible.page(params[:page]).per(25)
 
     @latest_weblog_posts    = []
     @weblog_posts_for_table = @weblog_posts.to_a

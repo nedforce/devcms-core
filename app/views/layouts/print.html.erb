@@ -5,8 +5,8 @@
         <link rel="SHORTCUT ICON" href="http://<%= h(Settler[:host]) %>/favicon.ico" type="image/vnd.microsoft.icon" />
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
         <meta name="language" content="NL"/>
-        <%= stylesheet_link_merged :print, :media => "all" -%>
-        <%= javascript_include_tag('prototype.js', 'print.js', :cache => 'cache-print', :plugin => 'devcms-core') %>
+        <%= stylesheet_link_tag :print, :media => "all" -%>
+        <%= javascript_include_tag('devcms_core.js', 'print.js') %>
     </head>
     <body>
       <div id="content">

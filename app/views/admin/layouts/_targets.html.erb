@@ -20,11 +20,11 @@
         height: <%= config["height"] %>,
         width: <%= config["width"] %>,
         targetable: <%= targetable %>,
-        items: <%= (@current_sortlets && @current_sortlets[target] ? @current_sortlets[target].to_json : '[]') %>,
+        items: <%= raw (@current_sortlets && @current_sortlets[target] ? @current_sortlets[target].to_json : '[]') %>,
         maxItems: <%= config["max_items"] || -1 %>,
         representation: '<%= config["representation"] %>',
         ddGroup: 'TreeAndSorterDD',
-        node: <%= @node.to_tree_node_for(current_user).to_json %>,
+        node: <%= raw @node.to_tree_node_for(current_user).to_json %>,
         disabled: <%= !(current_user.has_role?("admin") || targetable) %>,
         border: false
       }));
@@ -36,7 +36,7 @@
       renderTo: 'custom_representations',
       height: 240,
       width: 160,
-      items: <%= (@current_sortlets && @current_sortlets[:custom_representations] ? @current_sortlets[:custom_representations].to_json : '[]') %>,
+      items: <%= raw (@current_sortlets && @current_sortlets[:custom_representations] ? @current_sortlets[:custom_representations].to_json : '[]') %>,
       maxItems: -1,
       ddGroup: 'TreeAndSorterDD',
       border: 2

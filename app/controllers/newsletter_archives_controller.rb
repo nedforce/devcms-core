@@ -10,13 +10,12 @@ class NewsletterArchivesController < ApplicationController
 
   # Enable unsubscrubing using regular hyperlinks and <tt>:method => :delete</tt>.
   # See ApplicationController for more details.
-  verify :method => [:get, :delete], :only => :unsubscribe
-  before_filter :confirm_destroy,    :only => :unsubscribe
+  before_filter :confirm_destroy, :only => :unsubscribe, :unless => lambda{ request.delete? } 
 
   # * GET /newsletter_archives/:id
   # * GET /newsletter_archives/:id.xml
   def show
-    @newsletter_editions = @newsletter_archive.newsletter_editions.accessible.all(:conditions => [ 'published <> ?', 'unpublished' ], :page => {:size => 25, :current => params[:page]})
+    @newsletter_editions = @newsletter_archive.newsletter_editions.accessible.where([ 'published <> ?', 'unpublished' ]).page(params[:page]).per(25)
 
     first_page = !params[:page] || params[:page]==1
     @latest_newsletter_editions    = []

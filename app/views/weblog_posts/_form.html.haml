@@ -8,7 +8,7 @@
     = t 'weblogs.preamble'
   = f.text_area :preamble, :rows => 5, :class => 'textfield'
 
-- include_js 'tiny_mce/tiny_mce.js'
+- include_js '/libraries/tiny_mce/tiny_mce.js'
 
 .clearfix.formFieldCt
   %label.small{ :for => "weblog_post_body_ct" }
@@ -30,7 +30,7 @@
     / new images
     #weblog_post_image_forms
       - (WeblogPostsController::MAX_IMAGES - @images.size).times do |i|
-        %p= file_field_tag "images[#{i}][data]", :id => "image_field_#{i}", :class => 'textfield'
+        %p= file_field_tag "images[#{i}][file]", :id => "image_field_#{i}", :class => 'textfield'
 
     .clearfix.formFieldCt
       %label.small{ :for => "weblog_post_commentable" }

@@ -1,5 +1,5 @@
 .regularPage.newsArchive
-  - readspeaker do
+  = readspeaker do
     %h1= h @poll.title
     - if @question
       - if already_voted_for?(@question)

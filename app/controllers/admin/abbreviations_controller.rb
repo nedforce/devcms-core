@@ -1,4 +1,6 @@
 class Admin::AbbreviationsController < Admin::AdminController
+  before_filter :default_format_json,  :only => [ :create, :update, :destroy ]  
+    
   before_filter :set_paging,  :only => [ :index, :create ]
   before_filter :set_sorting, :only => [ :index, :create ]
 
@@ -12,7 +14,7 @@ class Admin::AbbreviationsController < Admin::AdminController
   # * GET /admin/abbreviations
   # * GET /admin/abbreviations.json
   def index
-    @abbreviations       = @node.abbreviations.all(:order => "#{@sort_field} #{@sort_direction}", :page => { :size => @page_limit, :current => @current_page })
+    @abbreviations       = @node.abbreviations.order("#{@sort_field} #{@sort_direction}").page(@current_page).per(@page_limit)
     @abbreviations_count = @node.abbreviations.size
 
     respond_to do |format|

@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::CalendarsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -62,7 +62,7 @@ class Admin::CalendarsControllerTest < ActionController::TestCase
     assert_difference('Calendar.count') do
       create_calendar
       assert_response :success
-      assert !assigns(:calendar).new_record?, :message => assigns(:calendar).errors.full_messages.join('; ')
+      assert !assigns(:calendar).new_record?, assigns(:calendar).errors.full_messages.join('; ')
     end
   end
 
@@ -85,7 +85,7 @@ class Admin::CalendarsControllerTest < ActionController::TestCase
       create_calendar({ :title => nil }, { :commit_type => 'preview' })
       assert_response :unprocessable_entity
       assert assigns(:calendar).new_record?
-      assert assigns(:calendar).errors.on(:title)
+      assert assigns(:calendar).errors[:title].any?
       assert_template 'new'
     end
   end
@@ -99,7 +99,7 @@ class Admin::CalendarsControllerTest < ActionController::TestCase
 
     assert_response :unprocessable_entity
     assert assigns(:calendar).new_record?
-    assert assigns(:calendar).errors.on(:title)
+    assert assigns(:calendar).errors[:title].any?
   end
 
   def test_should_get_edit
@@ -149,7 +149,7 @@ class Admin::CalendarsControllerTest < ActionController::TestCase
     put :update, :id => calendar, :calendar => { :title => nil }, :commit_type => 'preview'
 
     assert_response :unprocessable_entity
-    assert assigns(:calendar).errors.on(:title)
+    assert assigns(:calendar).errors[:title].any?
     assert_equal old_title, calendar.reload.title
     assert_template 'edit'
   end
@@ -159,7 +159,7 @@ class Admin::CalendarsControllerTest < ActionController::TestCase
 
     put :update, :id => calendars(:events_calendar).id, :calendar => { :title => nil }
     assert_response :unprocessable_entity
-    assert assigns(:calendar).errors.on(:title)
+    assert assigns(:calendar).errors[:title].any?
   end
 
 protected

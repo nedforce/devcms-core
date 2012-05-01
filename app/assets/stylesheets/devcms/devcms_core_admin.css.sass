@@ -1,0 +1,479 @@
+@import "../imports/devcms_core_clearfix"
+@import "../imports/admin/devcms_core_icons", "../imports/admin/devcms_core_approvals", "../imports/admin/devcms_core_content_types", "../imports/admin/devcms_core_preview", "../imports/admin/devcms_core_right_panel"
+
+/** Generic styles *
+
+#show a
+  color: #0076AF
+
+.ext-safari .x-form-field-wrap .x-form-trigger
+  right: auto !important
+  
+abbr, html\:abbr
+  border-bottom: 1px dashed #CCC
+  cursor: help  
+
+/** node styles *
+
+.x-tree-node-icon
+  background-repeat: no-repeat !important
+
+.privateNode span
+  font-weight: bold
+  font-style: italic
+  
+.hiddenNode span
+  color: #a0a0a0 !important
+
+.x-btn button
+  font-family: Arial, Helvetica, sans-serif
+  line-height: 13px
+
+/** main layout styles *
+
+body
+  font-family: Arial, Helvetica, sans-serif
+  font-size: 12px
+  color: #456ea4
+  background-color: #dfe8f6
+  background-image: url(image_path('admin/body_bg.png'))
+  background-repeat: repeat-x
+
+h2
+  font-size: 14px
+  margin-bottom: 20px
+
+#header
+  padding: 5px
+
+#logged_in_box
+  float: right
+  width: 320px
+
+.properties_box, .default_box
+  border: 1px solid #99bbe8
+  background-color: #ffffff
+
+.properties_box
+  th, td
+    text-align: left
+    padding: 4px 10px 4px 10px
+    font-weight: normal
+  th
+    background-color: #dfe8f6
+  td
+    color: #909090
+
+.top_bar
+  background-image: url(image_path('admin/top_bar_bg.png'))
+  background-repeat: repeat-x
+  background-color: #dfe8f6
+  border-bottom: 1px solid #99bbe8
+  height: 32px
+
+.menu
+  border-bottom: 0 !important
+
+.top_bar
+  h1
+    font-size: 14px
+    color: #456ea4
+    font-weight: normal
+    margin: 0
+    padding: 8px 0 0 10px
+  a
+    float: left
+    margin-top: 3px
+    margin-left: 4px
+    text-align: center
+    padding-top: 5px
+    width: 118px
+    height: 21px
+    background-image: url(image_path('admin/top_bar_button.png'))
+    background-repeat: no-repeat
+    background-color: #dfe8f6
+    background-position: top left
+    color: #456ea4
+    text-decoration: none
+    &:hover, &.active
+      background-position: bottom left
+    &.align_right
+      float: right
+      margin-left: 0
+      margin-right: 4px
+
+#show
+  padding: 10px
+
+.status
+  border: 2px solid #99bbe8
+  padding: 5px
+
+/** Forms *
+
+div.form_field
+  margin-bottom: 10px
+  label
+    float: left
+    width: 100px
+    padding-top: 3px
+    line-height: 20px
+
+fieldset
+  padding: 10px
+  background-color: #FFFDE1
+  border: 1px solid #FFFDE1 * 0.9
+  margin-bottom: 20px
+  legend
+    font-size: 16px
+    font-weight: bold
+
+#slider
+  margin-left: 10px
+
+/** Flash messages *
+
+.flash
+  padding: 5px
+  border-bottom-width: 1px
+  border-bottom-style: dashed
+
+.notice
+  background-color: #fffede
+  border-bottom-color: #99bbe8
+
+.warning
+  background-color: #ffcd8b
+  border-bottom-color: #ff0000
+
+.error
+  font-weight: bold
+  color: black
+  background-color: #ffffff
+  border-bottom-color: #ff0000
+
+.errorExplanation
+  border: 1px solid #99bbe8
+  padding-bottom: 6px
+  width: 400px
+  margin-bottom: 20px
+  h2
+    font-size: 12px
+    font-weight: bold
+    background-color: #ffcd8b
+    color: black
+    border-bottom: 1px dashed #ff0000
+    margin-bottom: 5px
+    padding: 4px
+  p
+    padding: 0 4px 4px 4px
+  ul
+    list-style-type: disc
+    padding: 0 0 0 20px
+    margin: 0
+
+/** sitemap page *
+
+#sitemap_panel, #approvals_panel
+  border-top: 1px solid #99bbe8
+  padding-top: 0
+
+.sitemapMainPanel, .approvalMainPanel
+  padding: 5px
+  background-color: #dfe8f6
+
+/** Ext.grid.Grid style fix.. *
+
+.x-grid3-header-offset
+  padding-left: 1px
+  width: auto
+
+/** file upload table *
+
+.uploaded_images_table, .uploaded_attachments_table
+  margin-bottom: 12px
+
+.uploaded_images_table th, .uploaded_attachments_table th, .uploaded_images_table td, .uploaded_attachments_table td
+  background-color: #dfe8f6
+  padding: 3px 6px 3px 6px
+
+.uploaded_images_table th, .uploaded_attachments_table th
+  font-weight: bold
+
+/** Ext.dvtr.Sorter & Ext.dvtr.Sortlet styles *
+
+.x-sorter .x-panel-body
+  padding: 5px
+
+.x-empty-sorter .x-panel-body
+  background-color: #e5ecf7
+
+.x-sortlet, .x-sorter .x-panel-dd-spacer
+  margin-bottom: 5px
+
+.x-sortlet
+  .x-panel-header
+    padding: 2px 2px 1px 2px
+  .x-panel-header-text
+    font-size: 9px !important
+
+.x-sortlet-header-loading .x-panel-header-text
+  padding-left: 20px
+  background-image: url(javascript_path('ext/resources/images/default/grid/loading.gif'))
+  background-repeat: no-repeat
+  background-position: left
+
+.x-panel-treenode-dd-spacer
+  margin: 5px
+  height: 1px
+  border-top: 2px dashed #99BBE8
+
+/** Ext.dvtr.NodeDropField styles *
+
+.x-node-drop-field-over
+  background-image: none !important
+  background-color: #e5ecf7
+
+.x-node-drop-field-txt
+  color: #555
+  margin-left: 5px
+  margin-top: 2px
+  font-style: italic
+
+/** Styles for Ext.dvtr.RemovableTextField *
+
+.x-removable-textfield-btn
+  position: relative
+  width: 15px
+  height: 15px
+  background-image: url(image_path('icons/delete.png'))
+  background-repeat: no-repeat
+  top: 2px
+  margin-right: 5px
+  cursor: pointer
+
+/* Ext datepicker fix for Firefox 3
+
+.x-date-middle
+  width: 160px
+
+.x-date-left, .x-date-right
+  width: 20px !important
+
+/** Side box manager *
+
+#layout_manager_content #targets
+  .targets
+    float: left
+    margin: 20px
+  #custom_representations.targets
+    margin-top: 30px
+
+.rightPanelPadding
+  padding: 15px
+
+#layout_manager_content
+  #targets table
+    margin-top: 10px
+    background-color: #99BBE8
+    td
+      background-color: #d0e1f8
+  #variants_settings_and_targets
+    padding-bottom: 20px
+
+#sorter_1, #sorter_2
+
+.newsItemColPanel
+  padding-left: 120px
+
+/** Form styles *
+
+.formFieldCt
+  margin-bottom: 10px
+  label
+    float: left
+    width: 120px
+    color: #456EA4
+    line-height: 20px
+
+.formFieldCb
+  padding-left: 100px
+  margin-bottom: 10px
+  label
+    padding-left: 5px
+    color: #456EA4
+
+.adminSubmitBtn
+  padding-left: 120px
+  float: left
+  + .adminSubmitBtn
+    padding-left: 20px !important
+
+.videoBtn
+  float: left
+  margin: 5px 0 10px 90px
+
+.admin_form_text_field, .admin_form_text_area, .admin_form_select
+  width: 250px
+  border: 1px solid #b5b8c8
+
+.admin_form_text_field, .admin_form_select
+  height: 20px
+
+.admin_form_text_area
+  font-family: Verdana, Arial, Helvetica, sans-serif
+  font-size: 12px
+
+#html_page_body
+  font-family: 'Courier New', Courier, monospace
+  overflow-x: scroll
+  width: 500px
+
+.helpText
+  padding-left: 120px
+  font-size: small
+
+.fieldWithErrors
+  input, select, textarea, .x-html-editor-wrap
+    border-bottom: 1px dashed red !important
+
+img.admin-header-image
+  width: 400px
+  height: 52px
+  border: 1px solid #b5b8c8
+  margin: 10px 0 0 0
+
+.new_header_image, .edit_header_image
+  margin-top: 10px
+  padding-top: 10px
+  border-top: 1px solid #b5b8c8
+
+.delete
+  width: 400px
+  text-align: right
+
+.deleting
+  color: #b5b8c8
+
+input.small
+  width: 22px
+  
+.new_contact_form_field .adminSubmitBtn
+  float: none
+
+/** User management styles
+
+.interests_group, .newsletter_archives_group
+  margin-bottom: 10px
+  background-color: #E8EFF9
+  position: relative
+  overflow-x: hidden
+  overflow-y: auto
+  height: 72px
+  white-space: nowrap
+
+.interests_group .x-panel-body, .newsletter_archives_group .x-panel-body
+  padding-top: 2px
+  padding-left: 3px
+  background-color: #E8EFF9
+
+.interests_group .x-form-check-wrap, .newsletter_archives_group .x-form-check-wrap
+  padding: 0
+
+/** Content box fields *
+
+#content_box_settings
+  margin: 15px 0 20px 0
+  .content_box_icon_chooser
+    margin-left: 120px
+    list-style: square outside none
+  .content_box_colour_chooser
+    list-style: square outside none
+  .content_box_icon_chooser li
+    display: block
+    position: relative
+  .content_box_colour_chooser li
+    display: block
+    position: relative
+    width: 40px
+    margin-right: 10px
+    float: left
+  .content_box_icon_chooser
+    li
+      width: 120px
+      margin: 4px 20px 0 0
+      float: left
+    label
+      float: none
+      display: inline-block
+      background-repeat: no-repeat
+  .content_box_colour_chooser label
+    float: none
+    display: inline-block
+    background-repeat: no-repeat
+    width: 20px
+    height: 20px
+    background: transparent
+    margin-right: 20px
+    &.default
+      background-image: url(image_path('content_box_header_default.png'))
+  .content_box_icon_chooser
+    label
+      width: 100px
+      height: 48px
+      background: #e7e6e6
+      margin-right: 20px
+    input
+      display: inline-block
+      position: absolute
+      right: 3px
+  .content_box_colour_chooser input
+    display: inline-block
+    position: absolute
+    right: 3px
+  .content_box_icon_chooser input
+    top: 17px
+  .content_box_colour_chooser
+    input
+      top: 3px    
+
+/* Misc
+
+#auto_complete_ct
+  padding-left: 120px
+
+.ext-gecko .x-window-body .x-form-item
+  overflow: inherit !important
+  
+#autocomplete
+  background-color: #dfe8f6
+  ul
+    margin: 10px
+    li:hover
+      cursor: pointer
+      background-color: #e7e6e6
+
+.url_alias_textbox input
+  margin: 4px !important
+  width: 300px !important
+
+.url_alias_textbox .ext-mb-fix-cursor
+  overflow: hidden !important
+
+.x-date-menu
+  width: 200px !important
+
+.x-date-picker
+  width: 200px !important
+  
+.x-menu
+  width: 200px !important
+  
+.x-combo-list
+  left: 391px !important
+  
+ul.x-menu-list
+  height: expression( this.scrollHeight > 350 ? "350px" : "auto" )
+  width: 200px
+  max-height: 350px
+  overflow-y: auto

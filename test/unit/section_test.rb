@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class SectionTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -22,7 +22,7 @@ class SectionTest < ActiveSupport::TestCase
     assert_no_difference('Section.count') do
       section = create_section(:title => nil)
       assert section.new_record?
-      assert section.errors.on(:title)
+      assert section.errors[:title].any?
     end
   end
 
@@ -47,7 +47,7 @@ class SectionTest < ActiveSupport::TestCase
     assert_no_difference('Section.count') do
       section = create_section(:frontpage_node => @root_node)
       assert !section.valid?
-      assert section.errors.on_base
+      assert section.errors[:base].any?
     end
   end
 
@@ -60,7 +60,7 @@ class SectionTest < ActiveSupport::TestCase
   def test_should_set_frontpage_node_to_nil_if_frontpage_node_is_own_node
     @root_section.set_frontpage!(@root_section_node)
     assert @root_section.valid?
-    assert !@root_section.errors.on(:frontpage_node)
+    assert !@root_section.errors[:frontpage_node].any?
     assert !@root_section.has_frontpage?
     assert_equal nil, @root_section.frontpage_node
   end
@@ -68,7 +68,7 @@ class SectionTest < ActiveSupport::TestCase
   # def test_should_accept_descendant_as_frontpage_node
   #   @root_section.set_frontpage!(@news_archive_node)
   #   assert @root_section.valid?
-  #   assert !@root_section.errors.on(:frontpage_node)
+  #   assert !@root_section.errors[:frontpage_node].any?
   #   assert_equal @news_archive_node, @root_section.frontpage_node
   # end
   # 
@@ -76,7 +76,7 @@ class SectionTest < ActiveSupport::TestCase
   #   section = create_section
   #   section.set_frontpage!(@root_node)
   #   assert !section.valid?
-  #   assert section.errors.on_base
+  #   assert section.errors[:base].any?
   # end
   # 
   # def test_should_not_accept_sibling_as_frontpage_node
@@ -84,13 +84,13 @@ class SectionTest < ActiveSupport::TestCase
   #   sibling = create_section
   #   section.set_frontpage!(sibling.node)
   #   assert !section.valid?
-  #   assert section.errors.on_base
+  #   assert section.errors[:base].any?
   # end
 
   def test_should_not_accept_section_with_frontpage_node_as_frontpage_node
     @root_section.set_frontpage!(@section_with_frontpage.node)
     assert !@root_section.valid?
-    assert @root_section.errors.on_base
+    assert @root_section.errors[:base].any?
   end
 
   def test_destruction_of_frontpage_node_should_set_frontpage_node_id_to_nil

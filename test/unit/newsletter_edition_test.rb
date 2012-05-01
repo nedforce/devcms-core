@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class NewsletterEditionTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -19,26 +19,26 @@ class NewsletterEditionTest < ActiveSupport::TestCase
   def test_should_require_title
     assert_no_difference 'NewsletterEdition.count' do
       newsletter_edition = create_newsletter_edition(:title => nil)
-      assert newsletter_edition.errors.on(:title)
+      assert newsletter_edition.errors[:title].any?
     end
     
     assert_no_difference 'NewsletterEdition.count' do
       newsletter_edition = create_newsletter_edition(:title => "  ")
-      assert newsletter_edition.errors.on(:title)
+      assert newsletter_edition.errors[:title].any?
     end
   end
 
   def test_should_require_body
     assert_no_difference 'NewsletterEdition.count' do
       newsletter_edition = create_newsletter_edition(:body => nil)
-      assert newsletter_edition.errors.on(:body)
+      assert newsletter_edition.errors[:body].any?
     end
   end
   
   def test_should_require_parent
     assert_no_difference 'NewsletterEdition.count' do
       newsletter_edition = create_newsletter_edition(:parent => nil)
-      assert newsletter_edition.errors.on(:newsletter_archive)
+      assert newsletter_edition.errors[:newsletter_archive].any?
     end
   end
 
@@ -46,7 +46,7 @@ class NewsletterEditionTest < ActiveSupport::TestCase
     assert_difference 'NewsletterEdition.count', 2 do
       2.times do
         newsletter_edition = create_newsletter_edition(:title => 'Non-unique title')
-        assert !newsletter_edition.errors.on(:title)
+        assert !newsletter_edition.errors[:title].any?
       end
     end
   end

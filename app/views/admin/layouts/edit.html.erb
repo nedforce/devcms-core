@@ -63,7 +63,7 @@
 <div id="layout_manager_panel">
   <div id="layout_manager_content" class="rightPanelPadding">
     <h1>Template en layout instellingen</h1>
-    <% admin_form_for(@node, :remote => true) do |form| %>
+    <%= admin_form_for(@node) do |form| %>
     <div id="layout">
       <p>Kies een template of overerven om van de bovenliggende pagina te overerven. Na de keuze voor een template worden eventuele varianten getoont.</p>
       <% options = @node.root? ? {} : { :include_blank => "Overerven (#{@node.inherited_layout.name})" } %>

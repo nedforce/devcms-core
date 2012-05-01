@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class PollTest < ActiveSupport::TestCase
   
@@ -17,20 +17,20 @@ class PollTest < ActiveSupport::TestCase
     assert_no_difference 'Poll.count' do
       poll = Poll.create(:parent => nodes(:root_section_node), :title => nil)
       assert poll.new_record?
-      assert poll.errors.on(:title)
+      assert poll.errors[:title].any?
     end
     
     assert_no_difference 'Poll.count' do
       poll = Poll.create(:parent => nodes(:root_section_node), :title => "  ")
       assert poll.new_record?
-      assert poll.errors.on(:title)
+      assert poll.errors[:title].any?
     end
   end
   
   def test_should_update_poll
     assert_no_difference 'Poll.count' do
       @hc_poll.title = 'New title'
-      assert @hc_poll.send(:save)
+      assert @hc_poll.save
     end
   end
   

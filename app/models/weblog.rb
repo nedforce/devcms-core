@@ -39,7 +39,8 @@ class Weblog < ActiveRecord::Base
     :copyable => false,
     :has_own_feed => true,
     :children_can_be_sorted => false,
-    :tree_loader_name => 'weblogs'
+    :tree_loader_name => 'weblogs',
+    :nested_resource => true    
   })
 
   # Extend this class with methods to find items based on their publication date.

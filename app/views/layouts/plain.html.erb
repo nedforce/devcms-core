@@ -5,9 +5,9 @@
     <meta name="language" content="NL"/>
     <title><%=h [Settler[:site_name], @page_title].compact.join(' | ') -%></title>
     <link rel="SHORTCUT ICON" href="http://<%= h(Settler[:host]) %>/favicon.ico" type="image/vnd.microsoft.icon" />
-    <%= stylesheet_link_merged :plain -%>
-    <%= javascript_include_tag('prototype.js', 'lightbox.js', 'default.js', :plugin => 'devcms-core') %>
-    <%= javascript_include_tag('scriptaculous.js?load=effects,builder', :plugin => 'devcms-core') %>
+    
+    <%= stylesheet_link_tag :application -%>    
+    <%= javascript_include_tag('devcms_core') %>    
     <%= javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};" -%>
     <%= yield :javascript %>
     <%= yield :atom_feed %>
@@ -16,7 +16,7 @@
 
     <div id="main-content-plain">
         <% if @node.present? %>
-          <% cache(:controller => '/nodes', :action => :breadcrumbs, :node => @node.id, :last_updated_at => @node.self_and_ancestors.maximum(:updated_at)) do %>
+          <%- cache(:controller => '/nodes', :action => :breadcrumbs, :node => @node.id, :last_updated_at => @node.self_and_ancestors.maximum(:updated_at)) do %>
             <%= bread_crumbs_for(@node, :include_root => false, :minimum_crumbs => 2) %>
           <% end %>
         <% end %>

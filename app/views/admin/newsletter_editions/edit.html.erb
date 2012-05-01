@@ -84,7 +84,7 @@ newsletterEditionForm.addButton({
 });
 
 // Show validation errors and handle marking of invalid fields.
-var errors = <%= @newsletter_edition.errors.to_json %>;
+var errors = <%= raw @newsletter_edition.errors.to_json %>;
 if (errors.length > 0) {
     newsletterEditionForm.insertErrorMessages('<%= error_messages_for :newsletter_edition %>', '<%= @newsletter_edition.class.to_s.underscore -%>');
 }

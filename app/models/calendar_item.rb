@@ -62,7 +62,7 @@ class CalendarItem < Event
   after_create :create_repeating_calendar_items
 
   # Assign an unique repeat_identifier is this is a repeating calendar item.
-  before_validation_on_create :assign_repeat_identifier_if_repeating
+  before_validation :assign_repeat_identifier_if_repeating, :on => :create
 
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of  :start_time, :end_time
@@ -70,7 +70,7 @@ class CalendarItem < Event
   validates_inclusion_of :repeat_interval_granularity, :in => REPEAT_INTERVAL_GRANULARITIES_VALUES, :if => :repeating?, :on => :create
   validates_inclusion_of :repeat_interval_multiplier,  :in => REPEAT_INTERVAL_MULTIPLIER_RANGE,     :if => :repeating?, :on => :create
   validates_presence_of  :repeat_end,                                                               :if => :repeating?, :on => :create
-  validate_on_create     :repeat_end_should_be_in_the_future
+  validate               :repeat_end_should_be_in_the_future, :on => :create
   validate               :end_time_should_be_after_start_time
 
   attr_protected :repeat_identifier
@@ -126,7 +126,7 @@ class CalendarItem < Event
 
   # Flag is repetitions of this calendar item should be created
   def repeating=(value)
-    @repeating = (value.present? || value.is_a?(FalseClass)) ? value.to_bool : nil
+    @repeating = (value.present? || value.is_a?(FalseClass)) ? value.to_boolean : nil
   end
 
   # Set repeat interval granularity (day, week, month)

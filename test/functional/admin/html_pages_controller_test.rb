@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::HtmlPagesControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -38,7 +38,7 @@ class Admin::HtmlPagesControllerTest < ActionController::TestCase
     assert_difference('HtmlPage.count') do
       create_html_page
       assert_response :success
-      assert !assigns(:html_page).new_record?, :message => assigns(:html_page).errors.full_messages.join('; ')
+      assert !assigns(:html_page).new_record?, assigns(:html_page).errors.full_messages.join('; ')
     end
   end
 
@@ -61,7 +61,7 @@ class Admin::HtmlPagesControllerTest < ActionController::TestCase
       create_html_page({ :title => nil }, { :commit_type => 'preview' })
       assert_response :unprocessable_entity
       assert assigns(:html_page).new_record?
-      assert assigns(:html_page).errors.on(:title)
+      assert assigns(:html_page).errors[:title].any?
       assert_template 'new'
     end
   end
@@ -74,7 +74,7 @@ class Admin::HtmlPagesControllerTest < ActionController::TestCase
     end
     assert_response :unprocessable_entity
     assert assigns(:html_page).new_record?
-    assert assigns(:html_page).errors.on(:title)
+    assert assigns(:html_page).errors[:title].any?
   end
 
   def test_should_get_edit
@@ -122,7 +122,7 @@ class Admin::HtmlPagesControllerTest < ActionController::TestCase
     old_title = html_page.title
     put :update, :id => html_page.id, :html_page => {:title => nil, :body => 'updated_body'}, :commit_type => 'preview'
     assert_response :unprocessable_entity
-    assert assigns(:html_page).errors.on(:title)
+    assert assigns(:html_page).errors[:title].any?
     assert_equal old_title, html_page.reload.title
     assert_template 'edit'
   end

@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::RoleAssignmentsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -15,7 +15,7 @@ class Admin::RoleAssignmentsControllerTest < ActionController::TestCase
     assert_difference('RoleAssignment.count') do
       create_role_assignment()
       assert_response :success
-      assert !assigns(:role_assignment).new_record?, :message => assigns(:role_assignment).errors.full_messages.join('; ')
+      assert !assigns(:role_assignment).new_record?, assigns(:role_assignment).errors.full_messages.join('; ')
     end
   end
 
@@ -45,7 +45,7 @@ class Admin::RoleAssignmentsControllerTest < ActionController::TestCase
     end
     assert_response :success
     assert assigns(:role_assignment).new_record?
-    assert assigns(:role_assignment).errors.on(:name)
+    assert assigns(:role_assignment).errors[:name].any?
   end
 
   def test_should_require_valid_role
@@ -56,7 +56,7 @@ class Admin::RoleAssignmentsControllerTest < ActionController::TestCase
     end
     assert_response :success
     assert assigns(:role_assignment).new_record?
-    assert assigns(:role_assignment).errors.on(:name)
+    assert assigns(:role_assignment).errors[:name].any?
   end
 
     def test_should_require_user
@@ -67,14 +67,14 @@ class Admin::RoleAssignmentsControllerTest < ActionController::TestCase
     end
     assert_response :success
     assert assigns(:role_assignment).new_record?
-    assert assigns(:role_assignment).errors.on(:user)
+    assert assigns(:role_assignment).errors[:user].any?
   end
 
   def test_should_page_for_extjs
     login_as :sjoerd
     get :index, :start => '2', :limit => '2', :format => 'json'
     assert_response :success
-    assert_equal 2, assigns(:role_assignments).results.size
+    assert_equal 2, assigns(:role_assignments).size
   end
 
   def test_should_sort_nodes_for_extjs
@@ -88,14 +88,14 @@ class Admin::RoleAssignmentsControllerTest < ActionController::TestCase
     login_as :sjoerd
     get :index, :sort => 'user_login', :dir => 'DESC', :format => 'json'
     assert_response :success
-    assert_equal users(:sjoerd).login, assigns(:role_assignments).results.first.user.login
+    assert_equal users(:sjoerd).login, assigns(:role_assignments).first.user.login
   end
 
   def test_should_sort_role_name_for_extjs
     login_as :sjoerd
     get :index, :sort => 'name', :dir => 'DESC', :format => 'json'
     assert_response :success
-    assert_equal users(:reader).login, assigns(:role_assignments).results.first.user.login
+    assert_equal users(:reader).login, assigns(:role_assignments).first.user.login
   end
 
   def test_should_page_and_sort_for_extjs

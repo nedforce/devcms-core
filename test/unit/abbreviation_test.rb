@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class AbbreviationTest < ActiveSupport::TestCase
 
@@ -11,21 +11,21 @@ class AbbreviationTest < ActiveSupport::TestCase
   def test_should_require_abbr
     assert_no_difference 'Abbreviation.count' do
       abbr = create_abbreviation(:abbr => nil)
-      assert abbr.errors.on(:abbr)
+      assert abbr.errors[:abbr].any?
     end
   end
 
   def test_should_require_definition
     assert_no_difference 'Abbreviation.count' do
       abbr = create_abbreviation(:definition => nil)
-      assert abbr.errors.on(:definition)
+      assert abbr.errors[:definition].any?
     end
   end
 
   def test_should_require_node
     assert_no_difference 'Abbreviation.count' do
       abbr = create_abbreviation(:node => nil)
-      assert abbr.errors.on(:node)
+      assert abbr.errors[:node].any?
     end
   end
 

@@ -5,3 +5,8 @@ index
 sharepoint.log
 tmp
 .DS_Store
+.rvmrc
+test.log
+acts_as_ferret.log
+uploads
+test/dummy/log/*.log

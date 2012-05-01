@@ -7,35 +7,24 @@
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
         <meta name="language" content="NL"/>
 
-        <%= stylesheet_link_tag '../javascripts/ext/resources/css/ext-all.css', :plugin => 'devcms-core' %>
+        <%= stylesheet_link_tag '/libraries/ext/resources/css/ext-all.css' %>
 
         <%= stylesheet_link_tag 'admin' %>
 
-        <%= javascript_include_tag 'application', 'date.js', 'prototype-1.6.0.3.js', 'effects.js', 'controls.js', (RAILS_ENV == 'development' ? 'tiny_mce/tiny_mce_src.js' : 'tiny_mce/tiny_mce.js'), :plugin => 'devcms-core' %>
-
-        <%= javascript_include_merged(:admin) %>
-        
+        <%= javascript_include_tag 'devcms_core_admin', '/libraries/tiny_mce/reset_tiny_mce.js', '/libraries/tiny_mce/tiny_mce.js' %>        
+              
         <%= calendar_date_select_includes :locale => :nl %>
         
         <!-- Include Ext Js-->
-        <%= javascript_include_tag 'ext/adapter/ext/ext-base.js', 'ie9_create_contextual_fragment.js',
-          (RAILS_ENV == 'development' ? 'ext/ext-all-debug.js' : 'ext/ext-all.js'), :plugin => 'devcms-core' %>
-
+        <%= javascript_include_tag '/libraries/ext/adapter/ext/ext-base.js', (Rails.env.development? ? '/libraries/ext/ext-all-debug.js' : '/libraries/ext/ext-all.js') %>
+        <%= javascript_include_tag 'extjs.js' %>
         <!-- Init Ext Js -->
-        <% javascript_tag do %>
-          Ext.namespace('Ext.dvtr')
-          Ext.BLANK_IMAGE_URL = '/images/blank.gif'
-          Ext.QuickTips.init() // required for html editor fields
-          Ext.Msg.minWidth = 300
-          Ext.Updater.defaults.loadScripts = true
-        <% end %>
 
-        <%= javascript_include_tag 'admin/categories', 'admin/poll_options', 'admin/init_viewport', 'admin/reset_tiny_mce',
-          'ext/dvtr/TreeNodeContextMenu', 'ext/dvtr/VirtualTreeNodeContextMenu',
+        <%= javascript_include_tag 'ext/dvtr/TreeNodeContextMenu', 'ext/dvtr/VirtualTreeNodeContextMenu',
           'ext/dvtr/MultipleTreeNodeContextMenu', 'ext/dvtr/Panel', 'ext/dvtr/TreeLoader',
           'ext/dvtr/AsyncContentTreeNode', 'ext/dvtr/AsyncVirtualTreeNode', 'ext/dvtr/Sorter',
           'ext/dvtr/ContentNodeFormPanel', 'ext/dvtr/Sortlet', 'ext/dvtr/NodeDropField', 'ext/dvtr/RemovableTextField', 'ext/dvtr/RemovableFieldSet',
-          'ext/ux/ext-extensions.js', 'ext/ux/grid/SmartCheckboxSelectionModel.js', :plugin => 'devcms-core' %>
+          '/libraries/ext/ux/ext-extensions.js', '/libraries/ext/ux/grid/SmartCheckboxSelectionModel.js' %>
 
     </head>
     <body>

@@ -1,9 +1,0 @@
-27-04-2012 - 1834b280f76132073752a2ac5def24b277b20165
-
-- calendar_date_select has been updated and copies its files to the root app on load. This has been added to
-  support date fields in contact forms
-- mailer views will be loaded from devcms-core, the need for having all mailer vies in the root app/views is not necessary
-  anymore unless the default has been intentionally overwritten
-- contact_form_mailer/message views have been updated and therefore need to be updated in all other devcms root apps as well
-- contact forms support file uploads. As these uploads are private, they will be stored in RAILS_ROOT/private/uploads. This
-  will need to be symlinked in deploy.rb

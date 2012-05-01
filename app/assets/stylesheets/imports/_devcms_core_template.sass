@@ -1,0 +1,53 @@
+= template($name, $base, $dark, $light, $highlight)
+  #header
+    background: transparent url(image_path('header_background_#{$name}.png')) repeat-x
+
+  #main_menu_and_header_photo .header_photo .overlay
+    background: transparent url(image_path('header_overlay_#{$name}.png')) no-repeat
+
+  #big_header .overlay, #big_header
+    background-image: url(image_path('big_header_overlay_#{$name}.png'))
+
+  h1
+    color: $base
+  h2
+    color: $dark
+  
+  .background_base, .hover_background_base:hover
+    background-color: $base !important
+
+  .background_highlight, .hover_background_highlight:hover
+    background-color: $highlight !important
+
+  .font_base, .hover_font_base:hover
+    color: $base !important
+
+  .font_highlight, .hover_font_highlight:hover
+    color: $highlight !important
+
+  .border_base
+    border-color: $base
+    *
+      border-color: $base
+
+  .border_highlight
+    border-color: $highlight
+    *
+      border-color: $highlight
+
+  .theme.depth_1
+    a
+      background-color: $base
+      color: white
+  .theme.depth_2
+    a
+      background-color: $dark
+      color: white
+  .theme.depth_3
+    a
+      background-color: $light
+      color: $base
+  .theme.depth_4
+    a
+      background-color: $highlight
+      color: $base

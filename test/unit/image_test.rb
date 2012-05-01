@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class ImageTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -9,29 +9,23 @@ class ImageTest < ActiveSupport::TestCase
       assert !i.new_record?, i.errors.full_messages.join("\n")
     end
   end
-
-  def test_should_save_data
-    i = create_image
-    data = i.data
-    assert_equal data, i.reload.data
-  end
   
   def test_should_not_create_image_without_title
     assert_no_difference 'Image.count' do
       i = create_image(:title => nil)
-      assert i.new_record? && i.errors.on(:title) 
+      assert i.new_record? && i.errors[:title].any? 
     end
     
     assert_no_difference 'Image.count' do
       i = create_image(:title => "  ")
-      assert i.new_record? && i.errors.on(:title) 
+      assert i.new_record? && i.errors[:title].any? 
     end
   end
   
   def test_should_not_create_image_with_invalid_title
     assert_no_difference 'Image.count' do
       i = create_image(:title => 'F')
-      assert i.new_record? && i.errors.on(:title) 
+      assert i.new_record? && i.errors[:title].any? 
     end
   end
 
@@ -72,6 +66,6 @@ class ImageTest < ActiveSupport::TestCase
 protected
   
   def create_image(options = {})
-    Image.create({:parent => nodes(:devcms_news_item_node), :title => "Dit is een image.", :data => fixture_file_upload("files/test.jpg") }.merge(options))
+    Image.create({:parent => nodes(:devcms_news_item_node), :title => "Dit is een image.", :file => fixture_file_upload("files/test.jpg") }.merge(options))
   end
 end

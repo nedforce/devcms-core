@@ -17,7 +17,7 @@ class Admin::ResponsesController < Admin::AdminController
   # * GET /admin/contact_forms/:contact_form_id/responses.xls
   def index
     if params[:type] == 'xml'
-      @responses = Response.all(:order => "#{@sort_field} #{@sort_direction}", :page => { :size => @page_limit, :current => @current_page }, :conditions => ["contact_form_id = ?", params[:contact_form_id].to_i])
+      @responses = Response.where(["contact_form_id = ?", params[:contact_form_id].to_i]).order("#{@sort_field} #{@sort_direction}").page(@current_page).per(@page_limit)
     else
       @responses = @contact_form.responses
     end
@@ -112,15 +112,11 @@ class Admin::ResponsesController < Admin::AdminController
     end
     respond_to do |format|
       format.js do
-        responds_to_parent do
+        responds_to_parent do |page|
           if headers_ok
-            render :update do |page|
-              page << "Ext.ux.showRightPanelMssg('#{escape_javascript(t('responses.done'))}')"
-            end
+            page << "Ext.ux.showRightPanelMssg('#{escape_javascript(t('responses.done'))}')"
           else
-            render :update, :status => :unprocessable_entity do |page|
-              page << "Ext.ux.showRightPanelMssg('#{escape_javascript(t('responses.failed'))}')"
-            end
+            page << "Ext.ux.showRightPanelMssg('#{escape_javascript(t('responses.failed'))}')"
           end
         end
       end

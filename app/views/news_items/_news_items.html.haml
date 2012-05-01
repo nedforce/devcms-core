@@ -7,7 +7,7 @@
     %p= t 'news.no_news_items'
 
   - latest_news_items.each do |news_item|
-    - readspeaker(news_item.node.id) do |readspeaker_id|
+    = readspeaker(news_item.node.id) do |readspeaker_id|
       .newsItem
         %h2= link_to_content_node h(news_item.title), news_item
 
@@ -25,7 +25,7 @@
             = simple_format(h(news_item.preamble))
 
         .buttons.clearfix
-          - news_item_button t('news.full_article') do
+          = news_item_button t('news.full_article') do
             = link_to_content_node t('news.full_article'), news_item, { :type => :url, :host => news_item.node.containing_site.content.domain }, :title => h(news_item.title)
             - if news_item.node.comments.count > 0
               == (#{pluralize(news_item.node.comments.count, t('news.comment'), t('news.comments'))})
@@ -50,4 +50,4 @@
             %td.right_sized.gray
               = l news_item.publication_start_date, :format => :long
 
-    = pagination_links(news_items)
+    = paginate(news_items)

@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class CommentsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -9,12 +9,12 @@ class CommentsControllerTest < ActionController::TestCase
     assert_difference('Comment.count', 2) do
       create_comment
       assert_response :redirect
-      assert !assigns(:comment).new_record?, :message => assigns(:comment).errors.full_messages.join('; ')
+      assert !assigns(:comment).new_record?, assigns(:comment).errors.full_messages.join('; ')
       assert_equal users(:gerjan), assigns(:comment).user
 
       create_comment
       assert_response :redirect
-      assert !assigns(:comment).new_record?, :message => assigns(:comment).errors.full_messages.join('; ')
+      assert !assigns(:comment).new_record?, assigns(:comment).errors.full_messages.join('; ')
       assert_equal users(:gerjan), assigns(:comment).user
     end
   end
@@ -40,7 +40,7 @@ class CommentsControllerTest < ActionController::TestCase
   def test_should_not_create_comment_without_user_but_with_user_name
     assert_no_difference('Comment.count') do
       create_comment(:user_name => 'Jan')
-      assert assigns(:comment).errors.on(:user)
+      assert assigns(:comment).errors[:user].any?
     end
   end
 
@@ -54,16 +54,17 @@ class CommentsControllerTest < ActionController::TestCase
     end
   end
 
-  def test_should_render_confirmation_with_get
-    login_as :gerjan
-    create_comment
-
-    assert_no_difference 'Comment.count' do
-      get :destroy, :node_id => nodes(:devcms_news_item_node).id, :id => assigns(:comment).id
-      assert_response :success
-      assert_template 'confirm_destroy'
-    end
-  end
+  # Not possible in rails3  
+  # def test_should_render_confirmation_with_get
+  #   login_as :gerjan
+  #   create_comment
+  # 
+  #   assert_no_difference 'Comment.count' do
+  #     get :destroy, :node_id => nodes(:devcms_news_item_node).id, :id => assigns(:comment).id
+  #     assert_response :success
+  #     assert_template 'confirm_destroy'
+  #   end
+  # end
 
 protected
 

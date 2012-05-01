@@ -1,10 +1,10 @@
 = render :partial => '/admin/calendars/show'
 
 .forms
-  - remote_form_for @combined_calendar, :method => :get, :url => edit_admin_combined_calendar_path(@combined_calendar, :format => 'html'), :update => 'right_panel_body' do |form|
+  = remote_form_for @combined_calendar, :method => :get, :url => edit_admin_combined_calendar_path(@combined_calendar, :format => 'html'), :update => 'right_panel_body' do |form|
     = render :partial => 'preview_form', :locals => { :form => form }
     = form.submit t('shared.edit')
 
-  - remote_form_for @combined_calendar, :url => admin_combined_calendar_path(@combined_calendar, :format => 'html'), :update => 'right_panel_body' do |form|
+  = remote_form_for @combined_calendar, :url => admin_combined_calendar_path(@combined_calendar, :format => 'html'), :update => 'right_panel_body' do |form|
     = render :partial => 'preview_form', :locals => { :form => form }
     = form.submit t('shared.save')

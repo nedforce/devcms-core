@@ -49,9 +49,6 @@ class PollQuestionsController < ApplicationController
     end # of respond_to
   end
 
-  # GETs may occur when JavaScript is suddenly turned off
-  verify :method => [:get, :put], :only => :vote
-
   # PUT /poll_questions/:id/vote
   # PUT /poll_questions/:id/vote.xml
   # PUT /poll_questions/:id/vote.js

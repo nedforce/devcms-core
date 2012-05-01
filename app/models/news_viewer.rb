@@ -54,7 +54,7 @@ class NewsViewer < ActiveRecord::Base
 
   # Gets accessible news items for the frontend. This method does not return unapproved content.
   def accessible_news_items(options = {})
-    self.news_items.newest.accessible.all({ :order => 'news_viewer_items.position, nodes.publication_start_date DESC' }.merge(options))
+    self.news_items.newest.accessible.scoped({ :order => 'news_viewer_items.position, nodes.publication_start_date DESC' }.merge(options))
   end
 
   # Returns the date when the +NewsViewer+ was last updated.

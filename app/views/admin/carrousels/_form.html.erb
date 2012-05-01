@@ -11,7 +11,7 @@ carrouselAnimationPanel = new Ext.Panel({
 });
 
 carrouselFormPanel = new Ext.Panel({
-  html: '<%= escape_javascript(content_box_settings_for(@carrousel) + category_settings_for(@carrousel)) -%>',
+  html: '<%= escape_javascript(content_box_settings_for(@carrousel) + category_settings_for(@carrousel)) %>',
   frame: false,
   border: false
 });

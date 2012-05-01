@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::UsersControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -38,7 +38,7 @@ class Admin::UsersControllerTest < ActionController::TestCase
     arthur = users(:arthur)
     put :update, :id => arthur.id, :user => { :email_address => 'arthur@invalid' }, :format => 'xml'
     assert_response :unprocessable_entity
-    assert assigns(:user).errors.on(:email_address)
+    assert assigns(:user).errors[:email_address].any?
   end
 
   def test_should_json_update_user
@@ -78,7 +78,7 @@ class Admin::UsersControllerTest < ActionController::TestCase
     login_as :sjoerd
     get :index, :start => '2', :limit => '2', :format => 'xml'
     assert_response :success
-    assert_equal 2, assigns(:users).results.size
+    assert_equal 2, assigns(:users).size
     assert_tag :tag => 'users'
   end
 
@@ -86,7 +86,7 @@ class Admin::UsersControllerTest < ActionController::TestCase
     login_as :sjoerd
     get :index, :sort => 'email_address', :dir => 'DESC', :format => 'xml'
     assert_response :success
-    assert_equal users(:gerjan).email_address, assigns(:users).results.first.email_address
+    assert_equal users(:gerjan).email_address, assigns(:users).first.email_address
   end
 
   def test_should_sort_newsletter_archives_for_extjs
@@ -100,8 +100,8 @@ class Admin::UsersControllerTest < ActionController::TestCase
     login_as :sjoerd
     get :index, :sort => 'email_address', :dir => 'DESC', :start => '2', :limit => '2', :format => 'xml'
     assert_response :success
-    assert_equal 2, assigns(:users).results.size
-    assert_not_equal users(:gerjan).email_address, assigns(:users).results.first.email_address
+    assert_equal 2, assigns(:users).size
+    assert_not_equal users(:gerjan).email_address, assigns(:users).first.email_address
   end
 
   def test_should_filter_for_extjs
@@ -109,8 +109,8 @@ class Admin::UsersControllerTest < ActionController::TestCase
     get :index, :filter => { 0 => { :data => { :type => 'string', :value => 'a' }, :field => 'login' } }, :format => 'xml'
 
     assert_response :success
-    assert_equal 1, assigns(:users).results.size
-    assert_equal users(:arthur).login, assigns(:users).results.first.login
+    assert_equal 1, assigns(:users).size
+    assert_equal users(:arthur).login, assigns(:users).first.login
   end
 
   def test_should_invite

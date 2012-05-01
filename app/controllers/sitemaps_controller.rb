@@ -1,4 +1,6 @@
-class SitemapsController < ApplicationController   
+class SitemapsController < ApplicationController
+  skip_before_filter :find_node
+  
   before_filter :set_node_to_root, :only => :changes
 
   # Shows the sitemap.
@@ -16,11 +18,12 @@ class SitemapsController < ApplicationController
   def changes
     respond_to do |format|
       format.xml do
-        raise ActionController::UnknownAction if params[:interval].blank?
+        raise ::AbstractController::ActionNotFound if params[:interval].blank?
         @changes = Node.all_including_deleted(:conditions => ["updated_at > ?", Time.now - params[:interval].to_i], :order => "updated_at DESC" )
       end
-      format.all do
-        super
+      format.atom do
+        @nodes = @node.last_changes(:all, { :limit => 25 })
+        render :template => '/shared/changes', :layout => false
       end
     end
   end

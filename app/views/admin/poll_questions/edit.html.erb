@@ -67,7 +67,7 @@ pollQuestionForm.addButton({
 });
 
 // Show validation errors and handle marking of invalid fields.
-var errors = <%= @poll_question.errors.to_json %>
+var errors = <%= raw @poll_question.errors.to_json %>
 if(errors.length > 0){
     pollQuestionForm.insertErrorMessages('<%= error_messages_for :poll_question %>', '<%= @poll_question.class.to_s.underscore -%>')   
 }

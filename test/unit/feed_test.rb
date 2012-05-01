@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 require 'fakeweb'
 
 class FeedTest < ActiveSupport::TestCase
@@ -23,14 +23,14 @@ class FeedTest < ActiveSupport::TestCase
   def test_should_require_url
     assert_no_difference 'Feed.count' do
       feed = create_feed(:url => nil)
-      assert feed.errors.on(:url)
+      assert feed.errors[:url].any?
     end
   end
   
   def test_should_require_valid_feed
     assert_no_difference 'Feed.count' do
       feed = create_feed(:url => "http://office.nedforce.nl/wrong.rss")
-      assert feed.errors.on(:url)
+      assert feed.errors[:url].any?
     end
   end
   

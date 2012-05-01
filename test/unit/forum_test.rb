@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class ForumTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -16,14 +16,14 @@ class ForumTest < ActiveSupport::TestCase
   def test_should_require_title
     assert_no_difference 'Forum.count' do
       forum = create_forum(:title => nil)
-      assert forum.errors.on(:title)
+      assert forum.errors[:title].any?
     end
   end
 
   def test_should_require_unique_title
     assert_no_difference 'Forum.count' do
       forum = create_forum(:title => @bewoners_forum.title)
-      assert forum.errors.on(:title)
+      assert forum.errors[:title].any?
     end
   end
   
@@ -31,7 +31,7 @@ class ForumTest < ActiveSupport::TestCase
     assert_no_difference 'Forum.count' do
       @bewoners_forum.title = 'New title'
       @bewoners_forum.description = 'New description'
-      assert @bewoners_forum.send(:save)
+      assert @bewoners_forum.save
     end
   end
   

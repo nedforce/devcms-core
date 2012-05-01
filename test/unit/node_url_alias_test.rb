@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class NodeURLAliasTest < ActiveSupport::TestCase
   def setup
@@ -39,8 +39,8 @@ class NodeURLAliasTest < ActiveSupport::TestCase
   def test_should_change_url_alias_when_title_changes
     cn = create_page
     assert_equal 'foo', cn.node.url_alias
-    cn.update_attributes(:title => 'foobar')
-    assert_equal 'foobar', Node.find(cn.node.id).url_alias
+    assert cn.update_attributes(:title => 'foobar')
+    assert_equal 'foobar', cn.node.reload.url_alias
   end
   
   def test_should_change_url_alias_when_title_changes_for_non_unique_title
@@ -64,7 +64,11 @@ class NodeURLAliasTest < ActiveSupport::TestCase
   def test_should_protect_url_alias
     cn = create_page
     assert_equal 'foo', cn.node.url_alias
-    cn.node.update_attributes(:url_alias => 'bar')
+    
+    assert_raises ActiveModel::MassAssignmentSecurity::Error do 
+      cn.node.update_attributes(:url_alias => 'bar')
+    end
+    
     assert_equal 'foo', cn.node.url_alias
   end
   
@@ -72,7 +76,11 @@ class NodeURLAliasTest < ActiveSupport::TestCase
     cn = create_page
     cn.node.update_attributes(:custom_url_suffix => 'foo')
     assert_equal 'foo', cn.node.custom_url_alias
-    cn.node.update_attributes(:custom_url_alias => 'bar')
+    
+    assert_raises ActiveModel::MassAssignmentSecurity::Error do 
+      cn.node.update_attributes(:custom_url_alias => 'bar')
+    end
+    
     assert_equal 'foo', cn.node.custom_url_alias
   end
   
@@ -166,32 +174,32 @@ class NodeURLAliasTest < ActiveSupport::TestCase
     cn = create_page
     cn.node.url_alias = "a"
     assert !cn.node.valid?
-    assert cn.node.errors.on(:url_alias)
+    assert cn.node.errors[:url_alias].any?
     cn.node.url_alias = "a" * 2
     assert cn.node.valid?
-    assert !cn.node.errors.on(:url_alias)
+    assert !cn.node.errors[:url_alias].any?
     cn.node.url_alias = "a" * Node::MAXIMUM_URL_ALIAS_LENGTH
     assert cn.node.valid?
-    assert !cn.node.errors.on(:url_alias)
+    assert !cn.node.errors[:url_alias].any?
     cn.node.url_alias = "a" * (Node::MAXIMUM_URL_ALIAS_LENGTH + 1)
     assert !cn.node.valid?
-    assert cn.node.errors.on(:url_alias)
+    assert cn.node.errors[:url_alias].any?
   end
   
   def test_custom_url_alias_length_restrictions
     cn = create_page
     cn.node.custom_url_alias = "a"
     assert !cn.node.valid?
-    assert cn.node.errors.on(:custom_url_alias)
+    assert cn.node.errors[:custom_url_alias].any?
     cn.node.custom_url_alias = "a" * 2
     assert cn.node.valid?
-    assert !cn.node.errors.on(:custom_url_alias)
+    assert !cn.node.errors[:custom_url_alias].any?
     cn.node.custom_url_alias = "a" * Node::MAXIMUM_URL_ALIAS_LENGTH
     assert cn.node.valid?
-    assert !cn.node.errors.on(:custom_url_alias)
+    assert !cn.node.errors[:custom_url_alias].any?
     cn.node.custom_url_alias = "a" * (Node::MAXIMUM_URL_ALIAS_LENGTH + 1)
     assert !cn.node.valid?
-    assert cn.node.errors.on(:custom_url_alias)
+    assert cn.node.errors[:custom_url_alias].any?
   end
   
   def test_should_clear_aliases_on_paranoid_destroy
@@ -202,7 +210,7 @@ class NodeURLAliasTest < ActiveSupport::TestCase
     assert cn.valid?
     assert !cn2.valid?
     cn.paranoid_delete!
-    assert_nil cn.reload
+    assert_nil Page.find_by_id(cn.id)
     assert_equal [], Node.all_including_deleted(:conditions => "url_alias = 'foobarbaz'")
     assert cn2.valid?, cn2.errors.full_messages.to_sentence
   end

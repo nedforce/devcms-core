@@ -1,6 +1,7 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of 
 # the application relating to +Weblog+ objects.
 class Admin::WeblogsController < Admin::AdminController
+  before_filter :default_format_json,  :only => :index
 
   # The +show+, +edit+ and +update+ actions need a +Weblog+ object to act upon.
   before_filter :find_weblog,       :only => [ :show, :edit, :update ]
@@ -125,9 +126,7 @@ protected
   end
 
   def find_weblog_posts
-    @weblog_posts = @weblog.weblog_posts.accessible.all(:include => [ :node ],
-                                                            :order => 'weblog_posts.created_at DESC',
-                                                            :page => { :size => 25, :current => 1 })
+    @weblog_posts = @weblog.weblog_posts.accessible.includes(:node).order('weblog_posts.created_at DESC').page(1).per(25)
 
     @weblog_posts_for_table  = @weblog_posts.to_a
     @latest_weblog_posts     = @weblog_posts_for_table[0..5]

@@ -1,5 +1,5 @@
 - event = event.becomes(Event) if event.class < Event
-- remote_form_for [event, event_registration] do |f|
+= remote_form_for [event, event_registration] do |f|
   = error_messages_for :event_registration
   Ik kom met
   = f.text_field :people_count, :size => 2

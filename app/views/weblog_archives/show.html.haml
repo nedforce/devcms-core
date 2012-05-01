@@ -1,5 +1,5 @@
 .regularPage.weblogArchive
-  - readspeaker(@weblog_archive.node.id) do |rid|
+  = readspeaker(@weblog_archive.node.id) do |rid|
     %h1= h @weblog_archive.title
 
     .htmlField.weblogArchiveDescription
@@ -13,7 +13,7 @@
       %h2= t('weblogs.weblogs').titleize
 
       - if logged_in? && !@weblog_archive.has_weblog_for_user?(current_user)
-        - right_new_button t('weblogs.new_weblog') do
+        = right_new_button t('weblogs.new_weblog') do
           = link_to t('weblogs.new_weblog'), new_weblog_archive_weblog_path(@weblog_archive)
 
     - if @weblogs.empty?
@@ -23,7 +23,7 @@
       .weblogs
         - @weblogs.each do |weblog|
           .clearfix{ :class => cycle('oddWeblog', 'evenWeblog') }
-            - readspeaker(weblog.node.id) do |rid|
+            = readspeaker(weblog.node.id) do |rid|
               %h3= link_to_content_node h(weblog.title), weblog, {}, :title => h(weblog.title)
 
               .clearfix
@@ -37,10 +37,10 @@
               .buttons.clearfix
                 = readspeaker_button(:rid => rid)
 
-      = pagination_links(@weblogs)
+      = paginate(@weblogs)
 
     - if logged_in? && !@weblog_archive.has_weblog_for_user?(current_user) && !@weblogs.empty?
-      - right_new_button t('weblogs.new_weblog') do
+      = right_new_button t('weblogs.new_weblog') do
         = link_to t('weblogs.new_weblog'), new_weblog_archive_weblog_path(@weblog_archive)
 
   - unless logged_in?

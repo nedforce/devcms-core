@@ -23,7 +23,7 @@ protected
   end
 
   def find_forum_threads
-    @forum_threads = @forum_topic.forum_threads_by_last_update_date(:page => { :size => 25, :current => params[:page] })
+    @forum_threads = @forum_topic.forum_threads_by_last_update_date.page(params[:page]).per(25)
   end
   
 end

@@ -30,7 +30,8 @@ class WeblogPost < ActiveRecord::Base
     :allowed_roles_for_update  => %w( admin final_editor ),
     :allowed_roles_for_destroy => %w( admin final_editor ),
     :show_in_menu => false,
-    :copyable => false
+    :copyable => false,
+    :nested_resource => true
   })
 
   # A +WeblogPost+ belongs to a +Weblog+.

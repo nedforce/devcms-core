@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class ContactFormFieldTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -19,7 +19,7 @@ class ContactFormFieldTest < ActiveSupport::TestCase
     assert_no_difference('ContactFormField.count') do
       cff = create_contact_form_field(:label => nil)
       assert cff.new_record?
-      assert cff.errors.on(:label)
+      assert cff.errors[:label].any?
     end
   end
 
@@ -27,7 +27,7 @@ class ContactFormFieldTest < ActiveSupport::TestCase
     assert_no_difference('ContactFormField.count') do
       cff = create_contact_form_field(:label => '')
       assert cff.new_record?
-      assert cff.errors.on(:label)
+      assert cff.errors[:label].any?
     end
   end
 
@@ -35,7 +35,7 @@ class ContactFormFieldTest < ActiveSupport::TestCase
     assert_no_difference('ContactFormField.count') do
       cff = create_contact_form_field(:field_type => nil)
       assert cff.new_record?
-      assert cff.errors.on(:field_type)
+      assert cff.errors[:field_type].any?
     end
   end
 
@@ -43,7 +43,7 @@ class ContactFormFieldTest < ActiveSupport::TestCase
     assert_difference('ContactFormField.count') do
       cff = create_contact_form_field(:obligatory => nil)
       assert !cff.new_record?
-      assert !cff.errors.on(:obligatory)
+      assert !cff.errors[:obligatory].any?
     end
   end
 
@@ -51,7 +51,7 @@ class ContactFormFieldTest < ActiveSupport::TestCase
     assert_difference('ContactFormField.count') do
       cff = create_contact_form_field(:default_value => nil)
       assert !cff.new_record?
-      assert !cff.errors.on(:default_value)
+      assert !cff.errors[:default_value].any?
     end
   end
 
@@ -59,7 +59,7 @@ class ContactFormFieldTest < ActiveSupport::TestCase
     assert_no_difference('ContactFormField.count') do
       cff = create_contact_form_field(:position => nil)
       assert cff.new_record?
-      assert cff.errors.on(:position)
+      assert cff.errors[:position].any?
     end
   end
 
@@ -67,7 +67,7 @@ class ContactFormFieldTest < ActiveSupport::TestCase
     assert_no_difference('ContactFormField.count') do
       cff = create_contact_form_field(:position => 'Not an integer')
       assert cff.new_record?
-      assert cff.errors.on(:position)
+      assert cff.errors[:position].any?
     end
   end
 
@@ -79,7 +79,7 @@ class ContactFormFieldTest < ActiveSupport::TestCase
       assert_no_difference('ContactFormField.count') do
         cff2 = create_contact_form_field
         assert cff2.new_record?
-        assert cff2.errors.on(:position)
+        assert cff2.errors[:position].any?
       end
     end
   end

@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class ContentCopyTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -21,7 +21,7 @@ class ContentCopyTest < ActiveSupport::TestCase
   def test_should_require_copied_node
     assert_no_difference 'ContentCopy.count' do
       content_copy = create_content_copy(:copied_node => nil)
-      assert content_copy.errors.on(:copied_node)
+      assert content_copy.errors[:copied_node].any?
     end
   end
   
@@ -29,7 +29,7 @@ class ContentCopyTest < ActiveSupport::TestCase
     [ @test_image_copy.node, @bewoners_forum_copy.node ].each do |node|
       assert_no_difference 'ContentCopy.count' do
         content_copy = create_content_copy(:copied_node => node)
-        assert content_copy.errors.on_base
+        assert content_copy.errors[:base].any?
       end
     end
   end
@@ -38,7 +38,7 @@ class ContentCopyTest < ActiveSupport::TestCase
     [ @news_item_node, @weblog_post_node ].each do |node|
       assert_no_difference 'ContentCopy.count' do
         content_copy = create_content_copy(:copied_node => node)
-        assert content_copy.errors.on_base
+        assert content_copy.errors[:base].any?
       end
     end
   end
@@ -46,7 +46,7 @@ class ContentCopyTest < ActiveSupport::TestCase
   def test_should_not_allow_copied_node_to_be_a_site_node
     assert_no_difference 'ContentCopy.count' do
       content_copy = create_content_copy(:copied_node => @root_node)
-      assert content_copy.errors.on_base
+      assert content_copy.errors[:base].any?
     end
   end
 

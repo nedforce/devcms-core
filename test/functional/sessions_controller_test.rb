@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class SessionsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -13,14 +13,14 @@ class SessionsControllerTest < ActionController::TestCase
     login_as :sjoerd
     get :new
     assert_response :redirect
-    assert flash.has_key?(:notice)
+    assert flash.key?(:notice)
   end
   
   def test_create_should_redirect_if_already_logged_in
     login_as :sjoerd
     post :create, :login => users(:gerjan).login, :password => 'gerjan'
     assert_response :redirect
-    assert flash.has_key?(:notice)
+    assert flash.key?(:notice)
   end
 
   def test_should_login_case_insensitive_and_redirect
@@ -47,7 +47,7 @@ class SessionsControllerTest < ActionController::TestCase
     delete :destroy
     assert_nil session[:user_id]
     assert_response :redirect
-    assert flash.has_key?(:notice)
+    assert flash.key?(:notice)
   end
 
   def test_should_show_confirmation_on_logout_with_get
@@ -60,7 +60,7 @@ class SessionsControllerTest < ActionController::TestCase
   def test_should_not_logout_if_not_logged_in
     delete :destroy
     assert_response :redirect
-    assert flash.has_key?(:warning)
+    assert flash.key?(:warning)
   end
   
   def test_should_remember_me

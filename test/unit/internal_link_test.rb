@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class InternalLinkTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -18,7 +18,7 @@ class InternalLinkTest < ActiveSupport::TestCase
   def test_should_require_linked_node
     assert_no_difference 'InternalLink.count' do
       internal_link = create_internal_link(:linked_node => nil)
-      assert internal_link.errors.on(:linked_node)
+      assert internal_link.errors[:linked_node].any?
     end
   end
   
@@ -38,7 +38,7 @@ class InternalLinkTest < ActiveSupport::TestCase
     [ @internal_link.node, @external_link.node ].each do |linked_node|
       assert_no_difference 'InternalLink.count' do
         internal_link = create_internal_link(:linked_node => linked_node)
-        assert internal_link.errors.on_base
+        assert internal_link.errors[:base].any?
       end
     end
   end
@@ -56,7 +56,7 @@ class InternalLinkTest < ActiveSupport::TestCase
     assert_difference 'InternalLink.count', 2 do
       2.times do
         internal_link = create_internal_link(:title => 'Non-unique title')
-        assert !internal_link.errors.on(:title)
+        assert !internal_link.errors[:title].any?
       end
     end
   end
@@ -78,7 +78,7 @@ class InternalLinkTest < ActiveSupport::TestCase
   def test_should_not_allow_linked_node_to_be_contained_in_a_different_site
     assert_no_difference 'InternalLink.count' do
       internal_link = create_internal_link(:parent => nodes(:sub_site_section_node), :linked_node => nodes(:help_page_node))
-      assert internal_link.errors.on_base
+      assert internal_link.errors[:base].any?
     end
   end
   

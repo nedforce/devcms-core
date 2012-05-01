@@ -2,13 +2,10 @@
 
     <h1><%=t 'links.edit' -%> '<%=h @link.title -%>'</h1>
 
-    <% admin_remote_form_for @link,
+    <%= admin_remote_form_for @link,
       :url => admin_link_path(@link, :format => 'html'),
       :update => 'right_panel_body' do %>
-        <% 
-          # Required to have all fields be named 'link[attr]' instead of 'ex/internal_link[attr]'
-          admin_fields_for :link, @link do |form|    
-        %>
+        <%= admin_fields_for :link, @link do |form| %>
            
           <%= error_messages_for :link %>
 
@@ -24,7 +21,7 @@
             <% txt = "#{t 'links.node'}<br/><small>#{t 'links.drag_and_drop'}</small>" %>
             <%= wrap_with_label content_tag(:div, '', :id => 'node_selector'), { :text => txt, :for => 'link_linked_node_id' } %>
 
-            <% javascript_tag do %>
+            <%= javascript_tag do %>
               ndf = new Ext.dvtr.NodeDropField({
                   renderTo: 'node_selector',
                   ddGroup: 'TreeAndSorterDD',

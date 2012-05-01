@@ -3,7 +3,7 @@
 
   = error_messages_for :share, :header_message => t('share.sending_failed')
 
-  - form_for @share, :url => shares_path, :html => { :method => :post } do |f|
+  = form_for @share, :url => shares_path, :html => { :method => :post } do |f|
     #reg_form_user_info.clearfix
       = hidden_field_tag :node_id, @node.id
 

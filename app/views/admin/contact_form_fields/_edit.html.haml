@@ -1,5 +1,5 @@
 %td.right_panel_content{ :colspan => 6 }
   %h1== #{t 'contact_form_fields.edit'} '#{h @contact_form_field.label}'
 
-  - admin_remote_form_for @contact_form_field, :url => admin_contact_form_contact_form_field_path(@contact_form, @contact_form_field, :format => 'html'), :update => "contact_form_field_#{@contact_form_field.id}" do |f|
+  = admin_remote_form_for @contact_form_field, :url => admin_contact_form_contact_form_field_path(@contact_form, @contact_form_field, :format => 'html'), :update => "contact_form_field_#{@contact_form_field.id}" do |f|
     = render :partial => 'form', :object => f

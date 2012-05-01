@@ -13,9 +13,9 @@ class Version < ActiveRecord::Base #:nodoc:
   
   before_create :set_number
   
-  default_scope :order => "created_at DESC"
+  default_scope :order => "versions.created_at DESC"
   
-  named_scope :unapproved, :conditions => [ "status = ? OR status = ?", STATUSES[:unapproved], STATUSES[:rejected] ]
+  scope :unapproved, :conditions => [ "status = ? OR status = ?", STATUSES[:unapproved], STATUSES[:rejected] ]
   
   def drafted?
     self.status == STATUSES[:drafted]

@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::ContentCopiesControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -33,7 +33,7 @@ class Admin::ContentCopiesControllerTest < ActionController::TestCase
       create_content_copy
       
       assert_response :success
-      assert !assigns(:content_copy).new_record?, :message => assigns(:content_copy).errors.full_messages.join('; ')
+      assert !assigns(:content_copy).new_record?, assigns(:content_copy).errors.full_messages.join('; ')
       assert_equal assigns(:content_copy).node, nodes(:economie_section_node).reload.right_sibling
     end
   end
@@ -42,7 +42,7 @@ class Admin::ContentCopiesControllerTest < ActionController::TestCase
     login_as :arthur
 
     assert_no_difference('ContentCopy.count') do
-      create_content_copy(:copied_node => nodes(:henk_weblog_post_one_node))
+      create_content_copy(:copied_node_id => nodes(:henk_weblog_post_one_node).id)
       
       assert_response :precondition_failed
     end
@@ -52,7 +52,7 @@ class Admin::ContentCopiesControllerTest < ActionController::TestCase
     login_as :arthur
 
     assert_no_difference('ContentCopy.count') do
-      create_content_copy(:copied_node => nodes(:root_section_node))
+      create_content_copy(:copied_node_id => nodes(:root_section_node).id)
       
       assert_response :precondition_failed
     end
@@ -61,7 +61,7 @@ class Admin::ContentCopiesControllerTest < ActionController::TestCase
 protected
   
   def create_content_copy(attributes = {}, options = {})
-    post :create, { :parent_node_id => nodes(:root_section_node).id, :content_copy => { :copied_node => nodes(:economie_section_node) }.merge(attributes), :format => 'json' }.merge(options)
+    post :create, { :parent_node_id => nodes(:root_section_node).id, :content_copy => { :copied_node_id => nodes(:economie_section_node).id }.merge(attributes), :format => 'json' }.merge(options)
   end
   
 end

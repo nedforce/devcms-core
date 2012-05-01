@@ -1,7 +1,0 @@
-# Do not change the type of the default root, or things will go horribly wrong.
-default_root:
-  type: Section
-  title: Welkom!
-  description: Dit is een automatisch gegenereerde sectie node.
-  
-

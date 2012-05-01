@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class AgendaItemTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -20,35 +20,35 @@ class AgendaItemTest < ActiveSupport::TestCase
   def test_should_require_parent
     assert_no_difference 'AgendaItem.count' do
       agenda_item = create_agenda_item(:parent => nil)
-      assert agenda_item.errors.on(:calendar_item)
+      assert agenda_item.errors[:calendar_item].any?
     end
   end
   
   def test_should_not_require_body
     assert_difference 'AgendaItem.count', 1 do
       agenda_item = create_agenda_item(:body => nil)
-      assert !agenda_item.errors.on(:body)
+      assert !agenda_item.errors[:body].any?
     end
   end
   
   def test_should_not_require_speaking_rights_option
     assert_difference 'AgendaItem.count', 1 do
       agenda_item = create_agenda_item(:speaking_rights => nil)
-      assert !agenda_item.errors.on(:speaking_rights)
+      assert !agenda_item.errors[:speaking_rights].any?
     end
   end
   
   def test_should_not_require_agenda_item_category
     assert_difference 'AgendaItem.count', 1 do
       agenda_item = create_agenda_item(:agenda_item_category => nil)
-      assert !agenda_item.errors.on(:agenda_item_category)
+      assert !agenda_item.errors[:agenda_item_category].any?
     end
   end
   
   def test_should_require_description
     assert_no_difference 'AgendaItem.count' do
       agenda_item = create_agenda_item(:description => nil)
-      assert agenda_item.errors.on(:description)
+      assert agenda_item.errors[:description].any?
     end
   end
   
@@ -56,13 +56,13 @@ class AgendaItemTest < ActiveSupport::TestCase
     assert_no_difference 'AgendaItem.count' do
       agenda_item = create_agenda_item(:speaking_rights => 'foo')
       assert agenda_item.new_record?
-      assert agenda_item.errors.on(:speaking_rights)
+      assert agenda_item.errors[:speaking_rights].any?
     end
     
     assert_no_difference 'AgendaItem.count' do
       agenda_item = create_agenda_item(:speaking_rights => AgendaItem::SPEAKING_RIGHT_OPTIONS.keys.max + 1)
       assert agenda_item.new_record?
-      assert agenda_item.errors.on(:speaking_rights)
+      assert agenda_item.errors[:speaking_rights].any?
     end
   end
   

@@ -1,4 +1,6 @@
 class Admin::SettingsController < Admin::AdminController
+  before_filter :default_format_json,  :only => :update
+    
   before_filter :set_paging,  :only => :index
   before_filter :set_sorting, :only => :index
 
@@ -13,7 +15,7 @@ class Admin::SettingsController < Admin::AdminController
   # * GET /admin/settings.json
   def index
     @active_page    = :settings
-    @settings       = Setting.all(  :conditions => { :editable => true }, :order => "#{@sort_field} #{@sort_direction}", :page => { :size => @page_limit, :current => @current_page })
+    @settings       = Setting.where(:editable => true).order("#{@sort_field} #{@sort_direction}").page(@current_page).per(@page_limit)
     @settings_count = Setting.count(:conditions => { :editable => true })
 
     respond_to do |format|

@@ -37,7 +37,7 @@ class Admin::VersionsController < Admin::AdminController
   def approve
     respond_to do |format|
       if @version.approve!(current_user)
-        UserMailer.deliver_approval_notification(current_user, @version.versionable.node, @version.editor, params[:comment], :host => request.host) if @version.editor
+        UserMailer.approval_notification(current_user, @version.versionable.node, @version.editor, params[:comment], :host => request.host).deliver if @version.editor
         format.xml { head :ok }
       else
         format.xml { head :internal_server_error }
@@ -50,7 +50,7 @@ class Admin::VersionsController < Admin::AdminController
   def reject
     respond_to do |format|
       if @version.reject!
-        UserMailer.deliver_rejection_notification(current_user, @version.versionable.node, @version.editor, params[:reason], :host => request.host) if @version.editor
+        UserMailer.rejection_notification(current_user, @version.versionable.node, @version.editor, params[:reason], :host => request.host).deliver if @version.editor
         format.xml { head :ok }
       else
         format.xml { head :internal_server_error }

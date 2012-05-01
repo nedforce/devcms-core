@@ -38,6 +38,11 @@ class Admin::LayoutsController < Admin::AdminController
   end
 
   protected
+  
+  def find_node
+    @node = Node.find(params[:node_id])
+  end
+  
   def find_layout
     @layout = Layout.find(params[:id]) || @node.own_or_inherited_layout
     if @layout.present?

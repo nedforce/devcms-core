@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::AbbreviationsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -19,7 +19,7 @@ class Admin::AbbreviationsControllerTest < ActionController::TestCase
     assert_difference 'Abbreviation.count' do
       create_abbreviation
       assert_response :success
-      assert !assigns(:abbreviation).new_record?, :message => assigns(:abbreviation).errors.full_messages.join('; ')
+      assert !assigns(:abbreviation).new_record?, assigns(:abbreviation).errors.full_messages.join('; ')
     end
   end
 

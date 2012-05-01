@@ -1,5 +1,5 @@
 #side_box_search
-  - form_tag(search_path(:protocol => 'http'), { :method => :get, :class => 'clearfix' }) do
+  = form_tag(search_path(:protocol => 'http'), { :method => :get, :class => 'clearfix' }) do
     .search_terms
       %label.hidden{ :for => 'search_terms' }
         =t 'search.search'

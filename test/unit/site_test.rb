@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class SiteTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -11,21 +11,21 @@ class SiteTest < ActiveSupport::TestCase
   def test_should_create_site
     assert_difference 'Site.count', 1 do
       site = create_site
-      assert !site.new_record?, site.errors.full_messages
+      assert !site.new_record?, site.errors.full_messages.to_sentence
     end
   end
 
   def test_should_validate_domain_if_given
     assert_no_difference 'Site.count' do
       site = create_site :domain => 'qlu'
-      assert site.errors.on(:domain)
+      assert site.errors[:domain].any?
     end
   end
 
   def test_should_not_create_site_when_parent_is_not_root
     assert_no_difference 'Site.count' do
       site = create_site :parent => @sub_site_section.node
-      assert site.errors.on_base
+      assert site.errors[:base].any?
     end
   end
   
@@ -34,7 +34,7 @@ class SiteTest < ActiveSupport::TestCase
       site = create_site
       assert !site.new_record?
       site = create_site :domain => 'WwW.nEdFoRcE.nL'
-      assert site.errors.on(:domain)
+      assert site.errors[:domain].any?
     end
   end
   
@@ -42,7 +42,7 @@ class SiteTest < ActiveSupport::TestCase
     site = create_site
     assert_equal Node.root.layout, site.node.layout
     assert_equal 'default', site.node.layout_variant
-    assert_equal Hash.new, site.node.layout_configuration
+    assert_equal({}, site.node.layout_configuration)
   end
 
 protected

@@ -3,7 +3,7 @@
 class FeedWorker
   # Returns the used logger.
   def logger
-    RAILS_DEFAULT_LOGGER
+    Rails.logger
   end
 
   # Updates all feeds.

@@ -1,5 +1,5 @@
 .regularPage.news_itemArchive
-  - readspeaker(@news_viewer.node.id) do |readspeaker_id|
+  = readspeaker(@news_viewer.node.id) do |readspeaker_id|
     %h1= h @news_viewer.title
 
     = render :partial => '/shared/metadata', :locals => { :last_update_date => @news_viewer.last_updated_at }

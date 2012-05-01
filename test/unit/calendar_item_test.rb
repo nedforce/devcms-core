@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class CalendarItemTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -25,19 +25,19 @@ class CalendarItemTest < ActiveSupport::TestCase
   def test_should_require_title
     assert_no_difference 'CalendarItem.count' do
       calendar_item = create_calendar_item(:title => nil)
-      assert calendar_item.errors.on(:title)
+      assert calendar_item.errors[:title].any?
     end
 
     assert_no_difference 'CalendarItem.count' do
       calendar_item = create_calendar_item(:title => "  ")
-      assert calendar_item.errors.on(:title)
+      assert calendar_item.errors[:title].any?
     end
   end
 
   def test_should_require_start_time
     assert_no_difference 'CalendarItem.count' do
       calendar_item = create_calendar_item(:start_time => nil)
-      assert calendar_item.errors.on(:start_time)
+      assert calendar_item.errors[:start_time].any?
     end
   end
 
@@ -49,7 +49,7 @@ class CalendarItemTest < ActiveSupport::TestCase
   def test_should_require_parent
     assert_no_difference 'CalendarItem.count' do
       calendar_item = create_calendar_item(:parent => nil)
-      assert calendar_item.errors.on(:calendar)
+      assert calendar_item.errors[:calendar].any?
     end
   end
 
@@ -57,7 +57,7 @@ class CalendarItemTest < ActiveSupport::TestCase
     assert_difference 'CalendarItem.count', 2 do
       2.times do
         calendar_item = create_calendar_item(:title => 'Non-unique title')
-        assert !calendar_item.errors.on(:title)
+        assert !calendar_item.errors[:title].any?
       end
     end
   end

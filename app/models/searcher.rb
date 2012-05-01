@@ -8,6 +8,8 @@
 #       see the +Synonym+ model for more info.
 #
 class Searcher
+  require 'acts_as_ferret'  
+  
   # The supported search engines.
   ENGINES = [ 'ferret', 'luminis' ]
 
@@ -19,9 +21,9 @@ class Searcher
 
   # Initialize the +Searcher+. An engine can be specified; if none is specified, the
   # default search engine set in the configuration is used.
-  def initialize(engine = DevCMS.search_configuration[:default_search_engine])
+  def initialize(engine = Devcms.search_configuration[:default_search_engine])
     raise "Search engine unknown: #{engine.to_s}"  unless ENGINES.include?(engine)
-    raise "Search engine disabled: #{engine.to_s}" unless DevCMS.search_configuration[:enabled_search_engines].include?(engine)
+    raise "Search engine disabled: #{engine.to_s}" unless Devcms.search_configuration[:enabled_search_engines].include?(engine)
 
     @engine = case engine
       when 'ferret'  then Search::FerretSearch
@@ -35,7 +37,7 @@ class Searcher
 
     page      = options.delete(:page).to_i
     page      = page > 0 ? page : 1
-    page_size = (options.delete(:page_size) || DevCMS.search_configuration[:default_page_size]).to_i
+    page_size = (options.delete(:page_size) || Devcms.search_configuration[:default_page_size]).to_i
     user      = options.delete(:for)
     top_node  = options.delete(:top_node)   || Node.root
 

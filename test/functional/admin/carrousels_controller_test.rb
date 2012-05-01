@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::CarrouselsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -60,7 +60,7 @@ class Admin::CarrouselsControllerTest < ActionController::TestCase
       create_carrousel({ :title => nil }, { :commit_type => 'preview' })
       assert_response :unprocessable_entity
       assert assigns(:carrousel).new_record?
-      assert assigns(:carrousel).errors.on(:title)
+      assert assigns(:carrousel).errors[:title].any?
       assert_template 'new'
     end
   end
@@ -74,7 +74,7 @@ class Admin::CarrouselsControllerTest < ActionController::TestCase
     
     assert_response :unprocessable_entity
     assert assigns(:carrousel).new_record?
-    assert assigns(:carrousel).errors.on(:title)
+    assert assigns(:carrousel).errors[:title].any?
   end
   
   def test_should_get_edit
@@ -122,7 +122,7 @@ class Admin::CarrouselsControllerTest < ActionController::TestCase
     put :update, :id => @carrousel.id, :carrousel => { :title => nil }, :commit_type => 'preview'
 
     assert_response :unprocessable_entity
-    assert assigns(:carrousel).errors.on(:title)
+    assert assigns(:carrousel).errors[:title].any?
     assert_equal old_title, @carrousel.reload.title
     assert_template 'edit'
   end
@@ -132,7 +132,7 @@ class Admin::CarrouselsControllerTest < ActionController::TestCase
     
     put :update, :id => @carrousel.id, :carrousel => { :title => nil }
     assert_response :unprocessable_entity
-    assert assigns(:carrousel).errors.on(:title)
+    assert assigns(:carrousel).errors[:title].any?
   end
   
   def test_should_create_carrousel_with_items_and_display_time
@@ -141,7 +141,7 @@ class Admin::CarrouselsControllerTest < ActionController::TestCase
     post :create, :parent_node_id => nodes(:root_section_node),
                  :carrousel => { :title => 'updated title', :display_time => [5,'hours'] }, 
                  :items => [ nodes(:help_page_node).id, nodes(:devcms_news_item_node).id, nodes(:devcms_news_item_voor_vorige_maand_node).id ],
-                 :carrousel_items => {nodes(:help_page_node).id => 'Help page' }
+                 :carrousel_items => {nodes(:help_page_node).id.to_s => 'Help page' }
 
     assert_response :success    
     assert_equal 3, assigns(:carrousel).items.size

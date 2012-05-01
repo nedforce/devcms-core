@@ -1,5 +1,5 @@
 #responsible_user_settings.clearfix
-  - field_set_tag t('responsible_user.settings') do
+  = field_set_tag t('responsible_user.settings') do
     = wrap_with_label(content_tag(:div, '', :id => 'responsible_user_ct'), { :text => t('shared.responsible_user'), :for => 'responsible_user_field' })
     :javascript
       var userStore = new Ext.data.Store({

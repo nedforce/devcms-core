@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::SearchPagesControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -35,7 +35,7 @@ class Admin::SearchPagesControllerTest < ActionController::TestCase
     assert_difference('SearchPage.count') do
       create_search_page
       assert_response :success
-      assert !assigns(:search_page).new_record?, :message => assigns(:search_page).errors.full_messages.join('; ')
+      assert !assigns(:search_page).new_record?, assigns(:search_page).errors.full_messages.join('; ')
     end
   end
 
@@ -48,7 +48,7 @@ class Admin::SearchPagesControllerTest < ActionController::TestCase
 
     assert_response :unprocessable_entity
     assert assigns(:search_page).new_record?
-    assert assigns(:search_page).errors.on(:title)
+    assert assigns(:search_page).errors[:title].any?
   end
 
   def test_should_get_edit
@@ -82,7 +82,7 @@ class Admin::SearchPagesControllerTest < ActionController::TestCase
 
     put :update, :id => search_pages(:standard_search_page).id, :search_page => {:title => nil}
     assert_response :unprocessable_entity
-    assert assigns(:search_page).errors.on(:title)
+    assert assigns(:search_page).errors[:title].any?
   end
 
   protected

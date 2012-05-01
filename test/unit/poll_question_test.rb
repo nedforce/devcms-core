@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class PollQuestionTest < ActiveSupport::TestCase
    
@@ -23,13 +23,13 @@ class PollQuestionTest < ActiveSupport::TestCase
     assert_no_difference 'PollQuestion.count' do
       pq = create_poll_question :question => nil
       assert !pq.valid?
-      assert pq.errors.on(:question)
+      assert pq.errors[:question].any?
     end
     
     assert_no_difference 'PollQuestion.count' do
       pq = create_poll_question :question => "  "
       assert !pq.valid?
-      assert pq.errors.on(:question)
+      assert pq.errors[:question].any?
     end
   end
   
@@ -37,7 +37,7 @@ class PollQuestionTest < ActiveSupport::TestCase
     assert_no_difference 'PollQuestion.count' do
       pq = create_poll_question :question => '?'
       assert !pq.valid?
-      assert pq.errors.on(:question)
+      assert pq.errors[:question].any?
     end
   end
   
@@ -46,7 +46,7 @@ class PollQuestionTest < ActiveSupport::TestCase
       assert_no_difference 'PollOption.count' do
         pq = create_poll_question :question => '?', :new_poll_option_attributes => [ { :text => 'Option 1' }, { :text => 'Option 2' } ]
         assert !pq.valid?
-        assert pq.errors.on(:question)
+        assert pq.errors[:question].any?
         
         pq.poll_options.each do |poll_option|
           assert poll_option.valid?
@@ -105,7 +105,7 @@ class PollQuestionTest < ActiveSupport::TestCase
     
     assert_difference('pq.poll_options.count', 2) do
       pq.new_poll_option_attributes= [ { :text => 'Option 1' }, { :text => 'Option 2' } ]
-      assert pq.send(:save)
+      assert pq.save
     end
   end
   
@@ -114,7 +114,7 @@ class PollQuestionTest < ActiveSupport::TestCase
     
     assert_no_difference('pq.poll_options.count') do
       pq.new_poll_option_attributes = [ { :text => 'Option 1' }, { :text => nil } ]
-      assert !pq.send(:save)
+      assert !pq.save
     end
   end
   
@@ -123,7 +123,7 @@ class PollQuestionTest < ActiveSupport::TestCase
     
     assert_no_difference('pq.poll_options.count') do
       pq.new_poll_option_attributes = nil
-      assert pq.send(:save)
+      assert pq.save
     end
   end
   
@@ -137,7 +137,7 @@ class PollQuestionTest < ActiveSupport::TestCase
     end
       
     pq.existing_poll_option_attributes = existing_poll_option_attributes
-    assert pq.send(:save)
+    assert pq.save
     
     poll_options.each do |poll_option|
       assert_equal 'Updated text', poll_option.reload.text
@@ -157,7 +157,7 @@ class PollQuestionTest < ActiveSupport::TestCase
     end
       
     pq.existing_poll_option_attributes = existing_poll_option_attributes
-    assert !pq.send(:save)
+    assert !pq.save
     
     poll_options.each do |poll_option|
       assert_equal old_poll_option_texts[poll_option.id.to_s], poll_option.reload.text
@@ -175,7 +175,7 @@ class PollQuestionTest < ActiveSupport::TestCase
     end
       
     pq.existing_poll_option_attributes = nil
-    assert pq.send(:save)
+    assert pq.save
     
     poll_options.each do |poll_option|
       assert_equal old_poll_option_texts[poll_option.id.to_s], poll_option.reload.text
@@ -197,20 +197,22 @@ class PollQuestionTest < ActiveSupport::TestCase
   
   def test_should_register_votes
     pq = poll_questions(:hc_question_1)
-    assert_difference('pq.poll_options.first.reload.number_of_votes', 1) do
-      pq.vote(pq.poll_options.first)
+    poll_option = pq.poll_options.first  
+        
+    assert_difference('poll_option.reload.number_of_votes', 1) do
+      pq.vote(poll_option)
     end
   end
 
   def test_should_require_user_for_poll
     pq = poll_questions(:hc_question_1)
     pq.poll.update_attribute :requires_login, true
-    
     assert pq.poll.reload.requires_login?
-    
-    assert_no_difference('pq.poll_options.first.reload.number_of_votes') do
+
+    poll_option = pq.poll_options.first        
+    assert_no_difference('poll_option.reload.number_of_votes') do
       assert_no_difference('pq.user_votes.count') do
-        pq.vote(pq.poll_options.first)
+        pq.vote(poll_option)
       end
     end
   end
@@ -218,10 +220,11 @@ class PollQuestionTest < ActiveSupport::TestCase
   def test_should_register_votes_for_user
     pq = poll_questions(:hc_question_1)
     pq.poll.update_attribute :requires_login, true
-    
-    assert_difference('pq.poll_options.first.reload.number_of_votes', 1) do
+
+    poll_option = pq.poll_options.first    
+    assert_difference('poll_option.reload.number_of_votes', 1) do
       assert_difference('pq.user_votes.count', 1) do
-        pq.vote(pq.poll_options.first, users(:arthur))
+        pq.vote(poll_option, users(:arthur))
         assert pq.has_vote_from?(users(:arthur))
       end
     end
@@ -230,15 +233,16 @@ class PollQuestionTest < ActiveSupport::TestCase
   def test_should_register_only_one_vote_per_user
     pq = poll_questions(:hc_question_1)
     pq.poll.update_attribute :requires_login, true
-    
-    assert_difference('pq.poll_options.first.reload.number_of_votes', 1) do
+    poll_option = pq.poll_options.first  
+        
+    assert_difference('poll_option.reload.number_of_votes', 1) do
       assert_difference('pq.user_votes.count', 1) do
-        pq.vote(pq.poll_options.first, users(:arthur))
+        pq.vote(poll_option, users(:arthur))
       end
     end
-    assert_no_difference('pq.poll_options.first.reload.number_of_votes') do
+    assert_no_difference('poll_option.reload.number_of_votes') do
       assert_no_difference('pq.user_votes.count') do
-        pq.vote(pq.poll_options.first, users(:arthur))
+        pq.vote(poll_option, users(:arthur))
       end
     end
   end

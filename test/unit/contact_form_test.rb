@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class ContactFormTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -19,7 +19,7 @@ class ContactFormTest < ActiveSupport::TestCase
     assert_no_difference('ContactForm.count') do
       cf = create_contact_form(:title => nil)
       assert cf.new_record?
-      assert cf.errors.on(:title)
+      assert cf.errors[:title].any?
     end
   end
 
@@ -27,7 +27,7 @@ class ContactFormTest < ActiveSupport::TestCase
     assert_no_difference('ContactForm.count') do
       cf = create_contact_form(:title => 'a')
       assert cf.new_record?
-      assert cf.errors.on(:title)
+      assert cf.errors[:title].any?
     end
   end
 
@@ -35,7 +35,7 @@ class ContactFormTest < ActiveSupport::TestCase
     assert_no_difference('ContactForm.count') do
       cf = create_contact_form(:email_address => nil)
       assert cf.new_record?
-      assert cf.errors.on(:email_address)
+      assert cf.errors[:email_address].any?
     end
   end
 
@@ -43,7 +43,7 @@ class ContactFormTest < ActiveSupport::TestCase
     assert_no_difference('ContactForm.count') do
       cf = create_contact_form(:email_address => 'invalid-email-address')
       assert cf.new_record?
-      assert cf.errors.on(:email_address)
+      assert cf.errors[:email_address].any?
     end
   end
 

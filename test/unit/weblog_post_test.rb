@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class WeblogPostTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -17,26 +17,26 @@ class WeblogPostTest < ActiveSupport::TestCase
   def test_should_require_title
     assert_no_difference 'WeblogPost.count' do
       weblog_post = create_weblog_post(:title => nil)
-      assert weblog_post.errors.on(:title)
+      assert weblog_post.errors[:title].any?
     end
     
     assert_no_difference 'WeblogPost.count' do
       weblog_post = create_weblog_post(:title => "  ")
-      assert weblog_post.errors.on(:title)
+      assert weblog_post.errors[:title].any?
     end
   end
 
   def test_should_require_body
     assert_no_difference 'WeblogPost.count' do
       weblog_post = create_weblog_post(:body => nil)
-      assert weblog_post.errors.on(:body)
+      assert weblog_post.errors[:body].any?
     end
   end
   
   def test_should_require_parent
     assert_no_difference 'WeblogPost.count' do
       weblog_post = create_weblog_post(:parent => nil)
-      assert weblog_post.errors.on(:weblog)
+      assert weblog_post.errors[:weblog].any?
     end
   end
 
@@ -44,7 +44,7 @@ class WeblogPostTest < ActiveSupport::TestCase
     assert_difference 'WeblogPost.count', 2 do
       2.times do
         weblog_post = create_weblog_post(:title => 'Non-unique title')
-        assert !weblog_post.errors.on(:title)
+        assert !weblog_post.errors[:title].any?
       end
     end
   end
@@ -53,7 +53,7 @@ class WeblogPostTest < ActiveSupport::TestCase
     assert_no_difference 'WeblogPost.count' do
       @henk_weblog_post_one.title = 'New title'
       @henk_weblog_post_one.body = 'New body'
-      assert @henk_weblog_post_one.send(:save)
+      assert @henk_weblog_post_one.save
     end
   end
   

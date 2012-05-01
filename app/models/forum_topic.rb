@@ -39,20 +39,11 @@ class ForumTopic < ActiveRecord::Base
   validates_length_of     :title, :in => 2..255
 
   # Returns the child ForumThread objects, ordered by their +last_update_date+ values.
-  def forum_threads_by_last_update_date(args = {})
-    # Custom SQL query to minimize performance hit
-    # TODO: Not too keen on the INNER JOIN here, any way to avoid that? DB caching of created_at?
-    #
-    # Reply (2010.07.20 RvdH): Add a field to ForumTopic that keeps the last created_at of a child?
-    # Or use the updated_at field of ForumTopic?
-    self.forum_threads.all(
-      {
-        :select => 'forum_threads.id, forum_threads.title, forum_threads.user_id, MAX(forum_posts.created_at) AS last_update_date', 
-        :joins  => :forum_posts,
-        :group  => 'forum_threads.id, forum_threads.title, forum_threads.user_id', 
-        :order  => 'last_update_date DESC'
-      }.merge(args)
-    )
+  def forum_threads_by_last_update_date
+    forum_threads.select('forum_threads.id, forum_threads.title, forum_threads.user_id, MAX(forum_posts.created_at) AS last_update_date')
+      .joins(:forum_posts)
+      .group('forum_threads.id, forum_threads.title, forum_threads.user_id')
+      .order('MAX(forum_posts.created_at) DESC')
   end
 
   # Returns the date at which this ForumTopic was last updated.
@@ -62,7 +53,6 @@ class ForumTopic < ActiveRecord::Base
     if self.forum_threads.empty?
       self.created_at
     else
-      # TODO: Not too keen on the INNER JOIN here, any way to avoid that? DB caching of created_at?
       self.forum_threads.maximum('forum_posts.created_at', :joins => :forum_posts)
     end
   end

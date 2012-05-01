@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::TopHitsPagesControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -38,7 +38,7 @@ class Admin::TopHitsPagesControllerTest < ActionController::TestCase
     assert_difference('TopHitsPage.count') do
       create_top_hits_page
       assert_response :success
-      assert !assigns(:top_hits_page).new_record?, :message => assigns(:top_hits_page).errors.full_messages.join('; ')
+      assert !assigns(:top_hits_page).new_record?, assigns(:top_hits_page).errors.full_messages.join('; ')
     end
   end
 
@@ -61,7 +61,7 @@ class Admin::TopHitsPagesControllerTest < ActionController::TestCase
       create_top_hits_page({ :title => nil }, { :commit_type => 'preview' })
       assert_response :unprocessable_entity
       assert assigns(:top_hits_page).new_record?
-      assert assigns(:top_hits_page).errors.on(:title)
+      assert assigns(:top_hits_page).errors[:title].any?
       assert_template 'new'
     end
   end
@@ -75,7 +75,7 @@ class Admin::TopHitsPagesControllerTest < ActionController::TestCase
 
     assert_response :unprocessable_entity
     assert assigns(:top_hits_page).new_record?
-    assert assigns(:top_hits_page).errors.on(:title)
+    assert assigns(:top_hits_page).errors[:title].any?
   end
 
   def test_should_get_edit
@@ -123,7 +123,7 @@ class Admin::TopHitsPagesControllerTest < ActionController::TestCase
     old_title = top_hits_page.title
     put :update, :id => top_hits_page.id, :top_hits_page => { :title => nil }, :commit_type => 'preview'
     assert_response :unprocessable_entity
-    assert assigns(:top_hits_page).errors.on(:title)
+    assert assigns(:top_hits_page).errors[:title].any?
     assert_equal old_title, top_hits_page.reload.title
     assert_template 'edit'
   end
@@ -133,7 +133,7 @@ class Admin::TopHitsPagesControllerTest < ActionController::TestCase
 
     put :update, :id => top_hits_pages(:top_ten_page).id, :top_hits_page => { :title => nil }
     assert_response :unprocessable_entity
-    assert assigns(:top_hits_page).errors.on(:title)
+    assert assigns(:top_hits_page).errors[:title].any?
   end
 
 

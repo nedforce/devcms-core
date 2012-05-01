@@ -21,7 +21,7 @@
 #
 class Synonym < ActiveRecord::Base
   # Synonyms are only used when Ferret is configured as the search engine.
-  if SETTLER_LOADED && DevCMS.search_configuration[:enabled_search_engines].include?('ferret')
+  if SETTLER_LOADED && Devcms.search_configuration[:enabled_search_engines].include?('ferret')
     extend Search::Modules::Ferret::FerretSynonymExtension
     acts_as_searchable
   end

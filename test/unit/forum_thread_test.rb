@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class ForumThreadTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -18,26 +18,26 @@ class ForumThreadTest < ActiveSupport::TestCase
   def test_should_require_user
     assert_no_difference 'ForumThread.count' do
       forum_thread = create_forum_thread(:user => nil)
-      assert forum_thread.errors.on(:user)
+      assert forum_thread.errors[:user].any?
     end
   end
   
   def test_should_require_forum_topic
     assert_no_difference 'ForumThread.count' do
       forum_thread = create_forum_thread(:forum_topic => nil)
-      assert forum_thread.errors.on(:forum_topic)
+      assert forum_thread.errors[:forum_topic].any?
     end
   end
   
   def test_should_require_title
     assert_no_difference 'ForumThread.count' do
       forum_thread = create_forum_thread(:title => nil)
-      assert forum_thread.errors.on(:title)
+      assert forum_thread.errors[:title].any?
     end
     
     assert_no_difference 'ForumThread.count' do
       forum_thread = create_forum_thread(:title => "   ")
-      assert forum_thread.errors.on(:title)
+      assert forum_thread.errors[:title].any?
     end
   end
   

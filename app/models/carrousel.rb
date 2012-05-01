@@ -83,14 +83,12 @@ class Carrousel < ActiveRecord::Base
   # Parameters: An array containing node IDs. The order of the items in the array determines the positions of the items 
   # in the carrousel
   def associate_items(items, excerpts = {})
-    # Use delete_all instead of destroy_all (quicker)
-    # But don't use it because it violates a notnull constraint in our DB...
     carrousel_items.destroy_all
 
     # Add the items
     if items
-      items.each_index do |index| 
-        carrousel_items.build(:item => Node.find(items.at(index)).content, :position => index, :excerpt => (excerpts.empty? ? nil : excerpts[items.at(index)]))   
+      items.each_with_index do |item, index| 
+        carrousel_items.build(:item => Node.find(item).content, :position => index, :excerpt => (excerpts.empty? ? nil : excerpts[item]))   
       end
     end
     true

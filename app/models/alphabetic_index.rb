@@ -21,12 +21,10 @@ class AlphabeticIndex < ActiveRecord::Base
     :copyable => false
   })
 
-  ALLOWED_CONTENT_TYPES = %w( Page ResearchReport Product )
-
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of  :title, :content_type
   validates_length_of    :title,        :in => 2..255, :allow_blank => true
-  validates_inclusion_of :content_type, :in => ALLOWED_CONTENT_TYPES
+  validates_inclusion_of :content_type, :in => DevcmsCore::Engine.config.allowed_content_types_for_alphabetic_index
 
   # Returns an alphabetic list of all the descendant Items of type ContentType of the parent.
   def items(letter = 'A', options = {})
@@ -40,7 +38,7 @@ class AlphabeticIndex < ActiveRecord::Base
       conditions = node.parent.descendant_conditions
       conditions = ["(#{conditions.shift})" + " AND (UPPER(#{klass.table_name}.title) LIKE UPPER(?) OR (taggings.context = 'title_alternatives' AND UPPER(tags.name) LIKE UPPER(?)))", conditions, "#{letter}%", "#{letter}%"].flatten
 
-      klass.accessible.all({ :joins => { :node => :base_tags }, :order => "CASE WHEN UPPER(#{klass.table_name}.title) LIKE UPPER('#{letter}%') THEN UPPER(#{klass.table_name}.title) ELSE UPPER(tags.name) END", :conditions => conditions }.merge(options))
+      klass.accessible.includes(:node => :base_tags).all({ :order => "CASE WHEN UPPER(#{klass.table_name}.title) LIKE UPPER('#{letter}%') THEN UPPER(#{klass.table_name}.title) ELSE UPPER(tags.name) END", :conditions => conditions }.merge(options))
     end
   end
 end

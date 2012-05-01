@@ -1,10 +1,18 @@
-DevCMSCore
-=============
+# For devcms to run, you need to add some gems that are only available on Github. Add this to your Gemfile:
 
-Installation:
+source 'http://gems.github.com'
 
-Generate a new Rails app, then execute:
+gem 'calendar_date_select', :git => 'https://github.com/emyl/calendar_date_select.git', :branch => 'rails3_1'
+gem 'prototype_legacy_helper', '0.0.0', :git => 'http://github.com/willbryant/prototype_legacy_helper.git'
+gem 'soap4r', :git => 'http://github.com/felipec/soap4r'
 
-bash <(curl -s https://raw.github.com/nedforce/devcms-core/master/devcms-install.sh)
+# A default layout and configuration files for devcms can be created by using the Devcms generator:
 
-and follow the further instructions.
+rails g devcms
+
+# Notes
+
+* As we're not precompiling ExtJS and TinyMCE, the asset pipeline fallback should be enabled in production:
+
+  config.assets.compile = true
+  

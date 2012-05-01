@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class SocialMediaLinksBoxTest < ActiveSupport::TestCase
 
@@ -11,7 +11,7 @@ class SocialMediaLinksBoxTest < ActiveSupport::TestCase
   def test_should_require_title
     assert_no_difference 'SocialMediaLinksBox.count' do
       smlb = create_social_media_links_box(:title => nil)
-      assert smlb.errors.on(:title)
+      assert smlb.errors[:title].any?
     end
   end
 

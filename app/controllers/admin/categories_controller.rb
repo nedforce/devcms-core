@@ -1,5 +1,6 @@
 class Admin::CategoriesController < Admin::AdminController
-
+  before_filter :default_format_json,  :only => [:create, :update, :destroy]
+  
   skip_before_filter :set_actions
   skip_before_filter :find_node    
 

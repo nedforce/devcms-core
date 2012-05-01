@@ -1,7 +1,7 @@
 - if logged_in? && current_user.has_role?('admin')
   #content_box_settings.clearfix
-    - field_set_tag t('content_boxes.settings') do
-      - fields_for content do |f|
+    = field_set_tag t('content_boxes.settings') do
+      = fields_for content do |f|
 
         .formFieldCt.clearfix
           = f.label      :content_box_title, t('content_boxes.title')
@@ -12,24 +12,24 @@
             = f.label  :content_box_number_of_items, t('content_boxes.number_of_items')
             = f.select :content_box_number_of_items, (3..50).to_a
 
-        - if DevCMS.content_box_colours.any?
+        - if Devcms.content_box_colours.any?
           .formFieldCt.clearfix
             %label= t 'content_boxes.colour'
             %ul.content_box_colour_chooser.clearfix
-              - DevCMS.content_box_colours.each do |colour|
+              - Devcms.content_box_colours.each do |colour|
                 %li
-                  %label{ :class => colour }= '&nbsp;'
+                  %label{ :class => colour }= raw '&nbsp;'
                   = radio_button_tag "#{content.class.name.underscore}[content_box_colour]", colour, content.content_box_colour == colour || content.content_box_colour.nil? && colour == 'default'
 
-        - if show_icon_field && DevCMS.content_box_icons.any?
+        - if show_icon_field && Devcms.content_box_icons.any?
           .formFieldCt.clearfix
             %label= t 'content_boxes.icon'
             %ul.content_box_icon_chooser.clearfix
               %li
-                %label= '&nbsp;'
+                %label= raw '&nbsp;'
                 = radio_button_tag "#{content.class.name.underscore}[content_box_icon]", '', content.content_box_icon.blank?
 
-              - DevCMS.content_box_icons.each do |icon|
+              - Devcms.content_box_icons.each do |icon|
                 %li
-                  %label{ :class => icon }= '&nbsp;'
+                  %label{ :class => icon }= raw '&nbsp;'
                   = radio_button_tag "#{content.class.name.underscore}[content_box_icon]", icon, content.content_box_icon == icon

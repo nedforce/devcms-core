@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 # Tests content_node functionality on the pages controller.
 class ContentNodesTest < ActionController::TestCase
@@ -31,19 +31,8 @@ class ContentNodesTest < ActionController::TestCase
     assert assigns(:attachment_nodes).empty?
   end
 
-  def test_should_get_changes_for_self_if_changed_feed_toggle_is_true
-     pages(:help_page).node.update_attribute(:has_changed_feed, true)
-     get :changes, :format => 'atom', :id => pages(:help_page).id
-     assert assigns(:nodes).size == 1
-  end
-
-  def test_should_not_get_changes_for_self_if_changed_feed_toggle_is_false
-     get :changes, :format => 'atom', :id => pages(:help_page).id
-     assert_response :not_found
-  end
-
   def test_should_not_include_header_images_in_content_children
-    hidden_image = Image.select_all_columns.find(images(:hidden_image).id)
+    hidden_image = Image.find(images(:hidden_image).id)
     hidden_image.update_attributes(:is_for_header => true)
     login_as :reader
     get :show, :id => pages(:not_hidden_page).id

@@ -22,10 +22,10 @@ class Admin::UsersController < Admin::AdminController
       # This may be resolved by transforming this controller into JSON or in
       # a version of Rails > 2.0.2.
       @sort_field = 'users.created_at' if @sort_field == 'created_at'
-      @users      = User.all(:include => [ :newsletter_archives, :interests ], :conditions => filter_conditions, :order => "#{@sort_field} #{@sort_direction}", :page => { :size => @page_limit, :current => @current_page })
+      @users      = User.includes([ :newsletter_archives, :interests ]).where(filter_conditions).order("#{@sort_field} #{@sort_direction}").page(@current_page).per(@page_limit)
       @user_count = @users.size
     else
-      @users      = user_class.all(:include => [ :newsletter_archives, :interests ], :conditions => filter_conditions, :order => "login #{@sort_direction}")
+      @users      = User.includes([ :newsletter_archives, :interests ]).where(filter_conditions).order("login #{@sort_direction}")
       @users      = @users.sort_by { |user| user.newsletter_archives.sort_by { |archive| archive.title.upcase }.map{ |archive| archive.title }.join(', ') }
       @users      = @users.reverse if @sort_direction == 'DESC'
       @user_count = @users.size
@@ -95,7 +95,7 @@ class Admin::UsersController < Admin::AdminController
     respond_to do |format|
       if @user == current_user
         error = I18n.t('users.cant_destroy_yourself')
-        @user.errors.add_to_base(error)
+        @user.errors.add(:base, error)
 
         format.html {
           flash[:error] = error

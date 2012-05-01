@@ -40,8 +40,9 @@ class NewsletterArchive < ActiveRecord::Base
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of     :title
   validates_length_of       :title, :in => 2..255, :allow_blank => true
-  validates_email_format_of :from_email_address,   :allow_blank => true
 
+  validates :from_email_address, :email => { :allow_blank => true }
+  
   # Returns the last update date
   def last_updated_at
     nle = self.newsletter_editions.accessible.first(:include => :node, :conditions => [ 'newsletter_editions.published <> ?', 'unpublished' ], :order => 'nodes.publication_start_date DESC')

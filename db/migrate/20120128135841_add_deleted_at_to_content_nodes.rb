@@ -20,6 +20,6 @@ class AddDeletedAtToContentNodes < ActiveRecord::Migration
   end
   
   def self.content_type_tables
-    DevCMSCore.registered_content_types.map(&:constantize).map(&:table_name).uniq
+    DevcmsCore::Engine.registered_content_types.map(&:constantize).map(&:table_name).uniq
   end
 end

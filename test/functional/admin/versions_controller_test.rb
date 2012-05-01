@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::VersionsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -43,7 +43,7 @@ class Admin::VersionsControllerTest < ActionController::TestCase
     
     mail = ActionMailer::Base.deliveries.first
     assert_equal editor.email_address, mail.to[0]
-    assert mail.body =~ /#{comment}/
+    assert mail.parts.first.body =~ /#{comment}/
   end
 
   def test_should_approve_rejected_node
@@ -84,6 +84,6 @@ class Admin::VersionsControllerTest < ActionController::TestCase
     
     mail = ActionMailer::Base.deliveries.first
     assert_equal editor.email_address, mail.to[0]
-    assert mail.body =~ /#{reason}/
+    assert mail.parts.first.body =~ /#{reason}/
   end
 end

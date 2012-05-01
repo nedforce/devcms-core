@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class PasswordResetsControllerTest < ActionController::TestCase
   
@@ -14,7 +14,7 @@ class PasswordResetsControllerTest < ActionController::TestCase
       assert_response :redirect
       assert_equal users(:sjoerd), assigns(:user)
       assert_not_equal old_hash, assigns(:user).reload.password_reset_token
-      assert flash.has_key?(:notice)
+      assert flash.key?(:notice)
     end
   end
   
@@ -25,16 +25,16 @@ class PasswordResetsControllerTest < ActionController::TestCase
       assert_response :redirect
       assert_equal users(:sjoerd), assigns(:user)
       assert_not_equal old_hash, assigns(:user).reload.password_reset_token
-      assert flash.has_key?(:notice)
+      assert flash.key?(:notice)
     end
   end
   
-  def test_should_send_reminder_mail_by_invalid_input
-    assert_difference 'ActionMailer::Base.deliveries.size', 1 do
+  def test_should_not_send_reminder_mail_by_invalid_input
+    assert_no_difference 'ActionMailer::Base.deliveries.size' do
       post :create, :login_email => 'Ch|_|ckn0rr15'
       assert_response :redirect
       assert_equal assigns(:user), nil
-      assert flash.has_key?(:notice)
+      assert flash.key?(:notice)
     end
   end
   
@@ -47,27 +47,27 @@ class PasswordResetsControllerTest < ActionController::TestCase
   
   def test_should_set_new_password
     create_password_reset users(:sjoerd)
-    put :update, :id => assigns(:user).password_reset_token, :user => { :password => 'test', :password_confirmation => 'test' }
+    put :update, :id => assigns(:user).password_reset_token, :user => { :password => 'Ch|_|ckn0rr15', :password_confirmation => 'Ch|_|ckn0rr15' }
     assert_response :redirect
     assert_equal assigns(:user).password_reset_token, nil
-    assert flash.has_key?(:notice)
+    assert flash.key?(:notice)
   end
   
   def test_should_confirm_new_password
     create_password_reset users(:sjoerd)
-    put :update, :id => assigns(:user).password_reset_token, :user => { :password => 'test', :password_confirmation => 'test2' }
+    put :update, :id => assigns(:user).password_reset_token, :user => { :password => 'Ch|_|ckn0rr15', :password_confirmation => 'Ch|_|ckn0rr16' }
     assert_response :success
-    assert assigns(:user).errors.on(:password)
+    assert assigns(:user).errors[:password].any?
   end
   
   def test_should_not_accept_expired_password_reset
     create_password_reset users(:sjoerd)
     old_hash = assigns(:user).password_reset_token
     assigns(:user).update_attribute :password_reset_expiration, Time.now - 1.day
-    put :update, :id => assigns(:user).password_reset_token, :user => { :password => 'test', :password_confirmation => 'test' }
+    put :update, :id => assigns(:user).password_reset_token, :user => { :password => 'Ch|_|ckn0rr15', :password_confirmation => 'Ch|_|ckn0rr15' }
     assert_response :redirect
     assert_equal old_hash, assigns(:user).reload.password_reset_token
-    assert flash.has_key?(:notice)
+    assert flash.key?(:notice)
   end
   
   protected

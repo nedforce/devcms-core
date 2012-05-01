@@ -29,7 +29,7 @@ class Admin::NewsletterSubscriptionsController < Admin::AdminController
     @active_page = :sitemap
 
     @newsletter_archive = NewsletterArchive.find(params[:id])
-    @users              = @newsletter_archive.users.all(:order => "#{@sort_field} #{@sort_direction}", :page => {:size => @page_limit, :current => @current_page})
+    @users              = @newsletter_archive.users.order("#{@sort_field} #{@sort_direction}").page(@current_page).per(@page_limit)
     @user_count         = @newsletter_archive.users.count
 
     respond_to do |format|
@@ -46,9 +46,9 @@ class Admin::NewsletterSubscriptionsController < Admin::AdminController
 
     respond_to do |format|
       if @newsletter_archive.users.delete(@user)
-        format.xml { head :ok }
+        format.any { head :ok }
       else 
-        format.xml { render :status => :not_found }
+        format.any { render :status => :not_found }
       end
     end 
   end

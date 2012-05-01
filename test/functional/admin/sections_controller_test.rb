@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::SectionsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -48,7 +48,7 @@ class Admin::SectionsControllerTest < ActionController::TestCase
     assert_difference('Section.count') do
       create_section
       assert_response :success
-      assert !assigns(:section).new_record?, :message => assigns(:section).errors.full_messages.join('; ')
+      assert !assigns(:section).new_record?, assigns(:section).errors.full_messages.join('; ')
     end
     
   end
@@ -73,7 +73,7 @@ class Admin::SectionsControllerTest < ActionController::TestCase
       create_section({ :title => nil }, { :commit_type => 'preview' })
       assert_response :unprocessable_entity
       assert assigns(:section).new_record?
-      assert assigns(:section).errors.on(:title)
+      assert assigns(:section).errors[:title].any?
       assert_template 'new'
     end
 
@@ -87,7 +87,7 @@ class Admin::SectionsControllerTest < ActionController::TestCase
     end
     assert_response :unprocessable_entity
     assert assigns(:section).new_record?
-    assert assigns(:section).errors.on(:title)
+    assert assigns(:section).errors[:title].any?
   end
   
   def test_should_get_edit
@@ -135,7 +135,7 @@ class Admin::SectionsControllerTest < ActionController::TestCase
     old_title = section.title
     put :update, :id => section.id, :section => {:title => nil, :description => 'updated_body'}, :commit_type => 'preview'
     assert_response :unprocessable_entity
-    assert assigns(:section).errors.on(:title)
+    assert assigns(:section).errors[:title].any?
     assert_equal old_title, section.reload.title
     assert_template 'edit'
   end
@@ -145,7 +145,7 @@ class Admin::SectionsControllerTest < ActionController::TestCase
 
     put :update, :id => sections(:economie_section).id, :section => {:title => nil}
     assert_response :unprocessable_entity
-    assert assigns(:section).errors.on(:title)
+    assert assigns(:section).errors[:title].any?
   end
 
   def test_should_not_show_frontpage_controls_to_editors

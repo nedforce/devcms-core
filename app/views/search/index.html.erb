@@ -1,13 +1,8 @@
-<% content_for :css do %>
-  <%= stylesheet_link_tag 'calendar_date_select/plain.css', :plugin => 'calendar_date_select' %>
-<% end %>
-
 <% content_for :javascript do %>
-  <%= javascript_include_tag 'calendar_date_select/calendar_date_select.js', :plugin => 'calendar_date_select' %>
-  <%= javascript_include_tag 'calendar_date_select/locale/nl.js',            :plugin => 'calendar_date_select' %>
-  <%= javascript_include_tag 'calendar_date_select/format_dutch.js',         :plugin => 'calendar_date_select' %>
-  <%= javascript_include_tag 'search.js',                                    :plugin => 'devcms-core' %>
-  <% javascript_tag do %>
+  <%= calendar_date_select_includes :locale => :nl %>
+  <%= javascript_include_tag 'search.js' %>
+
+  <%= javascript_tag do %>
   function show_advanced_search_options() {
     $('advanced_search').removeClassName("hidden");
     $('top_search_button').addClassName("hidden");
@@ -20,8 +15,8 @@
     $('show_advanced_options').removeClassName("hidden");
   }
   document.observe('dom:loaded', function () {
-    $('static_programme_and_project_selector').hide();
-    $('dynamic_programme_and_project_selectors').removeClassName("hidden");
+    if($('static_programme_and_project_selector')) $('static_programme_and_project_selector').hide();
+    if($('dynamic_programme_and_project_selectors')) $('dynamic_programme_and_project_selectors').removeClassName("hidden");
   });
   <% end %>
 <% end %>
@@ -34,7 +29,7 @@
   <h1><%=t 'search.to_search' -%></h1>
 <% end %>
 
-  <% form_tag search_path(params[:search_engine]), :method => :get, :class => 'clearfix', :id => 'main_search_form' do %>
+  <%= form_tag search_path(params[:search_engine]), :method => :get, :class => 'clearfix', :id => 'main_search_form' do %>
     <div id="controls" class="clearfix">
       <%= text_field_tag(:query, @query, :class => 'query') -%>
       <p><%=t 'search.in' -%></p>

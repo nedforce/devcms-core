@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class NewsletterSubscriptionTest < ActionMailer::TestCase
   tests NewsletterSubscription
@@ -20,23 +20,26 @@ class NewsletterSubscriptionTest < ActionMailer::TestCase
   def test_no_edition_for_non_subscriber
     newsletter_edition = newsletter_editions(:example_newsletter_edition)
     user = users(:roderick)
-    assert_raise (RuntimeError) { NewsletterSubscription.create_edition_for(newsletter_edition, user) }
+    assert_raise (RuntimeError) { NewsletterSubscription.edition_for(newsletter_edition, user) }
   end
   
   protected
     def create_and_test_default
-      @response = NewsletterSubscription.create_edition_for(@newsletter_edition, @user)
+      @response = NewsletterSubscription.edition_for(@newsletter_edition, @user)
+      body = @response.parts.first.body
 
       assert @response.to.to_s =~ /#{@user.email_address}/
       assert @response.subject =~ /#{@newsletter_edition.title}/
-      assert @response.body =~ /#{@newsletter_edition.body}/
+      
+      
+      assert body =~ /#{@newsletter_edition.body}/
 
       for item in @newsletter_edition.items
-        assert @response.body =~ /#{item.title}/
+        assert body =~ /#{item.title}/
         if item.respond_to?(:preamble)
-          assert @response.body =~ /#{item.preamble}/
+          assert body =~ /#{item.preamble}/
         else
-          assert @response.body =~ /#{item.body}/
+          assert body =~ /#{item.body}/
         end
       end
     end

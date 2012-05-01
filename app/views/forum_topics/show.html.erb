@@ -7,7 +7,7 @@
     <div class="clearfix">
       <h2><%=t 'forums.forum_threads' -%></h2>
       <% if logged_in? %>
-        <% right_new_button t('forums.new_thread') do %>
+        <%= right_new_button t('forums.new_thread') do %>
           <%= link_to(t('forums.new_thread'), new_forum_topic_forum_thread_path(@forum_topic)) %>
         <% end %>
       <% end %>
@@ -21,7 +21,7 @@
       <h3 <%= "class='closed'" if forum_thread.closed? -%>><%= link_to h(forum_thread.title), [ @forum_topic, forum_thread ] -%></h3>
       <div class="forumThreadBody"><%= truncate(strip_tags(forum_thread.start_post.body), :length => 110) -%></div>
       <div class="forumThreadDetails">
-        <p><%= "#{t 'forums.created_by'}: <span class='userLogin'>#{truncate(forum_thread.user.screen_name, :length => 12)}</span>" -%></p>
+        <p><%= "#{t 'forums.created_by'}: <span class='userLogin'>#{truncate(forum_thread.user.screen_name, :length => 12)}</span>".html_safe %></p>
         <p><%= "#{t 'forums.number_of_posts'}: #{forum_thread.number_of_replies}" -%></p>
       <% unless forum_thread.replies.empty? %>
         <p><%= "#{t 'forums.last_reply'}: #{l forum_thread.last_update_date, :format => :long}" -%></p>
@@ -33,13 +33,13 @@
   <% end %>
 
   <% if logged_in? && !@forum_threads.empty? %>
-    <% right_new_button t('forums.new_thread') do %>
+    <%= right_new_button t('forums.new_thread') do %>
       <%= link_to(t('forums.new_thread'), new_forum_topic_forum_thread_path(@forum_topic)) %>
     <% end %>
   <% end %>
   </div>
 
-  <%= pagination_links(@forum_threads) %>
+  <%= paginate(@forum_threads) %>
 
   <% unless logged_in? %>
     <p class="signup"><%=t 'forums.signup_required' -%></p>

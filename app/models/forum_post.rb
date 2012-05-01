@@ -35,12 +35,14 @@ class ForumPost < ActiveRecord::Base
   after_create :notify_thread_owner
 
   # See the preconditions overview for an explanation of these validations.
-  before_validation_on_create :set_user_name
+  before_validation     :set_user_name, :on => :create
   validates_presence_of :body, :forum_thread, :user_name, :user
   validates_length_of   :body, :in => 1..5000
 
   validates_numericality_of :user_id, :forum_thread_id, :allow_nil => false
-  validate_on_create :ensure_thread_not_closed
+  validate :ensure_thread_not_closed, :on => :create
+  
+  before_destroy :ensure_start_post_cannot_be_destroyed
   
   # Note: NOT ForumThread, as ForumThreads are no content nodes either
   def self.parent_type
@@ -80,7 +82,7 @@ class ForumPost < ActiveRecord::Base
 
   # Ensures that the ForumThread to which the new ForumPost is added is not closed.
   def ensure_thread_not_closed
-    errors.add_to_base(:cannot_be_added_to_closed_thread) if self.forum_thread && self.forum_thread.closed?
+    errors.add(:base, :cannot_be_added_to_closed_thread) if self.forum_thread && self.forum_thread.closed?
   end
 
   # Set the +user_name+ to the login of the +user+.
@@ -89,13 +91,13 @@ class ForumPost < ActiveRecord::Base
   end
 
   # Ensure the +ForumPost+ cannot be destroyed if it is the start post of a +ForumThread+.
-  def before_destroy
-    errors.add_to_base(:cannot_destroy_first_post) if is_start_post?
-    !is_start_post?
+  def ensure_start_post_cannot_be_destroyed
+    errors.add(:base, :cannot_destroy_first_post) if is_start_post?
+    return errors.empty?
   end
 
   # Notify the thread owner of a new forum post by sending an email.
   def notify_thread_owner
-    UserMailer.deliver_new_forum_post_notification(self.forum_thread.user, self) unless is_start_post?
+    UserMailer.new_forum_post_notification(self.forum_thread.user, self).deliver unless is_start_post?
   end
 end

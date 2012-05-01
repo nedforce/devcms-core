@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class TopHitsPageTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -17,12 +17,12 @@ class TopHitsPageTest < ActiveSupport::TestCase
   def test_should_require_title
     assert_no_difference 'TopHitsPage.count' do
       top_hits_page = create_top_hits_page(:title => nil)
-      assert top_hits_page.errors.on(:title)
+      assert top_hits_page.errors[:title].any?
     end
 
     assert_no_difference 'TopHitsPage.count' do
       top_hits_page = create_top_hits_page(:title => "  ")
-      assert top_hits_page.errors.on(:title)
+      assert top_hits_page.errors[:title].any?
     end
   end
 
@@ -30,7 +30,7 @@ class TopHitsPageTest < ActiveSupport::TestCase
     assert_difference 'TopHitsPage.count', 2 do
       2.times do
         top_hits_page = create_top_hits_page(:title => 'Non-unique title')
-        assert !top_hits_page.errors.on(:title)
+        assert !top_hits_page.errors[:title].any?
       end
     end
   end
@@ -95,7 +95,7 @@ protected
 
   def create_excluded_content_types
     [
-      Image.create({:parent => nodes(:devcms_news_item_node), :title => "Dit is een image.", :data => fixture_file_upload("files/test.jpg")}),
+      Image.create({:parent => nodes(:devcms_news_item_node), :title => "Dit is een image.", :file => fixture_file_upload("files/test.jpg")}),
       Calendar.create({:parent => @root_node, :title => "New calendar", :description => "This is a new calendar." }),
       CombinedCalendar.create({:parent => @root_node, :title => "New combined calendar", :description => "This is a new combined calendar." }),
       NewsArchive.create({:parent => @root_node, :title => "Good news, everyone!", :description => "I'm sending you all on a highly controversial mission." }),

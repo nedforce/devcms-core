@@ -13,6 +13,10 @@ class PagesController < ApplicationController
     end
   end
   
+  def home
+    render :layout => false
+  end
+  
 protected
   
   # Finds the Page object corresponding to the passed in +id+ parameter.

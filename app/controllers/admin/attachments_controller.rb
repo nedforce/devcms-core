@@ -63,25 +63,21 @@ class Admin::AttachmentsController < Admin::AdminController
         format.html # create.html.erb
         format.xml  { render :xml => @attachment, :status => :created, :location => @attachment }
         format.js do
-          responds_to_parent do
-            render :update do |page|
-              page << "if(Ext.get('no_attachments_row')) Ext.get('no_attachments_row').remove();"
-              page.insert_html(:bottom, "uploaded_attachments", "<tr id=\"uploaded_attachment_#{@attachment.id}\"><td>#{h(@attachment.title)}</td><td>#{h(@attachment.filename)}</td><td>#{(@attachment.size||0)/1024} KB</td></tr>")
-              page.call("treePanel.refreshNodesOf", @parent_node.id)
-              @attachment = Attachment.new # To reset fields
-              page.replace_html("right_panel_form", :partial => 'form')
-            end
+          responds_to_parent do |page|
+            page << "if(Ext.get('no_attachments_row')) Ext.get('no_attachments_row').remove();"
+            page.insert_html(:bottom, "uploaded_attachments", "<tr id=\"uploaded_attachment_#{@attachment.id}\"><td>#{h(@attachment.title)}</td><td>#{h(@attachment.filename)}</td><td>#{(@attachment.size||0)/1024} KB</td></tr>")
+            page.call("treePanel.refreshNodesOf", @parent_node.id)
+            @attachment = Attachment.new # To reset fields
+            page.replace_html("right_panel_form", :partial => 'form')
           end
         end
       else
         format.html { render :action => :new, :status => :unprocessable_entity }
         format.xml  { render :xml => @attachment.errors, :status => :unprocessable_entity }
         format.js do
-          responds_to_parent do
-            render :update, :status => :unprocessable_entity do |page|
-              # rerender form with error messages:
-              page.replace_html('right_panel_form', :partial => 'form')
-            end
+          responds_to_parent do |page|
+            # rerender form with error messages:
+            page.replace_html('right_panel_form', :partial => 'form')
           end
         end
       end
@@ -112,7 +108,7 @@ class Admin::AttachmentsController < Admin::AdminController
 
     def upload_file
       if @attachment.filename == "#{params[:basename]}.#{params[:baseformat]}" || @attachment.filename == params[:basename]
-        send_file(@attachment.create_temp_file, 
+        send_file(@attachment.file.path, 
                   :type        => @attachment.content_type, 
                   :filename    => @attachment.filename, 
                   :length      => @attachment.size, 

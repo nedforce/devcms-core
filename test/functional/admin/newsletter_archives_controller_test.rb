@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::NewsletterArchivesControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
@@ -91,7 +91,7 @@ class Admin::NewsletterArchivesControllerTest < ActionController::TestCase
       create_newsletter_archive({ :title => nil }, { :commit_type => 'preview' })
       assert_response :unprocessable_entity
       assert assigns(:newsletter_archive).new_record?
-      assert assigns(:newsletter_archive).errors.on(:title)
+      assert assigns(:newsletter_archive).errors[:title].any?
       assert_template 'new'
     end
   end
@@ -104,7 +104,7 @@ class Admin::NewsletterArchivesControllerTest < ActionController::TestCase
     end
     assert_response :unprocessable_entity
     assert assigns(:newsletter_archive).new_record?
-    assert assigns(:newsletter_archive).errors.on(:title)
+    assert assigns(:newsletter_archive).errors[:title].any?
   end
 
   def test_should_get_edit
@@ -154,7 +154,7 @@ class Admin::NewsletterArchivesControllerTest < ActionController::TestCase
     put :update, :id => newsletter_archive, :newsletter_archive => { :title => nil }, :commit_type => 'preview'
 
     assert_response :unprocessable_entity
-    assert assigns(:newsletter_archive).errors.on(:title)
+    assert assigns(:newsletter_archive).errors[:title].any?
     assert_equal old_title, newsletter_archive.reload.title
     assert_template 'edit'
   end
@@ -164,7 +164,7 @@ class Admin::NewsletterArchivesControllerTest < ActionController::TestCase
 
     put :update, :id => newsletter_archives(:devcms_newsletter_archive).id, :newsletter_archive => {:title => nil}
     assert_response :unprocessable_entity
-    assert assigns(:newsletter_archive).errors.on(:title)
+    assert assigns(:newsletter_archive).errors[:title].any?
   end
 
 protected

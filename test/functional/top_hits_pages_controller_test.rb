@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path('../../test_helper.rb', __FILE__)
 
 class TopHitsPagesControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
