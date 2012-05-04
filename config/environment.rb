@@ -14,7 +14,7 @@ end
 
 config.gem 'acts-as-taggable-on',   :version => '2.0.3',                              :source => "http://gemcutter.org"
 config.gem 'addressable',           :version => "~> 2.1",   :lib => 'addressable/uri'
-config.gem 'ancestry',              :version => '= 1.2.5'
+config.gem 'ancestry',              :version => '~> 1.3.0'
 config.gem 'dsl_accessor',          :version => '0.3.3'
 config.gem 'dynamic_attributes',    :version => '~> 1.1.3'  
 config.gem 'fastercsv'

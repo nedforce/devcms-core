@@ -83,6 +83,9 @@ class Node < ActiveRecord::Base
   # Prevents the root +Node+ from being destroyed.
   before_destroy :prevent_root_destruction
   
+  # Sets the sub content type
+  before_validation :set_sub_content_type
+  
   # Delegate tree calls to use Ancestry. Ensure this is added *after* other before/after filters.
   include Node::TreeDelegation
   
@@ -118,7 +121,7 @@ class Node < ActiveRecord::Base
 
   INDEX_DATETIME_FORMAT = "%Y%m%d%H%M"
 
-  attr_protected :hits
+  attr_protected :hits, :content_type, :sub_content_type
 
   has_many :node_categories, :dependent => :destroy
   has_many :categories, :through => :node_categories
@@ -165,8 +168,6 @@ class Node < ActiveRecord::Base
   attr_protected :publishable, :deleted_at
 
   before_validation :set_publication_start_date_to_current_time_if_blank
-
-  before_validation_on_create :set_sub_content_type
 
   # After update to private or hidden or publishable reindex all children
   before_update do |node| 
@@ -705,7 +706,7 @@ protected
   end
   
   def set_sub_content_type
-    if self.content
+    if self.new_record? && self.content
       self.sub_content_type = self.content.class.name
     end
   end

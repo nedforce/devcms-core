@@ -80,7 +80,7 @@ namespace :db do
     task(:nodes => :environment) do
       ActiveRecord::Base.transaction do
         root_section = Site.create!(:title => 'Website', :description => Faker::Lorem.sentence, :expiration_email_subject => "Content onder uw beheer is verouderd", :expiration_email_body => "<p>De onderstaande pagina is al enige tijd niet meer bijgewerkt en is inmiddels verlopen.</p><p>Gelieve de inhoud van deze pagina's te controleren en bij te werken.</p><p>Neem voor meer informatie contact op met de webredactie.</p>")
-        root_section.node.update_attributes!(:layout => "default", :layout_variant => 'default', :layout_configuration => {'template_color'=>'default'})
+        root_section.node.update_attributes!(:layout => "deventer", :layout_variant => 'deventer', :layout_configuration => {'template_color'=>'default'})
 
         news_archive = NewsArchive.create!(:parent =>root_section.node, :title => 'Home', :description => Faker::Lorem.sentence)
         news_archive.node.update_attributes!(:url_alias => 'home-nieuws', :show_in_menu => true)
