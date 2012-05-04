@@ -1,0 +1,9 @@
+%h2 Aanmelden
+- if event_registration = event.registration_for_user(current_user)
+  U heeft zich bij dit evenement aangemeld voor
+  %strong= "#{event_registration.people_count} personen."
+  U kunt zich ook weer
+  = link_to_remote "afmelden.", :url => event_event_registration_path(event, event_registration), :method => :delete
+- else
+  Voor dit evenement moet u zich aanmelden.
+  #event_registration_form= render :partial => '/event_registrations/form', :locals => { :event => event, :event_registration => event.event_registrations.build }

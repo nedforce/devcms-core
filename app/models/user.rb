@@ -98,6 +98,8 @@ class User < ActiveRecord::Base
   
   has_many :versions,        :foreign_key => :editor_id, :dependent => :destroy
   
+  has_many :event_registrations, :dependent => :destroy
+
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of     :password,                :if => :password_required?
   validates_presence_of     :password_confirmation,   :if => :password_required?

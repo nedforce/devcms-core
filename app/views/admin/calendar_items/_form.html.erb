@@ -55,6 +55,8 @@
 
 <%- now = Time.now -%>
 
+<%= record.errors.full_messages %>
+
 <%= form.date_field  :date,                 :label => t('calendars.date'),            :value => record.start_time || now %>
 <%= form.time_field  :start_time,           :label => t('calendars.start_time_time'), :value => record.start_time || now %>
 <%= form.time_field  :end_time,             :label => t('calendars.end_time_time'),   :value => record.end_time   || now + 1.hour %>
@@ -63,6 +65,7 @@
 <%= form.html_editor :body,                 :label => t('calendars.body'), :height => 100, :heading => 'h3' %>
 
 <%= form.check_box   :commentable,          :label => t('shared.commentable') -%>
+<%= form.check_box   :subscription_enabled %>
 
 <% javascript_tag do %>
   var repeatingCalendarItemFields = Ext.get('repeatingCalendarItemFields');

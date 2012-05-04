@@ -144,6 +144,10 @@ class CalendarItem < Event
     [ body, location_description ].compact.join(' ')
   end
 
+  def registration_for_user(user)
+    event_registrations.first(:conditions => {:user_id => user.id})
+  end
+
 protected
 
   # Validate that calendar items ends later than it starts.

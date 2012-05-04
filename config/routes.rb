@@ -14,7 +14,9 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :combined_calendars,                              :member => { :tomorrow => :get }
   map.resources :contact_boxes,       :only => :show
   map.resources :contact_forms,       :only => :show,             :member => { :send_message => :post }
-  map.resources :events,              :only => :show
+  map.resources :events,              :only => :show do |event|
+    event.resources :event_registrations, :only => [ :create, :destroy ]
+  end
   map.resources :feeds,               :only => :show
   map.resources :forums,              :only => :show
   map.resources :forum_topics,        :only => :show do |forum_topic|

@@ -14,6 +14,7 @@
 # * +end_time+ - The end time of the event.
 # * +type+ - The type of the event.
 # * +calendar+ - The calendar with which this event is associated.
+# * +subscription_enabled+ - If this event is to be subscribed for.
 #
 # Preconditions
 #
@@ -42,6 +43,9 @@ class Event < ActiveRecord::Base
   
   has_parent :calendar
   
+  has_many :event_registrations, :dependent => :destroy
+  has_many :users, :through => :event_registrations
+  
   # Returns a URL alias for a given +node+.
   def path_for_url_alias(node)
     "#{self.start_time.year}/#{self.start_time.month}/#{self.start_time.day}/#{self.title}"
@@ -50,6 +54,13 @@ class Event < ActiveRecord::Base
   # Returns the OWMS type.
   def self.owms_type
     I18n.t('owms.meeting_info')
+  end
+  
+  def self.send_registration_notfications
+    all(:conditions => ["start_time <= ? AND subscription_enabled = ?", Time.now + 1.day, true]).each do |event|
+      event.update_attribute :subscription_enabled, false
+      EventMailer.deliver_event_registrations(event)
+    end
   end
   
 protected

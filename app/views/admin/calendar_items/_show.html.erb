@@ -62,5 +62,15 @@
       <%= render_images -%>
       <%= render_attachments %>
     <% end %>
+
+    <% if record.subscription_enabled %>
+      <h3>Gastenlijst</h3>
+      <p>Er zijn in totaal <%= record.event_registrations.sum :people_count %> gasten.</p>
+      <ul>
+        <% record.event_registrations.each do |event_registration| %>
+          <li><%= "#{event_registration.user.full_name}, #{pluralize event_registration.people_count, 'persoon', 'personen'}" %></li>
+        <% end %>
+      </ul>
+    <% end %>
   </div>
 </div>

@@ -20,6 +20,7 @@ nl:
       contact_form: Contactformulier
       contact_form_field: Invoerveld
       course: Cursus
+      event_registration: Evenementinschrijving
       external_link: Externe link
       feed: RSS feed
       forum: Forum
@@ -75,6 +76,7 @@ nl:
         end_time: Eindtijd
         start_time: Starttijd
         title: Titel
+        subscription_enabled: Inschrijven toestaan?
       carrousel:
         display_time: Weergavetijd
       category:
@@ -126,6 +128,10 @@ nl:
         registration_information: Informatie over aanmelden
         target_group: Doelgroep
         title: Naam product
+      event_registration:
+        event: Evenement
+        user: U
+        people_count: Aantal personen
       external_link:
         url: URL
       feed:
