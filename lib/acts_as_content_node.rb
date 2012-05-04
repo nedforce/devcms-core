@@ -268,7 +268,8 @@ module Acts
     private
   
       def associate_node
-        self.build_node :content => self
+        node = self.build_node :content => self
+        node.sub_content_type = self.class.name
       end
 
       def update_url_alias_if_title_changed
