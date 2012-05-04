@@ -82,10 +82,7 @@ class Node < ActiveRecord::Base
   
   # Prevents the root +Node+ from being destroyed.
   before_destroy :prevent_root_destruction
-  
-  # Sets the sub content type
-  before_validation :set_sub_content_type
-  
+    
   # Delegate tree calls to use Ancestry. Ensure this is added *after* other before/after filters.
   include Node::TreeDelegation
   
@@ -702,12 +699,6 @@ protected
       self.category_attributes.each do |id, attrs|
         self.categories.find(id).update_attributes(attrs)
       end
-    end
-  end
-  
-  def set_sub_content_type
-    if self.new_record? && self.content
-      self.sub_content_type = self.content.class.name
     end
   end
   
