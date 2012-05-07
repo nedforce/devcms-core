@@ -374,7 +374,7 @@ class User < ActiveRecord::Base
   def to_s
     full_name.present? ? "#{full_name} (#{login})" : login
   end
-  
+
   def promote!
 	  self.update_attribute :type, 'PrivilegedUser'
   end
@@ -430,12 +430,13 @@ protected
   # Determens the password alphabet size
   def self.password_alphabet(password)
     alphabet = 0
-    lower = false
-    upper = false
-    numbers = false
+    lower    = false
+    upper    = false
+    numbers  = false
     symbols1 = false
     symbols2 = false
-    other = ""
+    other    = ''
+
     password.each_char do |c|
       if !lower && c.match('[a-z]') != nil
         lower = true
