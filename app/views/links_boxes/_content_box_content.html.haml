@@ -2,7 +2,7 @@
 - links      = node.children.accessible.with_content_type(%w(InternalLink ExternalLink)).include_content.all(:limit => node.content_box_number_of_items).map { |n| n.content }
 
 - unless links.empty?  
-  - header_image = node.children.with_content_type('Image').include_content.first.try(:content)
+  - header_image = node.children.accessible.with_content_type('Image').include_content.first.try(:content)
   
   - if header_image.present?
     = image_tag(content_box_header_image_path(header_image, :format => :jpg), :alt => h(header_image.title), :class => 'content_box_header')

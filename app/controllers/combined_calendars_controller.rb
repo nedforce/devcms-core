@@ -14,6 +14,8 @@ class CombinedCalendarsController < ApplicationController
         @date = Date.parse(params[:date]) rescue Date.today
         @date = Date.today if !@date.valid_gregorian_date?
 
+        raise ActiveRecord::RecordNotFound unless @calendar.calendar_items.date_in_range?(@date)
+
         @calendar_items = @calendar.calendar_items.find_all_for_month_of(@date).group_by {|ci| ci.start_time.mday }
         render :template => 'calendars/show'
       end

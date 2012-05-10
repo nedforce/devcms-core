@@ -34,11 +34,16 @@ module CalendarItemsAssociationExtensions #:nodoc:
   end
 
   def exists_after_date?(date = Date.today) #:nodoc:
-    gregorian_date?(date) ? self.accessible.all(:conditions => ['? < date(end_time) ', date], :limit => 1).size > 0 : false
+    gregorian_date?(date) ? self.accessible.exists?(['? < date(end_time) ', date]) : false
   end
 
   def exists_before_date?(date = Date.today) #:nodoc:
-    gregorian_date?(date) ? self.accessible.all(:conditions => ['? > date(start_time)', date], :limit => 1).size > 0 : false
+    gregorian_date?(date) ? self.accessible.exists?(['? > date(start_time)', date]) : false
+  end
+
+  # Checks if the date is between the first and the last known event
+  def date_in_range?(date = Date.now)
+    gregorian_date?(date) ? (self.accessible.minimum(:start_time).to_date..self.maximum(:end_time).to_date).include?(date) : false
   end
 
   def current_and_future(time = Time.now, limit = 10) #:nodoc:
