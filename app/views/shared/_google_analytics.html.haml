@@ -1,0 +1,12 @@
+- if current_site.content.analytics_code.present? || Settler[:google_analytics_key].present?
+  / Google Analytics code
+  :javascript
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', '#{escape_javascript(current_site.content.analytics_code || Settler[:google_analytics_key])}']);
+    _gaq.push(['_trackPageview']);
+
+    (function () {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
