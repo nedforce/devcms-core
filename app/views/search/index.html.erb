@@ -1,11 +1,11 @@
 <% content_for :css do %>
-  <%= stylesheet_link_tag 'calendar_date_select/plain.css', :plugin => 'devcms-core' %>
+  <%= stylesheet_link_tag 'calendar_date_select/plain.css', :plugin => 'calendar_date_select' %>
 <% end %>
 
 <% content_for :javascript do %>
-  <%= javascript_include_tag 'calendar_date_select/calendar_date_select.js', :plugin => 'devcms-core' %>
-  <%= javascript_include_tag 'calendar_date_select/locale/nl.js',            :plugin => 'devcms-core' %>
-  <%= javascript_include_tag 'calendar_date_select/format_dutch.js',         :plugin => 'devcms-core' %>
+  <%= javascript_include_tag 'calendar_date_select/calendar_date_select.js', :plugin => 'calendar_date_select' %>
+  <%= javascript_include_tag 'calendar_date_select/locale/nl.js',            :plugin => 'calendar_date_select' %>
+  <%= javascript_include_tag 'calendar_date_select/format_dutch.js',         :plugin => 'calendar_date_select' %>
   <%= javascript_include_tag 'search.js',                                    :plugin => 'devcms-core' %>
   <% javascript_tag do %>
   function show_advanced_search_options() {
@@ -59,8 +59,8 @@
       <div class="search_field_wrapper clearfix">
         <div class='search_description'><%=t 'search.in_period' -%>: </div>
         <div class='search_field'>
-          <%= calendar_date_select_tag 'from', @from, :popup => :force, :image => 'icons/calendar.png' %>
-          <%= calendar_date_select_tag 'to',   @to,   :popup => :force, :image => 'icons/calendar.png' %>
+          <%= calendar_date_select_tag 'from', @from, :image => 'icons/calendar.png' %>
+          <%= calendar_date_select_tag 'to',   @to,   :image => 'icons/calendar.png' %>
         </div>
       </div>
 
