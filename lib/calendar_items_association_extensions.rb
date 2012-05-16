@@ -43,7 +43,9 @@ module CalendarItemsAssociationExtensions #:nodoc:
 
   # Checks if the date is between the first and the last known event
   def date_in_range?(date = Date.now)
-    gregorian_date?(date) ? (self.accessible.minimum(:start_time).to_date..self.maximum(:end_time).to_date).include?(date) : false
+    min = self.accessible.minimum(:start_time)
+    max = self.accessible.maximum(:end_time) || self.accessible.maximum(:start_time)
+    gregorian_date?(date) ? (min.to_date..max.to_date).include?(date) : false
   end
 
   def current_and_future(time = Time.now, limit = 10) #:nodoc:
