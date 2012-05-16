@@ -400,11 +400,6 @@ protected
     @current_user = RoleAssignment.first(:conditions => { :name => 'admin' }, :include => :user).user if local_request?
   end
 
-  # Login as the Luminis user if the request is done by the crawler.
-  def login_as_luminis_user_if_required
-    @current_user = User.find_by_login('luminis') if !logged_in? && (request.remote_ip == LUMINIS_CRAWLER_IP)
-  end
-
   # Parse the publication start date corresponding to the passed in +publication_start_date_day+ and +publication_start_date_time+ parameters.
   def parse_publication_start_date
     parse_date(:publication_start_date)
