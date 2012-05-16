@@ -1,12 +1,12 @@
 <% content_for :css do %>
-  <%= stylesheet_link_tag 'calendar_date_select/plain.css', :plugin => 'calendar_date_select' %>
+  <%= stylesheet_link_tag 'calendar_date_select/plain.css', :plugin => 'devcms-core' %>
 <% end %>
 
 <% content_for :javascript do %>
-  <%= javascript_include_tag 'calendar_date_select/calendar_date_select.js', :plugin => 'calendar_date_select' %>
-  <%= javascript_include_tag 'calendar_date_select/locale/nl.js',            :plugin => 'calendar_date_select' %>
-  <%= javascript_include_tag 'calendar_date_select/format_dutch.js',         :plugin => 'calendar_date_select' %>
-  <%= javascript_include_tag 'search.js',                                    :plugin => 'devcms-core'          %>
+  <%= javascript_include_tag 'calendar_date_select/calendar_date_select.js', :plugin => 'devcms-core' %>
+  <%= javascript_include_tag 'calendar_date_select/locale/nl.js',            :plugin => 'devcms-core' %>
+  <%= javascript_include_tag 'calendar_date_select/format_dutch.js',         :plugin => 'devcms-core' %>
+  <%= javascript_include_tag 'search.js',                                    :plugin => 'devcms-core' %>
   <% javascript_tag do %>
   function show_advanced_search_options() {
     $('advanced_search').removeClassName("hidden");
@@ -19,7 +19,7 @@
     $('top_search_button').removeClassName("hidden");
     $('show_advanced_options').removeClassName("hidden");
   }
-  document.observe('dom:loaded', function() {
+  document.observe('dom:loaded', function () {
     $('static_programme_and_project_selector').hide();
     $('dynamic_programme_and_project_selectors').removeClassName("hidden");
   });
@@ -74,36 +74,36 @@
                    children.unshift([t('search.all_in_programme'), category.id]) 
                ]
              end %>
-          <%= select_tag 'category', grouped_options_for_select(categories,  @category.present? ? @category.id : nil, t('search.select_programme')) -%>
+          <%= select_tag 'category', grouped_options_for_select(categories, @category.present? ? @category.id : nil, t('search.select_programme')) -%>
        </div>
       </div>
 
-    <% if Category.root_categories.present? %>
-      <div id="dynamic_programme_and_project_selectors" class='hidden'>
-          <div class="search_field_wrapper clearfix">
-            <div class='search_description'><%=t 'search.in_programme' -%>: </div>
-            <div class='search_field'>
-              <%= select_tag 'programme', options_for_select(Category.root_categories.map { |category| [ category.name, category.id ] }.unshift( [ t('search.select_programme'), nil ]),  @programme.present? ? @programme.id : nil) -%>
-           </div>
-          </div>
+      <% if Category.root_categories.present? %>
+        <div id="dynamic_programme_and_project_selectors" class='hidden'>
+            <div class="search_field_wrapper clearfix">
+              <div class='search_description'><%=t 'search.in_programme' -%>: </div>
+              <div class='search_field'>
+                <%= select_tag 'programme', options_for_select(Category.root_categories.map { |category| [ category.name, category.id ] }.unshift( [ t('search.select_programme'), nil ]), @programme.present? ? @programme.id : nil) -%>
+             </div>
+            </div>
 
-          <div id="project_selection_field">
-            <%= render :partial => 'project_select' -%>
-          </div>
-      </div>
-    <% end %>
+            <div id="project_selection_field">
+              <%= render :partial => 'project_select' -%>
+            </div>
+        </div>
+      <% end %>
 
       <div class="search_field_wrapper clearfix">
-        <div class='search_description'><%= I18n.t('search.sort_by') %>: </div>
+        <div class='search_description'><%= t 'search.sort_by' -%>: </div>
         <div class='search_field'>
-          <%= radio_button_tag('sort', 'relevance', params[:sort] != 'date') %> <%= I18n.t('search.relevance') %>
-          <%= radio_button_tag('sort', 'date',      params[:sort] == 'date') %> <%= I18n.t('search.date')      %>
+          <%= radio_button_tag('sort', 'relevance', params[:sort] != 'date') %> <%= t 'search.relevance' %>
+          <%= radio_button_tag('sort', 'date',      params[:sort] == 'date') %> <%= t 'search.date'      %>
         </div>
       </div>
 
       <div class="clearfix">
         <div id="bottom_search_button">
-        <%= submit_tag(I18n.t('search.search'), :class => 'submit', :name => 'advanced') -%>
+        <%= submit_tag(t('search.search'), :class => 'submit', :name => 'advanced') -%>
         </div>
 
         <div id="hide_advanced_options">
