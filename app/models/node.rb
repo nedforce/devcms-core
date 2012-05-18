@@ -181,8 +181,8 @@ class Node < ActiveRecord::Base
   # Prevents the root +Node+ from being marked as deleted.
   before_paranoid_delete :prevent_root_destruction
 
-  # Make sure the associated content is removed (or marked as deleted) when the current node is marked as deleted
-  after_paranoid_delete :remove_associated_content
+  # Make sure the associated meta content is removed (or marked as deleted) for the entire subtree when the current node is marked as deleted
+  before_paranoid_delete :remove_associated_meta_content
   
   named_scope :sorted_by_position, :order => 'nodes.position'
   
@@ -638,33 +638,33 @@ protected
     raise ActiveRecord::ActiveRecordError, I18n.t('activerecord.errors.models.node.attributes.base.cant_remove_root') if self.root?
   end
   
-  def remove_associated_content
-    Node.unscoped do
-      deleted_node_ids = self.subtree_ids
-    
+  def remove_associated_meta_content
+    nodes_to_be_paranoid_deleted_ids = self.subtree_ids
+  
+    self.transaction do
       # Destroy all content copies that are associated with any of the nodes in the subtree and are not a descendant
-      ContentCopy.find_each(:include => :node, :conditions => [ 'copied_node_id IN (:deleted_node_ids) AND nodes.id NOT IN (:deleted_node_ids)', { :deleted_node_ids => deleted_node_ids } ]) do |content_copy|
+      ContentCopy.find_each(:include => :node, :conditions => [ 'copied_node_id IN (:nodes_to_be_paranoid_deleted_ids) AND NOT nodes.id IN (:nodes_to_be_paranoid_deleted_ids)', { :nodes_to_be_paranoid_deleted_ids => nodes_to_be_paranoid_deleted_ids } ]) do |content_copy|
         content_copy.destroy
       end
-      
+    
       # Destroy all internal links that are associated with any of the nodes in the subtree and are not a descendant
-      InternalLink.find_each(:include => :node, :conditions => [ 'linked_node_id IN (:deleted_node_ids) AND nodes.id NOT IN (:deleted_node_ids)', { :deleted_node_ids => deleted_node_ids } ]) do |internal_link|
+      InternalLink.find_each(:include => :node, :conditions => [ 'linked_node_id IN (:nodes_to_be_paranoid_deleted_ids) AND NOT nodes.id IN (:nodes_to_be_paranoid_deleted_ids)', { :nodes_to_be_paranoid_deleted_ids => nodes_to_be_paranoid_deleted_ids } ]) do |internal_link|
         internal_link.destroy
       end
-            
+          
       # Unset frontpage for Sections
-      Section.update_all({ :frontpage_node_id => nil }, { :frontpage_node_id => deleted_node_ids })
+      Section.update_all({ :frontpage_node_id => nil }, { :frontpage_node_id => nodes_to_be_paranoid_deleted_ids })
 
       # Delete any node categories, role assignments, synonyms or abbreviations that are associated with any of the nodes in the subtree
       [ NodeCategory, RoleAssignment, Synonym, Abbreviation ].each do |klass|
-        klass.delete_all(:node_id => deleted_node_ids)
+        klass.delete_all(:node_id => nodes_to_be_paranoid_deleted_ids)
       end
-      
+    
       # Do the same for all comments
-      Comment.delete_all(:commentable_id => deleted_node_ids)
-      
+      Comment.delete_all(:commentable_id => nodes_to_be_paranoid_deleted_ids)
+    
       # Delete content representations where appropriate 
-      ContentRepresentation.delete_all [ 'parent_id IN (:deleted_node_ids) OR content_id IN (:deleted_node_ids)', { :deleted_node_ids => deleted_node_ids } ]
+      ContentRepresentation.delete_all [ 'parent_id IN (:nodes_to_be_paranoid_deleted_ids) OR content_id IN (:nodes_to_be_paranoid_deleted_ids)', { :nodes_to_be_paranoid_deleted_ids => nodes_to_be_paranoid_deleted_ids } ]
     end
   end
 

@@ -75,6 +75,7 @@ nl:
     edit: Bewerken
     rights: Rechten
     settings_button: Instellingen
+    trash_button: Prullenbak
     sitemap: Sitemap
     succesfully_deleted: Kolomelement succesvol verwijderd.
     synonyms_button: Synoniemen
@@ -1068,6 +1069,25 @@ nl:
     edit: Bewerken van top 10 pagina
     failed: Kon top 10 pagina niet opslaan.
     saved: Top 10 pagina opgeslagen!
+  trash:
+    content_type: Content-type
+    title: Titel
+    path: Pad
+    deleted_at: Verwijderd om
+    count_msg: 'Verwijderde items {0} tot {1} van {2} worden weergegeven'
+    empty_msg: Geen verwijderde items om weer te geven
+    of_page: "van {0}"
+    page: Pagina
+    restore: Terugzetten
+    restore_tooltip: Klik hier om het geselecteerde item terug te zetten.
+    clear: Leegmaken
+    clear_tooltip: Klik hier om de prullenbak leeg te maken.
+    select_one: Kies tenminste 1 verwijderd item
+    confirm_clear: Weet u zeker dat u de prullenbak wilt leegmaken? Deze actie kan niet ongedaan gemaakt worden!
+    confirm_restoration: Weet u zeker dat u dit verwijderde item wilt terugzetten?
+    message: Bericht
+    clear_failed: Prullenbak leegmaken mislukt. Probeer het opnieuw.
+    restore_failed: Terugzetten mislukt. Probeer het opnieuw.
   users:
     invite: Uitnodigen
     invite_tooltip: Gebruiker uitnodigen

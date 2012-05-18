@@ -123,7 +123,7 @@ class User < ActiveRecord::Base
 
   validate :should_not_allow_reserved_login
 
-  validate :privileged_users_password_should_be_strong
+  validate :privileged_users_password_should_be_strong, :unless => Proc.new { Rails.env.development? }
 
   # Make sure the user's password (stored in the virtual attribute +password+)
   # is stored as a hash after the user is created/updatedRoleAssignment.

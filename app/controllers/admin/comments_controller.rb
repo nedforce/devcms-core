@@ -9,7 +9,7 @@ class Admin::CommentsController < Admin::AdminController
   skip_before_filter :set_actions
   skip_before_filter :find_node    
 
-  require_role [ 'admin', 'final_editor', 'editor'], :any_node => true, :except => :new
+  require_role [ 'admin', 'final_editor' ], :any_node => true
 
   layout false
 

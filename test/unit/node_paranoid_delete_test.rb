@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+ require File.dirname(__FILE__) + '/../test_helper'
 
 class NodeParanoidDeleteTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -149,6 +149,9 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
     assert !Node.exists?(@economie_section_node)
     assert !Node.exists?(node)
     
+    assert !@economie_section_node.content.reload.present?
+    assert !node.content.reload.present?
+    
     assert !ContentCopy.exists?(cc1)
     assert !ContentCopy.exists?(cc2)
     assert !ContentCopy.exists?(cc3)
@@ -191,6 +194,161 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
       page.node.paranoid_delete!
     end
   end
+  
+  def test_top_level_deleted_should_not_include_paranoid_deleted_descendants
+    node = create_node(@economie_section_node)
+    
+    assert Node.exists?(node)
+    
+    @economie_section_node.paranoid_delete!
+    
+    assert !Node.exists?(@economie_section_node)
+    assert !Node.exists?(node)
+    
+    assert Node.deleted.include?(@economie_section_node)
+    assert Node.deleted.include?(node)
+    
+    assert Node.top_level_deleted.include?(@economie_section_node)
+    assert !Node.top_level_deleted.include?(node)
+  end
+  
+  def test_paranoid_restore_should_restore_paranoid_deleted_node
+    @economie_section_node.paranoid_delete!
+    
+    assert !Node.exists?(@economie_section_node)
+    
+    assert Node.deleted.include?(@economie_section_node)
+    
+    @economie_section_node.paranoid_restore!
+    
+    assert Node.exists?(@economie_section_node)
+    
+    assert !Node.deleted.include?(@economie_section_node)
+    
+    assert_nil @economie_section_node.reload.deleted_at
+  end
+  
+  def test_paranoid_restore_should_not_restore_paranoid_deleted_node_if_parent_is_also_paranoid_deleted
+    node = create_node(@economie_section_node)
+    
+    assert Node.exists?(node)
+    
+    @economie_section_node.paranoid_delete!
+  
+    assert !Node.exists?(@economie_section_node)
+    assert !Node.exists?(node)
+    
+    assert_raises RuntimeError do
+      node.paranoid_restore!
+    end
+  end
+  
+  def test_paranoid_restore_should_restore_paranoid_deleted_descendants
+    node = create_node(@economie_section_node)
+    
+    assert Node.exists?(node)
+    
+    @economie_section_node.paranoid_delete!
+    
+    assert !Node.exists?(@economie_section_node)
+    assert !Node.exists?(node)
+    
+    @economie_section_node.paranoid_restore!
+    
+    assert Node.exists?(@economie_section_node)
+    assert Node.exists?(node)
+    
+    assert !Node.deleted.include?(@economie_section_node)
+    assert !Node.deleted.include?(node)
+    
+    assert_nil @economie_section_node.reload.deleted_at
+    assert_nil node.reload.deleted_at
+  end
+  
+  def test_paranoid_restore_should_restore_associated_content
+    node = create_node(@economie_section_node)
+    
+    cc = create_content_copy(@economie_section_node, @economie_section_node)
+    
+    assert Node.exists?(node)
+    assert ContentCopy.exists?(cc)
+    
+    @economie_section_node.paranoid_delete!
+    
+    assert !Node.exists?(@economie_section_node)
+    assert !Node.exists?(node)
+    assert !ContentCopy.exists?(cc)
+    
+    @economie_section_node.paranoid_restore!
+    
+    assert Node.exists?(@economie_section_node)
+    assert Node.exists?(node)
+    assert ContentCopy.exists?(cc)
+    
+    assert !Node.deleted.include?(@economie_section_node)
+    assert !Node.deleted.include?(node)
+  
+    assert @economie_section_node.content.present?
+    assert node.content.present?
+    
+    assert_nil @economie_section_node.content.reload.deleted_at
+    assert_nil node.content.reload.deleted_at
+    assert_nil cc.reload.deleted_at
+  end
+  
+  def test_delete_all_paranoid_deleted_content_should_not_delete_non_paranoid_deleted_content
+    node = create_node(@economie_section_node)
+    
+    Node.delete_all_paranoid_deleted_content!
+    
+    assert Node.exists?(node)
+    assert node.content.present?
+  end
+  
+  def test_delete_all_paranoid_deleted_content_should_delete_paranoid_deleted_content
+    node = create_node(@economie_section_node)
+    content = node.content
+    
+    Node.delete_all_paranoid_deleted_content!
+    
+    assert Node.exists?(node)
+    assert node.content.present?
+    
+    @economie_section_node.paranoid_delete!
+    
+    assert !Node.exists?(@economie_section_node)
+    assert !Node.exists?(node)
+    assert !Section.exists?(@economie_section)
+    assert !Page.exists?(content)
+    
+    Node.send(:with_exclusive_scope) do
+      assert Node.exists?(@economie_section_node)
+      assert Node.exists?(node)
+    end
+    
+    Section.send(:with_exclusive_scope) do
+      assert Section.exists?(@economie_section)
+    end
+    
+    Page.send(:with_exclusive_scope) do
+      assert Page.exists?(content)
+    end
+    
+    Node.delete_all_paranoid_deleted_content!
+    
+    Node.send(:with_exclusive_scope) do
+      assert !Node.exists?(@economie_section_node)
+      assert !Node.exists?(node)
+    end
+    
+    Section.send(:with_exclusive_scope) do
+      assert !Section.exists?(@economie_section)
+    end
+    
+    Page.send(:with_exclusive_scope) do
+      assert !Page.exists?(content)
+    end
+  end
 
 protected
 
@@ -230,5 +388,6 @@ protected
   def create_comment(target_node)
     Comment.create({ :user => users(:arthur), :commentable => target_node, :comment => "I don't like it!" })
   end
+
 
 end

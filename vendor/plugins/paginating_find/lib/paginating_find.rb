@@ -80,6 +80,8 @@ module PaginatingFind
         # during enumerator callback invocation
         cached_scoped_methods = self.scoped_methods.last
 
+        skip_scoping = page_options.delete(:skip_scoping)
+
         PagingEnumerator.new(page_size, total_size, auto, current, first) do |page|
           args.pop if args.last.is_a?(Hash)
 
@@ -87,10 +89,16 @@ module PaginatingFind
           options[:offset] = (page - 1) * page_size
           options[:limit] = (page_size) < total_size ? page_size : total_size
 
-          if cached_scoped_methods
+          puts skip_scoping
+
+          if cached_scoped_methods && !skip_scoping
             # :with_scope options were specified, so
             # the with_scope method must be invoked
             self.with_scope(cached_scoped_methods) do
+              find_without_pagination(*(args << options))
+            end
+          elsif skip_scoping
+            self.with_exclusive_scope do
               find_without_pagination(*(args << options))
             end
           else

@@ -97,7 +97,8 @@ module Acts
         include InstanceMethods
         extend ClassMethods
       
-        define_callbacks :before_paranoid_delete, :after_paranoid_delete
+        define_callbacks  :before_paranoid_delete, :after_paranoid_delete,
+                          :before_paranoid_restore, :after_paranoid_restore
   
         has_one :node, :as => :content, :autosave => true, :validate => true
 
@@ -119,7 +120,11 @@ module Acts
 
         after_save :update_search_index
         
-        after_paranoid_delete :copy_deleted_at_from_node, :delete_all_associated_versions
+        before_paranoid_delete :delete_all_associated_versions
+        
+        after_paranoid_delete :copy_deleted_at_from_node
+        
+        after_paranoid_restore :clear_deleted_at
   
         delegate :update_search_index, :expirable?, :expiration_required?, :expired?, :expiration_container?, :to => :node
   
@@ -300,12 +305,27 @@ module Acts
       def copy_deleted_at_from_node
         Node.unscoped do
           node_deleted_at = self.node.deleted_at
+          
+          self.deleted_at = node_deleted_at
+          self.updated_at = node_deleted_at
+          
           self.class.update_all({ :deleted_at => node_deleted_at, :updated_at => node_deleted_at }, self.class.primary_key => id)
         end
       end
 
       def delete_all_associated_versions
         self.versions.delete_all
+      end
+      
+      def clear_deleted_at
+        node_updated_at = self.node.updated_at
+        
+        self.deleted_at = nil
+        self.updated_at = node_updated_at
+        
+        self.class.send(:with_exclusive_scope) do
+          self.class.update_all({ :deleted_at => nil, :updated_at => node_updated_at }, self.class.primary_key => id)
+        end
       end
     end
   

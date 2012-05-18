@@ -213,11 +213,12 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
     }, // end onBeforeMove
 
     onMove: function (tree, node, oldParent, newParent, index) {
-        /* disable node */
-        tree.disable();
         /* adds the load mask if it does not exist, can be moved to TreePanel.js */
         if(tree.loadMask == undefined) { tree.loadMask = new Ext.LoadMask(tree.body, {msg: I18n.t('loading','generic')}); }
         tree.loadMask.show();
+        
+        /* disable node */
+        tree.disable();
         /* renumber if necessary */
         Ext.each([oldParent, newParent], function (prt) {
             if (prt.numberChildren) { prt.renumberChildren(); }
@@ -235,28 +236,36 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
             params: Ext.ux.prepareParams(this.baseParams, Ext.apply(customParams, { _method: 'put' })),
             scope: this,
             failure: function (response, options) {
-                tree.enable(); // renenable node
-                tree.loadMask.hide();
-                Ext.ux.alertResponseError(response, I18n.t('move_failed', 'nodes'), false);
                 // reset structure:
                 this.remove(); // remove node from its old parent
                 oldParent.reload(); // reload its old parent
-            },
-            success: function (response, options) {
+                Ext.ux.alertResponseError(response, I18n.t('move_failed', 'nodes'), false);
                 tree.enable(); // renenable node
                 tree.loadMask.hide();
+            },
+            success: function (response, options) {
                 newParent.leaf = false;
                 newParent.renderIndent();
 
                 // Reconstruct menus as options may have changed due to a new children count, like sorting.
                 oldParent.constructMenu();
                 newParent.constructMenu();
+                tree.enable(); // renenable node
+                tree.loadMask.hide();
             }
         });
     },// end onMove
 
     onDelete: function () {
-        this.ui.addClass('x-tree-node-loading');
+        tree = this.getOwnerTree();
+      
+        /* adds the load mask if it does not exist, can be moved to TreePanel.js */
+        if(tree.loadMask == undefined) { tree.loadMask = new Ext.LoadMask(tree.body, {msg: I18n.t('loading','generic')}); }
+        tree.loadMask.show();
+        
+        /* disable node */
+        tree.disable();
+        
         Ext.Ajax.request({
             url: '/admin/nodes/' + this.id,
             method: 'POST', // overridden with delete by the _method parameter
@@ -270,16 +279,27 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
 
                 // Reconstruct menu as options may have changed due to a new children count, like sorting.
                 this.constructMenu();
+                tree.enable(); // renenable node
+                tree.loadMask.hide();
             },
             failure: function (response, options) {
-                this.ui.removeClass('x-tree-node-loading');
                 Ext.ux.alertResponseError(response, I18n.t('delete_failed', 'nodes'));
+                tree.enable(); // renenable node
+                tree.loadMask.hide();
             }
         });
     },
 
     onRepeatingCalendarItemDelete: function () {
-        this.ui.addClass('x-tree-node-loading');
+        tree = this.getOwnerTree();
+      
+        /* adds the load mask if it does not exist, can be moved to TreePanel.js */
+        if(tree.loadMask == undefined) { tree.loadMask = new Ext.LoadMask(tree.body, {msg: I18n.t('loading','generic')}); }
+        tree.loadMask.show();
+        
+        /* disable node */
+        tree.disable();
+        
         Ext.Ajax.request({
             url: '/admin/calendar_items/' + this.attributes.contentNodeId,
             method: 'POST', // overridden with delete by the _method parameter
@@ -287,10 +307,13 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
             scope: this,
             success: function () {
                 this.parentNode.parentNode.reload();
+                tree.enable(); // renenable node
+                tree.loadMask.hide();
             },
             failure: function (response, options) {
-                this.ui.removeClass('x-tree-node-loading');
                 Ext.ux.alertResponseError(response, I18n.t('delete_failed', 'calendar_items'));
+                tree.enable(); // renenable node
+                tree.loadMask.hide();
             }
         });
     },
