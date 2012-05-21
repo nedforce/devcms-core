@@ -40,12 +40,12 @@ class CalendarsController < ApplicationController
         @date = Date.parse(params[:date]) rescue Date.today
         @date = Date.today if !@date.valid_gregorian_date?
 
-        raise ActiveRecord::RecordNotFound unless @calendar.calendar_items.date_in_range?(@date)
+        raise ActiveRecord::RecordNotFound if params[:date].present? && !@calendar.calendar_items.date_in_range?(@date)
 
-        @calendar_items = @calendar.calendar_items.find_all_for_month_of(@date).group_by {|ci| ci.start_time.mday }
+        @calendar_items = @calendar.calendar_items.find_all_for_month_of(@date).group_by { |ci| ci.start_time.mday }
       end
       format.atom do
-        @calendar_items = @calendar.calendar_items.accessible.all(:include => :node, :order => 'start_time', :conditions => ['nodes.ancestry = ? ', @calendar.node.child_ancestry])
+        @calendar_items = @calendar.calendar_items.accessible.all(:include => :node, :order => 'start_time', :conditions => [ 'nodes.ancestry = ? ', @calendar.node.child_ancestry ])
         render :layout => false
       end
       format.xml { render :xml => @calendar }

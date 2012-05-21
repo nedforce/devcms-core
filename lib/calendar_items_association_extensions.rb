@@ -45,7 +45,7 @@ module CalendarItemsAssociationExtensions #:nodoc:
   def date_in_range?(date = Date.now)
     min = self.accessible.minimum(:start_time)
     max = self.accessible.maximum(:end_time) || self.accessible.maximum(:start_time)
-    gregorian_date?(date) ? (min.to_date..max.to_date).include?(date) : false
+    min.present? && max.present? && gregorian_date?(date) ? (min.to_date..max.to_date).include?(date) : false
   end
 
   def current_and_future(time = Time.now, limit = 10) #:nodoc:
