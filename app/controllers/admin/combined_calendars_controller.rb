@@ -56,7 +56,7 @@ class Admin::CombinedCalendarsController < Admin::AdminController
         @calendar = @combined_calendar
         format.html { render :action => 'create_preview', :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @combined_calendar, :status => :created, :location => @combined_calendar }
-      elsif @commit_type == 'save' && @combined_calendar.save
+      elsif @commit_type == 'save' && @combined_calendar.save(:user => current_user)
         format.html { render :template => 'admin/shared/create' }
         format.xml  { render :xml => @combined_calendar, :status => :created, :location => @combined_calendar }
       else
@@ -79,7 +79,7 @@ class Admin::CombinedCalendarsController < Admin::AdminController
           render :action => 'update_preview', :layout => 'admin/admin_preview'
         }
         format.xml  { render :xml => @combined_calendar, :status => :created, :location => @combined_calendar }
-      elsif @commit_type == 'save' && @combined_calendar.save
+      elsif @commit_type == 'save' && @combined_calendar.save(:user => current_user)
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else

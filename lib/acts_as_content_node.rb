@@ -170,6 +170,14 @@ module Acts
       def save(*args)
         versioning_options = args.extract_options!
         
+        if user = versioning_options.delete :user
+          if new_record?
+            self.node.created_by = user
+          else
+            self.node.updated_by = user
+          end
+        end
+
         versioning_options[:should_create_version] = versioning_options[:should_create_version] || self.draft?
         versioning_options[:extra_version_attributes] ||= {}
         versioning_options[:extra_version_attributes][:status] = Version::STATUSES[:drafted] if self.draft?

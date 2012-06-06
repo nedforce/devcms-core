@@ -51,7 +51,7 @@ class Admin::ContactFormsController < Admin::AdminController
       if @commit_type == 'preview' && @contact_form.valid?
         format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @contact_form }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @contact_form, :status => :created, :location => @contact_form }
-      elsif @commit_type == 'save' && @contact_form.save
+      elsif @commit_type == 'save' && @contact_form.save(:user => current_user)
         format.html { render :template => 'admin/shared/create' }
         format.xml  { render :xml => @contact_form, :status => :created, :location => @contact_form }
       else
@@ -70,7 +70,7 @@ class Admin::ContactFormsController < Admin::AdminController
       if @commit_type == 'preview' && @contact_form.valid?
         format.html { render :template => 'admin/shared/update_preview', :locals => { :record => @contact_form }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @contact_form, :status => :created, :location => @contact_form }
-      elsif @commit_type == 'save' && @contact_form.save
+      elsif @commit_type == 'save' && @contact_form.save(:user => current_user)
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else

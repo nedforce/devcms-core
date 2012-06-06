@@ -56,7 +56,7 @@ class Admin::NewsViewersController < Admin::AdminController
       if @commit_type == 'preview' && @news_viewer.valid?
         format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @news_viewer }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @news_viewer, :status => :created, :location => @news_viewer }
-      elsif @commit_type == 'save' && @news_viewer.save
+      elsif @commit_type == 'save' && @news_viewer.save(:user => current_user)
         format.html { render :template => 'admin/shared/create' }
         format.xml  { render :xml => @news_viewer, :status => :created, :location => @news_viewer }
       else
@@ -75,7 +75,7 @@ class Admin::NewsViewersController < Admin::AdminController
       if @commit_type == 'preview' && @news_viewer.valid?
         format.html { render :template => 'admin/shared/update_preview', :locals => { :record => @news_viewer }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @news_viewer, :status => :created, :location => @news_viewer }
-      elsif @commit_type == 'save' && @news_viewer.save
+      elsif @commit_type == 'save' && @news_viewer.save(:user => current_user)
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else

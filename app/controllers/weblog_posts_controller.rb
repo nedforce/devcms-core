@@ -58,7 +58,7 @@ class WeblogPostsController < ApplicationController
     end
 
     respond_to do |format|
-      if @weblog_post.save
+      if @weblog_post.save(:user => current_user)
         images.delete_if do |image|
           image.parent = @weblog_post.node
           success      = image.save(:user => current_user)
@@ -89,9 +89,11 @@ class WeblogPostsController < ApplicationController
       @images = params[:images].values.reject{ |image| image[:data].is_a?(String) }
       images = @images[0..allowed_extra_images-1].collect {|image| Image.new(:parent => @weblog_post.node, :data => image[:data], :title => image[:data].original_filename) }
     end
+    
+    @weblog_post.attributes = params[:weblog_post]
 
     respond_to do |format|
-      if @weblog_post.update_attributes(params[:weblog_post])
+      if @weblog_post.save(:user => current_user)
         images.delete_if do |image|
           success = image.save(:user => current_user)
           image.versions.current.approve! if success

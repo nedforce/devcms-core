@@ -44,7 +44,7 @@ class Admin::SearchPagesController < Admin::AdminController
     @search_page.parent = @parent_node
 
     respond_to do |format|
-      if @search_page.save
+      if @search_page.save(:user => current_user)
         format.html { render :template => 'admin/shared/create' }
         format.xml  { render :xml => @search_page, :status => :created, :location => @search_page }
       else
@@ -60,7 +60,7 @@ class Admin::SearchPagesController < Admin::AdminController
     @search_page.attributes = params[:search_page]
 
     respond_to do |format|
-      if @search_page.save
+      if @search_page.save(:user => current_user)
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else

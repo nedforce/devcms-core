@@ -108,7 +108,7 @@ class Admin::WeblogArchivesController < Admin::AdminController
       if @commit_type == 'preview' && @weblog_archive.valid?
         format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @weblog_archive }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @weblog_archive, :status => :created, :location => @weblog_archive }
-      elsif @commit_type == 'save' && @weblog_archive.save
+      elsif @commit_type == 'save' && @weblog_archive.save(:user => current_user)
         format.html { render :template => 'admin/shared/create' }
         format.xml  { render :xml => @weblog_archive, :status => :created, :location => @weblog_archive }
       else
@@ -130,7 +130,7 @@ class Admin::WeblogArchivesController < Admin::AdminController
           render :template => 'admin/shared/update_preview', :locals => { :record => @weblog_archive }, :layout => 'admin/admin_preview'
         }
         format.xml  { render :xml => @weblog_archive, :status => :created, :location => @weblog_archive }
-      elsif @commit_type == 'save' && @weblog_archive.save
+      elsif @commit_type == 'save' && @weblog_archive.save(:user => current_user)
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else

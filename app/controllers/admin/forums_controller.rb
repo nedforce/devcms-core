@@ -49,7 +49,7 @@ class Admin::ForumsController < Admin::AdminController
       if @commit_type == 'preview' && @forum.valid?
         format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @forum }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @forum, :status => :created, :location => @forum }
-      elsif @commit_type == 'save' && @forum.save
+      elsif @commit_type == 'save' && @forum.save(:user => current_user)
         format.html { render :template => 'admin/shared/create' }
         format.xml  { render :xml => @forum, :status => :created, :location => @forum }
       else
@@ -71,7 +71,7 @@ class Admin::ForumsController < Admin::AdminController
           render :template => 'admin/shared/update_preview', :locals => { :record => @forum }, :layout => 'admin/admin_preview'
         }
         format.xml  { render :xml => @forum, :status => :created, :location => @forum }
-      elsif @commit_type == 'save' && @forum.save
+      elsif @commit_type == 'save' && @forum.save(:user => current_user)
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else

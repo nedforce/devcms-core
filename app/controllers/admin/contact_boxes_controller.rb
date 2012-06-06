@@ -44,7 +44,7 @@ class Admin::ContactBoxesController < Admin::AdminController
     @contact_box.parent = @parent_node
 
     respond_to do |format|
-      if @contact_box.save
+      if @contact_box.save(:user => current_user)
         format.html { render :template => 'admin/shared/create' }
         format.xml  { head :ok }
       else
@@ -57,8 +57,10 @@ class Admin::ContactBoxesController < Admin::AdminController
   # * PUT /admin/contact_boxs/:id
   # * PUT /admin/contact_boxs/:id.xml
   def update
+    @contact_box.attributes = params[:contact_box]
+    
     respond_to do |format|
-      if @contact_box.update_attributes(params[:contact_box])
+      if @contact_box.save(:user => current_user)
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else

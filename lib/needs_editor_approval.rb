@@ -33,7 +33,7 @@ module NeedsEditorApproval
         extra_version_attributes.update(:editor => last_version.editor, :editor_comment => last_version.editor_comment) if last_version
       end
 
-      super(*(args << { :should_create_version => should_create_version, :extra_version_attributes => extra_version_attributes }))
+      super(*(args << { :should_create_version => should_create_version, :extra_version_attributes => extra_version_attributes, :user => user }))
     end
     
     def update_attributes(attributes)

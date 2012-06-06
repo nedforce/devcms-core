@@ -135,6 +135,9 @@ class Node < ActiveRecord::Base
 
   has_many :abbreviations, :dependent => :destroy
   has_many :synonyms,      :dependent => :destroy
+  
+  belongs_to :created_by, :class_name => 'User'
+  belongs_to :updated_by, :class_name => 'User'
 
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of   :content, :sub_content_type, :publication_start_date

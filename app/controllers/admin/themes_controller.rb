@@ -54,7 +54,7 @@ class Admin::ThemesController < Admin::AdminController
       if @commit_type == 'preview' && @theme.valid?
         format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @theme }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @theme, :status => :created, :location => @theme }
-      elsif @commit_type == 'save' && @theme.save
+      elsif @commit_type == 'save' && @theme.save(:user => current_user)
         format.html { render :template => 'admin/shared/create' }
         format.xml  { render :xml => @theme, :status => :created, :location => @theme }
       else
@@ -76,7 +76,7 @@ class Admin::ThemesController < Admin::AdminController
           render :template => 'admin/shared/update_preview', :locals => { :record => @theme }, :layout => 'admin/admin_preview'
         }
         format.xml  { render :xml => @theme, :status => :created, :location => @theme }
-      elsif @commit_type == 'save' && @theme.save
+      elsif @commit_type == 'save' && @theme.save(:user => current_user)
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else

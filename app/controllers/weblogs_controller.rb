@@ -48,7 +48,7 @@ class WeblogsController < ApplicationController
     @weblog.parent = @weblog_archive.node
 
     respond_to do |format|
-      if @weblog.save
+      if @weblog.save(:user => current_user)
         format.html { redirect_to @weblog_archive }
         format.xml  { render :xml => @weblog, :status => :created, :location => @weblog }
        else
@@ -61,8 +61,10 @@ class WeblogsController < ApplicationController
   # * PUT /weblog_archives/:weblog_archive_id/weblogs/:id
   # * PUT /weblog_archives/:weblog_archive_id/weblogs/:id.xml
   def update
+    @weblog.attributes = params[:weblog]
+    
     respond_to do |format|      
-      if @weblog.update_attributes(params[:weblog])
+      if @weblog.save(:user => current_user)
         format.html { redirect_to aliased_or_delegated_path(@weblog.node) }
         format.xml  { head :ok }
       else

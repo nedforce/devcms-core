@@ -55,7 +55,7 @@ class Admin::TopHitsPagesController < Admin::AdminController
 
         format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @top_hits_page }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @top_hits_page, :status => :created, :location => @top_hits_page }
-      elsif @commit_type == 'save' && @top_hits_page.save
+      elsif @commit_type == 'save' && @top_hits_page.save(:user => current_user)
         format.html { render :template => 'admin/shared/create' }
         format.xml  { head :ok }
       else
@@ -76,7 +76,7 @@ class Admin::TopHitsPagesController < Admin::AdminController
 
         format.html { render :template => 'admin/shared/update_preview', :locals => { :record => @top_hits_page }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @top_hits_page, :status => :created, :location => @top_hits_page }
-      elsif @commit_type == 'save' && @top_hits_page.save
+      elsif @commit_type == 'save' && @top_hits_page.save(:user => current_user)
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else

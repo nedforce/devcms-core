@@ -116,7 +116,7 @@ class Admin::CalendarsController < Admin::AdminController
       if @commit_type == 'preview' && @calendar.valid?
         format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @calendar }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @calendar, :status => :created, :location => @calendar }
-      elsif @commit_type == 'save' && @calendar.save
+      elsif @commit_type == 'save' && @calendar.save(:user => current_user)
         format.html { render :template => 'admin/shared/create' }
         format.xml  { render :xml => @calendar, :status => :created, :location => @calendar }
       else
@@ -138,7 +138,7 @@ class Admin::CalendarsController < Admin::AdminController
           render :template => 'admin/shared/update_preview', :locals => { :record => @calendar }, :layout => 'admin/admin_preview'
         }
         format.xml  { render :xml => @calendar, :status => :created, :location => @calendar }
-      elsif @commit_type == 'save' && @calendar.save
+      elsif @commit_type == 'save' && @calendar.save(:user => current_user)
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else

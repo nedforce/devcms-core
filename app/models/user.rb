@@ -100,6 +100,9 @@ class User < ActiveRecord::Base
   
   has_many :event_registrations, :dependent => :destroy
 
+  has_many :created_nodes, :foreign_key => :created_by_id, :class_name => 'Node', :dependent => :nullify
+  has_many :updated_nodes, :foreign_key => :updated_by_id, :class_name => 'Node', :dependent => :nullify
+
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of     :password,                :if => :password_required?
   validates_presence_of     :password_confirmation,   :if => :password_required?

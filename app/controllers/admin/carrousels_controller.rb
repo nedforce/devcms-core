@@ -65,7 +65,7 @@ class Admin::CarrouselsController < Admin::AdminController
       if @commit_type == 'preview' && @carrousel.valid?
         format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @carrousel }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @carrousel, :status => :created, :location => @carrousel }
-      elsif @commit_type == 'save' && @carrousel.save    
+      elsif @commit_type == 'save' && @carrousel.save(:user => current_user)
         format.html { render :template => 'admin/shared/create' }
         format.xml  { render :xml => @carrousel, :status => :created, :location => @carrousel }
       else
@@ -86,7 +86,7 @@ class Admin::CarrouselsController < Admin::AdminController
       if @commit_type == 'preview' && @carrousel.valid?
         format.html { render :template => 'admin/shared/update_preview', :locals => { :record => @carrousel }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @carrousel, :status => :created, :location => @carrousel }
-      elsif @commit_type == 'save' && @carrousel.save
+      elsif @commit_type == 'save' && @carrousel.save(:user => current_user)
         format.html {
           @refresh = true
           render :template => 'admin/shared/update'

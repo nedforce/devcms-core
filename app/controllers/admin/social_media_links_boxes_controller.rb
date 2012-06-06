@@ -51,7 +51,7 @@ class Admin::SocialMediaLinksBoxesController < Admin::AdminController
       if @commit_type == 'preview' && @social_media_links_box.valid?
         format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @social_media_links_box }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @social_media_links_box, :status => :created, :location => @social_media_links_box }
-      elsif @commit_type == 'save' && @social_media_links_box.save
+      elsif @commit_type == 'save' && @social_media_links_box.save(:user => current_user)
         format.html { render :template => 'admin/shared/create' }
         format.xml  { head :ok }
       else
@@ -70,7 +70,7 @@ class Admin::SocialMediaLinksBoxesController < Admin::AdminController
       if @commit_type == 'preview' && @social_media_links_box.valid?
         format.html { render :template => 'admin/shared/update_preview', :locals => { :record => @social_media_links_box }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @social_media_links_box, :status => :created, :location => @social_media_links_box }
-      elsif @commit_type == 'save' && @social_media_links_box.save
+      elsif @commit_type == 'save' && @social_media_links_box.save(:user => current_user)
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else

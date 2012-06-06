@@ -104,7 +104,7 @@ class Admin::WeblogsController < Admin::AdminController
           render :template => 'admin/shared/update_preview', :locals => { :record => @weblog }, :layout => 'admin/admin_preview'
         }
         format.xml  { render :xml => @weblog, :status => :created, :location => @weblog }
-      elsif @commit_type == 'save' && @weblog.save
+      elsif @commit_type == 'save' && @weblog.save(:user => current_user)
         format.html {
           @refresh = true
           render :template => 'admin/shared/update'

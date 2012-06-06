@@ -44,7 +44,7 @@ class Admin::FeedsController < Admin::AdminController
     @feed.parent = @parent_node
 
     respond_to do |format|
-      if @feed.save
+      if @feed.save(:user => current_user)
         format.html { render :template => 'admin/shared/create' }
         format.xml  { render :xml => @feed, :status => :created, :location => @feed }
       else
@@ -57,8 +57,10 @@ class Admin::FeedsController < Admin::AdminController
   # * PUT /admin/feeds/:id
   # * PUT /admin/feeds/:id.xml
   def update
+    @feed.attributes = params[:feed]
+    
     respond_to do |format|      
-      if @feed.update_attributes(params[:feed])
+      if @feed.save(:user => current_user)
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else

@@ -57,7 +57,7 @@ class Admin::SitesController < Admin::AdminController
       if @commit_type == 'preview' && @site.valid?
         format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @site }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @site, :status => :created, :location => @site }
-      elsif @commit_type == 'save' && @site.save
+      elsif @commit_type == 'save' && @site.save(:user => current_user)
         format.html { render :template => 'admin/shared/create' }
         format.xml  { render :xml => @site, :status => :created, :location => @site }
       else
@@ -82,7 +82,7 @@ class Admin::SitesController < Admin::AdminController
           render :template => 'admin/shared/update_preview', :locals => { :record => @site }, :layout => 'admin/admin_preview'
         end
         format.xml  { render :xml => @site, :status => :created, :location => @site }
-      elsif @commit_type == 'save' && @site.save
+      elsif @commit_type == 'save' && @site.save(:user => current_user)
         format.html { render :template => '/admin/shared/update' }
         format.xml  { head :ok }
       else
