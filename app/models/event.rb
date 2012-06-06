@@ -56,10 +56,10 @@ class Event < ActiveRecord::Base
     I18n.t('owms.meeting_info')
   end
   
-  def self.send_registration_notfications
+  def self.send_registration_notifications
     all(:conditions => ["start_time <= ? AND subscription_enabled = ?", Time.now + 1.day, true]).each do |event|
       event.update_attribute :subscription_enabled, false
-      EventMailer.deliver_event_registrations(event)
+      EventRegistrationMailer.deliver_registrations_notification(event) unless event.event_registrations.count == 0
     end
   end
   
