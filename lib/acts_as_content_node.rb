@@ -124,7 +124,7 @@ module Acts
         
         after_paranoid_delete :copy_deleted_at_from_node
         
-        after_paranoid_restore :clear_deleted_at
+        after_paranoid_restore :clear_deleted_at, :set_url_alias
   
         delegate :update_search_index, :expirable?, :expiration_required?, :expired?, :expiration_container?, :to => :node
   
@@ -170,7 +170,7 @@ module Acts
       def save(*args)
         versioning_options = args.extract_options!
         
-        if user = versioning_options.delete :user
+        if user = versioning_options.delete(:user)
           if new_record?
             self.node.created_by = user
           else
@@ -334,6 +334,11 @@ module Acts
         self.class.send(:with_exclusive_scope) do
           self.class.update_all({ :deleted_at => nil, :updated_at => node_updated_at }, self.class.primary_key => id)
         end
+      end
+
+      def set_url_alias
+        node.set_url_alias
+        node.save!
       end
     end
   
