@@ -116,7 +116,7 @@ module Acts
         end
   
         before_update :touch_node
-        after_update  :update_url_alias_if_title_changed
+        after_update :update_url_alias_if_title_changed
 
         after_save :update_search_index
         
@@ -288,20 +288,12 @@ module Acts
       def update_url_alias_if_title_changed
         if self.respond_to?(:title) && self.title_changed?
           # Update self and descendants
-          node.set_url_alias(true) 
-          node.save
-          node.descendants.each do |n| 
-            n.set_url_alias(true) 
-            n.save
-          end
+          node.update_subtree_url_aliases
           # Save base_url_alias for later use
-          base_url_alias = node.url_alias.sub(/-\d+\Z/, '') # chomp off -1, -2, etc.
+          base_url_alias = node.reload.url_alias.sub(/-\d+\Z/, '') # chomp off -1, -2, etc.
           # Search siblings for nodes with identiacal aliases
           node.siblings.all(:conditions => ["url_alias like ?", base_url_alias + '-%']).each do |dupe| 
-            dupe.self_and_descendants.each do |n| 
-              n.set_url_alias(true)
-              n.save
-            end
+            dupe.update_subtree_url_aliases
           end
         end
       end

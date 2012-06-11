@@ -140,6 +140,27 @@ class NodeURLAliasTest < ActiveSupport::TestCase
     n.move_to_child_of @economie_section_node
     assert_equal 'bar', n.custom_url_alias
   end
+
+  def test_should_update_url_aliases_of_subtree_on_move
+    node = nodes(:devcms_news_node)
+    Node.root.content.set_frontpage!(nil)
+    node.descendants.update_all(:url_alias => "placeholder")
+    assert node.descendants.all? {|n| n.url_alias == "placeholder"}, "Should have set all descendants url_aliasses!"
+    assert nodes(:economie_section_node).url_alias.size > 1
+    node.move_to_child_of nodes(:economie_section_node)
+    assert node.descendants.all? {|n| n.url_alias.include? nodes(:economie_section_node).url_alias }, "Should have prefixed url_aliasses"
+  end
+
+  def test_should_update_url_aliases_of_subtree_on_rename
+    node = nodes(:devcms_news_node)
+    Node.root.content.set_frontpage!(nil)
+    node.descendants.update_all(:url_alias => "placeholder")
+    assert node.descendants.all? {|n| n.url_alias == "placeholder"}, "Should have set all descendants url_aliasses!"
+    node.content.update_attributes :title => "Nieuwe Nieuws Sectie Naam"
+    node.reload
+    assert_not_nil node.url_alias
+    assert node.descendants.all? {|n| n.url_alias.include? node.url_alias }, "Should have prefixed url_aliasses"
+  end
   
   def test_url_alias_length_restrictions
     cn = create_page
