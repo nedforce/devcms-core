@@ -104,7 +104,7 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       # Password check when there's a email/password change
-      if (@user.changed.include?('email_address') || params[:user][:password]) && !@user.authenticated?(params[:old_password])
+      if (@user.changed.include?('email_address') || params[:user][:password].present?) && !@user.authenticated?(params[:old_password])
         format.html do
           @user.errors.add_to_base I18n.t('users.wrong_password')
           render :action => 'edit', :status => :unprocessable_entity
