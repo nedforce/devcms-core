@@ -100,8 +100,17 @@ class UsersController < ApplicationController
       params[:user][:interest_ids] ||= []
     end
 
+    @user.attributes = params[:user]
+
     respond_to do |format|
-      if @user.update_attributes(params[:user])
+      # Password check when there's a email/password change
+      if (@user.changed.include?('email_address') || params[:user][:password]) && !@user.authenticated?(params[:old_password])
+        format.html do
+          @user.errors.add_to_base I18n.t('users.wrong_password')
+          render :action => 'edit', :status => :unprocessable_entity
+        end
+        format.xml  { head :unprocessable_entity }
+      elsif @user.save
         format.html do
           flash[:notice] = I18n.t('users.update_successful')
           redirect_to user_path(@user)

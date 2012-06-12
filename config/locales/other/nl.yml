@@ -1148,6 +1148,8 @@ nl:
     newsletter_title: Titel van de nieuwsbrief
     not_public: Uw e-mailadres wordt niet aan anderen dan u getoond
     of_page: "van {0}"
+    old_password: Huidige wachtwoord
+    old_password_explanation: Geef uw huidige wachtwoord op als u uw wachtwoord of e-mailadres wilt wijzigen
     options: Opties
     page: Pagina
     password: Wachtwoord

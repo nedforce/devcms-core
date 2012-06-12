@@ -45,5 +45,14 @@
     = f.password_field :password_confirmation, :class => 'textfield'
 
   .formButtonCt
+  .formFieldCt.clearfix
+    %label{ :for => "user_old_password" }
+      = t 'users.old_password'
+    .left
+      = password_field_tag :old_password, nil, :class => 'textfield'
+      %br
+      %small= t 'users.old_password_explanation'
+
+  .formButtonCt
     = submit_tag t('users.save'), :class => 'left submit'
     = link_to    t('users.back'), user_path(@user), :class => 'right'
