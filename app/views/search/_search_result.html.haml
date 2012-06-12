@@ -4,7 +4,7 @@
     - url = node.content.external_url
     - search_result.title << " (Landelijk)"
   - else
-    - url = aliased_or_delegated_path(node, :type => :url)
+    - url = content_node_url(node, :host => node.containing_site.content.domain)
 - else
   - url = search_result.url
 
