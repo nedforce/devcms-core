@@ -272,6 +272,7 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
             params: Ext.ux.prepareParams(this.baseParams, { _method: 'delete' }),
             scope: this,
             success: function () {
+                Ext.ux.showRightPanelMssg('Node succesvol verwijderd.');
                 var parent = this.parentNode;
                 this.remove();
                 parent.renderIndent();
