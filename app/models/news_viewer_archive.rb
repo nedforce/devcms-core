@@ -24,5 +24,5 @@ class NewsViewerArchive < ActiveRecord::Base
   after_create{ |viewer_archive| viewer_archive.news_archive.news_items.newest.each{ |item| viewer_archive.news_viewer.news_items << item rescue nil }}
 
   # Remove direct links (i.e. news viewer items) from the news viewer, which are also included in this news viewer archive.
-  after_destroy{ |viewer_archive| viewer_archive.news_viewer.news_items.delete(viewer_archive.news_archive.news_items) }
+  after_destroy{ |viewer_archive| viewer_archive.news_viewer.news_items.delete(viewer_archive.news_archive.news_items) if viewer_archive.news_viewer }
 end
