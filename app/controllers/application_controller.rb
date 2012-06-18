@@ -282,12 +282,6 @@ protected
     Rails.application.config.consider_all_requests_local || !Settler[:ssl_enabled]
   end
 
-  # Overrides +verify_authenticity_token+ from +RequestForgeryProtection+ to prevent
-  # exceptions from being thrown. Instead, a warning message is shown.
-  def verify_authenticity_token
-    verified_request? || flash.now[:error] = I18n.t('application.invalid_auth_token')
-  end
-
   # Renders the general deletion confirmation form, and cancels the chain.
   def confirm_destroy
     render :action => 'confirm_destroy'
