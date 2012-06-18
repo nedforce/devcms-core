@@ -24,7 +24,7 @@ class RewriteTest < ActionController::IntegrationTest
   def test_should_not_rewrite_for_unknown_domain
     @site.update_attribute(:domain, 'www.otherdomain.com')    
     get '/'
-    assert response.body.include?('www.example.com')
+    assert_response :redirect
   end
   
   def test_should_rewrite_finds_by_node_id

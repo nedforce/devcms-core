@@ -10,7 +10,7 @@
     <h3><%= link_to h(entry.title), '#' -%></h3>
 
     <div class="clearfix">
-      <%=w tidy_html(simple_format(entry.content.to_s.strip)) -%>
+      <%=w simple_format(entry.content.to_s.strip) -%>
     </div>
   </div>
   <% end %>
