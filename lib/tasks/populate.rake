@@ -62,15 +62,15 @@ namespace :db do
           login = login.gsub(/\s+/, '_')
           names = login.split('_', 2)
 
-          User.create(
+          u = User.create(
             :login => login,
             :first_name => names[0],
             :surname => names[1],
             :email_address => email,
             :password => login,
-            :password_confirmation => login,
-            :verified => true
+            :password_confirmation => login
           )
+          u.update_attribute :verified, true
         end
 
       end
@@ -84,8 +84,10 @@ namespace :db do
         root_section = Site.create!(:title => 'Website', :description => Faker::Lorem.sentence, :expiration_email_subject => "Content onder uw beheer is verouderd", :expiration_email_body => "<p>De onderstaande pagina is al enige tijd niet meer bijgewerkt en is inmiddels verlopen.</p><p>Gelieve de inhoud van deze pagina's te controleren en bij te werken.</p><p>Neem voor meer informatie contact op met de webredactie.</p>")
         root_section.node.update_attributes!(:layout => "deventer", :layout_variant => 'four_columns', :layout_configuration => {'template_color'=>'default'})
 
-        news_archive = NewsArchive.create!(:parent =>root_section.node, :title => 'Home', :description => Faker::Lorem.sentence)
-        news_archive.node.update_attributes!(:url_alias => 'home-nieuws', :show_in_menu => true)
+        news_archive = NewsArchive.new(:parent =>root_section.node, :title => 'Home', :description => Faker::Lorem.sentence)
+        news_archive.node.url_alias = 'home-nieuws'
+        news_archive.node.show_in_menu = true
+        news_archive.save!
 
         8.times do
           NewsItem.create!(:parent =>news_archive.node, :title => Faker::Lorem.sentence[0..12], :preamble => Faker::Lorem.paragraph, :body => Faker::Lorem.paragraph, :publication_start_date => rand(50).days.ago)
@@ -138,7 +140,7 @@ namespace :db do
 
     desc 'First performs a database reset, then creates 1000 User instances and node structure.'
     task :all do
-      if RAILS_ENV == "production" && (!ENV.has_key?("RESET_PRODUCTION") || ENV["RESET_PRODUCTION"] != "true")
+      if Rails.env.production? && (!ENV.has_key?("RESET_PRODUCTION") || ENV["RESET_PRODUCTION"] != "true")
         raise "Set RESET_PRODUCTION=true if you really want to do this for the production database."
       end
 
