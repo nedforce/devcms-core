@@ -59,7 +59,7 @@ module NodeExtensions::UrlAliasing
     end
     
     # Helper method for constructing a content url path for a node, used for rewrites
-    def path_for_node(node, action = '', query = '') 
+    def path_for_node(node, action = '', format = '', query = '') 
       case
       when node.content_type == 'ContentCopy'
         Node.path_for_node(node.content.copied_node, query)
@@ -74,9 +74,9 @@ module NodeExtensions::UrlAliasing
           end
         end
 
-        "#{path_builder.call(node)}#{action}#{query}"
+        "#{path_builder.call(node)}#{action}#{format}#{query}"
       else
-        "/#{node.content_type.tableize}/#{node.content_id}#{action}#{query}"      
+        "/#{node.content_type.tableize}/#{node.content_id}#{action}#{format}#{query}"      
       end
     end
     
