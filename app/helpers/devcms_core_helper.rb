@@ -228,7 +228,7 @@ module DevcmsCoreHelper
   #
   # +str+ - String to clean.
   def tidy_html(str)
-    TidyFFI::Tidy.clean(str, :show_body_only => 1, :output_xhtml => 1)
+    TidyFFI::Tidy.clean(str, :show_body_only => 1, :output_xhtml => 1, :input_encoding => 'utf8')
   end
 
   def white_list_preamble(str)
