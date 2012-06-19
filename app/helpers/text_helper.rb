@@ -27,7 +27,7 @@ module TextHelper
       results << "</#{tag}>"
     end
 
-    results.to_s + (input.length > len ? content_tag(:span, extension, :class => 'extension') : '')
+    raw (results.to_s + (input.length > len ? content_tag(:span, extension, :class => 'extension') : ''))
   end
 
   private 
