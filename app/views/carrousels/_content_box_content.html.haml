@@ -16,9 +16,12 @@
       - content.carrousel_items.each do |carrousel_item|
         .slide
           = render :partial => '/carrousels/carrousel_item', :object => carrousel_item, :locals => { :content => content, :node => node }
-      - if content.animation == Carrousel::ANIMATION_SLIDE || content.animation == Carrousel::ANIMATION_DIA || content.animation == Carrousel::ANIMATION_SPRING
+      - if [ Carrousel::ANIMATION_SLIDE, Carrousel::ANIMATION_DIA, Carrousel::ANIMATION_SPRING ].include?(content.animation)
         .slide
           = render :partial => '/carrousels/carrousel_item', :object => content.carrousel_items.first, :locals => { :content => content, :node => node }
+
+  - # We set float:left here, instead of in CSS, so the banners are shown if JavaScript is disabled (Drempelvrij).
+  = javascript_tag "$$('#carousel-#{content.id} .carousel-content .slide').invoke('setStyle', 'float:left');"
 
   - if content.animation == Carrousel::ANIMATION_FADE_IN
     = javascript_tag "new Carousel('carousel-#{content.id}', $$('#carousel-#{content.id} .carousel-content .slide'), $$('#carousel-#{content.id} a.carousel-control', 'a.carousel-jumper'), {auto:true, duration:1, frequency:#{frequency}, effect:'fade'});"
