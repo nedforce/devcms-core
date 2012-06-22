@@ -107,13 +107,7 @@ class Carrousel < ActiveRecord::Base
   def custom_content_box_title
     (current_item.try(:item) || self).title
   end
-  
-  
-  # Determine whether to show the content box header
-  #def show_content_box_header
-  #  false
-  #end
-  
+
   # Alternative text for tree nodes.
   def tree_text(node)
     self.title
