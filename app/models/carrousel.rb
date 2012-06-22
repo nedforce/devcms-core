@@ -18,23 +18,24 @@
 #  * A Carrousel only accepts +CarrouselItem+ child nodes.
 #
 class Carrousel < ActiveRecord::Base
-  ALLOWED_TIME_UNITS = ['seconds', 'minutes', 'hours', 'days', 'months' ]
+  ALLOWED_TIME_UNITS = [ 'seconds', 'minutes', 'hours', 'days', 'months' ]
   
-  ANIMATION_NONE = 0
-  ANIMATION_FADE_IN = 1
-  ANIMATION_SLIDE = 2
-  ANIMATION_DIA = 3
-  ANIMATION_SPRING = 4
+  ANIMATION_NONE          = 0
+  ANIMATION_FADE_IN       = 1
+  ANIMATION_SLIDE         = 2
+  ANIMATION_DIA           = 3
+  ANIMATION_SPRING        = 4
   ALLOWED_ANIMATION_TYPES = (0..4).to_a
-  ANIMATION_NAMES = {0 => "None", 1 => "Fade", 2 => "Slide", 3 => "Dia", 4 => "Spring"}
+  ANIMATION_NAMES         = { 0 => 'None', 1 => 'Fade', 2 => 'Slide', 3 => 'Dia', 4 => 'Spring' }
   
   # Adds content node functionality to news archives.
   acts_as_content_node({
-    :show_in_menu => false,
-    :copyable => false,
-    :allowed_roles_for_update  => %w( admin ),
-    :allowed_roles_for_create  => %w( admin ),
-    :allowed_roles_for_destroy => %w( admin ),
+    :show_in_menu                      => false,
+    :show_content_box_header           => false,
+    :copyable                          => false,
+    :allowed_roles_for_update          => %w( admin ),
+    :allowed_roles_for_create          => %w( admin ),
+    :allowed_roles_for_destroy         => %w( admin ),
     :available_content_representations => ['content_box']
   })
   
@@ -109,9 +110,9 @@ class Carrousel < ActiveRecord::Base
   
   
   # Determine whether to show the content box header
-  def show_content_box_header
-    false
-  end
+  #def show_content_box_header
+  #  false
+  #end
   
   # Alternative text for tree nodes.
   def tree_text(node)
@@ -134,29 +135,29 @@ class Carrousel < ActiveRecord::Base
     value = time[0].to_i; unit = time[1]
     self.display_time_in_seconds = ALLOWED_TIME_UNITS.include?(unit) ? value.send(unit) : 0
   end
-  
+
   # Get human display time
   def display_time
     case
     when display_time_in_seconds < 60
-      [display_time_in_seconds,              'seconds']
+      [display_time_in_seconds,                 'seconds']
     when display_time_in_seconds < 60*60
-      [display_time_in_seconds/60,            'minutes']
+      [display_time_in_seconds/60,              'minutes']
     when display_time_in_seconds < (60*60*24)
-      [display_time_in_seconds/(60*60),           'hours']
+      [display_time_in_seconds/(60*60),         'hours']
     when display_time_in_seconds < (30*(60*60*24))
       [display_time_in_seconds/(60*60*24),      'days']
     else 
       [display_time_in_seconds/(30*(60*60*24)), 'months']
     end    
   end
-  
+
 protected
 
   def remove_associated_content
     self.carrousel_items.destroy_all
   end
-  
+
 private
 
   # Cycle the current carrousel item  if it is time to do so and fetch it
