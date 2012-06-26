@@ -169,11 +169,11 @@ protected
   
   def run_paranoid_callbacks(callback, terminator, nodes_to_trigger_content_callbacks_ids)    
     Node.unscoped do
-      return false unless self.run_callbacks(callback, &terminator) && 
-                          self.class.find_paranoid_hidden_content(self.sub_content_type, self.content_id).run_callbacks(callback, &terminator)
+      return false unless self.send(:run_callbacks, callback, &terminator) && 
+                          self.class.find_paranoid_hidden_content(self.sub_content_type, self.content_id).send(:run_callbacks, callback, &terminator)
 
       Node.find_each(:conditions => { :id => nodes_to_trigger_content_callbacks_ids }) do |node|
-        return false unless self.class.find_paranoid_hidden_content(node.sub_content_type, node.content_id).run_callbacks(callback, &terminator)
+        return false unless self.class.find_paranoid_hidden_content(node.sub_content_type, node.content_id).send(:run_callbacks, callback, &terminator)
       end
     end
 
