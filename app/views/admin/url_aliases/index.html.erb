@@ -1,0 +1,100 @@
+<script type="text/javascript">
+//<![CDATA[
+Ext.onReady(function() {
+  perPage = 25;
+
+  var cm = new Ext.grid.ColumnModel([{
+    header: 'Alias',
+    dataIndex: 'custom_url_suffix',
+    editor: new Ext.form.TextField
+  },{
+    header: 'Titel',
+    dataIndex: 'title'
+  },{
+    header: 'URL',
+    dataIndex: 'url_alias'
+  }]);
+  cm.defaultSortable = true;
+
+  var store = new Ext.data.Store({
+    url: '<%= admin_url_aliases_path(:format => :xml) %>',
+    autoLoad: {params: {start: 0, limit: perPage}},
+    remoteSort: true,
+    reader: new Ext.data.XmlReader({
+      record: 'node',
+      id: 'id',
+      totalRecords: 'total_count',
+    }, ['id', 'custom_url_suffix', 'title', 'url_alias'])
+  });
+
+  var tbar = [{
+    text: '<%= t 'nodes.alias_delete' %>',
+    tooltip: '<%= t 'nodes.alias_delete_tooltip' %>',
+    handler: handleDelete,
+    iconCls: 'menu_item_delete'
+  }];
+
+  var bbar = new Ext.PagingToolbar({
+    store: store,
+    pageSize: perPage,
+    displayInfo: true,
+    displayMsg: '<%= I18n.t("nodes.alias_count_msg") %>',
+    emptyMsg: '<%= I18n.t("nodes.alias_empty_msg") %>',
+    afterPageText: '<%= I18n.t("nodes.of_page") %>',
+    beforePageText: '<%= I18n.t("nodes.page") %>'
+  });
+
+  var grid = new Ext.grid.EditorGridPanel({
+    cm: cm,
+    store: store,
+    sm: new Ext.grid.RowSelectionModel({singleSelect:true}),
+    stripeRows: true,
+    autoExpandColumn: 2,
+    loadMask: true,
+    bbar: bbar,
+    tbar: tbar,
+    listeners: { afteredit: handleEdit }
+  });
+  
+  function handleEdit(e) {
+    Ext.Ajax.request({
+      url: '/admin/url_aliases/' + e.record.id + '.json',
+      method: 'POST',
+      params: '_method=put&authenticity_token=<%= form_authenticity_token %>&node[' + e.field + ']=' + e.value,
+      failure: function(response, options) {
+        errors = Ext.util.JSON.decode(response.responseText);
+        Ext.MessageBox.alert('<%= t 'nodes.message' %>', errors.join('<br>'));
+      },
+      success: function(response, options) {
+        store.commitChanges();
+      }
+    });
+  }
+  
+  function handleDelete(e) {
+    if(grid.selModel.getSelections().length > 0) {
+      Ext.MessageBox.confirm('<%= t 'nodes.message' %>', '<%= t 'nodes.confirm_alias_deletion' %>', function(button) {
+        if(button == 'yes') {
+          Ext.Ajax.request({
+            waitMsg: '<%= t 'nodes.deleting_alias' %>',
+            url: '/admin/url_aliases/' + grid.selModel.getSelected().id + '.json',
+            method: 'POST',
+            params: '_method=delete&authenticity_token=<%= form_authenticity_token %>',
+            failure: function(response, options) {
+              Ext.ux.alertResponseError(response);
+            },
+            success: function(response, options) {
+              store.reload();
+            }
+          });
+        }
+      });
+    } else {
+      Ext.MessageBox.alert('<%= t 'nodes.message' %>', '<%= t 'nodes.select_one_alias' %>');
+    }
+  }
+      
+  initViewport(grid); // render admin layout using the viewport.
+});
+//]]>
+</script>

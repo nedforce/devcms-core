@@ -47,6 +47,11 @@ module Admin::AdminHelper
       :url  => { :controller => 'admin/trash', :action => :index },
       :text => I18n.t('admin.trash_button')
     }
+    url_aliases = {
+      :page => :url_aliases,
+      :url  => { :controller => 'admin/url_aliases', :action => :index },
+      :text => I18n.t('admin.url_aliases_button')
+    }
 
     menu_items = [sitemap]
     menu_items += [privileged_users, users, permissions, categories, settings] if current_user.has_role?('admin')
@@ -54,6 +59,7 @@ module Admin::AdminHelper
     if current_user.has_role?('admin', 'final_editor')
       menu_items << trash
       menu_items << comments
+      menu_items << url_aliases
       menu_items.unshift versions
     end
 

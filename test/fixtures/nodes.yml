@@ -914,6 +914,7 @@ standard_search_page_node:
   sub_content_type: SearchPage
   hidden: false
   private: false
+  custom_url_suffix: d_custom
 
 nedforce_feed_node:
   content: nedforce_feed (Feed)
@@ -925,6 +926,7 @@ nedforce_feed_node:
   sub_content_type: Feed
   hidden: false
   private: false
+  custom_url_suffix: c_custom
 
 contact_form_node:
   content: help_form (ContactForm)
@@ -936,6 +938,7 @@ contact_form_node:
   sub_content_type: ContactForm
   hidden: false
   private: false
+  custom_url_suffix: b_custom
 
 info_form_node:
   content: info_form (ContactForm)
@@ -947,6 +950,7 @@ info_form_node:
   sub_content_type: ContactForm
   hidden: false
   private: false
+  custom_url_suffix: a_custom
 
 sub_site_section_node:
   content: sub_site_section (Section)
@@ -970,6 +974,7 @@ yet_another_page_node:
   sub_content_type: Page
   hidden: false
   private: false
+  custom_url_suffix: yet_another_page
 
 subsection_alphabetic_index_node:
   content: subsection_alphabetic_index (AlphabeticIndex)

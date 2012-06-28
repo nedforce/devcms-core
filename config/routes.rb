@@ -320,6 +320,8 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :url_aliases, :only => [:index, :create, :update, :destroy]
+
     resources :users do
       collection do
         post :invite

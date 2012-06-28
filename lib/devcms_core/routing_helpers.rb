@@ -16,7 +16,9 @@ module DevcmsCore
     def aliased_or_delegated_address(node, options = {})
       type = (options.delete(:type) || :path).to_s
       
-      address = "/#{node.custom_url_alias.present? ? node.custom_url_alias : node.url_alias}"
+      address   = "/#{node.custom_url_alias.present? ? node.custom_url_alias : node.url_alias}" unless options.delete(:skip_custom_alias)
+      address ||= "/#{node.url_alias}"
+
       unless type == :path
         host = options.delete(:host)
         if defined?(request) && request.present?

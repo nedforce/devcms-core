@@ -78,6 +78,7 @@ nl:
     sitemap: Sitemap
     succesfully_deleted: Kolomelement succesvol verwijderd.
     synonyms_button: Synoniemen
+    url_aliases_button: URL aliassen
     users_button: Gebruikers
     privileged_users_button: Beheerders
   agenda_items:
@@ -738,11 +739,17 @@ nl:
     delete_failed: Verwijderen nieuwsarchief mislukt
     error: Fout    
   nodes:
+    alias_count_msg: "Aliassen {0} tot {1} van {2} worden weergegeven"
+    alias_delete_tooltip: Klik hier om de URL alias van de geselecteerde node te verwijderen
+    alias_delete: Verwijderen
+    alias_empty_msg: Geen aliassen om weer te geven
     bulk_edit: Meerdere nodes wijzigen
     commentable: Reacties toestaan?
     config_for: Kolommen configureren voor
+    confirm_alias_deletion: Weet u zeker dat u deze URL alias wil verwijderen?
     content_copy_creation_successful: Kopie aanmaken gelukt! Versleep nu de kopie naar de gewenste plek in de boom.
     copy_of: Deze node is een kopie van
+    deleting_alias: Bezig met verwijderen...
     draft: Draft
     drag_items: Sleep items in de kolommen om de indeling te bepalen.
     edit: wijzigen
@@ -764,19 +771,24 @@ nl:
     intro2: te configureren
     layout_update_failed: Kon layout niet opslaan. Controleer dat er geen privécontent in de paginadelen staat.
     layout_update_successful: Layout succesvol opgeslagen!
+    message: Bericht
     move_failed: "Sorry, verplaatsen van element"
     no_parent_or_sibling: Geen parent of sibling ID gegeven.
     not_found: Node niet gevonden. Mogelijk is hij inmiddels verwijderd.
+    of_page: "van {0}"
+    page: Pagina
     page_load_failed: "Sorry, de pagina kon niet worden geladen."
     new_version: nieuwe versie
     newsletter_subscribers_export: Met de link hieronder kunt u de nieuwsbrief abonnementen exporteren.
     newslttter_not_found: Nieuwsbrief bestaat niet
+    node_update_succesful: De node is succesvol aangepast.
     previous_version: vorige versie
     diff: diff
     rejected: Afgekeurd
     remove_failed: "Sorry, verwijderen van element mislukt."
     save_as_draft: Als draft opslaan
     select_one: Selecteer links een item...
+    select_one_alias: Kies tenminste een alias
     sitemap: Sitemap
     status: Status
     succesfully_destroyed: Node succesvol verwijderd.
