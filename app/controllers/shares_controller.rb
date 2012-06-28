@@ -3,6 +3,9 @@ class SharesController < ApplicationController
   before_filter :find_share_node
   before_filter :find_page
 
+  # SSL encryption is required for these actions:
+  ssl_required :new, :create
+
   def new
     @share = Share.new(:message => "#{@page.title}: http://#{request.host}/#{@page.node.url_alias}")
   end
