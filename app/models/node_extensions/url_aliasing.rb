@@ -59,7 +59,7 @@ module NodeExtensions::UrlAliasing
     end
     
     # Helper method for constructing a content url path for a node, used for rewrites
-    def path_for_node(node, query = '') 
+    def path_for_node(node, action = '', format = '', query = '') 
       case
       when node.content_type == 'ContentCopy'
         Node.path_for_node(node.content.copied_node, query)
@@ -74,19 +74,19 @@ module NodeExtensions::UrlAliasing
           end
         end
 
-        "#{path_builder.call(node)}#{query}"
+        "#{path_builder.call(node)}#{action}#{format}#{query}"
       else
-        "/#{node.content_type.tableize}/#{node.content_id}#{query}"      
+        "/#{node.content_type.tableize}/#{node.content_id}#{action}#{format}#{query}"      
       end
     end
     
-    def find_node_for_url_alias!(url_alias, domain)
-      site = Site.find_by_domain!(domain)
-      subsite_url_alias = "#{site.node.url_alias}/#{url_alias}"
-
-      unless node = Node.where([ 'url_alias = ? OR custom_url_alias = ?', subsite_url_alias, subsite_url_alias ]).first
-        node = Node.where([ 'url_alias = ? OR custom_url_alias = ?', url_alias, url_alias ]).first!
-      end      
+    def find_node_for_url_alias!(url_alias, site)
+      find_node_for_url_alias(url_alias, site) || raise(ActiveRecord::RecordNotFound)
+    end
+    
+    def find_node_for_url_alias(url_alias, site)
+      alias_to_find = [url_alias, "#{site.node.url_alias}/#{url_alias}"]
+      Node.where([ 'url_alias IN (?) OR custom_url_alias IN (?)', alias_to_find, alias_to_find]).first
     end
     
   end

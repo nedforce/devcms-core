@@ -10,7 +10,7 @@
       <h2><%= link_to h(entry.title), h(entry.url.to_s.strip) -%></h2>
 
       <div class="clearfix">
-        <%=w tidy_html(simple_format(entry.content.to_s.strip)) -%>
+        <%=w simple_format(entry.content.to_s.strip) -%>
       </div>
       <div class="buttons clearfix">
         <%= readspeaker_button(:rid => readspeaker_id) %>
