@@ -1,4 +1,4 @@
-- query_string = " #{t 'search.for'} " + content_tag(:span, "'#{h @query}'", :class => 'query') + " #{t 'search.in'} " + ((@top_node.nil? || @top_node.is_root?) ? Settler[:host] : "(#{h @top_node.content.title})")
+- query_string = raw " #{t 'search.for'} " + content_tag(:span, "'#{h @query}'", :class => 'query') + " #{t 'search.in'} " + ((@top_node.nil? || @top_node.is_root?) ? Settler[:host] : "(#{h @top_node.content.title})")
 - if @content_types_to_include
   - query_string += " #{t 'search.of_type'} '#{@search_scope.first}'"
 

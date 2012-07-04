@@ -14,7 +14,6 @@ class Search::FerretSearch
 
     query = "(#{search_tokens.join(' ')})"
     query = self.expand_query(query, top_node, options.delete(:zipcode), options.delete(:from), options.delete(:to), options.delete(:programme), options.delete(:project), options.delete(:content_types_to_include), options.delete(:content_types_to_exclude))
-    pp query
     options = {:sort => Ferret::Search::SortField.new(:updated_at_to_index, :reverse => true) }.merge(options) if options.delete(:sort) == 'date'
     self.paginating_ferret_search({ :q => query, :page_size => page_size, :current => page, :limit => 250 }.merge(options))
   end
