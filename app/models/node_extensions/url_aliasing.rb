@@ -62,9 +62,9 @@ module NodeExtensions::UrlAliasing
     def path_for_node(node, action = '', format = '', query = '') 
       case
       when node.content_type == 'ContentCopy'
-        Node.path_for_node(node.content.copied_node, query)
+        Node.path_for_node(node.content.copied_node, action, format, query)
       when node.content_type == 'Section' && frontpage_node = node.content.frontpage_node
-        Node.path_for_node(frontpage_node, query)
+        Node.path_for_node(frontpage_node, action, format, query)
       when DevcmsCore::Engine.content_type_configuration(node.content_type)[:nested_resource]
         path_builder = lambda do |node|
           if DevcmsCore::Engine.content_type_configuration(node.content_type)[:nested_resource]
