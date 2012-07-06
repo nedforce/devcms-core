@@ -7,7 +7,7 @@
     = render :partial => '/shared/metadata', :locals => { :last_update_date => @html_page.updated_at }
 
     .htmlField
-      = @html_page.body
+      = raw @html_page.body
 
     = render_images
     = render_attachments
