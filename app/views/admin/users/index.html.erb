@@ -1,8 +1,8 @@
 <!-- Include Grid Filter JS -->
-<%= javascript_include_tag 'ext/ux/RemoteCheckboxGroup.js','ext/ux/menu/EditableItem.js', 'ext/ux/menu/RangeMenu.js', 
-'ext/ux/grid/GridFilters.js','ext/ux/grid/filter/Filter.js', 'ext/ux/grid/filter/StringFilter.js', 
-'ext/ux/grid/filter/DateFilter.js', 'ext/ux/grid/filter/ListFilter.js', 'ext/ux/grid/filter/NumericFilter.js',
-'ext/ux/grid/filter/BooleanFilter.js' %>
+<%= javascript_include_tag '/libraries/ext/ux/RemoteCheckboxGroup.js','/libraries/ext/ux/menu/EditableItem.js', '/libraries/ext/ux/menu/RangeMenu.js', 
+'/libraries/ext/ux/grid/GridFilters.js','/libraries/ext/ux/grid/filter/Filter.js', '/libraries/ext/ux/grid/filter/StringFilter.js', 
+'/libraries/ext/ux/grid/filter/DateFilter.js', '/libraries/ext/ux/grid/filter/ListFilter.js', '/libraries/ext/ux/grid/filter/NumericFilter.js',
+'/libraries/ext/ux/grid/filter/BooleanFilter.js' %>
 
 <script type="text/javascript">
 //<![CDATA[
@@ -95,7 +95,11 @@ Ext.onReady(function(){
     // create the Data Store
     var store = new Ext.data.Store({
         // load using HTTP
-        url: '<%= @privileged ? admin_users_path(:format => :xml, :privileged => true) : admin_users_path(:format => :xml) %>',
+        proxy: new Ext.data.HttpProxy({
+          url: '<%= @privileged ? admin_users_path(:format => :xml, :privileged => true) : admin_users_path(:format => :xml) %>',
+          method: 'GET'
+        }),
+
         remoteSort: true,
 
         // the return will be XML, so lets set up a reader

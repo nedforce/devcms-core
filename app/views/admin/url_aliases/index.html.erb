@@ -17,7 +17,11 @@ Ext.onReady(function() {
   cm.defaultSortable = true;
 
   var store = new Ext.data.Store({
-    url: '<%= admin_url_aliases_path(:format => :xml) %>',
+    proxy: new Ext.data.HttpProxy({
+      url: '<%= admin_url_aliases_path(:format => :xml) %>',
+      method: 'GET'
+    }),    
+
     autoLoad: {params: {start: 0, limit: perPage}},
     remoteSort: true,
     reader: new Ext.data.XmlReader({

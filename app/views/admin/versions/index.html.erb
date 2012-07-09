@@ -56,7 +56,11 @@ Ext.onReady(function() {
     // create the Data Store
     var store = new Ext.data.Store({
         // load using HTTP
-        url: 'versions.xml',
+        proxy: new Ext.data.HttpProxy({
+          url: 'versions.xml',
+          method: 'GET'
+        }), 
+                
         remoteSort: false,
 
         // the return will be XML, so lets set up a reader
