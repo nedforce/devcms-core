@@ -1,9 +1,9 @@
 %p.attachmentsTableExplanation= t 'attachments.attachments_table'
 
-- if attachments
+- if attachments.present?
   .themeOverview
     = render :partial => "/attachment_themes/listing", :locals => { :items => attachments }
 
 - if container.sub_themes.exists?
-  %h2= t "attachment_themes.sub_themes"
+  %h2= t 'attachment_themes.sub_themes'
   = render :partial => '/themes/listing', :locals => { :container => container, :depth => 1, :max_depth => 4 }

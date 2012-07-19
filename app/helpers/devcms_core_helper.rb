@@ -395,7 +395,7 @@ module DevcmsCoreHelper
     end
 
     def render_attachments
-      render(:partial => 'shared/attachments', :locals => { :container => @node.content, :attachments => @attachment_nodes, :rel => @node.id }) unless @attachment_nodes.blank?
+      render(:partial => 'shared/attachments', :locals => { :container => @node.content, :attachments => @attachment_nodes, :rel => @node.id }) if @attachment_nodes.present? || @node.children.accessible.with_content_type(%w(AttachmentTheme)).count > 0
     end
 
     # Override +error_messages_for+ to override default header message. For some reason the localization
