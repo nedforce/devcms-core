@@ -57,7 +57,7 @@ class ApplicationController < ActionController::Base
   layout :set_layout
   
   # Include all helpers, all the time.
-  helper VideoHelper, SitemapsHelper, SearchHelper, PollQuestionsHelper, OwmsMetadataHelper, HtmlEditorHelper, ContactBoxesHelper, CalendarsHelper, AttachmentsHelper, ApplicationHelper, TextHelper, LayoutHelper
+  helper VideoHelper, SitemapsHelper, SearchHelper, PollQuestionsHelper, OwmsMetadataHelper, HtmlEditorHelper, ContactBoxesHelper, CalendarsHelper, AttachmentsHelper, ApplicationHelper, LayoutHelper
 
   helper_method :layout_configuration, :secure_url, :current_site, :current_user_has_any_role?, :current_user_is_admin?, :current_user_is_editor?, :current_user_is_final_editor?
 

@@ -34,6 +34,7 @@ require 'pg'
 require 'prototype-rails'
 require 'prototype_legacy_helper'
 require 'tidy_ffi'
+require 'truncate_html'
 
 # Libs
 module DevcmsCore

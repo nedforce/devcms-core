@@ -10,7 +10,7 @@ module SearchHelper
 
   def highlighted_content(result)
     if result.highlighted_content.blank?
-      highlight(truncate_html(white_list(result.content), 200), @query.split, '<span class="searchHighlight">\1</span>')
+      highlight(truncate_html(white_list(result.content), :length => 200), @query.split, '<span class="searchHighlight">\1</span>')
     else
       white_list(result.highlighted_content, :tags => ["span"], :attributes => ["class"])
     end

@@ -43,6 +43,7 @@ Gem::Specification.new do |s|
   s.add_dependency  'carrierwave'
   s.add_dependency  'bartt-ssl_requirement', '~>1.4.0'
   s.add_dependency  'rack-rewrite', '~> 1.2.1'
+  s.add_dependency  'truncate_html', '~> 0.5.5'
 
   s.add_dependency  'prototype_legacy_helper', '0.0.0'
   s.add_dependency  'prototype-rails', '~> 3.2.1'  
