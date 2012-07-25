@@ -142,7 +142,7 @@ Ext.onReady(function() {
       selectedRows.each(function(item) {
         Ext.Ajax.request({
           waitMsg: '<%= I18n.t("contact_forms.deleting") %>',
-          url: 'contact_forms/<%= @contact_form.id %>/responses/'+item.id+'.json',
+          url: '/admin/contact_forms/<%= @contact_form.id %>/responses/'+item.id+'.json',
           method: 'POST',
 
           params: "_method=delete&authenticity_token=<%= form_authenticity_token -%>",
@@ -161,7 +161,7 @@ Ext.onReady(function() {
   function handleEdit(editEvent) {
       Ext.Ajax.request({
           waitMsg: '<%= I18n.t("contact_forms.saving")%>',
-          url: 'contact_forms/<%= @contact_form.id %>/responses/' + editEvent.record.id + '.xml',
+          url: '/admin/contact_forms/<%= @contact_form.id %>/responses/' + editEvent.record.id + '.xml',
           method: 'POST',
 
           params: "_method=put&authenticity_token=<%= form_authenticity_token -%>" +
