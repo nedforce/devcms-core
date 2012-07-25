@@ -69,15 +69,11 @@ class Admin::ResponsesController < Admin::AdminController
   end
 
   def import_csv
-    if params[:response][:uploaded_data].class.name == "ModPorter::UploadedFile"
-      csv_data = params[:response][:uploaded_data].to_tempfile.read
-    else
-      csv_data = params[:response][:uploaded_data].read
-    end
+    csv_data = params[:response][:uploaded_data].read
     
     headers_ok = false
     headers = []
-    FasterCSV.parse(csv_data) do |row|
+    CSV.parse(csv_data) do |row|
       if(headers_ok)
         # [ ] TODO: kijken of dit goed gaat, row debuggen
         response_row = Response.create!(:contact_form => @contact_form, :ip => 'CSV-Import', :time => Time.now)

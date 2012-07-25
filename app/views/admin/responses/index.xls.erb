@@ -30,13 +30,13 @@ row = 2
   sheet[row, 0] = response.id
   
   ContactFormField.all(
-    :select => 'value, response_id, contact_form_id, label', 
+    :select => 'value, file, response_id, contact_form_id, label', 
     :order => "position asc", 
     :conditions => {:contact_form_id => @contact_form.id}, 
     :joins => ("LEFT JOIN response_fields ON (response_fields.contact_form_field_id = contact_form_fields.id 
       AND response_fields.response_id = #{response.id.to_s})")
   ).each do |response_field|
-    sheet[row, column] = response_field.value
+    sheet[row, column] = response_field.file? ? response_field.read_attribute(:file) : response_field.value
     column += 1
   end
   

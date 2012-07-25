@@ -28,7 +28,7 @@ Gem::Specification.new do |s|
   s.add_dependency  'shuber-sortable', '~> 1.0.6'
   s.add_dependency  'tidy_ffi', '~> 0.1.4'
   s.add_dependency  'whenever', '>= 0.4'
-  s.add_dependency  'spreadsheet', '~> 0.6.5.2'
+  s.add_dependency  'spreadsheet', '~> 0.7.3'
   s.add_dependency  'roo', '~> 1.10.1'
   s.add_dependency  'sdsykes-ferret' # [Rails3] gem 'ferret' seems to be broken in ruby 1.9
   s.add_dependency  'rmagick', '>= 2.13.1'
