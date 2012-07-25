@@ -9,7 +9,7 @@ I18n = {
     }
     if (scope == null && I18n.locale[I18n.currentLocale][key]) {
       return I18n.locale[I18n.currentLocale][key];
-    } else if (scope != null && I18n.locale[I18n.currentLocale][scope][key]) {
+    } else if (scope != null && I18n.locale[I18n.currentLocale][scope] && I18n.locale[I18n.currentLocale][scope][key]) {
       return I18n.locale[I18n.currentLocale][scope][key];
     } else {
       return 'missing: ' + key;
