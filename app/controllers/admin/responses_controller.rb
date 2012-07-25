@@ -26,7 +26,7 @@ class Admin::ResponsesController < Admin::AdminController
       format.html #index.html.erb
       format.xml  #index.xml.builder
       format.csv  #index.csv.erb
-      format.xls  #index.xls.erb
+      format.xls  { send_data(render_responses_xls(@contact_form, @responses), :type=>"application/ms-excel", :filename => "#{@contact_form.title}_inzendingen_#{Date.today.strftime('%d_%m_%Y')}.xls") }
     end
   end
 
@@ -136,4 +136,59 @@ class Admin::ResponsesController < Admin::AdminController
     end
     @sort_field = "UPPER(#{@sort_field})" unless @sort_field =~ /(id|created_at)/
   end
+  
+  private
+  
+  def render_responses_xls(contact_form, responses)
+    xls = Spreadsheet::Excel::Workbook.new
+    sheet = xls.create_worksheet :name => 'Inzendingen'
+
+    # Titel
+    fTitle = Spreadsheet::Format.new(:color => :blue, :weight => :bold, :size => 18)
+    sheet.row(0).set_format(0, fTitle)
+    sheet[0,0] = "Inzendingen"
+
+    # Kolomtitels
+    fHeading = Spreadsheet::Format.new :weight => :bold
+    sheet.row(1).default_format = fHeading
+
+    header_fields = ['#']
+    sheet.column(0).width = 5
+    i = 1
+    ContactFormField.all(:order => "position asc", :conditions => {:contact_form_id => contact_form.id}).each do |field|
+      header_fields << field.label
+      sheet.column(i).width = 20
+      i += 1
+    end
+
+    sheet.row(1).concat header_fields
+
+    # Rijen
+    row = 2
+
+    responses.each do |response|
+      column = 1
+
+      sheet[row, 0] = response.id
+
+      ContactFormField.all(
+        :select => 'value, file, response_id, contact_form_id, label', 
+        :order => "position asc", 
+        :conditions => {:contact_form_id => contact_form.id}, 
+        :joins => ("LEFT JOIN response_fields ON (response_fields.contact_form_field_id = contact_form_fields.id 
+          AND response_fields.response_id = #{response.id.to_s})")
+      ).each do |response_field|
+        sheet[row, column] = response_field.file? ? response_field.read_attribute(:file) : response_field.value
+        column += 1
+      end
+
+      row += 1
+    end
+
+    # Workaround because +Spreadsheet+ doesn't have an option to output to screen
+    io = StringIO.new('')
+    xls.write(io)
+    io.rewind
+    io.read
+  end  
 end
