@@ -56,6 +56,10 @@ class Layout
   def parent
     @parent ||= Layout.find(self.config["extends"])
   end
+  
+  def to_param
+    id
+  end
 
   def self.find(id)
     self.all.find{ |layout| layout.id == id }
