@@ -1,8 +1,13 @@
-- if current_site.content.analytics_code.present? || Settler[:google_analytics_key].present?
+- if current_site.content.analytics_code.present?
+  - analytics_code = current_site.content.analytics_code
+- elsif Settler[:google_analytics_key].present?
+  - analytics_code = Settler[:google_analytics_key]
+
+- if analytics_code
   / Google Analytics code
   :javascript
     var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', '#{escape_javascript(current_site.content.analytics_code || Settler[:google_analytics_key])}']);
+    _gaq.push(['_setAccount', '#{escape_javascript(analytics_code)}']);
     _gaq.push(['_trackPageview']);
 
     (function () {
