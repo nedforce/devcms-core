@@ -20,7 +20,7 @@ module DevcmsCore
                      start_of_month, end_of_month, start_of_month, end_of_month, start_of_month, end_of_month 
                    ]
 
-      self.accessible.all(:conditions => conditions, :order => 'start_time')
+      self.accessible.where(conditions).reorder('start_time')
     end
 
     def all_for_year(year) #:nodoc:
@@ -32,7 +32,7 @@ module DevcmsCore
                      { :start_of_year => start_of_year, :end_of_year => end_of_year }
                    ]
 
-      self.accessible.all(:conditions => conditions, :order => 'start_time')
+      self.accessible.where(conditions).reorder('start_time')
     end
 
     def exists_after_date?(date = Date.today) #:nodoc:
@@ -51,7 +51,7 @@ module DevcmsCore
     end    
 
     def current_and_future(time = Time.now, limit = 10) #:nodoc:
-      self.accessible.all(:conditions => ['( ? < start_time OR ? < end_time )', time, time], :limit => limit, :order => 'start_time ASC')
+      self.accessible.where(['( ? < start_time OR ? < end_time )', time, time]).limit(limit).reorder('start_time ASC')
     end
 
     def gregorian_date?(date)
