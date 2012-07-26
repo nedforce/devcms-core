@@ -2,15 +2,7 @@ class ImagesController < ApplicationController
   
   prepend_before_filter :redirect_to_jpg,  :except => :show
   
-  skip_before_filter :confirm_destroy
-
-  skip_before_filter :set_search_scopes
-  
-  skip_before_filter :set_private_menu
-  
-  skip_before_filter :find_accessible_content_children_for_menu
-  
-  skip_before_filter :set_rss_feed_url
+  skip_before_filter :confirm_destroy, :set_search_scopes, :set_private_menu, :find_accessible_content_children_for_menu, :set_rss_feed_url, :set_view_paths
   
   before_filter :find_image
   
