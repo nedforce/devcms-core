@@ -89,6 +89,7 @@ class ApplicationController < ActionController::Base
         if request.xhr?
           render :json => { :error => I18n.t('application.page_not_found') }.to_json, :status => 404
         else
+          set_view_paths
           if (error_404_url_alias = Settler[:error_page_404]).present? && @node = Node.find_by_url_alias(error_404_url_alias)
             @page = @node.content
             render :template => 'pages/show', :status => :not_found
@@ -111,7 +112,7 @@ class ApplicationController < ActionController::Base
       puts "\n#{exception.message}"
       puts exception.backtrace.join("\n") 
     end
-    
+  
     send_exception_notification(exception)
     error = {:error => "#{exception} (#{exception.class})", :backtrace => exception.backtrace.join('\n')}
     @page_title = t('errors.internal_server_error')
@@ -121,6 +122,7 @@ class ApplicationController < ActionController::Base
         if request.xhr?
           render :json => error.to_json, :status => :internal_server_error
         else
+          set_view_paths
           if (error_500_url_alias = Settler[:error_page_500]).present? && @node = Node.find_by_url_alias(error_500_url_alias)
             @page = @node.content
             render :template => 'pages/show', :status => :internal_server_error
