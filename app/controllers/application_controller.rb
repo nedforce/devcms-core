@@ -55,6 +55,7 @@ class ApplicationController < ActionController::Base
 
   # Set the layout based on its position in the tree.
   layout :set_layout
+  before_filter :set_view_paths
   
   # Include all helpers, all the time.
   helper VideoHelper, SitemapsHelper, SearchHelper, PollQuestionsHelper, OwmsMetadataHelper, HtmlEditorHelper, ContactBoxesHelper, CalendarsHelper, AttachmentsHelper, ApplicationHelper, LayoutHelper
@@ -200,8 +201,7 @@ protected
     end
   end
 
-  # Return layout to render and setup internal layout configuration
-  # Default to current site, with default variant
+  # Return layout to render
   # Return the default print template if param 'layout' equals 'print'.
   def set_layout
     if params[:layout] == "print"
@@ -209,24 +209,30 @@ protected
     elsif params[:layout] == "plain"
       return "plain"
     else
-      node = @node
-      
-      unless node
-        node                = current_site
-        node.layout_variant = 'default'
-      end        
-      
-      @layout_configuration = node.own_or_inherited_layout_configuration
-      layout                = node.own_or_inherited_layout
-      variant               = node.own_or_inherited_layout_variant
-      prepend_view_path((Rails.root + "app/layouts/#{layout.parent.id}/views").to_s) if layout.parent.present?
-      prepend_view_path((Rails.root + "app/layouts/#{layout.id}/views").to_s)
-      if variant
-        prepend_view_path((Rails.root + "app/layouts/#{layout.parent.id}/#{variant[:id]}/views").to_s) if layout.parent.present?
-        prepend_view_path((Rails.root + "app/layouts/#{layout.id}/#{variant[:id]}/views").to_s)
-      end  
       return 'default'
     end
+  end
+
+  # setup internal layout configuration
+  # Default to current site, with default variant
+  def set_view_paths
+    pp "set_view_paths called"
+    node = @node
+      
+    unless node
+      node                = current_site
+      node.layout_variant = 'default'
+    end        
+    
+    @layout_configuration = node.own_or_inherited_layout_configuration
+    layout                = node.own_or_inherited_layout
+    variant               = node.own_or_inherited_layout_variant
+    prepend_view_path("app/layouts/#{layout.parent.id}/views") if layout.parent.present?
+    prepend_view_path("app/layouts/#{layout.id}/views")
+    if variant && variant[:id] != 'default'
+      prepend_view_path("app/layouts/#{layout.parent.id}/#{variant[:id]}/views") if layout.parent.present?
+      prepend_view_path("app/layouts/#{layout.id}/#{variant[:id]}/views")
+    end 
   end
   
   def layout_configuration
