@@ -143,7 +143,7 @@ protected
 
   # Used to scope the content (menu's etc) to the current site node
   def current_site
-    @current_site ||= Node.with_content_type('Site').find_by_id(params[:site_id]) || Site.find_by_domain(request.domain).try(:node) || raise(ActionController::RoutingError, 'No root site found!')
+    @current_site ||= Node.with_content_type('Site').find_by_id(params[:site_id]) || Site.find_by_domain(request.host).try(:node) || raise(ActionController::RoutingError, 'No root site found!')
   end
   
   # Used to find the operated node. Should be used for content nodes only
