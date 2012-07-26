@@ -2,7 +2,7 @@
   #inner_columns_wrapper.clearfix
     #content_extended.clearfix
       - if @node.present?
-        - cache(:controller => '/nodes', :action => :breadcrumbs, :node => @node.id, :last_updated_at => @node.self_and_ancestors.maximum(:updated_at)) do
+        - cache(:controller => '/nodes', :action => :breadcrumbs, :node => @node.id, :last_updated_at => @node.self_and_ancestors.maximum(:updated_at), :site => current_site.id) do
           = bread_crumbs_for(@node, :include_root => false, :minimum_crumbs => 2)
       = yield_flash
       = yield

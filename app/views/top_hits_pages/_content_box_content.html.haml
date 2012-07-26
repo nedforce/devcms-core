@@ -1,6 +1,6 @@
 - content = node.content
 
-- cache(:content_type => content.class.name, :content_id => content.id, :controller => '/nodes', :action => :content_box, :expires_in => 30.minutes) do
+- cache(:content_type => content.class.name, :content_id => content.id, :controller => '/nodes', :action => :content_box, :expires_in => 30.minutes, :site => current_site.id ) do
   - top_hits = content.find_top_hits(:limit => node.content_box_number_of_items, :include_content => false)
 
   - unless top_hits.empty?
