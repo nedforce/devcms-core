@@ -51,7 +51,7 @@ module DevcmsCore
     end    
 
     def current_and_future(time = Time.now, limit = 10) #:nodoc:
-      self.accessible.all(:conditions => ['( ? < start_time OR ? < end_time )', time, time], :limit => limit, :order => 'start_time')
+      self.accessible.all(:conditions => ['( ? < start_time OR ? < end_time )', time, time], :limit => limit, :order => 'start_time ASC')
     end
 
     def gregorian_date?(date)
