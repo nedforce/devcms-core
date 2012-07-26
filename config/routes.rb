@@ -370,7 +370,7 @@ Rails.application.routes.draw do
       
       resources :layouts, :only => [] do
         member do
-          get :variants_settings_and_targets
+          post :variants_settings_and_targets
           get :targets
         end      
       end
