@@ -24,8 +24,10 @@ class ApplicationController < ActionController::Base
   # Try retrieve the +Node+ object for the current request.
   # This needs to be done before any authorization attempts, a +Node+ might be needed.
   before_filter :find_node
-  
   before_filter :find_context_node
+
+  # Set view paths
+  before_filter :set_view_paths
 
   # Attempt to login the user from a cookie, if it's set.
   before_filter :login_from_cookie
@@ -53,9 +55,8 @@ class ApplicationController < ActionController::Base
   # Increment the number of hits for the accessed node, if a node was accessed
   after_filter :increment_hits, :only => :show
 
-  # Set the layout based on its position in the tree.
+  # Set the layout
   layout :set_layout
-  before_filter :set_view_paths
   
   # Include all helpers, all the time.
   helper VideoHelper, SitemapsHelper, SearchHelper, PollQuestionsHelper, OwmsMetadataHelper, HtmlEditorHelper, ContactBoxesHelper, CalendarsHelper, AttachmentsHelper, ApplicationHelper, LayoutHelper
