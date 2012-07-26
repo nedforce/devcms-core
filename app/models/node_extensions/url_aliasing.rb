@@ -25,14 +25,16 @@ module NodeExtensions::UrlAliasing
     
     # Do not run uniqueness validation if url_alias length exceeds MAXIMUM_URL_ALIAS_LENGTH, as this will cause
     # an ActiveRecord::StatementInvalid exception being thrown
-    validates_uniqueness_of :url_alias, :allow_nil => true, :unless => Proc.new { |node| node.url_alias.present? && node.url_alias.length > MAXIMUM_URL_ALIAS_LENGTH }
+    # validates_uniqueness_of :url_alias, :allow_nil => true, :unless => Proc.new { |node| node.url_alias.present? && node.url_alias.length > MAXIMUM_URL_ALIAS_LENGTH }
     
     # Do not run uniqueness validation if url_alias length exceeds MAXIMUM_URL_ALIAS_LENGTH, as this will cause
     # an ActiveRecord::StatementInvalid exception being thrown
-    validates_uniqueness_of :custom_url_alias, :allow_nil => true, :unless => Proc.new { |node| node.custom_url_alias.present? && node.custom_url_alias.length > MAXIMUM_URL_ALIAS_LENGTH }
+    # validates_uniqueness_of :custom_url_alias, :allow_nil => true, :unless => Proc.new { |node| node.custom_url_alias.present? && node.custom_url_alias.length > MAXIMUM_URL_ALIAS_LENGTH }
     
     validate :should_not_have_reserved_url_alias
     validate :should_not_have_reserved_custom_url_alias
+    validate :should_have_unique_url_alias_in_site
+    validate :should_have_unique_custom_url_alias_in_site
             
     # Set an URL alias
     before_create :set_url_alias
@@ -137,7 +139,7 @@ module NodeExtensions::UrlAliasing
   end
   
   def parent_url_alias
-    parent.url_alias if self.parent && !self.parent.is_global_frontpage? && !self.parent.root?
+    parent.url_alias if self.parent && !self.parent.is_global_frontpage? && !self.parent.root? && self.parent.sub_content_type != "Site"
   end
   
   def generate_unique_url_alias
@@ -164,7 +166,7 @@ module NodeExtensions::UrlAliasing
   
     i = 0
   
-    while Node.first(:conditions => [ "id <> ? AND (url_alias = ? OR custom_url_alias = ?)", (self.id || 0), temp_url_alias, temp_url_alias ]) || self.class.url_alias_reserved?(temp_url_alias)
+    while containing_site.self_and_descendants.first(:conditions => [ "id <> ? AND (url_alias = ? OR custom_url_alias = ?)", (id || 0), temp_url_alias, temp_url_alias ]) || self.class.url_alias_reserved?(temp_url_alias)
       i += 1
       temp_url_alias = "#{generated_url_alias}-#{i}"
     end
@@ -195,6 +197,18 @@ module NodeExtensions::UrlAliasing
     errors.add(:url_alias, :reserved_custom_url_alias) if self.class.url_alias_reserved?(self.custom_url_alias)
   end
   
+  def should_have_unique_url_alias_in_site
+    if url_alias.present? && url_alias.size <= MAXIMUM_URL_ALIAS_LENGTH
+      errors.add(:url_alias, :taken) if containing_site.self_and_descendants.where(["url_alias = ? AND id != ?", url_alias, (id || 0)]).any? 
+    end
+  end
+
+  def should_have_unique_custom_url_alias_in_site
+    if custom_url_alias.present? && custom_url_alias.size <= MAXIMUM_URL_ALIAS_LENGTH
+      errors.add(:custom_url_alias, :taken) if containing_site.self_and_descendants.where(["custom_url_alias = ? AND id != ?", custom_url_alias, (id || 0)]).any? 
+    end
+  end
+
   def clear_aliases
     self.class.update_all({ :url_alias => nil, :custom_url_alias => nil }, [ 'id IN (?)', self.subtree_ids ])
   end

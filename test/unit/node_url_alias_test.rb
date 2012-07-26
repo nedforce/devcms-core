@@ -214,6 +214,13 @@ class NodeURLAliasTest < ActiveSupport::TestCase
     assert_equal [], Node.all_including_deleted(:conditions => "url_alias = 'foobarbaz'")
     assert cn2.valid?, cn2.errors.full_messages.to_sentence
   end
+
+  def test_should_require_uniq_url_alias_scoped_by_site
+    cn1 = create_page(:title => 'foobarbaz').node
+    cn2 = create_page(:parent => nodes(:sub_site_section_node), :title => "foobarbaz" ).node
+    assert cn2.valid?
+    assert_equal cn1.url_alias, cn2.url_alias
+  end
   
 protected
 
