@@ -85,8 +85,7 @@ module NodeExtensions::UrlAliasing
     end
     
     def find_node_for_url_alias(url_alias, site)
-      alias_to_find = [url_alias, "#{site.node.url_alias}/#{url_alias}"]
-      Node.where([ 'url_alias IN (?) OR custom_url_alias IN (?)', alias_to_find, alias_to_find]).first
+      site.node.subtree.where([ 'url_alias IN (?) OR custom_url_alias IN (?)', url_alias, url_alias]).first
     end
     
   end
