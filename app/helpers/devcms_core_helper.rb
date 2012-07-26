@@ -181,7 +181,7 @@ module DevcmsCoreHelper
   def print_button
     content_tag(:div, :class => 'print') do
       image_tag('icons/print.png', :class => 'icon', :alt => t('application.print_alt'), :title => t('application.print_title')) +
-      link_to(t('application.print'), "?layout=print")
+      link_to(t('application.print'), "?layout=print", :rel => 'nofollow')
     end
   end
 
@@ -194,7 +194,7 @@ module DevcmsCoreHelper
 
       content_tag(:div, :class => 'readspeaker_button') do
         (image_tag('icons/sayit.png', :class => 'icon', :alt => t('application.sayit_alt'), :title => t('application.sayit_title')) +
-        (link_to(t('application.sayit'), readspeaker_url, { :class => link_class }.merge(options))) unless @node && (@node.hidden? || @node.private? || !@node.publishable?))
+        (link_to(t('application.sayit'), readspeaker_url, { :class => link_class, :rel => 'nofollow' }.merge(options))) unless @node && (@node.hidden? || @node.private? || !@node.publishable?))
       end
     end
   end

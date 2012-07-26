@@ -217,7 +217,6 @@ protected
   # setup internal layout configuration
   # Default to current site, with default variant
   def set_view_paths
-    pp "set_view_paths called"
     node = @node
       
     unless node
