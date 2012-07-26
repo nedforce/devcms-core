@@ -233,7 +233,7 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
         Ext.Ajax.request({
             url: '/admin/nodes/' + this.id + '/move',
             method: 'POST', // overridden with put by the _method parameter
-            params: Ext.ux.prepareParams(this.baseParams, Ext.apply(customParams, { _method: 'put' })),
+            params: Ext.ux.prepareParams(this.baseParams, Ext.apply(defaultParams, Ext.apply(customParams, { _method: 'put' }))),
             scope: this,
             failure: function (response, options) {
                 // reset structure:
@@ -269,7 +269,7 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
         Ext.Ajax.request({
             url: '/admin/nodes/' + this.id,
             method: 'POST', // overridden with delete by the _method parameter
-            params: Ext.ux.prepareParams(this.baseParams, { _method: 'delete' }),
+            params: Ext.ux.prepareParams(this.baseParams, Ext.apply(defaultParams, { _method: 'delete' })),
             scope: this,
             success: function () {
                 Ext.ux.showRightPanelMssg('Node succesvol verwijderd.');
@@ -304,7 +304,7 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
         Ext.Ajax.request({
             url: '/admin/calendar_items/' + this.attributes.contentNodeId,
             method: 'POST', // overridden with delete by the _method parameter
-            params: Ext.ux.prepareParams(this.baseParams, { _method: 'delete' }),
+            params: Ext.ux.prepareParams(this.baseParams, Ext.apply(defaultParams, { _method: 'delete' })),
             scope: this,
             success: function () {
                 this.parentNode.parentNode.reload();
