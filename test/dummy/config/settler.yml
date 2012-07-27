@@ -109,7 +109,7 @@ settings: &settings
     editable: false
   search_enabled_engines:
     alt: Beschikbare zoekmachines
-    value: ['luminis']
+    value: ['luminis', 'ferret']
   search_default_engine: &search
     alt: Standaard zoekmachine
     value: 'ferret'

@@ -314,8 +314,7 @@ protected
   
   def find_accessible_private_items_for(user)
     role_assignments = user.role_assignments.all
-    
-    Node.accessible.private.sections.all(:order => :position).select do |node|
+    Node.accessible.private.sections.order(:position).select do |node|
       role_assignments.any? { |ra| node.self_and_ancestor_ids.include?(ra.node_id) }
     end
   end

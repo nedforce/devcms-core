@@ -2,7 +2,7 @@ module SearchHelper
 
   def highlighted_title_link(result, url)
     if result.highlighted_title.blank?
-      link_to(highlight(white_list(result.title), @query.split, '<span class="searchHighlight">\1</span>'), url)
+      link_to(highlight(white_list(result.title), @query.split, :higlighter => '<span class="searchHighlight">\1</span>'), url)
     else
       link_to(white_list(result.highlighted_title, :tags => ["span"], :attributes => ["class"]), url)
     end
@@ -10,7 +10,7 @@ module SearchHelper
 
   def highlighted_content(result)
     if result.highlighted_content.blank?
-      highlight(truncate_html(white_list(result.content), :length => 200), @query.split, '<span class="searchHighlight">\1</span>')
+      highlight(truncate_html(white_list(result.content), :length => 200), @query.split, :higlighter => '<span class="searchHighlight">\1</span>')
     else
       white_list(result.highlighted_content, :tags => ["span"], :attributes => ["class"])
     end

@@ -29,7 +29,7 @@
   <h1><%=t 'search.to_search' -%></h1>
 <% end %>
 
-  <%= form_tag search_path(params[:search_engine]), :method => :get, :class => 'clearfix', :id => 'main_search_form' do %>
+  <%= form_tag search_path(@engine), :method => :get, :class => 'clearfix', :id => 'main_search_form' do %>
     <div id="controls" class="clearfix">
       <%= text_field_tag(:query, @query, :class => 'query') -%>
       <p><%=t 'search.in' -%></p>
@@ -40,7 +40,7 @@
       </div>
 
       <div id="show_advanced_options" <%= 'class="hidden"' if params[:advanced] -%>>
-        <%= link_to_function(t('search.advanced_search'), 'show_advanced_search_options()', :href => search_path(params[:search_engine], :advanced => true)) %>
+        <%= link_to_function(t('search.advanced_search'), 'show_advanced_search_options()', :href => search_path(@engine, :advanced => true)) %>
         <%= image_tag 'blue_pointer_down.png', :alt => t('search.show_advanced_options') -%>
       </div>
     </div>
@@ -102,7 +102,7 @@
         </div>
 
         <div id="hide_advanced_options">
-          <%= link_to_function t('search.simple_search'), 'hide_advanced_search_options()', :href => search_path(params[:search_engine]) %>
+          <%= link_to_function t('search.simple_search'), 'hide_advanced_search_options()', :href => search_path(@engine) %>
           <%= image_tag 'blue_pointer_up.png', :alt => t('search.hide_advanced_options') -%>
         </div>
       </div>

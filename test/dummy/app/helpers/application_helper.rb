@@ -1,21 +1,4 @@
 module ApplicationHelper
-  
-  def search_url(options = {})
-    options ||= {}
-    parameters = []
-    parameters << "view=advanced"                          if options[:advanced].present?
-    parameters << "thema=#{options[:project]}"             if options[:project].present?
-    parameters << "thema=#{options[:programme]}"           if options[:project].blank? && options[:programme].present?
-    parameters << "search_scope=#{options[:search_scope]}" if options[:search_scope].present?
-    parameters << "domein=#{current_site.content.domain}"  unless current_site.root?
-    parameters = parameters.map {|param| ERB::Util.url_encode(param) }
-    "http://zoeken.deventer.nl/search.php?#{parameters.join('&')}"
-  end
-  
-  def search_path(*args)
-    options = args.is_a?(Array) ? args.last : args
-    search_url(options)
-  end
 
   def content_box_icon_alt_for node
     return if node.content_box_icon.blank?

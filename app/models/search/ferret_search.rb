@@ -40,7 +40,7 @@ private
       search_results << res
    end
 
-   search_results.paginate(options[:current], options[:page_size], count)   
+   search_results.paginate(options[:current], options[:page_size], count)
   end
 
   # Takes an existing search string and expands it with related words from the thesaurus.
