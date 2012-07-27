@@ -41,7 +41,7 @@ module NodeExtensions::Expiration
   end
   
   def inherited_expiration_email_settings_node
-    Section.first(:include => :node, :conditions => ["nodes.id IN (?) AND sections.expiration_email_subject IS NOT NULL AND sections.expiration_email_subject != ''", self.path_ids], :order => 'ancestry DESC')
+    Section.includes(:node).where(["nodes.id IN (?) AND sections.expiration_email_subject IS NOT NULL AND sections.expiration_email_subject != ''", self.path_ids]).order('ancestry DESC').first
   end
   
   def expiration_notification_method

@@ -29,7 +29,7 @@ class NodeExpirationMailerWorkerTest < ActionMailer::TestCase
   end
   
   def test_should_use_parent_subject
-    Node.expired.last.parent.content.update_attribute :expiration_email_subject, "Aangepast onderwerp"
+    assert Node.root.content.update_attribute :expiration_email_subject, "Aangepast onderwerp"
     assert_difference('ActionMailer::Base.deliveries.size', 3) do
       NodeExpirationMailerWorker.notify_authors
       assert ActionMailer::Base.deliveries.all? {|message| message.subject.include? "Aangepast onderwerp"}

@@ -222,19 +222,6 @@ module DevcmsCoreHelper
     url
   end
 
-  # Returns a string whose HTML format and structure has been cleaned.
-  #
-  # *Parameters*
-  #
-  # +str+ - String to clean.
-  def tidy_html(str)
-    TidyFFI::Tidy.clean(str, :show_body_only => 1, :output_xhtml => 1, :input_encoding => 'utf8')
-  end
-
-  def white_list_preamble(str)
-    white_list(str, :elements => ['span'], :attributes => { 'span' => ['lang', 'xml:lang'] })
-  end
-
   def header_image(node = nil, big_header = false)
     random_image = (node || current_site).random_header_image
 
