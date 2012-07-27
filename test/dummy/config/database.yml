@@ -1,6 +1,8 @@
 test:
   adapter: postgresql
   host: localhost
+  user: arthur
+  password: reetneuken
   database: devcms_test
   min_messages: WARNING
     

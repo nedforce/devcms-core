@@ -2,11 +2,7 @@ module NodeExtensions::ParanoidDelete
   extend ActiveSupport::Concern    
   
   included do
-    if content_columns.any? { |column| column.name == 'deleted_at' }
-      default_scope order('nodes.ancestry, nodes.position').where('nodes.deleted_at IS NULL')
-    else
-      default_scope order('nodes.ancestry, nodes.position')
-    end
+    default_scope order('nodes.ancestry, nodes.position').where('nodes.deleted_at IS NULL')
 
     define_callbacks :before_paranoid_delete, :after_paranoid_delete, :before_paranoid_restore, :after_paranoid_restore
   end
