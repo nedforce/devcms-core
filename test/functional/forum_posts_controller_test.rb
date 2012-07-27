@@ -13,21 +13,21 @@ class ForumPostsControllerTest < ActionController::TestCase
     assert_response :redirect
   end
   
-  def test_should_redirect_for_invalid_forum_topic
+  def test_should_render_not_found_for_invalid_forum_topic
     login_as :henk
-    get :edit, :forum_topic_id => nil, :forum_thread_id => forum_threads(:bewoners_forum_thread_one).id, :id => forum_posts(:bewoners_forum_post_five).id
+    get :edit, :forum_topic_id => -1, :forum_thread_id => forum_threads(:bewoners_forum_thread_one).id, :id => forum_posts(:bewoners_forum_post_five).id
     assert_response :not_found
   end
   
-  def test_should_redirect_for_invalid_forum_thread
+  def test_should_render_not_found_for_invalid_forum_thread
     login_as :henk
-    get :edit, :forum_topic_id => forum_topics(:bewoners_forum_topic_wonen).id, :forum_thread_id => nil, :id => forum_posts(:bewoners_forum_post_five).id
+    get :edit, :forum_topic_id => forum_topics(:bewoners_forum_topic_wonen).id, :forum_thread_id => -1, :id => forum_posts(:bewoners_forum_post_five).id
     assert_response :not_found
   end
 
-  def test_should_redirect_for_invalid_forum_post
+  def test_should_render_not_found_for_invalid_forum_post
     login_as :henk
-    get :edit, :forum_topic_id => forum_topics(:bewoners_forum_topic_wonen).id, :forum_thread_id => forum_threads(:bewoners_forum_thread_one), :id => nil
+    get :edit, :forum_topic_id => forum_topics(:bewoners_forum_topic_wonen).id, :forum_thread_id => forum_threads(:bewoners_forum_thread_one), :id => -1
     assert_response :not_found
   end
  

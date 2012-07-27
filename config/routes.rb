@@ -26,6 +26,8 @@ Rails.application.routes.draw do
       get :tomorrow
     end
   end
+  
+  resources :carrousels, :only => :show
 
   resources :combined_calendars do
     member do
@@ -102,6 +104,7 @@ Rails.application.routes.draw do
     end  
   end
 
+  resources :search_pages, :only => :show
   resources :sections, :only => :show
   resources :shares, :only => [:new, :create]
   resources :social_media_links_boxes, :only => :show
@@ -124,6 +127,7 @@ Rails.application.routes.draw do
       resources :weblog_posts, :except => :index do
         member do
           get :confirm_destroy
+          delete :destroy_image
         end        
       end
       
@@ -135,6 +139,8 @@ Rails.application.routes.draw do
 
   resources :weblog_posts, :except => :index
 
+# =============== ADMIN NAMESPACE ===============
+  
   namespace :admin do
     resources :abbreviations, :except => [:show, :edit]
     
@@ -386,7 +392,9 @@ Rails.application.routes.draw do
   end
   
   root  :to => 'pages#home'
-  
+
+# =============== CUSTOM ROUTES ===============
+    
   match '/attachments/:id/:basename' => 'attachments#show'
   match '/attachments/:action/:id/:basename' => 'attachments#index'
   match '/attachments/:id/:basename.:format' => 'attachments#show', :as => :download
