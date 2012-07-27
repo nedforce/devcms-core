@@ -1,5 +1,5 @@
 .theme{ :class => "depth_#{depth}" }
-  = link_to_node "#{theme.title} #{content_tag('span', theme.content.number_of_children)}", theme
+  = link_to_node "#{theme.title} #{content_tag('span', theme.content.number_of_children)}".html_safe, theme
 
 - depth += 1
 - if depth <= max_depth
