@@ -12,12 +12,12 @@ class RewriteTest < ActionController::IntegrationTest
 
   def test_should_rewrite_to_site_node
     get '/'
-    assert_equal @site.node, assigns(:node)
+    assert_equal @site.frontpage_node, assigns(:node)
   end
   
   def test_should_rewrite_to_site_node_print_preview
     get '/?layout=print'
-    assert_equal @site.node, assigns(:node)
+    assert_equal @site.frontpage_node, assigns(:node)
     assert response.body.include?('Afdrukken:')
   end
   

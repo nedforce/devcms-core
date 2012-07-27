@@ -3,7 +3,7 @@ root_section:
   title: Website root
   description: Dit is de eerste node in de website's boomstructuur.
   frontpage_node_id: <%= ActiveRecord::Fixtures.identify(:devcms_news_node) %>
-  domain: root.local.dev
+  domain: www.example.com
   expiration_email_subject: Content onder uw beheer
 
 sub_site_section:

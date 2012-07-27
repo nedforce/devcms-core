@@ -229,11 +229,14 @@ protected
     @layout_configuration = node.own_or_inherited_layout_configuration
     layout                = node.own_or_inherited_layout
     variant               = node.own_or_inherited_layout_variant
-    prepend_view_path("app/layouts/#{layout.parent.id}/views") if layout.parent.present?
-    prepend_view_path("app/layouts/#{layout.id}/views")
+    parent                = layout.parent
+    
+    prepend_view_path("#{parent.path}/views") if parent.present?
+    prepend_view_path("#{layout.path}/views")
+    
     if variant && variant[:id] != 'default'
-      prepend_view_path("app/layouts/#{layout.parent.id}/#{variant[:id]}/views") if layout.parent.present?
-      prepend_view_path("app/layouts/#{layout.id}/#{variant[:id]}/views")
+      prepend_view_path("#{parent.path}/#{variant[:id]}/views") if parent.present?
+      prepend_view_path("#{layout.path}/#{variant[:id]}/views")
     end 
   end
   
