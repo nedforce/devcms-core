@@ -1,4 +1,4 @@
-# For devcms to run, you need to add some gems that are only available on Github. Add this to your Gemfile:
+# For DevCMS to run, you need to add some gems that are only available on Github. Add this to your Gemfile:
 
 source 'http://gems.github.com'
 
@@ -6,9 +6,13 @@ gem 'calendar_date_select', :git => 'https://github.com/emyl/calendar_date_selec
 gem 'prototype_legacy_helper', '0.0.0', :git => 'http://github.com/willbryant/prototype_legacy_helper.git'
 gem 'soap4r', :git => 'http://github.com/felipec/soap4r'
 
-# A default layout and configuration files for devcms can be created by using the Devcms generator:
+# A default layout and configuration files for DevCMS can be created by using the DevCMS generator:
 
-rails g devcms
+rails generate devcms
+
+# You can overwrite the default DevCMS layout, by setting at the first line of "class Application < Rails::Application"
+
+register_cms_modules
 
 # Notes
 
@@ -16,7 +20,7 @@ rails g devcms
 
   config.assets.compile = true
   
-* For new Devcms applications, you should remove the default ApplicationController. If you'd like to keep it, you need to make it an extension of DevcmsCore:
+* For new DevCMS applications, you should remove the default ApplicationController. If you'd like to keep it, you need to make it an extension of DevcmsCore:
   
   extension_of DevcmsCore
   class ApplicationController < ActionController::Base
