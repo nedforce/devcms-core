@@ -1,6 +1,6 @@
 - show_private_items_in_sub_menu = @node.is_private_or_has_private_ancestor? && current_user_has_any_role?(@node)
-
-- cache({ :controller => '/nodes', :action => :sub_menu, :node => @node.id, :last_updated_at => @node.parent.self_and_children.maximum(:updated_at), :expires_in => 15.minutes, :layout => :deventer }, { :enabled => !show_private_items_in_sub_menu }) do
+- cache_key = { :sub_menu_for_node => @node.id, :last_updated_at => @node.parent.self_and_children.maximum(:updated_at), :site => current_site.id, :private => show_private_items_in_sub_menu }
+- cache(cache_key, { :expires_in => 15.minutes }) do
   - self_and_ancestor_ids = @node.self_and_ancestor_ids
   - top_ancestor = Node.find(self_and_ancestor_ids[1])
   
