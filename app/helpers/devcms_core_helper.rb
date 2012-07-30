@@ -26,7 +26,7 @@ module DevcmsCoreHelper
   #
   # See documentation of +bread_crumbs_track_for+ for more information.
   def bread_crumbs_for(node, options = {})
-    cache(:breadcrumbs_for_node => node.id, :last_updated_at => node.path.maximum(:updated_at), :site => current_site.id) do
+    string_cache(:breadcrumbs_for_node => node.id, :last_updated_at => node.path.maximum(:updated_at), :site => current_site.id) do
       crumb_track = bread_crumbs_track_for(node, options)
       content_tag(:div, crumb_track.html_safe, :class => 'bread_crumbs') if crumb_track.present?
     end
@@ -109,7 +109,7 @@ module DevcmsCoreHelper
   # Returns the html for the double-level main menu.
   def create_main_menu
     menu_scope = current_site.descendants(:to_depth => Devcms.main_menu_depth).accessible.public.shown_in_menu
-    cache(:main_menu_for_site => current_site.id, :last_update_at => menu_scope.maximum(:updated_at)) do
+    string_cache(:main_menu_for_site => current_site.id, :last_update_at => menu_scope.maximum(:updated_at)) do
       top_level_main_menu_items = current_site.closure_for(menu_scope).values.first
 
       if top_level_main_menu_items.any?
@@ -307,6 +307,18 @@ module DevcmsCoreHelper
 
   def new_button(title = nil, &block)
     concat(content_tag(:div, :class => 'new') { image_tag('icons/add.png', :class => 'icon', :alt => 'Icoon van een plusteken', :title => title) + capture(&block) })
+  end
+
+  def string_cache(name = {}, options = nil, &block)
+    if controller.perform_caching
+     if fragment = controller.read_fragment(name, options)
+        fragment
+      else
+        controller.write_fragment(name, yield, options)
+      end
+    else
+      yield
+    end
   end
 
   protected
