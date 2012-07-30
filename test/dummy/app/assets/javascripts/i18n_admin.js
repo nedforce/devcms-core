@@ -1,7 +1,6 @@
 I18n.locale['nl'] = {
 	nodes: {
 		change_feed_failed: 'Sorry, het wijzigen van de feed is mislukt.',
-		columns_mode_failed: 'Sorry, wijzigen kolommen-modus mislukt.',
 		content_copy_failed: 'Sorry, kopie aanmaken mislukt.',
 		delete_all_items: 'Weet u zeker dat u alle items in dit mapje wilt verwijderen?',
 		delete_content: 'Content verwijderen',

@@ -144,7 +144,6 @@ class Node < ActiveRecord::Base
   validates_inclusion_of :publishable,       :in => [ false, true ], :allow_nil => false
   
   validates_inclusion_of :commentable,       :in => [ false, true ], :allow_nil => true
-  validates_inclusion_of :hide_right_column, :in => [ false, true ], :allow_nil => true
   
   validates_inclusion_of :content_box_colour, :in => Devcms.content_box_colours, :allow_blank => true
   validates_inclusion_of :content_box_icon, :in => Devcms.content_box_icons, :allow_blank => true

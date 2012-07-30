@@ -1,6 +1,6 @@
 #columns_wrapper.clearfix
   #inner_columns_wrapper.clearfix
-    .clearfix{:id => @node && @node.hide_right_column? ? 'content_extended' : 'content'}
+    .clearfix#content
       - if @node.present?
         = bread_crumbs_for(@node, :include_root => false, :minimum_crumbs => 2)
       = yield_flash

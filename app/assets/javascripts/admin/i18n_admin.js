@@ -1,7 +1,6 @@
 I18n.locale['nl'] = {
 	nodes: {
 		change_feed_failed: 'Sorry, het wijzigen van de feed is mislukt.',
-		columns_mode_failed: 'Sorry, wijzigen kolommen-modus mislukt.',
 		content_copy_failed: 'Sorry, kopie aanmaken mislukt.',
 		delete_all_items: 'Weet u zeker dat u alle items in dit mapje wilt verwijderen?',
 		delete_content: 'Content verwijderen',
@@ -11,7 +10,6 @@ I18n.locale['nl'] = {
 		edit_items: 'Items bewerken',
 		global_frontpage_success: 'Globale frontpage instellen gelukt.',
 		global_frontpage_failed: 'Sorry, de globale frontpage kon niet worden ingesteld.',
-		hide_right_column_failed: 'Sorry, het verbergen van de rechterkolom is mislukt.',
 		import_items: 'Importeren',
 		private_failed: 'Sorry, privé maken mislukt.',
 		hidden_failed: 'Sorry, onzichtbaar maken mislukt.',
