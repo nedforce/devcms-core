@@ -28,7 +28,6 @@
   .meta_links
     #fontsize.fontsize.hidden
   / Main menu
-  - cache(:controller => '/nodes', :action => :main_menu, :site => current_site.id) do
-    = create_main_menu
+  = create_main_menu
   .header_photo
     = header_image(@node)[:image_tag]

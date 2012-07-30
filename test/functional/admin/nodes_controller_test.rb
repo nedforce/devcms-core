@@ -50,7 +50,7 @@ class Admin::NodesControllerTest < ActionController::TestCase
   def test_move_should_return_error
     login_as :sjoerd
     xhr :put, :move, :id => Node.root.id, :parent => Node.root.id
-    assert_response :error
+    assert_response :unprocessable_entity
   end
 
   def test_move_should_require_parent_or_sibling_id

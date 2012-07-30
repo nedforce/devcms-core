@@ -44,5 +44,9 @@ class Devcms
       /(burger?meester|wethouder|gemeente|stads|student|leerling|voorlichting|communicatie|openba?are?|brandweer|politie|ambulance|ggz|ggd|ziekenhuis|school|hospitaal|gemeente|college|stadhuis)/i
     end
 
+    def main_menu_depth
+      2
+    end
+
   end
 end

@@ -1,3 +1,2 @@
 - content = node.content
-- cache(:content_type => content.class.name, :content_id => content.id, :controller => '/nodes', :action => :content_box, :expires_in => 15.minutes, :site => current_site.id) do
   = render :partial => '/calendars/content_box_content', :locals => { :node => node }

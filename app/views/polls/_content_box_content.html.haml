@@ -8,11 +8,11 @@
 
     %div{ :id => "poll_content_box_content_#{content.id}" }
       - if already_voted_for?(active_question)
-        - cache(:content_type => content.class.name, :content_id => content.id, :controller => '/nodes', :action => :content_box, :type => :results, :expires_in => 15.minutes, :site => current_site.id) do
+        - cache({:poll_options_content_box_for => content.id, :site => current_site.id}, { :expires_in => 15.minutes }) do
           = render :partial => '/poll_questions/results_side_box', :locals => { :question => active_question }
       - else
         = form_tag vote_poll_question_url(active_question), :method => :put, :id => "poll_content_box_form_#{content.id}", :class => 'poll_content_box_form' do
-          - cache(:content_type => content.class.name, :content_id => content.id, :controller => '/nodes', :action => :content_box, :type => :options, :last_updated_at => content.last_updated_at, :site => current_site.id) do
+          - cache(:poll_options_content_box_for => content.id, :last_updated_at => content.last_updated_at, :site => current_site.id) do
             - active_question.poll_options.each do |o|
               .option.transparent
                 = radio_button_tag 'poll_option_id', o.id, false, :id => "sb_poll_option_#{o.id}", :disabled => !poll_enabled?(content)

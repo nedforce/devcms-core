@@ -172,18 +172,21 @@ class Admin::NodesController < Admin::AdminController
   # * XHR PUT /admin/nodes/2/move?parent=1
   # * XHR PUT /admin/nodes/2/move?next_sibling=1
   def move
-    if params[:next_sibling].present?
-      next_sibling = Node.find(params[:next_sibling])
-      @node.move_to_left_of next_sibling
-    elsif params[:parent].present?
-      parent = Node.find(params[:parent])
-      @node.move_to_child_of parent
-    else
-      render :text => I18n.t('nodes.no_parent_or_sibling'), :status => :precondition_failed
-      return false
+    begin
+      if params[:next_sibling].present?
+        next_sibling = Node.find(params[:next_sibling])
+        @node.move_to_left_of next_sibling
+      elsif params[:parent].present?
+        parent = Node.find(params[:parent])
+        @node.move_to_child_of parent
+      else
+        render :text => I18n.t('nodes.no_parent_or_sibling'), :status => :precondition_failed
+        return false
+      end
+    rescue ActiveRecord::ActiveRecordError => e
+      render :text => e.message, :status => :unprocessable_entity
     end
-
-    render :text => I18n.t('nodes.succesfully_moved'), :status => :ok
+      render :text => I18n.t('nodes.succesfully_moved'), :status => :ok
   end
 
   # Used for approving content of a given node

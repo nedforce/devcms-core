@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
   # Catch all exceptions (except 404 errors, which are handled below) to render
   # a custom 500 page. Also makes sure a notification mail is sent.
   # 404 exceptions are handled below.
-  rescue_from StandardError, :with => :handle_500 unless Rails.env.development?
+  rescue_from Exception, :with => :handle_500 if Rails.env.production?
    
   # Catches all 404 errors to render a 404 page.
   # Note that this rescue_from statement has precedence over the one above.

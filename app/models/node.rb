@@ -551,15 +551,6 @@ class Node < ActiveRecord::Base
       self.title.blank? ? self.content.content_title : self.title
     end
   end
-  
-  # This method is used to cache the titles of content nodes, so we don't have to query separately for them
-  def content_title
-    if %w( ExternalLink InternalLink Feed ContentCopy ).include?(self.sub_content_type)
-      self.content.content_title
-    else
-      self.title.blank? ? self.content.content_title : self.title
-    end
-  end
 
   def self.root
     Node.roots.first || raise(ActiveRecord::RecordNotFound, "No root node found!")

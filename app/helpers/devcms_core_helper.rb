@@ -26,9 +26,10 @@ module DevcmsCoreHelper
   #
   # See documentation of +bread_crumbs_track_for+ for more information.
   def bread_crumbs_for(node, options = {})
-    crumb_track = bread_crumbs_track_for(node, options)
-
-    content_tag(:div, crumb_track.html_safe, :class => 'bread_crumbs') if crumb_track.present?
+    cache(:breadcrumbs_for_node => node.id, :last_updated_at => node.path.maximum(:updated_at), :site => current_site.id) do
+      crumb_track = bread_crumbs_track_for(node, options)
+      content_tag(:div, crumb_track.html_safe, :class => 'bread_crumbs') if crumb_track.present?
+    end
   end
 
   # Creates the breadcrumbs element, which displays links to all the node's ancestors.
@@ -107,12 +108,15 @@ module DevcmsCoreHelper
 
   # Returns the html for the double-level main menu.
   def create_main_menu
-    top_level_main_menu_items = current_site.closure_for(current_site.descendants(:to_depth => 2).accessible.public.shown_in_menu.all(:order => :position)).values.first
+    menu_scope = current_site.descendants(:to_depth => Devcms.main_menu_depth).accessible.public.shown_in_menu
+    cache(:main_menu_for_site => current_site.id, :last_update_at => menu_scope.maximum(:updated_at)) do
+      top_level_main_menu_items = current_site.closure_for(menu_scope).values.first
 
-    if top_level_main_menu_items.any?
-      content_tag(:ul, top_level_main_menu_items.map { |item, sub_items| create_main_menu_item(item, sub_items.keys) }.join("\n").html_safe, :id => 'main_menu', :class => 'clearfix')
-    else
-      raw '&nbsp;' # No menu if no top level main menu items
+      if top_level_main_menu_items.any?
+        content_tag(:ul, top_level_main_menu_items.map { |item, sub_items| create_main_menu_item(item, sub_items.keys) }.join("\n").html_safe, :id => 'main_menu', :class => 'clearfix')
+      else
+        raw '&nbsp;' # No menu if no top level main menu items
+      end
     end
   end
 
