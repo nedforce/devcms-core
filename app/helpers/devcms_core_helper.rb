@@ -312,9 +312,9 @@ module DevcmsCoreHelper
   def string_cache(name = {}, options = nil, &block)
     if controller.perform_caching
      if fragment = controller.read_fragment(name, options)
-        fragment
+        fragment.html_safe
       else
-        controller.write_fragment(name, yield, options)
+        controller.write_fragment(name, yield.to_s, options)
       end
     else
       yield
