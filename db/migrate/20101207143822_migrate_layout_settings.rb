@@ -17,19 +17,20 @@ class MigrateLayoutSettings < ActiveRecord::Migration
       
   def self.up
     # Stop using the Template model
-    Template.destroy_all.each do |template|
+    Template.all.each do |template|
       template.nodes.each do |node|
         Node.where(:id => node.id).update_all :template_id => nil, :layout => template.filename, :layout_variant => :default, :layout_configuration => {'template_color' => template.filename}.to_yaml
       end
     end
+    Template.destroy_all
     
     # Convert booleans to layout variants
     Node.where(:columns_mode => true).each do |node|
-      Node.where(:id => node.id).update_all :layout => node.own_or_inherited_layout, :layout_variant => 'four_columns'
+      Node.where(:id => node.id).update_all :layout => node.own_or_inherited_layout.id, :layout_variant => 'four_columns'
     end
 
     Node.where(:hide_right_column => true).each do |node|
-      Node.where(:id => node.id).update_all :layout => node.own_or_inherited_layout, :layout_variant => 'two_columns'
+      Node.where(:id => node.id).update_all :layout => node.own_or_inherited_layout.id, :layout_variant => 'two_columns'
     end
         
     # Convert SBE's to CR's
