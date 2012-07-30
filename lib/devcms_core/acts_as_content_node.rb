@@ -32,7 +32,7 @@ module DevcmsCore
 
       has_one :node, :as => :content, :autosave => true, :validate => true
 
-      if content_columns.any? { |column| column.name == 'deleted_at' }
+      if table_exists? && content_columns.any? { |column| column.name == 'deleted_at' }
         default_scope where("#{table_name}.deleted_at IS NULL")
       end
 

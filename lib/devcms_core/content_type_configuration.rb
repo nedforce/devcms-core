@@ -47,12 +47,9 @@ module DevcmsCore
       # Ensures all content types register themselves
       def register_content_types!
         # puts "\"Registering all content types, this might take a while..\""
-        
+
         config.registered_models.each do |model_file|
-          begin
-            register_content_type(model_file.constantize)
-          rescue Exception
-          end
+          model_file.constantize
         end
     
         self.content_types_registered = true  
