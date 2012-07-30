@@ -314,7 +314,7 @@ module DevcmsCoreHelper
      if fragment = controller.read_fragment(name, options)
         fragment.html_safe
       else
-        controller.write_fragment(name, yield.to_s, options)
+        controller.write_fragment(name, yield.to_s, options).html_safe
       end
     else
       yield
