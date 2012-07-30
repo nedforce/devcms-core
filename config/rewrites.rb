@@ -47,7 +47,7 @@ Rails.application.config.rewriter.append do
             rewritten_path.tap{|path| Rails.logger.debug "[DevcmsCore] Rewritten #{match.string} to #{path}" }
           rescue ActionController::RoutingError
             # Consider the last slug as part of the URL alias otherwise
-            node = node.children.find_node_for_url_alias!(match[:url_alias], site)
+            node = Node.find_node_for_url_alias!(match[:url_alias], site)
             Node.path_for_node(node, '', format, query).tap{|path| Rails.logger.debug "[DevcmsCore] Rewritten #{match.string} to #{path}" }          
           end
         else
