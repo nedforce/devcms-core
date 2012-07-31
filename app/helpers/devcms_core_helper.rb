@@ -267,7 +267,6 @@ module DevcmsCoreHelper
         }
       end
     end
-    
     render :partial => '/layouts/partials/header_slideshow', :locals => { :available_header_images => available_header_images }
   end
 
