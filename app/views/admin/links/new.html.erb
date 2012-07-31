@@ -33,7 +33,7 @@
         <%= form.text_field :url, :label => t('links.url'), :wrapper => { :style => (@link.is_a?(InternalLink) ? 'display: none' : '') } %>
         
         <!-- Internal link field -->
-        <% txt = "#{t 'links.node_id'}<br/><small>#{t 'links.drag_and_drop'}</small>" %>
+        <% txt = "#{t 'links.node_id'}<br/><small>#{t 'links.drag_and_drop'}</small>".html_safe %>
         <%= wrap_with_label content_tag(:div, '', :id => 'node_selector'), { :text => txt, :for => 'link_linked_node_id' }, { :id => 'link_linked_node_id_wrapper', :style => (@link.is_a?(InternalLink) ? '' : 'display: none;') } %>
 
         <%= javascript_tag do %>

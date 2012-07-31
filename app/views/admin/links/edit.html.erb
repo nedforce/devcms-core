@@ -18,7 +18,7 @@
           <%= form.text_field :url, :label => t('links.url') if @link.is_a?(ExternalLink) %>
           
           <% if @link.is_a?(InternalLink) %>
-            <% txt = "#{t 'links.node'}<br/><small>#{t 'links.drag_and_drop'}</small>" %>
+            <% txt = "#{t 'links.node'}<br/><small>#{t 'links.drag_and_drop'}</small>".html_safe %>
             <%= wrap_with_label content_tag(:div, '', :id => 'node_selector'), { :text => txt, :for => 'link_linked_node_id' } %>
 
             <%= javascript_tag do %>
