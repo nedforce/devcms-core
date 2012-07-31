@@ -1,5 +1,6 @@
 # This administrative controller is used to manage role assignments (permissions).
 class Admin::RoleAssignmentsController < Admin::AdminController
+  before_filter :find_node,   :only => [:new, :create]
   before_filter :set_paging,  :only => [ :index, :create ]
   before_filter :set_sorting, :only => [ :index, :create ]
   
@@ -80,6 +81,10 @@ class Admin::RoleAssignmentsController < Admin::AdminController
   end
 
   protected
+  
+    def find_node
+      @node = Node.include_content.find(params[:node_id]) if params[:node_id]
+    end
 
     # Finds sorting parameters.
     def set_sorting
