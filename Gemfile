@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 source 'http://gems.github.com'
 
-gem 'rails', '3.2.6'
+gem 'rails', '3.2.7'
 
 group :development do
   gem 'debugger'  
