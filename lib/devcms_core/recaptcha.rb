@@ -105,7 +105,7 @@ module DevcmsCore
             html << %{</div>\n</noscript>\n}
           end
         end
-        return html
+        return raw html
       end # recaptcha_tags
     end # ClientHelper
   end # Recaptcha
