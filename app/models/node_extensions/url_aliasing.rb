@@ -160,11 +160,12 @@ module NodeExtensions::UrlAliasing
   def uniqify_url_alias(generated_url_alias)
     temp_url_alias = generated_url_alias
   
-    i = 0
-  
-    while containing_site.self_and_descendants.first(:conditions => [ "id <> ? AND (url_alias = ? OR custom_url_alias = ?)", (id || 0), temp_url_alias, temp_url_alias ]) || self.class.url_alias_reserved?(temp_url_alias)
-      i += 1
-      temp_url_alias = "#{generated_url_alias}-#{i}"
+    unless is_root?
+      i = 0  
+      while containing_site.subtree.first(:conditions => [ "id <> ? AND (url_alias = ? OR custom_url_alias = ?)", (id || 0), temp_url_alias, temp_url_alias ]) || self.class.url_alias_reserved?(temp_url_alias)
+        i += 1
+        temp_url_alias = "#{generated_url_alias}-#{i}"
+      end
     end
 
     temp_url_alias
