@@ -101,8 +101,8 @@ module NodeExtensions::UrlAliasing
 
   def update_subtree_url_aliases
     Node.sort_by_ancestry(self_and_descendants).each do |node|
-      node.update_attribute(:url_alias, node.generate_unique_url_alias)
-      node.update_attribute(:custom_url_alias, node.generate_unique_custom_url_alias) if node.custom_url_suffix.present?
+      node.update_column(:url_alias, node.generate_unique_url_alias)
+      node.update_column(:custom_url_alias, node.generate_unique_custom_url_alias) if node.custom_url_suffix.present?
     end
   end
   
