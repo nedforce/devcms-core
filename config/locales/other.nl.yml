@@ -596,7 +596,8 @@ nl:
     unknown: Onbekend
     username: loginnaam
   links:
-    add_to: Link toevoegen aan
+    add_to_internal: Interne link toevoegen aan
+    add_to_external: Externe link toevoegen aan
     drag_and_drop: Sleep een item uit de sitemap in het veld
     edit: Bewerken van link
     external: Externe link

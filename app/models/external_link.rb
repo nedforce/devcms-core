@@ -18,7 +18,8 @@ class ExternalLink < Link
   # Adds content node functionality to links.
   acts_as_content_node({
     :available_content_representations => ['content_box'],
-    :show_content_box_header => false
+    :show_content_box_header => false,
+    :controller_name => 'external_links'
   })
   
   needs_editor_approval

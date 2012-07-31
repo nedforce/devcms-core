@@ -215,6 +215,12 @@ Rails.application.routes.draw do
         get :previous
       end
     end
+    
+    resources :external_links, :except => [:index, :destroy] do    
+      member do
+        get :previous
+      end
+    end
       
     resources :feeds, :except => [:index, :destroy]
     resources :forums, :except => [:index, :destroy]
@@ -231,7 +237,7 @@ Rails.application.routes.draw do
       end    
     end
 
-    resources :links, :except => [:index, :destroy] do    
+    resources :internal_links, :except => [:index, :destroy] do    
       member do
         get :previous
       end
