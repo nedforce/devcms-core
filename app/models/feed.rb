@@ -41,7 +41,7 @@ class Feed < ActiveRecord::Base
 
     # May be nil, in which case to_yaml would cache a NilClass, so test if parse_feed returned anything meaningful.
     # Then remove all lines containing only space characters because they can confuse YAML::load.
-    update_attribute(:cached_parsed_feed, local_parsed_feed.to_yaml.gsub(/\n\s+\n/, '\n')) if local_parsed_feed
+    update_attributes(:cached_parsed_feed => local_parsed_feed.to_yaml.gsub(/\n\s+\n/, '\n')) if local_parsed_feed
     local_parsed_feed
   end
 
@@ -53,7 +53,7 @@ class Feed < ActiveRecord::Base
 
   # Returns the entries of the parsed feed.
   def entries
-    parsed_feed.entries
+    parsed_feed.try(:entries) || []
   end
   
   # Update the feed
@@ -85,8 +85,9 @@ class Feed < ActiveRecord::Base
   def read_feed
     begin
       self.xml = open(url).read.gsub(/\n/, ' ').gsub(/\s+/, ' ')
-    rescue Exception => e
-      nil
+    rescue => e
+      Rails.logger.error(e)
+      return nil
     ensure
       # open-uri may leave Tempfiles lingering if the garbage collector is
       # not triggered before the application loop exits.

@@ -30,7 +30,7 @@ ActiveRecord::Base.connection.tables.each{ |table| ActiveRecord::Base.connection
 
 # Initialize Settler
 Settler.load!
-Settler.search_default_engine.update_attribute(:value, 'ferret')
+Settler.search_default_engine.update_column(:value, 'ferret')
 
 class ActiveSupport::TestCase
   # Transactional fixtures accelerate your tests by wrapping each test method
