@@ -28,8 +28,8 @@ protected
 
   # Finds recent news items.
   def find_recent_news_items
-    max_news_items = (Settler[:news_items_max] ? Settler[:news_items_max] : 25)
-    featured_news_items = (Settler[:news_items_featured] ? Settler[:news_items_featured] : 5)
+    max_news_items = @news_archive.items_max || Settler[:news_items_max] || 25
+    featured_news_items = @news_archive.items_featured || Settler[:news_items_featured] || 5
     @news_items = @news_archive.news_items.accessible.page(params[:page]).per(max_news_items)
     
     @latest_news_items = []

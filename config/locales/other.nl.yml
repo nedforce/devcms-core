@@ -651,6 +651,8 @@ nl:
   news_archives:
     add_to: Nieuwsarchief toevoegen aan
     edit: Bewerken van nieuwsarchief
+    items_featured: Aantal prominente nieuwsitems
+    items_max: Maximaal weergegeven nieuwsitems
     older_items_caption: Overzicht van oudere nieuwsberichten
   news_items:
     add_to: Nieuwsbericht toevoegen aan
