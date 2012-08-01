@@ -1,3 +1,7 @@
+CarrierWave.configure do |config|
+  config.cache_dir = Rails.root.join('tmp', 'uploads').to_s
+end
+
 module CarrierWave
   module RMagick
 
