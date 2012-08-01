@@ -157,7 +157,7 @@ module Admin::AdminHelper
   end
 
   def approval_fields(form, obj = nil)
-    html = form.check_box :draft, :label => t('pages.save_as_draft'), :for_check_box => true
+    html = form.check_box :draft, :label => t('pages.save_as_draft'), :for_check_box => true, :wrapper => { :class => 'formFieldCb draft-wrapper' }
     
     if obj ? obj.class.requires_editor_approval? : form.object.class.requires_editor_approval?
       html << hidden_field_tag(:for_approval, true) if @for_approval

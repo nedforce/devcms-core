@@ -5,12 +5,14 @@ class Admin::AdminFormBuilder < ActionView::Helpers::FormBuilder
       options[:class] ||= "admin_form_#{fh.to_s}"
       args              = (args << options)
       id, name          = id_and_name(attr)
+      for_check_box     = options.delete(:for_check_box)
+      wrapper           = options.delete(:wrapper) || {}
       @template.wrap_with_label(
         super(attr, *args),
         { :text          => (options[:label] || @object.class.human_attribute_name(attr)),
           :for           => "#{@object_name}_#{attr}",
-          :for_check_box => options[:for_check_box] },
-        { :id => "#{id}_wrapper" }.merge(options[:wrapper]||{})
+          :for_check_box => for_check_box },
+        { :id => "#{id}_wrapper" }.merge(wrapper)
       )
     end
   end
