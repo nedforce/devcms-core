@@ -22,8 +22,10 @@ class Admin::UsersController < Admin::AdminController
       # This may be resolved by transforming this controller into JSON or in
       # a version of Rails > 2.0.2.
       @sort_field = 'users.created_at' if @sort_field == 'created_at'
-      @users      = User.includes([ :newsletter_archives, :interests ]).where(filter_conditions).order("#{@sort_field} #{@sort_direction}").page(@current_page).per(@page_limit)
-      @user_count = @users.size
+      
+      user_scope  = User.includes([ :newsletter_archives, :interests ]).where(filter_conditions).order("#{@sort_field} #{@sort_direction}")      
+      @user_count = user_scope.count
+      @users      = user_scope.page(@current_page).per(@page_limit)
     else
       @users      = User.includes([ :newsletter_archives, :interests ]).where(filter_conditions).order("login #{@sort_direction}")
       @users      = @users.sort_by { |user| user.newsletter_archives.sort_by { |archive| archive.title.upcase }.map{ |archive| archive.title }.join(', ') }
@@ -31,7 +33,6 @@ class Admin::UsersController < Admin::AdminController
       @user_count = @users.size
       @users      = @users.values_at((@page_limit * (@current_page - 1))..(@page_limit * @current_page - 1)).compact
     end
-    #@user_count   = @users.size
 
     respond_to do |format|
       format.html

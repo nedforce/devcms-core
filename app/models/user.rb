@@ -379,7 +379,7 @@ class User < ActiveRecord::Base
   end
 
   def promote!
-	  self.update_attribute :type, 'PrivilegedUser'
+	  update_column :type, 'PrivilegedUser'
   end
 
 protected
