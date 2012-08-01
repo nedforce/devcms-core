@@ -1,7 +1,7 @@
 -# Set content for header first, fixes yields in partial
 - content_for :header, render(:partial => '/layouts/partials/header')
 !!! Strict
-%html{:lang => "nl", "xml:lang" => "nl", :xmlns => "http://www.w3.org/1999/xhtml"}
+%html{ :lang => "nl", "xml:lang" => "nl", :xmlns => "http://www.w3.org/1999/xhtml" }
   %head
     %meta{ :content => "text/html;charset=utf-8", "http-equiv" => "Content-Type" }/
     %meta{ :content => "nl_nl", :name => "language" }/
@@ -31,5 +31,5 @@
       = render :partial => '/layouts/partials/content'
       = yield :header
     = render :partial => '/layouts/partials/footer'
-    = render :partial => '/layouts/partials/admin_tools'
+    = render :partial => '/shared/admin_tools'
     = render :partial => '/shared/google_analytics'
