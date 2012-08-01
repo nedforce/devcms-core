@@ -4,7 +4,6 @@ source 'http://gems.github.com'
 
 gem 'calendar_date_select', :git => 'https://github.com/emyl/calendar_date_select.git', :branch => 'rails3_1'
 gem 'prototype_legacy_helper', '0.0.0', :git => 'http://github.com/willbryant/prototype_legacy_helper.git'
-gem 'soap4r', :git => 'http://github.com/felipec/soap4r'
 
 # A default layout and configuration files for DevCMS can be created by using the DevCMS generator:
 
