@@ -1,1 +1,3 @@
-= form.html_editor :description, :label => t('shared.description'), :height => 100
+= form.html_editor :description,    :label => t('shared.description'), :height => 100
+= form.text_field  :items_featured, :label => "#{t('news_archives.items_featured')}<br><small>Leeg voor standaard (#{Settler[:news_items_featured]})</small>".html_safe
+= form.text_field  :items_max,      :label => "#{t('news_archives.items_max')}<br><small>Leeg voor standaard (#{Settler[:news_items_max]})</small>".html_safe
