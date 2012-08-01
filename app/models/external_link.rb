@@ -24,6 +24,10 @@ class ExternalLink < Link
   
   needs_editor_approval
   
+  before_validation do
+    self.url = "http://#{url}" if url.present? && !(url =~ %r(^https?://))
+  end
+  
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of :url
   validates_format_of   :url, :with => /(^$)|(^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.([a-z]{2,5}|[0-9]{1,5})(\/.*)?$)/ix
