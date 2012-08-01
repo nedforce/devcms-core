@@ -1,8 +1,1 @@
-<% @users.each do |user| %><%= CSV.generate_line [
-user.email_address,
-user.first_name, 
-user.surname,
-user.sex
-]
-%>
-<% end %>
+<% @users.each do |user| %><%= CSV.generate_line([user.email_address,user.first_name,user.surname,user.sex]).html_safe %><% end %>

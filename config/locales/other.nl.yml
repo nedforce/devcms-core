@@ -1114,7 +1114,7 @@ nl:
     confirm_deletion: "Weet u zeker dat u deze gebruiker(s) wilt verwijderen? Ook de discussies, reacties en weblogs van deze gebruiker(s) zullen verwijderd worden."
     confirm_user_deletion: "Weet u zeker dat u uw profiel wilt verwijderen? Ook de uw discussies, reacties en weblogs zullen verwijderd worden. Bevestig het verwijderen met uw wachtwoord."
     confirm_demote: "Weet u zeker dat u deze gebruiker wil degraderen? Al zijn rechten worden bevroren en zijn dan niet meer bruikbaar tot (her)promotie."
-    confirm_promote: "Weet u zeker dat u deze gebruiker wil promoten?"
+    confirm_promote: "Weet u zeker dat u deze gebruiker wil promoveren?"
     confirm_revoke: "Weet u zeker dat u deze gebruiker wil ontgrendelen?"
     could_not_delete: "Sorry, kon de gebruiker(s) niet verwijderen."
     couldnt_find_user: Login naam / E-mailadres niet gevonden

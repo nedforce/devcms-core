@@ -61,6 +61,8 @@ class User < ActiveRecord::Base
     'm' => :male,
     'f' => :female
   }
+  
+  scope :exclusive, where(['users.type is null or users.type = ?', 'User'])
 
   # Virtual attribute to hold the unencrypted password
   attr_accessor :password

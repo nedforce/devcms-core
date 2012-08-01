@@ -15,35 +15,26 @@ class Admin::UsersController < Admin::AdminController
   # * GET /admin/users.xml
   # * GET /admin/users.json
   def index
-    @active_page = :users
-    # Sort the polymorphic node relationship separately if necessary.
-    if !@sort_by_newsletter_archives
-      # Don't eager load newsletter_archives lest the XML builder will fail.
-      # This may be resolved by transforming this controller into JSON or in
-      # a version of Rails > 2.0.2.
-      @sort_field = 'users.created_at' if @sort_field == 'created_at'
+    @active_page ||= :users
+    user_scope = (@active_page == :privileged_users) ? PrivilegedUser.scoped : User.exclusive
       
-      user_scope  = User.includes([ :newsletter_archives, :interests ]).where(filter_conditions).order("#{@sort_field} #{@sort_direction}")      
-      @user_count = user_scope.count
-      @users      = user_scope.page(@current_page).per(@page_limit)
-    else
-      @users      = User.includes([ :newsletter_archives, :interests ]).where(filter_conditions).order("login #{@sort_direction}")
-      @users      = @users.sort_by { |user| user.newsletter_archives.sort_by { |archive| archive.title.upcase }.map{ |archive| archive.title }.join(', ') }
-      @users      = @users.reverse if @sort_direction == 'DESC'
-      @user_count = @users.size
-      @users      = @users.values_at((@page_limit * (@current_page - 1))..(@page_limit * @current_page - 1)).compact
-    end
 
     respond_to do |format|
-      format.html
-      format.xml { render :action => :index, :layout => false }
+      format.html do 
+        find_users(user_scope)
+        render :action => :index
+      end
+      format.xml do
+        find_users(user_scope)
+        render :action => :index, :layout => false
+      end
       format.json do
-        users = User.all(:select => 'users.login, users.id', :conditions => ["users.login LIKE ?", "#{params[:query]}%"] )
+        users = user_scope.select('users.login, users.id').where(["users.login LIKE ?", "#{params[:query]}%"])
         render :json => { :users => users }.to_json, :status => :ok
       end
       format.csv do
         require 'csv'
-        @users = User.all
+        @users = user_scope
         render :action => :index, :layout => false
       end
     end
@@ -52,15 +43,14 @@ class Admin::UsersController < Admin::AdminController
   # * GET /admin/users/privileged.json
   def privileged
     @active_page = :privileged_users
-    
+
     respond_to do |format|
-      format.html do
-        @privileged = true
-        render :action => :index
-      end
+      format.html{ index }
+      format.xml{ index }
+      format.csv{ index }
       format.json do
         node = Node.find(params[:node])
-        users = PrivilegedUser.all(:select => 'users.login, users.id', :include => :role_assignments, :conditions => ["users.login LIKE ? AND role_assignments.node_id IN (?) AND role_assignments.name in (?)", "#{params[:query]}%", node.path_ids, ['editor', 'final_editor']] )
+        users = PrivilegedUser.select('users.login, users.id').includes(:role_assignments).where(["users.login LIKE ? AND role_assignments.node_id IN (?) AND role_assignments.name in (?)", "#{params[:query]}%", node.path_ids, ['editor', 'final_editor']])
         render :json => { :users => users }.to_json, :status => :ok
       end
     end
@@ -186,7 +176,7 @@ class Admin::UsersController < Admin::AdminController
   def revoke
     respond_to do |format|
       format.json do
-        if @user.update_attribute :blocked, false
+        if @user.update_column :blocked, false
           render :json => { :success => 'true' }
         else
           render :json => { :status => :unprocessable_entity }
@@ -196,6 +186,25 @@ class Admin::UsersController < Admin::AdminController
   end
 
   protected
+  
+    def find_users(user_scope = User.scoped)
+      if !@sort_by_newsletter_archives
+        # Don't eager load newsletter_archives lest the XML builder will fail.
+        # This may be resolved by transforming this controller into JSON or in
+        # a version of Rails > 2.0.2.
+        @sort_field = 'users.created_at' if @sort_field == 'created_at'
+
+        user_scope  = user_scope.includes([ :newsletter_archives, :interests ]).where(filter_conditions).order("#{@sort_field} #{@sort_direction}")      
+        @user_count = user_scope.count
+        @users      = user_scope.page(@current_page).per(@page_limit)
+      else
+        @users      = user_scope.includes([ :newsletter_archives, :interests ]).where(filter_conditions).order("login #{@sort_direction}")
+        @users      = @users.sort_by { |user| user.newsletter_archives.sort_by { |archive| archive.title.upcase }.map{ |archive| archive.title }.join(', ') }
+        @users      = @users.reverse if @sort_direction == 'DESC'
+        @user_count = @users.size
+        @users      = @users.values_at((@page_limit * (@current_page - 1))..(@page_limit * @current_page - 1)).compact
+      end       
+    end
 
     def find_user
       @user = User.find(params[:id])
