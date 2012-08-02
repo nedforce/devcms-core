@@ -14,8 +14,8 @@ class NodeSweeper < ActionController::Caching::Sweeper
   end
 
   def self.sweep_nodes
-    Node.where(['(:now >= nodes.publication_start_date AND nodes.publication_start_date > nodes.updated_at) OR (:now <= nodes.publication_end_date AND nodes.publication_end_date > nodes.updated_at))', { :now => Time.now.to_s(:db) }] ).each do |node|
-      node.update_attributes :updated_at, Time.now
+    Node.where(['(:now >= nodes.publication_start_date AND nodes.publication_start_date > nodes.updated_at) OR (:now <= nodes.publication_end_date AND nodes.publication_end_date > nodes.updated_at)', { :now => Time.now.to_s(:db) }] ).each do |node|
+      node.update_attributes :updated_at => Time.now
     end
   end
 
@@ -23,9 +23,9 @@ protected
 
   def sweep(node)
     # If title, url_alias, show_in_menu, private, deleted_at or ancestry changed, we'll need to expire some things
-    if node.content.blank? || (node.changed & %w(title url_alias ancestry show_in_menu private deleted_at)).present? || node.changed == ["updated_at"]
+    if node.content.blank? || (node.changed & %w(title url_alias ancestry show_in_menu private deleted_at publication_start_date publication_end_date)).present? || node.changed == ["updated_at"]
       # But only if we where shown in the menu or are shown there now
-      if node.show_in_menu || node.show_in_menu_changed? || node.changed == ["updated_at"]
+      if node.show_in_menu || node.show_in_menu_changed?
         # Expire footer if parent is a site
         controller.expire_fragment(:footer_for_site => node.parent.id) if node.parent.sub_content_type == 'Site'
         # Expire submenu for parent and siblings
@@ -43,8 +43,8 @@ protected
         controller.expire_fragment(:main_menu_for_site => node.containing_site.id) if node.depth - node.containing_site.depth <= Devcms.main_menu_depth
       end
       # Expire breadcrumbs for self and descendants
-      node.self_and_descendants.each do |n|
-        controller.expire_fragment(:breadcrumbs_for_node => node.id)
+      node.self_and_descendants.where(:show_in_menu => true).each do |n|
+        controller.expire_fragment(:breadcrumbs_for_node => n.id)
       end
       # Expire slideshow on delete/destroy
       controller.expire_fragment(:header_slideshow_for => node.child_ancestry ) if node.deleted_at.present?
