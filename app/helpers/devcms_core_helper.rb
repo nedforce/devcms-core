@@ -26,7 +26,7 @@ module DevcmsCoreHelper
   #
   # See documentation of +bread_crumbs_track_for+ for more information.
   def bread_crumbs_for(node, options = {})
-    string_cache(:breadcrumbs_for_node => node.id, :last_updated_at => node.path.maximum(:updated_at), :site => current_site.id) do
+    string_cache(:breadcrumbs_for_node => node.id) do
       crumb_track = bread_crumbs_track_for(node, options)
       content_tag(:div, crumb_track.html_safe, :class => 'bread_crumbs') if crumb_track.present?
     end
@@ -108,8 +108,8 @@ module DevcmsCoreHelper
 
   # Returns the html for the double-level main menu.
   def create_main_menu
-    menu_scope = current_site.descendants(:to_depth => Devcms.main_menu_depth).accessible.public.shown_in_menu
-    string_cache(:main_menu_for_site => current_site.id, :last_update_at => menu_scope.maximum(:updated_at)) do
+    string_cache(:main_menu_for_site => current_site.id) do
+      menu_scope = current_site.descendants(:to_depth => Devcms.main_menu_depth).accessible.public.shown_in_menu
       top_level_main_menu_items = current_site.closure_for(menu_scope).values.first
 
       if top_level_main_menu_items.any?
@@ -247,27 +247,31 @@ module DevcmsCoreHelper
   end
 
   def header_slideshow(node, big_header = false)
-    available_header_images_nodes = node.present? ? node.header_images : []
-    available_header_images_nodes << header_image(node, big_header)[:url] if available_header_images_nodes.empty?
-    
-    available_header_images = available_header_images_nodes.map do |header_image|
-      if header_image.is_a?(String)
-        {
-          :url   => header_image,
-          :id    => nil,
-          :alt   => nil,
-          :title => nil
-        }
-      else
-        {
-          :url   => big_header ? big_header_image_path(header_image, :format => :jpg) : header_image_path(header_image, :format => :jpg),
-          :id    => "ss-image-#{header_image.id}",
-          :alt   => header_image.alt,
-          :title => header_image.title
-        }
+    string_cache(:header_slideshow_for => (node.present? ? node.header_container_ancestry : current_site.child_ancestry)) do
+      capture do
+        available_header_images_nodes = node.present? ? node.header_images : []
+        available_header_images_nodes << header_image(node, big_header)[:url] if available_header_images_nodes.empty?
+        
+        available_header_images = available_header_images_nodes.map do |header_image|
+          if header_image.is_a?(String)
+            {
+              :url   => header_image,
+              :id    => nil,
+              :alt   => nil,
+              :title => nil
+            }
+          else
+            {
+              :url   => big_header ? big_header_image_path(header_image, :format => :jpg) : header_image_path(header_image, :format => :jpg),
+              :id    => "ss-image-#{header_image.id}",
+              :alt   => header_image.alt,
+              :title => header_image.title
+            }
+          end
+        end
+        render :partial => '/layouts/partials/header_slideshow', :locals => { :available_header_images => available_header_images }
       end
     end
-    render :partial => '/layouts/partials/header_slideshow', :locals => { :available_header_images => available_header_images }
   end
 
   def image_url(source)
