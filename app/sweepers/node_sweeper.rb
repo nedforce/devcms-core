@@ -14,7 +14,7 @@ class NodeSweeper < ActionController::Caching::Sweeper
   end
 
   def self.sweep_nodes
-    Node.where(['(:now >= nodes.publication_start_date AND nodes.publication_start_date > nodes.updated_at) OR (:now <= nodes.publication_end_date AND nodes.publication_end_date > nodes.updated_at)', { :now => Time.now.to_s(:db) }] ).each do |node|
+    Node.where(['(:now >= nodes.publication_start_date AND nodes.publication_start_date > nodes.updated_at) OR (:now <= nodes.publication_end_date AND nodes.publication_end_date > nodes.updated_at)', { :now => Time.now }] ).each do |node|
       node.update_attributes :updated_at => Time.now
     end
   end
