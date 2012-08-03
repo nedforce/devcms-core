@@ -58,6 +58,7 @@ module DevcmsCore
   autoload :EngineExtensions
   autoload :Hijacker
   autoload :ImageProcessingExtensions
+  autoload :MeasureQueuing
   autoload :Recaptcha
   autoload :RespondsToParent  
   autoload :RoleRequirementSystem

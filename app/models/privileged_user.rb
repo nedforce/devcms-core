@@ -14,7 +14,7 @@ class PrivilegedUser < User
   
 	
 	def demote!
-	  self.update_attribute :type, 'User'
+	  update_column :type, 'User'
   end
 
 end

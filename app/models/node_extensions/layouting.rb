@@ -150,13 +150,27 @@ module NodeExtensions::Layouting
   
   # Find header image(s) for this node, either those set on this node or on one of its parents.
   def header_images
-    images = Image.accessible.all(:conditions => { :is_for_header => true, 'nodes.ancestry' => self.child_ancestry })
-  
-    if images.empty? && !self.root?
-      images = self.parent.header_images
-    end
+    Image.accessible.all(:conditions => { :is_for_header => true, 'nodes.ancestry' => self.child_ancestry })
+  end
 
-    images
+  # Find the ancestry for the first parent or self containing header images
+  # use containing site if none are found in the contaning site
+  def header_container_ancestry
+    ancestries = []
+    path_ids.reduce([]) do |last_path, parent_id|
+      ancestries << last_path.push(parent_id).join("/")
+      last_path
+    end
+    container_ancestry = Image.includes(:node).where(["is_for_header = ? and nodes.ancestry IN (?)", true, ancestries]).group('nodes.ancestry').count.keys.last
+    if container_ancestry.present? && container_ancestry != Node.root.id.to_s
+      container_ancestry
+    else
+      containing_site.child_ancestry
+    end
+  end
+
+  def header_container
+    Node.find(header_container_ancestry.split("/").last)
   end
 
   # Returns a random header image for this node.

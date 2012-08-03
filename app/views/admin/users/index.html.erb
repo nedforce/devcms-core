@@ -11,11 +11,11 @@ Ext.onReady(function(){
     perPage = 25
 
     Ext.ux.menu.RangeMenu.prototype.icons = {
-          gt: '../../images/ext/ux/greater_then.png',
-          lt: '../../images/ext/ux/less_then.png',
-          eq: '../../images/ext/ux/equals.png'
+          gt: '<%= image_path('ext/ux/greater_then.png') %>',
+          lt: '<%= image_path('ext/ux/less_then.png') %>',
+          eq: '<%= image_path('ext/ux/equals.png') %>'
 	};
-    Ext.ux.grid.filter.StringFilter.prototype.icon = '../../images/ext/ux/find.png';
+    Ext.ux.grid.filter.StringFilter.prototype.icon = '<%= image_path('ext/ux/find.png') %>';
 
     Ext.QuickTips.init();
 
@@ -31,7 +31,7 @@ Ext.onReady(function(){
            dataIndex: 'login',
            width: 150
         },
-        <% if @privileged %>
+        <% if @active_page == :privileged_users %>
         {
           header: "<%= I18n.t('users.status') %>",
           dataIndex: 'status'
@@ -96,7 +96,7 @@ Ext.onReady(function(){
     var store = new Ext.data.Store({
         // load using HTTP
         proxy: new Ext.data.HttpProxy({
-          url: '<%= @privileged ? admin_users_path(:format => :xml, :privileged => true) : admin_users_path(:format => :xml) %>',
+          url: '<%= @active_page == :privileged_users ? privileged_admin_users_path(:format => 'xml') : admin_users_path(:format => 'xml') %>',
           method: 'GET'
         }),
 
@@ -170,7 +170,7 @@ Ext.onReady(function(){
                   handler: handleNewsletterExport,
                   iconCls: 'attachment_icon'
               }, {
-                  <% if @privileged %>
+                  <% if @active_page == :privileged_users %>
                     text: '<%= I18n.t("users.demote") %>',
                     tooltip: '<%= I18n.t("users.demote_tooltip") %>',
                     handler: handleDemote,
@@ -213,7 +213,7 @@ Ext.onReady(function(){
             animateTarget: editEvent.getEl(),
             modal: true,
             layout: 'fit',
-            height: <%= @privileged ? '435' : '375' %>,
+            height: <%= @active_page == :privileged_users ? '435' : '375' %>,
             width: 385,
             resizable: false,
             title: '<%= I18n.t("users.edit") %>',
@@ -249,6 +249,7 @@ Ext.onReady(function(){
                   value: item.get('email_address')
               },{
                 xtype: 'radiogroup',
+                id: 'gender-select',
                 fieldLabel: '<%= I18n.t("users.sex") %>',
                 items: [
                     {boxLabel: '<%= I18n.t("users.male") %>', name: 'user[sex]', inputValue: 'm', checked: item.get('sex') == 'm'},
@@ -290,7 +291,7 @@ Ext.onReady(function(){
                   cbFieldLabel: 'title',
                   cbFieldValue: 'id',
                   cbFieldChecked: 'checked'
-              }<% if @privileged %>,{
+              }<% if @active_page == :privileged_users %>,{
                 xtype: 'textfield',
                 fieldLabel: '<%= I18n.t("users.password") %>',
                 width: 250,
@@ -378,11 +379,11 @@ Ext.onReady(function(){
     };
 
     function handleExport() {
-      window.location = "<%= admin_users_path + '.csv' %>"
+      window.location = "<%= @active_page == :privileged_users ? privileged_admin_users_path(:format => 'csv') : admin_users_path(:format => 'csv') %>"
     }
     
     function handleNewsletterExport() {
-      window.location = "<%= admin_newsletter_archives_path + '.csv' %>"
+      window.location = "<%= admin_newsletter_archives_path(:format => 'csv') %>"
     }
 
     function handleEdit(editEvent) {
