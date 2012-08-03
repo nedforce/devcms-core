@@ -18,9 +18,9 @@
 %td.obligatory= contact_form_field.obligatory? ? '*' : ''
 
 %td
-  - form_remote_tag :url => "/admin/contact_forms/#{@contact_form.id}/contact_form_fields/#{contact_form_field.id}/edit", :method => :get do
-    = image_submit_tag '/images/icons/pencil.png', :alt => t('contact_form_fields.edit_contact_form_field'), :mouseover => t('contact_form_fields.edit_contact_form_field')
+  = form_remote_tag :url => "/admin/contact_forms/#{@contact_form.id}/contact_form_fields/#{contact_form_field.id}/edit", :method => :get do
+    = image_submit_tag 'icons/pencil.png', :alt => t('contact_form_fields.edit_contact_form_field'), :mouseover => t('contact_form_fields.edit_contact_form_field')
 
 %td
-  - form_remote_tag :url => "/admin/contact_forms/#{@contact_form.id}/contact_form_fields/#{contact_form_field.id}", :method => :delete do
-    = image_submit_tag '/images/icons/delete.png', :alt => t('contact_form_fields.destroy_contact_form_field'), :mouseover => t('contact_form_fields.destroy_contact_form_field')
+  = form_remote_tag :url => "/admin/contact_forms/#{@contact_form.id}/contact_form_fields/#{contact_form_field.id}", :method => :delete do
+    = image_submit_tag 'icons/delete.png', :alt => t('contact_form_fields.destroy_contact_form_field'), :mouseover => t('contact_form_fields.destroy_contact_form_field')
