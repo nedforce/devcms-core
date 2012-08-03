@@ -13,7 +13,7 @@ every 1.day, :at => '5pm' do
 end  
 
 every 1.day, :at => '4:30am' do
-  runner 'Node.find(:all).each { |n| n.ferret_update }'    
+  runner 'Node.rebuild_index'    
 end
 
 every :friday, :at => '11:59pm' do
