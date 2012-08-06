@@ -63,13 +63,12 @@ class TopHitsPage < ActiveRecord::Base
     
     # Exclude private sections
     nodes_to_exclude += containing_site.descendants.sections.private
-    
-    options.reverse_merge!({
-      :limit => DEFAULT_AMOUNT_TO_SHOW,
-      :order => 'nodes.hits DESC'
-    })
-    
+
+    limit = options.delete(:limit) || DEFAULT_AMOUNT_TO_SHOW
+    order = options.delete(:order) || "hits desc"
+        
     top_hits_scope = containing_site.descendants.accessible.exclude_subtrees_of(nodes_to_exclude.uniq).exclude_content_types(content_types_to_exclude)
+    top_hits_scope = top_hits_scope.limit(limit).reorder(order)
     
     @top_hits = if include_content
       top_hits_scope.include_content.all(options)
