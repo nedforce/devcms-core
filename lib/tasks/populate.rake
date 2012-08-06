@@ -70,7 +70,7 @@ namespace :db do
             :password => login,
             :password_confirmation => login
           )
-          u.update_attribute :verified, true
+          u.update_attribute(:verified, true) if u.persisted?
         end
 
       end
