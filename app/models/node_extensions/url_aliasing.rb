@@ -87,7 +87,7 @@ module NodeExtensions::UrlAliasing
     end
     
     def find_node_for_url_alias(url_alias, site)
-      site.node.subtree.where([ 'url_alias IN (?) OR custom_url_alias IN (?)', url_alias, url_alias]).first
+      site.node.subtree.where([ 'url_alias IN (:alias) OR custom_url_alias IN (:alias)', {:alias => url_alias.downcase}]).first
     end
     
   end

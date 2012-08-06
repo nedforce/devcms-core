@@ -16,7 +16,7 @@ module NodeExtensions::VisibilityAndAccessibility
     def accessibility_and_visibility_conditions
       [ 
         'nodes.hidden = false AND nodes.publishable = true AND (:now >= nodes.publication_start_date AND (nodes.publication_end_date IS NULL OR :now <= nodes.publication_end_date))', 
-        { :now => Time.now.to_s(:db) } 
+        { :now => Time.now } 
       ]
     end
   end

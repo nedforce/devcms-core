@@ -308,6 +308,16 @@ devcms_weblog_archive_node:
   hidden: false
   private: false
 
+devcms_weblog_header_image_node:
+  content: weblog_header_image (Image)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 5
+  publishable: true
+  sub_content_type: Image
+  hidden: false
+  private: false
+
 henk_weblog_node:
   content: henk_weblog (Weblog)
   ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_weblog_archive_node) %>
@@ -1006,5 +1016,15 @@ test_social_media_links_box_node:
   position: 43
   publishable: true
   sub_content_type: SocialMediaLinksBox
+  hidden: false
+  private: false
+
+root_header_image_node:
+  content: root_header_image (Image)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 44
+  publishable: true
+  sub_content_type: Image
   hidden: false
   private: false

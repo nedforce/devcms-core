@@ -1,4 +1,4 @@
-- cache(:footer_for_site => current_site.id, :last_updated_at => current_site.children.accessible.public.shown_in_menu.maximum(:updated_at)) do
+- cache(:footer_for_site => current_site.id) do
   #footer.clearfix
     .meta_links
       = link_to_node I18n.t('layouts.home_link'), current_site

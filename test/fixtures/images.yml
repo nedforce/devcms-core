@@ -16,4 +16,14 @@ henks_weblog_image:
 
 root_section_image:
   title: An image in a section!
-  file: test.jpg   
+  file: test.jpg
+
+root_header_image:
+  title: An header image!
+  file: test.jpg
+  is_for_header: true
+
+weblog_header_image:
+  title: Another header image!
+  file: test.jpg
+  is_for_header: true
