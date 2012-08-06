@@ -293,15 +293,15 @@ module DevcmsCoreHelper
 
   def social_media_button(object, image, alt, url)
     url = url.gsub(/\{\{url\}\}/, u("http://#{request.host}/#{object.node.url_alias}")).gsub(/\{\{title\}\}/, u(object.title))
-    link_to(image_tag("icons/#{image}", :alt => alt, :title => alt, :class => 'icon'), url)
+    link_to(image_tag("icons/#{image}", :alt => alt, :title => alt, :class => 'icon'), url, :rel => 'nofollow')
   end
 
   def social_media_link(image, alt, url)
-    link_to(image_tag("icons/#{image}", :alt => alt, :title => alt, :class => 'icon'), url)
+    link_to(image_tag("icons/#{image}", :alt => alt, :title => alt, :class => 'icon'), url, :rel => 'nofollow')
   end
 
   def email_button(object, image, alt)
-    link_to(image_tag("icons/#{image}", :alt => alt, :title => alt, :class => 'icon'), new_share_path(:node_id => @node.id))
+    link_to(image_tag("icons/#{image}", :alt => alt, :title => alt, :class => 'icon'), new_share_path(:node_id => @node.id), :rel => 'nofollow')
   end
 
   def read_more_link(content, text = t('shared.read_more'))

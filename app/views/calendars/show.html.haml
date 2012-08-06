@@ -1,8 +1,3 @@
-- content_for :atom_feed do
-  %link{ :href => calendars_url(:format => 'atom'), :rel => "alternate", :title => t('calendars.all_calendar_items'), :type => "application/atom+xml" }/
-  - if CombinedCalendar.count > 0
-    %link{ :href => tomorrow_combined_calendar_url(:id => CombinedCalendar.first.id, :format => 'atom'), :rel => "alternate", :title => t('calendars.tomorrow'), :type => "application/atom+xml" }/
-
 #calendarMain
   = render :partial => '/calendars/calendar_header', :locals => { :date => @date }
   = render :partial => '/calendars/calendar_week',   :locals => { :date => @date }

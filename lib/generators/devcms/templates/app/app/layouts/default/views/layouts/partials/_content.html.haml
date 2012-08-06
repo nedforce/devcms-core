@@ -3,7 +3,7 @@
     .clearfix#content
       = bread_crumbs_for(@node, :include_root => false, :minimum_crumbs => 2) if @node.present?
       = yield_flash
-      = yield
+      = yield 
       \&nbsp;
     #second_side_bar
       = render_representations('secondary_column')

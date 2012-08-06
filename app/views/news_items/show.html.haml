@@ -1,26 +1,27 @@
-.newsItem.regularPage
-  = readspeaker do
-    = readspeaker_button :class => 'topRightReadspeaker'
+- do cache :main_content_for => @node.id, :last_updated_at => @node.content.last_updated_at do
+  .newsItem.regularPage
+    = readspeaker do
+      = readspeaker_button :class => 'topRightReadspeaker'
 
-    %h1= h @news_item.title
+      %h1= h @news_item.title
 
-    = render :partial => '/shared/metadata', :locals => { :publication_date => @news_item.publication_start_date, :last_update_date => @news_item.updated_at }
+      = render :partial => '/shared/metadata', :locals => { :publication_date => @news_item.publication_start_date, :last_update_date => @news_item.updated_at }
 
-    - if @news_item.preamble.present?
-      .preamble
-        = simple_format(white_list_preamble(@news_item.preamble))
+      - if @news_item.preamble.present?
+        .preamble
+          = simple_format(white_list_preamble(@news_item.preamble))
 
-    = render_images
+      = render_images
 
-    .htmlField
-      = process_video_tags(@news_item.body)
+      .htmlField
+        = process_video_tags(@news_item.body)
 
-    = render_attachments
+      = render_attachments
 
-    .buttons.clearfix
-      = print_button
-      .social_buttons
-        = social_media_buttons(@news_item)
+      .buttons.clearfix
+        = print_button
+        .social_buttons
+          = social_media_buttons(@news_item)
 
 - if @news_item.commentable?
   #comment_container

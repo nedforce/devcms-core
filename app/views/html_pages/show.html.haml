@@ -1,16 +1,17 @@
-.regularPage.htmlPage
-  = readspeaker do
-    = readspeaker_button :class => 'topRightReadspeaker withIcon'
+- do cache :main_content_for => @node.id, :last_updated_at => @node.content.last_updated_at do
+  .regularPage.htmlPage
+    = readspeaker do
+      = readspeaker_button :class => 'topRightReadspeaker withIcon'
 
-    %h1= h @html_page.title
+      %h1= h @html_page.title
 
-    = render :partial => '/shared/metadata', :locals => { :last_update_date => @html_page.updated_at }
+      = render :partial => '/shared/metadata', :locals => { :last_update_date => @html_page.updated_at }
 
-    .htmlField
-      = raw @html_page.body
+      .htmlField
+        = raw @html_page.body
 
-    = render_images
-    = render_attachments
+      = render_images
+      = render_attachments
 
-    .buttons.clearfix
-      = print_button
+      .buttons.clearfix
+        = print_button

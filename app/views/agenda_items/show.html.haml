@@ -1,31 +1,32 @@
-= readspeaker do
-  = readspeaker_button :class => 'topRightReadspeaker'
-  %h1= h @agenda_item.description
+- do cache :main_content_for => @node.id, :last_updated_at => @node.content.last_updated_at do
+  = readspeaker do
+    = readspeaker_button :class => 'topRightReadspeaker'
+    %h1= h @agenda_item.description
 
-  #agendaItemMain
-    .details
-      .date
-        == #{t 'calendars.date'}: #{@agenda_item.calendar_item.start_time.strftime('%d %B %Y')}
-      - if @agenda_item.agenda_item_category
-        .category
-          == #{t 'calendars.category'}: #{@agenda_item.agenda_item_category.name}
-      .duration
-        == #{t 'calendars.duration'}: #{@agenda_item.duration}
-      .chairman
-        == #{t 'calendars.chairman'}: #{@agenda_item.chairman}
-      .notary
-        == #{t 'calendars.notary'}: #{@agenda_item.notary}
-      .staff_member
-        == #{t 'calendars.staff_member'}: #{@agenda_item.staff_member}
-      .speaking_rights
-        == #{t 'calendars.speaking_rights'}:
-        = @agenda_item.speaking_rights ? t("calendars.speaking_rights_#{AgendaItem::SPEAKING_RIGHT_OPTIONS[@agenda_item.speaking_rights]}") : ''
+    #agendaItemMain
+      .details
+        .date
+          == #{t 'calendars.date'}: #{@agenda_item.calendar_item.start_time.strftime('%d %B %Y')}
+        - if @agenda_item.agenda_item_category
+          .category
+            == #{t 'calendars.category'}: #{@agenda_item.agenda_item_category.name}
+        .duration
+          == #{t 'calendars.duration'}: #{@agenda_item.duration}
+        .chairman
+          == #{t 'calendars.chairman'}: #{@agenda_item.chairman}
+        .notary
+          == #{t 'calendars.notary'}: #{@agenda_item.notary}
+        .staff_member
+          == #{t 'calendars.staff_member'}: #{@agenda_item.staff_member}
+        .speaking_rights
+          == #{t 'calendars.speaking_rights'}:
+          = @agenda_item.speaking_rights ? t("calendars.speaking_rights_#{AgendaItem::SPEAKING_RIGHT_OPTIONS[@agenda_item.speaking_rights]}") : ''
 
-    - if @agenda_item.body
-      .htmlField.body
-        = process_video_tags(@agenda_item.body)
+      - if @agenda_item.body
+        .htmlField.body
+          = process_video_tags(@agenda_item.body)
 
-    = render_images
-    = render_attachments
-    .buttons.clearfix
-      = print_button
+      = render_images
+      = render_attachments
+      .buttons.clearfix
+        = print_button

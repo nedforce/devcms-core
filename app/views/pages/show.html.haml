@@ -1,23 +1,24 @@
-.page.regularPage
-  = readspeaker do
-    = readspeaker_button :class => 'topRightReadspeaker'
+- do cache :main_content_for => @node.id, :last_updated_at => @node.content.last_updated_at do
+  .page.regularPage
+    = readspeaker do
+      = readspeaker_button :class => 'topRightReadspeaker'
 
-    %h1= h @page.title
+      %h1= h @page.title
 
-    = render :partial => '/shared/metadata', :locals => { :publication_date => @page.publication_start_date, :last_update_date => @page.updated_at }
+      = render :partial => '/shared/metadata', :locals => { :publication_date => @page.publication_start_date, :last_update_date => @page.updated_at }
 
-    - if @page.preamble.present?
-      .preamble
-        = simple_format(white_list_preamble(@page.preamble))
+      - if @page.preamble.present?
+        .preamble
+          = simple_format(white_list_preamble(@page.preamble))
 
-    = render_images
+      = render_images
 
-    .htmlField
-      = process_video_tags(@page.body)
+      .htmlField
+        = process_video_tags(@page.body)
 
-    = render_attachments
+      = render_attachments
 
-    .buttons.clearfix
-      = print_button
-      .social_buttons
-        = social_media_buttons(@page)
+      .buttons.clearfix
+        = print_button
+        .social_buttons
+          = social_media_buttons(@page)

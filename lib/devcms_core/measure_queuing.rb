@@ -7,7 +7,6 @@ module DevcmsCore
 
     def call(env)
       env["X-Queue-Start"] = "t=#{(Time.now.to_f * 1000000).to_i}"
-      env["HTTP_X_MIDDLEWARE_START"] = "t=#{(Time.now.to_f * 1000000).to_i}"
       @app.call(env)   
     end                
   end                  
