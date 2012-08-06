@@ -43,14 +43,14 @@ protected
         controller.expire_fragment(:main_menu_for_site => node.containing_site.id) if node.depth - node.containing_site.depth <= Devcms.main_menu_depth
       end
       # Expire breadcrumbs for self and descendants
-      node.self_and_descendants.where(:show_in_menu => true).each do |n|
+      node.self_and_descendants.each do |n|
         controller.expire_fragment(:breadcrumbs_for_node => n.id)
       end
       # Expire slideshow on delete/destroy
       controller.expire_fragment(:header_slideshow_for => node.child_ancestry ) if node.deleted_at.present?
     end
 
-    #TODO: Expire content boxes => based on content type etc. Might be path, parent or grandparent etc..
+    #TODO: Expire content boxes => based on content type etc. Might be path, parent or grandparent etc..        
 
     if node.sub_content_type == 'Image'
       if (node.parent.present? rescue false)
