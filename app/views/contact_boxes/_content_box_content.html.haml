@@ -1,24 +1,23 @@
-- content = node.content
+- cache(:content_box_for => node.id, :last_updated_at => content.last_updated_at, :site => current_site.id, :day => Date.today.cwday) do
+  - content = node.content
+  - header_image = node.children.accessible.with_content_type('Image').include_content.first.try(:content)
+  - if header_image.present?
+    = image_tag(sidebox_image_path(header_image, :format => :jpg), :alt => h(header_image.title), :class => 'content_box_header')
+  - else
+    = image_tag 'contact_box_header.png', :alt => t('contact_boxes.town_hall')
 
-- header_image = node.children.accessible.with_content_type('Image').include_content.first.try(:content)
+  .contact_wrapper
+    .contact_information
+      .wrapper.clearfix
+        .text
+          = w content.contact_information
 
-- if header_image.present?
-  = image_tag(sidebox_image_path(header_image, :format => :jpg), :alt => h(header_image.title), :class => 'content_box_header')
-- else
-  = image_tag 'contact_box_header.png', :alt => t('contact_boxes.town_hall')
-
-.contact_wrapper
-  .contact_information
-    .wrapper.clearfix
-      .text
-        = w content.contact_information
-
-      = link_to t('contact_boxes.more_addresses'), '/contact', :class => 'read_more_link'
+        = link_to t('contact_boxes.more_addresses'), '/contact', :class => 'read_more_link'
 
 
-  .opening_hours
-    %h2= t 'contact_boxes.opening_hours'
+    .opening_hours
+      %h2= t 'contact_boxes.opening_hours'
 
-    .wrapper.clearfix
-      = w text_for_today(content)
-      = link_to t('contact_boxes.more_times'), '/contact', :class => 'read_more_link'
+      .wrapper.clearfix
+        = w text_for_today(content)
+        = link_to t('contact_boxes.more_times'), '/contact', :class => 'read_more_link'
