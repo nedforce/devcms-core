@@ -1,4 +1,4 @@
-- cache(:content_box_for => node.id, :last_updated_at => content.last_updated_at, :site => current_site.id, :day => Date.today.cwday) do
+- cache(:content_box_for => node.id, :last_updated_at => node.content.last_updated_at, :site => current_site.id, :day => Date.today.cwday) do
   - content = node.content
   - header_image = node.children.accessible.with_content_type('Image').include_content.first.try(:content)
   - if header_image.present?
