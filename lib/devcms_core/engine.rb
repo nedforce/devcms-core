@@ -11,7 +11,6 @@ module DevcmsCore
     config.rewriter = nil
 
     config.app_middleware.insert_before(Rack::Lock, DevcmsCore::Rewriter)
-    config.app_middleware.insert_before(::DevcmsCore::Rewriter, DevcmsCore::MeasureQueuing)
     config.app_middleware.insert_before(::DevcmsCore::Rewriter, ::ActionDispatch::Static, "#{root}/public") 
 
     register_cms_modules        
