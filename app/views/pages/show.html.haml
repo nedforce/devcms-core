@@ -9,7 +9,7 @@
 
       - if @page.preamble.present?
         .preamble
-          = simple_format(white_list_preamble(@page.preamble))
+          = white_list_preamble(simple_format(@page.preamble))
 
       = render_images
 
