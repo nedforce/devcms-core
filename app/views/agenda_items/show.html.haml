@@ -1,4 +1,4 @@
-- cache :main_content_for => @node.id, :last_updated_at => @node.content.last_updated_at do
+- cache(:main_content_for => @node.id, :last_updated_at => @node.content.last_updated_at) do
   = readspeaker do
     = readspeaker_button :class => 'topRightReadspeaker'
     %h1= h @agenda_item.description
