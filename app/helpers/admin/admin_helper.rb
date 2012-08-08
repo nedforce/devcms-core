@@ -111,6 +111,10 @@ module Admin::AdminHelper
     render :partial => 'admin/shared/category_hidden_fields', :locals => { :form => form }
   end
   
+  def short_title_for(content)
+    render :partial => 'admin/shared/short_title_field', :locals => { :content => content }
+  end
+  
   def time_select_for(carrousel)    
     [
       label_tag(     'carrousel[display_time][]', Carrousel.human_attribute_name(:display_time)) + ': ',

@@ -26,6 +26,8 @@ nl:
     save: Opslaan
     set_email: Ingestelde E-mailadres
     size: Grootte
+    short_title: Titel voor menu
+    short_title_field: Menu instellingen
     submit: Versturen
     succes: Succesvol
     text: Tekst

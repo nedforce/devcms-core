@@ -550,6 +550,10 @@ class Node < ActiveRecord::Base
       self.title.blank? ? self.content.content_title : self.title
     end
   end
+  
+  def menu_title
+    self.short_title.blank? ? self.content_title : self.short_title
+  end
 
   def self.root
     Node.roots.first || raise(ActiveRecord::RecordNotFound, "No root node found!")

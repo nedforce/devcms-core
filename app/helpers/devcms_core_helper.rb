@@ -388,7 +388,7 @@ module DevcmsCoreHelper
     end
 
     def create_menu_link(node, opts = {})
-      link_to_node(h(node.content_title), node, {}, { :title => h(node.content_title) }.merge(opts))
+      link_to_node(h(node.menu_title), node, {}, { :title => h(node.menu_title) }.merge(opts))
     end
 
     # Returns the HTML for any children belonging to this node.
