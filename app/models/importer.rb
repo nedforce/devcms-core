@@ -36,10 +36,8 @@ class Importer
         ActiveRecord::Base.transaction do
           self.parse_spreadsheet
         end
-      rescue ImporterException => e
+      rescue => e
         @errors << e.message
-      rescue
-        @errors << 'bestand voldoet niet aan XLSX formaat'
       end
     else
       @errors << 'geen bestand opgegeven'
