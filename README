@@ -14,10 +14,6 @@ rails generate devcms
 register_cms_modules
 
 # Notes
-
-* As we're not precompiling ExtJS and TinyMCE, the asset pipeline fallback should be enabled in production:
-
-  config.assets.compile = true
   
 * For new DevCMS applications, you should remove the default ApplicationController. If you'd like to keep it, you need to make it an extension of DevcmsCore:
   
