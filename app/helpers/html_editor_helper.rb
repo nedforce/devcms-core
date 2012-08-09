@@ -38,7 +38,7 @@ module HtmlEditorHelper
     heading   = options.delete(:heading) || 'h2'
     width     = options.delete(:width)   || (front_end ? '410' : '600')
 
-    <<-JS
+    raw <<-JS
         tinyMCE.init({
           width : "#{width}",
           mode : "textareas",
@@ -73,7 +73,7 @@ module HtmlEditorHelper
 private
 
   def insert_video_button
-    "ed.addButton('add_video_button', {
+    raw "ed.addButton('add_video_button', {
       title : 'Video invoegen',
       image : '#{image_path 'icons/film_add.png'}',
       onclick : function() {
