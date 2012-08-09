@@ -150,7 +150,7 @@ module NodeExtensions::Layouting
   
   # Find header image(s) for this node, either those set on this node or on one of its parents.
   def header_images
-    Image.accessible.all(:conditions => { :is_for_header => true, 'nodes.ancestry' => self.child_ancestry })
+    Image.accessible.all(:conditions => { :is_for_header => true, 'nodes.ancestry' => self.header_container_ancestry })
   end
 
   # Find the ancestry for the first parent or self containing header images
