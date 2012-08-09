@@ -163,7 +163,7 @@ Rails.application.routes.draw do
       end    
     end
 
-    resources :attachment_themes, :except => :index
+    resources :attachment_themes, :except => :index, :controller => :themes, :defaults => { :type => :attachment_theme }
     
     resources :calendars, :except => :destroy
     
@@ -319,7 +319,7 @@ Rails.application.routes.draw do
     resources :sites, :except => [:index, :destroy]
     resources :social_media_links_boxes, :except => [:index, :destroy]
     resources :synonyms, :only => [:index, :create, :update, :destroy]
-    resources :link_themes, :except => :index
+    resources :link_themes, :except => :index, :controller => :themes, :defaults => { :type => :link_theme }
     resources :top_hits_pages, :except => [:index, :destroy]
     
     resources :trash, :only => [ :index ] do
