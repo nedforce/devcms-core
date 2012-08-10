@@ -10,3 +10,4 @@ test.log
 acts_as_ferret.log
 uploads
 test/dummy/log/*.log
+coverage

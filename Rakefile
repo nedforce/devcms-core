@@ -25,26 +25,18 @@ load 'rails/tasks/engine.rake'
 
 require 'rake/testtask'
 
-STATS_DIRECTORIES = [
-  %w(Controllers        app/controllers),
-  %w(Helpers            app/helpers), 
-  %w(Models             app/models),
-  %w(Mailers            app/mailers),
-  %w(Sweepers           app/sweepers),
-  %w(Uploaders          app/uploaders),
-  %w(validators         app/validators),
-  %w(Libraries          lib/),
-  %w(APIs               app/apis),
-  %w(Integration\ tests test/integration),
-  %w(Functional\ tests  test/functional),
-  %w(Unit\ tests        test/unit)
-
-].collect { |name, dir| [ name, "#{Rails.root}/../../#{dir}" ] }.select { |name, dir| File.directory?(dir) }
-
-desc "Report code statistics (KLOCs, etc) from the application"
-task :stats do
-  require 'rails/code_statistics'
-  CodeStatistics.new(*STATS_DIRECTORIES).to_s
+desc "Run continues integration build"
+task :cruise => ['setup_database',  'app:db:schema:load', 'test']
+task 'setup_database' do
+      File.open("#{Rails.root}/config/database.yml",'w'){|f| f.write(
+%Q{
+test:
+  adapter: postgresql
+  host: #{ENV['DB_HOST'] || 'localhost'}
+  database: #{ENV['DB_NAME'] || ''}
+  password: #{ENV['DB_PASS'] || ''}
+  username: #{ENV['DB_USER'] || ''}
+})}
 end
 
 Rake::TestTask.new(:test) do |t|
@@ -93,6 +85,28 @@ namespace :test do
       t.verbose = false
     end    
   end
+end
+
+STATS_DIRECTORIES = [
+  %w(Controllers        app/controllers),
+  %w(Helpers            app/helpers), 
+  %w(Models             app/models),
+  %w(Mailers            app/mailers),
+  %w(Sweepers           app/sweepers),
+  %w(Uploaders          app/uploaders),
+  %w(validators         app/validators),
+  %w(Libraries          lib/),
+  %w(APIs               app/apis),
+  %w(Integration\ tests test/integration),
+  %w(Functional\ tests  test/functional),
+  %w(Unit\ tests        test/unit)
+
+].collect { |name, dir| [ name, "#{Rails.root}/../../#{dir}" ] }.select { |name, dir| File.directory?(dir) }
+
+desc "Report code statistics (KLOCs, etc) from the application"
+task :stats do
+  require 'rails/code_statistics'
+  CodeStatistics.new(*STATS_DIRECTORIES).to_s
 end
 
 task :default => :test
