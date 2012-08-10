@@ -1,6 +1,6 @@
 .textAboveForm.logoutPageText.clearfix
   - if Settler[:logout_page_text].present?
-    = Settler[:logout_page_text]
+    = Settler[:logout_page_text].html_safe
   - else
     %h1= t 'sessions.confirm_logout'
     %p= t 'sessions.really_logout?'
