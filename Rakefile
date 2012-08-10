@@ -26,7 +26,7 @@ load 'rails/tasks/engine.rake'
 require 'rake/testtask'
 
 desc "Run continues integration build"
-task :cruise => ['setup_database',  'app:db:schema:load', 'test']
+task :cruise => ['setup_database',  'environment', 'app:db:drop', 'app:db:create', 'app:db:schema:load', 'test']
 task 'setup_database' do
       File.open("#{Rails.root}/config/database.yml",'w'){|f| f.write(
 %Q{
