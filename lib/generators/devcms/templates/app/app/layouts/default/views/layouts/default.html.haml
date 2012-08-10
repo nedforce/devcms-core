@@ -5,8 +5,7 @@
   %head
     %meta{:content => "text/html;charset=utf-8", "http-equiv" => "Content-Type"}/
     %meta{:content => "nl_nl", :name => "language"}/
-    - @node
-      = generate_metadata_for(@node)
+    = generate_metadata_for(@node) if @node.present?
     %title= h [Settler[:site_name], @page_title].compact.join(' | ')
     %link{:href => "http://#{Settler[:host]}/favicon.ico", :rel => "SHORTCUT ICON", :type => "image/vnd.microsoft.icon"}/
     

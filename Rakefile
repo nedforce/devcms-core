@@ -26,17 +26,32 @@ load 'rails/tasks/engine.rake'
 require 'rake/testtask'
 
 desc "Run continues integration build"
-task :cruise => ['setup_database',  'environment', 'app:db:drop', 'app:db:create', 'app:db:schema:load', 'test']
-task 'setup_database' do
-      File.open("#{Rails.root}/config/database.yml",'w'){|f| f.write(
-%Q{
-test:
-  adapter: postgresql
-  host: #{ENV['DB_HOST'] || 'localhost'}
-  database: #{ENV['DB_NAME'] || ''}
-  password: #{ENV['DB_PASS'] || ''}
-  username: #{ENV['DB_USER'] || ''}
-})}
+task :cruise do
+  ['cruise:setup', 'app:db:drop', 'app:db:create', 'app:db:schema:load', 'test', 'test:integrations', 'cruise:cleanup'].each do |t|
+    Rake::Task[t].invoke
+  end
+end
+
+namespace :cruise do
+  task :setup do
+    ENV['RAILS_ENV']=ENV['FORCE_RAILS_ENV'] || 'test'
+    File.open("#{Rails.root}/config/database.yml",'w') do |f| 
+      f.write(
+        %Q{
+        test:
+          adapter: postgresql
+          host: #{ENV['DB_HOST'] || 'localhost'}
+          database: #{ENV['DB_NAME'] || ''}
+          password: #{ENV['DB_PASS'] || ''}
+          username: #{ENV['DB_USER'] || ''}
+        })
+    end
+  end
+
+  task :cleanup do
+    SimpleCov.result.format!
+    `ln -s #{ENV['CC_BUILD_ARTIFACTS']}/coverage #{SimpleCov.coverage_path}` if ENV['CC_BUILD_ARTIFACTS'].present?
+  end
 end
 
 Rake::TestTask.new(:test) do |t|

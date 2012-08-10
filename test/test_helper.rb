@@ -1,8 +1,17 @@
 ENV["RAILS_ENV"] = "test"
 
 # Keep simplecov on top
-require 'simplecov'
-SimpleCov.start 'rails' if ENV["COVERAGE"]
+if ENV["COVERAGE"]
+  require 'simplecov'
+  SimpleCov.start 'rails' do
+    add_filter 'vendor'
+    add_group 'Sweepers',   'app/sweepers'           
+    add_group 'Uploaders',  'app/uploaders'       
+    add_group 'Validators', 'app/validators'       
+    minimum_coverage = 0
+    maximum_coverage_drop = 100
+  end
+end
 
 require File.expand_path('../dummy/config/environment.rb', __FILE__)
 require 'rails/test_help'
