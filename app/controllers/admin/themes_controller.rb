@@ -72,7 +72,6 @@ class Admin::ThemesController < Admin::AdminController
     respond_to do |format|
       if @commit_type == 'preview' && @theme.valid?
         format.html {
-          find_theme_items
           render :template => 'admin/shared/update_preview', :locals => { :record => @theme }, :layout => 'admin/admin_preview'
         }
         format.xml  { render :xml => @theme, :status => :created, :location => @theme }

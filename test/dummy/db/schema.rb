@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120606084203) do
+ActiveRecord::Schema.define(:version => 20120808142305) do
 
   create_table "abbreviations", :force => true do |t|
     t.string   "abbr",       :null => false
@@ -69,7 +69,6 @@ ActiveRecord::Schema.define(:version => 20120606084203) do
     t.integer  "width"
     t.integer  "parent_id"
     t.string   "thumbnail"
-    t.integer  "db_file_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
@@ -77,7 +76,6 @@ ActiveRecord::Schema.define(:version => 20120606084203) do
   end
 
   add_index "attachments", ["created_at"], :name => "index_attachments_on_created_at"
-  add_index "attachments", ["db_file_id"], :name => "index_attachments_on_db_file_id", :unique => true
   add_index "attachments", ["deleted_at"], :name => "index_attachments_on_deleted_at"
   add_index "attachments", ["parent_id"], :name => "index_attachments_on_parent_id"
   add_index "attachments", ["updated_at"], :name => "index_attachments_on_updated_at"
@@ -231,15 +229,6 @@ ActiveRecord::Schema.define(:version => 20120606084203) do
 
   add_index "content_representations", ["parent_id", "content_id"], :name => "index_content_representations_on_parent_id_and_content_id", :unique => true
 
-  create_table "db_files", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "loid"
-  end
-
-  add_index "db_files", ["created_at"], :name => "index_db_files_on_created_at"
-  add_index "db_files", ["updated_at"], :name => "index_db_files_on_updated_at"
-
   create_table "event_registrations", :force => true do |t|
     t.integer  "event_id"
     t.integer  "user_id"
@@ -381,7 +370,6 @@ ActiveRecord::Schema.define(:version => 20120606084203) do
   add_index "html_pages", ["updated_at"], :name => "index_html_pages_on_updated_at"
 
   create_table "images", :force => true do |t|
-    t.binary   "data"
     t.string   "title",                              :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -482,11 +470,13 @@ ActiveRecord::Schema.define(:version => 20120606084203) do
   add_index "meeting_categories", ["updated_at"], :name => "index_meeting_categories_on_updated_at"
 
   create_table "news_archives", :force => true do |t|
-    t.string   "title",       :null => false
+    t.string   "title",          :null => false
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
+    t.integer  "items_featured"
+    t.integer  "items_max"
   end
 
   add_index "news_archives", ["created_at"], :name => "index_news_archives_on_created_at"
@@ -524,11 +514,13 @@ ActiveRecord::Schema.define(:version => 20120606084203) do
   add_index "news_viewer_items", ["news_viewer_id"], :name => "index_news_viewer_items_on_news_viewer_id"
 
   create_table "news_viewers", :force => true do |t|
-    t.string   "title",       :null => false
+    t.string   "title",          :null => false
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
+    t.integer  "items_featured"
+    t.integer  "items_max"
   end
 
   add_index "news_viewers", ["deleted_at"], :name => "index_news_viewers_on_deleted_at"
@@ -608,14 +600,12 @@ ActiveRecord::Schema.define(:version => 20120606084203) do
     t.integer  "content_id",                                            :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "template_id"
     t.boolean  "inherits_side_box_elements",     :default => true,      :null => false
     t.boolean  "private",                        :default => false
     t.string   "url_alias"
     t.boolean  "show_in_menu",                   :default => false,     :null => false
     t.boolean  "commentable",                    :default => false
     t.boolean  "has_changed_feed",               :default => false
-    t.boolean  "hide_right_column",              :default => false
     t.integer  "hits",                           :default => 0,         :null => false
     t.datetime "publication_start_date"
     t.datetime "publication_end_date"
@@ -647,6 +637,7 @@ ActiveRecord::Schema.define(:version => 20120606084203) do
     t.integer  "pin_id"
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
+    t.string   "short_title"
   end
 
   add_index "nodes", ["ancestry"], :name => "index_nodes_on_ancestry"
@@ -667,7 +658,6 @@ ActiveRecord::Schema.define(:version => 20120606084203) do
   add_index "nodes", ["publishable"], :name => "index_nodes_on_publishable"
   add_index "nodes", ["show_in_menu"], :name => "index_nodes_on_show_in_menu"
   add_index "nodes", ["sub_content_type"], :name => "index_nodes_on_sub_content_type"
-  add_index "nodes", ["template_id"], :name => "index_nodes_on_template_id"
   add_index "nodes", ["title"], :name => "index_nodes_on_title"
   add_index "nodes", ["updated_at"], :name => "index_nodes_on_updated_at"
   add_index "nodes", ["url_alias"], :name => "index_nodes_on_url_alias"
@@ -1103,19 +1093,6 @@ ActiveRecord::Schema.define(:version => 20120606084203) do
   create_table "tags", :force => true do |t|
     t.string "name"
   end
-
-  create_table "templates", :force => true do |t|
-    t.string   "title",       :null => false
-    t.string   "description"
-    t.string   "filename",    :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "templates", ["created_at"], :name => "index_templates_on_created_at"
-  add_index "templates", ["filename"], :name => "index_templates_on_filename", :unique => true
-  add_index "templates", ["title"], :name => "index_templates_on_title", :unique => true
-  add_index "templates", ["updated_at"], :name => "index_templates_on_updated_at"
 
   create_table "themes", :force => true do |t|
     t.string   "title",      :null => false

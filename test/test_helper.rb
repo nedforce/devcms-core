@@ -1,5 +1,9 @@
 ENV["RAILS_ENV"] = "test"
 
+# Keep simplecov on top
+require 'simplecov'
+SimpleCov.start 'rails' if ENV["COVERAGE"]
+
 require File.expand_path('../dummy/config/environment.rb', __FILE__)
 require 'rails/test_help'
 require 'mocha'

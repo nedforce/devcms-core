@@ -12,6 +12,7 @@ gem 'prototype_legacy_helper', '0.0.0', :git => 'http://github.com/willbryant/pr
 
 group :test do
   gem 'turn'
+  gem 'simplecov', "~> 0.6.4", :require => false
 end
 
 gemspec

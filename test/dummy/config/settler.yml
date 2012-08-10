@@ -109,13 +109,13 @@ settings: &settings
     editable: false
   search_enabled_engines:
     alt: Beschikbare zoekmachines
-    value: ['luminis', 'ferret']
+    value: ['ferret']
   search_default_engine: &search
     alt: Standaard zoekmachine
     value: 'ferret'
     editable: true
     validations:
-      inclusion: [ 'ferret' , 'luminis' ]     
+      inclusion: [ 'ferret' ]
   search_default_page_size:
     alt: Standaard aantal zoekresultaten per pagina
     value: 5
@@ -131,33 +131,9 @@ settings: &settings
     value: 0.8
     editable: true   
     typecast: float      
-  search_luminis_connection_timeout:
-    alt: De timeout in seconden voor een query verstuurd naar Luminis
-    value: 20
-    editable: true
-    typecast: integer    
   search_luminis_crawler_ips:
     alt: 'Luminis crawler IPs die toegang zullen hebben tot verborgen nodes'
     value: ['62.129.149.150', '62.129.149.151']
-  search_luminis_solr_base_url:
-    alt: URL naar de Luminis service
-    value: 'http://gdv-sea01-pro.hosting.nl/solr/core0/'
-    editable: true
-  search_luminis_date_boost:
-    alt: 'De Luminis datum boost, standaard ingesteld op 1 jaar (in seconden)'
-    value: <%= 1.year.to_i %>
-    editable: true    
-    typecast: integer      
-  search_luminis_title_boost:
-    alt: De Luminis titel boostwaarde
-    value: 100
-    editable: true
-    typecast: integer      
-  search_luminis_synonyms_boost:
-    alt: De Luminis synoniem boostwaarde
-    value: 100
-    editable: true
-    typecast: integer    
   site_name:
     alt: De naam van de website
     value: 'Gemeente Dummy'

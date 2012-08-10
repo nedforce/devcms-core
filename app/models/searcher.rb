@@ -11,7 +11,7 @@ class Searcher
   require 'acts_as_ferret'  
   
   # The supported search engines.
-  ENGINES = [ 'ferret', 'luminis' ]
+  ENGINES = [ 'ferret' ]
 
   # The structure of the result of a search.
   SEARCH_RESULT_STRUCT = Struct.new(:title, :tstamp, :content, :url, :node, :score, :highlighted_title, :highlighted_content)
@@ -27,7 +27,6 @@ class Searcher
 
     @engine = case engine
       when 'ferret'  then Search::FerretSearch
-      when 'luminis' then Search::LuminisSearch
     end
   end
 

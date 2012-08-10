@@ -7,6 +7,7 @@ class SearchControllerTest < ActionController::TestCase
 
   def setup
     unless @@index_built 
+      `rm -rf #{File.join(Rails.root, 'index')}`
       Node.rebuild_index
       @@index_built = true
     end

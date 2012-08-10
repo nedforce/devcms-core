@@ -28,14 +28,6 @@ class Devcms
     #     :ferret => {
     #       :synonym_weight => Settler[:search_ferret_synonym_weight].to_f,
     #       :proximity => Settler[:search_ferret_proximity].to_f
-    #     },
-    #     :luminis => {
-    #       :luminis_crawler_ips => Settler[:search_luminis_crawler_ips],
-    #       :solr_base_url => Settler[:search_luminis_solr_base_url],
-    #       :solr_connection_timeout => Settler[:search_luminis_connection_timeout].to_i,
-    #       :title_boost => Settler[:search_luminis_title_boost].to_i,
-    #       :synonyms_boost => Settler[:search_luminis_synonyms_boost].to_i,          
-    #       :date_boost => Settler[:search_luminis_date_boost].to_i
     #     }
     #   }
     # end

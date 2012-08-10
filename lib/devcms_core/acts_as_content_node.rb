@@ -32,7 +32,7 @@ module DevcmsCore
 
       has_one :node, :as => :content, :autosave => true, :validate => true
 
-      default_scope joins(:node).includes(:node).where("#{table_name}.deleted_at IS NULL")
+      default_scope where("#{table_name}.deleted_at IS NULL")
 
       scope :with_parent, lambda { |node, options| options.merge({:include => :node, :conditions => [ 'nodes.ancestry = ?', node.child_ancestry ] }) }
       scope :accessible,  lambda { { :include => :node, :conditions => Node.accessibility_and_visibility_conditions } }

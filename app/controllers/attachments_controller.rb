@@ -8,7 +8,7 @@ class AttachmentsController < ApplicationController
   # Uploads an attachment to the user if the filename matches. If no filename is
   # given, then redirect to the correct filename for caching purposes.
   def show
-    if Devcms.search_configuration[:luminis].try(:has_key?, :luminis_crawler_ips) and Devcms.search_configuration[:luminis][:luminis_crawler_ips].include?(request.remote_ip)
+    if (Settler[:search_luminis_crawler_ips] || []).include?(request.remote_ip)
       render :file => '/attachments/show.html.haml'
     else
       # Upload file to user

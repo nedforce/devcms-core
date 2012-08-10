@@ -25,6 +25,28 @@ load 'rails/tasks/engine.rake'
 
 require 'rake/testtask'
 
+STATS_DIRECTORIES = [
+  %w(Controllers        app/controllers),
+  %w(Helpers            app/helpers), 
+  %w(Models             app/models),
+  %w(Mailers            app/mailers),
+  %w(Sweepers           app/sweepers),
+  %w(Uploaders          app/uploaders),
+  %w(validators         app/validators),
+  %w(Libraries          lib/),
+  %w(APIs               app/apis),
+  %w(Integration\ tests test/integration),
+  %w(Functional\ tests  test/functional),
+  %w(Unit\ tests        test/unit)
+
+].collect { |name, dir| [ name, "#{Rails.root}/../../#{dir}" ] }.select { |name, dir| File.directory?(dir) }
+
+desc "Report code statistics (KLOCs, etc) from the application"
+task :stats do
+  require 'rails/code_statistics'
+  CodeStatistics.new(*STATS_DIRECTORIES).to_s
+end
+
 Rake::TestTask.new(:test) do |t|
   t.libs << 'lib'
   t.libs << 'test'

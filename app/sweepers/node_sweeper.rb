@@ -26,13 +26,15 @@ protected
     if node.content.blank? || (node.changed & %w(title url_alias ancestry show_in_menu private deleted_at publication_start_date publication_end_date)).present? || node.changed == ["updated_at"]
       # But only if we where shown in the menu or are shown there now
       if node.show_in_menu || node.show_in_menu_changed?
-        # Expire footer if parent is a site
-        controller.expire_fragment(:footer_for_site => node.parent.id) if node.parent.sub_content_type == 'Site'
-        # Expire submenu for parent and siblings
-        node.parent.self_and_children.where(:show_in_menu => true).each do |n|
-          # Disregading visibility, remove both private and public version.
-          controller.expire_fragment(:sub_menu_for_node => n.id, :private => true)
-          controller.expire_fragment(:sub_menu_for_node => n.id, :private => false)
+        if node.parent.present?        
+          # Expire footer if parent is a site
+          controller.expire_fragment(:footer_for_site => node.parent.id) if node.parent.sub_content_type == 'Site'
+          # Expire submenu for parent and siblings
+          node.parent.self_and_children.where(:show_in_menu => true).each do |n|
+            # Disregading visibility, remove both private and public version.
+            controller.expire_fragment(:sub_menu_for_node => n.id, :private => true)
+            controller.expire_fragment(:sub_menu_for_node => n.id, :private => false)
+          end
         end
         node.self_and_descendants.where(:show_in_menu => true).each do |n|
           # Disregading visibility, remove both private and public version.
