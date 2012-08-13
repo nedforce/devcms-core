@@ -53,7 +53,7 @@ class NewsletterArchive < ActiveRecord::Base
 
   # Returns all header images that can be used in a +NewsletterArchive+.
   def self.header_images
-    path = Rails.root.join('public', 'images', 'newsletter', "#{Settler[:newsletter_archive_header_prefix]}*")
+    path = Rails.root.join('app', 'assets', 'images', 'newsletter', "#{Settler[:newsletter_archive_header_prefix]}*")
     Dir.glob(path).collect { |file| file.split("/").last }
   end
 
