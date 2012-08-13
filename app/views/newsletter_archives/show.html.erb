@@ -36,7 +36,7 @@
       <%= render :partial => '/shared/metadata', :locals => { :publication_date => newsletter_edition.publication_start_date, :last_update_date => newsletter_edition.updated_at } %>
 
       <div class="htmlEditor clearfix">
-        <%= newsletter_edition.body -%>
+        <%= raw newsletter_edition.body -%>
       </div>
 
       <div class="buttons clearfix">
