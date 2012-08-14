@@ -2,14 +2,13 @@ class LoginAttempt < ActiveRecord::Base
 
   validates_presence_of :ip
 
-  scope :failed, :conditions => { :success => false }
-
   # Checks if the given +ip+ is blocked. If so, returns
   # the date of unblock. If not, returns +nil+.
   def self.is_ip_blocked?(ip)
-    attempts = LoginAttempt.failed.all(:conditions => { :ip => ip, :created_at => Time.now.yesterday..Time.now })
-    if attempts.size >= 10
-      return attempts.first.created_at.tomorrow
+    last_ten_attempts = LoginAttempt.order('created_at desc').where(:ip => ip).limit(10)
+
+    if last_ten_attempts.map(&:success).count(false) == 10
+      return last_ten_attempts.first.created_at.tomorrow
     else
       nil
     end
