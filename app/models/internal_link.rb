@@ -55,7 +55,7 @@ protected
 
   # Ensure the linked node is contained in the same site node, so that inter-site links are impossible.
   def linked_node_is_contained_in_same_site
-    errors.add(:base, :linked_node_must_be_contained_in_same_site) if self.linked_node && self.parent && !self.parent.containing_site.self_and_descendants.include?(self.linked_node)
+    errors.add(:base, :linked_node_must_be_contained_in_same_site) if self.linked_node && self.parent && !self.parent.containing_site.self_and_descendants.exists?(:id => self.linked_node_id)
   end
 
 end

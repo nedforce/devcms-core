@@ -32,7 +32,6 @@ class SearcherTest < ActiveSupport::TestCase
   end
 
   def test_should_search          
-    RSolr::Client.any_instance.expects(:select).returns({})
     Search::FerretSearch.expects(:search).returns({})
 
     assert_not_nil Searcher(:ferret).search('test')

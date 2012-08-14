@@ -216,7 +216,7 @@ Rails.application.routes.draw do
       end
     end
     
-    resources :external_links, :except => [:index, :destroy] do    
+    resources :external_links, :except => [:index, :destroy], :controller => 'links', :defaults => { :type => 'external_link' } do
       member do
         get :previous
       end
@@ -237,7 +237,7 @@ Rails.application.routes.draw do
       end    
     end
 
-    resources :internal_links, :except => [:index, :destroy] do    
+    resources :internal_links, :except => [:index, :destroy], :controller => 'links', :defaults => { :type => 'internal_link' } do
       member do
         get :previous
       end
