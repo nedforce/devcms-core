@@ -64,7 +64,7 @@ module DevcmsCore
         key   = options[:public_key] ||= Settler[:recaptcha_public_key]
         raise RecaptchaError, I18n.t('recaptcha.no_public_key_specified') unless key
         error = options[:error]      ||= (defined? flash ? flash[:recaptcha_error] : "")
-        uri   = options[:ssl] ? RECAPTCHA_API_SECURE_SERVER : RECAPTCHA_API_SERVER
+        uri   = options[:ssl] || request.ssl? ? RECAPTCHA_API_SECURE_SERVER : RECAPTCHA_API_SERVER
         lang  = options[:lang]       ||= I18n.locale
         html  = ""
         if options[:display]
