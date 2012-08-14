@@ -408,8 +408,10 @@ Rails.application.routes.draw do
   match '/logout' => 'sessions#destroy', :as => :logout
   match '/signup' => 'users#new', :as => :signup
   
-  match '/search/projects' => 'search#projects', :as => :search_projects
-  match '/search(/:search_engine)' => 'search#index', :as => :search
+  if SETTLER_LOADED && Settler[:search_enabled_engines].present?
+    match '/search/projects' => 'search#projects', :as => :search_projects
+    match '/search(/:search_engine)' => 'search#index', :as => :search
+  end
   
   match '/profile' => 'users#profile', :as => :profile
   match '/synonyms.txt' => 'application#synonyms', :as => :synonyms, :format => :txt
