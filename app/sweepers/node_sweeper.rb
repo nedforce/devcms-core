@@ -29,24 +29,9 @@ protected
         if node.parent.present?        
           # Expire footer if parent is a site
           controller.expire_fragment(:footer_for_site => node.parent.id) if node.parent.sub_content_type == 'Site'
-          # Expire submenu for parent and siblings
-          node.parent.self_and_children.where(:show_in_menu => true).each do |n|
-            # Disregading visibility, remove both private and public version.
-            controller.expire_fragment(:sub_menu_for_node => n.id, :private => true)
-            controller.expire_fragment(:sub_menu_for_node => n.id, :private => false)
-          end
-        end
-        node.self_and_descendants.where(:show_in_menu => true).each do |n|
-          # Disregading visibility, remove both private and public version.
-          controller.expire_fragment(:sub_menu_for_node => n.id, :private => true)
-          controller.expire_fragment(:sub_menu_for_node => n.id, :private => false)
         end
         # Expire mainmenu of containing site if in main menu scope of containing site
         controller.expire_fragment(:main_menu_for_site => node.containing_site.id) if node.depth - node.containing_site.depth <= Devcms.main_menu_depth
-      end
-      # Expire breadcrumbs for self and descendants
-      node.self_and_descendants.each do |n|
-        controller.expire_fragment(:breadcrumbs_for_node => n.id)
       end
       # Expire slideshow on delete/destroy
       controller.expire_fragment(:header_slideshow_for => node.child_ancestry ) if node.deleted_at.present?
