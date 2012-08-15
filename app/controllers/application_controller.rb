@@ -108,6 +108,17 @@ class ApplicationController < ActionController::Base
 
   # Renders a custom 500 page. Also makes sure a notification mail is sent.
   def handle_500(exception = env["action_dispatch.exception"])
+    # Some one requested '/500' directly?
+    if exception.blank?
+      if (error_500_url_alias = Settler[:error_page_500]).present? && @node = Node.find_by_url_alias(error_500_url_alias)
+        @page = @node.content
+        render :template => 'pages/show', :status => :internal_server_error
+      else
+        render :template => "errors/500", :status => :internal_server_error
+      end
+      return
+    end
+
     if Rails.env.test?
       puts "\n#{exception.message}"
       puts exception.backtrace.join("\n") 
