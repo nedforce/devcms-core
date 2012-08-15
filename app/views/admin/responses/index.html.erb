@@ -18,7 +18,7 @@ Ext.onReady(function() {
       'email', 
       'created_at',
 <% @contact_form.contact_form_fields.each do |contact_form_field| -%>
-<%= contact_form_field == @contact_form.contact_form_fields.last ? "'field_#{contact_form_field.id}'" : "'field_#{contact_form_field.id}'," %>
+<%= (contact_form_field == @contact_form.contact_form_fields.last ? "'field_#{contact_form_field.id}'" : "'field_#{contact_form_field.id}',").html_safe %>
 <% end -%>
     ]),
     autoLoad: {params: {start: 0, limit: 25}}
@@ -57,7 +57,7 @@ Ext.onReady(function() {
                 fields: 'text',
                 data: [
 <% contact_form_field.default_value.split(',').each do |option| -%>
-<%= option == contact_form_field.default_value.split(',').last ? "'#{option}'" : "'#{option}'," %>
+<%= (option == contact_form_field.default_value.split(',').last ? "'#{option}'" : "'#{option}',").html_safe %>
 <% end -%>
                 ]
            }),
