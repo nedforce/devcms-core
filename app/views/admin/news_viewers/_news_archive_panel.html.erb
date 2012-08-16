@@ -1,4 +1,4 @@
-var news_archives = [<%= @news_archives.collect{|archive| "[#{archive.id}, '#{escape_javascript archive.title}','#{@news_viewer.news_archives.include?(archive).to_s}']" }.join(',') %>];
+var news_archives = [<%= @news_archives.collect{|archive| "[#{archive.id}, '#{escape_javascript archive.title}','#{@news_viewer.news_archives.include?(archive).to_s}']" }.join(',').html_safe %>];
 
 var selModel = new Ext.grid.SmartCheckboxSelectionModel({
   excel: false,
