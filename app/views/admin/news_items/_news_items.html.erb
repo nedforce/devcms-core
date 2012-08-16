@@ -20,7 +20,7 @@
       </div>
 
       <div class="images clearfix">
-        <% if (image_node = news_item.node.children.reject { |c| c.content_class != Image }.first) -%>
+        <% if (image_node = news_item.node.children.accessible.with_content_type('Image').first) -%>
           <%=
             link_to(
               image_tag(content_node_path(image_node, :action => :thumbnail), :alt => h(image_node.content.title)),

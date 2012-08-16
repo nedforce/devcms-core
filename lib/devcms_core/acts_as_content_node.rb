@@ -139,7 +139,7 @@ module DevcmsCore
     end
     
     def associate_node
-      build_node.tap{|node| node.sub_content_type = self.class.name }
+      build_node.tap{|node| node.sub_content_type = (self.respond_to?(:copied_content_class) ? self.copied_content_class : self.class).name}
     end
 
     def save(*args)
