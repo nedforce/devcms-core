@@ -59,7 +59,7 @@ class NewsViewer < ActiveRecord::Base
 
   # Returns the date when the +NewsViewer+ was last updated.
   def last_updated_at
-    [news_items.newest.accessible.maximum(:updated_at), self.updated_at, (news_items.newest.accessible.first(:order => 'nodes.updated_at DESC').children.with_content_type('Image').maximum(:updated_at) rescue nil)].compact.max
+    [news_items.newest.accessible.maximum(:updated_at), self.updated_at, (news_items.newest.accessible.first(:order => 'news_viewer_items.position, nodes.publication_start_date DESC').children.with_content_type('Image').maximum(:updated_at) rescue nil)].compact.max
   end
 
   # Maintenance task for removing old news items and adding new ones.
