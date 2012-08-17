@@ -127,6 +127,8 @@ module DevcmsCore
 
       # Called from #current_user.  First attempt to login by the user id stored in the session.
       def login_from_session
+        session[:ip] = request.remote_ip if session[:ip].blank?
+        return nil if ip_violation(session[:ip])
         self.current_user = User.find_by_id(session[:user_id]) if session[:user_id]
       end
 
@@ -141,8 +143,19 @@ module DevcmsCore
       def login_from_cookie
         user = cookies[:auth_token] && User.find_by_remember_token(cookies[:auth_token])
         if user && user.remember_token?
+          return nil if ip_violation(user.remember_token_ip)
           cookies[:auth_token] = { :value => user.remember_token, :expires => user.remember_token_expires_at }
           self.current_user = user
+        end
+      end
+
+      def ip_violation(ip)
+        if ip != request.remote_ip
+          Rails.logger.info "AUTHENTICATION IP MISMATCH: For user (#{User.find_by_id(session[:user_id]).try(:login)}). " +
+            "IP should be (#{ip}), IP was (#{request.remote_ip})"
+          true
+        else
+          false
         end
       end
   end

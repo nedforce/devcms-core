@@ -206,19 +206,20 @@ class User < ActiveRecord::Base
   end
 
   # Allows the user to be remembered for 2 weeks.
-  def remember_me
-    remember_me_for 2.weeks
+  def remember_me(ip)
+    remember_me_for 2.weeks, ip
   end
 
   # Allows the user to be remembered for the given period.
-  def remember_me_for(time)
-    remember_me_until time.from_now.utc
+  def remember_me_for(time, ip)
+    remember_me_until time.from_now.utc, ip
   end
 
   # Allows the user to be remembered until the given time.
-  def remember_me_until(time)
+  def remember_me_until(time, ip)
     self.remember_token_expires_at = time
     self.remember_token            = encrypt("#{email_address}--#{remember_token_expires_at}")
+    self.remember_token_ip         = ip
     save(:validate => false)
   end
 
@@ -226,6 +227,7 @@ class User < ActiveRecord::Base
   def forget_me
     self.remember_token_expires_at = nil
     self.remember_token            = nil
+    self.remember_token_ip         = nil
     save(:validate => false)
   end
 
