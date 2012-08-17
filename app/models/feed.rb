@@ -99,7 +99,7 @@ class Feed < ActiveRecord::Base
   def parse_feed
     read_feed if xml.blank?
     begin
-      FeedNormalizer::FeedNormalizer.parse(xml)
+      FeedNormalizer::FeedNormalizer.parse(ActiveSupport::Multibyte::Unicode.tidy_bytes(xml))
     ensure
       # Force-start the garbage collector to clean up after FeedNormalizer leaks.
       GC.start
