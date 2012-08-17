@@ -88,22 +88,13 @@ class Feed < ActiveRecord::Base
     rescue => e
       Rails.logger.error(e)
       return nil
-    ensure
-      # open-uri may leave Tempfiles lingering if the garbage collector is
-      # not triggered before the application loop exits.
-      GC.start
     end
   end
 
   # Parse the feed and normalize it using +FeedNormalizer+.
   def parse_feed
     read_feed if xml.blank?
-    begin
-      FeedNormalizer::FeedNormalizer.parse(ActiveSupport::Multibyte::Unicode.tidy_bytes(xml))
-    ensure
-      # Force-start the garbage collector to clean up after FeedNormalizer leaks.
-      GC.start
-    end
+    FeedNormalizer::FeedNormalizer.parse(ActiveSupport::Multibyte::Unicode.tidy_bytes(xml)) unless xml.blank?
   end
 
   # Validate that we can parse the new feed URL or restore the old XML.

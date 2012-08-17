@@ -14,6 +14,8 @@ class SearchControllerTest < ActionController::TestCase
     Node.stubs(:find_with_ferret).returns(stub({
       :total_hits => 0
     }))
+    Search::FerretSearch.stubs(:create_search_string).returns("query")
+    # Search::FerretSearch.stubs(:expand_query).returns("expanded query")
   end
 
   def test_should_search_on_post
