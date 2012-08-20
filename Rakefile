@@ -27,8 +27,12 @@ require 'rake/testtask'
 
 desc "Run continues integration build"
 task :cruise do
-  ['cruise:setup', 'app:db:drop', 'app:db:create', 'app:db:schema:load', 'test', 'test:integrations', 'cruise:cleanup'].each do |t|
-    Rake::Task[t].invoke
+  begin 
+    ['cruise:setup', 'app:db:drop', 'app:db:create', 'app:db:schema:load','test', 'test:integrations'].each do |t|
+      Rake::Task[t].invoke
+    end
+  ensure
+    Rake::Task['cruise:cleanup'].invoke
   end
 end
 
@@ -49,7 +53,7 @@ namespace :cruise do
   end
 
   task :cleanup do
-    `mv #{Rails.root}/coverage #{ENV['CC_BUILD_ARTIFACTS']}` if ENV['CC_BUILD_ARTIFACTS'].present?
+    `mv #{Rails.root}/../../coverage #{ENV['CC_BUILD_ARTIFACTS']}` if ENV['CC_BUILD_ARTIFACTS'].present?
   end
 end
 
