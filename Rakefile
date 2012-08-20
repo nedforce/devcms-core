@@ -49,8 +49,7 @@ namespace :cruise do
   end
 
   task :cleanup do
-    SimpleCov.result.format!
-    `ln -s #{ENV['CC_BUILD_ARTIFACTS']}/coverage #{SimpleCov.coverage_path}` if ENV['CC_BUILD_ARTIFACTS'].present?
+    `mv #{Rails.root}/coverage #{ENV['CC_BUILD_ARTIFACTS']}` if ENV['CC_BUILD_ARTIFACTS'].present?
   end
 end
 
