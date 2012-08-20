@@ -24,11 +24,7 @@ Debugger.settings[:autoeval] = true
 
 include ActionDispatch::TestProcess # Required to make fixture_file_upload work
 
-begin
-  require 'turn'
-rescue LoadError
-  puts 'Install the Turn gem for prettier test output.'
-end
+require 'turn/autorun' unless ENV["COVERAGE"]
 
 # module I18n 
 #   def self.just_raise(*args) 

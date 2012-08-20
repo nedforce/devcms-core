@@ -18,7 +18,7 @@
         .header
           .corner_overlay.transparent
           - if top_ancestor.content_box_icon.present?
-            = image_tag "icons/content_box_#{top_ancestor.content_box_icon}.png", :class => 'icon_overlay transparent'
+            .icon_overlay{:class => @node.content_box_icon}
           %h2= link_to_node top_ancestor.content_title, top_ancestor
         .content
           = create_sub_menu(self_and_ancestor_ids, top_sub_menu_items, show_private_items_in_sub_menu)

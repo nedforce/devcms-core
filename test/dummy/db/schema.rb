@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120808142305) do
+ActiveRecord::Schema.define(:version => 20120817132521) do
 
   create_table "abbreviations", :force => true do |t|
     t.string   "abbr",       :null => false
@@ -1180,6 +1180,7 @@ ActiveRecord::Schema.define(:version => 20120808142305) do
     t.boolean  "blocked",                   :default => false
     t.integer  "failed_logins",             :default => 0
     t.string   "type"
+    t.string   "remember_token_ip"
   end
 
   add_index "users", ["created_at"], :name => "index_users_on_created_at"

@@ -150,7 +150,7 @@ class User < ActiveRecord::Base
   attr_readonly :login
 
   # An array of field names that are considered to be information-sensitive.
-  SECRETS = %w( password_hash password_salt remember_token remember_token_expires_at verification_code ).freeze
+  SECRETS = %w( password_hash password_salt remember_token remember_token_expires_at verification_code password_reset_token remember_token_ip ).freeze
 
   # The original ActiveRecord::Base.to_xml that also includes information-sensitive fields.
   alias_method :to_xml_with_secrets,  :to_xml

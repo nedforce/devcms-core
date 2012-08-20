@@ -11,7 +11,7 @@ gem 'calendar_date_select', :git => 'https://github.com/emyl/calendar_date_selec
 gem 'prototype_legacy_helper', '0.0.0', :git => 'http://github.com/willbryant/prototype_legacy_helper.git'
 
 group :test do
-  gem 'turn'
+  gem 'turn', :require => false
   gem 'simplecov', "~> 0.6.4", :require => false
 end
 

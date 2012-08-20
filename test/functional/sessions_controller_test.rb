@@ -80,14 +80,15 @@ class SessionsControllerTest < ActionController::TestCase
   end
 
   def test_should_login_with_cookie
-    users(:gerjan).remember_me
+    users(:gerjan).remember_me '127.0.0.1'
     @request.cookies['auth_token'] = cookie_for(:gerjan)
+    @request.remote_addr = '127.0.0.1'
     get :new
-    assert @controller.send(:logged_in?)
+    assert @controller.send(:logged_in?), "Should be logged in, but wasn't.."
   end
 
   def test_should_fail_expired_cookie_login
-    users(:gerjan).remember_me
+    users(:gerjan).remember_me '127.0.0.2'
     users(:gerjan).update_attribute :remember_token_expires_at, 5.minutes.ago.utc
     @request.cookies['auth_token'] = cookie_for(:gerjan)
     get :new
@@ -95,7 +96,7 @@ class SessionsControllerTest < ActionController::TestCase
   end
 
   def test_should_fail_cookie_login
-    users(:gerjan).remember_me
+    users(:gerjan).remember_me '127.0.0.1'
     @request.cookies['auth_token'] = auth_token('invalid_auth_token')
     get :new
     assert !@controller.send(:logged_in?)

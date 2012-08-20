@@ -98,13 +98,13 @@ class UserTest < ActiveSupport::TestCase
   end
 
   def test_should_set_remember_token
-    users(:gerjan).remember_me
+    users(:gerjan).remember_me '127.0.0.1'
     assert_not_nil users(:gerjan).remember_token
     assert_not_nil users(:gerjan).remember_token_expires_at
   end
 
   def test_should_unset_remember_token
-    users(:gerjan).remember_me
+    users(:gerjan).remember_me '127.0.0.1'
     assert_not_nil users(:gerjan).remember_token
     users(:gerjan).forget_me
     assert_nil users(:gerjan).remember_token
@@ -112,7 +112,7 @@ class UserTest < ActiveSupport::TestCase
 
   def test_should_remember_me_for_one_week
     before = 1.week.from_now.utc
-    users(:gerjan).remember_me_for 1.week
+    users(:gerjan).remember_me_for 1.week, '127.0.0.1'
     after = 1.week.from_now.utc
     assert_not_nil users(:gerjan).remember_token
     assert_not_nil users(:gerjan).remember_token_expires_at
@@ -122,7 +122,7 @@ class UserTest < ActiveSupport::TestCase
 
   def test_should_remember_me_until_one_week
     time = 1.week.from_now.utc
-    users(:gerjan).remember_me_until time
+    users(:gerjan).remember_me_until time, '127.0.0.1'
     assert_not_nil users(:gerjan).remember_token
     assert_not_nil users(:gerjan).remember_token_expires_at
     assert_equal users(:gerjan).remember_token_expires_at, time
@@ -130,7 +130,7 @@ class UserTest < ActiveSupport::TestCase
 
   def test_should_remember_me_default_two_weeks
     before = 2.weeks.from_now.utc
-    users(:gerjan).remember_me
+    users(:gerjan).remember_me '127.0.0.1'
     after = 2.weeks.from_now.utc
     assert_not_nil users(:gerjan).remember_token
     assert_not_nil users(:gerjan).remember_token_expires_at
@@ -247,12 +247,14 @@ class UserTest < ActiveSupport::TestCase
 
   def test_should_strip_sensitive_information_from_json
     json = users(:arthur).to_json
-    User::SECRETS.each { |secret| assert !json.include?(secret) }
+    User::SECRETS.each do |secret| 
+      assert !json.include?(secret), "#{json.pretty_inspect} included #{secret}. It shouldn't"
+    end
   end
 
   def test_should_keep_sensitive_information_in_secrets_json
     json = users(:arthur).to_json_with_secrets
-    User::SECRETS.each { |secret| assert json.include?(secret) }
+    User::SECRETS.each { |secret| assert json.include?(secret),  "#{json.pretty_inspect} didn't included #{secret}. It should" }
   end
 
   def test_has_subscription_for?
