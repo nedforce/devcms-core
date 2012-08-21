@@ -41,7 +41,7 @@ var tabs = new Ext.TabPanel({
     border: false,
     defaults: {autoHeight: true},
     items:[
-    <%= tabs.join(',') %>
+    <%= tabs.join(',').html_safe %>
     ]
 });
 

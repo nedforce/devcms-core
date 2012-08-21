@@ -29,7 +29,7 @@ class Admin::UsersController < Admin::AdminController
         render :action => :index, :layout => false
       end
       format.json do
-        users = user_scope.select('users.login, users.id').where(["users.login LIKE ?", "#{params[:query]}%"])
+        users = User.select('users.login, users.id').where(["users.login LIKE ?", "#{params[:query]}%"])
         render :json => { :users => users }.to_json, :status => :ok
       end
       format.csv do
