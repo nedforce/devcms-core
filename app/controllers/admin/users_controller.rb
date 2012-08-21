@@ -2,8 +2,8 @@
 # set up to communicate with ExtJS components using XML.
 class Admin::UsersController < Admin::AdminController
   before_filter :find_user, :except => [ :index, :create, :invite, :privileged ]
-  before_filter :set_paging,  :only => [ :index, :create ]
-  before_filter :set_sorting, :only => [ :index, :create ]
+  before_filter :set_paging,  :only => [ :index, :create, :privileged ]
+  before_filter :set_sorting, :only => [ :index, :create, :privileged ]
 
   skip_before_filter :set_actions
   skip_before_filter :find_node
