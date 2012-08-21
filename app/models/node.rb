@@ -311,7 +311,7 @@ class Node < ActiveRecord::Base
     hash = {
       # default Ext attributes:
       :id            => self.id,
-      :text          => self.tree_text,
+      :text          => self.tree_text.html_safe,
       :leaf          => !self.is_expandable_for_user?(user),
       :noChildNodes  => self.leaf?,
       :disabled      => role.nil?,
@@ -407,7 +407,7 @@ class Node < ActiveRecord::Base
       tree_text += ")</i>"
     end
 
-    tree_text.html_safe
+    tree_text
   end
 
   # Returns the site that directly contains this node as a descendant
