@@ -5,4 +5,4 @@
   = render :partial => "/admin/#{@controller_path}/show", :locals => { :record => @previous_content }
 
 #show
-  = diff(previous_version, current_version)
+  = diff(previous_version, current_version).html_safe
