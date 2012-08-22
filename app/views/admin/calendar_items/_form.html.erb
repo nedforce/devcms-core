@@ -1,6 +1,6 @@
 <%= form.check_box :repeating, :label => t('calendars.repeating'), :onclick => 'toggleRepeatingCalendarItemFields()' %>
 
-<div id="repeatingCalendarItemFields" <%= "style='display:none;'" unless record.repeating? -%>>
+<div id="repeatingCalendarItemFields" <%= "style='display:none;'".html_safe unless record.repeating? -%>>
   <div id="repeat_interval" class="formFieldCt clearfix">
     <label for="repeat_interval"><%=t 'calendars.every' -%></label>
     <%= form.select :repeat_interval_multiplier,  CalendarItem.repeat_interval_multipliers, {}, { :id => 'repeat_interval' } -%>
@@ -12,13 +12,13 @@
 
 <% if record.is_a?(Meeting) %>
 <div id="meetingCategoryFields">
-  <div id="existing_meeting_category_wrapper" class="formFieldCt clearfix" <%= "style='display:none;'" if @categories.empty? || record.meeting_category.try(:new_record?) -%>>
+  <div id="existing_meeting_category_wrapper" class="formFieldCt clearfix" <%= "style='display:none;'".html_safe if @categories.empty? || record.meeting_category.try(:new_record?) -%>>
     <label for="meeting_category_select"><%=t 'calendars.meeting_category' -%></label>
     <%= select_tag "meeting_category_select", options_from_collection_for_select(@categories, 'name', 'name', record.meeting_category_name), :onclick => 'setMeetingCategoryName()', :id => 'meeting_category_select' -%>
     <%= link_to_function t('calendars.new_category'), "toggleNewMeetingCategoryField()" -%>
   </div>
 
-  <div id="new_meeting_category_wrapper" class="formFieldCt clearfix" <%= "style='display:none;'" unless @categories.empty? || record.meeting_category.try(:new_record?) -%>>
+  <div id="new_meeting_category_wrapper" class="formFieldCt clearfix" <%= "style='display:none;'".html_safe unless @categories.empty? || record.meeting_category.try(:new_record?) -%>>
     <label for="meeting_category_name"><%=t 'calendars.meeting_category' -%></label>
     <%= text_field_tag 'meeting[meeting_category_name]', record.meeting_category_name || (@categories.any? ? @categories.first.name : nil), :class => 'admin_form_text_field', :id => 'meeting_category_name' -%>
     <%= link_to_function t('calendars.existing_category'), "toggleExistingMeetingCategoryField()" unless @categories.empty? -%>
