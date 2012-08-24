@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
   include ::SslRequirement
 
   protect_from_forgery
+  skip_before_filter [:verify_authenticity_token, :check_authorization], :only => [:handle_500, :handle_404] 
 
   # Catch all exceptions (except 404 errors, which are handled below) to render
   # a custom 500 page. Also makes sure a notification mail is sent.

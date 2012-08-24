@@ -406,8 +406,7 @@ class Node < ActiveRecord::Base
       
       tree_text += ")</i>"
     end
-
-    "#{self.content.current_version.tree_text(self)} #{tree_text.html_safe}"
+    "#{self.content.current_version.tree_text(self)}#{tree_text.html_safe}"
   end
 
   # Returns the site that directly contains this node as a descendant
