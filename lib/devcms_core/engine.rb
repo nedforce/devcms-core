@@ -15,6 +15,10 @@ module DevcmsCore
 
     register_cms_modules        
     
+    initializer "haml_configuration" do |app|
+      Haml::Template.options[:format] = :xhtml          
+    end
+    
     initializer "exceptions_app" do |app|
       app.config.exceptions_app = app.routes
     end
