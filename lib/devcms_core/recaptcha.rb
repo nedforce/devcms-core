@@ -1,8 +1,7 @@
 module DevcmsCore
   module Recaptcha
-    RECAPTCHA_API_SERVER        = 'http://api.recaptcha.net';
-    RECAPTCHA_API_SECURE_SERVER = 'https://api-secure.recaptcha.net';
-    RECAPTCHA_VERIFY_SERVER     = 'api-verify.recaptcha.net';
+    RECAPTCHA_API_SERVER        = 'http://www.google.com/recaptcha/api';
+    RECAPTCHA_API_SECURE_SERVER = 'https://www.google.com/recaptcha/api';
 
     SKIP_VERIFY_ENV = ['test', 'cucumber']
 
@@ -27,7 +26,7 @@ module DevcmsCore
         begin
           recaptcha = nil
           Timeout::timeout(options[:timeout] || 3) do
-            recaptcha = Net::HTTP.post_form URI.parse("http://#{RECAPTCHA_VERIFY_SERVER}/verify"), {
+            recaptcha = Net::HTTP.post_form URI.parse("#{RECAPTCHA_API_SERVER}/verify"), {
               "privatekey" => private_key,
               "remoteip"   => request.remote_ip,
               "challenge"  => params[:recaptcha_challenge_field],
