@@ -99,10 +99,8 @@ class ApplicationController < ActionController::Base
           end
         end
       end
-      f.xml  { head 404 }
+      f.any(:xml, :js, :atom, :rss)  { head 404 }
       f.json { render :json => { :error => I18n.t('application.page_not_found')}.to_json, :status => 404 }
-      f.js   { head 404 }
-      f.atom { head 404 }
       f.all  { render :nothing => true, :status => :not_found }
     end
   end
@@ -143,11 +141,10 @@ class ApplicationController < ActionController::Base
           end
         end
       end
-      f.xml  { render :xml  => error.to_xml,  :status => :internal_server_error }
-      f.json { render :json => error.to_json, :status => :internal_server_error }
-      f.js   { render :json => error.to_json, :status => :internal_server_error }
-      f.atom { render :xml  => error.to_xml,  :status => :internal_server_error, :layout => false }
-      f.all  { render :nothing => true,       :status => :internal_server_error }
+      f.xml               { render :xml  => error.to_xml,  :status => :internal_server_error }
+      f.any(:json, :js)   { render :json => error.to_json, :status => :internal_server_error }
+      f.any(:rss, :atom)  { render :xml  => error.to_xml,  :status => :internal_server_error, :layout => false }
+      f.all               { render :nothing => true,       :status => :internal_server_error }
     end
   end
   
@@ -209,9 +206,9 @@ protected
   def set_rss_feed_url
     unless @node.nil? || @node.content_class == Feed
       if @node.content_type_configuration[:has_own_feed]
-        @rss_feed_url = content_node_path(@node, :format => 'atom')
+        @rss_feed_url = content_node_path(@node, :format => 'rss')
       elsif @node.has_changed_feed || @node.content_class == Section
-        @rss_feed_url = content_node_path(@node, :format => 'atom', :action => :changes)
+        @rss_feed_url = content_node_path(@node, :format => 'rss', :action => :changes)
       end
     end
   end

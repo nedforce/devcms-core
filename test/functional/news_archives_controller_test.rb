@@ -17,5 +17,10 @@ class NewsArchivesControllerTest < ActionController::TestCase
     get :show, :id => news_archives(:devcms_news).id, :format => 'atom'
     assert_response :success
   end
+
+  def test_should_show_news_archive_rss
+    get :show, :id => news_archives(:devcms_news).id, :format => 'rss'
+    assert_response :success
+  end
   
 end

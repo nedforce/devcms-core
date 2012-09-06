@@ -19,5 +19,15 @@ class CombinedCalendarsControllerTest < ActionController::TestCase
     get :tomorrow, :id => combined_calendars(:combined_calendar).id, :format => 'atom'
     assert_response :success
   end
+
+  def test_should_show_calendar_rss
+    get :show, :id => combined_calendars(:combined_calendar).id, :format => 'rss'
+    assert_response :success
+  end
+
+  def test_should_get_rss_tomorrow
+    get :tomorrow, :id => combined_calendars(:combined_calendar).id, :format => 'rss'
+    assert_response :success
+  end
   
 end

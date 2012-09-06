@@ -21,6 +21,11 @@ class NewsViewersControllerTest < ActionController::TestCase
     get :show, :id => @news_viewer.id, :format => 'atom'
     assert_response :success
   end
+
+  def test_should_show_news_viewer_rss
+    get :show, :id => @news_viewer.id, :format => 'rss'
+    assert_response :success
+  end
   
 private  
   

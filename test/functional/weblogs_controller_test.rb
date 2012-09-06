@@ -34,6 +34,11 @@ class WeblogsControllerTest < ActionController::TestCase
     assert_response :success
   end
  
+  def test_should_show_weblog_rss
+    get :show, :id => weblogs(:henk_weblog).id, :format => 'rss'
+    assert_response :success
+  end
+ 
   def test_should_get_new_for_user_that_hasnt_got_a_weblog_yet
     login_as :sjoerd
     get :new, :weblog_archive_id => weblog_archives(:devcms_weblog_archive).id

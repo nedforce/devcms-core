@@ -25,7 +25,7 @@ Debugger.settings[:autoeval] = true
 include ActionDispatch::TestProcess # Required to make fixture_file_upload work
 
 require 'turn/autorun'
-Turn.config.format = ENV["CC_BUILD_ARTIFACTS"] ? :dot : :progress 
+Turn.config.format = ENV["CC_BUILD_ARTIFACTS"] ? :dot : :pretty 
 
 # module I18n 
 #   def self.just_raise(*args) 

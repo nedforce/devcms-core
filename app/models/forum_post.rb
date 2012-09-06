@@ -78,6 +78,9 @@ class ForumPost < ActiveRecord::Base
   def comment; body end
   def comment=(text); self.body = text  end
 
+  # Pretend to have a title
+  def title; "Re: #{forum_thread.title}" end
+
   protected
 
   # Ensures that the ForumThread to which the new ForumPost is added is not closed.

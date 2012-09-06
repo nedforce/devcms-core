@@ -24,4 +24,19 @@ class CalendarsControllerTest < ActionController::TestCase
     get :tomorrow, :id => calendars(:events_calendar).id, :format => 'atom'
     assert_response :success
   end
+
+  def test_should_show_calendar_rss
+    get :show, :id => calendars(:events_calendar).id, :format => 'rss'
+    assert_response :success
+  end
+  
+  def test_should_redirect_rss_index
+    get :index, :format => 'rss'
+    assert_response :redirect
+  end
+  
+  def test_should_get_rss_tomorrow
+    get :tomorrow, :id => calendars(:events_calendar).id, :format => 'rss'
+    assert_response :success
+  end
 end

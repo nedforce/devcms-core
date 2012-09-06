@@ -19,7 +19,7 @@ class CombinedCalendarsController < ApplicationController
         @calendar_items = @calendar.calendar_items.find_all_for_month_of(@date).group_by { |ci| ci.start_time.mday }
         render :template => 'calendars/show'
       end
-      format.atom do
+      format.any(:atom, :rss) do
         @calendar_items = @calendar.calendar_items.accessible.all(:include => :node, :order => 'events.start_time DESC', :limit => 25)
         render :layout => false, :template => 'calendars/show'
       end
@@ -35,7 +35,7 @@ class CombinedCalendarsController < ApplicationController
     @feed_title = I18n.t('calendars.tomorrow')
 
     respond_to do |format|
-      format.atom do
+      format.any(:rss, :atom) do
         render :template => 'calendars/index', :layout => false
       end
     end

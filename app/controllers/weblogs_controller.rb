@@ -26,7 +26,7 @@ class WeblogsController < ApplicationController
   def show
     respond_to do |format|
       format.html # show.html.erb
-      format.atom { render :layout => false }
+      format.any(:rss, :atom) { render :layout => false }
       format.xml  { render :xml => @weblog }
     end
   end

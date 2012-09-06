@@ -7,16 +7,15 @@ class CalendarsController < ApplicationController
 
   # * GET /calendars.atom
   def index
-    respond_to do |format|
-      format.atom {
-        combined_calendar = CombinedCalendar.first
-        if combined_calendar.present?
-          redirect_to :controller => :combined_calendars, :action => :show, :id => combined_calendar.id, :format => :atom
-        else
-          raise ActiveRecord::RecordNotFound
-        end
-      }
+    combined_calendar = CombinedCalendar.first
+    if combined_calendar.present?
+      respond_to do |format|
+        format.any(:rss, :atom) { redirect_to :controller => :combined_calendars, :action => :show, :id => combined_calendar.id, :format => request.format.to_sym }
+      end      
+    else
+      raise ActiveRecord::RecordNotFound
     end
+    
   end
 
   # * GET /calendars/:id/tomorrow.atom
@@ -27,7 +26,7 @@ class CalendarsController < ApplicationController
     @feed_title     = I18n.t('calendars.tomorrow')
 
     respond_to do |format|
-      format.atom { render :action => 'index', :layout => false }
+      format.any(:atom, :rss) { render :action => 'index', :layout => false }
     end
   end
 
@@ -44,7 +43,7 @@ class CalendarsController < ApplicationController
 
         @calendar_items = @calendar.calendar_items.find_all_for_month_of(@date).group_by { |ci| ci.start_time.mday }
       end
-      format.atom do
+      format.any(:rss, :atom) do
         @calendar_items = @calendar.calendar_items.accessible.all(:include => :node, :order => 'start_time', :conditions => [ 'nodes.ancestry = ? ', @calendar.node.child_ancestry ])
         render :layout => false
       end

@@ -21,7 +21,7 @@ class SitemapsController < ApplicationController
         raise ::AbstractController::ActionNotFound if params[:interval].blank?
         @changes = Node.all_including_deleted(:conditions => ["updated_at > ?", Time.now - params[:interval].to_i], :order => "updated_at DESC" )
       end
-      format.atom do
+      format.any(:rss, :atom) do
         @nodes = @node.last_changes(:all, { :limit => 25 })
         render :template => '/shared/changes', :layout => false
       end

@@ -3,7 +3,7 @@
 class NodesController < ApplicationController
 
   def changes
-    if @node.content_class != Feed && params[:format] == 'atom'
+    if @node.content_class != Feed && (params[:format] == 'atom' || params[:format] == 'rss')
       if @node.has_changed_feed
         @nodes = @node.last_changes(:self)
       elsif @node.content_class <= Section
@@ -13,7 +13,7 @@ class NodesController < ApplicationController
       end
       
       respond_to do |format|
-        format.atom { render :template => '/shared/changes', :layout => false }
+        format.any(:rss, :atom) { render :template => '/shared/changes', :layout => false }
       end
     else
       raise ::AbstractController::ActionNotFound
