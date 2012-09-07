@@ -28,7 +28,7 @@ class Admin::CommentsController < Admin::AdminController
           {
             :id         => comment.id,
             :user_name  => comment.user_name,
-            :subject    => @show_forum_posts ? I18n.t('comments.no_subject') : comment.commentable.content.title,
+            :subject    => @show_forum_posts ? I18n.t('comments.no_subject') : (comment.commentable.present? ? comment.commentable.content.title : ''),
             :comment    => comment.comment,
             :updated_at => comment.updated_at
           }
