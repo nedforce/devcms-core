@@ -8,7 +8,7 @@ xml.results do
         xml.email(response.email)        
         xml.created_at(response.created_at.strftime("%d-%m-%Y %H:%M"))
         xml.fields {
-          response.response_fields.each do |response_field|
+          response.response_fields.includes(:contact_form_field).order('contact_form_fields.position asc').each do |response_field|
             if response_field.file?
               download_url = file_admin_contact_form_response_response_field_url(response.contact_form, response, response_field)
               xml.tag!("field_#{response_field.contact_form_field.id}", link_to(response_field.value, download_url), :label => response_field.contact_form_field.label)

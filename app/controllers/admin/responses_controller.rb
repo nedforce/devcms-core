@@ -155,7 +155,7 @@ class Admin::ResponsesController < Admin::AdminController
     header_fields = ['#']
     sheet.column(0).width = 5
     i = 1
-    ContactFormField.all(:order => "position asc", :conditions => {:contact_form_id => contact_form.id}).each do |field|
+    contact_form.contact_form_fields.order("position asc").each do |field|
       header_fields << field.label
       sheet.column(i).width = 20
       i += 1
@@ -171,13 +171,7 @@ class Admin::ResponsesController < Admin::AdminController
 
       sheet[row, 0] = response.id
 
-      ContactFormField.all(
-        :select => 'value, file, response_id, contact_form_id, label', 
-        :order => "position asc", 
-        :conditions => {:contact_form_id => contact_form.id}, 
-        :joins => ("LEFT JOIN response_fields ON (response_fields.contact_form_field_id = contact_form_fields.id 
-          AND response_fields.response_id = #{response.id.to_s})")
-      ).each do |response_field|
+      response.response_fields.includes(:contact_form_field).order('contact_form_fields.position asc').each do |response_field|
         sheet[row, column] = response_field.file? ? response_field.read_attribute(:file) : response_field.value
         column += 1
       end
