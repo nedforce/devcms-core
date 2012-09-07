@@ -12,7 +12,7 @@
   <div class="content">
     <div class="details">
       <%- if record.is_a? Meeting -%>
-        <div class="category"><%=t 'calendars.category'   -%>: <%= record.meeting_category.name -%></div>
+        <div class="category"><%=t 'calendars.category'   -%>: <%= record.meeting_category_name -%></div>
       <%- end -%>
     
       <div class="start_time"><%=t 'calendars.start_time' -%>: <%= record.start_time.strftime("%d %B %Y #{t 'shared.at'} %H:%M") -%></div>
