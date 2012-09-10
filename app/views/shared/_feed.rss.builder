@@ -8,7 +8,7 @@ xml.rss :version => "2.0" do
       xml.description local_assigns[:content_node].send(attribute)
     end
     xml.link local_assigns[:url] || content_node_url(local_assigns[:content_node].try(:node), :format => 'rss')
-    xml.lastBuildDate items.first.try(:created_at) || Time.now.utc
+    xml.lastBuildDate (items.first.try(:created_at) || Time.now.utc).to_s(:rfc822)
 
     items.each do |item|
       xml.item do
@@ -18,7 +18,7 @@ xml.rss :version => "2.0" do
         end.try do |attribute|
           xml.description item.send(attribute)
         end
-        xml.pubDate item.created_at
+        xml.pubDate item.created_at.to_s(:rfc822)
         xml.link content_node_url(item.node)
       end
     end
