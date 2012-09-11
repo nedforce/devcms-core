@@ -110,10 +110,10 @@ class CalendarTest < ActiveSupport::TestCase
 
   def test_last_updated_at_should_return_updated_at_when_no_accessible_calendar_items_are_found
     c = create_calendar
-    assert_equal c.updated_at.to_i, c.last_updated_at.to_i
+    assert_equal c.node.updated_at.to_i, c.last_updated_at.to_i
     ci = create_calendar_item :calendar => c, :publication_start_date => 1.day.ago
     ci.node.update_attribute(:hidden, true)
-    assert_equal c.updated_at.to_i, c.last_updated_at.to_i
+    assert_equal c.node.updated_at.to_i, c.last_updated_at.to_i
   end
 
 protected
