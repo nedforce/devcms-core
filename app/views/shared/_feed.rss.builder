@@ -1,6 +1,6 @@
 url = local_assigns[:url] || content_node_url(local_assigns[:content_node].try(:node), :format => 'rss')
-xml.instruct! :xml, :version => "1.0", :'xmlns:atom' => 'http://www.w3.org/2005/Atom'
-xml.rss :version => "2.0" do
+xml.instruct! :xml, :version => "1.0"
+xml.rss :version => "2.0", :'xmlns:atom' => 'http://www.w3.org/2005/Atom' do
   xml.channel do
     xml.title local_assigns[:title] || local_assigns[:content_node].title
     [:description, :body].find do |attribute|
