@@ -10,7 +10,7 @@ class Array
   def paginate page = 1, per_page = 20, count = nil
     define_singleton_method(:current_page){ page }
     define_singleton_method(:limit_value){ per_page }        
-    define_singleton_method(:num_pages){ ((count || size).to_f / per_page).ceil }  
+    define_singleton_method(:total_pages){ ((count || size).to_f / per_page).ceil }  
 
     return self  
   end
