@@ -175,8 +175,8 @@ module ApplicationHelper
   # Generates a print button.
   def print_button
     content_tag(:div, :class => 'print') do
-      image_tag('icons/print.png', :class => 'icon', :alt => t('application.print_alt'), :title => t('application.print_title')) +
-      link_to(t('application.print'), "?layout=print")
+      image_tag('icons/print.png', :class => 'icon', :alt => '', :title => t('application.print_title')) +
+      link_to(t('application.print'), "?layout=print", :rel => 'nofollow')
     end
   end
 
