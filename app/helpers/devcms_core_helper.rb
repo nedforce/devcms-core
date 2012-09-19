@@ -185,7 +185,7 @@ module DevcmsCoreHelper
   def print_button
     content_tag(:div, :class => 'print') do
       image_tag('icons/print.png', :class => 'icon', :alt => '', :title => t('application.print_title')) +
-      link_to(t('application.print'), "?layout=print", :rel => 'nofollow')
+      link_to(t('application.print'), "?layout=print", :title => t('application.print_title'), :rel => 'nofollow')
     end
   end
 
