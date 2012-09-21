@@ -111,8 +111,8 @@ module Admin::AdminHelper
     render :partial => 'admin/shared/category_hidden_fields', :locals => { :form => form }
   end
   
-  def short_title_for(content)
-    render :partial => 'admin/shared/short_title_field', :locals => { :content => content }
+  def meta_fields_for(content)
+    render :partial => 'admin/shared/meta_fields', :locals => { :content => content }
   end
   
   def time_select_for(carrousel)    

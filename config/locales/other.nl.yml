@@ -13,6 +13,7 @@ nl:
     filename: Bestandsnaam
     failed: Opslaan mislukt!
     last_updated: Laatst gewijzigd
+    locale: Taal van inhoud
     more_activities: meer activiteiten
     more_permits: meer bekendmakingen
     more_products: meer producten
@@ -27,7 +28,7 @@ nl:
     set_email: Ingestelde E-mailadres
     size: Grootte
     short_title: Titel voor menu
-    short_title_field: Menu instellingen
+    meta_fields: Meta instellingen
     submit: Versturen
     succes: Succesvol
     text: Tekst

@@ -40,5 +40,15 @@ class Devcms
       2
     end
 
+    def node_locales
+      {
+        "Nederlands" => "nl",
+        "Engels"     => "en",
+        "Duits"      => "de",
+        "Spaans"     => "es",
+        "Frans"      => "fr"
+      }
+    end
+
   end
 end

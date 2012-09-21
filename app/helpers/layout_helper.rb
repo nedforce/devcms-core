@@ -70,4 +70,10 @@ module LayoutHelper
       default
     end
   end
+
+  def locale_attrs
+    node = (@node || current_site)
+    node.locale.present? ? {'xml:lang' => node.locale, 'lang' => node.locale} : {}
+  end
+
 end

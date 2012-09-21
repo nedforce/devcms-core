@@ -43,6 +43,16 @@ class Devcms
     # def reserved_logins_regex
     #   /(burger?meester|wethouder|gemeente|stads|student|leerling|voorlichting|communicatie|openba?are?|brandweer|politie|ambulance|ggz|ggd|ziekenhuis|school|hospitaal|gemeente|college|stadhuis)/i
     # end
+
+    # def node_locales
+    #   {
+    #     "Nederlands" => "nl",
+    #     "Engels"     => "en",
+    #     "Duits"      => "de",
+    #     "Spaans"     => "es",
+    #     "Frans"      => "fr"
+    #   }
+    # end
    
   end
 end

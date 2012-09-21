@@ -3,17 +3,17 @@
     = readspeaker do
       = readspeaker_button :class => 'topRightReadspeaker'
 
-      %h1= h @page.title
+      %h1{locale_attrs}= h @page.title
 
       = render :partial => '/shared/metadata', :locals => { :publication_date => @page.publication_start_date, :last_update_date => @page.updated_at }
 
       - if @page.preamble.present?
-        .preamble
+        .preamble{locale_attrs}
           = white_list_preamble(simple_format(@page.preamble))
 
       = render_images
 
-      .htmlField
+      .htmlField{locale_attrs}
         = process_video_tags(@page.body)
 
       = render_attachments

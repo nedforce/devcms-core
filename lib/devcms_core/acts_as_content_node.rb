@@ -64,7 +64,7 @@ module DevcmsCore
                         :responsible_user, :responsible_user_id, :expires_on,
                         :expiration_notification_method, :expiration_email_recipient, :cascade_expires_on,
                         :title_alternative_list, :title_alternatives, :location, :pin_id,
-                        :short_title, :to => :node
+                        :short_title, :locale, :to => :node
     end
     
     module ClassMethods
