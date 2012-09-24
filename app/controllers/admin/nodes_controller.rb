@@ -173,11 +173,13 @@ class Admin::NodesController < Admin::AdminController
   # * XHR PUT /admin/nodes/2/move?next_sibling=1
   def move
     begin
-      if params[:next_sibling].present?
-        next_sibling = Node.find(params[:next_sibling])
+      
+      next_sibling = Node.find(params[:next_sibling]) if params[:next_sibling].present?
+      parent = Node.find(params[:parent]) if params[:parent].present?
+      
+      if next_sibling.present? && (parent.blank? || parent == next_sibling.parent)
         @node.move_to_left_of next_sibling
-      elsif params[:parent].present?
-        parent = Node.find(params[:parent])
+      elsif parent.present?
         @node.move_to_child_of parent
       else
         render :text => I18n.t('nodes.no_parent_or_sibling'), :status => :precondition_failed
