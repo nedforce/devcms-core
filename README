@@ -14,6 +14,10 @@ rails generate devcms
 register_cms_modules
 
 # Notes
+
+* For calendar_date_select to work, run the following rake task:
+
+  rake calendar:install
   
 * For new DevCMS applications, you should remove the default ApplicationController. If you'd like to keep it, you need to make it an extension of DevcmsCore:
   
