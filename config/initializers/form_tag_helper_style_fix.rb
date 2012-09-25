@@ -16,10 +16,10 @@ module ActionView::Helpers::FormTagHelper
         token_tag(authenticity_token)
       else
         html_options["method"] = "post"
-        method_tag(method) + token_tag(authenticity_token)
+        tag(:input, :type => "hidden", :name => "_method", :value => method) + token_tag(authenticity_token)
     end
 
     tags = utf8_enforcer_tag << method_tag
-    content_tag(:div, tags, :style => 'authenticity_token')
+    content_tag(:div, tags, :class => 'authenticity_token')
   end
 end
