@@ -9,7 +9,7 @@
         .answer.clearfix
           = o.text
         .result_bar_ct.clearfix.ISI_IGNORE
-          = image_tag '/images/poll_result_main.gif', :alt => 'Resultaat percentage', :height => '16', :width => number_to_percentage(o.percentage_of_votes, :precision => 0)
+          = image_tag 'poll_result_main.gif', :alt => 'Resultaat percentage', :height => '16', :width => number_to_percentage(o.percentage_of_votes, :precision => 0)
         .result_number.clearfix
           == (#{number_to_percentage(o.percentage_of_votes, :precision => 2)})
 

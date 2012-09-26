@@ -8,7 +8,7 @@
   - url   = (carrousel_item.item.is_a?(Image) && carrousel_item.item.url.present? && carrousel_item.item.url) || content_node_url(carrousel_item.item.node)
 
   - if image
-    = link_to(image_tag(sidebox_image_path(image, :format => :jpg), :alt => h(image.alt)), url)
+    = link_to(image_tag(sidebox_image_path(image, :format => :jpg), :alt => image.alt.to_s), url)
   - if carrousel_item.excerpt.present?
     %p.excerpt
       = h carrousel_item.excerpt

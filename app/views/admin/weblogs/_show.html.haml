@@ -39,12 +39,12 @@
 
             .htmlField.weblogPostBody
               - if (image_node = weblog_post.node.children.first)
-                = link_to(image_tag(content_node_path(image_node, :action => :thumbnail), :alt => h(image_node.content.title)), '#', { :rel => 'lightbox', :class => 'right' })
+                = link_to(image_tag(content_node_path(image_node, :action => :thumbnail), :alt => image_node.content.alt.to_s), '#', { :rel => 'lightbox', :class => 'right' })
               = w weblog_post.body
 
             .clearfix.buttons
               = news_item_button t('weblogs.show_post') do
-                = link_to_content_node t('weblogs.show_post'), weblog_post, {}, :title => h(weblog_post.title)
+                = link_to_content_node t('weblogs.show_post'), weblog_post, {}, :title => weblog_post.title
 
     - if @weblog_posts_for_table.present?
       #olderWeblogPosts
