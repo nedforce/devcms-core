@@ -17,7 +17,7 @@ I18n.locale['nl'] = {
 	},
 	polls: {		
 		submit: 'Stem',
-		submit_alt: 'Icoon van een uitroepteken',
+		submit_alt: '',
 		submit_title: 'Breng uw stem uit',
 		submit_image: '/images/exclamation_block.png'
 	},
