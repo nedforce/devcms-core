@@ -162,7 +162,7 @@ module DevcmsCoreHelper
   end
 
   def arrow_block_button(title = nil, options = {}, &block)
-    content_tag(:div, options.reverse_merge(:class => 'go')) { image_tag('arrow_block.png', :class => 'icon transparent', :alt => 'Icoon van een pijl', :title => title) + capture(&block) }
+    content_tag(:div, options.reverse_merge(:class => 'go')) { image_tag('arrow_block.png', :class => 'icon transparent', :alt => '', :title => title) + capture(&block) }
   end
 
   def news_item_button(title = nil, &block)
