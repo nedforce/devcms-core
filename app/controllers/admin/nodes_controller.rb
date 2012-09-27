@@ -66,11 +66,11 @@ class Admin::NodesController < Admin::AdminController
     # available to the given user. Maybe we can use the scope_out plugin or something similar.
     if params[:node] && params[:node][:template_id]
       if params[:node][:template_id] == 'inherit'
-         params[:node][:template] = nil
+        params[:node][:template] = nil
       elsif @node.find_available_templates_for(current_user).map(&:id).include?(params[:node][:template_id].to_i)
-         params[:node][:template] = @node.find_available_templates_for(current_user).find{ |t| t.id == params[:node][:template_id].to_i }
+        params[:node][:template] = @node.find_available_templates_for(current_user).find{ |t| t.id == params[:node][:template_id].to_i }
       else
-         raise ActiveRecord::RecordNotFound
+        raise ActiveRecord::RecordNotFound
       end
       params[:node].delete(:template_id)
     end
@@ -130,7 +130,7 @@ class Admin::NodesController < Admin::AdminController
     if @node.content.is_a?(NewsletterArchive)
       #redirect_to @node.content, :action => 'show', :id => @node.content.id
       respond_to do |format|
-          format.json { render :json => { :id => @node.content.id,:notice => I18n.t('nodes.newsletter_subscribers_export')}.to_json, :status => :ok }
+        format.json { render :json => { :id => @node.content.id,:notice => I18n.t('nodes.newsletter_subscribers_export')}.to_json, :status => :ok }
       end
     else
       respond_to do |format|
@@ -143,17 +143,13 @@ class Admin::NodesController < Admin::AdminController
   # * PUT /admin/nodes/1/make_global_frontpage.json
   # * PUT /admin/nodes/1/make_global_frontpage.xml
   def make_global_frontpage
-    if !@node.visible?
-      respond_to do |format|
+    respond_to do |format|
+      if !@node.visible?
         format.json { render :json => { :error => I18n.t('nodes.frontpage_cant_be_hidden')}.to_json, :status => :precondition_failed }
         format.xml  { head :precondition_failed }
-      end
-    else
-      if Node.root.content.set_frontpage!(@node)
-        respond_to do |format|
-          format.json { render :json => { :notice => I18n.t('nodes.frontpage_set')}.to_json, :status => :ok }
-          format.xml  { head :ok }
-        end
+      elsif Node.root.content.set_frontpage!(@node)
+        format.json { render :json => { :notice => I18n.t('nodes.frontpage_set')}.to_json, :status => :ok }
+        format.xml  { head :ok }
       else
         format.json { render :json => { :error => I18n.t('nodes.frontpage_cant_be_set')}.to_json, :status => :precondition_failed }
         format.xml  { head :precondition_failed }
@@ -188,25 +184,17 @@ class Admin::NodesController < Admin::AdminController
     rescue ActiveRecord::ActiveRecordError => e
       render :text => e.message, :status => :unprocessable_entity
     end
-      render :text => I18n.t('nodes.succesfully_moved'), :status => :ok
+    render :text => I18n.t('nodes.succesfully_moved'), :status => :ok
   end
 
   # Used for approving content of a given node
   #
   # GET /admin/nodes/1/audit_show
   def audit_show
-    @current_url = if @node.content_class == InternalLink || @node.content_class == ExternalLink
-      admin_link_url(@node.content, :show_actions => false)
-    else
-      self.send("admin_#{@node.content_class.name.underscore}_url", @node.content) + '?show_actions=false'
-    end
+    @current_url = self.send("admin_#{@node.content_class.name.underscore}_url", @node.content) + '?show_actions=false'
 
     if @node.content.versioned? && @node.publishable?
-      @previous_url = if @node.content_class == InternalLink || @node.content_class == ExternalLink
-        previous_admin_link_url(@node.content, :show_actions => false)
-      else
-        self.send("previous_admin_#{@node.content_class.name.underscore}_url", @node.content) + '?show_actions=false'
-      end
+      @previous_url = self.send("previous_admin_#{@node.content_class.name.underscore}_url", @node.content) + '?show_actions=false'
 
       @diff_url = previous_diffed_admin_node_url(@node, :show_actions => false)
     end
