@@ -18,6 +18,15 @@ class PagesControllerTest < ActionController::TestCase
     assert_equal old_hits + 1, page.node.reload.hits
   end
   
+  def test_should_have_lang_attributes_if_locale_set
+    page = pages(:english_page)
+    get :show, :id => page.id
+    
+    assert_response :success
+    assert assigns(:page)
+    assert_tag :h1, :attributes => { :lang => page.node.locale }
+  end
+  
   def test_should_render_404_if_hidden_for_user
     get :show, :id => pages(:hidden_page).id
     assert_response :not_found

@@ -79,3 +79,8 @@ yet_another_page:
   title: Yet
   preamble: Another
   body: Page
+  
+english_page:
+  title: English Page
+  preamble: This page is in English.
+  body: The quick brown fox jumps over the lazy dog.
