@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120817132521) do
+ActiveRecord::Schema.define(:version => 20120925155307) do
 
   create_table "abbreviations", :force => true do |t|
     t.string   "abbr",       :null => false
@@ -484,12 +484,13 @@ ActiveRecord::Schema.define(:version => 20120817132521) do
   add_index "news_archives", ["updated_at"], :name => "index_news_archives_on_updated_at"
 
   create_table "news_items", :force => true do |t|
-    t.string   "title",      :null => false
-    t.text     "body",       :null => false
+    t.string   "title",            :null => false
+    t.text     "body",             :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "preamble"
     t.datetime "deleted_at"
+    t.string   "meta_description"
   end
 
   add_index "news_items", ["created_at"], :name => "index_news_items_on_created_at"
@@ -638,6 +639,7 @@ ActiveRecord::Schema.define(:version => 20120817132521) do
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
     t.string   "short_title"
+    t.string   "locale"
   end
 
   add_index "nodes", ["ancestry"], :name => "index_nodes_on_ancestry"
@@ -671,12 +673,13 @@ ActiveRecord::Schema.define(:version => 20120817132521) do
   end
 
   create_table "pages", :force => true do |t|
-    t.string   "title",      :null => false
-    t.text     "body",       :null => false
+    t.string   "title",            :null => false
+    t.text     "body",             :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "preamble"
     t.datetime "deleted_at"
+    t.string   "meta_description"
   end
 
   add_index "pages", ["created_at"], :name => "index_pages_on_created_at"
