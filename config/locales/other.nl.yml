@@ -533,7 +533,7 @@ nl:
     add_to: Afbeelding(en) toevoegen aan
     alt: ALT tekst (optioneel)
     data: Bestand
-    description: Beschrijving (optioneel)
+    description: Beschrijving (voor mouseover en onderschrift)
     done: Afbeelding(en) toegevoegd
     done_btn: Klaar met uploaden
     edit: Bewerken van afbeelding
@@ -568,7 +568,7 @@ nl:
     help_title: Ga naar de helppagina
     home_icon_link: Icoon van een huis
     home_link: home
-    home_title: Icoon van een huis
+    home_title: Naar de homepage
     jump_to_content: Ga direct naar de inhoud van de pagina
     log_out: Log uit
     log_out_alt: Icoon van een persoon die uitlogt

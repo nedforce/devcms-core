@@ -209,7 +209,8 @@ function showFontResizeBox() {
 
   if (fontResizeBox) {
     var smallerFontLink = new Element('a', {
-      'href': '#'
+      'href': '#',
+      'title': I18n.t('smaller_text_title', 'font_resize')
     });
 
     var smallerFontImage = new Element('img', {
@@ -219,7 +220,8 @@ function showFontResizeBox() {
     });
 
     var biggerFontLink = new Element('a', {
-      'href': '#'
+      'href': '#',
+      'title': I18n.t('bigger_text_title', 'font_resize')
     });
 
     var biggerFontImage = new Element('img', {

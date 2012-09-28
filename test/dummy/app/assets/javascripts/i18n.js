@@ -2,8 +2,10 @@ I18n.locale['nl'] = {
 	font_resize: {
 		smaller_text: 'Kleinere tekst',
 		smaller_text_image: '/images/icons/icon_fontsize_smaller.png',
+		smaller_text_title: 'Letters kleiner maken',
 		bigger_text: 'Grotere tekst',
-		bigger_text_image: '/images/icons/icon_fontsize_bigger.png'		
+		bigger_text_image: '/images/icons/icon_fontsize_bigger.png',
+		bigger_text_title: 'Letters groter maken'
 	},
 	newsletter_archives: {
 		subscribe: 'Aanmelden',
