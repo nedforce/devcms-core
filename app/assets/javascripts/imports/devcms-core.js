@@ -153,34 +153,34 @@ function ajaxifyPollSideBoxElements() {
   $$('.poll_content_box_form').each(function (form) {
     var buttons = form.down('.buttons');
 
-		if (buttons.down('.login_link') == null) {
-	    buttons.down('.vote_button').addClassName('hidden');
+    if (buttons.down('.login_link') == null) {
+      buttons.down('.vote_button').addClassName('hidden');
 
-	    var resultsLink = buttons.down('.results_link');
-	    resultsLink.observe('click', function (event) {
-	      new Ajax.Request(resultsLink.href, {
-	        asynchronous: true,
-	        evalScripts: true,
-	        method: 'get'
-	      });
+      var resultsLink = buttons.down('.results_link');
+      resultsLink.observe('click', function (event) {
+        new Ajax.Request(resultsLink.href, {
+          asynchronous: true,
+          evalScripts: true,
+          method: 'get'
+        });
 
-	      event.stop();
-	    });
+        event.stop();
+      });
 
-	    var voteLinkContainer = new Element('div', { 'class': 'vote' });
+      var voteLinkContainer = new Element('div', { 'class': 'vote' });
 
-	    var image = new Element('img', {
-	      'src': I18n.t('submit_image', 'polls'),
-	      'alt': I18n.t('submit_alt', 'polls'),
-	      'title': I18n.t('submit_title', 'polls')
-	    });
+      var image = new Element('img', {
+        'src': I18n.t('submit_image', 'polls'),
+        'alt': '',
+        'title': I18n.t('submit_title', 'polls')
+      });
 
 
-	    var voteLink = new Element('a', {
-	      'href': '#'
-	    });
+      var voteLink = new Element('a', {
+        'href': '#'
+      });
 
-			voteLink.update(I18n.t('submit', 'polls'));
+      voteLink.update(I18n.t('submit', 'polls'));
 
 	    voteLink.observe('click', function (event) {
 	      new Ajax.Request(form.action, {

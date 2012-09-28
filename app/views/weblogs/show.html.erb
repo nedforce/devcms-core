@@ -50,7 +50,7 @@
         <% if (image_node = weblog_post.node.children.first) %>
           <%= 
             link_to_node(
-              image_tag(content_node_path(image_node, :action => :thumbnail), :alt => h(image_node.content.title)),
+              image_tag(content_node_path(image_node, :action => :thumbnail), :alt => image_node.content.alt.to_s),
               image_node,
               { :action => :full },
               { 
@@ -65,9 +65,9 @@
 
         <div class="clearfix buttons">
 
-          <%= readspeaker_button(:rid => readspeaker_id, :title => h(weblog_post.title)) %>
+          <%= readspeaker_button(:rid => readspeaker_id, :title => weblog_post.title) %>
           <%= news_item_button t('weblogs.show_post') do %>
-            <%= link_to_content_node t('weblogs.show_post'), weblog_post, {}, :title => h(weblog_post.title) -%>
+            <%= link_to_content_node t('weblogs.show_post'), weblog_post, {}, :title => weblog_post.title -%>
           <% end %>
           <% if logged_in? && (@weblog.is_owned_by_user?(current_user) || current_user.has_role?('admin')) %>
             <%= edit_button t('weblogs.edit_post') do %>

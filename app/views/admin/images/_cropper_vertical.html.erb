@@ -10,7 +10,7 @@ else
 end
 
 resized_height    = image.calculate_other_dimension_with :width => width
-slider_top        = resized_height - height
+slider_top        = resized_height - height.to_f
 offset            = image.offset || slider_top / 2
 %>
 <style>

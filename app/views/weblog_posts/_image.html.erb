@@ -1,10 +1,10 @@
 <div id='weblog_post_image_<%= image.id -%>' class='weblogPostImage'>
   <%= 
       link_to_node(
-        image_tag(content_node_path(image.node, :action => :thumbnail), :alt => h(image.title)),
+        image_tag(content_node_path(image.node, :action => :thumbnail), :alt => image.alt.to_s),
         image.node,
         { :action => :full },
-        { :rel    => "lightbox[#{@weblog_post.node.id}]", :title => h(image.title) }
+        { :rel    => "lightbox[#{@weblog_post.node.id}]", :title => image.title }
       )
     -%>
   <br/>

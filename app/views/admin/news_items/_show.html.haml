@@ -24,4 +24,4 @@
       %p.explanation
         = t 'images.header_image_explanation'
       - if @header_image
-        = image_tag(content_box_header_image_path(@header_image, :format => :jpg), :alt => h(@header_image.title), :class => 'content_box_header')
+        = image_tag(content_box_header_image_path(@header_image, :format => :jpg), :alt => @header_image.alt.to_s, :class => 'content_box_header')

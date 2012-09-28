@@ -17,7 +17,7 @@
         - @children.each do |content_node|
           - if content_node.node.content_type_configuration[:show_in_menu]
             %li
-              = image_tag "icons/#{content_node.try :icon_filename}", :class => 'icon', :alt => h(content_node.title)
+              = image_tag "icons/#{content_node.try :icon_filename}", :class => 'icon', :alt => '', :title => content_node.title
               = link_to_content_node h(content_node.title), content_node
 
     = render_attachments

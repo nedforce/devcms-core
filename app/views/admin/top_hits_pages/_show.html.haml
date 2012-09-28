@@ -1,5 +1,5 @@
 .regularPage
-  %h1= h @top_hits_page.title
+  %h1= @top_hits_page.title
 
   - if @top_hits_page.description.present?
     .htmlField
@@ -10,7 +10,7 @@
       - @top_hits.each do |top_hit|
         - content_node = top_hit.content
         %li
-          = image_tag "icons/#{content_node.icon_filename}", :class => 'icon', :alt => h(content_node.title)
-          = link_to h(content_node.title), '#'
+          = image_tag "icons/#{content_node.icon_filename}", :class => 'icon', :alt => '', :title => content_node.title
+          = link_to content_node.title, '#'
           %span.hits
             == (#{content_node.node.hits})

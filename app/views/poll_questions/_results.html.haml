@@ -1,0 +1,18 @@
+#poll_results_main.clearfix
+  .question
+    = question.question
+    == (#{question.number_of_votes})
+
+  .results.clearfix
+    - question.poll_options.each do |o|
+      .option
+        .answer.clearfix
+          = o.text
+        .result_bar_ct.clearfix.ISI_IGNORE
+          = image_tag 'poll_result_main.gif', :alt => 'Resultaat percentage', :height => '16', :width => number_to_percentage(o.percentage_of_votes, :precision => 0)
+        .result_number.clearfix
+          == (#{number_to_percentage(o.percentage_of_votes, :precision => 2)})
+
+    .number_of_votes.clearfix
+      == #{t 'polls.number_of_votes'}:
+      = question.number_of_votes

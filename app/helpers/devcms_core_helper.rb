@@ -17,7 +17,7 @@ module DevcmsCoreHelper
   def yield_flash
     flash.keys.map do |key|
       content_tag(:div, :class => "flash #{key}") do
-        content_tag(:p, image_tag("icons/#{key}.png", :class => 'icon', :alt => key) + flash[key].to_s)
+        content_tag(:p, image_tag("icons/#{key}.png", :class => 'icon', :alt => '') + flash[key].to_s)
       end
     end.join.html_safe
   end
@@ -26,7 +26,7 @@ module DevcmsCoreHelper
   #
   # See documentation of +bread_crumbs_track_for+ for more information.
   def bread_crumbs_for(node, options = {})
-    string_cache(:breadcrumbs_for_node => node.id,  :last_updated_at => node.path.maximum(:updated_at)) do
+    string_cache(:breadcrumbs_for_node => node.id, :last_updated_at => node.path.maximum(:updated_at)) do
       crumb_track = bread_crumbs_track_for(node, options)
       content_tag(:div, crumb_track.html_safe, :class => 'bread_crumbs') if crumb_track.present?
     end
@@ -162,7 +162,7 @@ module DevcmsCoreHelper
   end
 
   def arrow_block_button(title = nil, options = {}, &block)
-    content_tag(:div, options.reverse_merge(:class => 'go')) { image_tag('arrow_block.png', :class => 'icon transparent', :alt => 'Icoon van een pijl', :title => title) + capture(&block) }
+    content_tag(:div, options.reverse_merge(:class => 'go')) { image_tag('arrow_block.png', :class => 'icon transparent', :alt => '', :title => title) + capture(&block) }
   end
 
   def news_item_button(title = nil, &block)
@@ -264,7 +264,7 @@ module DevcmsCoreHelper
             {
               :url   => big_header ? big_header_image_path(header_image, :format => :jpg) : header_image_path(header_image, :format => :jpg),
               :id    => "ss-image-#{header_image.id}",
-              :alt   => header_image.alt,
+              :alt   => header_image.alt.to_s,
               :title => header_image.title
             }
           end
