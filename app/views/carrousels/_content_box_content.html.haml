@@ -9,25 +9,26 @@
       = render :partial => '/carrousels/carrousel_item', :object => carrousel_item, :locals => { :content => content, :node => node }
 
 - else
-  - #= link_to image_tag('carrousel_left.png',  :alt => 'Vorige',   :title => 'Vorige'),   "javascript:devi_carrousel.prev();", :class => 'carousel-control-previous', :rel => 'prev'
-  - #= link_to image_tag('carrousel_right.png', :alt => 'Volgende', :title => 'Volgende'), "javascript:devi_carrousel.next();", :class => 'carousel-control-next',     :rel => 'next'
-  .carousel-wrapper{ :id => "carousel-#{content.id}" }
-    .carousel-content
-      - content.carrousel_items.each do |carrousel_item|
-        .slide
-          = render :partial => '/carrousels/carrousel_item', :object => carrousel_item, :locals => { :content => content, :node => node }
-      - if [ Carrousel::ANIMATION_SLIDE, Carrousel::ANIMATION_DIA, Carrousel::ANIMATION_SPRING ].include?(content.animation)
-        .slide
-          = render :partial => '/carrousels/carrousel_item', :object => content.carrousel_items.first, :locals => { :content => content, :node => node }
+  .carousel-wrapper{ :id => "carousel-wrapper-#{content.id}" }
+    = link_to "&laquo;".html_safe, "#", :class => 'carousel-control carousel-control-left', :rel => 'prev'
+    = link_to "&raquo;".html_safe, "#", :class => 'carousel-control carousel-control-right', :rel => 'next'
+    .carousel-content-wrapper{ :id => "carousel-#{content.id}" }
+      .carousel-content
+        - content.carrousel_items.each do |carrousel_item|
+          .slide
+            = render :partial => '/carrousels/carrousel_item', :object => carrousel_item, :locals => { :content => content, :node => node }
+        - if [ Carrousel::ANIMATION_SLIDE, Carrousel::ANIMATION_DIA, Carrousel::ANIMATION_SPRING ].include?(content.animation)
+          .slide
+            = render :partial => '/carrousels/carrousel_item', :object => content.carrousel_items.first, :locals => { :content => content, :node => node }
 
   - # We set float:left here, instead of in CSS, so the banners are shown if JavaScript is disabled (Drempelvrij).
   = javascript_tag "$$('#carousel-#{content.id} .carousel-content .slide').invoke('setStyle', 'float:left');"
 
   - if content.animation == Carrousel::ANIMATION_FADE_IN
-    = javascript_tag "new Carousel('carousel-#{content.id}', $$('#carousel-#{content.id} .carousel-content .slide'), $$('#carousel-#{content.id} a.carousel-control', 'a.carousel-jumper'), {auto:true, duration:1, frequency:#{frequency}, effect:'fade'});"
+    = javascript_tag "new Carousel('carousel-#{content.id}', 'carousel-wrapper-#{content.id}', $$('#carousel-#{content.id} .carousel-content .slide'), $$('#carousel-wrapper-#{content.id} a.carousel-control', 'a.carousel-jumper'), {auto:true, autoPause:true, duration:1, frequency:#{frequency}, effect:'fade'});"
   - elsif content.animation == Carrousel::ANIMATION_DIA
-    = javascript_tag "new Carousel('carousel-#{content.id}', $$('#carousel-#{content.id} .carousel-content .slide'), $$('#carousel-#{content.id} a.carousel-control', 'a.carousel-jumper'), {auto:true, duration:1, frequency:#{frequency}, circular:true});"
+    = javascript_tag "new Carousel('carousel-#{content.id}', 'carousel-wrapper-#{content.id}', $$('#carousel-#{content.id} .carousel-content .slide'), $$('#carousel-wrapper-#{content.id} a.carousel-control', 'a.carousel-jumper'), {auto:true, autoPause:true, duration:1, frequency:#{frequency}, circular:true});"
   - elsif content.animation == Carrousel::ANIMATION_SPRING
-    = javascript_tag "new Carousel('carousel-#{content.id}', $$('#carousel-#{content.id} .carousel-content .slide'), $$('#carousel-#{content.id} a.carousel-control', 'a.carousel-jumper'), {auto:true, transition:'spring', duration:2, frequency:#{frequency}, circular:true});"
+    = javascript_tag "new Carousel('carousel-#{content.id}', 'carousel-wrapper-#{content.id}', $$('#carousel-#{content.id} .carousel-content .slide'), $$('#carousel-wrapper-#{content.id} a.carousel-control', 'a.carousel-jumper'), {auto:true, autoPause:true, transition:'spring', duration:2, frequency:#{frequency}, circular:true});"
   - elsif content.animation == Carrousel::ANIMATION_SLIDE
-    = javascript_tag "new Carousel('carousel-#{content.id}', $$('#carousel-#{content.id} .carousel-content .slide'), $$('#carousel-#{content.id} a.carousel-control', 'a.carousel-jumper'), {auto:true, transition:'linear', duration:#{frequency}, frequency:#{frequency}, circular:true});"
+    = javascript_tag "new Carousel('carousel-#{content.id}', 'carousel-wrapper-#{content.id}', $$('#carousel-#{content.id} .carousel-content .slide'), $$('#carousel-wrapper-#{content.id} a.carousel-control', 'a.carousel-jumper'), {auto:true, autoPause:true, transition:'linear', duration:#{frequency}, frequency:#{frequency}, circular:true});"

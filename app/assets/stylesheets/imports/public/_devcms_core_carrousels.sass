@@ -32,6 +32,28 @@
 /* Carrousel display
 
 .carousel-wrapper
+  position: relative
+  width: 230px
+  .carousel-control
+    display: block
+    width: 30px
+    height: 100%
+    background-color: black
+    opacity: 0.5
+    position: absolute
+    text-decoration: none
+    color: white
+    font-size: 4em
+    text-align: center
+    visibility: hidden
+    z-index: 5
+    line-height: 3em
+  .carousel-control-right
+    right: 0
+  &:hover
+    .carousel-control
+      visibility: visible
+.carousel-content-wrapper
   width: 230px
   overflow: hidden
 .carousel-content
@@ -39,6 +61,10 @@
   .slide
     width: 230px
     padding-right: 10px
+    position: relative
+    a
+      img
+        display: block
     // IE bug fix (#5264)
     .header
       position: static
