@@ -5,4 +5,4 @@
       = f.text_field    :short_title
     .formFieldCt
       = f.label         :locale, t('shared.locale')
-      = f.select        :locale, options_for_select(Devcms.node_locales)
+      = f.select        :locale, options_for_select(Devcms.node_locales), :include_blank => true
