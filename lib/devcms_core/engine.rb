@@ -52,6 +52,7 @@ module DevcmsCore
         'iepngfix_tilebg.js',
         'placeholder.js',
         'print.js',
+        'prototype16.js',
         'search.js',
         'treemenu.js'
       ]
