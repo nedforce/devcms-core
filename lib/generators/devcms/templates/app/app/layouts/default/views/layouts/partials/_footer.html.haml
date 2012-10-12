@@ -1,4 +1,4 @@
-- cache(:footer_for_site => current_site.id) do
+- cache(:footer_for_site => current_site.id, :expires_in => 1.hour) do
   #footer.clearfix
     .meta_links
       = link_to_node I18n.t('layouts.home_link'), current_site
