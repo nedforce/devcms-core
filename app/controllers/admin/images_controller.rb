@@ -36,8 +36,21 @@ class Admin::ImagesController < Admin::AdminController
   end
 
   # * GET /admin/images/:id/thumbnail.jpg
+  # Copy-paste from frontend method. Might want to refactor that...
   def thumbnail
-    render_jpg_image_data @image.resize!(:size => '100x100', :format => 'jpg')
+    offset = @image.offset
+    if @image.orientation == :vertical
+      if @image.node.parent.content_type == 'NewsItem' && @image.node.previous_item.blank?
+        ratio  = (100.0/Image::CONTENT_BOX_SIZE[:width].to_f)
+        offset = 0 if offset.nil?
+        offset = ((offset + (Image::CONTENT_BOX_SIZE[:height].to_f/2)) * ratio) - 50
+        offset = 0 if offset < 0
+        resized_height = @image.calculate_other_dimension_with(:width => 100)
+        offset = resized_height - 100 if (resized_height - offset) < 100
+      end
+    end
+
+    render_jpg_image_data @image.resize!(:size => "100x100", :crop => true, :quality => 80, :offset => offset, :upsample => true, :format => 'jpg')
   end
 
   def thumbnail_preview
