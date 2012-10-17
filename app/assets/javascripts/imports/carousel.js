@@ -90,6 +90,9 @@ Carousel = Class.create(Abstract, {
     this.stop();
 
     var element = event.findElement('a');
+    if (element === undefined || element === null) {
+      element = event.findElement('div');
+    }
 
     if (!element.hasClassName(this.options.disabledClassName)) {
       if (element.hasClassName(this.options.controlClassName)) {
