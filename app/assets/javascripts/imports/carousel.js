@@ -62,7 +62,7 @@ Carousel = Class.create(Abstract, {
     }
 
     if (this.options.wheel) {
-      this.scroller.observe('mousewheel', this.wheel.bindAsEventListener(this)).observe('DOMMouseScroll', this.wheel.bindAsEventListener(this));;
+      this.scroller.observe('mousewheel', this.wheel.bindAsEventListener(this)).observe('DOMMouseScroll', this.wheel.bindAsEventListener(this));
     }
 
     // http://code.google.com/p/prototype-carousel/issues/detail?id=18
