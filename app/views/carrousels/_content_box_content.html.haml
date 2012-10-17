@@ -10,8 +10,10 @@
 
 - else
   .carousel-wrapper{ :id => "carousel-wrapper-#{content.id}" }
-    .carousel-control.carousel-control-left{  '&laquo;'.html_safe, :rel => 'prev' }
-    .carousel-control.carousel-control-right{ '&raquo;'.html_safe, :rel => 'next' }
+    .carousel-control.carousel-control-left{ :rel => 'prev' }
+      &laquo;
+    .carousel-control.carousel-control-right{ :rel => 'next' }
+      &raquo;
     .carousel-content-wrapper{ :id => "carousel-#{content.id}" }
       .carousel-content
         - content.carrousel_items.each do |carrousel_item|
