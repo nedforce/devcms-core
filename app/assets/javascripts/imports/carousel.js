@@ -93,7 +93,11 @@ Carousel = Class.create(Abstract, {
 
     if (!element.hasClassName(this.options.disabledClassName)) {
       if (element.hasClassName(this.options.controlClassName)) {
-        eval("this." + element.rel + "()");
+        if (element.hasClassName('carousel-control-left')) {
+          this.prev();
+        } else if (element.hasClassName('carousel-control-right')) {
+          this.next();
+        }
       } else if (element.hasClassName(this.options.jumperClassName)) {
         this.moveTo(element.rel);
         if (this.options.selectedClassName) {
