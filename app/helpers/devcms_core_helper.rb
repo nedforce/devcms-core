@@ -257,14 +257,14 @@ module DevcmsCoreHelper
             {
               :url   => header_image,
               :id    => nil,
-              :alt   => nil,
+              :alt   => '',
               :title => nil
             }
           else
             {
               :url   => big_header ? big_header_image_path(header_image, :format => :jpg) : header_image_path(header_image, :format => :jpg),
               :id    => "ss-image-#{header_image.id}",
-              :alt   => header_image.alt,
+              :alt   => header_image.alt.to_s,
               :title => header_image.title
             }
           end
