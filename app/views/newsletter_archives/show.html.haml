@@ -1,0 +1,47 @@
+.regularPage.newsletterArchive
+  - if logged_in?
+    #subscription_box
+      - if @newsletter_archive.has_subscription_for?(current_user)
+        - form_tag unsubscribe_newsletter_archive_path(@newsletter_archive), :method => :delete do
+          %div= submit_tag t('newsletters.unsubscribe_from_this_newsletter'), :class => 'submit'
+      - else
+        - form_tag subscribe_newsletter_archive_path(@newsletter_archive), :method => :post do
+          %div= submit_tag t('newsletters.subscribe_to_this_newsletter'), :class => 'submit'
+
+  - readspeaker(@newsletter_archive.node.id) do |rid|
+    %h1= h @newsletter_archive.title
+    = render :partial => '/shared/metadata', :locals => { :last_update_date => @newsletter_archive.last_updated_at }
+    - if @newsletter_archive.present?
+      .htmlField.newsletterArchiveDescription
+        = w @newsletter_archive.description
+      .buttons.clearfix
+        = readspeaker_button(:rid => rid, :title => h(@newsletter_archive.title))
+
+  .newsletterEditions
+    - if @newsletter_editions.empty?
+      %p= t 'newsletters.no_editions'
+    - @latest_newsletter_editions.each do |newsletter_edition|
+      .newsletterEdition
+        - readspeaker(newsletter_edition.node.id) do |readspeaker_id|
+          %h2= link_to_content_node h(newsletter_edition.title), newsletter_edition
+          = render :partial => '/shared/metadata', :locals => { :publication_date => newsletter_edition.publication_start_date, :last_update_date => newsletter_edition.updated_at }
+          .htmlEditor.clearfix
+            = newsletter_edition.body
+          .buttons.clearfix
+            - news_item_button t('newsletters.full_edition') do
+              = link_to_content_node t('newsletters.full_edition'), newsletter_edition, {}, :class => 'article', :title => h(newsletter_edition.title)
+            = readspeaker_button(:rid => readspeaker_id, :title => h(newsletter_edition.title))
+
+    - unless @newsletter_editions_for_table.empty?
+      %h2= t 'newsletters.older_newsletter_editions'
+      %table#items{ :cellpadding => 0, :cellspacing => 0 }
+        %caption= t 'newsletters.older_editions_caption'
+        %thead
+          %tr
+            %th.gray{ :scope => 'col' }= t 'newsletters.newsletter_title'
+            %th.right.gray{ :scope => 'col' }= t 'newsletters.publication_date'
+        %tbody
+          - @newsletter_editions_for_table.each_with_index do |newsletter_edition, i|
+            %tr{ :class => "#{'alt' if i.even?}" }
+              %td= link_to_content_node h(newsletter_edition.title), newsletter_edition
+              %td.right_sized.date= l newsletter_edition.publication_start_date, :format => :long
