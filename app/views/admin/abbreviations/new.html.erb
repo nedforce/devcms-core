@@ -1,19 +1,19 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-	<title>{#xhtmlxtras_dlg.title_abbr_element}</title>
-	<%= javascript_include_tag "/libraries/tiny_mce/tiny_mce_popup.js" %>
-	<%= javascript_include_tag "/libraries/tiny_mce/utils/mctabs.js" %>
-	<%= javascript_include_tag "/libraries/tiny_mce/utils/form_utils.js" %>
-	<%= javascript_include_tag "/libraries/tiny_mce/utils/editable_selects.js" %>
-	<%= javascript_include_tag "/libraries/tiny_mce/plugins/xhtmlxtras/js/element_common.js" %>
-	<%= javascript_include_tag "/libraries/tiny_mce/plugins/xhtmlxtras/js/abbr.js" %>
-  <%= javascript_include_tag 'prototype16.js' %>
-  <%= stylesheet_link_tag    '/libraries/tiny_mce/plugins/xhtmlxtras/css/popup.css?v=307' %>
-  
-	<base target="_self" />
-</head>
-<body style="display: none">
+  <head>
+    <title>{#xhtmlxtras_dlg.title_abbr_element}</title>
+    <%= javascript_include_tag "/libraries/tiny_mce/tiny_mce_popup.js" %>
+    <%= javascript_include_tag "/libraries/tiny_mce/utils/mctabs.js" %>
+    <%= javascript_include_tag "/libraries/tiny_mce/utils/form_utils.js" %>
+    <%= javascript_include_tag "/libraries/tiny_mce/utils/editable_selects.js" %>
+    <%= javascript_include_tag "/libraries/tiny_mce/plugins/xhtmlxtras/js/element_common.js" %>
+    <%= javascript_include_tag "/libraries/tiny_mce/plugins/xhtmlxtras/js/abbr.js" %>
+    <%= javascript_include_tag '/admin/prototype16.js' %>
+    <%= stylesheet_link_tag    '/libraries/tiny_mce/plugins/xhtmlxtras/css/popup.css?v=307' %>
+
+    <base target="_self" />
+  </head>
+<body style="display: none;">
 <form onsubmit="insertAbbr();return false;" action="#">
 	<div class="tabs">
 		<ul>
