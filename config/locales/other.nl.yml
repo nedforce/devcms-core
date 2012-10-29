@@ -558,15 +558,15 @@ nl:
     administration_title: Ga naar websitebeheer
     advanced_search: Uitgebreid zoeken
     colofon_link: colofon
-    contact_icon_link: Icoon van een envelop
+    contact_icon_link: Contact
     contact_title: Neem contact op
     control_panel: Websitebeheer
     email: E-mailadres
     forgot_password: wachtwoord vergeten?
-    help_icon_link: Icoon van een vraagteken
+    help_icon_link: Helppagina
     help_link: hulp
     help_title: Ga naar de helppagina
-    home_icon_link: Icoon van een huis
+    home_icon_link: Homepage
     home_link: home
     home_title: Naar de homepage
     jump_to_content: Ga direct naar de inhoud van de pagina
@@ -583,7 +583,7 @@ nl:
     password: wachtwoord
     print: Afdrukken
     private_menu_header: Persoonlijk menu (ingelogd)
-    proclaimer_icon_link: Copyrightteken
+    proclaimer_icon_link: Copyright
     proclaimer_link: proclaimer
     proclaimer_title: Lees onze proclaimer
     registration_link: registreer hier
@@ -592,7 +592,7 @@ nl:
     rss_alt: RSS-icoon
     rss_title: RSS-feed tonen
     search: Zoek
-    sitemap_icon_link: Icoon van een hiërarchie
+    sitemap_icon_link: Sitemap
     sitemap_link: sitemap
     sitemap_title: Bekijk de sitemap
     source: Bron
