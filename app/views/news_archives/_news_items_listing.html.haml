@@ -1,6 +1,6 @@
-- unless news_items.empty?
+- if news_items.present?
   - first_item   = news_items.shift
-  
+
   - header_image = first_item.node.children.accessible.with_content_type('Image').include_content.first.try(:content)
 
   - if header_image
@@ -11,7 +11,7 @@
 
     %p.publicationDate
       = l(first_item.publication_start_date.to_date, :format => :long)
-    %p= link_to_content_node "#{strip_tags(truncate(first_item.preamble, :length => 200))} #{image_tag('pointer_right.png')}", first_item, { :type => :url, :host => first_item.node.containing_site.content.domain }, :class => 'body'
+    %p= link_to_content_node "#{strip_tags(truncate(first_item.preamble, :length => 200))} #{image_tag('pointer_right.png', :alt => '')}", first_item, { :type => :url, :host => first_item.node.containing_site.content.domain }, :class => 'body'
 
   %ul
     - news_items.each do |news_item|
