@@ -58,7 +58,8 @@ I18n.locale['nl'] = {
 		hidden: 'Verborgen',
 		show_in_menu: 'Toon in menu',
 		sort_content: 'Inhoud sorteren',
-		url_alias: 'Webadres...'
+		url_alias: 'Webadres...',
+		export_subscribers: 'Exporteer abonnementen'
 	},	
 	errors: {
 		error_save_header: 'Sorry, opslaan mislukt:',
