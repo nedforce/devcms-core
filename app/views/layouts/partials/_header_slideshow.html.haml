@@ -1,5 +1,6 @@
-<% content_for :javascript do %>
-  <% javascript_tag do %>
+- header_image = available_header_images.first
+- content_for :javascript do
+  :javascript
     document.observe('dom:loaded', function () {
       var slides = <%= available_header_images.to_json.html_safe %>;
       headerSlideShow = new SlideShow(slides, {
@@ -11,10 +12,5 @@
         headerSlideShow.start();
       };
     });
-  <% end %>
-<% end %>
 
-<div id="header-slideshow">
-  <% header_image = available_header_images.first %>
-  <%= image_tag header_image[:url], :id => header_image[:id], :title => header_image[:title], :alt => header_image[:alt] %>
-</div>
+#header-slideshow= image_tag header_image[:url], :id => header_image[:id], :title => header_image[:title], :alt => header_image[:alt]
