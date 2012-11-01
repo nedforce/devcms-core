@@ -1,17 +1,16 @@
 - header_image = available_header_images.first
-- content_for :javascript do
-  :javascript
-    document.observe('dom:loaded', function () {
-      var slides = #{available_header_images.to_json.html_safe};
-      headerSlideShow = new SlideShow(slides, {
-        fadeDuration: 3000,
-        displayDuration: 6000,
-        fadeOutStartToFadeInStartDelay: 0
-      });
-      if (slides.size() > 1) {
-        headerSlideShow.start();
-      };
+:javascript
+  document.observe('dom:loaded', function () {
+    var slides = #{available_header_images.to_json.html_safe};
+    headerSlideShow = new SlideShow(slides, {
+      fadeDuration: 3000,
+      displayDuration: 6000,
+      fadeOutStartToFadeInStartDelay: 0
     });
+    if (slides.size() > 1) {
+      headerSlideShow.start();
+    };
+  });
 
 #header-slideshow
   = image_tag header_image[:url], :id => header_image[:id], :title => header_image[:title], :alt => header_image[:alt]
