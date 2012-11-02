@@ -30,10 +30,10 @@
 
                 .title.clearfix
                   - if day_item.is_a?(Meeting)
-                    = image_tag 'icons/meeting.png', :class => 'icon', :alt => h(day_item.title)
+                    = image_tag 'icons/meeting.png', :class => 'icon', :alt => ''
                     = link_to_content_node h(day_item.title), day_item, { :type => :url, :host => day_item.node.containing_site.content.domain }, :class => 'meeting'
                   - else
-                    = image_tag 'icons/calendar_item.png', :class => 'icon', :alt => h(day_item.title)
+                    = image_tag 'icons/calendar_item.png', :class => 'icon', :alt => ''
                     = link_to_content_node h(day_item.title), day_item, { :type => :url, :host => day_item.node.containing_site.content.domain }, :class => 'event'
 
                 .buttons.clearfix

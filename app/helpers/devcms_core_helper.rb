@@ -197,8 +197,8 @@ module DevcmsCoreHelper
       readspeaker_url = readspeaker_url_for(request.url, { :rid => rid }.merge(options))
 
       content_tag(:div, :class => 'readspeaker_button') do
-        (image_tag('icons/sayit.png', :class => 'icon', :alt => t('application.sayit_alt'), :title => t('application.sayit_title')) +
-        (link_to(t('application.sayit'), readspeaker_url, { :class => link_class, :rel => 'nofollow' }.merge(options))) unless @node && (@node.hidden? || @node.private? || !@node.publishable?))
+        (image_tag('icons/sayit.png', :class => 'icon', :alt => '', :title => t('application.sayit_title')) +
+        (link_to(t('application.sayit'), readspeaker_url, { :title => t('application.sayit_title'), :class => link_class, :rel => 'nofollow' }.merge(options))) unless @node && (@node.hidden? || @node.private? || !@node.publishable?))
       end
     end
   end
