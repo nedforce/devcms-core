@@ -13,6 +13,7 @@
 //= require imports/i18n_object
 //= require imports/ie9_create_contextual_fragment
 //= require imports/lightbox
+//= require imports/opacity
 //= require imports/prototype_custom
 //= require imports/readspeaker
 //= require imports/slideshow
