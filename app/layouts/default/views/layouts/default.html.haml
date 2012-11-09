@@ -26,10 +26,10 @@
       %link{ :href => @rss_feed_url, :rel => "alternate", :type => "application/atom+xml" }/
     = yield :atom_feed
     = javascript_tag("document.observe('dom:loaded', function () { lightbox = new Lightbox({}); });")
+    = render :partial => '/shared/google_analytics'
   %body
     #main_container
       = render :partial => '/layouts/partials/content'
       = yield :header
     = render :partial => '/layouts/partials/footer'
     = render :partial => '/shared/admin_tools'
-    = render :partial => '/shared/google_analytics'
