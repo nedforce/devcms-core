@@ -1,12 +1,12 @@
-<div style="font-family: arial, sans-serif; font-size: 12px">
+<div style="font-family: Arial, Helvetica, sans-serif; font-size: 12px;">
   <p>
-      Beste <%= @share.to_name -%>,
+    Beste <%= @share.to_name -%>,
   </p>
   <p>
-      U ontvangt deze e-mail omdat <%= @share.from_name -%> (<%= @share.from_email_address -%>)
-      het volgende bericht wil delen:
-      <br/><br/>
+    U ontvangt deze e-mail omdat <%= @share.from_name -%> (<%= @share.from_email_address -%>)
+    het volgende bericht wil delen:
+    <br/><br/>
 
-      <%= @share.message %>
+    <%= @share.message %>
   </p>
 </div>
