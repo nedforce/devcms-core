@@ -17,6 +17,6 @@ module AttachmentsHelper
     else
       file_name = 'default.png'
     end
-    image_tag("icons/mime_types/#{file_name}", { :alt => attachment.content_type }.merge(options))
+    image_tag("icons/mime_types/#{file_name}", { :alt => '' }.merge(options))
   end
 end
