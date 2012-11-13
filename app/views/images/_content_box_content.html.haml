@@ -2,4 +2,4 @@
 - if content.url.present?
   = link_to(image_tag(sidebox_image_path(content, :format => :jpg), :alt => content.alt.to_s), h(content.url), :title => "#{h content.description}", :class => 'clearfix')
 - else
-  = link_to_node(image_tag(sidebox_image_path(content, :format => :jpg), :alt => content.alt.to_s), node, { :action => :full }, { :rel => "lightbox['sidebox']", :title => 'Vergroot deze afbeelding' })
+  = link_to_node(image_tag(sidebox_image_path(content, :format => :jpg), :alt => content.alt.to_s, :title => content.description), node, { :action => :full }, { :rel => "lightbox['sidebox']", :title => 'Vergroot deze afbeelding' })
