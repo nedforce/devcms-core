@@ -31,7 +31,9 @@ I18n.locale['nl'] = {
 		url_alias_prompt_current_1: 'Elk item heeft ook een standaard webadres, dat automatisch gegenereerd wordt aan de hand van de titel van het item en zijn plaats in de boom. Voor dit item is het standaard webadres:',
 		url_alias_prompt_current_2: 'Huidig webadres achtervoegsel:',
 		url_alias_prompt_current_3: 'Huidige volledige extra webadres:',
-		custom_url_suffix: 'Nieuw webadres achtervoegsel'
+		custom_url_suffix: 'Nieuw webadres achtervoegsel',
+		newsletter_export_title: 'Exporteer abonnementen',
+		newsletter_export_open: 'Open export'
 	},
 	abbreviations: {
 		show: 'Afkortingen'
