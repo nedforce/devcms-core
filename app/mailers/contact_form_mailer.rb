@@ -8,7 +8,7 @@ class ContactFormMailer < ActionMailer::Base
     @entered_fields        = entered_fields
    
     entered_fields.each do |field|
-      if field[:value].respond_to? :original_filename
+      if field[:value].is_a? ActionDispatch::Http::UploadedFile
         attachments[field[:value].original_filename] = field[:value].read
       end
     end
