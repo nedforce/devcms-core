@@ -77,7 +77,7 @@ module NodeExtensions::Expiration
   end
 
   def set_default_expires_on
-    self.expires_on ||= Date.today + Settler[:default_expiration_time].days
+    self.expires_on = Date.today + Settler[:default_expiration_time].days if self.expires_on.blank?
   end
   
   def expires_on_valid?

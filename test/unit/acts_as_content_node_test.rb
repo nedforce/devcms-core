@@ -237,7 +237,7 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
     page = build_page :content_box_title => nil, :content_box_icon => nil,
                       :content_box_colour => nil, :content_box_number_of_items => nil
 
-    assert page.save
+    assert page.save, page.errors.full_messages.to_sentence
     assert page.valid?
   end
 
