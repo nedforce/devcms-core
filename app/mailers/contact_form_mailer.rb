@@ -7,8 +7,10 @@ class ContactFormMailer < ActionMailer::Base
     @subject               = contact_form.title
     @entered_fields        = entered_fields
    
-    entered_fields.select{|field| field[:value].is_a?(Tempfile) }.each do |field|
-      attachments[field[:value].original_filename] = field[:value].read  
+    entered_fields.each do |field|
+      if field[:value].respond_to? :original_filename
+        attachments[field[:value].original_filename] = field[:value].read
+      end
     end
     
     mail(:from => @from, :to => @recipients, :subject => @subject)     
