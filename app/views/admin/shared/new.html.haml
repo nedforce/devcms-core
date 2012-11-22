@@ -15,7 +15,7 @@
     
     - if current_user_is_admin?(record.node) || current_user_is_final_editor?(record.node)
       = render :partial => 'admin/shared/responsible_user_fields', :locals => {:form => form, :content => record}
-    - else
+    - elsif record.node.expiration_required? || record.node.expired?
       = hidden_field_tag "#{ActiveModel::Naming.param_key(record)}[expires_on]", Settler[:default_expiration_time].days.from_now
 
     = category_settings_for record
