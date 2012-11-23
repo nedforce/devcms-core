@@ -1,5 +1,6 @@
 /*
   Altered by Cas Ebbers for DevCMS compatibility
+  Tab focus control added by Arthur Holstvoogd 
 */
 /*
 Copyright (c) 2009 Victor Stanciu - http://www.victorstanciu.ro
@@ -55,7 +56,9 @@ Carousel = Class.create(Abstract, {
 
     this.slides.each(function (slide, index) {
       slide._index = index;
-    });
+      slide.firstDescendant().observe('focus', this.focus.bind(this, slide));
+      slide.firstDescendant().observe('blur', this.start.bind(this));
+    }.bind(this));
 
     if (this.controls) {
       this.controls.invoke('observe', 'click', this.click.bind(this));
@@ -84,6 +87,11 @@ Carousel = Class.create(Abstract, {
       }
       this.moveTo(this.slides[initialIndex]);
     }
+  },
+
+  focus: function (slide, event) {
+    this.stop();
+    this.moveTo(slide);
   },
 
   click: function (event) {
