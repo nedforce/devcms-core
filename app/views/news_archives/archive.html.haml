@@ -11,4 +11,5 @@
         .buttons.clearfix
           = readspeaker_button(:rid => readspeaker_id, :title => h(@news_archive.title))
 
-  = render :partial => 'news_items/news_items', :locals => { :news_items => @news_items, :latest_news_items => @latest_news_items, :news_items_for_table => @news_items_for_table, :show_archive_link => true }
+  = render :partial => 'archive_header'
+  = render :partial => 'news_items/news_items', :locals => { :news_items => @news_items, :news_items_for_table => @news_items }

@@ -90,9 +90,17 @@ Rails.application.routes.draw do
   end
 
   resources :newsletter_editions, :only => :show
-  resources :news_archives, :only => :show
+  resources :news_archives, :only => :show do
+    member do
+      get :archive
+    end
+  end
   resources :news_items, :only => :show
-  resources :news_viewers, :only => :show
+  resources :news_viewers, :only => :show do
+    member do
+      get :archive
+    end
+  end
   resources :pages, :only => :show
   resources :password_resets, :only => [:new, :create, :edit, :update]
   resources :polls, :only => :show

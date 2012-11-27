@@ -1,6 +1,7 @@
 - latest_news_items    ||= []
 - news_items_for_table ||= []
 - show_bread_crumbs    ||= false
+- show_archive_link    ||= false
 
 .newsItems
   - if news_items.empty?
@@ -32,7 +33,8 @@
           = readspeaker_button(:rid => readspeaker_id, :title => h(news_item.title))
 
   - if news_items_for_table.present?
-    %h2= t 'news.older_news_items'
+    - if show_archive_link
+      %h2= t 'news.older_news_items'
 
     %table#items{ :cellpadding => 0, :cellspacing => 0 }
       %caption= t 'news_archives.older_items_caption'
@@ -50,4 +52,5 @@
             %td.right_sized.gray
               = l news_item.publication_start_date, :format => :long
 
-    = paginate(news_items)
+    - if show_archive_link
+      .pagination= link_to_content_node 'Naar archief...', (@news_viewer || @news_archive), :action => 'archive'    

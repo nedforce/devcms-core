@@ -1,0 +1,16 @@
+- prev_year  = @date - 1.year
+- prev_month = @date - 1.month
+- next_month = @date + 1.month
+- next_year  = @date + 1.year
+.pagination
+  .left
+    = link_to_if @valid_range.cover?(prev_year),  "&lt;&lt;".html_safe, {:date => {:month => prev_year.month,  :year => prev_year.year}},  {:title => 'vorig jaar'}
+    = link_to_if @valid_range.cover?(prev_month), "&lt;".html_safe,     {:date => {:month => prev_month.month, :year => prev_month.year}}, {:title => 'vorige maand'}
+  .right
+    = link_to_if @valid_range.cover?(next_month), "&gt;".html_safe,     {:date => {:month => next_month.month, :year => next_month.year}}, {:title => 'volgende maand'}
+    = link_to_if @valid_range.cover?(next_year),  "&gt;&gt;".html_safe, {:date => {:month => next_year.month,  :year => next_year.year}},  {:title => 'volgend jaar'}
+  .pageNumbers
+    = form_tag({}, :method => :get) do
+      = select_month @date
+      = select_year  @date, :start_year => @start_date.year, :end_year => @end_date.year
+      = submit_tag 'Ga'

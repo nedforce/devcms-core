@@ -3,7 +3,7 @@
 class NewsArchivesController < ApplicationController
   
   # The +show+ action needs a +NewsArchive+ object to work with.  
-  before_filter :find_news_archive, :only => :show
+  before_filter :find_news_archive, :only => [:show, :archive]
 
   # The +show+ action needs a list of recent news items to work with.
   before_filter :find_recent_news_items, :only => :show
@@ -17,6 +17,18 @@ class NewsArchivesController < ApplicationController
       format.any(:rss, :atom) { render :layout => false }
       format.xml  { render :xml => @news_archive }
     end
+  end
+  
+  # * GET /news_archives/1/archive
+  def archive
+    @date = Time.parse("#{params[:date][:year]}-#{params[:date][:month]}-1") rescue Time.now
+    @news_items  = @news_archive.news_items
+    @start_date  = @news_archive.news_items.last.publication_start_date
+    @end_date    = @news_archive.news_items.first.publication_start_date
+    @valid_range = (@start_date.beginning_of_year..@end_date.end_of_year)
+    @date = Time.now unless @valid_range.cover? @date
+    #@date = Time.now unless (@start_date..@end_date).include?(@date)
+    @news_items = @news_items.where('nodes.publication_start_date' => @date.beginning_of_month..@date.end_of_month)
   end
   
 protected
