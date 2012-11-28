@@ -90,8 +90,11 @@ Carousel = Class.create(Abstract, {
   },
 
   focus: function (slide, event) {
-    this.stop();
-    this.moveTo(slide);
+    this.stop()
+    // dur = this.duration
+    // this.duration = 0
+    this.moveTo(slide)
+    // this.duration = dur
   },
 
   click: function (event) {
