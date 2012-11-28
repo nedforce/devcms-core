@@ -25,9 +25,8 @@ class NewsArchivesController < ApplicationController
     @news_items  = @news_archive.news_items
     @start_date  = @news_archive.news_items.last.publication_start_date
     @end_date    = @news_archive.news_items.first.publication_start_date
-    @valid_range = (@start_date.beginning_of_year..@end_date.end_of_year)
+    @valid_range = (@start_date.beginning_of_month..Date.today.end_of_month)
     @date = Time.now unless @valid_range.cover? @date
-    #@date = Time.now unless (@start_date..@end_date).include?(@date)
     @news_items = @news_items.where('nodes.publication_start_date' => @date.beginning_of_month..@date.end_of_month)
   end
   
