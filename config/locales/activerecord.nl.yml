@@ -151,6 +151,7 @@ nl:
         title: Titel
       image:
         data: Bestand
+        file: Bestand
         title: Titel
       internal_link:
         linked_node: Gelinkte node
