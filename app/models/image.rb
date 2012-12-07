@@ -51,6 +51,7 @@ class Image < ActiveRecord::Base
 
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of     :title
+  validates_presence_of     :file
 
   validates_inclusion_of    :show_in_listing, :in => [ false, true ], :allow_nil => false
 
