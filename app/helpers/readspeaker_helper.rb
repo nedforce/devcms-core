@@ -5,7 +5,7 @@ module ReadspeakerHelper
     if Settler[:readspeaker_cid].present?
       rid = options.delete(:rid)
       link_class = [ options.delete(:class), 'readspeaker_link' ].compact.join(' ')
-      readspeaker_url = readspeaker_url_for(request.url, { :rid => rid }.merge(options))
+      readspeaker_url = readspeaker_url_for(request.url, { :rid => rid }.merge(options)).html_safe
 
       content_tag(:div, :class => 'readspeaker_button') do
         (image_tag('icons/sayit.png', :class => 'icon', :alt => '', :title => t('application.sayit_title')) +
@@ -32,7 +32,11 @@ module ReadspeakerHelper
   def readspeaker_url_for(target_url, options = {})
     url  = "http://app.readspeaker.com/cgi-bin/rsent?customerid=#{Settler[:readspeaker_cid]}"
     url << "&amp;readid=readspeaker_block_#{options[:rid]}" if options[:rid].present?
-    url << "&amp;lang=#{options[:lang] || 'nl'}"
+    if options[:lang].present? && options[:lang] != 'nl'
+      url << "&amp;lang=#{options[:lang]}"
+    else
+      url << "&amp;lang=nl_nl"
+    end
     url << "&amp;url=#{CGI.escape(target_url)}"
     url.html_safe
   end
