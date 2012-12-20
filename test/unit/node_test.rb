@@ -409,10 +409,11 @@ class NodeTest < ActiveSupport::TestCase
   end
 
   def test_should_set_position_on_create
+    Node.root.reorder_children
     n = create_node
     assert_not_nil n.position
     assert_not_equal 0, n.position
-    assert n.last_item?
+    assert n.last?
 
     assert_not_nil create_node.position
   end

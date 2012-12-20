@@ -598,7 +598,7 @@ no_extension_attachment_node:
   ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
   show_in_menu: true
   publication_start_date: <%= 1.day.ago.to_s(:db) %>
-  position: 21
+  position: 20
   publishable: true
   sub_content_type: Attachment
   hidden: false

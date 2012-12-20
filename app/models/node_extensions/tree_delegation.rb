@@ -3,10 +3,19 @@ module NodeExtensions::TreeDelegation
   
   included do  
     has_ancestry :cache_depth => true
-    sortable :scope => :ancestry
-    
+    # sortable :scope => :ancestry
+    acts_as_list :scope => :ancestry
+
     validate :parent_should_be_valid, :unless => lambda {|n| Node.count.zero? || (Node.root && Node.root == n ) }
     validate :parent_should_allow_type
+
+    def will_leave_list?
+      in_list? && parent_id_changed?
+    end
+
+    def in_list?
+      super unless ancestry_callbacks_disabled?
+    end
   end
 
   module ClassMethods
@@ -43,6 +52,14 @@ module NodeExtensions::TreeDelegation
 
   def parent_id
     super
+  end
+
+  def parent_id_was
+    ancestry_was ? ancestry_was.split("/").last : nil
+  end
+
+  def parent_id_changed?
+    parent_id_was != parent_id
   end
 
   # Determines which nodes from the given set of nodes can be reached from the current node.
@@ -170,8 +187,8 @@ module NodeExtensions::TreeDelegation
           insert_at!(target.position)
         when :right
           insert_at!(target.position + 1)
-        when :child
-          move_to_bottom!
+        # when :child
+          #move_to_bottom!
         end
       else
         raise ActiveRecord::ActiveRecordError, "Move failed: #{self.errors.full_messages.pretty_inspect}"
@@ -181,6 +198,7 @@ module NodeExtensions::TreeDelegation
 
   # Reorders the nodes children by the order the of their ids given
   def reorder_children(*ids)
+    ids = children.first.send :lock_list! if ids.blank?
     transaction do
       ordered_ids = ids.flatten.uniq
       ordered_ids.each do |child_id|
@@ -211,6 +229,26 @@ module NodeExtensions::TreeDelegation
     Node.path_children_by_depth(self)
   end
 
+  def move_down!
+    move_lower
+  end
+
+  def move_up!
+    move_higher
+  end
+
+  def move_to_bottom!
+    move_to_bottom
+  end
+
+  def insert_at! position
+    insert_at position
+  end
+
+  def last_item?
+    last?
+  end
+
   protected
 
   def calculate_closure_for(nodes)
@@ -223,5 +261,4 @@ module NodeExtensions::TreeDelegation
 
     [ tree, rest ]
   end
-
 end

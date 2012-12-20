@@ -1,7 +1,7 @@
 class AddCustomTypeToContentRepresentations < ActiveRecord::Migration
 
   class ContentRepresentation < ActiveRecord::Base
-    sortable :scope => :parent_id
+    acts_as_list :scope => :parent_id
     belongs_to :parent, :class_name => 'Node'
   end
 

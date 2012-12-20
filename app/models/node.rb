@@ -601,10 +601,10 @@ class Node < ActiveRecord::Base
   end
   
   # Override ancestry setter to correctly check wether the sortable scope is changed. This will prevent subtree repositioning issues.
-  def ancestry=(value)
-    sortable_scope_changes << :ancestry unless sortable_scope_changes.include?(:ancestry) || new_record? || (send(:ancestry).present? && value.to_s.split("/").last == send(:ancestry).to_s.split("/").last) || !self.class.sortable_lists.any? { |list_name, configuration| configuration[:scope].include?(:ancestry) }
-    self.ancestry_without_sortable = value
-  end
+  # def ancestry=(value)
+  #   sortable_scope_changes << :ancestry unless sortable_scope_changes.include?(:ancestry) || new_record? || (send(:ancestry).present? && value.to_s.split("/").last == send(:ancestry).to_s.split("/").last) || !self.class.sortable_lists.any? { |list_name, configuration| configuration[:scope].include?(:ancestry) }
+  #   self.ancestry_without_sortable = value
+  # end
   
   # Determines the "content date" of the content
   # This is used to determine whether the content date is "past", "current" or "future"
