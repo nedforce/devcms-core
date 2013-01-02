@@ -22,5 +22,13 @@ class NewsArchivesControllerTest < ActionController::TestCase
     get :show, :id => news_archives(:devcms_news).id, :format => 'rss'
     assert_response :success
   end
-  
+
+  def test_should_show_news_archive_archive_action
+    get :archive, :id => news_archives(:devcms_news).id, :month => Date.today.month, :year => Date.today.year
+    assert_response :success
+    assert assigns(:news_archive)
+    assert assigns(:start_date)
+    assert assigns(:end_date)
+    assert assigns(:news_items)
+  end
 end

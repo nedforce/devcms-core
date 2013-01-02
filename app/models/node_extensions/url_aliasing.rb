@@ -87,7 +87,15 @@ module NodeExtensions::UrlAliasing
     end
     
     def find_node_for_url_alias(url_alias, site)
-      site.node.subtree.where([ 'url_alias IN (:alias) OR custom_url_alias IN (:alias)', {:alias => url_alias.downcase}]).first
+      slugs = []
+      url_alias.split('/').each do |part|
+        if slugs.empty?
+          slugs = ["#{part.downcase}"]
+        else
+          slugs << "#{slugs.last}/#{part.downcase}"
+        end
+      end
+      site.node.subtree.where([ 'url_alias IN (:slugs) OR custom_url_alias IN (:slugs)', {:slugs => slugs}]).reorder('url_alias ASC').first
     end
     
   end

@@ -19,14 +19,14 @@ class NewsArchivesController < ApplicationController
     end
   end
   
-  # * GET /news_archives/1/archive
+  # * GET /news_archives/1/:month/:year
   def archive
-    @date = Time.parse("#{params[:date][:year]}-#{params[:date][:month]}-1") rescue Time.now
+    @date = Date.parse("#{params[:year]||params[:date][:year]}-#{params[:month]||params[:date][:month]}-1") rescue Date.today
     @news_items  = @news_archive.news_items
-    @start_date  = @news_archive.news_items.last.publication_start_date
-    @end_date    = @news_archive.news_items.first.publication_start_date
+    @start_date  = @news_archive.news_items.last.publication_start_date rescue Date.today
+    @end_date    = @news_archive.news_items.first.publication_start_date rescue Date.today
     @valid_range = (@start_date.beginning_of_month..Date.today.end_of_month)
-    @date = Time.now unless @valid_range.cover? @date
+    @date = Date.today unless @valid_range.cover? @date
     @news_items = @news_items.where('nodes.publication_start_date' => @date.beginning_of_month..@date.end_of_month)
   end
   

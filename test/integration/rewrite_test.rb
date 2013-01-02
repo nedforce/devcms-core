@@ -3,7 +3,7 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 # This test might not work when running all tests using 'rake test' due to the fact that 
 # the exceptions middleware is not properly initialized in that case.
 class RewriteTest < ActionController::IntegrationTest
-  fixtures :nodes, :pages 
+  fixtures :nodes, :pages, :news_archives, :news_items
   
   setup do
     @site = Site.first
@@ -28,7 +28,7 @@ class RewriteTest < ActionController::IntegrationTest
   end
   
   def test_should_rewrite_finds_by_node_id
-    @node = Section.all.sample.node
+    @node = Node.root.descendants.with_content_type('Section').all.sample
     get "/content/#{@node.id}"
     assert_equal @node, assigns(:node)
     assert response.body.include?(@node.content.title)
@@ -49,5 +49,22 @@ class RewriteTest < ActionController::IntegrationTest
     assert response.body.include?(@node.content.title)
   end     
 
+  def test_should_rewrite_to_longest_matched_url_alias
+    @node = NewsArchive.first.node
+    @node.set_url_alias true
+    @node.save
+    get @node.url_alias + '/1/2013'
+    assert_equal @node, assigns(:node)    
+    assert response.body.include?(@node.content.title)
+  end
+
+  def test_should_rewrite_with_action
+    @node = Node.root.descendants.with_content_type('Section').all.sample
+    @node.set_url_alias true
+    @node.save
+    get @node.url_alias + '/changes.atom'
+    assert_equal @node, assigns(:node)    
+    assert response.body.include?(@node.content.title)
+  end
 
 end
