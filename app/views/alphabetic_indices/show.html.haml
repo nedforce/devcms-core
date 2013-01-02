@@ -10,8 +10,9 @@
 
   - if @items.present?
     #overview.clearfix
-      %ul.items
-        - @items.each do |item|
-          %li
-            = link_to_content_node index_title(item, @letter), item
-            %p= item.respond_to?(:preamble) ? item.preamble : item.try(:description)
+      = skippable 'items' do
+        %ul.items
+          - @items.each do |item|
+            %li
+              = link_to_content_node index_title(item, @letter), item
+              %p= item.respond_to?(:preamble) ? item.preamble : item.try(:description)

@@ -29,6 +29,8 @@ nl:
     size: Grootte
     short_title: Titel voor menu
     meta_fields: Meta instellingen
+    skip_to_bottom: Spring naar einde
+    skip_to_top: Spring naar begin
     submit: Versturen
     succes: Succesvol
     text: Tekst

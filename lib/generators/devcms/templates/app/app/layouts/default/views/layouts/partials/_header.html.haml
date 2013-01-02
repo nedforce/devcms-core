@@ -28,6 +28,7 @@
   .meta_links
     #fontsize.fontsize.hidden
   / Main menu
-  = create_main_menu
+  = skippable 'mainmenu' do
+    = create_main_menu
   .header_photo
     = header_image(@node)[:image_tag]

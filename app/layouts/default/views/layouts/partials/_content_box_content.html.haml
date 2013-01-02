@@ -13,4 +13,5 @@
           %h2= content_box_title_for(node)
 
     .content.hoverable
-      = render :partial => "/#{node.sub_content_type.tableize}/#{partial}", :locals => { :node => node, :parent => parent }
+      = skippable "content_box_for_#{node.id}" do
+        = render :partial => "/#{node.sub_content_type.tableize}/#{partial}", :locals => { :node => node, :parent => parent }

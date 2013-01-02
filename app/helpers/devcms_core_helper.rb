@@ -287,10 +287,10 @@ module DevcmsCoreHelper
     end
   end
 
-  def skippable(&block)
-    link_to 'skip list', '#next' +
+  def skippable(id, &block)
+    link_to(t('shared.skip_to_bottom'), "\#bottom_of_#{id}", :name => "top_of_#{id}", :class => 'hidden') +
     capture(&block) +
-    link_to('end of list', '#', :name => 'next')   
+    link_to(t('shared.skip_to_top'),    "\#top_of_#{id}", :name => "bottom_of_#{id}", :class => 'hidden') 
   end
 
   protected

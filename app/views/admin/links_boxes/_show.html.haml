@@ -9,8 +9,9 @@
     = render_images
 
     - if @children.present?
-      %ul.section_items
-        - @children.each do |content_node|
-          %li
-            = image_tag "icons/#{content_node.try :icon_filename}", :class => 'icon', :alt => '', :title => content_node.title
-            = link_to_content_node content_node.title, content_node, {}, :target => '_blank'
+      = skippable 'section_items' do
+        %ul.section_items
+          - @children.each do |content_node|
+            %li
+              = image_tag "icons/#{content_node.try :icon_filename}", :class => 'icon', :alt => '', :title => content_node.title
+              = link_to_content_node content_node.title, content_node, {}, :target => '_blank'

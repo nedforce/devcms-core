@@ -18,23 +18,24 @@
 
         / A calendarItems for this day !
         .calendarItems
-          - @day_items.each do |day_item|
-            = readspeaker("#{day.mday}_#{day_item.id}") do |rid|
-              .calendarItem
-                .metaInfo
-                  .time
-                    = t 'calendars.from'
-                    = day_item.start_time.strftime("%H:%M")
-                    = t 'calendars.till'
-                    = day_item.end_time.strftime("%H:%M")
+          = skippable 'calendar_items' do
+            - @day_items.each do |day_item|
+              = readspeaker("#{day.mday}_#{day_item.id}") do |rid|
+                .calendarItem
+                  .metaInfo
+                    .time
+                      = t 'calendars.from'
+                      = day_item.start_time.strftime("%H:%M")
+                      = t 'calendars.till'
+                      = day_item.end_time.strftime("%H:%M")
 
-                .title.clearfix
-                  - if day_item.is_a?(Meeting)
-                    = image_tag 'icons/meeting.png', :class => 'icon', :alt => ''
-                    = link_to_content_node h(day_item.title), day_item, { :type => :url, :host => day_item.node.containing_site.content.domain }, :class => 'meeting'
-                  - else
-                    = image_tag 'icons/calendar_item.png', :class => 'icon', :alt => ''
-                    = link_to_content_node h(day_item.title), day_item, { :type => :url, :host => day_item.node.containing_site.content.domain }, :class => 'event'
+                  .title.clearfix
+                    - if day_item.is_a?(Meeting)
+                      = image_tag 'icons/meeting.png', :class => 'icon', :alt => ''
+                      = link_to_content_node h(day_item.title), day_item, { :type => :url, :host => day_item.node.containing_site.content.domain }, :class => 'meeting'
+                    - else
+                      = image_tag 'icons/calendar_item.png', :class => 'icon', :alt => ''
+                      = link_to_content_node h(day_item.title), day_item, { :type => :url, :host => day_item.node.containing_site.content.domain }, :class => 'event'
 
-                .buttons.clearfix
-                  = readspeaker_button(:rid => rid)
+                  .buttons.clearfix
+                    = readspeaker_button(:rid => rid)
