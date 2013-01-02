@@ -237,7 +237,7 @@ Lightbox.prototype = {
                 $$(imageLink.tagName + '[href][rel="' + imageLink.rel + '"]').
                 // !!! HACK -- include the image alt
                 //collect(function(anchor){ return [anchor.href, anchor.title, anchor.down('img').alt]; }).
-                collect(function(anchor){ return [anchor.href, '', anchor.down('img').alt]; }).
+                collect(function(anchor){ return [anchor.href, anchor.down('div').textContent, anchor.down('img').alt]; }).
                 uniq();
             
             while (this.imageArray[imageNum][0] != imageLink.href) { imageNum++; }

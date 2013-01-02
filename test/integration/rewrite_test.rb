@@ -3,7 +3,7 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 # This test might not work when running all tests using 'rake test' due to the fact that 
 # the exceptions middleware is not properly initialized in that case.
 class RewriteTest < ActionController::IntegrationTest
-  fixtures :nodes, :pages, :news_archives, :news_items
+  fixtures :nodes, :pages, :news_archives, :news_items, :images
   
   setup do
     @site = Site.first
@@ -43,19 +43,27 @@ class RewriteTest < ActionController::IntegrationTest
   
   def test_should_rewrite_finds_by_custom_url_alias
     @node = Page.all.sample.node
-    @node.update_attribute(:custom_url_alias, 'dobedobedo')
+    assert @node.update_attributes(:custom_url_suffix => 'dobedobedo'), @node.errors.full_messages.to_sentence
     get '/' + @node.custom_url_alias
     assert_equal @node, assigns(:node)    
     assert response.body.include?(@node.content.title)
   end     
 
-  def test_should_rewrite_to_longest_matched_url_alias
+  def test_should_rewrite_with_remaining_slugs
     @node = NewsArchive.first.node
     @node.set_url_alias true
     @node.save
     get @node.url_alias + '/1/2013'
     assert_equal @node, assigns(:node)    
     assert response.body.include?(@node.content.title)
+  end
+
+  def test_should_prefer_longest_matched_url_alias
+    @node = nodes(:devcms_news_item_voor_vorig_jaar_node)
+    @node.set_url_alias true
+    @node.save
+    get @node.url_alias
+    assert_equal @node, assigns(:node)
   end
 
   def test_should_rewrite_with_action

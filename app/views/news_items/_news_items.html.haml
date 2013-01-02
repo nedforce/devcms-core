@@ -21,7 +21,9 @@
 
         .content.clearfix
           - if (image_node = news_item.node.children.accessible.with_content_type('Image').first)
-            = link_to_node(image_tag(content_node_path(image_node, :action => :thumbnail), :alt => image_node.content.alt.to_s), image_node, { :action => :full }, { :rel => "lightbox[#{news_item.node.id}]", :title => 'Vergroot deze afbeelding', :class => 'right' })
+            = link_to_node(                                                                                                                                                 |
+                image_tag(content_node_path(image_node, :action => :thumbnail), :alt => image_node.content.alt.to_s) + content_tag('div', image.title, :class => 'hidden'), |
+                image_node, { :action => :full }, { :rel => "lightbox[#{news_item.node.id}]", :title => 'Vergroot deze afbeelding', :class => 'right' })                    |
           - if news_item.preamble.present?
             = simple_format(h(news_item.preamble))
 
@@ -35,22 +37,22 @@
   - if news_items_for_table.present?
     - if show_archive_link
       %h2= t 'news.older_news_items'
-
-    %table#items{ :cellpadding => 0, :cellspacing => 0 }
-      %caption= t 'news_archives.older_items_caption'
-      %thead
-        %tr
-          %th.gray{ :scope => 'col' }
-            = t 'news.title'
-          %th.right_sized.gray
-            = t 'news.date'
-      %tbody
-        - news_items_for_table.each_with_index do |news_item, i|
-          %tr{ :class => "#{'alt' if i.even?}" }
-            %td
-              = link_to_content_node h(truncate(news_item.title, :length => 54)), news_item
-            %td.right_sized.gray
-              = l news_item.publication_start_date, :format => :long
+    - skippable do  
+      %table#items{ :cellpadding => 0, :cellspacing => 0 }
+        %caption= t 'news_archives.older_items_caption'
+        %thead
+          %tr
+            %th.gray{ :scope => 'col' }
+              = t 'news.title'
+            %th.right_sized.gray
+              = t 'news.date'
+        %tbody
+          - news_items_for_table.each_with_index do |news_item, i|
+            %tr{ :class => "#{'alt' if i.even?}" }
+              %td
+                = link_to_content_node h(truncate(news_item.title, :length => 54)), news_item
+              %td.right_sized.gray
+                = l news_item.publication_start_date, :format => :long
 
     - if show_archive_link
       .pagination= link_to_content_node 'Naar archief...', (@news_viewer || @news_archive), :action => "#{Date.today.month}/#{Date.today.year}"

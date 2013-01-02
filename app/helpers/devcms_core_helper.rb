@@ -287,6 +287,12 @@ module DevcmsCoreHelper
     end
   end
 
+  def skippable(&block)
+    link_to 'skip list', '#next' +
+    capture(&block) +
+    link_to('end of list', '#', :name => 'next')   
+  end
+
   protected
 
     # Returns the HTML for a main menu item.
