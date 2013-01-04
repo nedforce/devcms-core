@@ -1,0 +1,28 @@
+.regularPage.newsletterEdition
+- readspeaker do
+  = readspeaker_button :class => 'topRightReadspeaker withIcon', :title => h(@newsletter_edition.title)
+  %h1= h @newsletter_edition.title
+
+  = render :partial => '/shared/metadata', :locals => { :publication_date => @newsletter_edition.publication_start_date, :last_update_date => @newsletter_edition.updated_at }
+
+  .htmlField.clearfix
+    = w @newsletter_edition.body
+
+  - if @newsletter_edition.items.empty?
+    %p= t 'newsletters.no_items'
+  - else
+    %h2= t 'newsletters.items'
+    %table{ :cellpadding => 0, :cellspacing => 0, :id => 'items' }
+      %caption= t 'newsletters.items_caption'
+      %thead
+        %tr
+          %th.gray{ :scope => 'col' }= t 'newsletters.edition_title'
+          %th.right.gray{ :scope => 'col' }= t 'newsletters.type'
+      %tbody
+        - @newsletter_edition.items.each_with_index do |item, i|
+          %tr{ :class => "#{'alt' if i.even?}" }
+            %td= link_to_content_node h(item.content_title), item
+            %td.right.type= item.class.human_name
+
+  .buttons.clearfix
+    = print_button
