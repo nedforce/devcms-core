@@ -1,7 +1,7 @@
 <div id='weblog_post_image_<%= image.id -%>' class='weblogPostImage'>
   <%= 
       link_to_node(
-        image_tag(content_node_path(image.node, :action => :thumbnail), :alt => image.alt.to_s) + content_tag('div', image.title, :class => 'hidden'),
+        image_tag(content_node_path(image.node, :action => :thumbnail), :alt => image.alt.to_s) + content_tag('div', image.description.to_s, :class => 'hidden'),
         image.node,
         { :action => :full },
         { :rel    => "lightbox[#{@weblog_post.node.id}]", :title => 'Vergroot deze afbeelding' }
