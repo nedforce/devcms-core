@@ -33,6 +33,13 @@ class NodeSortingTest < ActiveSupport::TestCase
     assert n.last?
   end
 
+  def test_should_not_update_position_if_not_moved
+    n = Node.root.children.first
+    pos = n.position
+    n.update_attributes :show_in_menu => !n.show_in_menu
+    assert_equal pos, n.reload.position, "Node position updated!"
+  end
+
   protected
   def create_page(options = {})
     Page.create({ :user => users(:arthur), :parent => nodes(:root_section_node), :title => 'foo', :preamble => 'xuu', :body => 'bar' }.merge(options))

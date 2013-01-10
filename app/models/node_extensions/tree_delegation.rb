@@ -14,7 +14,8 @@ module NodeExtensions::TreeDelegation
     end
 
     def in_list?
-      super unless ancestry_callbacks_disabled?
+      breakpoint
+      !(ancestry_callbacks_disabled? || !super)
     end
   end
 
@@ -59,7 +60,7 @@ module NodeExtensions::TreeDelegation
   end
 
   def parent_id_changed?
-    parent_id_was != parent_id
+    parent_id_was != parent_id.to_s
   end
 
   # Determines which nodes from the given set of nodes can be reached from the current node.
