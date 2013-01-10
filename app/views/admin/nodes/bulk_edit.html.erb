@@ -27,8 +27,8 @@
           <p><%= insert_new_category_combination_link(first_root_category) -%></p>
 
           <div class="keep_existing_categories_field">
-            <%= check_box_tag 'node[keep_existing_categories]', '1', true -%>
-            <%= label_tag 'node[keep_existing_categories]', t('categories.keep_existing') -%>
+            <%= check_box_tag 'keep_existing_categories', '1', true -%>
+            <%= label_tag 'keep_existing_categories', t('categories.keep_existing') -%>
           </div>
         </div>
       <% end %>

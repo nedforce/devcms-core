@@ -58,7 +58,7 @@ module DevcmsCore
 
       delegate_accessor :commentable,
                         :content_box_title, :content_box_icon, :content_box_colour, :content_box_number_of_items,
-                        :categories, :category_attributes, :category_ids, :keep_existing_categories,
+                        :categories, :category_attributes, :category_ids,
                         :parent,
                         :publication_start_date, :publication_end_date,
                         :responsible_user, :responsible_user_id, :expires_on,

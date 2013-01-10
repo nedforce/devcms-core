@@ -183,7 +183,7 @@ module NodeExtensions::UrlAliasing
   # special characters, replacing illegal characters by hyphens and converting
   # the entire URL to downcase.
   def clean_for_url(url)
-    result = Iconv.iconv('ascii//ignore//translit', 'utf-8', help.strip_tags(url.strip)).join.downcase.gsub(/[^\/a-z0-9]/,'-').gsub(/-{2,}/,'-').gsub(/\/$/, "")
+    result = Node::Helper.instance.strip_tags(url.strip).encode('utf-8', :ignore => true, :translit => true).downcase.gsub(/[^\/a-z0-9]/,'-').gsub(/-{2,}/,'-').gsub(/\/$/, "")
 
     # remove any leading and trailing hyphens, also when directly after a slash
     result = $1 while result =~ /\A-(.*)/
