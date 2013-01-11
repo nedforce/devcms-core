@@ -14,7 +14,7 @@ module NodeExtensions::TreeDelegation
     end
 
     def in_list?
-        !(ancestry_callbacks_disabled? || !super)
+      !(ancestry_callbacks_disabled? || !super)
     end
   end
 
@@ -198,13 +198,13 @@ module NodeExtensions::TreeDelegation
 
   # Reorders the nodes children by the order the of their ids given
   def reorder_children(*ids)
-    if children
+    if children.present?
       ids = children.first.send :lock_list! if ids.blank?
       transaction do
         ordered_ids = ids.flatten.uniq
         ordered_ids.each do |child_id|
           position = ordered_ids.index(child_id) + 1
-          children.unscoped.find(child_id).insert_at!(position)
+          children.find(child_id).insert_at!(position)
         end
       end
     end
