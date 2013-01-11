@@ -28,6 +28,7 @@ class NewsViewersController < ApplicationController
     @valid_range = (@start_date.beginning_of_month..Date.today.end_of_month)
     @date = Date.today unless @valid_range.cover? @date
     @news_items = @news_items.where('nodes.publication_start_date' => @date.beginning_of_month..@date.end_of_month)
+    render :template => '/news_archives/archive'
   end
 
 protected

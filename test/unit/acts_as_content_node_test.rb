@@ -281,7 +281,7 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
     category2 = Category.create(:name => 'Categorie 2')
 
     page = create_page(:category_ids => [ category1.id, category2.id ])
-    # debugger
+    
     assert page.update_attributes(:title => "update title", :category_attributes => {
       category1.id => { :synonyms => 'Categorie 1' },
       category2.id => { :synonyms => 'Categorie 2' },
