@@ -28,7 +28,7 @@ class NewsViewer < ActiveRecord::Base
   # A +NewsViewer+ can have many +NewsViewerItem+ and +NewsViewerArchive+ children.
   has_many :news_viewer_items,    :dependent => :destroy
   has_many :news_viewer_archives, :dependent => :destroy  
-  has_many :news_items,           :through => :news_viewer_items
+  has_many :news_items,           :through => :news_viewer_items,   :include => :node
   has_many :news_archives,        :through => :news_viewer_archives
 
   # See the preconditions overview for an explanation of these validations.

@@ -276,60 +276,16 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
     assert page.errors[:'node.base'].any?
   end
 
-  def test_should_save_categories_to_node_while_keeping_existing_categories
-    category1 = Category.create(:name => 'Categorie 1')
-    category2 = Category.create(:name => 'Categorie 2')
-
-    page = create_page(:category_ids => [ category1.id, category2.id ], :keep_existing_categories => true)
-
-    assert page.categories.include?(category1)
-    assert page.categories.include?(category2)
-    assert page.node.categories.include?(category1)
-    assert page.node.categories.include?(category2)
-
-    category3 = Category.create(:name => 'Categorie 3')
-
-    assert page.update_attributes(:category_ids => [ category2.id, category3.id ], :keep_existing_categories => true)
-
-    assert page.categories.include?(category2)
-    assert page.categories.include?(category3)
-    assert page.node.categories.include?(category1)
-    assert page.node.categories.include?(category2)
-    assert page.node.categories.include?(category3)
-  end
-
-  def test_should_save_categories_to_node_without_keeping_existing_categories
-    category1 = Category.create(:name => 'Categorie 1')
-    category2 = Category.create(:name => 'Categorie 2')
-
-    page = create_page(:category_ids => [ category1.id, category2.id ], :keep_existing_categories => false)
-
-    assert page.categories.include?(category1)
-    assert page.categories.include?(category2)
-    assert page.node.categories.include?(category1)
-    assert page.node.categories.include?(category2)
-
-    category3 = Category.create(:name => 'Categorie 3')
-
-    assert page.update_attributes(:category_ids => [ category2.id, category3.id ], :keep_existing_categories => false)
-
-    assert page.categories.include?(category2)
-    assert page.categories.include?(category3)
-    assert !page.node.categories.include?(category1)
-    assert page.node.categories.include?(category2)
-    assert page.node.categories.include?(category3)
-  end
-
   def test_should_save_category_attributes_to_node_associated_categories_on_save
     category1 = Category.create(:name => 'Categorie 1')
     category2 = Category.create(:name => 'Categorie 2')
 
     page = create_page(:category_ids => [ category1.id, category2.id ])
-
-    page.update_attributes(:category_attributes => {
+    
+    assert page.update_attributes(:title => "update title", :category_attributes => {
       category1.id => { :synonyms => 'Categorie 1' },
       category2.id => { :synonyms => 'Categorie 2' },
-    })
+    }), page.errors.full_messages.to_sentence
 
     assert_equal 'Categorie 1', category1.reload.synonyms
     assert_equal 'Categorie 2', category2.reload.synonyms

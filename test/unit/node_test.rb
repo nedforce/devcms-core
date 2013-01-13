@@ -26,7 +26,7 @@ class NodeTest < ActiveSupport::TestCase
     date = Time.now
 
     assert node.update_attributes(:publication_start_date => date)
-    assert_equal date, node.publication_start_date
+    assert_equal date.to_i, node.publication_start_date.to_i
   end
 
   def test_root_node_should_be_updateable
@@ -418,14 +418,13 @@ class NodeTest < ActiveSupport::TestCase
     assert_not_nil create_node.position
   end
 
-  def test_should_set_categories_while_keeping_existing
+  def test_should_set_categories_while_keeping_existing_on_bulk_update
     n = create_node
 
     category1 = Category.create(:name => 'Categorie 1')
     category2 = Category.create(:name => 'Categorie 2')
-    
-    n.keep_existing_categories = true
-    n.category_ids=([ category1.id, category2.id ])
+
+    Node.bulk_update([n], {:category_ids => [ category1.id, category2.id ]}, nil, true)
 
     assert n.categories.include?(category1)
     assert n.categories.include?(category2)
@@ -433,7 +432,7 @@ class NodeTest < ActiveSupport::TestCase
     category3 = Category.create(:name => 'Categorie 3')
     category4 = Category.create(:name => 'Categorie 4')
 
-    n.category_ids=([ category2.id, category3.id, category4.id ])
+    Node.bulk_update([n], {:category_ids => [ category3.id, category4.id ]}, nil, true)
 
     assert n.categories.include?(category1)
     assert n.categories.include?(category2)
@@ -441,14 +440,13 @@ class NodeTest < ActiveSupport::TestCase
     assert n.categories.include?(category4)
   end
 
-  def test_should_set_categories_while_not_keeping_existing
+  def test_should_set_categories_while_not_keeping_existing_on_bulk_update
     n = create_node
 
     category1 = Category.create(:name => 'Categorie 1')
     category2 = Category.create(:name => 'Categorie 2')
     
-    n.keep_existing_categories = true
-    n.category_ids=([ category1.id, category2.id ])
+    Node.bulk_update([n], {:category_ids => [ category1.id, category2.id ]}, nil, true)
 
     assert n.categories.include?(category1)
     assert n.categories.include?(category2)
@@ -456,8 +454,7 @@ class NodeTest < ActiveSupport::TestCase
     category3 = Category.create(:name => 'Categorie 3')
     category4 = Category.create(:name => 'Categorie 4')
     
-    n.keep_existing_categories = false
-    n.category_ids=([ category2.id, category3.id, category4.id ])
+    Node.bulk_update([n], {:category_ids => [ category2.id, category3.id, category4.id ]}, nil, false)
 
     assert n.categories.include?(category2)
     assert n.categories.include?(category3)
@@ -467,12 +464,12 @@ class NodeTest < ActiveSupport::TestCase
   def test_bulk_update_should_return_true_if_updating_succeeds_for_all_nodes
     node1 = stub(:content => stub(:update_attributes! => true, :class => stub(:requires_editor_approval? => false)))
     node2 = stub(:content => stub(:update_attributes! => true, :class => stub(:requires_editor_approval? => false)))
-    assert_equal true, Node.bulk_update([ node1, node2 ], {})
+    assert_equal true, Node.bulk_update([ node1, node2 ], {:title => 'ok'})
   end
 
   def test_bulk_update_should_return_false_if_updating_fails_for_one_of_the_nodes
-    content = stub(:class => { :requires_editor_approval? => false })
-    content.stubs(:update_attributes!).raises(ActiveRecord::RecordInvalid)
+    content = stub(:class => stub(:requires_editor_approval? => false))
+    content.stubs(:update_attributes!).raises(ActiveRecord::RecordInvalid.new(Node.new)) 
     node1 = stub(:content => content)
     
     content = stub(:update_attributes! => true, :class => stub(:requires_editor_approval? => false))

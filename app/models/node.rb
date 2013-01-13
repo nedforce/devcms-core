@@ -1,5 +1,3 @@
-require 'iconv'
-
 # A node is a proxy for different types of content, so that all types of
 # content may be managed in a uniform manner. A node cannot be instantiated
 # directly, instead one will be automatically created when the associated
@@ -115,7 +113,7 @@ class Node < ActiveRecord::Base
 
   attr_protected :hits, :content_type, :sub_content_type
 
-  has_many :node_categories, :dependent => :destroy
+  has_many :node_categories, :dependent => :destroy, :inverse_of => :node
   has_many :categories, :through => :node_categories
 
   has_many :combined_calendar_nodes, :dependent => :destroy
@@ -175,6 +173,10 @@ class Node < ActiveRecord::Base
 
   after_save :save_category_attributes
 
+  # Remove from list on paranoid delete
+  before_paranoid_delete :remove_from_list
+  after_paranoid_restore :add_to_list
+
   # Prevents the root +Node+ from being marked as deleted.
   before_paranoid_delete :prevent_root_destruction
 
@@ -227,11 +229,6 @@ class Node < ActiveRecord::Base
   end
   
   alias_method_chain :move_to, :reindexing
-
-  # A proxy method for accessing the SanitizeHelper through the Helper class.
-  def help
-    Helper.instance
-  end
 
   # The Helper class includes the SanitizeHelper for proxy access.
   class Helper
@@ -562,10 +559,19 @@ class Node < ActiveRecord::Base
     (options[:top_node] ? options[:top_node].children : Node.scoped).accessible.public.includes(:node_categories).limit(options[:limit] || 5).where([ 'node_categories.category_id in (?) AND nodes.id <> ?', node.category_ids, node.id ])
   end
 
-  def self.bulk_update(nodes, attributes, user = nil)
+  def self.bulk_update(nodes, attributes, user = nil, keep_existing_categories = false)
     Node.transaction do
       nodes.each do |node|
         content = node.content
+
+        new_category_ids = attributes.delete(:category_ids)
+        if new_category_ids.present?
+          attributes[:category_ids] = if keep_existing_categories
+            new_category_ids + node.category_ids
+          else
+            new_category_ids
+          end.reject(&:blank?).map(&:to_i).uniq
+        end
 
         if content.class.requires_editor_approval? && user.present?
           content.update_attributes!(attributes.merge(:user => user))
@@ -576,35 +582,13 @@ class Node < ActiveRecord::Base
     end
     
     true
-  rescue
+  rescue ActiveRecord::RecordInvalid
     false
-  end
-
-  attr_accessor :keep_existing_categories
-  
-  alias_method :original_category_ids=, :category_ids=
-  
-  def category_ids=(new_category_ids)
-    new_category_ids = new_category_ids.reject(&:blank?).map(&:to_i)
-
-    return if new_category_ids.empty?  
-    
-    if keep_existing_categories
-      self.original_category_ids = (new_category_ids + category_ids).uniq
-    else
-      self.original_category_ids = new_category_ids.uniq
-    end
   end
   
   def last_set_category
     @last_set_category ||= self.node_categories.first(:order => 'created_at DESC').try(:category)
   end
-  
-  # Override ancestry setter to correctly check wether the sortable scope is changed. This will prevent subtree repositioning issues.
-  # def ancestry=(value)
-  #   sortable_scope_changes << :ancestry unless sortable_scope_changes.include?(:ancestry) || new_record? || (send(:ancestry).present? && value.to_s.split("/").last == send(:ancestry).to_s.split("/").last) || !self.class.sortable_lists.any? { |list_name, configuration| configuration[:scope].include?(:ancestry) }
-  #   self.ancestry_without_sortable = value
-  # end
   
   # Determines the "content date" of the content
   # This is used to determine whether the content date is "past", "current" or "future"
