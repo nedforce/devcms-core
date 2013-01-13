@@ -10,6 +10,9 @@ class PasswordResetsController < ApplicationController
   before_filter :find_user_by_password_reset_token, :only => [ :edit, :update ]
 
   def new
+    respond_to do |format|
+      format.html # new.html.haml
+    end
   end
 
   def create
