@@ -29,6 +29,9 @@ class PasswordResetsController < ApplicationController
   end
 
   def edit
+    respond_to do |format|
+      format.html # edit.html.haml
+    end
   end
 
   def update

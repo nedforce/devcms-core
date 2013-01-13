@@ -17,6 +17,9 @@ class SessionsController < ApplicationController
 
   # * GET /session/new
   def new
+    respond_to do |format|
+      format.html # new.html.haml
+    end
   end
 
   # * POST /session
