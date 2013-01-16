@@ -96,10 +96,10 @@ module NodeExtensions::UrlAliasing
         end
       end
 
-      results = site.node.subtree.where([ 'url_alias IN (:slugs) OR custom_url_alias IN (:slugs)', { :slugs => slugs }]).reorder('url_alias DESC').all
-      if site.node.root?
-        results.each do |res|
-          res if res.containing_site.id == site.node.id
+      matched_nodes = site.node.subtree.where([ 'url_alias IN (:slugs) OR custom_url_alias IN (:slugs)', { :slugs => slugs }]).reorder('url_alias DESC')
+      if matched_nodes.is_a?(Array) && site.node.root?
+        matched_nodes.all.each do |node|
+          node if node.containing_site.id == site.node.id
         end
       else
         site.node.subtree.where([ 'url_alias IN (:slugs) OR custom_url_alias IN (:slugs)', { :slugs => slugs }]).reorder('url_alias DESC').first
