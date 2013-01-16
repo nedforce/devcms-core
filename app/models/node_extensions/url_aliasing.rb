@@ -96,18 +96,17 @@ module NodeExtensions::UrlAliasing
         end
       end
 
-      matched_nodes = site.node.subtree.where([ 'url_alias IN (:slugs) OR custom_url_alias IN (:slugs)', { :slugs => slugs }]).reorder('url_alias DESC').all
-      if matched_nodes.is_a?(Array) && site.node.root?
-        matched_nodes.each do |node|
-          node if node.containing_site.id == site.node.id
-        end
+      # Exclude other sites if the site is the root node.
+      if site.node.root?
+        nodes_to_exclude = site.node.descendants.with_content_type('Site')
+        site.node.subtree.where([ 'url_alias IN (:slugs) OR custom_url_alias IN (:slugs)', { :slugs => slugs }]).exclude_subtrees_of(nodes_to_exclude).reorder('url_alias DESC').first
       else
         site.node.subtree.where([ 'url_alias IN (:slugs) OR custom_url_alias IN (:slugs)', { :slugs => slugs }]).reorder('url_alias DESC').first
       end
     end
-    
+
   end
-    
+
   # Instance Methods
   # Update after move
   def move_to_with_update_url_aliases(*args)
