@@ -95,7 +95,15 @@ module NodeExtensions::UrlAliasing
           slugs << "#{slugs.last}/#{part.downcase}"
         end
       end
-      site.node.subtree.where([ 'url_alias IN (:slugs) OR custom_url_alias IN (:slugs)', {:slugs => slugs}]).reorder('url_alias DESC').first
+
+      results = site.node.subtree.where([ 'url_alias IN (:slugs) OR custom_url_alias IN (:slugs)', {:slugs => slugs}]).reorder('url_alias DESC')
+      if site.node.root?
+        results.each do |res|
+          res if res.containing_site.id == site.node.id
+        end
+      else
+        results.first
+      end
     end
     
   end
