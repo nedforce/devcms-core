@@ -6,13 +6,17 @@ Ext.onReady(function() {
   var cm = new Ext.grid.ColumnModel([{
     header: 'Alias',
     dataIndex: 'custom_url_suffix',
+    width: 200,
     editor: new Ext.form.TextField
   },{
     header: 'Titel',
-    dataIndex: 'title'
+    dataIndex: 'title',
+    width: 200
   },{
     header: 'Domein',
-    dataIndex: 'domain'
+    dataIndex: 'domain',
+    width: 175,
+    sortable: false
   },{
     header: 'URL',
     dataIndex: 'url_alias'
