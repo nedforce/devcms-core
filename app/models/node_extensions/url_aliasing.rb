@@ -165,19 +165,20 @@ module NodeExtensions::UrlAliasing
   def set_url_alias(force = false)
     self.url_alias = generate_unique_url_alias if self.url_alias.blank? || force
   end
-  
+
   protected
-  
+
   def set_custom_url_alias
     self.custom_url_alias = (self.custom_url_suffix.present? ? self.generate_unique_custom_url_alias : nil) if custom_url_suffix_changed?
   end
 
   def uniqify_url_alias(generated_url_alias)
     temp_url_alias = generated_url_alias
-  
+
     unless is_root?
-      i = 0  
-      while containing_site.subtree.first(:conditions => [ "id <> ? AND (url_alias = ? OR custom_url_alias = ?)", (id || 0), temp_url_alias, temp_url_alias ]) || self.class.url_alias_reserved?(temp_url_alias)
+      i = 0
+      nodes_to_exclude = containing_site.root? ? containing_site.descendants.with_content_type('Site') : nil
+      while containing_site.subtree.exclude_subtrees_of(nodes_to_exclude).first(:conditions => [ "id <> ? AND (url_alias = ? OR custom_url_alias = ?)", (id || 0), temp_url_alias, temp_url_alias ]) || self.class.url_alias_reserved?(temp_url_alias)
         i += 1
         temp_url_alias = "#{generated_url_alias}-#{i}"
       end
@@ -185,7 +186,7 @@ module NodeExtensions::UrlAliasing
 
     temp_url_alias
   end
-  
+
   # Cleans a URL by stripping any whitespace characters, transliterating any
   # special characters, replacing illegal characters by hyphens and converting
   # the entire URL to downcase.
