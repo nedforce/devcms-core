@@ -11,6 +11,9 @@ Ext.onReady(function() {
     header: 'Titel',
     dataIndex: 'title'
   },{
+    header: 'Domein',
+    dataIndex: 'domain'
+  },{
     header: 'URL',
     dataIndex: 'url_alias'
   }]);
@@ -28,7 +31,7 @@ Ext.onReady(function() {
       record: 'node',
       id: 'id',
       totalRecords: 'total_count',
-    }, ['id', 'custom_url_suffix', 'title', 'url_alias'])
+    }, ['id', 'custom_url_suffix', 'domain', 'title', 'url_alias'])
   });
 
   var tbar = [{

@@ -6,6 +6,7 @@ xml.results do
         xml.id(node.id)
         xml.custom_url_suffix(node.custom_url_suffix)
         xml.title(node.title)
+        xml.domain(node.containing_site.content.domain)
         xml.url_alias(aliased_or_delegated_address(node, :skip_custom_alias => true))
       end
     end
