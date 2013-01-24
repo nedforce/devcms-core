@@ -98,8 +98,8 @@ module NodeExtensions::UrlAliasing
 
       # Exclude other sites if the site is the root node.
       if site.node.root?
-        nodes_to_exclude = site.node.descendants.with_content_type('Site')
-        site.node.subtree.where([ 'url_alias IN (:slugs) OR custom_url_alias IN (:slugs)', { :slugs => slugs }]).exclude_subtrees_of(nodes_to_exclude).reorder('url_alias DESC').first
+        nodes_to_exclude_for_root = site.node.children.with_content_type('Site')
+        site.node.subtree.where([ 'url_alias IN (:slugs) OR custom_url_alias IN (:slugs)', { :slugs => slugs }]).exclude_subtrees_of(nodes_to_exclude_for_root).reorder('url_alias DESC').first
       else
         site.node.subtree.where([ 'url_alias IN (:slugs) OR custom_url_alias IN (:slugs)', { :slugs => slugs }]).reorder('url_alias DESC').first
       end
@@ -177,7 +177,6 @@ module NodeExtensions::UrlAliasing
 
     unless is_root?
       i = 0
-      nodes_to_exclude = containing_site.root? ? containing_site.descendants.with_content_type('Site') : nil
       while containing_site.subtree.exclude_subtrees_of(nodes_to_exclude).first(:conditions => [ "id <> ? AND (url_alias = ? OR custom_url_alias = ?)", (id || 0), temp_url_alias, temp_url_alias ]) || self.class.url_alias_reserved?(temp_url_alias)
         i += 1
         temp_url_alias = "#{generated_url_alias}-#{i}"
@@ -212,18 +211,22 @@ module NodeExtensions::UrlAliasing
   
   def should_have_unique_url_alias_in_site
     if url_alias.present? && url_alias.size <= MAXIMUM_URL_ALIAS_LENGTH
-      errors.add(:url_alias, :taken) if containing_site.self_and_descendants.where(["url_alias = ? AND id != ?", url_alias, (id || 0)]).any? 
+      errors.add(:url_alias, :taken) if containing_site.self_and_descendants.exclude_subtrees_of(nodes_to_exclude).where(["url_alias = ? AND id != ?", url_alias, (id || 0)]).any?
     end
   end
 
   def should_have_unique_custom_url_alias_in_site
     if custom_url_alias.present? && custom_url_alias.size <= MAXIMUM_URL_ALIAS_LENGTH
-      errors.add(:custom_url_alias, :taken) if containing_site.self_and_descendants.where(["custom_url_alias = ? AND id != ?", custom_url_alias, (id || 0)]).any? 
+      errors.add(:custom_url_alias, :taken) if containing_site.self_and_descendants.exclude_subtrees_of(nodes_to_exclude).where(["custom_url_alias = ? AND id != ?", custom_url_alias, (id || 0)]).any?
     end
   end
 
   def clear_aliases
     self.class.update_all({ :url_alias => nil, :custom_url_alias => nil }, [ 'id IN (?)', self.subtree_ids ])
   end
-    
+
+  def nodes_to_exclude
+    containing_site.root? ? containing_site.children.with_content_type('Site') : nil
+  end
+
 end
