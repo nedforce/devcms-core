@@ -25,7 +25,7 @@ class Admin::UsersController < Admin::AdminController
       @users      = User.all(:include => [ :newsletter_archives, :interests ], :conditions => filter_conditions, :order => "#{@sort_field} #{@sort_direction}", :page => { :size => @page_limit, :current => @current_page })
       @user_count = @users.size
     else
-      @users      = user_class.all(:include => [ :newsletter_archives, :interests ], :conditions => filter_conditions, :order => "login #{@sort_direction}")
+      @users      = User.all(:include => [ :newsletter_archives, :interests ], :conditions => filter_conditions, :order => "login #{@sort_direction}")
       @users      = @users.sort_by { |user| user.newsletter_archives.sort_by { |archive| archive.title.upcase }.map{ |archive| archive.title }.join(', ') }
       @users      = @users.reverse if @sort_direction == 'DESC'
       @user_count = @users.size
@@ -65,8 +65,8 @@ class Admin::UsersController < Admin::AdminController
     end
   end
 
-  # * PUT /admin/users/1
-  # * PUT /admin/users/1.xml
+  # * PUT /admin/users/:id
+  # * PUT /admin/users/:id.xml
   def update
     params[:user][:newsletter_archive_ids] ||= []
     params[:user][:interest_ids] ||= []
@@ -87,8 +87,8 @@ class Admin::UsersController < Admin::AdminController
     end
   end
 
-  # * DELETE /admin/users/1
-  # * DELETE /admin/users/1.json
+  # * DELETE /admin/users/:id
+  # * DELETE /admin/users/:id.json
   #
   # This method ensures that the current user cannot be deleted.
   def destroy
@@ -110,7 +110,7 @@ class Admin::UsersController < Admin::AdminController
     end
   end
 
-  # * GET /admin/users/1/accessible_newsletter_archives.json
+  # * GET /admin/users/:id/accessible_newsletter_archives.json
   #
   def accessible_newsletter_archives
     respond_to do |format|
