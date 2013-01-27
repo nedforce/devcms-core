@@ -16,7 +16,7 @@
 
 - form_tag "/contact_forms/#{@contact_form.id}/send_message", :method => :post, :multipart => @contact_form_fields.any?{|field| field.field_type == 'file' } do
   %table.contact_form_field
-    %caption= "Contact formulier velden"
+    %caption Contactformulier velden
     - @contact_form_fields.each do |contact_form_field|
       %tr
         %td= label_tag "contact_form_field_#{contact_form_field.id}", contact_form_field.label
@@ -25,7 +25,7 @@
           - value = match ? match[2] : contact_form_field.default_value
           - if contact_form_field.field_type == 'textarea'
             = text_area_tag "contact_form_field_#{contact_form_field.id}", value, :name => "contact_form_field[#{contact_form_field.id}]", :rows => 7, :cols => 42, :class => 'contact_field'
-          - elsif contact_form_field.field_type == 'textfield' || contact_form_field.field_type == 'email_address'
+          - elsif [ 'textfield', 'email_address' ].include?(contact_form_field.field_type)
             = text_field_tag "contact_form_field_#{contact_form_field.id}", value, :name => "contact_form_field[#{contact_form_field.id}]", :class => 'contact_field'
           - elsif contact_form_field.field_type == 'dropdown'
             = select_tag "contact_form_field_#{contact_form_field.id}", options_for_select(contact_form_field.default_value.split(','), match ? match[2] : ''), :name => "contact_form_field[#{contact_form_field.id}]", :class => 'contact_field'
