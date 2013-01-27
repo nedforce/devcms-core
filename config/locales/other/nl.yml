@@ -418,6 +418,7 @@ nl:
     send_method_database: Database
     sent_successfully: Uw bericht is succesvol verzonden.
     should_enter_obligatory_fields: U heeft niet alle verplichte velden ingevuld!
+    should_enter_valid_email_address: U dient een geldig e-mailadres in te vullen!
     successful: Succesvol
     textarea: Tekstgebied
     textfield: Tekstveld

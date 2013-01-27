@@ -25,8 +25,12 @@ class ContactFormsController < ApplicationController
 
     get_entered_fields
     respond_to do |format|
-      if entered_all_obligatory_fields?(@contact_form_field)
+      @obligatory_error    = true if !entered_all_obligatory_fields?(@contact_form_field)
+      @email_address_error = true if !valid_email_address_fields?(@contact_form_field)
 
+      if @obligatory_error || @email_address_error
+        format.html { render :action => 'show' }
+      else
         # Check for send method
         if @contact_form.send_method == ContactForm::SEND_METHOD_DATABASE
           # Store response to database
@@ -51,9 +55,6 @@ class ContactFormsController < ApplicationController
           ContactFormMailer.deliver_message(@contact_form, @entered_fields)
         end
         format.html # send_message.html.erb
-      else
-        @obligatory_error = true
-        format.html { render :action => 'show' }
       end
     end
   end
@@ -102,6 +103,20 @@ class ContactFormsController < ApplicationController
     @contact_form.obligatory_field_ids.each do |field_id|
       if array.blank? || array["#{field_id}"].blank?
         return false
+      end
+    end
+    return true
+  end
+
+  # Check whether all email_address fields are actually an e-mail address.
+  # We allow empty fields, because it is the responsibility of the obligatory setting.
+  # Returns +true+ if the e-mail addresses are valid, +false+ otherwise.
+  def valid_email_address_fields?(array)
+    if array.present?
+      @contact_form.email_address_field_ids.each do |field_id|
+        if array["#{field_id}"].present? && array["#{field_id}"] !~ ValidatesEmailFormatOf::Regex
+          return false
+        end
       end
     end
     return true

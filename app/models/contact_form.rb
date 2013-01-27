@@ -21,14 +21,14 @@
 #
 class ContactForm < ActiveRecord::Base
   # Constants for different sendmethods. Used in the send_method column in the table
-  SEND_METHOD_MAIL = 0;
-  SEND_METHOD_DATABASE = 1;
-  
+  SEND_METHOD_MAIL     = 0
+  SEND_METHOD_DATABASE = 1
+
   acts_as_content_node
 
   # A +ContactForm+ has many +ContactFormField+ objects.
   has_many :contact_form_fields, :dependent => :destroy
-  has_many :responses, :dependent => :destroy
+  has_many :responses,           :dependent => :destroy
 
   # Ensure the +ContactFormFields+ are valid, build on creation of the +ContactForm+,
   # and updated and deleted when necessary.
@@ -47,18 +47,16 @@ class ContactForm < ActiveRecord::Base
 
   # Virtual attribute to keep track of +ContactFormField+ objects that need to be deleted.
   attr_accessor :deleted_contact_form_fields
-  
+
   after_paranoid_delete :remove_associated_content
 
   # Returns an array with the ids of the +ContactFormField+ objects that are obligatory.
   def obligatory_field_ids
-    array = []
-    contact_form_fields.each do |field|
-      if field.obligatory?
-        array << field.id
-      end
-    end
-    array
+    contact_form_fields.obligatory.map{ |field| field.id }
+  end
+
+  def email_address_field_ids
+    contact_form_fields.has_field_type('email_address').map { |field| field.id }
   end
 
   protected
@@ -125,5 +123,5 @@ protected
     self.contact_form_fields.destroy_all
     self.responses.destroy_all
   end
-  
+
 end
