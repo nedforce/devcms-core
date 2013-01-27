@@ -15,7 +15,7 @@ class Admin::ContactFormsController < Admin::AdminController
   # * GET /admin/contact_forms/:id
   # * GET /admin/contact_forms/:id.xml
   def show
-    @actions << { :url => { :action => :index, :controller => :responses, :contact_form_id => @contact_form.id }, :text => t('contact_forms.responses'), :method => :get }
+    @actions << { :url => { :action => :index,      :controller => :responses, :contact_form_id => @contact_form.id }, :text => t('contact_forms.responses'),  :method => :get }
     @actions << { :url => { :action => :upload_csv, :controller => :responses, :contact_form_id => @contact_form.id }, :text => t('contact_forms.import_csv'), :method => :get }
     respond_to do |format|
       format.html { render :partial => 'show', :layout => 'admin/admin_show' }
@@ -90,8 +90,9 @@ class Admin::ContactFormsController < Admin::AdminController
       end
     end
     used_fields
-  end 
-   # Check whether all obligatory fields are entered.
+  end
+
+  # Check whether all obligatory fields are entered.
   # Returns +true+ if this is the case, +false+ otherwise.
   def entered_all_obligatory_fields?(array)
     @contact_form.obligatory_field_ids.each do |field_id|
@@ -105,6 +106,6 @@ class Admin::ContactFormsController < Admin::AdminController
   # Finds the +ContactForm+ object corresponding to the passed +id+ parameter.
   def find_contact_form
     @contact_form = ContactForm.find(params[:id], :include => :contact_form_fields).current_version
-    @contact_form_fields = @contact_form.contact_form_fields
+    @contact_form_fields = @contact_form.contact_form_fields.all(:order => :position)
   end
 end
