@@ -9,6 +9,8 @@ module NodeExtensions::TreeDelegation
     validate :parent_should_be_valid, :unless => lambda {|n| Node.count.zero? || (Node.root && Node.root == n ) }
     validate :parent_should_allow_type
 
+    scope :broken_list_ancestries, select(:ancestry).group(:ancestry).having('max(nodes.position)!=(SELECT COUNT(*) FROM nodes n2 WHERE n2.ancestry=nodes.ancestry AND deleted_at IS NULL) OR sum(nodes.position)!=(SELECT SUM(DISTINCT position) FROM nodes n3 WHERE n3.ancestry=nodes.ancestry AND deleted_at IS NULL)').reorder(:ancestry)
+
     def will_leave_list?
       in_list? && parent_id_changed?
     end
@@ -204,7 +206,7 @@ module NodeExtensions::TreeDelegation
         ordered_ids = ids.flatten.uniq
         ordered_ids.each do |child_id|
           position = ordered_ids.index(child_id) + 1
-          children.find(child_id).insert_at!(position)
+          self.class.update_all({:position => position}, {:id => child_id})
         end
       end
     end

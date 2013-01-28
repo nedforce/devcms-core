@@ -9,6 +9,11 @@ class NodeSortingTest < ActiveSupport::TestCase
     @economie_section_node = nodes(:economie_section_node)
   end
 
+  def test_root_children_should_be_sorted_after_setup
+    assert Node.root.children.broken_list_ancestries.empty?
+    assert_equal Node.root.children.collect(&:position), (1..Node.root.children.count).to_a
+  end
+
   def test_should_sort_children
     node = @root_node
     node.sort_children
