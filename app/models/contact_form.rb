@@ -53,13 +53,7 @@ class ContactForm < ActiveRecord::Base
 
   # Returns an array with the ids of the +ContactFormField+ objects that are obligatory.
   def obligatory_field_ids
-    array = []
-    contact_form_fields.each do |field|
-      if field.obligatory?
-        array << field.id
-      end
-    end
-    array
+    contact_form_fields.obligatory.map{ |field| field.id }
   end
 
   protected

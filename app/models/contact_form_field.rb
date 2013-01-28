@@ -39,6 +39,9 @@ class ContactFormField < ActiveRecord::Base
   validates_inclusion_of    :field_type, :in => ContactFormField::FIELD_TYPES
   validates_uniqueness_of   :position, :scope => :contact_form_id, :message => I18n.t('activerecord.errors.models.contact_form_field.attributes.position.must_be_unique')
 
+  scope :obligatory, where(:obligatory => true)
+  scope :has_field_type, lambda { |field_type| { :conditions => { :field_type => field_type }} }
+
   def self.human_field_type_for(field_type)
     I18n.t(field_type, :scope => 'contact_form_fields')
   end
