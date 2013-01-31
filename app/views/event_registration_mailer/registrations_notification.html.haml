@@ -1,11 +1,11 @@
-%div{:style => "font-family: arial, sans-serif; font-size: 12px"}
+%div{ :style => "font-family: Arial, Helvetica, sans-serif; font-size: 12px;" }
   %p Beste #{@user.full_name},
   %p U heeft een evenement "#{@event.title}" gemaakt op #{@host}. De gastenlijst is op dit moment (#{@event.event_registrations.sum(:people_count)} personen):
   %ul
     - @event.event_registrations.each do |event_registration|
       %li #{event_registration.user.full_name}, #{pluralize event_registration.people_count, 'persoon', 'personen'}
   %p De registratie is op de website is nu gesloten.
-  %p 
+  %p
     Met vriendelijke groet,
     %br
     %br
