@@ -339,6 +339,7 @@ class Node < ActiveRecord::Base
       :customURLSuffix                 => self.custom_url_suffix.present? ? self.custom_url_suffix : nil,
       :customURLAlias                  => self.custom_url_alias.present? ? self.custom_url_alias : nil,
       :URLAlias                        => self.url_alias.present? ? self.url_alias : nil,
+      :host                            => "http://#{self.containing_site.content.domain}/",
       :contentNodeId                   => self.content_id,
       :siteNodeId                      => self.containing_site.id,
       :topLevelPrivateAncestorId       => self.top_level_private_ancestor.try(:id),

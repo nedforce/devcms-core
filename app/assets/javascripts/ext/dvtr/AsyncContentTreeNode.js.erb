@@ -38,6 +38,7 @@ Ext.dvtr.AsyncContentTreeNode = function (config) {
         this.customURLAlias                  = config.customURLAlias;
         this.customURLSuffix                 = config.customURLSuffix;
         this.URLAlias                        = config.URLAlias;
+        this.host                            = config.host;
         this.noChildNodes                    = config.noChildNodes;
         this.numberChildren                  = config.numberChildren;
         this.isHidden                        = config.isHidden;
@@ -522,7 +523,7 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
     },
 
     onSetUrlAlias: function (item) {
-        var promptText = I18n.t('url_alias_prompt_1', 'nodes') + ' ' + I18n.t('url_alias_host', 'nodes');
+        var promptText = I18n.t('url_alias_prompt_1', 'nodes') + ' ' + this.host;
 
         if (this.parentURLAlias) {
             promptText += this.parentURLAlias + '/<i>test</i>.';
@@ -530,17 +531,17 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
             promptText += '<i>test</i>.';
         }
 
-        promptText += '<br/><br/>' + I18n.t('url_alias_prompt_2', 'nodes') + ' (' + I18n.t('url_alias_host', 'nodes') + ') ' + I18n.t('url_alias_prompt_3', 'nodes');
-        promptText += ' ' + I18n.t('url_alias_host', 'nodes') + '<i>test</i>.' + '<br/>';
+        promptText += '<br/><br/>' + I18n.t('url_alias_prompt_2', 'nodes') + ' (' + this.host + ') ' + I18n.t('url_alias_prompt_3', 'nodes');
+        promptText += ' ' + this.host + '<i>test</i>.' + '<br/>';
 
-        promptText += '<br/>' + I18n.t('url_alias_prompt_current_1', 'nodes') + ' <i>' + I18n.t('url_alias_host', 'nodes') + this.URLAlias + '</i>.<br/>';
+        promptText += '<br/>' + I18n.t('url_alias_prompt_current_1', 'nodes') + ' <i>' + this.host + this.URLAlias + '</i>.<br/>';
 
         if (this.customURLSuffix) {
             promptText += '<br/>' + I18n.t('url_alias_prompt_current_2', 'nodes') + ' <i>' + this.customURLSuffix + '</i>.<br/>';
         }
 
         if (this.customURLAlias) {
-            promptText += '<br/>' + I18n.t('url_alias_prompt_current_3', 'nodes') + ' <i>' + I18n.t('url_alias_host', 'nodes') + this.customURLAlias + '</i>.<br/>';
+            promptText += '<br/>' + I18n.t('url_alias_prompt_current_3', 'nodes') + ' <i>' + this.host + this.customURLAlias + '</i>.<br/>';
         }
 
         promptText += '<br/><br/>' + I18n.t('custom_url_suffix', 'nodes') + ':';
