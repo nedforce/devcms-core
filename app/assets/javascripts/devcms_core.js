@@ -11,8 +11,6 @@
 //= require imports/devcms-core
 //= require imports/fontresize
 //= require imports/i18n_object
-//= require imports/ie8_text_content
-//= require imports/ie9_create_contextual_fragment
 //= require imports/lightbox
 //= require imports/opacity
 //= require imports/prototype_custom

@@ -11,6 +11,13 @@
 
         <%= stylesheet_link_tag 'admin' %>
 
+        <!--[if gte IE 8]>
+            <%= javascript_include_tag 'imports/ie8_text_content.js' %>
+        <![endif]-->
+        <!--[if gte IE 9]>
+            <%= javascript_include_tag 'imports/ie9_create_contextual_fragment' -%>
+        <![endif]-->
+
         <%= javascript_include_tag 'devcms_core_admin', '/libraries/tiny_mce/reset_tiny_mce.js', '/libraries/tiny_mce/tiny_mce.js' %>        
               
         <%= calendar_date_select_includes :locale => :nl %>
