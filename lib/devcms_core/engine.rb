@@ -56,7 +56,7 @@ module DevcmsCore
         'search.js',
         'treemenu.js',
         'imports/ie8_text_content.js',
-        'imports/ie9_create_contextual_fragment'
+        'imports/ie9_create_contextual_fragment.js'
       ]
     end
 
