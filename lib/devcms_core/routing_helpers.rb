@@ -20,7 +20,7 @@ module DevcmsCore
       address ||= "/#{node.url_alias}"
 
       containing_node = node.containing_site
-      if containing_node != Node.is_root?
+      if !containing_node.root?
         type = :url
         host = options.delete(:host) || containing_node.content.domain
       end
