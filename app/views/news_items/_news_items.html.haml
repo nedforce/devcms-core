@@ -22,10 +22,9 @@
 
           .content.clearfix
             - if (image_node = news_item.node.children.accessible.with_content_type('Image').first)
-              = link_to_node(                                                                                                                                                  |
-                  image_tag(content_node_path(image_node, :action => :thumbnail), :alt => image_node.content.alt.to_s, :host => image_node.containing_site.content.domain) + |
-                  content_tag('div', image_node.content.description.to_s, :class => 'hidden'),                                                                                 |
-                  image_node, { :action => :full }, { :rel => "lightbox[#{news_item.node.id}]", :title => 'Vergroot deze afbeelding', :class => 'right' })                     |
+              = link_to_node(                                                                                                                                                 |
+                  image_tag(content_node_path(image_node, :action => :thumbnail), :alt => image_node.content.alt.to_s) + content_tag('div', image_node.content.description.to_s, :class => 'hidden'), |
+                  image_node, { :action => :full }, { :rel => "lightbox[#{news_item.node.id}]", :title => 'Vergroot deze afbeelding', :class => 'right' })                    |
             - if news_item.preamble.present?
               = simple_format(h(news_item.preamble))
 

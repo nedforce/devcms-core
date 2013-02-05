@@ -11,16 +11,22 @@ module DevcmsCore
     def link_to_content_node(name, content_node, options = {}, html_options = nil)
       link_to_node(name, content_node.node, options, html_options)
     end
-  
+
     # return aliased or delegated path to node
     def aliased_or_delegated_address(node, options = {})
       type = options.delete(:type) || :path
-      
+
       address   = "/#{node.custom_url_alias.present? ? node.custom_url_alias : node.url_alias}" unless options.delete(:skip_custom_alias)
       address ||= "/#{node.url_alias}"
 
-      unless type == :path
-        host = options.delete(:host)
+      containing_node = node.containing_site
+      if containing_node != Node.is_root?
+        type = :url
+        host = options.delete(:host) || containing_node.content.domain
+      end
+
+      if type != :path
+        host ||= options.delete(:host)
         if defined?(request) && request.present?
           address = "#{request.protocol}#{host || request.host_with_port}#{address}" 
         else
