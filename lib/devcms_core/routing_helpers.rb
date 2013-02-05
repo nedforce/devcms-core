@@ -20,11 +20,10 @@ module DevcmsCore
       address ||= "/#{node.url_alias}"
 
       containing_node = node.containing_site
-      type = :url if current_site.node != containing_node
+      type = :url if current_site != containing_node
 
       if type != :path
         host = options.delete(:host) || containing_node.content.domain
-
         if defined?(request) && request.present?
           address = "#{request.protocol}#{host || request.host_with_port}#{address}" 
         else
