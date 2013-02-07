@@ -1,4 +1,4 @@
-<%= FasterCSV.generate(:headers => :first_rowm :col_sep => ';', :force_quotes => true) do |csv|
+<%= FasterCSV.generate(:headers => :first_row, :col_sep => ';', :force_quotes => true) do |csv|
   header_fields = []
   @contact_form.contact_form_fields.order("position asc").each do |field|
     header_fields << field.label
