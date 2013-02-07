@@ -10,6 +10,7 @@ module NodeExtensions::TreeDelegation
     validate :parent_should_allow_type
 
     scope :broken_list_ancestries, select(:ancestry).group(:ancestry).having('max(nodes.position)!=(SELECT COUNT(*) FROM nodes n2 WHERE n2.ancestry=nodes.ancestry AND deleted_at IS NULL) OR sum(nodes.position)!=(SELECT SUM(DISTINCT position) FROM nodes n3 WHERE n3.ancestry=nodes.ancestry AND deleted_at IS NULL)').reorder(:ancestry)
+    scope :broken_position, select(:id).where('nodes.deleted_at IS NULL AND nodes.position IS NULL').reorder(:id)
 
     def will_leave_list?
       in_list? && parent_id_changed?
