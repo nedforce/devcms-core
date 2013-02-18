@@ -176,6 +176,7 @@ class Node < ActiveRecord::Base
   # Remove from list on paranoid delete
   before_paranoid_delete :remove_from_list
   after_paranoid_restore :add_to_list
+  after_paranoid_restore :add_descendants_to_list
 
   # Prevents the root +Node+ from being marked as deleted.
   before_paranoid_delete :prevent_root_destruction

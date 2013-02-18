@@ -55,6 +55,7 @@ module DevcmsCore
         'admin/prototype16.js',
         'search.js',
         'treemenu.js',
+        'tiny_mce/tiny_mce.js',
         'imports/ie8_text_content.js',
         'imports/ie9_create_contextual_fragment.js'
       ]

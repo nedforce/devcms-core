@@ -160,6 +160,7 @@ module NodeExtensions::TreeDelegation
 
   # Move the node to the left of another node (you can pass id only)
   def move_to_left_of(node)
+    move_to_bottom
     move_to node, :left
   end
 
@@ -188,9 +189,7 @@ module NodeExtensions::TreeDelegation
         when :left
           insert_at!(target.position)
         when :right
-          insert_at!(target.position + 1)
-        # when :child
-          #move_to_bottom!
+          insert_at!(target.position + 1 )
         end
       else
         raise ActiveRecord::ActiveRecordError, "Move failed: #{self.errors.full_messages.pretty_inspect}"
@@ -254,6 +253,12 @@ module NodeExtensions::TreeDelegation
   end
 
   protected
+
+  def add_descendants_to_list
+    descendants.where("position IS NULL").each do |descendant|
+      descendant.add_to_list
+    end
+  end
 
   def calculate_closure_for(nodes)
     children, rest = nodes.partition { |n| n.ancestry == self.child_ancestry }

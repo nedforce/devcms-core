@@ -106,7 +106,7 @@ class Admin::NodesController < Admin::AdminController
     respond_to do |format|
       return access_denied unless current_user.has_role_on?(@node.content_type_configuration[:allowed_roles_for_destroy], @node)
 
-      @node.paranoid_delete!
+      @node.content_type == 'ContentCopy' ? @node.destroy! : @node.paranoid_delete!
       
       format.xml  { head :ok }
       format.json { render :json => { :notice => I18n.t('nodes.succesfully_destroyed')}.to_json, :status => :ok }
@@ -117,7 +117,7 @@ class Admin::NodesController < Admin::AdminController
     respond_to do |format|
       parent_node = Node.find(params[:parent_id])
       return access_denied unless current_user.has_role_on?("admin", parent_node)
-      
+      #                                                                                  paranoid_delete
       parent_node.content.destroy_items_for_year_or_month(params[:year], params[:month], true)
               
       format.xml  { head :ok }
@@ -175,16 +175,15 @@ class Admin::NodesController < Admin::AdminController
       
       if next_sibling.present? && (parent.blank? || parent == next_sibling.parent)
         @node.move_to_left_of next_sibling
+        render :text => I18n.t('nodes.succesfully_moved'), :status => :ok
       elsif parent.present?
         @node.move_to_child_of parent
+        render :text => I18n.t('nodes.succesfully_moved'), :status => :ok
       else
         render :text => I18n.t('nodes.no_parent_or_sibling'), :status => :precondition_failed
-        return false
       end
-      render :text => I18n.t('nodes.succesfully_moved'), :status => :ok
     rescue ActiveRecord::ActiveRecordError => e
       render :text => e.message, :status => :unprocessable_entity
-      return false
     end
   end
 

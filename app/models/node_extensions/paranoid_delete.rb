@@ -70,25 +70,25 @@ module NodeExtensions::ParanoidDelete
   end
     
   def paranoid_delete!
-    return true if deleted_at.present?
-    
-    time = Time.now
-    nodes_to_paranoid_delete_ids = self.descendant_ids
-    
-    self.class.transaction do
-      return false unless run_paranoid_callbacks(:before_paranoid_delete, nodes_to_paranoid_delete_ids)
+    if deleted_at.blank?
+      
+      time = Time.now
+      nodes_to_paranoid_delete_ids = self.descendant_ids
+      
+      self.class.transaction do
+        return false unless run_paranoid_callbacks(:before_paranoid_delete, nodes_to_paranoid_delete_ids)
 
-      # Set updated_at, deleted_at of the in-memory node for the paranoid destroy callbacks
-      self.updated_at = time      
-      self.deleted_at = time 
-      
-      # Update with an SQL query
-      self.class.update_all({ :updated_at => updated_at, :deleted_at => deleted_at }, [ 'id IN (?)', nodes_to_paranoid_delete_ids + [ self.id ] ])  
-      
-      return false unless run_paranoid_callbacks(:after_paranoid_delete, nodes_to_paranoid_delete_ids)
+        # Set updated_at, deleted_at of the in-memory node for the paranoid destroy callbacks
+        self.updated_at = time      
+        self.deleted_at = time 
+        
+        # Update with an SQL query
+        self.class.update_all({ :updated_at => updated_at, :deleted_at => deleted_at }, [ 'id IN (?)', nodes_to_paranoid_delete_ids + [ self.id ] ])  
+        
+        return false unless run_paranoid_callbacks(:after_paranoid_delete, nodes_to_paranoid_delete_ids)
+      end
+      true
     end
-    
-    true
   end
   
   # Restores a paranoid deleted node and all its descendants, and ensures the appropriate callbacks are executed.

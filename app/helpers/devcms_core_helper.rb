@@ -198,12 +198,12 @@ module DevcmsCoreHelper
       image_tag    = image_tag(image_url, :alt => header_title, :title => header_title)
     elsif (big_header)
       header_title = random_image.title
-      image_url    = big_header_image_path(random_image, :format => :jpg)
-      image_tag    = image_tag big_header_image_path(random_image, :format => :jpg), :alt => random_image.alt, :title => header_title
+      image_url    = content_node_path(random_image, :action => :big_header,  :format => :jpg)
+      image_tag    = image_tag content_node_path(random_image, :action => :big_header,  :format => :jpg), :alt => random_image.alt, :title => header_title
     else
       header_title = random_image.title
-      image_url    = header_image_path(random_image, :format => :jpg)
-      image_tag    = image_tag header_image_path(random_image, :format => :jpg), :alt => random_image.alt, :title => header_title
+      image_url    = content_node_path(random_image, :action => :header,  :format => :jpg)
+      image_tag    = image_tag content_node_path(random_image, :action => :header,  :format => :jpg), :alt => random_image.alt, :title => header_title
     end
 
     return { :title => header_title, :image_tag => image_tag, :url => image_url }
@@ -225,7 +225,7 @@ module DevcmsCoreHelper
             }
           else
             {
-              :url   => big_header ? big_header_image_path(header_image, :format => :jpg) : header_image_path(header_image, :format => :jpg),
+              :url   => big_header ? content_node_path(header_image, :action => :big_header,  :format => :jpg) : content_node_path(header_image, :action => :header,  :format => :jpg),
               :id    => "ss-image-#{header_image.id}",
               :alt   => header_image.alt.to_s,
               :title => header_image.title
