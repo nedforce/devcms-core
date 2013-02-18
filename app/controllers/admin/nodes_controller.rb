@@ -181,10 +181,11 @@ class Admin::NodesController < Admin::AdminController
         render :text => I18n.t('nodes.no_parent_or_sibling'), :status => :precondition_failed
         return false
       end
+      render :text => I18n.t('nodes.succesfully_moved'), :status => :ok
     rescue ActiveRecord::ActiveRecordError => e
       render :text => e.message, :status => :unprocessable_entity
+      return false
     end
-    render :text => I18n.t('nodes.succesfully_moved'), :status => :ok
   end
 
   # Used for approving content of a given node
