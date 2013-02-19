@@ -29,9 +29,8 @@ Gem::Specification.new do |s|
   s.add_dependency  'whenever', '>= 0.4'
   s.add_dependency  'spreadsheet', '~> 0.7.3'
   s.add_dependency  'roo', '~> 1.10.1'
-  s.add_dependency  'sdsykes-ferret' # [Rails3] gem 'ferret' seems to be broken in ruby 1.9
   s.add_dependency  'rmagick', '>= 2.13.1'
-  s.add_dependency  'acts_as_ferret'
+  s.add_dependency  'acts_as_ferret', '~> 0.5.4'
   s.add_dependency  'calendar_date_select'
   s.add_dependency  'exception_notification'
   s.add_dependency  'kaminari'
