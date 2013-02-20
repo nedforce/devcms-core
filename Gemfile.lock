@@ -16,7 +16,7 @@ PATH
   specs:
     devcms_core (0.0.1)
       acts-as-taggable-on (~> 2.2.2)
-      acts_as_ferret
+      acts_as_ferret (~> 0.5.4)
       addressable (~> 2.1)
       ancestry (~> 1.3.0)
       aspgems-foreign_key_migrations (~> 2.0.0.beta1)
@@ -43,7 +43,6 @@ PATH
       roo (~> 1.10.1)
       sanitize
       sass-rails
-      sdsykes-ferret
       settler (~> 1.2.3)
       sortifiable
       spreadsheet (~> 0.7.3)
@@ -205,8 +204,6 @@ GEM
       railties (~> 3.2.0)
       sass (>= 3.1.10)
       tilt (~> 1.3)
-    sdsykes-ferret (0.11.6.19)
-      rake (> 0.0.0)
     settler (1.2.4)
       rails
     simple-rss (1.2.3)

@@ -194,6 +194,7 @@ module NodeExtensions::TreeDelegation
       else
         raise ActiveRecord::ActiveRecordError, "Move failed: #{self.errors.full_messages.pretty_inspect}"
       end
+      touch
     end
   end
 
