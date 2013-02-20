@@ -194,7 +194,7 @@ module NodeExtensions::TreeDelegation
       else
         raise ActiveRecord::ActiveRecordError, "Move failed: #{self.errors.full_messages.pretty_inspect}"
       end
-      touch
+      update_attributes :updated_at => Time.now
     end
   end
 
