@@ -652,7 +652,7 @@ protected
       Section.update_all({ :frontpage_node_id => nil }, { :frontpage_node_id => nodes_to_be_paranoid_deleted_ids })
 
       # Delete any node categories, role assignments, synonyms or abbreviations that are associated with any of the nodes in the subtree
-      [ NodeCategory, RoleAssignment, Synonym, Abbreviation ].each do |klass|
+      [ NodeCategory, RoleAssignment, Synonym, Abbreviation, CombinedCalendarNode ].each do |klass|
         klass.delete_all(:node_id => nodes_to_be_paranoid_deleted_ids)
       end
     
