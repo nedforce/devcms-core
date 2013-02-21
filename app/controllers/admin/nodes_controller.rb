@@ -106,7 +106,7 @@ class Admin::NodesController < Admin::AdminController
     respond_to do |format|
       return access_denied unless current_user.has_role_on?(@node.content_type_configuration[:allowed_roles_for_destroy], @node)
 
-      @node.content_type == 'ContentCopy' ? @node.destroy! : @node.paranoid_delete!
+      @node.content_type == 'ContentCopy' ? @node.destroy : @node.paranoid_delete!
       
       format.xml  { head :ok }
       format.json { render :json => { :notice => I18n.t('nodes.succesfully_destroyed')}.to_json, :status => :ok }

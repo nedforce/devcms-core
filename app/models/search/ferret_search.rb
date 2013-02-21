@@ -84,13 +84,6 @@ private
     elsif to
       query << " AND (publication_start_date_to_index:[* #{to}] OR updated_at_to_index:[* #{to}])"
     end
-    
-    # if user.is_a?(User)
-    #   user.role_assignments.each do |ra|
-    #     query << " OR ancestry_to_index:XX#{ra.node.child_ancestry}X*"
-    #   end
-    # end
-    # query << ")"
 
     query
   end
