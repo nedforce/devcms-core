@@ -4,7 +4,6 @@ require 'association_preload_fix'
 
 require 'has_one_association_fix'
 require 'test_process_fix'
-require 'sweeper_fix'
 
 require 'date_extensions'
 require 'array_extensions'
