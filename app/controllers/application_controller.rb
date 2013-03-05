@@ -190,7 +190,7 @@ protected
   
   # Used to find the operated node (if present and accessible)
   def find_node
-    @node = current_site.self_and_descendants.accessible.include_content.find(params[:node_id]) if params[:node_id]
+    @node = current_site.subtree.accessible.include_content.find(params[:node_id]) if params[:node_id]
   end
   
   # Used to find the context node (for authorization purposes)
@@ -210,7 +210,7 @@ protected
         # Nested controller access
         if parent_resource_type
           name = parent_resource_type.name
-          node = current_site.self_and_descendants.accessible.with_content_type(name).include_content.first(:conditions => { :content_id => params["#{name.underscore}_id"] })
+          node = current_site.subtree.accessible.with_content_type(name).include_content.first(:conditions => { :content_id => params["#{name.underscore}_id"] })
           @context_node = node.self_and_ancestors.sections.last if node
         else
           @context_node = current_site

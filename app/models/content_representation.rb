@@ -79,7 +79,7 @@ protected
 
   # Checkes whether +content+ is in the same site as the content box itself
   def content_should_be_in_same_site
-    errors.add(:content, :should_be_in_same_site) if self.content && self.parent && !self.parent.containing_site.self_and_descendants.exists?(:id => self.content_id)
+    errors.add(:content, :should_be_in_same_site) if self.content && self.parent && !self.parent.containing_site.subtree.exists?(:id => self.content_id)
   end
 
   # Checks whether +content+ is allowed as content box content (as indicated by +available_content_representations?+)

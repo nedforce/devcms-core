@@ -199,7 +199,7 @@ module Acts
     
       # Returns the last update date
       def last_updated_at
-        self.node.self_and_descendants.accessible.maximum('nodes.updated_at')
+        self.node.subtree.accessible.maximum('nodes.updated_at')
       end
     
       def touch!

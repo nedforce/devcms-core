@@ -24,7 +24,7 @@ class LinksBox < ActiveRecord::Base
   
   # Returns the last update date
   def last_updated_at
-    ([self.node.self_and_descendants.accessible.maximum('nodes.updated_at')] + self.node.children.with_content_type("InternalLink").collect {|link_node| link_node.content.linked_node.updated_at }).compact.max
+    ([self.node.subtree.accessible.maximum('nodes.updated_at')] + self.node.children.with_content_type("InternalLink").collect {|link_node| link_node.content.linked_node.updated_at }).compact.max
   end
   
   # Returns the description as the token for indexing.

@@ -463,15 +463,15 @@ class Node < ActiveRecord::Base
       # Exclude private sections
       nodes_to_exclude += self.descendants.sections.private
         
-      self.self_and_descendants.accessible.exclude_subtrees_of(nodes_to_exclude).with_content_type(%w( Page Section NewsItem )).include_content.all({ :order => 'updated_at DESC' }.merge(conditions))
+      self.subtree.accessible.exclude_subtrees_of(nodes_to_exclude).with_content_type(%w( Page Section NewsItem )).include_content.all({ :order => 'updated_at DESC' }.merge(conditions))
     elsif on == :self
-      self.self_and_descendants(:to_depth => 0).accessible.public.exclude_content_types('Site').include_content.all({ :order => 'updated_at DESC' }.merge(conditions))
+      self.subtree(:to_depth => 0).accessible.public.exclude_content_types('Site').include_content.all({ :order => 'updated_at DESC' }.merge(conditions))
     end
   end
 
   def reindex_self_and_children
     if self.respond_to?(:update_index)
-      self.self_and_descendants.each do |node|
+      self.subtree.each do |node|
         node.update_search_index
       end
     end

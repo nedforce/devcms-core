@@ -82,7 +82,7 @@ class NodeVisibilityAndAccessibilityFunctionalityTest < ActiveSupport::TestCase
     
     assert @editor_section_node.set_visibility!(false)
     
-    @editor_section_node.self_and_descendants do |node|
+    @editor_section_node.subtree do |node|
       assert node.hidden?
     end
   end
@@ -96,7 +96,7 @@ class NodeVisibilityAndAccessibilityFunctionalityTest < ActiveSupport::TestCase
     
     assert @editor_section_node.set_visibility!(true)
     
-    @editor_section_node.self_and_descendants do |node|
+    @editor_section_node.subtree do |node|
       assert !node.hidden?
     end
   end

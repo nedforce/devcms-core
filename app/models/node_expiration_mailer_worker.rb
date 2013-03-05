@@ -16,7 +16,7 @@ class NodeExpirationMailerWorker
     def notify_final_editors
       logger.info "Notifying responsible final editors of expired content..."
       PrivilegedUser.final_editors.each do |user|
-        nodes = user.assigned_nodes.collect { |node| node.self_and_descendants.expired(1.week.ago) }.flatten.compact
+        nodes = user.assigned_nodes.collect { |node| node.subtree.expired(1.week.ago) }.flatten.compact
         logger.debug "Notifying #{user.login} of #{nodes.size} expired nodes."
         send_final_editor_notification(user, nodes) if nodes.present?
       end
