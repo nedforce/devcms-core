@@ -49,13 +49,12 @@ class RewriteTest < ActionController::IntegrationTest
     assert response.body.include?(@node.content.title)
   end     
 
-  def test_should_rewrite_with_remaining_slugs
-    @node = NewsArchive.first.node
+  def test_should_not_rewrite_with_remaining_slugs
+    @node = Page.first.node
     @node.set_url_alias true
     @node.save
     get @node.url_alias + '/1/2013'
-    assert_equal @node, assigns(:node)    
-    assert response.body.include?(@node.content.title)
+    assert_response :not_found 
   end
 
   def test_should_prefer_longest_matched_url_alias
@@ -74,5 +73,15 @@ class RewriteTest < ActionController::IntegrationTest
     assert_equal @node, assigns(:node)    
     assert response.body.include?(@node.content.title)
   end
+
+
+  def test_should_not_rewrite_for_news_archive_archive_with_invalid_date
+    @node = NewsArchive.first.node
+    @node.set_url_alias true
+    @node.save
+    get @node.url_alias + '/bla/bla'
+    assert_response :not_found  
+  end
+
 
 end
