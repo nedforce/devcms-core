@@ -8,7 +8,6 @@
 #
 # * +title+ - The title of the newsletter archive.
 # * +description+ - The description of the newsletter archive.
-# * +header+ - The filename of the header image for the newsletter archive.
 # * +from_email_address+ - The email address that is used for the from field for the associated newsletter editions.
 #
 # Preconditions
@@ -19,7 +18,7 @@
 class NewsletterArchive < ActiveRecord::Base
   # Adds content node functionality to news archives.
   acts_as_content_node({
-    :allowed_child_content_types => %w( NewsletterEdition ),
+    :allowed_child_content_types => %w( NewsletterEdition Image ),
     :allowed_roles_for_update  => %w( admin final_editor ),
     :allowed_roles_for_create  => %w( admin final_editor ),
     :allowed_roles_for_destroy => %w( admin final_editor ),
@@ -49,21 +48,6 @@ class NewsletterArchive < ActiveRecord::Base
     last_nle_update = nle ? nle.node.publication_start_date : nil
     
     [ last_nle_update, self.updated_at].compact.max
-  end
-
-  # Returns all header images that can be used in a +NewsletterArchive+.
-  def self.header_images
-    path = Rails.root.join('app', 'assets', 'images', 'newsletter', "#{Settler[:newsletter_archive_header_prefix]}*")
-    Dir.glob(path).collect { |file| file.split("/").last }
-  end
-
-  # Returns the header for this +NewsletterArchive+.
-  def header
-    if read_attribute(:header) and File.exist?(Rails.root.join('public', 'images', 'newsletter', read_attribute(:header)))
-      read_attribute(:header)
-    else
-      Settler[:newsletter_archive_header_default]
-    end
   end
 
   # Returns true if this +NewsletterArchive+ has a subscription for the +User+ specified by +user+, else false.

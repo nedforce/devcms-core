@@ -13,16 +13,7 @@ class NewsletterArchiveTest < ActiveSupport::TestCase
       create_newsletter_archive
     end
   end
-  
-  def test_should_return_header_file_names
-    path = Rails.root.join('public', 'images', 'newsletter', "#{Settler[:newsletter_archive_header_prefix]}*")
-    assert_equal Dir.glob(path).size, NewsletterArchive.header_images.size
-  end
-  
-  def test_should_default_to_standard_header
-    assert_equal @devcms_newsletter_archive.header, Settler[:newsletter_archive_header_default]
-  end
-  
+   
   def test_should_require_title
     assert_no_difference 'NewsletterArchive.count' do
       newsletter_archive = create_newsletter_archive(:title => nil)

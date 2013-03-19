@@ -22,7 +22,7 @@ module DevcmsCore
       if type != :path
         host = options.delete(:host) || containing_node.content.domain
         if defined?(request) && request.present?
-          address = "#{request.protocol}#{host || request.host_with_port}#{address}" 
+          address = "#{request.protocol}#{host || request.host}:#{request.port}#{address}" 
         else
           url_options = Rails.application.config.action_mailer.default_url_options || {}
           url_options.merge!(:host => host) if host

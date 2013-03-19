@@ -1,5 +1,6 @@
 <% @approved_content_items ||= record.approved_items %>
 <div class="regularPage newsletterEdition">
+  <%= image_tag(content_node_url(record.header, :action => 'newsletter_banner', :format => :jpg)) %>
   <h2><%=h record.title -%></h2>
 
   <%- unless record.new_record? -%>

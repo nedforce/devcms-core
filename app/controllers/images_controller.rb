@@ -12,7 +12,7 @@ class ImagesController < ApplicationController
 
   layout false
 
-  caches_page :full, :sidebox, :header, :thumbnail, :content_box_header, :big_header
+  caches_page :full, :sidebox, :header, :thumbnail, :content_box_header, :big_header, :newsletter_banner
 
   def full
     render_jpg_image @image.file.full.path
@@ -28,6 +28,10 @@ class ImagesController < ApplicationController
 
   def content_box_header
     render_jpg_image_data @image.resize!(:size => "#{Image::CONTENT_BOX_SIZE[:width]}x#{Image::CONTENT_BOX_SIZE[:height]}", :offset => @image.offset, :crop => true, :upsample => false, :quality => 80, :format => 'jpg')
+  end
+
+  def newsletter_banner
+    render_jpg_image_data @image.resize!(:size => "#{Image::NEWSLETTER_BANNER_SIZE[:width]}x#{Image::NEWSLETTER_BANNER_SIZE[:height]}", :crop => true, :upsample => false, :quality => 80, :format => 'jpg')
   end
 
   def thumbnail

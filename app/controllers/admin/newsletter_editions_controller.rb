@@ -44,7 +44,7 @@ class Admin::NewsletterEditionsController < Admin::AdminController
 
   # * GET /admin/newsletter_editions/new
   def new
-    @newsletter_edition = @newsletter_archive.newsletter_editions.build(params[:newsletter_edition])
+    @newsletter_edition = @newsletter_archive.newsletter_editions.build({:parent => @newsletter_archive.node}.merge(params[:newsletter_edition] || {}))
 
     if params[:items]
       @item_sortlets = item_sortlet_hash_for_ids(params[:items])

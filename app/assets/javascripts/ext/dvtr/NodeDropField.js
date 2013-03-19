@@ -33,6 +33,12 @@ Ext.extend(Ext.dvtr.NodeDropField, Ext.form.TextField, {
             drop: true,
             afterinserttreenode: true
         });
+        this.on('validatedrop', function (e) {
+            if(e.dd.dragData.node != null && e.nodeDropField.allowedContentTypes != null)  {
+                return e.nodeDropField.allowedContentTypes.indexOf(e.dd.dragData.node.attributes.ownContentType) != -1
+            }
+            return true;
+        })
     },
 
     initEvents : function () {
@@ -42,6 +48,10 @@ Ext.extend(Ext.dvtr.NodeDropField, Ext.form.TextField, {
 
     setText : function (txt) {
         this.textLabel.update(txt);
+    },
+
+    setImage : function (url) {
+        this.textLabel.update('<img src="'+url+'"/>')
     },
 
     onRender: function (ct, position) {
@@ -60,6 +70,7 @@ Ext.extend(Ext.dvtr.NodeDropField, Ext.form.TextField, {
 
 Ext.dvtr.NodeDropField.DropTarget = function (ndf, cfg) {
     this.nodeDropField = ndf;
+    // this.on('validatedrop', this.validateDrop);
     Ext.dvtr.NodeDropField.DropTarget.superclass.constructor.call(this, ndf.el.dom, cfg);
 };
 
@@ -101,10 +112,16 @@ Ext.extend(Ext.dvtr.NodeDropField.DropTarget, Ext.dd.DropTarget, {
             dd instanceof Ext.tree.TreeDragZone) {
 
             // Create a new sortlet object
-            var treeNode = dd.dragData.node;
-            // Remove currently selected node
+            var treeNode = dd.dragData.node;         
+            // set the node ide
             this.nodeDropField.setRawValue(treeNode.id);
-            this.nodeDropField.setText(treeNode.text);
+
+            // Set text or image
+            if (treeNode.ownContentType == 'Image') {
+                this.nodeDropField.setImage('/'+treeNode.URLAlias+'/newsletter_banner.jpg');
+            } else {
+                this.nodeDropField.setText(treeNode.text);
+            }  
 
             this.nodeDropField.el.removeClass('x-node-drop-field-over');
         }

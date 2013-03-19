@@ -71,6 +71,7 @@ Rails.application.routes.draw do
       get :content_box_header
       get :header
       get :big_header
+      get :newsletter_banner
       get :private_thumbnail
       get :private_sidebox
       get :private_full
