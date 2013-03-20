@@ -28,23 +28,18 @@ newsletterEditionForm.add({
   value: '<%= @newsletter_edition.publication_start_date.strftime("%H:%M") if @newsletter_edition.publication_start_date -%>'
 });
 
-/*
-newsletterEditionForm.add({
-  id: 'newsletter_edition_body',
-  fieldLabel: '<%= I18n.t("newsletters.text") %>',
-  name: 'newsletter_edition[body]',
-  xtype: 'htmleditor',
-  height: 150,
-  width: 400,
-  enableFont: false,
-  enableColors: false,
-  enableAlignments: false,
-  enableFontSize: false,
-  allowBlank: false,
-  enableSourceEdit: true, // for dev purposes
-  value: '<%= escape_javascript @newsletter_edition.body -%>'
+ndf = new Ext.dvtr.NodeDropField({
+  ddGroup: 'TreeAndSorterDD',
+  name: 'newsletter_edition[header_image_node_id]',
+  fieldLabel: '<%= I18n.t("newsletters.header") %>',
+  value: '<%= @newsletter_edition.header_image_node_id || String.new %>',
+  id: 'newsletter_edition_header_image_id',
+  text: '<%= image_tag(content_node_url(@newsletter_edition.header, :action => 'newsletter_banner', :format => :jpg)) %>',
+  allowedContentTypes: ['Image'],
+  width: 60
 });
-*/
+
+newsletterEditionForm.add(ndf);
 
 initEditor = function(e) {
 	setTimeout(function() {
@@ -59,4 +54,6 @@ newsletterEditionForm.add({
   listeners: { render: initEditor }
 });
 <%#= category_settings_for @newsletter_edition -%>
+
+
 

@@ -27,9 +27,10 @@
 class Image < ActiveRecord::Base
   include DevcmsCore::ImageProcessingExtensions
 
-  CONTENT_BOX_SIZE      = { :height =>  93, :width => 230 }
-  HEADER_IMAGE_SIZE     = { :height => 135, :width => 726 }
-  HEADER_BIG_IMAGE_SIZE = { :height => 190, :width => 980 }
+  CONTENT_BOX_SIZE        = { :height =>  93, :width => 230 }
+  HEADER_IMAGE_SIZE       = { :height => 135, :width => 726 }
+  HEADER_BIG_IMAGE_SIZE   = { :height => 190, :width => 980 }
+  NEWSLETTER_BANNER_SIZE  = { :height => 118, :width => 540 }
 
   # An +Image+ can be a carrousel item
   has_many :carrousel_items, :as => :item, :dependent => :destroy

@@ -39,6 +39,9 @@ class NewsletterEdition < ActiveRecord::Base
   has_many :newsletter_edition_items,  :dependent => :destroy
   has_many :newsletter_edition_queues, :dependent => :destroy
 
+  # A +NewsletterEdition+ has one +Node+ object.
+  belongs_to :header_image_node, :class_name => "Node"
+
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of :title, :body, :newsletter_archive
   validates_length_of   :title, :in => 2..255, :allow_blank => true
@@ -69,6 +72,10 @@ class NewsletterEdition < ActiveRecord::Base
         self.newsletter_edition_items.create(:item => Node.find(items.at(index)).content, :position => index)   
       end
     end
+  end
+
+  def header
+    header_image_node || newsletter_archive.node.children.with_content_type("Image").first
   end
 
   # Alternative text for tree nodes.

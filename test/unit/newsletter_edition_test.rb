@@ -105,6 +105,12 @@ class NewsletterEditionTest < ActiveSupport::TestCase
     assert_equal "#{created_at.day}/#{created_at.month} #{ne.title}", ne.node.tree_text
   end
   
+  def test_should_default_to_first_sibbling_image
+    image = Image.last.node
+    image.move_to_child_of(nodes(:newsletter_archive_node))
+    assert_equal image, create_newsletter_edition.header
+  end
+  
 protected
   
   def create_newsletter_edition(options = {})
