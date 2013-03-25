@@ -34,6 +34,7 @@ Ext.onReady(function(){
         <% if @active_page == :privileged_users %>
         {
           header: "<%= I18n.t('users.status') %>",
+          sortable: false,
           dataIndex: 'status'
         },
         <% end %>
@@ -51,7 +52,7 @@ Ext.onReady(function(){
            header: "<%= I18n.t('users.sex') %>",
            dataIndex: 'sex',
            width: 80,
-           renderer: function(value, meta, record){
+           renderer: function(value, meta, record) {
                  return (value == 'm') ? '<%=I18n.t("users.male")-%>' : (value == 'f') ? '<%=I18n.t("users.female")-%>' : '';
            },
            editor: new fm.ComboBox({
