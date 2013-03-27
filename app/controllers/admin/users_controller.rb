@@ -2,8 +2,8 @@
 # set up to communicate with ExtJS components using XML.
 class Admin::UsersController < Admin::AdminController
   before_filter :find_user, :except => [ :index, :create, :invite, :privileged ]
-  before_filter :set_paging,  :only => [ :index, :create ]
-  before_filter :set_sorting, :only => [ :index, :create ]
+  before_filter :set_paging,  :only => [ :index, :create, :privileged ]
+  before_filter :set_sorting, :only => [ :index, :create, :privileged ]
 
   skip_before_filter :set_actions
   skip_before_filter :find_node
@@ -15,7 +15,7 @@ class Admin::UsersController < Admin::AdminController
   # * GET /admin/users.xml
   # * GET /admin/users.json
   def index
-    @active_page = :users
+    @active_page ||= :users
     # Sort the polymorphic node relationship separately if necessary.
     if !@sort_by_newsletter_archives
       # Don't eager load newsletter_archives lest the XML builder will fail.
