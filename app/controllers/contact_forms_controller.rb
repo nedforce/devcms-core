@@ -4,9 +4,9 @@ class ContactFormsController < ApplicationController
 
   # The +show+, +edit+, +update+ and +destroy+ actions
   # each need a +ContactForm+ object to work with/act on.
-  before_filter :find_contact_form
-  before_filter :find_contact_form_fields
-  
+  before_filter :find_contact_form,        :only => [ :show, :send_message ]
+  before_filter :find_contact_form_fields, :only => [ :show, :send_message ]
+
   # SSL is obligatory here for the authenticity token.
   ssl_required :show, :send_message
 
@@ -36,14 +36,14 @@ class ContactFormsController < ApplicationController
           # Create response_field objects
           @entered_fields.each do |field|
             response_field = ResponseField.new(:response => @response_row, :contact_form_field_id => field[:id])
-            
+
             if field[:type] == 'file'
               response_field.file = field[:value]
               response_field.value = field[:value].try(:original_filename)
             else
               response_field.value = field[:value]
             end
-            
+
             response_field.save!
           end
         else
