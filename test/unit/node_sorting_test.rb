@@ -53,6 +53,10 @@ class NodeSortingTest < ActiveSupport::TestCase
     assert_nil Node.unscoped.find(n.id).position
   end
 
+  def test_should_return_path_in_correct_order
+    assert_equal [Node.root, nodes(:economie_section_node)], nodes(:economie_poll_node).path.sections
+  end
+
   protected
   def create_page(options = {})
     Page.create({ :user => users(:arthur), :parent => nodes(:root_section_node), :title => 'foo', :preamble => 'xuu', :body => 'bar' }.merge(options))

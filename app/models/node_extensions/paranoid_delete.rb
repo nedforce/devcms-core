@@ -2,7 +2,7 @@ module NodeExtensions::ParanoidDelete
   extend ActiveSupport::Concern    
   
   included do
-    default_scope order('nodes.ancestry, nodes.position').where('nodes.deleted_at IS NULL')
+    default_scope ordered_by_ancestry.order('nodes.position').where('nodes.deleted_at IS NULL')
 
     define_callbacks :before_paranoid_delete, :after_paranoid_delete, :before_paranoid_restore, :after_paranoid_restore
   end
