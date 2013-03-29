@@ -1046,6 +1046,7 @@ nl:
   sites:
     add_to: Site toevoegen aan
     analytics_code: Google analytics code (UA-1234567-89)
+    piwik_site_id: Piwik site ID
     edit: Bewerken van site
   social_media_links_boxes:
     add_to: Social media links box toevoegen aan

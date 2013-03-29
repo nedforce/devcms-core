@@ -1019,6 +1019,7 @@ ActiveRecord::Schema.define(:version => 20130329114327) do
     t.text     "expiration_email_body"
     t.string   "expiration_email_subject"
     t.datetime "deleted_at"
+    t.string   "piwik_site_id"
   end
 
   add_index "sections", ["created_at"], :name => "index_sections_on_created_at"
