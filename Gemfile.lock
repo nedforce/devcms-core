@@ -24,7 +24,7 @@ PATH
       bartt-ssl_requirement (~> 1.4.0)
       calendar_date_select
       carrierwave
-      coffee-rails
+      coffee-rails (~> 3.0)
       dsl_accessor (= 0.3.3)
       dynamic_attributes (~> 1.2.0)
       exception_notification
@@ -42,13 +42,13 @@ PATH
       rmagick (>= 2.13.1)
       roo (~> 1.10.1)
       sanitize
-      sass-rails
+      sass-rails (~> 3.0)
       settler (~> 1.2.3)
       sortifiable
       spreadsheet (~> 0.7.3)
       tidy_ffi (~> 0.1.4)
       truncate_html (~> 0.5.5)
-      uglifier
+      uglifier (~> 1.0)
       whenever (>= 0.4)
 
 GEM
@@ -243,6 +243,7 @@ PLATFORMS
 
 DEPENDENCIES
   calendar_date_select!
+  coffee-rails (~> 3.2.1)
   debugger
   devcms_core!
   fakeweb
@@ -251,5 +252,7 @@ DEPENDENCIES
   prototype_legacy_helper (= 0.0.0)!
   rails (= 3.2.13)
   rsolr (~> 0.12.1)
+  sass-rails (~> 3.2.3)
   simplecov (~> 0.6.4)
   turn
+  uglifier (>= 1.0.3)

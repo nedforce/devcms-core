@@ -51,11 +51,11 @@ Gem::Specification.new do |s|
   ##### Asset helpers (require through bundler in app, not necessary in production always)
 
   # Javascript
-  s.add_dependency 'coffee-rails'
-  s.add_dependency 'uglifier'
+  s.add_dependency 'coffee-rails', '~> 3.0'
+  s.add_dependency 'uglifier', '~> 1.0'
 
   # Styling
-  s.add_dependency 'sass-rails'
+  s.add_dependency 'sass-rails', '~> 3.0'
 
   ##### Development / test dependencies
 
