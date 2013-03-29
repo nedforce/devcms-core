@@ -11,6 +11,6 @@ class AddHeaderImageToNewsletterEditions < ActiveRecord::Migration
     end
     remove_column :newsletter_archives, :header
     Setting.delete_all(:key => 'newsletter_archive_header_default')
-    raise "Migration failed: not all archives have a default header." if Node.with_content_type("NewsletterArchive").all? {|nla| nla.children.with_content_type("Image").any? }
+    raise "Migration failed: not all archives have a default header." if NewsletterArchive.any? && Node.with_content_type("NewsletterArchive").all? {|nla| nla.children.with_content_type("Image").any? }
   end
 end

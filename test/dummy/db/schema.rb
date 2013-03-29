@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120921142701) do
+ActiveRecord::Schema.define(:version => 20130329114327) do
 
   create_table "abbreviations", :force => true do |t|
     t.string   "abbr",       :null => false
@@ -109,11 +109,12 @@ ActiveRecord::Schema.define(:version => 20120921142701) do
     t.string   "title",                     :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "display_time_in_seconds"
+    t.integer  "display_time"
     t.integer  "current_carrousel_item_id"
     t.datetime "last_cycled"
     t.integer  "animation"
     t.datetime "deleted_at"
+    t.integer  "transition_time"
   end
 
   add_index "carrousels", ["deleted_at"], :name => "index_carrousels_on_deleted_at"
@@ -531,7 +532,6 @@ ActiveRecord::Schema.define(:version => 20120921142701) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "from_email_address"
-    t.string   "header"
     t.datetime "deleted_at"
   end
 
@@ -573,12 +573,13 @@ ActiveRecord::Schema.define(:version => 20120921142701) do
   add_index "newsletter_edition_queues", ["updated_at"], :name => "index_newsletter_edition_queues_on_updated_at"
 
   create_table "newsletter_editions", :force => true do |t|
-    t.string   "title",                                 :null => false
-    t.text     "body",                                  :null => false
+    t.string   "title",                                           :null => false
+    t.text     "body",                                            :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "published",  :default => "unpublished"
+    t.string   "published",            :default => "unpublished"
     t.datetime "deleted_at"
+    t.integer  "header_image_node_id"
   end
 
   add_index "newsletter_editions", ["created_at"], :name => "index_newsletter_editions_on_created_at"

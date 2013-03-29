@@ -78,6 +78,8 @@ nl:
         subscription_enabled: Inschrijven toestaan?
       carrousel:
         display_time: Weergavetijd
+        animation: Animatie
+        transition_time: Overgangstijd
       category:
         name: Naam
       combined_calendar:

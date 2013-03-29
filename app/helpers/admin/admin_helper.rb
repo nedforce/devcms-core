@@ -115,11 +115,18 @@ module Admin::AdminHelper
     render :partial => 'admin/shared/meta_fields', :locals => { :content => content }
   end
   
-  def time_select_for(carrousel)    
+  def display_time_select_for(carrousel)    
     [
       label_tag(     'carrousel[display_time][]', Carrousel.human_attribute_name(:display_time)) + ': ',
-      text_field_tag('carrousel[display_time][]', carrousel.display_time[0], :size => 2),
-      select_tag(    'carrousel[display_time][]', options_for_select(Carrousel::ALLOWED_TIME_UNITS.collect{|unit| [t(unit, :scope => 'carrousels.units'), unit] }, carrousel.display_time[1]))
+      text_field_tag('carrousel[display_time][]', carrousel.human_display_time[0], :size => 2),
+      select_tag(    'carrousel[display_time][]', options_for_select(Carrousel::ALLOWED_TIME_UNITS.collect{|unit| [t(unit, :scope => 'carrousels.units'), unit] }, carrousel.human_display_time[1]))
+    ].join("\n").html_safe
+  end
+
+  def transition_time_select_for(carrousel)    
+    [
+      label_tag(     'carrousel[transition_time]', Carrousel.human_attribute_name(:transition_time)) + ': ',
+      text_field_tag('carrousel[transition_time]', carrousel.transition_time, :size => 4) + "ms"
     ].join("\n").html_safe
   end
   

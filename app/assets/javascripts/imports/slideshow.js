@@ -1,3 +1,4 @@
+// This is used for the header animation!
 // Default values
 
 var defaultFadeDuration = 3.0; // Default fade duration if none is specified. In seconds.

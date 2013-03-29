@@ -5,7 +5,7 @@
 # Attributes
 # 
 # * +title+ - The title of the carrousel.
-# * +display_time_in_seconds+ - The display time in seconds of a carrousel item.
+# * +display_time+ - The display time in seconds of a carrousel item.
 # * +current_carrousel_item_id+ - The item that is currently being shown
 # * +last_cycled+ - The last time the item was cycled
 #
@@ -47,7 +47,7 @@ class Carrousel < ActiveRecord::Base
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of     :title
   validates_length_of       :title, :in => 2..255,    :allow_blank => true
-  validates_numericality_of :display_time_in_seconds, :allow_blank => true, :integer_only => true, :greater_than_or_equal_to => 0
+  validates_numericality_of :display_time, :allow_blank => true, :integer_only => true, :greater_than_or_equal_to => 0
   validates_numericality_of :animation, :integer_only => true, :greater_than_or_equal_to => 0
   
   after_paranoid_delete :remove_associated_content
@@ -116,31 +116,34 @@ class Carrousel < ActiveRecord::Base
     false
   end
   
-  # Get display time in minutes
-  def display_time_in_seconds
-    read_attribute(:display_time_in_seconds) || 0
+  # Get display time
+  def display_time
+    read_attribute(:display_time) || 0
   end  
   
   # Set display time
   def display_time=(time)
-    return unless time.is_a?(Array) and time.size == 2
-    value = time[0].to_i; unit = time[1]
-    self.display_time_in_seconds = ALLOWED_TIME_UNITS.include?(unit) ? value.send(unit) : 0
+    if time.is_a?(Array) and time.size == 2
+      value = time[0].to_i
+      unit = time[1]
+      time = ALLOWED_TIME_UNITS.include?(unit) ? value.send(unit) : 0
+    end
+    self[:display_time] = time
   end
 
   # Get human display time
-  def display_time
+  def human_display_time
     case
-    when display_time_in_seconds < 60
-      [display_time_in_seconds,                 'seconds']
-    when display_time_in_seconds < 60*60
-      [display_time_in_seconds/60,              'minutes']
-    when display_time_in_seconds < (60*60*24)
-      [display_time_in_seconds/(60*60),         'hours']
-    when display_time_in_seconds < (30*(60*60*24))
-      [display_time_in_seconds/(60*60*24),      'days']
+    when display_time < 60
+      [display_time,                 'seconds']
+    when display_time < 60*60
+      [display_time/60,              'minutes']
+    when display_time < (60*60*24)
+      [display_time/(60*60),         'hours']
+    when display_time < (30*(60*60*24))
+      [display_time/(60*60*24),      'days']
     else 
-      [display_time_in_seconds/(30*(60*60*24)), 'months']
+      [display_time/(30*(60*60*24)), 'months']
     end    
   end
 
@@ -160,7 +163,7 @@ private
           connection.update("UPDATE carrousels SET last_cycled = '#{Time.now.to_formatted_s(:db)}', current_carrousel_item_id = #{self.carrousel_items.first.id} WHERE id = #{self.id}")
         end
         self.current_carrousel_item = self.carrousel_items.first
-      elsif (last_cycled + display_time_in_seconds.seconds) <= Time.now
+      elsif (last_cycled + display_time.seconds) <= Time.now
         current_item_index = carrousel_items.index(current_carrousel_item)
         self.current_carrousel_item = carrousel_items.at( (current_item_index+1)%carrousel_items.size )
         Node.without_search_reindex do # No update of the search index is necessary.

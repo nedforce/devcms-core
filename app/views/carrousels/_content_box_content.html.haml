@@ -1,6 +1,7 @@
 - content        = node.content
 - carrousel_item = content.current_item
-- frequency      = content.display_time_in_seconds > 0 ? content.display_time_in_seconds.to_s : '0.4'
+- frequency      = content.display_time > 0 ? content.display_time.to_s : '0.4'
+- duration       = (content.transition_time.to_f/1000.0).to_s
 
 - if content.animation == Carrousel::ANIMATION_NONE || content.animation.blank?
   - carrousel_item = content.current_item
@@ -27,10 +28,10 @@
   = javascript_tag "$$('#carousel-#{content.id} .carousel-content .slide').invoke('setStyle', 'float:left');"
 
   - if content.animation == Carrousel::ANIMATION_FADE_IN
-    = javascript_tag "new Carousel('carousel-#{content.id}', 'carousel-wrapper-#{content.id}', $$('#carousel-#{content.id} .carousel-content .slide'), $$('#carousel-wrapper-#{content.id} span.carousel-control', 'a.carousel-jumper'), {auto:true, autoPause:true, duration:1, frequency:#{frequency}, effect:'fade'});"
+    = javascript_tag "new Carousel('carousel-#{content.id}', 'carousel-wrapper-#{content.id}', $$('#carousel-#{content.id} .carousel-content .slide'), $$('#carousel-wrapper-#{content.id} span.carousel-control', 'a.carousel-jumper'), {auto:true, autoPause:true, duration:#{duration || '1'}, frequency:#{frequency}, effect:'fade'});"
   - elsif content.animation == Carrousel::ANIMATION_DIA
-    = javascript_tag "new Carousel('carousel-#{content.id}', 'carousel-wrapper-#{content.id}', $$('#carousel-#{content.id} .carousel-content .slide'), $$('#carousel-wrapper-#{content.id} span.carousel-control', 'a.carousel-jumper'), {auto:true, autoPause:true, duration:1, frequency:#{frequency}, circular:true});"
+    = javascript_tag "new Carousel('carousel-#{content.id}', 'carousel-wrapper-#{content.id}', $$('#carousel-#{content.id} .carousel-content .slide'), $$('#carousel-wrapper-#{content.id} span.carousel-control', 'a.carousel-jumper'), {auto:true, autoPause:true, duration:#{duration || '1'}, frequency:#{frequency}, circular:true});"
   - elsif content.animation == Carrousel::ANIMATION_SPRING
-    = javascript_tag "new Carousel('carousel-#{content.id}', 'carousel-wrapper-#{content.id}', $$('#carousel-#{content.id} .carousel-content .slide'), $$('#carousel-wrapper-#{content.id} span.carousel-control', 'a.carousel-jumper'), {auto:true, autoPause:true, transition:'spring', duration:2, frequency:#{frequency}, circular:true});"
+    = javascript_tag "new Carousel('carousel-#{content.id}', 'carousel-wrapper-#{content.id}', $$('#carousel-#{content.id} .carousel-content .slide'), $$('#carousel-wrapper-#{content.id} span.carousel-control', 'a.carousel-jumper'), {auto:true, autoPause:true, transition:'spring', duration:#{duration || '2'}, frequency:#{frequency}, circular:true});"
   - elsif content.animation == Carrousel::ANIMATION_SLIDE
-    = javascript_tag "new Carousel('carousel-#{content.id}', 'carousel-wrapper-#{content.id}', $$('#carousel-#{content.id} .carousel-content .slide'), $$('#carousel-wrapper-#{content.id} span.carousel-control', 'a.carousel-jumper'), {auto:true, autoPause:true, transition:'linear', duration:#{frequency}, frequency:#{frequency}, circular:true});"
+    = javascript_tag "new Carousel('carousel-#{content.id}', 'carousel-wrapper-#{content.id}', $$('#carousel-#{content.id} .carousel-content .slide'), $$('#carousel-wrapper-#{content.id} span.carousel-control', 'a.carousel-jumper'), {auto:true, autoPause:true, transition:'linear', duration:#{duration || frequency}, frequency:#{frequency}, circular:true});"

@@ -1,6 +1,6 @@
 .carrousel
   %h2= h @carrousel.title
-  %p== #{Carrousel.human_attribute_name(:display_time)}: #{@carrousel.display_time[0]} #{t(@carrousel.display_time[1], :scope => 'carrousels.units')}
+  %p== #{Carrousel.human_attribute_name(:display_time)}: #{@carrousel.human_display_time[0]} #{t(@carrousel.human_display_time[1], :scope => 'carrousels.units')}
   %p== #{Carrousel.human_attribute_name(:animation)}: #{ @animation}
 
   - @carrousel.carrousel_items.each_with_index do |carrousel_item,i|
