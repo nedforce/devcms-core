@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120921142701) do
+ActiveRecord::Schema.define(:version => 20130329111106) do
 
   create_table "abbreviations", :force => true do |t|
     t.string   "abbr",       :null => false
@@ -1018,6 +1018,7 @@ ActiveRecord::Schema.define(:version => 20120921142701) do
     t.text     "expiration_email_body"
     t.string   "expiration_email_subject"
     t.datetime "deleted_at"
+    t.string   "piwik_site_id"
   end
 
   add_index "sections", ["created_at"], :name => "index_sections_on_created_at"

@@ -13,5 +13,11 @@ class SectionsControllerTest < ActionController::TestCase
     get :show, :id => sections(:root_section).id
     assert_response :success
   end
+
+  def test_should_show_site_piwik_script
+    assert sections(:root_section).update_column :piwik_site_id, 'PIWIKCODE'
+    get :show, :id => sections(:root_section).id
+    assert response.body.include?('PIWIKCODE')
+  end
   
 end

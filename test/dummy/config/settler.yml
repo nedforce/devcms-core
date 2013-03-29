@@ -33,6 +33,11 @@ settings: &settings
     editable: true
     validations:
       format: !ruby/regexp /^(|UA-\d*-\d*)$/i
+  piwik_analytics_domain:
+    alt: Piwik analytics domain
+    value: 'stats.railscluster.nl'
+    editable: true
+
   google_maps_key: &google_maps_key
     alt: Google maps API sleutel
     value: ''
