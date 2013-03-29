@@ -1,10 +1,10 @@
 test:
   adapter: postgresql
-  host: localhost
+  socket: /var/run/postgresql
   database: devcms_test
   min_messages: WARNING
     
 development:
   adapter: postgresql
-  host: localhost
+  socket: /var/run/postgresql
   database: devcms_development
