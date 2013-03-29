@@ -12,3 +12,4 @@ uploads
 test/dummy/log/*.log
 coverage
 .sass-cache
+database.yml
