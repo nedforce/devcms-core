@@ -54,6 +54,7 @@ module DevcmsCore
   autoload :Blowfish
   autoload :CalendarItemsAssociationExtensions
   autoload :ContentTypeConfiguration
+  autoload :ContentNodeCheckerRunner
   autoload :DutchStemmingAnalyzer
   autoload :EngineExtensions
   autoload :Hijacker

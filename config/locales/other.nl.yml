@@ -73,8 +73,9 @@ nl:
   admin:
     abbreviations_button: Afkortingen
     approvals_button: Goedkeuringen
-    categories_button: Categoriën
+    categories_button: Categorieën
     comments_button: Reacties
+    data_warnings_button: Meldingen
     content_type_not_allowed: Het is niet mogelijk dit contenttype aan deze node toe te voegen
     edit: Bewerken
     rights: Rechten
@@ -123,6 +124,7 @@ nl:
     sayit: Lees voor
     sayit_title: Gebruik Readspeaker om de content hardop voor te lezen
     site: Gehele site
+    select_a_node_left: Selecteer linksboven een item...    
   approvals:
     approval_failed: Goedkeuren mislukt
     approve: Goedkeuren
@@ -155,7 +157,6 @@ nl:
     rejected: Afgekeurd
     rejecting: Bezig met afkeuren
     rejection_failed: Afkeuren mislukt
-    select_a_node_left: Selecteer linksboven een item...
     select_a_node_up: Selecteer hierboven een item...
     select_exactly_one: Selecteer exact een item
     select_one: Selecteer ten minste een item
@@ -444,6 +445,26 @@ nl:
     position: Positie
     textarea: Tekstgebied
     textfield: Tekstveld
+  data_warnings:
+    subject: Pagina
+    error_code: Type
+    message: Melding
+    created_at: Gevonden op
+    count_msg: 'Meldingen {0} tot {1} van {2} worden weergegeven'
+    empty_msg: Geen meldingen om weer te geven
+    of_page: "van {0}"
+    page: Pagina
+    delete: Verwijderen
+    deleting: Bezig met verwijderen...
+    clear: Alles verwijderen
+    message_header: Bericht
+    delete_tooltip: Klik hier om de geselecteerde meldingen te verwijderen.    
+    clear_tooltip: Klik hier om alle meldingen te verwijderen.
+    select_one: Kies tenminste 1 melding  
+    confirm_delete: Weet u zeker dat u de geselecteerde meldingen wilt verwijderen? 
+    confirm_clear: Weet u zeker dat u alle meldingen wilt verwijderen? Deze actie kan niet ongedaan gemaakt worden!
+    clear_failed: Verwijderen mislukt. Probeer het opnieuw.
+    destroy_failed: Verwijderen mislukt. Probeer het opnieuw.
   errors:
     go_back: Ga terug naar de
     internal_server_error: Onverwachte fout

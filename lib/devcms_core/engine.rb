@@ -59,6 +59,10 @@ module DevcmsCore
         'imports/ie9_create_contextual_fragment.js'
       ]
     end
+    
+    initializer "data checker config" do |app|
+      DataChecker.config.checker_logger = DataChecker::DatabaseLogger       
+    end    
 
     config.after_initialize do |app|
       # Process rewrites     

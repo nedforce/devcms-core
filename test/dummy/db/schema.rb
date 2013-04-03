@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130329114327) do
+ActiveRecord::Schema.define(:version => 20130402152350) do
 
   create_table "abbreviations", :force => true do |t|
     t.string   "abbr",       :null => false
@@ -229,6 +229,20 @@ ActiveRecord::Schema.define(:version => 20130329114327) do
   end
 
   add_index "content_representations", ["parent_id", "content_id"], :name => "index_content_representations_on_parent_id_and_content_id", :unique => true
+
+  create_table "data_warnings", :force => true do |t|
+    t.integer  "subject_id"
+    t.string   "subject_type"
+    t.string   "error_code"
+    t.text     "message"
+    t.string   "status"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  add_index "data_warnings", ["error_code"], :name => "index_data_warnings_on_error_code"
+  add_index "data_warnings", ["status"], :name => "index_data_warnings_on_status"
+  add_index "data_warnings", ["subject_id", "subject_type"], :name => "index_data_warnings_on_subject_id_and_subject_type"
 
   create_table "event_registrations", :force => true do |t|
     t.integer  "event_id"
@@ -640,6 +654,7 @@ ActiveRecord::Schema.define(:version => 20130329114327) do
     t.integer  "updated_by_id"
     t.string   "short_title"
     t.string   "locale"
+    t.datetime "last_checked_at"
   end
 
   add_index "nodes", ["ancestry"], :name => "index_nodes_on_ancestry"

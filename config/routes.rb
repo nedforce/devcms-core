@@ -227,6 +227,12 @@ Rails.application.routes.draw do
       end
     end
     
+    resources :data_warnings, :only => [ :index, :destroy ] do
+      collection do
+        delete :clear
+      end    
+    end
+    
     resources :external_links, :except => [:index, :destroy], :controller => 'links', :defaults => { :type => 'external_link' } do
       member do
         get :previous
@@ -370,7 +376,7 @@ Rails.application.routes.draw do
     resources :weblog_archives, :except => :destroy
     resources :weblog_posts, :only => [:show, :edit, :update]
 
-    resources :nodes, :only => [:index, :update, :destroy] do
+    resources :nodes, :only => [:index, :edit, :update, :destroy] do
       collection do
         get :bulk_edit
         put :bulk_update

@@ -225,6 +225,20 @@ class Admin::NodesController < Admin::AdminController
 
     render :action => :audit_edit, :layout => false
   end
+  
+  # Handles a normal edit in a side panel
+  # GET /admin/nodes/1/edit
+  def edit
+    if @node.content_class == InternalLink || @node.content_class == ExternalLink
+      @current_url = edit_admin_link_url(@node.content)
+    elsif @node.content_class == Meeting
+      @current_url = edit_admin_calendar_item_url(@node.content)
+    else
+      @current_url = polymorphic_url([ :admin, @node.content ], :action => :edit)
+    end
+
+    render :action => :audit_edit, :layout => false
+  end  
 
   # Request the number of children. Returned as a plain text string.
   #

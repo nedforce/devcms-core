@@ -30,4 +30,8 @@ end
 
 every 10.minutes do
   runner 'FeedWorker.new.update_feeds'
-end     
+end
+
+every :month do
+  runner 'DevcmsCore::ContentNodeCheckerRunner.run!'
+end  

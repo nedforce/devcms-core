@@ -239,6 +239,10 @@ module DevcmsCore
       # Bit of a hack. Should only be defined for content classes that allow attachments as a child
       node.children.with_content_type('AttachmentTheme').accessible
     end
+    
+    def to_label
+      title
+    end
   
     private
 
