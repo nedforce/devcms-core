@@ -391,7 +391,11 @@ protected
   end
 
   def set_default_search_scopes
-    @search_scopes << [ t('application.site'), (current_site.root? ? "" : "node_#{current_site.id}") ]
+    @search_scopes << [ t('application.whole_site'), "" ] 
+    
+    if !current_site.root?
+      @search_scopes << [ t('application.current_site'), current_site.id ] 
+    end
 
     if @node
       @search_scopes << [ t('application.current_section'), "node_#{@node.id}" ] unless @node == current_site

@@ -105,6 +105,7 @@ nl:
     add_to_twitter: Twitter deze pagina
     content_type_not_allowed: Content type niet toegestaan.
     current_section: Huidige onderdeel
+    current_site: Huidige site
     default_header_photo_alt: Titelafbeelding
     email_page: E-mail deze pagina naar iemand
     field_error: "Het opslaan mislukte door het volgende probleem:"
@@ -123,7 +124,7 @@ nl:
     save_error: Opslaan mislukt.
     sayit: Lees voor
     sayit_title: Gebruik Readspeaker om de content hardop voor te lezen
-    site: Gehele site
+    whole_site: Gehele site
     select_a_node_left: Selecteer linksboven een item...    
   approvals:
     approval_failed: Goedkeuren mislukt
