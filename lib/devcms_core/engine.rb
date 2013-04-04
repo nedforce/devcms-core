@@ -61,7 +61,8 @@ module DevcmsCore
     end
     
     initializer "data checker config" do |app|
-      DataChecker.config.checker_logger = DataChecker::DatabaseLogger       
+      DataChecker.config.site_url = "http://#{Settler[:host]}" if Settler[:host].present?
+      DataChecker.config.checker_logger = DataChecker::DatabaseLogger  
     end    
 
     config.after_initialize do |app|
