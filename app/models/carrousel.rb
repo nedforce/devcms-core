@@ -116,11 +116,26 @@ class Carrousel < ActiveRecord::Base
     false
   end
   
+  def transition_time_in_seconds
+    if transition_time > 0
+      transition_time.to_f/1000.0
+    else
+      case animation
+      when Carrousel::ANIMATION_SPRING
+        2
+      when Carrousel::ANIMATION_SLIDE
+        display_time
+      else
+        1
+      end
+    end
+  end  
+  
   # Get display time
   def display_time
     read_attribute(:display_time) || 0
   end  
-  
+
   # Set display time
   def display_time=(time)
     if time.is_a?(Array) and time.size == 2

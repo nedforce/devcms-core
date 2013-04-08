@@ -93,14 +93,14 @@ Rails.application.routes.draw do
   resources :newsletter_editions, :only => :show
   resources :news_archives, :only => :show do
     member do
-      get ':month/:year' => :archive, :month => /\d{1-2}/, :year => /\d{4}/
+      get ':year/:month' => :archive, :month => /\d{1,2}/, :year => /\d{4}/ 
       get :archive
     end
   end
   resources :news_items, :only => :show
   resources :news_viewers, :only => :show do
     member do
-      get ':month/:year' => :archive
+      get ':year/:month' => :archive, :month => /\d{1,2}/, :year => /\d{4}/
       get :archive
     end
   end
