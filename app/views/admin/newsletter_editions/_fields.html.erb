@@ -34,7 +34,7 @@ ndf = new Ext.dvtr.NodeDropField({
   fieldLabel: '<%= I18n.t("newsletters.header") %>',
   value: '<%= @newsletter_edition.header_image_node_id || String.new %>',
   id: 'newsletter_edition_header_image_id',
-  text: '<%= image_tag(content_node_url(@newsletter_edition.header, :action => 'newsletter_banner', :format => :jpg)) %>',
+  text: '<%= image_tag(content_node_url(@newsletter_edition.header, :action => 'newsletter_banner', :format => :jpg)) if @newsletter_edition.header %>',
   allowedContentTypes: ['Image'],
   width: 60
 });
