@@ -117,7 +117,7 @@ class Carrousel < ActiveRecord::Base
   end
   
   def transition_time_in_seconds
-    if transition_time > 0
+    if transition_time.present? && transition_time > 0
       transition_time.to_f/1000.0
     else
       case animation
