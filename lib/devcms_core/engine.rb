@@ -1,11 +1,11 @@
 module DevcmsCore
-  
+
   class Engine < Rails::Engine
     config.model_paths = []
     config.layout_paths = []
     config.registered_models = []
     config.allowed_content_types_for_alphabetic_index = %w( Page )
-    
+
     config.reserved_slugs = ['admin', 'assets']
     config.rewrite_paths = []
     config.rewriter = nil
@@ -14,11 +14,11 @@ module DevcmsCore
     config.app_middleware.insert_before(::DevcmsCore::Rewriter, ::ActionDispatch::Static, "#{root}/public") 
 
     register_cms_modules        
-    
+
     initializer "haml_configuration" do |app|
       Haml::Template.options[:format] = :xhtml          
     end
-    
+
     initializer "exceptions_app" do |app|
       app.config.exceptions_app = app.routes
     end
@@ -27,10 +27,10 @@ module DevcmsCore
       config.model_paths.reverse.each do |model_path| 
         config.registered_models += model_path.existent.collect{|model| model.split('/').last[0..-4].camelize }
       end
-      
+
       config.reserved_slugs += config.registered_models.collect(&:tableize)
     end
-    
+
     initializer "devcms_precompile" do |app|
       app.config.assets.precompile += [
         'application.css',
@@ -38,10 +38,10 @@ module DevcmsCore
         'pdf.css',
         'plain.css',
         'print.css', 
-        'ie.css',       
+        'ie.css',
         'templates/default.css'
       ]
-      
+
       app.config.assets.precompile += [
         'devcms_core.js',
         'devcms_core_admin.js',
@@ -59,17 +59,17 @@ module DevcmsCore
         'imports/ie9_create_contextual_fragment.js'
       ]
     end
-    
+
     initializer "data checker config" do |app|
-      DataChecker.config.site_url = "http://#{Settler[:host]}" if Settler[:host].present?
+      DataChecker.config.site_url = "http://#{Settler[:host]}" if SETTLER_LOADED && Settler[:host].present?
       DataChecker.config.checker_logger = DataChecker::DatabaseLogger  
     end    
 
     config.after_initialize do |app|
-      # Process rewrites     
+      # Process rewrites
       config.rewrite_paths.map(&:existent).flatten.reverse.each do |rewrites| 
         require rewrites
-      end      
+      end
     end
 
     ActiveSupport.on_load(:action_controller) do
@@ -78,18 +78,17 @@ module DevcmsCore
       include DevcmsCore::RoutingHelpers
       include DevcmsCore::Recaptcha::Verify  
     end
-    
+
     ActiveSupport.on_load(:action_view) do
       include DevcmsCore::Recaptcha::ClientHelper
       include DevcmsCore::RoutingHelpers
-    end        
-    
+    end
+
     ActiveSupport.on_load(:active_record) do
       include DevcmsCore::ActiveRecordExtensions
       include DevcmsCore::ActsAsCommentable
     end
-    
+
     include DevcmsCore::ContentTypeConfiguration
   end
-
 end
