@@ -1,18 +1,18 @@
 - piwik_site_id = current_site.content.piwik_site_id if current_site.content.piwik_site_id.present?
-- if Settler[:piwik_analytics_domain] && piwik_site_id 
+- if Settler[:piwik_analytics_domain].present? && piwik_site_id 
   / Piwik Analytics code
   :javascript
     var _paq = _paq || [];
     _paq.push(["trackPageView"]);
     _paq.push(["enableLinkTracking"]);
 
-    (function() {
-      var u=(("https:" == document.location.protocol) ? "https" : "http") + "#{Settler[:piwik_analytics_domain]}";
+    (function () {
+      var u=(("https:" == document.location.protocol) ? "https" : "http") + "://#{Settler[:piwik_analytics_domain]}";
       _paq.push(["setTrackerUrl", u+"piwik.php"]);
       _paq.push(["setSiteId", "#{piwik_site_id}"]);
       var d=document, g=d.createElement("script"), s=d.getElementsByTagName("script")[0]; g.type="text/javascript";
       g.defer=true; g.async=true; g.src=u+"piwik.js"; s.parentNode.insertBefore(g,s);
     })();
-    <!-- End Piwik Code -->
+  / End Piwik Code
 
   %noscript= image_tag "#{request.protocol}#{Settler[:piwik_analytics_domain]}/piwik.php?idsite=#{piwik_site_id }&amp;rec=1", style: "border:0", alt: ''
