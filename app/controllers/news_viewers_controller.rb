@@ -19,15 +19,16 @@ class NewsViewersController < ApplicationController
     end
   end
 
-    # * GET /news_viewers/1/archive
+  # * GET /news_viewers/:id/archive
+  # * GET /news_viewers/:id/:year/:month
   def archive
-    @date = Date.parse("#{params[:year]||params[:date][:year]}-#{params[:month]||params[:date][:month]}-1") rescue Date.today
+    @date        = Date.parse("#{params[:year]||params[:date][:year]}-#{params[:month]||params[:date][:month]}-1") rescue Date.today
     @news_items  = @news_viewer.news_items.accessible
     @start_date  = @news_viewer.news_items.last.publication_start_date rescue Date.today
     @end_date    = @news_viewer.news_items.first.publication_start_date rescue Date.today
     @valid_range = (@start_date.beginning_of_month..Date.today.end_of_month)
-    @date = Date.today unless @valid_range.cover? @date
-    @news_items = @news_items.where('nodes.publication_start_date' => @date.beginning_of_month..@date.end_of_month)
+    @date        = Date.today unless @valid_range.cover? @date
+    @news_items  = @news_items.where('nodes.publication_start_date' => @date.beginning_of_month..@date.end_of_month)
 
     respond_to do |format|
       format.html { render :template => '/news_archives/archive' }
