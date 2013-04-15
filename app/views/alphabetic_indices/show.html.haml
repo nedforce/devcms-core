@@ -15,4 +15,7 @@
           - @items.each do |item|
             %li
               = link_to_content_node index_title(item, @letter), item
-              %p= item.respond_to?(:preamble) ? item.preamble : item.try(:description)
+              - if item.respond_to?(:preamble)
+                %p= item.preamble
+              - else
+                = w item.try(:description)
