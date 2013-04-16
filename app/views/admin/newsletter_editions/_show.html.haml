@@ -1,0 +1,34 @@
+- @approved_content_items ||= record.approved_items
+.regularPage.newsletterEdition
+  %h2= h record.title
+
+  - unless record.new_record?
+    .metadata.clearfix
+      %p.publicationDate
+        == #{t 'shared.published'}:
+        = l record.publication_start_date, :format => :long
+      %p.lastUpdateDate
+        == #{t 'shared.last_updated'}:
+        = l record.updated_at, :format => :long
+
+  .content
+    .htmlField.clearfix
+      = w record.body
+
+    - if @approved_content_items.present?
+      %h3= t 'newsletters.items'
+      %table#items{ :cellpadding => 0, :cellspacing => 0 }
+        %thead
+          %tr
+            %th.gray{ :scope => 'col' }
+              = t 'newsletters.edition_title'
+            %th.right.gray{ :scope => 'col' }
+              = t 'newsletters.type'
+        %tbody
+          - @approved_content_items.each_with_index do |item, i|
+            %tr{ :class => "#{'alt' if i.even?}" }
+              %td= link_to h(item.content_title), '#'
+              %td.right.type= item.class.human_name
+
+    - else
+      %p= t 'newsletters.no_items'
