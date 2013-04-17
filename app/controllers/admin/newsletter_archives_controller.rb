@@ -8,6 +8,8 @@ class Admin::NewsletterArchivesController < Admin::AdminController
   
   skip_before_filter :find_node, :only => :index
 
+  skip_before_filter :set_cache_buster, :only => [ :index, :show ]
+
   require_role [ 'admin', 'final_editor' ], :except => [ :index, :show ]
 
   def index
@@ -21,7 +23,6 @@ class Admin::NewsletterArchivesController < Admin::AdminController
       format.any { super }
     end
   end
-
 
   def show
     respond_to do |format|
