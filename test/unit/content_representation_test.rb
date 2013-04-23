@@ -52,11 +52,6 @@ class ContentRepresentationTest < ActiveSupport::TestCase
     end
   end
 
-  def test_should_set_default_positions_when_none_are_specified
-    content_representation = create_content_representation
-    assert_equal 2, content_representation.position
-  end
-
   def test_should_not_allow_content_if_content_is_not_allowed_as_side_box_content
     assert_no_difference('ContentRepresentation.count') do
       content_representation = create_content_representation(:parent => @root_section_node, :content => @devcms_news_item_node)

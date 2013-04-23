@@ -32,9 +32,6 @@ class ContentRepresentation < ActiveRecord::Base
   # Accessor to set the partial title explicitly.
   attr_accessor :title
 
-  # Provides list functionality to all +ContentRepresentation+ instances
-  acts_as_list :scope => :parent_id
-
   # The node whose side box contains the content box element.
   belongs_to :parent, :class_name => 'Node'
 

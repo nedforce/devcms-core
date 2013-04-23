@@ -31,4 +31,13 @@ class NewsArchivesControllerTest < ActionController::TestCase
     assert assigns(:end_date)
     assert assigns(:news_items)
   end
+
+  def test_should_show_news_archive_archive_action_from_search
+    get :archive, :id => news_archives(:devcms_news).id, :date => {:month => Date.today.month, :year => Date.today.year}
+    assert_response :success
+    assert assigns(:news_archive)
+    assert assigns(:start_date)
+    assert assigns(:end_date)
+    assert assigns(:news_items)
+  end
 end
