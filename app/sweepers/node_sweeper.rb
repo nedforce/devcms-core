@@ -28,13 +28,13 @@ protected
       if node.show_in_menu || node.show_in_menu_changed?
         if node.parent.present?        
           # Expire footer if parent is a site
-          controller.expire_fragment(:footer_for_site => node.parent.id) if node.parent.sub_content_type == 'Site'
+          expire_fragment(:footer_for_site => node.parent.id) if node.parent.sub_content_type == 'Site'
         end
         # Expire mainmenu of containing site if in main menu scope of containing site
-        controller.expire_fragment(:main_menu_for_site => node.containing_site.id) if node.depth - node.containing_site.depth <= Devcms.main_menu_depth
+        expire_fragment(:main_menu_for_site => node.containing_site.id) if node.depth - node.containing_site.depth <= Devcms.main_menu_depth
       end
       # Expire slideshow on delete/destroy
-      controller.expire_fragment(:header_slideshow_for => node.child_ancestry ) if node.deleted_at.present?
+      expire_fragment(:header_slideshow_for => node.child_ancestry ) if node.deleted_at.present?
     end
 
     #TODO: Expire content boxes => based on content type etc. Might be path, parent or grandparent etc..        
@@ -42,16 +42,16 @@ protected
     if node.sub_content_type == 'Image'
       if (node.parent.present? rescue false)
         if node.content.blank? || node.changed == ["updated_at"] || node.content.is_for_header_changed? || ((node.changed & %w(url_alias ancestry private deleted_at)).present? && node.content.is_for_header)
-          controller.expire_fragment(:header_slideshow_for => node.parent.header_container_ancestry ) # Expire parent or ancestor container
-          controller.expire_fragment(:header_slideshow_for => node.ancestry ) #expire parent in case the was the last header image for this parent
+          expire_fragment(:header_slideshow_for => node.parent.header_container_ancestry ) # Expire parent or ancestor container
+          expire_fragment(:header_slideshow_for => node.ancestry ) #expire parent in case the was the last header image for this parent
         end
       end
-      controller.expire_page(:host => Settler[:host], :controller => '/images', :action => :thumbnail,          :id => node.content_id, :format => 'jpg')
-      controller.expire_page(:host => Settler[:host], :controller => '/images', :action => :header,             :id => node.content_id, :format => 'jpg')
-      controller.expire_page(:host => Settler[:host], :controller => '/images', :action => :big_header,         :id => node.content_id, :format => 'jpg')
-      controller.expire_page(:host => Settler[:host], :controller => '/images', :action => :full,               :id => node.content_id, :format => 'jpg')
-      controller.expire_page(:host => Settler[:host], :controller => '/images', :action => :sidebox,            :id => node.content_id, :format => 'jpg')
-      controller.expire_page(:host => Settler[:host], :controller => '/images', :action => :content_box_header, :id => node.content_id, :format => 'jpg')
+      expire_page(:host => Settler[:host], :controller => '/images', :action => :thumbnail,          :id => node.content_id, :format => 'jpg')
+      expire_page(:host => Settler[:host], :controller => '/images', :action => :header,             :id => node.content_id, :format => 'jpg')
+      expire_page(:host => Settler[:host], :controller => '/images', :action => :big_header,         :id => node.content_id, :format => 'jpg')
+      expire_page(:host => Settler[:host], :controller => '/images', :action => :full,               :id => node.content_id, :format => 'jpg')
+      expire_page(:host => Settler[:host], :controller => '/images', :action => :sidebox,            :id => node.content_id, :format => 'jpg')
+      expire_page(:host => Settler[:host], :controller => '/images', :action => :content_box_header, :id => node.content_id, :format => 'jpg')
     end
   end
 end
