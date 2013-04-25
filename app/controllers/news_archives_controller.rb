@@ -24,8 +24,8 @@ class NewsArchivesController < ApplicationController
   def archive
     @date        = Date.parse("#{params[:year]||params[:date][:year]}-#{params[:month]||params[:date][:month]}-1") rescue Date.today
     @news_items  = @news_archive.news_items.accessible
-    @start_date  = @news_items.minimum(:publication_start_date) rescue Date.today
-    @end_date    = @news_items.maximum(:publication_start_date) rescue Date.today
+    @start_date  = @news_items.minimum(:publication_start_date).to_date rescue Date.today
+    @end_date    = @news_items.maximum(:publication_start_date).to_date rescue Date.today
     @valid_range = (@start_date.beginning_of_month..Date.today.end_of_month)
     @date        = Date.today unless @valid_range.cover? @date
     @news_items  = @news_items.where('nodes.publication_start_date' => @date.beginning_of_month..@date.end_of_month)
