@@ -8,12 +8,12 @@ Ext.Updater.defaults.loadScripts = true;
 
 Ext.onReady(function(){
     perPage = 25
-    
+
     // Set default parameters for ajax requests
     defaultParams = {
       authenticity_token: '<%= form_authenticity_token -%>',
       format: 'xml'
-    };    
+    };
 
     Ext.QuickTips.init();
 
@@ -24,7 +24,7 @@ Ext.onReady(function(){
     // dataIndex maps the column to the specific data field in
     // the data store (created below)
     var cm = new Ext.grid.ColumnModel({
-      columns: 
+      columns:
         [{
              id: 'id',
              node_id: 'node_id',
@@ -36,7 +36,7 @@ Ext.onReady(function(){
              header: "<%= I18n.t('data_warnings.subject') %>",
              dataIndex: 'subject',
              width: 150,
-             sortable: true
+             sortable: false
          },{
              header: "<%= I18n.t('data_warnings.message') %>",
              dataIndex: 'message',
@@ -74,8 +74,8 @@ Ext.onReady(function(){
 
         autoLoad: {params: {start: 0, limit: perPage}}
     });
-    
-    selModel = new Ext.grid.RowSelectionModel({singleSelect:false});    
+
+    selModel = new Ext.grid.RowSelectionModel({singleSelect:false});
 
     // create the grid
     grid = new Ext.grid.GridPanel({
@@ -101,7 +101,7 @@ Ext.onReady(function(){
                   tooltip: '<%= I18n.t("data_warnings.delete_tooltip") %>',
                   handler: handleDelete,
                   iconCls:'menu_item_delete'
-              },        
+              },
               {
                   text: '<%= I18n.t("data_warnings.clear") %>',
                   tooltip: '<%= I18n.t("data_warnings.clear_tooltip") %>',
@@ -110,9 +110,9 @@ Ext.onReady(function(){
               }
         ]
     });
-    
-   selModel.addListener('rowselect', onRowSelect);    
-    
+
+   selModel.addListener('rowselect', onRowSelect);
+
    leftPanel = new Ext.Panel({
      layout: 'border',
      border: 'false',
@@ -133,9 +133,9 @@ Ext.onReady(function(){
             Ext.apply(rightPanel, {region: 'center'})
         ]
     }
-    
-    var last_loaded_item_id = -1;    
-    
+
+    var last_loaded_item_id = -1;
+
     function onRowSelect (selModel, rowIndex, record) {
       rightPanel.load({
         url: '/admin/nodes/'+record.get('node_id')+'/edit',
@@ -146,7 +146,7 @@ Ext.onReady(function(){
          }
       });
     }
-    
+
     function handleDelete(deleteEvent) {
       grid.disable();
       var selectedItems = grid.selModel.getSelections();
@@ -159,13 +159,13 @@ Ext.onReady(function(){
           Ext.MessageBox.alert('<%= I18n.t("data_warnings.message") %>','<%= I18n.t("data_warnings.select_one") %>');
           grid.enable();
       }
-    }  
-    
+    }
+
     function handleClear(clearEvent) {
       grid.disable();
       Ext.MessageBox.confirm('<%= I18n.t("data_warnings.message_header") %>','<%= I18n.t("data_warnings.confirm_clear") %>', clearWarnings);
     }
-    
+
     function deleteRecords(button) {
         if (button == 'yes') {
           var selectedRows = grid.selModel.getSelections();
@@ -190,8 +190,8 @@ Ext.onReady(function(){
           });
         }
         else grid.enable();
-    };    
-    
+    };
+
     function clearWarnings(button) {
         if (button == 'yes')
         {
@@ -203,7 +203,7 @@ Ext.onReady(function(){
               headers: {
                 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>'
               },
-              
+
               callback: function(options, success, response){
                 if (!success) {
                     Ext.ux.alertResponseError(response)
@@ -219,7 +219,7 @@ Ext.onReady(function(){
           grid.enable();
         }
     };
-  
+
     initViewport(mainPanelCfg);
 });
 
