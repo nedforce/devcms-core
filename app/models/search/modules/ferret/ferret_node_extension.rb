@@ -75,10 +75,7 @@ module Search::Modules::Ferret::FerretNodeExtension
 
     # Returns the latest approved content tokens for indexing.
     def content_tokens_to_index
-      result = Helper.new.strip_tags(content.content_tokens) || ''
-      # Strip any HTML and JavaScript and replace whitespace characters (including newlines) with a single space.
-      result = Helper.new.sanitize(result.gsub(/[[:space:]]/, ' ').gsub(/[[:space:]]{2,}/, ' '))
-      return result.strip
+      (content.content_tokens || '').gsub(/<[^>]*>/, " ").gsub(/[[:space:]]/, ' ').gsub(/[[:space:]]{2,}/, ' ').strip
     end
 
     # Returns the publication date for indexing.
