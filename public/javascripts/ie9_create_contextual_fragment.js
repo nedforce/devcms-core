@@ -1,3 +1,4 @@
+/*global document*/
 if ((typeof Range !== "undefined") && !Range.prototype.createContextualFragment) {
   Range.prototype.createContextualFragment = function (html) {
     var frag = document.createDocumentFragment(),

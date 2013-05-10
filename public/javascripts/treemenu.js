@@ -1,3 +1,4 @@
+/*global document,$$*/
 function toggleTreeItem(treemenu, treeitem) {
   var plus, collapse;
 

@@ -1,3 +1,4 @@
+/*global Ext*/
 initViewport = function (pnl) {
 
   Ext.Ajax.timeout = 120000;
