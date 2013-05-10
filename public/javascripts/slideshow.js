@@ -1,12 +1,12 @@
-// Default values
+/*global window,$*/
 
+// Default values
 var defaultFadeDuration = 3.0; // Default fade duration if none is specified. In seconds.
 var defaultDisplayDuration = 5000; // Default display duration if none is specified. In milliseconds.
 var defaultFadeOutStartToFadeInStartDelay = 0.0; // Default delay next slide starts fading in after current slide has begun fading out. In milliseconds.
 var defaultContainerClassName = 'header-slideshow'; // Default container class name.
 
 // Classes
-
 var SlideShow = Class.create({
 
   // Call this function to start the image cycler.
@@ -17,7 +17,7 @@ var SlideShow = Class.create({
   // Do not call this function directly.
   startTimer: function () {
     var _self = this; // Hack required because Javascript timers execute in a global context
-    setTimeout(function () { _self.loadNextSlide(); }, this.options.displayDuration);
+    window.setTimeout(function () { _self.loadNextSlide(); }, this.options.displayDuration);
   },
 
   // Do not call this function directly.
@@ -39,7 +39,7 @@ var SlideShow = Class.create({
   fadePreviousSlideOut: function () {
     this.previousSlide.fade({ duration: this.options.fadeDuration / 1000 });
     var _self = this; // Hack required because Javascript timers execute in a global context
-    setTimeout(function () { _self.fadeCurrentSlideIn(); }, this.options.fadeOutStartToFadeInStartDelay);
+    window.setTimeout(function () { _self.fadeCurrentSlideIn(); }, this.options.fadeOutStartToFadeInStartDelay);
   },
 
   fadeCurrentSlideIn: function () {

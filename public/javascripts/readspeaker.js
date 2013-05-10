@@ -1,3 +1,4 @@
+/*global document,$$*/
 function showReadspeaker(anchor) {
   var flash_url, flash, readspeaker_button, page_container, buttons_container;
 

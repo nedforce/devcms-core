@@ -1,3 +1,4 @@
+/*global document,$,$$,Ajax*/
 document.observe('dom:loaded', function () {
   javascriptifyLogoutLinks();
   javascriptifyUnsubscribeNewsletterArchiveLinks();
@@ -50,17 +51,21 @@ function javascriptifyDeleteWeblogPostLinks() {
 function attachDeleteFormToAnchor(anchor, no_confirmation) {
   anchor.observe('click', function (event) {
     if (no_confirmation || confirm('Weet u het zeker?')) {
-      var f = document.createElement('form');
+      var f, m, s;
+
+      f = document.createElement('form');
       f.style.display = 'none';
       anchor.parentNode.appendChild(f);
       f.method = 'POST';
       f.action = anchor.href;
-      var m = document.createElement('input');
+
+      m = document.createElement('input');
       m.setAttribute('type', 'hidden');
       m.setAttribute('name', '_method');
       m.setAttribute('value', 'delete');
       f.appendChild(m);
-      var s = document.createElement('input');
+
+      s = document.createElement('input');
       s.setAttribute('type', 'hidden');
       s.setAttribute('name', 'authenticity_token');
       s.setAttribute('value', AUTH_TOKEN);
@@ -153,54 +158,53 @@ function ajaxifyPollSideBoxElements() {
   $$('.poll_content_box_form').each(function (form) {
     var buttons = form.down('.buttons');
 
-		if (buttons.down('.login_link') == null) {
-	    buttons.down('.vote_button').addClassName('hidden');
+    if (buttons.down('.login_link') == null) {
+      buttons.down('.vote_button').addClassName('hidden');
 
-	    var resultsLink = buttons.down('.results_link');
-	    resultsLink.observe('click', function (event) {
-	      new Ajax.Request(resultsLink.href, {
-	        asynchronous: true,
-	        evalScripts: true,
-	        method: 'get'
-	      });
+      var resultsLink = buttons.down('.results_link');
+      resultsLink.observe('click', function (event) {
+        new Ajax.Request(resultsLink.href, {
+          asynchronous: true,
+          evalScripts: true,
+          method: 'get'
+        });
 
-	      event.stop();
-	    });
+        event.stop();
+      });
 
-	    var voteLinkContainer = new Element('div', { 'class': 'vote' });
+      var voteLinkContainer = new Element('div', { 'class': 'vote' });
 
-	    var image = new Element('img', {
-	      'src': I18n.t('submit_image', 'polls'),
-	      'alt': I18n.t('submit_alt', 'polls'),
-	      'title': I18n.t('submit_title', 'polls')
-	    });
+      var image = new Element('img', {
+        'src': I18n.t('submit_image', 'polls'),
+        'alt': I18n.t('submit_alt', 'polls'),
+        'title': I18n.t('submit_title', 'polls')
+      });
 
+      var voteLink = new Element('a', {
+        'href': '#'
+      });
 
-	    var voteLink = new Element('a', {
-	      'href': '#'
-	    });
+      voteLink.update(I18n.t('submit', 'polls'));
 
-			voteLink.update(I18n.t('submit', 'polls'));
+      voteLink.observe('click', function (event) {
+        new Ajax.Request(form.action, {
+          asynchronous: true,
+          evalScripts: true,
+          method: 'post',
+          parameters: form.serialize()
+        });
 
-	    voteLink.observe('click', function (event) {
-	      new Ajax.Request(form.action, {
-	        asynchronous: true,
-	        evalScripts: true,
-	        method: 'post',
-	        parameters: form.serialize()
-	      });
+        event.stop();
+      });
 
-	      event.stop();
-	    });
+      voteLinkContainer.insert(image);
+      voteLinkContainer.insert(voteLink);
 
-	    voteLinkContainer.insert(image);
-	    voteLinkContainer.insert(voteLink);
+      image.addClassName('icon transparent');
+      voteLink.addClassName('vote_link');
 
-	    image.addClassName('icon transparent');
-	    voteLink.addClassName('vote_link');
-
-	    buttons.insert(voteLinkContainer);
-		}
+      buttons.insert(voteLinkContainer);
+    }
   });
 }
 
