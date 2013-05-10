@@ -1,3 +1,4 @@
+/*global Ajax,$$*/
 function getSynonymsForCategory(category_id, field) {
   new Ajax.Updater(field.down('.category_synonyms_field_wrapper'), '/admin/categories/' + category_id + '/synonyms', {
     method: 'get'

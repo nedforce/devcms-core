@@ -1,3 +1,4 @@
+/*global window,$*/
 var entropy_state = 0;
 var privileged_user = false;
 

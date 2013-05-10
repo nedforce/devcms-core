@@ -1,3 +1,4 @@
+/*global document,$,$$,Ajax*/
 document.observe('dom:loaded', function () {
   javascriptifyLogoutLinks();
   javascriptifyUnsubscribeNewsletterArchiveLinks();
@@ -15,7 +16,7 @@ function javascriptifyToggableSectionLinks() {
     $(link.id.replace('toggle_section_', '')).hide();
 
     link.observe('click', function (event) {
-      section_id = $(this).id.replace('toggle_section_', '');
+      var section_id = $(this).id.replace('toggle_section_', '');
       Effect.toggle(section_id, 'appear', { duration: 0.5 });
       Element.toggleClassName(link.id, 'minus_icon');
       Event.stop(event);
@@ -50,17 +51,21 @@ function javascriptifyDeleteWeblogPostLinks() {
 function attachDeleteFormToAnchor(anchor, no_confirmation) {
   anchor.observe('click', function (event) {
     if (no_confirmation || confirm('Weet u het zeker?')) {
-      var f = document.createElement('form');
+      var f, m, s;
+
+      f = document.createElement('form');
       f.style.display = 'none';
       anchor.parentNode.appendChild(f);
       f.method = 'POST';
       f.action = anchor.href;
-      var m = document.createElement('input');
+
+      m = document.createElement('input');
       m.setAttribute('type', 'hidden');
       m.setAttribute('name', '_method');
       m.setAttribute('value', 'delete');
       f.appendChild(m);
-      var s = document.createElement('input');
+
+      s = document.createElement('input');
       s.setAttribute('type', 'hidden');
       s.setAttribute('name', 'authenticity_token');
       s.setAttribute('value', AUTH_TOKEN);
@@ -79,19 +84,21 @@ function ajaxifyNewsletterArchiveSideBoxElements() {
 }
 
 function ajaxifyNewsletterArchiveSideBoxElementForm(id) {
-  var form = $(id);
-  var buttons = form.down('div.buttons');
+  var form, buttons, image, link;
+
+  form = $(id);
+  buttons = form.down('div.buttons');
 
   if (form.hasClassName('unsubscribe')) {
     buttons.down('input.unsubscribe_button').addClassName('hidden');
 
-    var image = new Element('img', {
+    image = new Element('img', {
       'src': I18n.t('unsubscribe_image', 'newsletter_archives'),
       'alt': I18n.t('unsubscribe_alt', 'newsletter_archives'),
       'title': I18n.t('unsubscribe_title', 'newsletter_archives')
     });
 
-    var link = new Element('a', {
+    link = new Element('a', {
       'href': '#'
     }).update(I18n.t('unsubscribe', 'newsletter_archives'));
 
@@ -117,13 +124,13 @@ function ajaxifyNewsletterArchiveSideBoxElementForm(id) {
   } else {
     buttons.down('input.subscribe_button').addClassName('hidden');
 
-    var image = new Element('img', {
+    image = new Element('img', {
       'src': I18n.t('subscribe_image', 'newsletter_archives'),
       'alt': I18n.t('subscribe_alt', 'newsletter_archives'),
       'title': I18n.t('subscribe_title', 'newsletter_archives')
     });
 
-    var link = new Element('a', {
+    link = new Element('a', {
       'href': '#'
     }).update(I18n.t('subscribe', 'newsletter_archives'));
 
@@ -151,12 +158,14 @@ function ajaxifyNewsletterArchiveSideBoxElementForm(id) {
 
 function ajaxifyPollSideBoxElements() {
   $$('.poll_content_box_form').each(function (form) {
-    var buttons = form.down('.buttons');
+    var buttons, resultsLink, voteLinkContainer, image, voteLink;
+
+    buttons = form.down('.buttons');
 
     if (buttons.down('.login_link') == null) {
       buttons.down('.vote_button').addClassName('hidden');
 
-      var resultsLink = buttons.down('.results_link');
+      resultsLink = buttons.down('.results_link');
       resultsLink.observe('click', function (event) {
         new Ajax.Request(resultsLink.href, {
           asynchronous: true,
@@ -167,64 +176,65 @@ function ajaxifyPollSideBoxElements() {
         event.stop();
       });
 
-      var voteLinkContainer = new Element('div', { 'class': 'vote' });
+      voteLinkContainer = new Element('div', { 'class': 'vote' });
 
-      var image = new Element('img', {
+      image = new Element('img', {
         'src': I18n.t('submit_image', 'polls'),
         'alt': '',
         'title': I18n.t('submit_title', 'polls')
       });
 
-
-      var voteLink = new Element('a', {
+      voteLink = new Element('a', {
         'href': '#'
       });
 
       voteLink.update(I18n.t('submit', 'polls'));
 
-	    voteLink.observe('click', function (event) {
-	      new Ajax.Request(form.action, {
-	        asynchronous: true,
-	        evalScripts: true,
-	        method: 'post',
-	        parameters: form.serialize()
-	      });
+      voteLink.observe('click', function (event) {
+        new Ajax.Request(form.action, {
+          asynchronous: true,
+          evalScripts: true,
+          method: 'post',
+          parameters: form.serialize()
+        });
 
-	      event.stop();
-	    });
+        event.stop();
+      });
 
-	    voteLinkContainer.insert(image);
-	    voteLinkContainer.insert(voteLink);
+      voteLinkContainer.insert(image);
+      voteLinkContainer.insert(voteLink);
 
-	    image.addClassName('icon transparent');
-	    voteLink.addClassName('vote_link');
+      image.addClassName('icon transparent');
+      voteLink.addClassName('vote_link');
 
-	    buttons.insert(voteLinkContainer);
-		}
+      buttons.insert(voteLinkContainer);
+    }
   });
 }
 
 function showFontResizeBox() {
-  var fontResizeBox = $('fontsize');
+  var fontResizeBox, smallerFontLink, smallerFontImage, biggerFontLink, biggerFontImage;
+
+  fontResizeBox = $('fontsize');
 
   if (fontResizeBox) {
-    var smallerFontLink = new Element('a', {
+    smallerFontLink = new Element('a', {
       'href': '#',
       'title': I18n.t('smaller_text_title', 'font_resize')
     });
 
-    var smallerFontImage = new Element('img', {
+    smallerFontImage = new Element('img', {
       'src': I18n.t('smaller_text_image', 'font_resize'),
       'alt': I18n.t('smaller_text', 'font_resize'),
       'class': 'transparent'
     });
 
-    var biggerFontLink = new Element('a', {
+    biggerFontLink = new Element('a', {
       'href': '#',
       'title': I18n.t('bigger_text_title', 'font_resize')
     });
 
-    var biggerFontImage = new Element('img', {
+    biggerFontImage = new Element('img', {
       'src': I18n.t('bigger_text_image', 'font_resize'),
       'alt': I18n.t('bigger_text', 'font_resize'),
       'class': 'transparent'

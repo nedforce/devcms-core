@@ -1,4 +1,6 @@
-// provide input hints
+/*global document,$$*/
+
+// Provide input hints
 document.observe('dom:loaded', function () {
   var PLACEHOLDER_SUFFIX = '_placeholder'; // used for password inputs
 
