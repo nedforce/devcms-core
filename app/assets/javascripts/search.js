@@ -1,3 +1,4 @@
+/*global document,$,Ajax*/
 function getProjectsForProgramme(root_category_id) {
   var project_selection_field = $('project_selection_field');
 
@@ -16,6 +17,6 @@ function observeProgrammeSelectionField() {
   });
 }
 
-document.observe('dom:loaded', function () {
+//document.observe('dom:loaded', function () {
   // observeProgrammeSelectionField();
-});
+//});

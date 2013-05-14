@@ -1,3 +1,4 @@
+/*global document,window,$*/
 function insertPrintButtons() {
   var printLink, backLink;
 

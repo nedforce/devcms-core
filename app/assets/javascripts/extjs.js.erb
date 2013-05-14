@@ -1,3 +1,4 @@
+/*global Ext*/
 Ext.namespace('Ext.dvtr');
 Ext.BLANK_IMAGE_URL = '<%= image_path('blank.gif') %>';
 Ext.QuickTips.init();
@@ -5,7 +6,6 @@ Ext.Msg.minWidth = 300;
 Ext.Updater.defaults.loadScripts = true;
 
 initViewport = function (pnl) {
-
   Ext.Ajax.timeout = 120000;
   // If you pass in a Component instead of a config object you'll have to set the margins manually!
   Ext.apply(pnl, { region: 'center', margins: '0 5 5 5' });
