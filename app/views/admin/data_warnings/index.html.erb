@@ -176,7 +176,10 @@ Ext.onReady(function(){
                   url: '/admin/data_warnings/' + item.id + '.json',
                   method: 'POST',
 
-                  params: "_method=delete&authenticity_token=<%= form_authenticity_token -%>",
+                  params: "_method=delete",
+                  headers: {
+                    'X-CSRF-Token': '<%= form_authenticity_token.to_s %>'
+                  },
                   callback: function(options, success, response){
                     if(!success){
                         Ext.ux.alertResponseError(response)
