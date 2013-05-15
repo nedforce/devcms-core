@@ -1,9 +1,9 @@
-class Admin::ResponseFieldsController < Admin::AdminController 
-  
+class Admin::ResponseFieldsController < Admin::AdminController
+
   before_filter :find_contact_form, :find_response, :find_response_field
-  
+
   layout false
-  
+
   def file
     if @response_field.file?
       send_file(@response_field.file.path)
@@ -11,7 +11,7 @@ class Admin::ResponseFieldsController < Admin::AdminController
       render :nothing => true, :status => :not_found
     end
   end
-  
+
 private
 
   def find_contact_form
@@ -24,6 +24,7 @@ private
 
   def find_response_field
     @response_field = @response.response_fields.find(params[:id])
+    debug
   end
 
 end

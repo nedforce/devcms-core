@@ -77,19 +77,23 @@ class ContactFormsController < ApplicationController
     @entered_fields
   end
 
-  def get_used_fields_only(contact_fields)
+  def get_used_fields_only(contact_field)
     used_fields = []
-    if contact_fields.present?
-      @contact_form_fields.each do |field|
-        if contact_fields["#{field.id}"].present?
-          if field.field_type == 'multiselect'
-            value = contact_fields["#{field.id}"].join(';')
-          else
-            value = contact_fields["#{field.id}"]
-          end
 
-          used_fields << { :id => field.id, :label => field.label, :value => value, :type => field.field_type }
+    if contact_field.present?
+      @contact_form_fields.each do |field|
+        if contact_field["#{field.id}"].present?
+          if field.field_type == 'multiselect'
+            value = contact_field["#{field.id}"].join(';')
+          else
+            value = contact_field["#{field.id}"]
+          end
+        else
+          # Make sure an empty field is not nil, so that the exported XLS stays correctly formatted
+          value = ''
         end
+
+        used_fields << { :id => field.id, :label => field.label, :value => value, :type => field.field_type }
       end
     end
 

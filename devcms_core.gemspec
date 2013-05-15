@@ -5,21 +5,21 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.authors     = ['Nedforce Informatica Specialisten B.V.']
   s.email       = ['info@nedforce.nl']
-  s.homepage    = 'http://www.nedforce.nl'  
+  s.homepage    = 'http://www.nedforce.nl'
   s.summary     = 'CMS engine for rails 3.2'
   s.description = 'CMS engine for rails 3.2'
   s.version     = '0.0.1'
-  
+
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
-  s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }  
+  s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
 
   s.add_dependency  'rails', '>= 3.2.3', '< 4.0.0'
   s.add_dependency  'acts-as-taggable-on', '~> 2.2.2'
   s.add_dependency  'addressable', '~> 2.1'
   s.add_dependency  'ancestry', '~> 1.3.0'
   s.add_dependency  'dsl_accessor', '0.3.3'
-  s.add_dependency  'dynamic_attributes', '~> 1.2.0'  
+  s.add_dependency  'dynamic_attributes', '~> 1.2.0'
   s.add_dependency  'feed-normalizer', '~> 1.5.2'
   s.add_dependency  'haml', '~> 3.0'
   s.add_dependency  'libxml-ruby', '~> 2.2.0'
@@ -47,8 +47,8 @@ Gem::Specification.new do |s|
   s.add_dependency  'data_checker'
 
   s.add_dependency  'prototype_legacy_helper', '0.0.0'
-  s.add_dependency  'prototype-rails', '~> 3.2.1'  
-  
+  s.add_dependency  'prototype-rails', '~> 3.2.1'
+
   ##### Asset helpers (require through bundler in app, not necessary in production always)
 
   # Javascript
@@ -61,8 +61,8 @@ Gem::Specification.new do |s|
   ##### Development / test dependencies
 
   s.add_development_dependency 'jakewendt-html_test', '~> 0.2.3'
-  s.add_development_dependency 'mocha'   
-  s.add_development_dependency 'fakeweb' 
+  s.add_development_dependency 'mocha'
+  s.add_development_dependency 'fakeweb'
   s.add_development_dependency 'rsolr', '~> 0.12.1'
-  
+
 end

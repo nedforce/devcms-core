@@ -1,4 +1,4 @@
-# This +RESTful+ controller is used to orchestrate and control the flow of 
+# This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to administering +Response+ objects
 class Admin::ResponsesController < Admin::AdminController
 
@@ -6,7 +6,7 @@ class Admin::ResponsesController < Admin::AdminController
   before_filter :find_contact_form,       :only => [ :index, :upload_csv, :import_csv ]
   before_filter :set_paging,              :only => [ :index ]
   before_filter :set_sorting,             :only => [ :index ]
-  
+
   skip_before_filter :find_node
 
   layout false
@@ -21,7 +21,7 @@ class Admin::ResponsesController < Admin::AdminController
     else
       @responses = @contact_form.responses
     end
-    
+
     respond_to do |format|
       format.html #index.html.erb
       format.xml  #index.xml.builder
@@ -34,7 +34,7 @@ class Admin::ResponsesController < Admin::AdminController
   def update
     @response_field = ResponseField.find_by_response_id_and_contact_form_field_id(params[:response_id], params[:contact_form_field_id])
     @response_field = ResponseField.create(:response_id => params[:response_id], :contact_form_field_id => params[:contact_form_field_id]) if @response_field.nil?
-    
+
     respond_to do |format|
       if @response_field.update_attributes(params[:response_field])
         format.xml  { head :ok }
@@ -43,19 +43,19 @@ class Admin::ResponsesController < Admin::AdminController
       end
     end
   end
-  
+
   # * DELETE /admin/contact_forms/:contact_form_id/responses/:id
   # * DELETE /admin/contact_forms/:contact_form_id/responses/:id.json
   def destroy
     @response = Response.find(params[:id])
-    
+
     respond_to do |format|
       @response.destroy
       format.html { redirect_to admin_responses_path }
       format.json { head :ok }
     end
   end
-  
+
     # [ ] TODO: Form maken waarmee je file kunt uploaden
   def upload_csv
     # Determine the required order of files for the uploaded csv
@@ -70,7 +70,7 @@ class Admin::ResponsesController < Admin::AdminController
 
   def import_csv
     csv_data = params[:response][:uploaded_data].read
-    
+
     headers_ok = false
     headers = []
     CSV.parse(csv_data) do |row|
@@ -118,14 +118,14 @@ class Admin::ResponsesController < Admin::AdminController
       end
     end
   end
-  
+
   protected
 
   # Finds the +ContactForm+ object corresponding to the passed +id+ parameter.
   def find_contact_form
     @contact_form = ContactForm.find(params[:contact_form_id], :include => :contact_form_fields)
   end
-  
+
   # Finds sorting parameters.
   def set_sorting
     if extjs_sorting?
@@ -136,9 +136,9 @@ class Admin::ResponsesController < Admin::AdminController
     end
     @sort_field = "UPPER(#{@sort_field})" unless @sort_field =~ /(id|created_at)/
   end
-  
+
   private
-  
+
   def render_responses_xls(contact_form, responses)
     xls = Spreadsheet::Excel::Workbook.new
     sheet = xls.create_worksheet :name => 'Inzendingen'
@@ -184,5 +184,5 @@ class Admin::ResponsesController < Admin::AdminController
     xls.write(io)
     io.rewind
     io.read
-  end  
+  end
 end

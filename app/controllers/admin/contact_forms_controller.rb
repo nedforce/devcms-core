@@ -1,4 +1,4 @@
-# This +RESTful+ controller is used to orchestrate and control the flow of 
+# This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to administering +ContactForm+ objects.
 class Admin::ContactFormsController < Admin::AdminController
 
@@ -81,7 +81,7 @@ class Admin::ContactFormsController < Admin::AdminController
   end
 
   protected
-  
+
   def get_used_fields_only(contact_fields)
     used_fields = []
     @contact_form_fields.each do |field|
@@ -90,7 +90,7 @@ class Admin::ContactFormsController < Admin::AdminController
       end
     end
     used_fields
-  end 
+  end
    # Check whether all obligatory fields are entered.
   # Returns +true+ if this is the case, +false+ otherwise.
   def entered_all_obligatory_fields?(array)
