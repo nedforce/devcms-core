@@ -4,9 +4,9 @@
 # A +ContactForm+ has many +ContactFormField+ objects.
 #
 # *Specification*
-# 
+#
 # Attributes
-# 
+#
 # * +title+ - The title of the contact form.
 # * +email_address+ - The email address to which contact requests are send; typically an email address of an editor or administrator.
 # * +description_before_contact_fields+ - The description of the contact form (printed before the actual contact fields).
@@ -23,7 +23,7 @@ class ContactForm < ActiveRecord::Base
   # Constants for different sendmethods. Used in the send_method column in the table
   SEND_METHOD_MAIL = 0;
   SEND_METHOD_DATABASE = 1;
-  
+
   acts_as_content_node
 
   # A +ContactForm+ has many +ContactFormField+ objects.
@@ -48,7 +48,11 @@ class ContactForm < ActiveRecord::Base
 
   # Virtual attribute to keep track of +ContactFormField+ objects that need to be deleted.
   attr_accessor :deleted_contact_form_fields
-  
+
+  # Virtual attributes for honeypotfields
+  attr_accessor :honeypot_name
+  attr_accessor :honeypot_empty_name
+
   after_paranoid_delete :remove_associated_content
 
   # Returns an array with the ids of the +ContactFormField+ objects that are obligatory.
@@ -120,5 +124,5 @@ protected
     self.contact_form_fields.destroy_all
     self.responses.destroy_all
   end
-  
+
 end

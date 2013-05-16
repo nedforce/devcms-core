@@ -6,6 +6,7 @@ class ContactFormsController < ApplicationController
   # each need a +ContactForm+ object to work with/act on.
   before_filter :find_contact_form,        :only => [ :show, :send_message ]
   before_filter :find_contact_form_fields, :only => [ :show, :send_message ]
+  around_filter :check_honeypot,           :only => :send_message
 
   # SSL is obligatory here for the authenticity token.
   ssl_required :show, :send_message
@@ -24,6 +25,7 @@ class ContactFormsController < ApplicationController
     @contact_form_field = params[:contact_form_field]
 
     get_entered_fields
+
     respond_to do |format|
       if entered_all_obligatory_fields?(@contact_form_field)
 
@@ -33,12 +35,13 @@ class ContactFormsController < ApplicationController
           # Create a new response object
           @response_row = Response.create!(:contact_form => @contact_form, :ip => request.remote_ip, :time => Time.now, :email => current_user.try(:email_address))
           @response_row.save
+
           # Create response_field objects
           @entered_fields.each do |field|
             response_field = ResponseField.new(:response => @response_row, :contact_form_field_id => field[:id])
 
             if field[:type] == 'file'
-              response_field.file = field[:value]
+              response_field.file  = field[:value]
               response_field.value = field[:value].try(:original_filename)
             else
               response_field.value = field[:value]
@@ -46,10 +49,11 @@ class ContactFormsController < ApplicationController
 
             response_field.save!
           end
+
         else
-          # Send response over e-mail
           ContactFormMailer.contact_message(@contact_form, @entered_fields).deliver
         end
+
         format.html # send_message.html.erb
       else
         @obligatory_error = true
@@ -110,4 +114,22 @@ class ContactFormsController < ApplicationController
     end
     return true
   end
+
+  def check_honeypot
+    if filled_check && empty_check
+      yield
+    else
+      # redirect with status 'Accepted', to confuse the bot
+      render 'send_message'
+    end
+  end
+
+  def filled_check
+    params[Rails.application.config.honeypot_name] == Rails.application.config.honeypot_value
+  end
+
+  def empty_check
+    params[Rails.application.config.honeypot_empty_name] == ''
+  end
+
 end
