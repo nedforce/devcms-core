@@ -119,8 +119,7 @@ class ContactFormsController < ApplicationController
     if filled_check && empty_check
       yield
     else
-      # redirect with status 'Accepted', to confuse the bot
-      render 'send_message'
+      head :unprocessable_entity
     end
   end
 

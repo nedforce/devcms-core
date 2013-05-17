@@ -5,9 +5,9 @@ gem 'rails', '3.2.13'
 gem 'sass-rails', '~> 3.2.3'
 gem 'coffee-rails', '~> 3.2.1'
 gem 'uglifier',     '~> 1.0'
-  
+
 group :development do
-  gem 'debugger'  
+  gem 'debugger'
 end
 
 gem 'data_checker', :git => 'git@git.nedforce.nl:data_checker.git', :branch => 'master'
@@ -17,6 +17,7 @@ gem 'prototype_legacy_helper', '0.0.0', :git => 'http://github.com/willbryant/pr
 group :test do
   gem 'turn', :require => false
   gem 'simplecov', "~> 0.6.4", :require => false
+  gem 'shoulda-context'
 end
 
 gemspec
