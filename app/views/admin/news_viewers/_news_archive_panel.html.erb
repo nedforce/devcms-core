@@ -3,8 +3,8 @@ var news_archives = [<%= @news_archives.collect{|archive| "[#{archive.id}, '#{es
 var selModel = new Ext.grid.SmartCheckboxSelectionModel({
   excel: false,
   singleSelect:true,
-  alwaysSelectOnCheck:false,    
-  email: true, 
+  alwaysSelectOnCheck:false,
+  email: true,
   dataIndex: 'checked'
 });
 
@@ -12,9 +12,9 @@ var selModel = new Ext.grid.SmartCheckboxSelectionModel({
 var archive_store = new Ext.data.SimpleStore({
     id: 0,
     fields: [
-       {name: 'id'},    
+       {name: 'id'},
        {name: 'title'},
-       {name: 'checked'}       
+       {name: 'checked'}
     ]
 });
 archive_store.loadData(news_archives);
@@ -24,19 +24,19 @@ var newsArchivePanel = new Ext.Panel({
     border: false,
     autoScroll: true,
     defaults: {autoHeight: true},
-    minSize: 185, 
+    minSize: 185,
     maxSize: 185,
     style: "border-right: 1px solid #99BBE8;",
     items: [
       new Ext.grid.GridPanel({
         store: archive_store,
-        selModel: selModel,        
-        border: false,        
-        frame: false,  
-        enableColumnResize: false,          
+        selModel: selModel,
+        border: false,
+        frame: false,
+        enableColumnResize: false,
         columns: [
-          selModel, 
-          {id:'id', header: "<%= escape_javascript NewsArchive.human_name %>", width: 185, sortable: true, dataIndex: 'title'}               
+          selModel,
+          {id:'id', header: "<%= escape_javascript NewsArchive.human_name %>", width: 185, sortable: true, dataIndex: 'title'}
         ],
         stripeRows: true
       })
@@ -61,7 +61,7 @@ var archivePanel = new Ext.Panel({
     height: Ext.get('right_panel_body').getHeight()-30,
     items:[
       Ext.apply(newsArchivePanel, {region: 'west', split: true, width: 185}),
-      Ext.apply(newsItemPanel, {region: 'center'})      
+      Ext.apply(newsItemPanel, {region: 'center'})
     ]
 });
 
@@ -69,12 +69,15 @@ var archivePanel = new Ext.Panel({
 function onRowSelect(selModel, rowIndex, record) {
   newsItemPanel.load({
     url: '/admin/news_viewers/<%= @news_viewer.id %>/news_viewer_items/available_news_items?news_archive_id=' + record.id,
-     params: Ext.ux.prepareParams(defaultParams, {format: 'html'}),
-     method: 'GET',
-     callback: function(options, success, response) {
-       if(!success)
-         Ext.ux.alertResponseError(response)
-       }
+      params: Ext.ux.prepareParams(defaultParams, {format: 'html'}),
+      method: 'GET',
+      headers: {
+       'X-CSRF-Token': '<%= form_authenticity_token.to_s %>'
+      },
+      callback: function(options, success, response) {
+        if(!success)
+          Ext.ux.alertResponseError(response)
+        }
       });
 }
 
@@ -83,11 +86,14 @@ function onCheckboxChange(selModel, record) {
   else removeNewsArchive(record);
 }
 
-function addNewsArchive (record) {                    
+function addNewsArchive (record) {
   Ext.Ajax.request({
       url: '/admin/news_viewers/<%= @news_viewer.id %>/news_viewer_archives',
       method: 'POST',
-      params: Ext.urlEncode({ authenticity_token: '<%= form_authenticity_token -%>', news_archive_id: record.id }),
+      params: Ext.urlEncode({ news_archive_id: record.id }),
+      headers: {
+       'X-CSRF-Token': '<%= form_authenticity_token.to_s %>'
+      },
       callback: function(options, success, response){
         if(!success && response.status == 422){
           var responseJson = Ext.util.JSON.decode(response.responseText)
@@ -95,14 +101,17 @@ function addNewsArchive (record) {
         }
         else if(!success) Ext.ux.alertResponseError(response, '<%= I18n.t("news_viewer_archives.create_failed") %>')
       }
-  });  
-}    
+  });
+}
 
-function removeNewsArchive (record) {        
+function removeNewsArchive (record) {
   Ext.Ajax.request({
       url: '/admin/news_viewers/<%= @news_viewer.id %>/news_viewer_archives/delete_news_archive',
       method: 'DELETE',
-      params: Ext.urlEncode({ authenticity_token: '<%= form_authenticity_token -%>', news_archive_id: record.id }),
+      params: Ext.urlEncode({ news_archive_id: record.id }),
+      headers: {
+       'X-CSRF-Token': '<%= form_authenticity_token.to_s %>'
+      },
       callback: function(options, success, response){
         if(!success && response.status == 422){
           var responseJson = Ext.util.JSON.decode(response.responseText)
@@ -110,5 +119,5 @@ function removeNewsArchive (record) {
         }
         else if(!success) Ext.ux.alertResponseError(response, '<%= I18n.t("news_viewer_archives.delete_failed") %>')
       }
-  }); 
-} 
+  });
+}
