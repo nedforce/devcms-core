@@ -23,7 +23,7 @@ protected
 
   def sweep(node)
     # If title, url_alias, show_in_menu, private, deleted_at or ancestry changed, we'll need to expire some things
-    if node.content.blank? || (node.changed & %w(title url_alias ancestry show_in_menu private deleted_at publication_start_date publication_end_date)).present? || node.changed == ["updated_at"]
+    if node.content.blank? || (node.changed & %w(title url_alias ancestry show_in_menu private deleted_at publication_start_date publication_end_date position)).present? || node.changed == ["updated_at"]
       # But only if we where shown in the menu or are shown there now
       if node.show_in_menu || node.show_in_menu_changed?
         if node.parent.present?        
