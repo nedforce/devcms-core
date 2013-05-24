@@ -44,7 +44,7 @@ module OwmsMetadataHelper
     tags << meta_tag('DCTERMS.language',   'nl-NL',                                                                                   'DCTERMS.RFC4646')
     tags << meta_tag('DCTERMS.creator',    Settler[:site_name],                                                                       'OVERHEID.Gemeente')
     tags << meta_tag('DCTERMS.modified',  (content.updated_at || content.created_at).utc.to_s(:w3cdtfutc),                            'DCTERMS.W3CDTF')
-    tags << meta_tag('DCTERMS.available',  content.publication_start_date.utc.to_s(:w3cdtfutc),                                       'DCTERMS.W3CDTF')
+    # tags << meta_tag('DCTERMS.available',  content.publication_start_date.utc.to_s(:w3cdtfutc),                                       'DCTERMS.W3CDTF')
     tags << meta_tag('DCTERMS.spatial',    Settler[:site_name],                                                                       'OVERHEID.Gemeente')
     tags << meta_tag('DCTERMS.temporal',   content.respond_to?(:owms_temporal) ? content.owms_temporal : '',                          'ODCTERMS.Period')
     tags
