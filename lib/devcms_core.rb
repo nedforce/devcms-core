@@ -31,7 +31,7 @@ require 'ssl_requirement'
 require 'rack/rewrite'
 require 'pg'
 require 'prototype-rails'
-require 'prototype_legacy_helper'
+require 'devcms_core/prototype_legacy_helper'
 require 'tidy_ffi'
 require 'truncate_html'
 
@@ -59,6 +59,7 @@ module DevcmsCore
   autoload :Hijacker
   autoload :ImageProcessingExtensions
   # autoload :NewsItemsAssociationExtensions
+  # autoload :PrototypeLegacyHelper
   autoload :Recaptcha
   autoload :RespondsToParent  
   autoload :RoleRequirementSystem

@@ -46,7 +46,7 @@ Gem::Specification.new do |s|
   s.add_dependency  'faker', '~> 1.0.1'
   s.add_dependency  'data_checker'
 
-  s.add_dependency  'prototype_legacy_helper', '0.0.0'
+  # s.add_dependency  'prototype_legacy_helper', '0.0.0'
   s.add_dependency  'prototype-rails', '~> 3.2.1'
 
   ##### Asset helpers (require through bundler in app, not necessary in production always)

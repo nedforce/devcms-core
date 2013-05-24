@@ -14,12 +14,6 @@ GIT
   specs:
     calendar_date_select (1.16.3)
 
-GIT
-  remote: http://github.com/willbryant/prototype_legacy_helper.git
-  revision: fc4fbb8792e7bb511ca8327774bbf4f6a3ec7434
-  specs:
-    prototype_legacy_helper (0.0.0)
-
 PATH
   remote: .
   specs:
@@ -46,7 +40,6 @@ PATH
       libxml-ruby (~> 2.2.0)
       pg
       prototype-rails (~> 3.2.1)
-      prototype_legacy_helper (= 0.0.0)
       rack-rewrite (~> 1.2.1)
       rails (>= 3.2.3, < 4.0.0)
       rmagick (>= 2.13.1)
@@ -121,12 +114,12 @@ GEM
       execjs
     coffee-script-source (1.6.2)
     columnize (0.3.6)
-    debugger (1.5.0)
+    debugger (1.6.0)
       columnize (>= 0.3.1)
       debugger-linecache (~> 1.2.0)
-      debugger-ruby_core_source (~> 1.2.0)
+      debugger-ruby_core_source (~> 1.2.1)
     debugger-linecache (1.2.0)
-    debugger-ruby_core_source (1.2.0)
+    debugger-ruby_core_source (1.2.2)
     dsl_accessor (0.3.3)
     dynamic_attributes (1.2.0)
     erubis (2.7.0)
@@ -152,20 +145,19 @@ GEM
     i18n (0.6.1)
     jakewendt-html_test (0.2.3)
     journey (1.0.4)
-    json (1.7.7)
+    json (1.8.0)
     kaminari (0.14.1)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
     libxml-ruby (2.2.2)
-    mail (2.5.3)
-      i18n (>= 0.4.0)
+    mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     metaclass (0.0.1)
     mime-types (1.23)
-    mocha (0.13.3)
+    mocha (0.14.0)
       metaclass (~> 0.0.1)
-    multi_json (1.7.2)
+    multi_json (1.7.3)
     nokogiri (1.5.9)
     pg (0.15.1)
     polyglot (0.3.3)
@@ -208,14 +200,14 @@ GEM
     rubyzip (0.9.9)
     sanitize (2.0.3)
       nokogiri (>= 1.4.4, < 1.6)
-    sass (3.2.8)
+    sass (3.2.9)
     sass-rails (3.2.6)
       railties (~> 3.2.0)
       sass (>= 3.1.10)
       tilt (~> 1.3)
     settler (1.2.4)
       rails
-    shoulda-context (1.1.1)
+    shoulda-context (1.1.2)
     simple-rss (1.2.3)
     simplecov (0.6.4)
       multi_json (~> 1.0)
@@ -234,7 +226,7 @@ GEM
     thor (0.18.1)
     tidy_ffi (0.1.5)
       ffi (~> 1.2.0)
-    tilt (1.3.7)
+    tilt (1.4.1)
     treetop (1.4.12)
       polyglot
       polyglot (>= 0.3.1)
@@ -261,7 +253,6 @@ DEPENDENCIES
   fakeweb
   jakewendt-html_test (~> 0.2.3)
   mocha
-  prototype_legacy_helper (= 0.0.0)!
   rails (= 3.2.13)
   rsolr (~> 0.12.1)
   sass-rails (~> 3.2.3)
