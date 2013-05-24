@@ -291,6 +291,11 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
     assert_equal 'Categorie 2', category2.reload.synonyms
   end
   
+  def test_should_accept_empty_title_alternatives
+    assert_difference 'Page.count' do
+      assert_nothing_raised { create_page(:title_alternative_list => "") }
+    end
+  end
 protected
 
   def build_page(options = {})
