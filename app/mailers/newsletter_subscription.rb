@@ -1,4 +1,4 @@
-class NewsletterSubscription < ActionMailer::Base
+ class NewsletterSubscription < ActionMailer::Base
   add_template_helper(WhiteListHelper)
     
   def edition_for(edition, user)
