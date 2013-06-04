@@ -8,14 +8,14 @@ class Admin::UsersController < Admin::AdminController
   skip_before_filter :set_actions
   skip_before_filter :find_node
   
-  require_role 'admin', :except => :privileged
-  require_role ['admin', 'final_editor', 'editor'], :only => :privileged
+  require_role ['admin', 'final_editor']
 
   # * GET /admin/users
   # * GET /admin/users.xml
   # * GET /admin/users.json
   def index
     @active_page ||= :users
+    @role ||= RoleAssignment.where("user_id = #{current_user.id}").first.name
     user_scope = (@active_page == :privileged_users) ? PrivilegedUser.scoped : User.exclusive
       
 
@@ -184,6 +184,7 @@ class Admin::UsersController < Admin::AdminController
       end
     end
   end
+
 
   protected
   

@@ -59,13 +59,15 @@ module Admin::AdminHelper
     }    
 
     menu_items = [sitemap]
-    menu_items += [privileged_users, users, permissions, categories, settings] if current_user.has_role?('admin')
+    menu_items += [permissions, categories, settings] if current_user.has_role?('admin')
 
     if current_user.has_role?('admin', 'final_editor')
+      menu_items << privileged_users
+      menu_items << users 
       menu_items << trash
       menu_items << comments
       menu_items << url_aliases
-      menu_items << data_warnings      
+      menu_items << data_warnings
       menu_items.unshift versions
     end
 

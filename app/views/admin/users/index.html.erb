@@ -148,6 +148,7 @@ Ext.onReady(function(){
             beforePageText: '<%= I18n.t("users.page") %>'
         }),
         tbar: [
+              <% if @role != 'final_editor' -%>
               {
                   text: '<%= I18n.t("users.delete") %>',
                   tooltip: '<%= I18n.t("users.del_tooltip") %>',
@@ -158,19 +159,8 @@ Ext.onReady(function(){
                   tooltip: '<%= I18n.t("users.edit_tooltip") %>',
                   handler: handleExtendedEdit,
                   iconCls: 'menu_item_edit'
-              },<% if Settler[:user_allow_export] -%>
+              }, 
               {
-                  text: '<%= I18n.t("users.export") %>',
-                  tooltip: '<%= I18n.t("users.export_tooltip") %>',
-                  handler: handleExport,
-                  iconCls: 'attachment_icon'
-              },<% end -%>
-              {
-                  text: '<%= I18n.t("users.export_newsletter_counts") %>',
-                  tooltip: '<%= I18n.t("users.export_newsletter_counts_tooltip") %>',
-                  handler: handleNewsletterExport,
-                  iconCls: 'attachment_icon'
-              }, {
                   <% if @active_page == :privileged_users %>
                     text: '<%= I18n.t("users.demote") %>',
                     tooltip: '<%= I18n.t("users.demote_tooltip") %>',
@@ -187,6 +177,20 @@ Ext.onReady(function(){
                     handler: handlePromote,
                     iconCls: 'menu_item_create'
                   <% end %>
+              },
+              <% end -%>
+              <% if Settler[:user_allow_export] -%>
+              {
+                  text: '<%= I18n.t("users.export") %>',
+                  tooltip: '<%= I18n.t("users.export_tooltip") %>',
+                  handler: handleExport,
+                  iconCls: 'attachment_icon'
+              },<% end -%>
+              {
+                  text: '<%= I18n.t("users.export_newsletter_counts") %>',
+                  tooltip: '<%= I18n.t("users.export_newsletter_counts_tooltip") %>',
+                  handler: handleNewsletterExport,
+                  iconCls: 'attachment_icon'
               }
               <% if Settler[:user_allow_invite] -%>, '->', {
                   text: '<%= I18n.t("users.invite") %>',
@@ -194,7 +198,8 @@ Ext.onReady(function(){
                   handler: handleInvite,
                   iconCls: 'menu_item_create'
               }
-              <% end %>
+              <% end -%>
+              
               ],
         plugins: filters,
         listeners:{
