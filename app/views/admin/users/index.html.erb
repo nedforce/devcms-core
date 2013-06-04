@@ -177,14 +177,7 @@ Ext.onReady(function(){
                     handler: handlePromote,
                     iconCls: 'menu_item_create'
                   <% end %>
-              }
-              <% if Settler[:user_allow_invite] -%>, '->', {
-                  text: '<%= I18n.t("users.invite") %>',
-                  tooltip: '<%= I18n.t("users.invite_tooltip") %>',
-                  handler: handleInvite,
-                  iconCls: 'menu_item_create'
               },
-              <% end -%>
               <% end -%>
               <% if Settler[:user_allow_export] -%>
               {
@@ -199,6 +192,14 @@ Ext.onReady(function(){
                   handler: handleNewsletterExport,
                   iconCls: 'attachment_icon'
               }
+              <% if Settler[:user_allow_invite] -%>, '->', {
+                  text: '<%= I18n.t("users.invite") %>',
+                  tooltip: '<%= I18n.t("users.invite_tooltip") %>',
+                  handler: handleInvite,
+                  iconCls: 'menu_item_create'
+              }
+              <% end -%>
+              
               ],
         plugins: filters,
         listeners:{
