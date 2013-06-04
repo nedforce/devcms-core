@@ -148,7 +148,7 @@ Ext.onReady(function(){
             beforePageText: '<%= I18n.t("users.page") %>'
         }),
         tbar: [
-              <% if @role != 'final_editor' -%>
+              <% unless @roles.include?('final_editor') -%>
               {
                   text: '<%= I18n.t("users.delete") %>',
                   tooltip: '<%= I18n.t("users.del_tooltip") %>',

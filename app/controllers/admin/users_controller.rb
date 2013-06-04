@@ -15,7 +15,7 @@ class Admin::UsersController < Admin::AdminController
   # * GET /admin/users.json
   def index
     @active_page ||= :users
-    @role ||= RoleAssignment.where("user_id = #{current_user.id}").first.name
+    @roles ||= current_user.role_assignments.map{|role_assignment| role_assignment.name}
     user_scope = (@active_page == :privileged_users) ? PrivilegedUser.scoped : User.exclusive
       
 

@@ -10,6 +10,12 @@ class Admin::UsersControllerTest < ActionController::TestCase
     assert assigns(:users)
   end
 
+  def test_should_not_get_index
+    login_as :jan
+    get :index
+    assert_response :redirect
+  end
+
   def test_should_get_csv_list_to_export_users
     login_as :sjoerd
     get :index, :format => 'csv'
@@ -60,6 +66,13 @@ class Admin::UsersControllerTest < ActionController::TestCase
     login_as :sjoerd
     delete :destroy, :id => users(:sjoerd).id, :format => 'json'
     assert_response :unprocessable_entity
+  end
+
+  def test_should_not_destroy_user
+    login_as :jan
+    assert_no_difference 'User.all.count' do
+      delete :destroy, :id => users(:sjoerd).id, :format => 'json'   
+    end
   end
 
   def test_should_json_get_newsletter_archives_for_user
