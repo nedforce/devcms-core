@@ -680,6 +680,7 @@ nl:
     items_featured: Aantal prominente nieuwsitems
     items_max: Maximaal weergegeven nieuwsitems
     older_items_caption: Overzicht van oudere nieuwsberichten
+    show_archives: Voeg archieven toe
   news_items:
     add_to: Nieuwsbericht toevoegen aan
     edit: Bewerken van nieuwsbericht
@@ -755,6 +756,7 @@ nl:
     news_order_description: Stel de volgorde van de berichten door deze te verslepen in het veld hieronder.
     saved_viewer: Nieuwsselectie archief aangemaakt!
     saving: Bezig met opslaan...
+    show_archives: Voeg archieven toe
   news_viewer_items:
     count_message: "Item {0} tot {1} van {2}"
     create_failed: Toevoegen nieuwsitem mislukt

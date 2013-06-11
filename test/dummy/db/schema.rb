@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130402152350) do
+ActiveRecord::Schema.define(:version => 20130611090167) do
 
   create_table "abbreviations", :force => true do |t|
     t.string   "abbr",       :null => false
@@ -536,6 +536,7 @@ ActiveRecord::Schema.define(:version => 20130402152350) do
     t.datetime "deleted_at"
     t.integer  "items_featured"
     t.integer  "items_max"
+    t.boolean  "show_archives"
   end
 
   add_index "news_viewers", ["deleted_at"], :name => "index_news_viewers_on_deleted_at"

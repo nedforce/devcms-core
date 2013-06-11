@@ -29,7 +29,6 @@ class NewsViewersController < ApplicationController
     @valid_range = (@start_date.beginning_of_month..Date.today.end_of_month)
     @date        = Date.today unless @valid_range.cover? @date
     @news_items  = @news_items.where('nodes.publication_start_date' => @date.beginning_of_month..@date.end_of_month)
-
     respond_to do |format|
       format.html { render :template => '/news_archives/archive' }
     end
@@ -47,11 +46,16 @@ protected
     max_news_items = @news_viewer.items_max || Settler[:news_items_max] || 25
     featured_news_items = @news_viewer.items_featured || Settler[:news_items_featured] || 5
     @news_items = @news_viewer.accessible_news_items.page(params[:page]).per(max_news_items).to_a
+    @show_archives = @news_viewer.show_archives
     @latest_news_items = []
 
     if params[:page].blank? || params[:page].to_i == 1
       @latest_news_items = @news_items[0..featured_news_items-1] if featured_news_items>0
-      @news_items_for_table = @news_items[featured_news_items..max_news_items-1] if featured_news_items<max_news_items
+      if @show_archives
+        @news_items_for_table = @news_items[featured_news_items..@news_items.count-1]
+      elsif featured_news_items<max_news_items
+        @news_items_for_table = @news_items[featured_news_items..max_news_items-1]
+      end
     end
   end
 end
