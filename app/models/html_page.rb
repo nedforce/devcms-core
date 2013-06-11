@@ -21,10 +21,11 @@
 class HtmlPage < ActiveRecord::Base
   # Adds content node functionality to html pages.
   acts_as_content_node({
-    :allowed_child_content_types => %w( Attachment AttachmentTheme Image ),
-    :allowed_roles_for_update  => %w( admin ),
-    :allowed_roles_for_create  => %w( admin ),
-    :allowed_roles_for_destroy => %w( admin )
+    :allowed_child_content_types       => %w( Attachment AttachmentTheme Image ),
+    :available_content_representations => ['content_box'],
+    :allowed_roles_for_update          => %w( admin ),
+    :allowed_roles_for_create          => %w( admin ),
+    :allowed_roles_for_destroy         => %w( admin )
   })
 
   # See the preconditions overview for an explanation of these validations.
