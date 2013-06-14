@@ -26,10 +26,18 @@ module DevcmsCoreHelper
   #
   # See documentation of +bread_crumbs_track_for+ for more information.
   def bread_crumbs_for(node, options = {})
-    string_cache(:breadcrumbs_for_node => node.id,  :last_updated_at => node.path.maximum(:updated_at)) do
-      crumb_track = bread_crumbs_track_for(node, options)
-      content_tag(:div, crumb_track.html_safe, :class => 'bread_crumbs') if crumb_track.present?
+    if @category.blank?
+      string_cache(:breadcrumbs_for_node => node.id,  :last_updated_at => node.path.maximum(:updated_at)) do
+        build_bread_crumbs_for(node, options)
+      end
+    else
+      build_bread_crumbs_for(node, options)
     end
+  end
+
+  def build_bread_crumbs_for(node, options = {})
+    crumb_track = bread_crumbs_track_for(node, options)
+    content_tag(:div, crumb_track.html_safe, :class => 'bread_crumbs') if crumb_track.present?
   end
 
   # Creates the breadcrumbs element, which displays links to all the node's ancestors.
