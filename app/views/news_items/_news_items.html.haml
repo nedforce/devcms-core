@@ -57,5 +57,3 @@
   - if show_archive_link
     - date = latest_news_items.first.try(:publication_start_date) || Date.today
     .pagination= link_to_content_node 'Naar archief...', (@news_viewer || @news_archive), :action => "#{date.year}/#{date.month}"
-  - else
-    = paginate(news_items)
