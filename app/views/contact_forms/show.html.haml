@@ -15,7 +15,8 @@
   %table.contact_form_field
     %caption= 'Contactformulier velden'
 
-    %div= render_honeypot
+    %tr
+      %td= render_honeypot
 
     - @contact_form_fields.each do |contact_form_field|
       %tr
