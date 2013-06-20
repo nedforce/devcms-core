@@ -32,7 +32,7 @@
             = select_tag "contact_form_field_#{contact_form_field.id}", options_for_select(contact_form_field.default_value.split(','), match ? match[2] : ''), :name => "contact_form_field[#{contact_form_field.id}]", :class => 'contact_field'
           - elsif contact_form_field.field_type == 'multiselect'
             - values = params[contact_form_field.label.parameterize.to_s] || {}
-            - contact_form_field.default_value.split(', :id => "selector"').each do |choice|
+            - contact_form_field.default_value.split(',').each do |choice|
               #{check_box_tag "contact_form_field[#{contact_form_field.id}][]", choice.to_s, values[choice.parameterize.to_s] == '1'} #{label_tag "contact_form_field[#{contact_form_field.id}][#{choice.parameterize}]", choice}
               %br
           - elsif contact_form_field.field_type == 'date'
