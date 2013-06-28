@@ -26,7 +26,7 @@ module DevcmsCoreHelper
   #
   # See documentation of +bread_crumbs_track_for+ for more information.
   def bread_crumbs_for(node, options = {})
-    if @category.blank?
+    if @category.blank? && node.content_type != 'ProductCatalogue'
       string_cache(:breadcrumbs_for_node => node.id,  :last_updated_at => node.path.maximum(:updated_at)) do
         build_bread_crumbs_for(node, options)
       end
