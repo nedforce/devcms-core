@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130611090167) do
+ActiveRecord::Schema.define(:version => 20130611100167) do
 
   create_table "abbreviations", :force => true do |t|
     t.string   "abbr",       :null => false
@@ -529,14 +529,14 @@ ActiveRecord::Schema.define(:version => 20130611090167) do
   add_index "news_viewer_items", ["news_viewer_id"], :name => "index_news_viewer_items_on_news_viewer_id"
 
   create_table "news_viewers", :force => true do |t|
-    t.string   "title",          :null => false
+    t.string   "title",                            :null => false
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
     t.integer  "items_featured"
     t.integer  "items_max"
-    t.boolean  "show_archives"
+    t.boolean  "show_archives",  :default => true
   end
 
   add_index "news_viewers", ["deleted_at"], :name => "index_news_viewers_on_deleted_at"
