@@ -48,7 +48,7 @@ class WeblogPost < ActiveRecord::Base
 
   # Returns the preamble and body as the tokens for indexing.
   def content_tokens
-    [ preamble, body ].compact.join(' ')
+    [ preamble, body ].join(' ')
   end
 
   # Returns a URL alias for a given +node+.

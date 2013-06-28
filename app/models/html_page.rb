@@ -34,7 +34,7 @@ class HtmlPage < ActiveRecord::Base
 
   # Returns the preamble and body as the tokens for indexing.
   def content_tokens
-    [ body ].compact.join(' ')
+    [ body ].join(' ')
   end
 
   # Returns the image file name to be used for icons on the front end website.

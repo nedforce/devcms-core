@@ -141,7 +141,7 @@ class CalendarItem < Event
 
   # Returns the body and location_description as the tokens for indexing.
   def content_tokens
-    [ body, location_description ].compact.join(' ')
+    [ body, location_description ].join(' ')
   end
 
   def registration_for_user(user)

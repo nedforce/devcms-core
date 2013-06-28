@@ -4,7 +4,7 @@ module ReadspeakerHelper
   def readspeaker_button(options = {})
     if Settler[:readspeaker_cid].present?
       rid = options.delete(:rid)
-      link_class = [ options.delete(:class), 'readspeaker_link' ].compact.join(' ')
+      link_class = [ options.delete(:class), 'readspeaker_link' ].join(' ')
       readspeaker_url = readspeaker_url_for(request.url, { :rid => rid }.merge(options)).html_safe
 
       content_tag(:div, :class => 'readspeaker_button') do

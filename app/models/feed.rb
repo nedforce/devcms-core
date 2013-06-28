@@ -76,7 +76,7 @@ class Feed < ActiveRecord::Base
 
   # Returns the entry titles and descriptions as the tokens for indexing.
   def content_tokens
-    entries.map { |entry| [ entry.title, entry.description ].compact.join(' ') }.compact.join(' ')
+    entries.map { |entry| [ entry.title, entry.description ].join(' ') }.compact.join(' ')
   end
 
   protected

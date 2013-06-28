@@ -355,7 +355,7 @@ class User < ActiveRecord::Base
 
   # Returns first and surname (String).
   def full_name
-    [first_name, surname].compact.join(' ')
+    [first_name, surname].join(' ')
   end
 
   # Returns the name to use on the frontend.
