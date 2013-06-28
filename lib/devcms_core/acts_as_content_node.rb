@@ -177,7 +177,7 @@ module DevcmsCore
     def last_updated_at
       self_and_children = self.node.self_and_children
       scope = self_and_children.accessible unless node.private? && node.hidden?
-      [scope.maximum('nodes.updated_at'), self_and_children.accessible.maximum('nodes.publication_start_date')]
+      [scope.maximum('nodes.updated_at'), self_and_children.accessible.maximum('nodes.publication_start_date')].max
     end
 
     def touch!
