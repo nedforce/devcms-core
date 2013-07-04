@@ -47,7 +47,6 @@ class Admin::AdminController < ApplicationController
   cache_sweeper :node_sweeper, :only => [ :create, :update, :destroy, :approve, :set_visibility, :set_accessibility, :move, :bulk_update, :bulk_destroy, :sort_children ]
 
 protected
-
   def default_format_json
     if(request.headers["HTTP_ACCEPT"].nil? &&
        params[:format].nil?)
