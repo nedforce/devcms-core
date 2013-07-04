@@ -45,9 +45,9 @@ class Admin::AdminController < ApplicationController
   helper Admin::NewsletterArchiveHelper, Admin::AgendaItemsHelper, Admin::AdminHelper, Admin::AdminFormBuilderHelper, Admin::CategoriesHelper, Admin::DiffHelper, Admin::CropperHelper
   
   cache_sweeper :node_sweeper, :only => [ :create, :update, :destroy, :approve, :set_visibility, :set_accessibility, :move, :bulk_update, :bulk_destroy, :sort_children ]
-  
-protected
 
+protected
+  
   def default_format_json
     if(request.headers["HTTP_ACCEPT"].nil? &&
        params[:format].nil?)

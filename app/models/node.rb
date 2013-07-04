@@ -74,6 +74,8 @@
 class Node < ActiveRecord::Base
   # A node is commentable
   acts_as_commentable
+
+  acts_as_taggable
   
   # Nodes are taggable with alterative titles
   acts_as_taggable_on :title_alternatives
@@ -620,6 +622,10 @@ class Node < ActiveRecord::Base
   
   def title_alternatives
     super.map(&:name).join(',')
+  end
+
+  def self.tags
+    Node.all.map{|node| node.tag_list}.flatten.uniq
   end
 
 protected
