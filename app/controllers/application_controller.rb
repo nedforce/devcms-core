@@ -307,9 +307,8 @@ protected
     render :action => 'confirm_destroy'
   end
 
-  # Delivers the exception notification email.
   def send_exception_notification(exception)
-    ExceptionNotifier::Notifier.exception_notification(request.env, exception).deliver
+    notify_airbrake(exception)
   end
 
   def set_private_menu

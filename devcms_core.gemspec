@@ -32,7 +32,6 @@ Gem::Specification.new do |s|
   s.add_dependency  'rmagick', '>= 2.13.1'
   s.add_dependency  'acts_as_ferret', '~> 0.5.4'
   s.add_dependency  'calendar_date_select'
-  s.add_dependency  'exception_notification'
   s.add_dependency  'kaminari'
   s.add_dependency  'sanitize'
   s.add_dependency  'sortifiable'
@@ -45,6 +44,7 @@ Gem::Specification.new do |s|
   s.add_dependency  'truncate_html', '~> 0.5.5'
   s.add_dependency  'faker', '~> 1.0.1'
   s.add_dependency  'data_checker'
+  s.add_dependency  'airbrake'
 
   # s.add_dependency  'prototype_legacy_helper', '0.0.0'
   s.add_dependency  'prototype-rails', '~> 3.2.1'
