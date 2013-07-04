@@ -5,7 +5,7 @@
     = error_messages_for record.class.base_class.name.downcase
     
     = javascript_tag("document.getElementById('right_panel_body').scrollTop = 0;")
-    
+
     = default_fields_before_form form
     = render :partial => 'form', :locals => { :form => form, :record => record }
     = default_fields_after_form form
