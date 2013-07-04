@@ -50,13 +50,17 @@ module NodeExtensions::UrlAliasing
     # Class methods
     # Returns if the specified URL alias has been reserved.
     def url_alias_reserved?(alias_to_check)
-      return false if alias_to_check.blank?
-      
-      begin
-        params = ActionController::Routing::Routes.recognize_path "/#{alias_to_check}"
-        return !params.has_key?(:node_id)
-      rescue Exception
-        return false
+      if alias_to_check.blank?
+        false 
+      elsif Rails.application.config.reserved_slugs.include?(alias_to_check)
+        true
+      else
+        begin
+          Rails.application.routes.recognize_path "/#{alias_to_check.split('/').first}"
+          return true
+        rescue ActionController::RoutingError
+          return false
+        end
       end
     end
     

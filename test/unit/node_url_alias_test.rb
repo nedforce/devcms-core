@@ -222,6 +222,22 @@ class NodeURLAliasTest < ActiveSupport::TestCase
     assert_equal cn1.url_alias, cn2.url_alias
   end
   
+  def test_should_not_assign_reserved_url_alias
+    cn = create_page
+    cn.node.url_alias = Rails.application.config.reserved_slugs.first
+    assert !cn.node.valid?
+    assert cn.node.errors[:url_alias].any?
+    
+    cn = create_page(title: Rails.application.config.reserved_slugs.first)
+    assert cn.node.valid?
+    assert !Rails.application.config.reserved_slugs.include?(cn.node.url_alias)
+    
+    cn = create_page(title: Rails.application.config.reserved_slugs.first)
+    cn.node.url_alias = 'signup'
+    assert !cn.node.valid?
+    assert cn.node.errors[:url_alias].any?    
+  end  
+  
 protected
 
   def create_page(options = {})
