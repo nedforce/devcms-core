@@ -231,7 +231,7 @@ class User < ActiveRecord::Base
     self.type.to_s == 'PrivilegedUser'
   end
 
-  # Determins whether this user has a +RoleAssignment+ with (one of) the given name(s) for the given node or one of its ancestors.
+  # Determines whether this user has a +RoleAssignment+ with (one of) the given name(s) for the given node or one of its ancestors.
   # If no node is given, the +Node.root+ is used.
   # Arguments
   #  +role+ A string with the name of the role. Any number of roles can be given here.
