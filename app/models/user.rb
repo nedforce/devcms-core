@@ -270,7 +270,7 @@ class User < ActiveRecord::Base
 
   # Returns the role the user has on a Node.
   def role_on(node)
-    self.role_assignments.first(:conditions => { :node_id => node.path_ids })
+    self.role_assignments.last(:conditions => { :node_id => node.path_ids })
   end
 
   # Gives the user a role for a specific Node.
