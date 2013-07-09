@@ -1,12 +1,12 @@
 module DevcmsCoreHelper
-  
+
   # Use the asset path for images, as we have our own image controller
   def image_path *args
     asset_path(*args)
   end
 
   def content_box_title_for(node)
-    (node.content.respond_to?(:custom_content_box_title) && node.content.custom_content_box_title) || 
+    (node.content.respond_to?(:custom_content_box_title) && node.content.custom_content_box_title) ||
     (node.content_box_title.present? && node.content_box_title) || node.content.title
   end
 
@@ -82,7 +82,7 @@ module DevcmsCoreHelper
         crumb_track << (crumb_track.blank? ? '' : options[:separator])
 
         n = nil
-        
+
         if node.class == Node
           n = node.content
         else
@@ -222,7 +222,7 @@ module DevcmsCoreHelper
       capture do
         available_header_images_nodes = node.present? ? node.header_images : []
         available_header_images_nodes << header_image(node, big_header)[:url] if available_header_images_nodes.empty?
-        
+
         available_header_images = available_header_images_nodes.map do |header_image|
           if header_image.is_a?(String)
             {
@@ -251,13 +251,12 @@ module DevcmsCoreHelper
       abs_path = "#{request.protocol}#{request.host_with_port}#{abs_path}"
     end
    abs_path
-  end  
+  end
 
   def social_media_buttons(page)
     social_media_button(page, 'social_hyves.png',    t('application.add_to_hyves'),    'http://www.hyves.nl/profilemanage/add/tips/?name={{title}}&amp;text=[url={{url}}]{{title}}[/url]&amp;type=12') +
     social_media_button(page, 'social_twitter.png',  t('application.add_to_twitter'),  'http://twitter.com/?status={{title}}%20{{url}}') +
     social_media_button(page, 'social_facebook.png', t('application.add_to_facebook'), 'http://www.facebook.com/sharer.php?u={{url}}&amp;t={{title}}') +
-    social_media_button(page, 'social_linkedin.png', t('application.add_to_linkedin'), 'http://www.linkedin.com/shareArticle?mini=true&amp;url={{url}}&amp;title={{title}}&amp;source={{title}}') +
     social_media_button(page, 'social_blogger.png',  t('application.add_to_blogger'),  'http://www.blogger.com/blog_this.pyra?t=&amp;u={{url}}&amp;n={{title}}') +
     email_button(page, 'email.png', t('application.email_page'))
   end
@@ -298,7 +297,7 @@ module DevcmsCoreHelper
   def skippable(id, &block)
     link_to(t('shared.skip_to_bottom'), "\#bottom_of_#{id}", :name => "top_of_#{id}", :class => 'hidden') +
     capture(&block) +
-    link_to(t('shared.skip_to_top'),    "\#top_of_#{id}", :name => "bottom_of_#{id}", :class => 'hidden') 
+    link_to(t('shared.skip_to_top'),    "\#top_of_#{id}", :name => "bottom_of_#{id}", :class => 'hidden')
   end
 
   protected
@@ -335,13 +334,13 @@ module DevcmsCoreHelper
           sub_menu_items = node.children.accessible.shown_in_menu.all(:order => 'position')
         else
           sub_menu_items = node.children.accessible.shown_in_menu.all(:order => 'position').select do |sub_menu_item|
-            sub_menu_item.public? || current_user_has_any_role?(sub_menu_item) 
+            sub_menu_item.public? || current_user_has_any_role?(sub_menu_item)
           end
         end
       else
         sub_menu_items = node.children.accessible.public.shown_in_menu.all(:order => 'position')
       end
-      
+
       has_sub_menu_items = sub_menu_items.any?
 
       options[:class] = options[:class] ? "#{options[:class]} parent" : "parent" if has_sub_menu_items
@@ -351,14 +350,14 @@ module DevcmsCoreHelper
       else
         classes = %w( sub_menu_link expanded )
         classes << 'current' if node == @node || (node.content.is_a?(Section) && node.content.frontpage_node_id == @node.id)
-        
+
         content = create_menu_link(node, :class => classes.join(' '))
 
         if has_sub_menu_items
           content += content_tag(:ul, sub_menu_items.map { |item| create_sub_menu_item(item, self_and_ancestors_except_root_ids, show_private_items_in_sub_menu) }.join("\n").html_safe)
         end
 
-        options[:class] = options[:class] ? "#{options[:class]} expanded" : "expanded" 
+        options[:class] = options[:class] ? "#{options[:class]} expanded" : "expanded"
 
         content_tag(:li, content, options)
       end
