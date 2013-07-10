@@ -625,7 +625,26 @@ class Node < ActiveRecord::Base
   end
 
   def self.tags
-    Node.all.map{|node| node.tag_list}.flatten.uniq
+    #Node.all.map{|node| node.tag_list}.flatten.uniq
+    ActsAsTaggableOn::Tag.all.map { |tag_data| tag_data.name }.uniq
+  end
+
+  def self.complete_tag current_input
+    current_input_word = current_input.split(", ").last
+    
+    if not current_input_word.empty?
+      all_tags = Node.tags
+      suggested_input = all_tags.select{|tag| tag.match("^#{current_input_word}")}
+      
+      if suggested_input.count < 5
+        suggested_input += all_tags.select{|tag| tag.match(".+#{current_input_word}")}
+      end
+
+      suggested_input[0..4]
+    
+    else
+      []
+    end
   end
 
 protected
