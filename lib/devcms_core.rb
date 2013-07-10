@@ -19,7 +19,6 @@ require 'spreadsheet'
 require 'roo'
 require 'ferret'
 require 'RMagick'
-require 'exception_notification'
 require 'kaminari'
 require 'sanitize'
 require 'geokit'
@@ -34,6 +33,7 @@ require 'prototype-rails'
 require 'devcms_core/prototype_legacy_helper'
 require 'tidy_ffi'
 require 'truncate_html'
+require 'airbrake'
 
 # Libs
 module DevcmsCore

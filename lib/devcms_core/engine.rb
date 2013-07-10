@@ -18,6 +18,15 @@ module DevcmsCore
     config.honeypot_value =      "DA0MEHBTDZRQnTlv"
     config.honeypot_empty_name = "eQ8oaGMk"
     config.honeypot_class =      "ufnskjfdsniubh"
+    
+    # Airbrake configuration
+    config.airbrake_redmine_project  = 'devcms'
+    config.airbrake_development_environments = %w(development test cucumber)
+    config.airbrake_redmine_api_key  = 'GYM6UFON3M4XhvRivnGZ'
+    config.airbrake_redmine_host     = 'projects.nedforce.nl'
+    config.airbrake_redmine_port     = 80
+    config.airbrake_redmine_secure   = false
+    config.airbrake_redmine_login    = 'exception_notifier'        
 
     register_cms_modules
 
@@ -69,6 +78,20 @@ module DevcmsCore
     initializer "data checker config" do |app|
       DataChecker.config.site_url = "http://#{Settler[:host]}" if SETTLER_LOADED && Settler[:host].present?
       DataChecker.config.checker_logger = DataChecker::DatabaseLogger
+    end
+    
+    initializer "airbrake configuration" do |app|
+      Airbrake.configure do |config|
+        config.api_key = {
+          :project => DevcmsCore::Engine.config.airbrake_redmine_project,
+          :api_key => DevcmsCore::Engine.config.airbrake_redmine_api_key
+        }.to_yaml
+
+        config.host   = DevcmsCore::Engine.config.airbrake_redmine_host
+        config.port   = DevcmsCore::Engine.config.airbrake_redmine_port
+        config.secure = DevcmsCore::Engine.config.airbrake_redmine_secure
+        config.development_environments = DevcmsCore::Engine.config.airbrake_development_environments
+      end      
     end
 
     config.after_initialize do |app|
