@@ -25,38 +25,6 @@ load 'rails/tasks/engine.rake'
 
 require 'rake/testtask'
 
-desc "Run continues integration build"
-task :cruise do
-  begin 
-    ['cruise:setup', 'app:db:drop', 'app:db:create', 'app:db:schema:load','test', 'test:integrations'].each do |t|
-      Rake::Task[t].invoke
-    end
-  ensure
-    Rake::Task['cruise:cleanup'].invoke
-  end
-end
-
-namespace :cruise do
-  task :setup do
-    ENV['RAILS_ENV']=ENV['FORCE_RAILS_ENV'] || 'test'
-    File.open("#{Rails.root}/config/database.yml",'w') do |f| 
-      f.write(
-        %Q{
-        test:
-          adapter: postgresql
-          host: #{ENV['DB_HOST'] || 'localhost'}
-          database: #{ENV['DB_NAME'] || ''}
-          password: #{ENV['DB_PASS'] || ''}
-          username: #{ENV['DB_USER'] || ''}
-        })
-    end
-  end
-
-  task :cleanup do
-    `mv #{Rails.root}/../../coverage #{ENV['CC_BUILD_ARTIFACTS']}` if ENV['CC_BUILD_ARTIFACTS'].present?
-  end
-end
-
 Rake::TestTask.new(:test) do |t|
   t.libs << 'lib'
   t.libs << 'test'

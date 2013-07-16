@@ -16,7 +16,6 @@ gem 'calendar_date_select', :git => 'http://github.com/emyl/calendar_date_select
 
 group :test do
   gem 'turn', :require => false
-  gem 'simplecov', "~> 0.6.4", :require => false
   gem 'shoulda-context'
 end
 

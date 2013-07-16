@@ -1,18 +1,5 @@
 ENV["RAILS_ENV"] = "test"
 
-# Keep simplecov on top
-if ENV["COVERAGE"]
-  require 'simplecov'
-  SimpleCov.start 'rails' do
-    add_filter 'vendor'
-    add_group 'Sweepers',   'app/sweepers'           
-    add_group 'Uploaders',  'app/uploaders'       
-    add_group 'Validators', 'app/validators'       
-    minimum_coverage = 0
-    maximum_coverage_drop = 100
-  end
-end
-
 require File.expand_path('../dummy/config/environment.rb', __FILE__)
 require 'rails/test_help'
 require 'mocha/setup'
@@ -25,7 +12,7 @@ Debugger.settings[:autoeval] = true
 include ActionDispatch::TestProcess # Required to make fixture_file_upload work
 
 require 'turn/autorun'
-Turn.config.format = ENV["CC_BUILD_ARTIFACTS"] ? :dot : :pretty 
+Turn.config.format = :pretty 
 
 # module I18n 
 #   def self.just_raise(*args) 
@@ -109,27 +96,6 @@ class ActiveSupport::TestCase
       Object.send(:remove_const, constant)
     end
   end
-
-  # setup :begin_gc_deferment
-  # teardown :reconsider_gc_deferment
-
-  # DEFERRED_GC_THRESHOLD = (ENV['DEFER_GC'] || 1.0).to_f
-
-  # @@last_gc_run = Time.now
-
-  # def begin_gc_deferment
-  #   GC.disable if DEFERRED_GC_THRESHOLD > 0
-  # end
-
-  # def reconsider_gc_deferment
-  #   if DEFERRED_GC_THRESHOLD > 0 && Time.now - @@last_gc_run >= DEFERRED_GC_THRESHOLD
-  #     GC.enable
-  #     GC.start
-  #     GC.disable
-
-  #     @@last_gc_run = Time.now
-  #   end
-  # end
 end
 
 class ActionController::IntegrationTest
