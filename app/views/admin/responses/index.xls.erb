@@ -1,0 +1,14 @@
+<table border="1">
+  <tr>
+    <% @labels.each do |label| %>
+      <td><%= label %></td>
+    <% end %>
+  </tr>
+  <% @responses.each do |response| %>
+    <tr>
+      <% response.response_fields.map.each do |field| %>
+        <td><%= field.value %></td>
+      <% end %>
+    </tr>
+  <% end %>
+</table>
