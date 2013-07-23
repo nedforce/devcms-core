@@ -27,8 +27,7 @@ class Admin::ResponsesController < Admin::AdminController
       format.html #index.html.erb
       format.xml  #index.xml.builder
       format.csv  { send_data @responses.to_my_csv }#index.csv.erb
-      format.xls  #{ send_data @responses.to_my_csv( col_sep: "\t") }
-      # format.xls  { send_data(render_responses_xls(@contact_form, @responses), :type=>"application/ms-excel", :filename => "#{@contact_form.title}_inzendingen_#{Date.today.strftime('%d_%m_%Y')}.xls") }
+      format.xls
     end
   end
 

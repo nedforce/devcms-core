@@ -1,14 +1,23 @@
-<table border="1">
-  <tr>
-    <% @labels.each do |label| %>
-      <td><%= label %></td>
-    <% end %>
-  </tr>
-  <% @responses.each do |response| %>
-    <tr>
+<?xml version="1.0"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns:x="urn:schemas-microsoft-com:office:excel"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:html="http://www.w3.org/TR/REC-html40">
+  <Worksheet ss:Name="Sheet1">
+    <Table>
+      <Row>
+        <% @labels.each do |label| %>
+          <Cell><Data ss:Type="String"><%= label %></Data></Cell>
+        <% end %>
+      </Row>
+    <% @responses.each do |response| %>
+      <Row>
       <% response.response_fields.map.each do |field| %>
-        <td><%= field.value %></td>
+        <Cell><Data ss:Type="String"><%= field.value %></Data></Cell>
       <% end %>
-    </tr>
-  <% end %>
-</table>
+      </Row>
+    <% end %>
+    </Table>
+  </Worksheet>
+</Workbook>
