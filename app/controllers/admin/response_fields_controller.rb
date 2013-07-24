@@ -24,7 +24,6 @@ private
 
   def find_response_field
     @response_field = @response.response_fields.find(params[:id])
-    debug
   end
 
 end

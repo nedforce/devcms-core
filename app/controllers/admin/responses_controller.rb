@@ -6,6 +6,7 @@ class Admin::ResponsesController < Admin::AdminController
   before_filter :find_contact_form,       :only => [ :index, :upload_csv, :import_csv ]
   before_filter :set_paging,              :only => [ :index ]
   before_filter :set_sorting,             :only => [ :index ]
+  before_filter :get_labels,              :only => [ :index ]
 
   skip_before_filter :find_node
 
@@ -25,8 +26,8 @@ class Admin::ResponsesController < Admin::AdminController
     respond_to do |format|
       format.html #index.html.erb
       format.xml  #index.xml.builder
-      format.csv  #index.csv.erb
-      format.xls  { send_data(render_responses_xls(@contact_form, @responses), :type=>"application/ms-excel", :filename => "#{@contact_form.title}_inzendingen_#{Date.today.strftime('%d_%m_%Y')}.xls") }
+      format.csv  { send_data @responses.to_my_csv }#index.csv.erb
+      format.xls
     end
   end
 
@@ -184,5 +185,9 @@ class Admin::ResponsesController < Admin::AdminController
     xls.write(io)
     io.rewind
     io.read
+  end
+
+  def get_labels
+    @labels = @contact_form.contact_form_fields.map.each { |field| field.label }
   end
 end
