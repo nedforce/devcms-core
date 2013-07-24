@@ -26,7 +26,7 @@ class Admin::ResponsesController < Admin::AdminController
     respond_to do |format|
       format.html #index.html.erb
       format.xml  #index.xml.builder
-      format.csv  { send_data @responses.to_my_csv }#index.csv.erb
+      format.csv  { send_data @responses.to_csv_file } #index.csv.erb
       format.xls
     end
   end

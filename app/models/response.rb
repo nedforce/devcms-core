@@ -19,7 +19,7 @@ class Response < ActiveRecord::Base
 
   validates_presence_of :contact_form_id, :ip, :time
 
-  def self.to_my_csv(options = {})
+  def self.to_csv_file(options = {})
     CSV.generate(options) do |csv|
       header_fields = []
       self.first.contact_form.contact_form_fields.order('position ASC').each do |field|
