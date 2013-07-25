@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns:x="urn:schemas-microsoft-com:office:excel"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:html="http://www.w3.org/TR/REC-html40">
+  <Styles>
+    <Style ss:ID="Default" ss:Name="Normal">
+     <Alignment ss:Vertical="Bottom"/>
+     <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="12" ss:Color="#313131"/>
+    </Style>
+    <Style ss:ID="s64">
+     <Font ss:FontName="Calibri" ss:Size="18" ss:Color="#003366" ss:Bold="1"/>
+    </Style>
+    <Style ss:ID="s65">
+      <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="12" ss:Color="#313131" ss:Bold="1"/>
+    </Style>
+  </Styles>
+  <Worksheet ss:Name="Inzendingen">
+    <Table ss:ExpandedColumnCount="12" ss:ExpandedRowCount="5" x:FullColumns="1" x:FullRows="1" ss:DefaultColumnWidth="65" ss:DefaultRowHeight="15">
+      <Row ss:AutoFitHeight="0" ss:Height="30">
+        <Cell ss:StyleID="s64"><Data ss:Type="String">Inzendingen voor Inschrijven als belangstellende</Data></Cell>
+      </Row>
+      <Row ss:StyleID="s65">
+      <% @labels.each do |label| %>
+        <Cell><Data ss:Type="String"><%= label %></Data></Cell>
+      <% end %>
+      </Row>
+    <% @responses.each do |response| %>
+      <Row>
+      <% response.response_fields.map.each do |field| %>
+        <Cell><Data ss:Type="String"><%= field.value %></Data></Cell>
+      <% end %>
+      </Row>
+    <% end %>
+    </Table>
+  </Worksheet>
+</Workbook>
