@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 source 'http://gems.github.com'
 
-gem 'rails', '3.2.13'
+gem 'rails', '3.2.14'
 gem 'sass-rails', '~> 3.2.3'
 gem 'coffee-rails', '~> 3.2.1'
 gem 'uglifier',     '~> 1.0'
@@ -16,7 +16,6 @@ gem 'calendar_date_select', :git => 'http://github.com/emyl/calendar_date_select
 
 group :test do
   gem 'turn', :require => false
-  gem 'simplecov', "~> 0.6.4", :require => false
   gem 'shoulda-context'
 end
 
