@@ -1,18 +1,22 @@
-function autoComplete (form, all_tags, controller){
-  var current_cursor_pos_word = getCursorIndexWord(form);
-  var current_input_word_raw_array = form.value.split(",");
+function castStringToArray(str){
+  return str.split(",");
+}
 
-  var current_input_word = current_input_word_raw_array[current_cursor_pos_word].replace(/^\s*/, "");
-  var length = all_tags.length;
-  var suggested_input = new Array();
+function removeWhiteSpaces(str){
+  return str.replace(/^\s*/, "");
+}
+
+function autoComplete (form, all_tags, controller){
+  var current_input_word = removeWhiteSpaces( castStringToArray( form.value ) [getCursorWordIndex(form)] );
+  var suggested_input = [];
   if (current_input_word.length > 0 ){
-    for (var i = 0; i < length && suggested_input.length < 5; i++){
+    for (var i = 0; i < all_tags.length && suggested_input.length < 5; i++){
       var index = all_tags[i].search("^" + current_input_word + "..*?");
       if (index != -1){
         suggested_input.push(all_tags[i]);
       }
     }
-    for (var i = 0; i < length && suggested_input.length < 5; i++){
+    for (var i = 0; i < all_tags.length && suggested_input.length < 5; i++){
       var index = all_tags[i].search("..*?" + current_input_word);
       if (index != -1){
         suggested_input.push(all_tags[i]);
@@ -20,71 +24,75 @@ function autoComplete (form, all_tags, controller){
     }
   }
   
-  var field_text = "<ul>";
-  for (var i = 0; i < suggested_input.length; i++){
-    field_text += "<li onclick=\"fillInAutoComplete('"+ controller + "', '" + suggested_input[i] + "')\">" + suggested_input[i].replace(current_input_word, "<b>" + current_input_word + "</b>") + " </li>";
-  }
-  field_text += "</ul>";
-  var output_field = document.getElementById("auto_complete_dropdown");
-  output_field.innerHTML = field_text;
+  var output_field = $("auto_complete_dropdown");
+  output_field.innerHTML = toHTMLList(suggested_input, castStringToArray(form.value), controller);
   output_field.style.display = "block";
-  return;
+}
+
+function fattenPartStringInHTML(entire_string, part_string){
+  return entire_string.replace(part_string, "<b>" + part_string + "</b>");
+}
+
+function toHTMLList(string_array, part_string, controller){
+  var html_list = "<ul>";
+  for (var i = 0; i < string_array.length; i++){
+    html_list += "<li onmousedown=\"fillInAutoComplete('"+ controller + "', '" + string_array[i] + "')\">" + fattenPartStringInHTML(string_array[i], part_string) + " </li>";
+  }
+  html_list += "</ul>";
+  return html_list;
 }
 
 function hideAutoComplete(){
-  document.getElementById("auto_complete_dropdown").style.display = "none";
-  return;
+  $("auto_complete_dropdown").hide();
 }
 
 function fillInAutoComplete (controller, single_value){
-  var form = document.getElementById(controller+"_tag_list");
-  var current_cursor_pos_word = getCursorIndexWord(form);
-  var multiple_value = form.value.split(",");
-  multiple_value[current_cursor_pos_word] = single_value;
-  var output_value = "";
-  for (var i = 0; i < multiple_value.length-1; i++){
-    output_value += multiple_value[i].replace(/^\s*/, "") + ", ";
+  var form = $(controller+"_tag_list");
+  var current_cursor_pos_word = getCursorWordIndex(form);
+  var string_array = castStringToArray(form.value);
+  string_array[current_cursor_pos_word] = single_value;
+
+  var new_form_value = "";
+  for (var i = 0; i < string_array.length - 1; i++){
+    new_form_value += removeWhiteSpaces( string_array[i] ) + ", ";
   }
-  output_value += multiple_value[multiple_value.length - 1].replace(/^\s*/, "");
-  form.value = output_value;
-  document.getElementById("auto_complete_dropdown").innerHTML = "";
+  new_form_value += removeWhiteSpaces( string_array[ string_array.length - 1] );
+  
+  form.value = new_form_value;
+  $("auto_complete_dropdown").innerHTML = "";
   form.focus();
-  return;
 }
 
-function getCursorIndexWord(form) {
-  var current_input_word_raw_array = form.value.split(",");
-  var current_cursor_pos = getInputSelection(form);
-  var current_cursor_pos_word = current_input_word_raw_array.length - 1;
+function getCursorWordIndex(form) {
+  var current_input_word_raw_array = castStringToArray(form.value);
+  var current_cursor_pos = getCursorPos(form);
 
   for (var i = 0; i < current_input_word_raw_array.length; i++){
     current_cursor_pos -= current_input_word_raw_array[i].length + 1;
     if (current_cursor_pos < 0){
-      current_cursor_pos_word = i;
-      break;
+      return  i;
     }
   }
-  return current_cursor_pos_word;
+  return current_input_word_raw_array.length - 1;
 }
 
-//also get the current cursor pos in IE <8
-function getInputSelection(el) {
+function getCursorPos(form) {
     var start = 0, end = 0, normalizedValue, range,
         textInputRange, len, endRange;
 
-    if (typeof el.selectionStart == "number") {
-        start = el.selectionStart;
+    if (typeof form.selectionStart == "number") {
+        start = form.selectionStart;
     } else {
         range = document.selection.createRange();
 
-        if (range && range.parentElement() == el) {
-            len = el.value.length;
-            normalizedValue = el.value.replace(/\r\n/g, "\n");
+        if (range && range.parentElement() == form) {
+            len = form.value.length;
+            normalizedValue = form.value.replace(/\r\n/g, "\n");
 
-            textInputRange = el.createTextRange();
+            textInputRange = form.createTextRange();
             textInputRange.moveToBookmark(range.getBookmark());
 
-            endRange = el.createTextRange();
+            endRange = form.createTextRange();
             endRange.collapse(false);
 
             if (textInputRange.compareEndPoints("StartToEnd", endRange) > -1) {
@@ -92,15 +100,9 @@ function getInputSelection(el) {
             } else {
                 start = -textInputRange.moveStart("character", -len);
                 start += normalizedValue.slice(0, start).split("\n").length - 1;
-
-                if (textInputRange.compareEndPoints("EndToEnd", endRange) > -1) {
-                    end = len;
-                } else {
-                    end = -textInputRange.moveEnd("character", -len);
-                    end += normalizedValue.slice(0, end).split("\n").length - 1;
-                }
             }
         }
     }
-    return start;
+
+    return position;
 }
