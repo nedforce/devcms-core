@@ -10,11 +10,11 @@
 
   - if @top_hits.present?
     %ol.top_hits
-    - @top_hits.each do |top_hit|
-      - content_node = top_hit.content
-      %li
-        = image_tag "icons/#{content_node.icon_filename}", :class => 'icon', :alt => '', :title => content_node.title
-        = link_to_node h(content_node.title), top_hit
+      - @top_hits.each do |top_hit|
+        - content_node = top_hit.content
+        %li
+          = image_tag "icons/#{content_node.icon_filename}", :class => 'icon', :alt => '', :title => content_node.title
+          = link_to_node h(content_node.title), top_hit
 
   .buttons.clearfix
     = print_button
