@@ -5,6 +5,9 @@ class NewsArchivesController < ApplicationController
   # The +show+ action needs a +NewsArchive+ object to work with.  
   before_filter :find_news_archive, :only => [:show, :archive]
 
+  # See application controller
+  before_filter :set_max_news_items, :only => [:show, :archive]
+
   # The +show+ action needs a list of recent news items to work with.
   before_filter :find_recent_news_items, :only => :show
 
@@ -28,7 +31,7 @@ class NewsArchivesController < ApplicationController
     @end_date    = @news_items.maximum(:publication_start_date).to_date rescue Date.today
     @valid_range = (@start_date.beginning_of_month..Date.today.end_of_month)
     @date        = Date.today unless @valid_range.cover? @date
-    @news_items  = @news_items.where('nodes.publication_start_date' => @date.beginning_of_month..@date.end_of_month)
+    @news_items  = @news_items.where('nodes.publication_start_date' => @date.beginning_of_month..@date.end_of_month).page(params[:page]).per(@max_news_items)
 
     respond_to do |format|
       format.html # archive.html.haml
@@ -36,23 +39,24 @@ class NewsArchivesController < ApplicationController
   end
 
 protected
-
   # Finds the +NewsArchive+ object corresponding to the passed in +id+ parameter.
   def find_news_archive
     @news_archive = @node.content
   end
 
+  def set_max_news_items
+    @max_news_items = @news_archive.items_max || Settler[:news_items_max] || 25
+    @featured_news_items = @news_archive.items_featured || Settler[:news_items_featured] || 5
+  end
+
   # Finds recent news items.
   def find_recent_news_items
-    max_news_items      = @news_archive.items_max      || Settler[:news_items_max]      || 25
-    featured_news_items = @news_archive.items_featured || Settler[:news_items_featured] ||  5
-    @news_items         = @news_archive.news_items.accessible.page(params[:page]).per(max_news_items).to_a
-
+    @news_items = @news_archive.news_items.accessible.page(params[:page]).per(@max_news_items).to_a
     @latest_news_items = []
 
     if params[:page].blank? || params[:page].to_i == 1
-      @latest_news_items = @news_items[0..featured_news_items-1] if featured_news_items > 0
-      @news_items_for_table = @news_items[featured_news_items..max_news_items-1] if featured_news_items < max_news_items
+      @latest_news_items = @news_items[0..@featured_news_items-1] if @featured_news_items > 0
+      @news_items_for_table = @news_items[@featured_news_items..@max_news_items-1] if @featured_news_items < @max_news_items
     end
   end
 end

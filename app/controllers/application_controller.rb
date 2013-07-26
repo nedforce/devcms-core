@@ -422,6 +422,7 @@ protected
     @controller_model ||= controller_name.classify.split('::').last.constantize rescue nil
   end
 
+
 private
   
   def determine_redirect_url(request, ssl)
