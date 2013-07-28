@@ -3,7 +3,7 @@
     %h4= contact_form_field.class.localized_model_name
 
     - contact_form_field.attributes.each_pair do |attr, value|
-      - if [:label, :obligatory, :field_type, :default_value, :position].include?(attr.to_sym)
+      - if ['label', 'obligatory', 'field_type', 'default_value', 'position'].include?(attr.to_s)
         %div{ :class => "#{attr}" }
           %span.label>= contact_form_field.class.human_attribute_name(attr)
           \:
