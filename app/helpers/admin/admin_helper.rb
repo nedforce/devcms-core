@@ -160,8 +160,9 @@ module Admin::AdminHelper
   
   def default_fields_before_form(form)
     form.text_field(:title, :label => t('shared.title')) +
-    form.text_field(:tag_list, :label => t('shared.tags'), :onkeyup => "autoComplete(this, #{Node.tags}, '#{controller_name.singularize}')") +
+    form.text_field(:tag_list, :label => t('shared.tags')) +
     content_tag(:div, "", :id => "auto_complete_dropdown") +
+    content_tag(:div, "", :id => "data_capsule_for_tags", :tags => "#{Node.tags}", :controller => "#{controller_name.singularize}") +
     form.text_field(:title_alternative_list, :label => t('shared.title_alternatives')) if form.object.attributes.keys.include?("title")
   end
     
@@ -172,7 +173,7 @@ module Admin::AdminHelper
   def default_preview_fields(form)
     fields = form.hidden_field(:publication_start_date) + form.hidden_field(:publication_end_date)
     if form.object.attributes.keys.include?('title')
-      fields << form.hidden_field(:title) + form.hidden_field(:title_alternative_list)
+      fields << form.hidden_field(:title) + form.hidden_field(:title_alternative_list) + form.hidden_field(:tag_list)
     end
     return fields
   end

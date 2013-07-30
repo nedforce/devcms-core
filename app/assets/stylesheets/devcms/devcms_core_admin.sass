@@ -343,6 +343,29 @@ fieldset .formFieldCt label
   overflow-x: scroll
   width: 500px
 
+#data_capsule
+  display: none
+
+#auto_complete_dropdown
+  padding-left: 120px
+  position: relative
+  display: none
+  ul
+    background: #ffffff
+    border: 1px solid #b5b8c8
+    padding: 0
+    width: 250px  
+    top: -10px
+    position: absolute
+    z-index: 10
+    li
+      float: none
+      position: relative
+      padding: 10px 20px
+      color: #000000
+    li:hover
+      color: #456ea4
+
 .helpText
   padding-left: 120px
   font-size: small
@@ -499,6 +522,7 @@ input.small
   
 .x-combo-list
   left: 391px !important
+
   
 ul.x-menu-list
   height: expression( this.scrollHeight > 350 ? "350px" : "auto" )
