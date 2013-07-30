@@ -75,8 +75,6 @@ class Node < ActiveRecord::Base
   # A node is commentable
   acts_as_commentable
 
-  acts_as_taggable
-  
   # Nodes are taggable with alterative titles
   acts_as_taggable_on :title_alternatives
   
@@ -293,6 +291,10 @@ class Node < ActiveRecord::Base
     @content_to_hide_from_menu ||= self.content_types_configuration.select do |content_type, configuration|
       !configuration[:show_in_menu]
     end.map(&:first)
+  end
+
+  def related_content
+    find_related_tags[0..9]
   end
 
   # Returns a hash representing this node's config properties for an Ext.dvtr.AsyncTreeNode javascript object.
