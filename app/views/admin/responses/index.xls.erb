@@ -28,7 +28,7 @@
       </Row>
     <% @responses.each do |response| %>
       <Row>
-      <% response.response_fields.map.each do |field| %>
+      <% response.response_fields.each do |field| %>
         <Cell><Data ss:Type="String"><%= field.value %></Data></Cell>
       <% end %>
       </Row>

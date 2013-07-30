@@ -188,6 +188,6 @@ class Admin::ResponsesController < Admin::AdminController
   end
 
   def get_labels
-    @labels = @contact_form.contact_form_fields.map.each { |field| field.label }
+    @labels = @contact_form.contact_form_fields.map{ |field| field.label }
   end
 end
