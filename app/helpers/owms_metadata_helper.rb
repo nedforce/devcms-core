@@ -7,6 +7,10 @@ module OwmsMetadataHelper
     metadata << owms_mantle_metadata_for(node)
     metadata << owms_permit_metadata_for(node) if node.content_type == 'Permit'
 
+    node.tag_list.each do |tag|
+      metadata << meta_tag('tags', tag)
+    end
+
     unless node.categories.empty?
       categories = node.categories.categories
 
