@@ -6,19 +6,20 @@ function removeWhiteSpaces(str){
   return str.replace(/^\s*/, "");
 }
 
-function autoComplete (form, all_tags, controller){
+function autoComplete (all_tags, controller){
+  var form = $(controller + "_tag_list");
   var current_input_word = removeWhiteSpaces( castStringToArray( form.value ) [getCursorWordIndex(form)] );
   var suggested_input = [];
   if (current_input_word.length > 0 ){
     for (var i = 0; i < all_tags.length && suggested_input.length < 5; i++){
-      var index = all_tags[i].search("^" + current_input_word + "..*?");
+      var index = all_tags[i].search("^" + current_input_word + ".");
       if (index != -1){
         suggested_input.push(all_tags[i]);
       }
     }
     for (var i = 0; i < all_tags.length && suggested_input.length < 5; i++){
-      var index = all_tags[i].search("..*?" + current_input_word);
-      if (index != -1){
+      var index = all_tags[i].search(current_input_word);
+      if (index != -1 && !wordAlreadyInArray(suggested_input, all_tags[i])){
         suggested_input.push(all_tags[i]);
       }
     }
@@ -27,6 +28,16 @@ function autoComplete (form, all_tags, controller){
   var output_field = $("auto_complete_dropdown");
   output_field.innerHTML = toHTMLList(suggested_input, castStringToArray(form.value), controller);
   output_field.style.display = "block";
+  return ;
+}
+
+function wordAlreadyInArray(word_array, word){
+  for (var i = 0; i < word_array.length; i++){
+    if (word_array [i] == word){
+      return true;
+    }
+  }
+  return false;
 }
 
 function fattenPartStringInHTML(entire_string, part_string){
@@ -47,7 +58,7 @@ function hideAutoComplete(){
 }
 
 function fillInAutoComplete (controller, single_value){
-  var form = $(controller+"_tag_list");
+  var form = $(controller + "_tag_list");
   var current_cursor_pos_word = getCursorWordIndex(form);
   var string_array = castStringToArray(form.value);
   string_array[current_cursor_pos_word] = single_value;
@@ -104,5 +115,20 @@ function getCursorPos(form) {
         }
     }
 
-    return position;
+    return start;
 }
+
+function addEventListenersOnTags(){
+  if ( $('data_capsule_for_tags') != undefined ){
+    var controller = $('data_capsule_for_tags').attributes.getNamedItem("controller").value;
+    var tags = JSON.parse( $('data_capsule_for_tags').attributes.getNamedItem("tags").value );
+    $(controller + "_tag_list").observe('keyup', function(event) { autoComplete(tags, controller) });
+    $(controller + "_tag_list").observe('blur', function(event) { hideAutoComplete() });
+  }
+}
+
+Ajax.Responders.register({
+  onComplete: function() {
+    addEventListenersOnTags()
+  }
+});

@@ -160,8 +160,9 @@ module Admin::AdminHelper
   
   def default_fields_before_form(form)
     form.text_field(:title, :label => t('shared.title')) +
-    form.text_field(:tag_list, :label => t('shared.tags'), :onkeyup => "autoComplete(this, #{Node.tags}, '#{controller_name.singularize}')", :onblur => "hideAutoComplete()") +
+    form.text_field(:tag_list, :label => t('shared.tags')) +
     content_tag(:div, "", :id => "auto_complete_dropdown") +
+    content_tag(:div, "", :id => "data_capsule_for_tags", :tags => "#{Node.tags}", :controller => "#{controller_name.singularize}") +
     form.text_field(:title_alternative_list, :label => t('shared.title_alternatives')) if form.object.attributes.keys.include?("title")
   end
     
