@@ -7,37 +7,40 @@ function removeWhiteSpaces(str){
 }
 
 function autoComplete (all_tags, controller){
-  var form = $(controller + "_tag_list");
-  var current_input_word = removeWhiteSpaces( castStringToArray( form.value ) [getCursorWordIndex(form)] );
+  var form = getTagListForm (controller);
+  //current_input_word becomes the word the cursor is currently at
+  var current_input_word = removeWhiteSpaces( castStringToArray( form.value )[ getCursorWordIndex(form) ] );
+  var suggested_output = getSuggestions(all_tags, current_input_word);
+  setSuggestionsAsOutput(suggested_output, form, controller, current_input_word);
+}
+
+function getSuggestions(all_tags, current_input_word){
   var suggested_input = [];
   if (current_input_word.length > 0 ){
     for (var i = 0; i < all_tags.length && suggested_input.length < 5; i++){
       var index = all_tags[i].search("^" + current_input_word + ".");
-      if (index != -1){
+      if (index !== -1){
         suggested_input.push(all_tags[i]);
       }
     }
     for (var i = 0; i < all_tags.length && suggested_input.length < 5; i++){
-      var index = all_tags[i].search(current_input_word);
-      if (index != -1 && !wordAlreadyInArray(suggested_input, all_tags[i])){
+      var index = all_tags[i].search("." + current_input_word);
+      if (index !== -1){
         suggested_input.push(all_tags[i]);
       }
     }
   }
-  
-  var output_field = $("auto_complete_dropdown");
-  output_field.innerHTML = toHTMLList(suggested_input, castStringToArray(form.value), controller);
-  output_field.style.display = "block";
-  return ;
+  return suggested_input;
 }
 
-function wordAlreadyInArray(word_array, word){
-  for (var i = 0; i < word_array.length; i++){
-    if (word_array [i] == word){
-      return true;
-    }
-  }
-  return false;
+function setSuggestionsAsOutput (output_list, form, controller, current_input_word){
+  var output_field = $("auto_complete_dropdown");
+  output_field.innerHTML = toHTMLList(output_list, current_input_word, controller);
+  output_field.style.display = "block";
+}
+
+function getTagListForm (controller){
+  return $(controller + "_tag_list");
 }
 
 function fattenPartStringInHTML(entire_string, part_string){
@@ -58,7 +61,7 @@ function hideAutoComplete(){
 }
 
 function fillInAutoComplete (controller, single_value){
-  var form = $(controller + "_tag_list");
+  var form = getTagListForm (controller);
   var current_cursor_pos_word = getCursorWordIndex(form);
   var string_array = castStringToArray(form.value);
   string_array[current_cursor_pos_word] = single_value;
@@ -67,6 +70,7 @@ function fillInAutoComplete (controller, single_value){
   for (var i = 0; i < string_array.length - 1; i++){
     new_form_value += removeWhiteSpaces( string_array[i] ) + ", ";
   }
+  //add the last one without ", " at the end
   new_form_value += removeWhiteSpaces( string_array[ string_array.length - 1] );
   
   form.value = new_form_value;
@@ -94,6 +98,8 @@ function getCursorPos(form) {
     if (typeof form.selectionStart == "number") {
         start = form.selectionStart;
     } else {
+      //for non-normal browsers (<= IE8)
+      //copied from http://stackoverflow.com/questions/3053542/how-to-get-the-start-and-end-points-of-selection-in-text-area
         range = document.selection.createRange();
 
         if (range && range.parentElement() == form) {
@@ -119,16 +125,17 @@ function getCursorPos(form) {
 }
 
 function addEventListenersOnTags(){
-  if ( $('data_capsule_for_tags') != undefined ){
+  if ($('data_capsule_for_tags')) {
     var controller = $('data_capsule_for_tags').attributes.getNamedItem("controller").value;
     var tags = JSON.parse( $('data_capsule_for_tags').attributes.getNamedItem("tags").value );
-    $(controller + "_tag_list").observe('keyup', function(event) { autoComplete(tags, controller) });
-    $(controller + "_tag_list").observe('blur', function(event) { hideAutoComplete() });
+    getTagListForm (controller).observe('keyup', function(event) { autoComplete(tags, controller) });
+    getTagListForm (controller).observe('focus', function(event) { autoComplete(tags, controller) });
+    getTagListForm (controller).observe('blur', function(event) { hideAutoComplete() });
   }
 }
 
 Ajax.Responders.register({
   onComplete: function() {
-    addEventListenersOnTags()
+    addEventListenersOnTags();
   }
 });
