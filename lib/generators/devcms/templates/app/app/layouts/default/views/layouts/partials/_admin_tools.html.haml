@@ -12,4 +12,4 @@
           = link_to I18n.t('layouts.administration'), admin_nodes_path
       %li
         = image_tag 'icons/user_go.png', :class => 'icon', :alt => t('layouts.log_out_alt'), :title => t('layouts.log_out_title')
-        = link_to I18n.t('layouts.log_out'), logout_path, :class => 'logout'
+        = link_to I18n.t('layouts.log_out'), logout_path, :class => 'logout', :method => :delete

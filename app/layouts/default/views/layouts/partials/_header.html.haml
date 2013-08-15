@@ -11,7 +11,7 @@
       = form_tag secure_url(:session_url), :method => :post do
         .login_username_container.clearfix
           .field_wrapper
-            = text_field_tag :login, (params[:login] or t('layouts.username')), :id => 'login_username'
+            = text_field_tag :login, params[:login], :id => 'login_username', :placeholder => t('layouts.username')
           %label{ :for => 'login_username' }= t('layouts.username')
         .login_password_container.clearfix
           .field_wrapper

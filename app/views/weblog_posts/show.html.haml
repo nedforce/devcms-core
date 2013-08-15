@@ -28,7 +28,7 @@
     .buttons.clearfix
       - if logged_in? && (@weblog_post.weblog.is_owned_by_user?(current_user) || current_user.has_role?('admin'))
         = delete_button t('weblogs.delete_post') do
-          = link_to t('weblogs.delete_post'), confirm_destroy_weblog_archive_weblog_weblog_post_path(@weblog_post.weblog.weblog_archive, @weblog_post.weblog, @weblog_post)
+          = link_to t('weblogs.delete_post'), confirm_destroy_weblog_archive_weblog_weblog_post_path(@weblog_post.weblog.weblog_archive, @weblog_post.weblog, @weblog_post), :method => :delete, :confirm => 'Weet u het zeker?'
         = edit_button t('weblogs.edit_post') do
           = link_to t('weblogs.edit_post'), edit_weblog_archive_weblog_weblog_post_path(@weblog_post.weblog.weblog_archive, @weblog_post.weblog, @weblog_post)
       = print_button

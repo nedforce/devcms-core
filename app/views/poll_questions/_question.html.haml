@@ -13,7 +13,7 @@
 
     .button.clearfix
       - unless poll_enabled?(question.poll)
-        = link_to t('polls.login_link'), login_path, :class => 'results_link'
+        = link_to t('polls.login_link'), login_path, :class => 'results_link', :remote => true
 
       - else
         = submit_tag t('polls.vote')

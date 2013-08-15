@@ -38,26 +38,24 @@ class NewsletterArchivesController < ApplicationController
       unless @newsletter_archive.has_subscription_for?(current_user)
         @newsletter_archive.users << current_user
         format.html do 
-          flash[:notice] = I18n.t('newsletters.subscribe_successfull')
-          redirect_to @newsletter_archive
+          if request.xhr?
+            render :partial => '/newsletter_archives/content_box_content', :locals => { :node => @node }
+          else
+            flash[:notice] = I18n.t('newsletters.subscribe_successfull')
+            redirect_to @newsletter_archive
+          end
         end
         format.xml { head :ok }
-        format.js do
-          render :update do |page|
-            page.replace_html "newsletter_archive_content_box_#{@newsletter_archive.id}", :partial => '/newsletter_archives/content_box_content_content', :locals => { :content => @newsletter_archive }
-          end
-        end
       else
-        format.html do 
-          flash[:warning] = I18n.t('newsletters.subscribe_unsuccessfull')
-          redirect_to @newsletter_archive
+        format.html do
+          if request.xhr?          
+            render :partial => '/newsletter_archives/content_box_content', :locals => { :node => @node }
+          else
+            flash[:warning] = I18n.t('newsletters.subscribe_unsuccessfull')
+            redirect_to @newsletter_archive
+          end
         end
         format.xml { render :xml => @newsletter_archive.errors, :status => :unprocessable_entity }
-        format.js do
-          render :update do |page|
-            page.replace_html "newsletter_archive_content_box_#{@newsletter_archive.id}", :partial => '/newsletter_archives/content_box_content_content', :locals => { :content => @newsletter_archive }
-          end
-        end
       end
     end
   end
@@ -69,26 +67,24 @@ class NewsletterArchivesController < ApplicationController
       if @newsletter_archive.has_subscription_for?(current_user)
         @newsletter_archive.users.delete(current_user)
         format.html do 
-          flash[:notice] = I18n.t('newsletters.unsubscribe_successfull')
-          redirect_back_or_default(@newsletter_archive)
+          if request.xhr?
+            render :partial => '/newsletter_archives/content_box_content', :locals => { :node => @node }
+          else
+            flash[:notice] = I18n.t('newsletters.unsubscribe_successfull')
+            redirect_back_or_default(@newsletter_archive)
+          end
         end
         format.xml { head :ok }
-        format.js do
-          render :update do |page|
-            page.replace_html "newsletter_archive_content_box_#{@newsletter_archive.id}", :partial => '/newsletter_archives/content_box_content_content', :locals => { :content => @newsletter_archive }
-          end
-        end
       else
         format.html do 
-          flash[:warning] = I18n.t('newsletters.unsubscribe_unsuccessfull')
-          redirect_back_or_default(@newsletter_archive)
-        end
-        format.xml { render :xml => @newsletter_archive.errors, :status => :unprocessable_entity }
-        format.js do
-          render :update do |page|
-            page.replace_html "newsletter_archive_content_box_#{@newsletter_archive.id}", :partial => '/newsletter_archives/content_box_content_content', :locals => { :content => @newsletter_archive }
+          if request.xhr?
+            render :partial => '/newsletter_archives/content_box_content', :locals => { :node => @node }
+          else
+            flash[:warning] = I18n.t('newsletters.unsubscribe_unsuccessfull')
+            redirect_back_or_default(@newsletter_archive)
           end
         end
+        format.xml { render :xml => @newsletter_archive.errors, :status => :unprocessable_entity }
       end
     end
   end

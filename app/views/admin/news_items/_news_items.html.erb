@@ -26,7 +26,8 @@
               image_tag(content_node_path(image_node, :action => :thumbnail), :alt => image_node.content.alt.to_s) + content_tag('div', image_node.content.description.to_s, :class => 'hidden'),
               '#',
               {
-                :rel => "lightbox[#{news_item.node.id}]", :title => 'Vergroot deze afbeelding',
+                :data => { :lightbox => "lightbox[#{news_item.node.id}]" },
+                :title => 'Vergroot deze afbeelding',
                 :class => 'right'
               }
             )

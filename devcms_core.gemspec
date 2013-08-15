@@ -46,13 +46,14 @@ Gem::Specification.new do |s|
   s.add_dependency  'data_checker'
   s.add_dependency  'airbrake'
 
-  # s.add_dependency  'prototype_legacy_helper', '0.0.0'
-  s.add_dependency  'prototype-rails', '~> 3.2.1'
+  s.add_dependency  'jquery-ui-sass-rails', '~> 4.0.3' # Frontend, includes jquery-rails
+  s.add_dependency  'prototype-rails', '~> 3.2.1' # Backend
 
   ##### Asset helpers (require through bundler in app, not necessary in production always)
 
   # Javascript
   s.add_dependency 'coffee-rails', '~> 3.0'
+  s.add_dependency 'coffee-script-source', '~> 1.5.0'  
   s.add_dependency 'uglifier', '~> 1.0'
 
   # Styling

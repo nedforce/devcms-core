@@ -5,6 +5,7 @@
   %head
     %meta{:content => "text/html;charset=utf-8", "http-equiv" => "Content-Type"}/
     %meta{:content => "nl_nl", :name => "language"}/
+    = csrf_meta_tags    
     = generate_metadata_for(@node) if @node.present?
     %title= h [Settler[:site_name], @page_title].compact.join(' | ')
     %link{:href => "http://#{Settler[:host]}/favicon.ico", :rel => "SHORTCUT ICON", :type => "image/vnd.microsoft.icon"}/
@@ -19,12 +20,12 @@
       <haml:loud> stylesheet_link_tag :ie </haml:loud>
     /[if lte IE 6]
       <haml:loud> javascript_include_tag('iepngfix_tilebg.js') </haml:loud>
-    = javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};"
+
     = yield :javascript
     - unless @rss_feed_url.nil?
       %link{:href => @rss_feed_url, :rel => "alternate", :type => "application/atom+xml"}/
     = yield :atom_feed
-    = javascript_tag("document.observe('dom:loaded', function () { lightbox = new Lightbox({}); });")
+
   %body
     #main_container
       = render :partial => '/layouts/partials/content'

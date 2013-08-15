@@ -1,6 +1,3 @@
-- content_for :javascript do
-  = calendar_date_select_includes :locale => :nl
-
 %h1= h @contact_form.title
 
 - if @contact_form.description_before_contact_fields
@@ -36,7 +33,7 @@
               #{check_box_tag "contact_form_field[#{contact_form_field.id}][]", choice.to_s, values[choice.parameterize.to_s] == '1'} #{label_tag "contact_form_field[#{contact_form_field.id}][#{choice.parameterize}]", choice}
               %br
           - elsif contact_form_field.field_type == 'date'
-            = calendar_date_select_tag "contact_form_field_#{contact_form_field.id}", value, :name => "contact_form_field[#{contact_form_field.id}]", :class => 'contact_field'
+            = text_field_tag "contact_form_field_#{contact_form_field.id}", value, :name => "contact_form_field[#{contact_form_field.id}]", :class => 'contact_field datepicker'
           - elsif contact_form_field.field_type == 'file'
             = file_field_tag "contact_form_field_#{contact_form_field.id}", :name => "contact_form_field[#{contact_form_field.id}]", :class => 'contact_field'
         %td.obligatory

@@ -1,7 +1,7 @@
 - content = node.content
 - active_question = content.active_question
 
-%div{ :id => "poll_content_box_#{content.id}" }
+%div{ :id => "poll_content_box_#{content.id}", :class => 'poll_content_box_content' }
   - if active_question.present?
     %p.question
       = h active_question.question
@@ -11,7 +11,7 @@
         - cache({:poll_results_content_box_for => content.id, :site => current_site.id}, { :expires_in => 15.minutes }) do
           = render :partial => '/poll_questions/results_side_box', :locals => { :question => active_question }
       - else
-        = form_tag vote_poll_question_url(active_question), :method => :put, :id => "poll_content_box_form_#{content.id}", :class => 'poll_content_box_form' do
+        = form_tag vote_poll_question_url(active_question), :method => :put, :remote => true, :data => { :type => 'html' }, :id => "poll_content_box_form_#{content.id}", :class => 'poll_content_box_form' do
           - cache(:poll_options_content_box_for => content.id, :last_updated_at => content.last_updated_at, :site => current_site.id) do
             - active_question.poll_options.each do |o|
               .option.transparent
@@ -21,11 +21,11 @@
 
           .buttons.clearfix
             - if !poll_enabled?(content)
-              = link_to t('polls.login_link'), login_path, :class => 'results_link login_link'
+              = link_to t('polls.login_link'), login_path, :class => 'results_link login_link', :remote => true
             - else
               = submit_tag t('polls.vote'), :class => 'submit_orange vote_button'
               = arrow_block_button t('polls.view_results'), :class => 'results' do
-                = link_to t('polls.results'), results_poll_question_url(active_question), :class => 'results_link', :id => "poll_results_link_#{content.id}"
+                = link_to t('polls.results'), results_poll_question_url(active_question), :class => 'results_link', :id => "poll_results_link_#{content.id}", :remote => true
 
   - else
     %p.not_active= t 'polls.no_active_question'

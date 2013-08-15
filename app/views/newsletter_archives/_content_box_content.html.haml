@@ -1,4 +1,22 @@
 - content = node.content
 
-%div{ :id => "newsletter_archive_content_box_#{content.id}" }
-  = render :partial => '/newsletter_archives/content_box_content_content', :locals => { :content => content }
+%div{ :id => "newsletter_archive_content_box_#{content.id}", :class => 'newsletter_archive_content_box_content' }
+  - if content.description.present?
+    .description
+      = w content.description
+
+  - if logged_in?
+    - if content.has_subscription_for?(current_user)
+      = form_tag unsubscribe_newsletter_archive_path(content), :method => :delete, :remote => true, :data => { :type => 'html' }, :id => "newsletter_archive_content_box_form_#{content.id}", :class => 'newsletter_archive_content_box_form unsubscribe' do
+        .buttons.clearfix
+          = submit_tag t('newsletters.unsubscribe'), :class => 'unsubscribe_button submit'
+
+    - else
+      = form_tag subscribe_newsletter_archive_path(content), :method => :post, :remote => true, :data => { :type => 'html' }, :id => "newsletter_archive_content_box_form_#{content.id}", :class => 'newsletter_archive_content_box_form subscribe' do
+        .buttons.clearfix
+          = submit_tag t('newsletters.subscribe'), :class => 'subscribe_button submit'
+
+  - else
+    %p
+      = link_to t('newsletters.register'), secure_url(:signup_url)
+      = t 'newsletters.to_receive_newsletter'

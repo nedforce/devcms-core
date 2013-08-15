@@ -1,29 +1,10 @@
-<% content_for :javascript do %>
-  <%= calendar_date_select_includes :locale => :nl %>
-  <%= javascript_include_tag 'search.js' %>
-
-  <%= javascript_tag do %>
-  function show_advanced_search_options() {
-    $('advanced_search').removeClassName("hidden");
-    $('top_search_button').addClassName("hidden");
-    $('show_advanced_options').addClassName("hidden");
-  }
-
-  function hide_advanced_search_options() {
-    $('advanced_search').addClassName("hidden");
-    $('top_search_button').removeClassName("hidden");
-    $('show_advanced_options').removeClassName("hidden");
-  }
-  <% end %>
-<% end %>
-
 <div class="regularPage searchPage">
 
-<% if @query %>
-  <h1><%=t 'search.search_results' -%></h1>
-<% else %>
-  <h1><%=t 'search.to_search' -%></h1>
-<% end %>
+  <% if @query %>
+    <h1><%=t 'search.search_results' -%></h1>
+  <% else %>
+    <h1><%=t 'search.to_search' -%></h1>
+  <% end %>
 
   <%= form_tag search_path(@engine), :method => :get, :class => 'clearfix', :id => 'main_search_form' do %>
     <div id="controls" class="clearfix">
@@ -36,7 +17,7 @@
       </div>
 
       <div id="show_advanced_options" <%= 'class=hidden' if params[:advanced] -%>>
-        <%= link_to_function(t('search.advanced_search'), 'show_advanced_search_options()', :href => search_path(@engine, :advanced => true)) %>
+        <%= link_to t('search.advanced_search'), search_path(@engine, :advanced => true), :clss => 'show-advanced-search-options' %>
         <%= image_tag 'blue_pointer_down.png', :alt => t('search.show_advanced_options') -%>
       </div>
     </div>
@@ -50,8 +31,8 @@
       <div class="search_field_wrapper clearfix">
         <div class='search_description'><%=t 'search.in_period' -%>: </div>
         <div class='search_field'>
-          <%= calendar_date_select_tag 'from', @from, :image => 'icons/calendar.png' %>
-          <%= calendar_date_select_tag 'to',   @to,   :image => 'icons/calendar.png' %>
+          <%= text_field_tag 'from', @from, :class => 'datepicker' %>
+          <%= text_field_tag 'to',   @to,   :class => 'datepicker' %>
         </div>
       </div>
 
@@ -69,7 +50,7 @@
         </div>
 
         <div id="hide_advanced_options">
-          <%= link_to_function t('search.simple_search'), 'hide_advanced_search_options()', :href => search_path(@engine) %>
+          <%= link_to t('search.simple_search'), search_path(@engine), :class => 'hide-advanced-search-options' %>
           <%= image_tag 'blue_pointer_up.png', :alt => t('search.hide_advanced_options') -%>
         </div>
       </div>

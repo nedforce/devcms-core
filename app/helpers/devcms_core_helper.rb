@@ -223,11 +223,11 @@ module DevcmsCoreHelper
         available_header_images_nodes = node.present? ? node.header_images : []
         available_header_images_nodes << header_image(node, big_header)[:url] if available_header_images_nodes.empty?
 
-        available_header_images = available_header_images_nodes.map do |header_image|
+        available_header_images = available_header_images_nodes.map.each_with_index do |header_image, index|
           if header_image.is_a?(String)
             {
               :url   => header_image,
-              :id    => nil,
+              :id    => "header-image-#{index}",
               :alt   => '',
               :title => nil
             }

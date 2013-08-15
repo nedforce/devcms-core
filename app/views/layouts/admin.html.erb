@@ -19,9 +19,7 @@
         <![endif]-->
 
         <%= javascript_include_tag 'devcms_core_admin', '/libraries/tiny_mce/reset_tiny_mce.js', '/libraries/tiny_mce/tiny_mce.js' %>        
-              
-        <%= calendar_date_select_includes :locale => :nl %>
-        
+
         <!-- Include Ext Js-->
         <%= javascript_include_tag '/libraries/ext/adapter/ext/ext-base.js', (Rails.env.development? ? '/libraries/ext/ext-all-debug.js' : '/libraries/ext/ext-all.js') %>
         <%= javascript_include_tag 'extjs.js' %>

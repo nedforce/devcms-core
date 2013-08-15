@@ -13,7 +13,7 @@
    <div class="buttons clearfix">
     <% if logged_in? && (@weblog.is_owned_by_user?(current_user) || current_user.has_role?('admin')) %>
       <%= delete_button t('weblogs.delete_weblog') do %>
-        <%= link_to t('weblogs.delete_weblog'), weblog_archive_weblog_path(@weblog.weblog_archive, @weblog), :method => :delete %>
+        <%= link_to t('weblogs.delete_weblog'), weblog_archive_weblog_path(@weblog.weblog_archive, @weblog), :method => :delete, :confirm => 'Weet u het zeker?' %>
       <% end %>
       <%= edit_button t('weblogs.edit_weblog') do %>
         <%= link_to t('weblogs.edit_weblog'), edit_weblog_archive_weblog_path(@weblog.weblog_archive, @weblog) -%>
@@ -54,7 +54,7 @@
               image_node,
               { :action => :full },
               { 
-                :rel => 'lightbox', 
+                :data => { :lightbox => 'lightbox' },
                 :class => 'right'
               }
             )

@@ -4,7 +4,7 @@
         image_tag(content_node_path(image.node, :action => :thumbnail), :alt => image.alt.to_s) + content_tag('div', image.description.to_s, :class => 'hidden'),
         image.node,
         { :action => :full },
-        { :rel    => "lightbox[#{@weblog_post.node.id}]", :title => 'Vergroot deze afbeelding' }
+        { :data    => { :lightbox => "lightbox[#{@weblog_post.node.id}]" }, :title => 'Vergroot deze afbeelding' }
       )
     -%>
   <br/>

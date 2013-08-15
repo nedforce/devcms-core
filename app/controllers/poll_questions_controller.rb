@@ -27,10 +27,11 @@ class PollQuestionsController < ApplicationController
   # GET /poll_questions/:id/results.js
   def results
     respond_to do |format|
-      format.html # results.html.erb
-      format.js do # XHR request
-        render :update do |page|
-          page.replace_html "poll_content_box_content_#{@poll_question.poll.id}", :partial => 'results_side_box', :locals => {:question => @poll_question}
+      format.html do
+        if request.xhr?
+          render :partial => 'results_side_box', :locals => {:question => @poll_question}
+        else
+          render
         end
       end
       format.xml do

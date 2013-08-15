@@ -1,0 +1,83 @@
+$.Placeholder.settings.color = null
+
+$.fn.replaceNewsletterArchiveSubmitButton = () ->
+  return this.each -> 
+    $form = $(this)
+    linkType = if $form.hasClass('unsubscribe') then 'unsubscribe' else 'subscribe'
+    $buttons = $('div.buttons', $form)
+
+    $("input.#{linkType}_button", $buttons).addClass('hidden')
+    $submitImage = $("<img src='#{I18n.t("#{linkType}_image", 'newsletter_archives')}' alt='#{I18n.t("#{linkType}_alt", 'newsletter_archives')}' title='#{I18n.t("#{linkType}_title", 'newsletter_archives')}' />")
+    $submitLink = $("<a href='#'>#{I18n.t(linkType, 'newsletter_archives')}</a>")
+    $submitLink.click (event) -> 
+      event.preventDefault()
+      $form.submit()
+  
+    $buttons.append($submitImage).append($submitLink)       
+  
+jQuery ->
+  # Font resize
+  $fontBox = $('#fontsize')  
+  if $fontBox.length > 0
+    $smallerFontLink = $("<a href='#' title='#{I18n.t('smaller_text_title', 'font_resize')}'><img src='#{I18n.t('smaller_text_image', 'font_resize')}' alt='#{I18n.t('smaller_text', 'font_resize')}' class='transparent' /></a>")
+    $biggerFontLink = $("<a href='#' title='#{I18n.t('bigger_text_title', 'font_resize')}'><img src='#{I18n.t('bigger_text_image', 'font_resize')}' alt='#{I18n.t('bigger_text', 'font_resize')}' class='transparent' /></a>")
+    $smallerFontLink.click (event) ->
+      event.preventDefault()
+      window.downsizeFont()
+    $biggerFontLink.click (event) ->
+      event.preventDefault()
+      window.upsizeFont()
+      
+    $fontBox.append($smallerFontLink).append($biggerFontLink).removeClass('hidden')  
+
+  # Link box
+  $('.toggable_section_link').each ->
+    $link = $(this)
+    $section = $("##{$link.attr('id').replace('toggle_section_', '')}")
+    $section.hide()        
+
+    $link.addClass('activated').click (event) ->
+      event.preventDefault()
+      $section.slideToggle()
+      $link.toggleClass('minus_icon')
+  
+  # Newsletter archive box
+  $('form.newsletter_archive_content_box_form').replaceNewsletterArchiveSubmitButton()  
+  $('.newsletter_archive_content_box').on 'ajax:complete', 'form.newsletter_archive_content_box_form', (event, xhr) ->
+    $newContent = $(xhr.responseText)
+    $('form', $newContent).replaceNewsletterArchiveSubmitButton()
+    $(this).closest('.newsletter_archive_content_box_content').replaceWith($newContent)
+  
+  # Poll box
+  $('form.poll_content_box_form')
+    .each ->
+      $poll = $(this)
+      $buttons = $('.buttons', $poll)
+      
+      if $(".login_link", $buttons).length == 0
+        $(".vote_button", $buttons).addClass('hidden')
+        $voteLinkContainer = $("<div class='vote'><img src='#{I18n.t('submit_image', 'polls')}' alt='' title='#{I18n.t('submit_title', 'polls')}' class='icon transparent' /><a href='#' class='vote_link'>#{I18n.t('submit', 'polls')}</a></div>")
+        $('a', $voteLinkContainer).click (event) -> 
+          event.preventDefault()
+          $poll.submit()
+  
+        $buttons.append($voteLinkContainer)
+    .on 'ajax:success', (event, data) -> $(this).closest('.poll_content_box_content').replaceWith(data)
+    .on 'ajax:success', '.results_link', (event, data) -> $(this).closest('.poll_content_box_content').replaceWith(data)
+
+  # Datepickers
+  $('.datepicker').datepicker
+    showOn: 'button'
+    buttonImage: '<%= image_path('icons/calendar.png') %>'
+    buttonImageOnly: true
+    changeMonth: true
+    changeYear: true
+      
+  # Carousel  
+  $('.carousel-wrapper .carousel-control').css('opacity', '0.5')
+  
+  # Placeholders
+  $.Placeholder.settings.color = '#666' unless $.Placeholder.settings.color
+  $.Placeholder.init()  
+  
+

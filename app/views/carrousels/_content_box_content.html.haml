@@ -27,11 +27,12 @@
   - # We set float:left here, instead of in CSS, so the banners are shown if JavaScript is disabled (Drempelvrij).
   = javascript_tag "$$('#carousel-#{content.id} .carousel-content .slide').invoke('setStyle', 'float:left');"
 
-  - if content.animation == Carrousel::ANIMATION_FADE_IN
-    = javascript_tag "new Carousel('carousel-#{content.id}', 'carousel-wrapper-#{content.id}', $$('#carousel-#{content.id} .carousel-content .slide'), $$('#carousel-wrapper-#{content.id} span.carousel-control', 'a.carousel-jumper'), {auto:true, autoPause:true, duration:#{duration}, frequency:#{frequency}, effect:'fade'});"
-  - elsif content.animation == Carrousel::ANIMATION_DIA
-    = javascript_tag "new Carousel('carousel-#{content.id}', 'carousel-wrapper-#{content.id}', $$('#carousel-#{content.id} .carousel-content .slide'), $$('#carousel-wrapper-#{content.id} span.carousel-control', 'a.carousel-jumper'), {auto:true, autoPause:true, duration:#{duration}, frequency:#{frequency}, circular:true});"
-  - elsif content.animation == Carrousel::ANIMATION_SPRING
-    = javascript_tag "new Carousel('carousel-#{content.id}', 'carousel-wrapper-#{content.id}', $$('#carousel-#{content.id} .carousel-content .slide'), $$('#carousel-wrapper-#{content.id} span.carousel-control', 'a.carousel-jumper'), {auto:true, autoPause:true, transition:'spring', duration:#{duration}, frequency:#{frequency}, circular:true});"
-  - elsif content.animation == Carrousel::ANIMATION_SLIDE
-    = javascript_tag "new Carousel('carousel-#{content.id}', 'carousel-wrapper-#{content.id}', $$('#carousel-#{content.id} .carousel-content .slide'), $$('#carousel-wrapper-#{content.id} span.carousel-control', 'a.carousel-jumper'), {auto:true, autoPause:true, transition:'linear', duration:#{duration}, frequency:#{frequency}, circular:true});"
+  / JQuery TODO
+  / - if content.animation == Carrousel::ANIMATION_FADE_IN
+  /   = javascript_tag "new Carousel('carousel-#{content.id}', 'carousel-wrapper-#{content.id}', $$('#carousel-#{content.id} .carousel-content .slide'), $$('#carousel-wrapper-#{content.id} span.carousel-control', 'a.carousel-jumper'), {auto:true, autoPause:true, duration:#{duration}, frequency:#{frequency}, effect:'fade'});"
+  / - elsif content.animation == Carrousel::ANIMATION_DIA
+  /   = javascript_tag "new Carousel('carousel-#{content.id}', 'carousel-wrapper-#{content.id}', $$('#carousel-#{content.id} .carousel-content .slide'), $$('#carousel-wrapper-#{content.id} span.carousel-control', 'a.carousel-jumper'), {auto:true, autoPause:true, duration:#{duration}, frequency:#{frequency}, circular:true});"
+  / - elsif content.animation == Carrousel::ANIMATION_SPRING
+  /   = javascript_tag "new Carousel('carousel-#{content.id}', 'carousel-wrapper-#{content.id}', $$('#carousel-#{content.id} .carousel-content .slide'), $$('#carousel-wrapper-#{content.id} span.carousel-control', 'a.carousel-jumper'), {auto:true, autoPause:true, transition:'spring', duration:#{duration}, frequency:#{frequency}, circular:true});"
+  / - elsif content.animation == Carrousel::ANIMATION_SLIDE
+  /   = javascript_tag "new Carousel('carousel-#{content.id}', 'carousel-wrapper-#{content.id}', $$('#carousel-#{content.id} .carousel-content .slide'), $$('#carousel-wrapper-#{content.id} span.carousel-control', 'a.carousel-jumper'), {auto:true, autoPause:true, transition:'linear', duration:#{duration}, frequency:#{frequency}, circular:true});"
