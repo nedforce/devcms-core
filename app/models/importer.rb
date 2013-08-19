@@ -30,13 +30,14 @@ class Importer
 
     if @file_path.present?
       begin
-        @spreadsheet = Excelx.new(@file_path)
+        @spreadsheet = Roo::Excelx.new(@file_path)
         @spreadsheet.default_sheet = @spreadsheet.sheets.first
 
         ActiveRecord::Base.transaction do
           self.parse_spreadsheet
         end
       rescue => e
+        raise e if Rails.env.development? || Rails.env.test?
         @errors << e.message
       end
     else
