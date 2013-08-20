@@ -1,0 +1,41 @@
+// search styling */
+
+ul#search-tabs
+  list-style: none outside none
+  padding: 0
+  margin: 0 0 10px 0
+  border-bottom: 1px solid $blue
+  padding-left: 10px
+  li
+    float: left
+    margin-right: 10px
+    a
+      float: left
+      width: 80px
+      text-align: center
+      background-color: $blueHighlight
+      color: black
+      border-bottom: none
+      text-decoration: none
+    &.selected a
+      background-color: $blue
+      color: white
+
+form#main_search_form
+  padding: 10px 0 20px 0
+
+div
+  &.searchResults
+    margin-top: 10px
+    border-top: 1px solid $default
+    
+    div.searchResult h2 a
+      text-decoration: none  
+
+// Search highlighting
+
+.searchHighlight
+  font-weight: bold
+  h2 a
+    font-weight: bold
+      

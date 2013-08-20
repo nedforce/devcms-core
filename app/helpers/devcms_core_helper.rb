@@ -114,28 +114,6 @@ module DevcmsCoreHelper
     content_tag(:ul, list_items, :class => 'errors')
   end
 
-  # Returns the html for the double-level main menu.
-  def create_main_menu
-    string_cache(:main_menu_for_site => current_site.id) do
-      menu_scope = current_site.descendants(:to_depth => Devcms.main_menu_depth).accessible.public.shown_in_menu
-      top_level_main_menu_items = current_site.closure_for(menu_scope).values.first
-
-      if top_level_main_menu_items.any?
-        content_tag(:ul, top_level_main_menu_items.map { |item, sub_items| create_main_menu_item(item, sub_items.keys) }.join("\n").html_safe, :id => 'main_menu', :class => 'clearfix main-menu')
-      else
-        raw '&nbsp;' # No menu if no top level main menu items
-      end
-    end
-  end
-
-  # Returns the HTML for the multi-level sub menu.
-  def create_sub_menu(self_and_ancestor_ids, top_sub_menu_items, show_private_items_in_sub_menu)
-    sub_menu_content = top_sub_menu_items.map do |item|
-      create_sub_menu_item(item, self_and_ancestor_ids[1..-1], show_private_items_in_sub_menu, :class => 'top_level')
-    end.join("\n").html_safe
-
-    content_tag(:ul, sub_menu_content, :id => 'sub_menu')
-  end
 
   # Returns the HTML for the footer menu links.
   def create_footer_menu_links
@@ -301,71 +279,6 @@ module DevcmsCoreHelper
   end
 
   protected
-
-    # Returns the HTML for a main menu item.
-    #
-    # *arguments*
-    # +node+ - The node to create a main menu item for.
-    def create_main_menu_item(node, children)
-      #active = (@node && @node.path_ids.include?(node.id)) ? 'active' : ''
-
-      if children.empty?
-        content_tag(:li, create_menu_link(node, :class => 'main_menu_link'), :class => "#{node.own_or_inherited_layout_configuration['template_color']}")
-      else
-        link             = create_menu_link(node, :class => 'main_menu_link')
-        sub_menu_items   = children.map { |child| content_tag(:li, create_menu_link(child, :class => 'sub_menu_link')) }.join("\n").html_safe
-        sub_menu         = content_tag(:ul,  sub_menu_items, :class => 'sub_menu')
-        sub_menu_wrapper = content_tag(:div, sub_menu,       :class => 'sub_menu_wrapper')
-        content_tag(:li, link + sub_menu_wrapper, :class => "#{node.own_or_inherited_layout_configuration['template_color']} hover")
-      end
-    end
-
-    # Returns the HTML for a sub menu item.
-    #
-    # *arguments*
-    # +node+ - The node to create a sub menu item for.
-    # +self_and_ancestors_except_root_ids+ - The list of ids of nodes that are ancestors of (except the root node) or equal to the node
-    # for which the submenu is being built.
-    # +show_private_items_in_sub_menu+ - True if private items should be shown, otherwise false.
-    # +options+ - Additional HTML attributes to be set on the sub menu item.
-    def create_sub_menu_item(node, self_and_ancestors_except_root_ids, show_private_items_in_sub_menu, options = {})
-      if show_private_items_in_sub_menu
-        if current_user_has_any_role?(node)
-          sub_menu_items = node.children.accessible.shown_in_menu.all(:order => 'position')
-        else
-          sub_menu_items = node.children.accessible.shown_in_menu.all(:order => 'position').select do |sub_menu_item|
-            sub_menu_item.public? || current_user_has_any_role?(sub_menu_item)
-          end
-        end
-      else
-        sub_menu_items = node.children.accessible.public.shown_in_menu.all(:order => 'position')
-      end
-
-      has_sub_menu_items = sub_menu_items.any?
-
-      options[:class] = options[:class] ? "#{options[:class]} parent" : "parent" if has_sub_menu_items
-
-      unless self_and_ancestors_except_root_ids.include?(node.id)
-        content_tag(:li, create_menu_link(node, :class => 'sub_menu_link'), options)
-      else
-        classes = %w( sub_menu_link expanded )
-        classes << 'current' if node == @node || (node.content.is_a?(Section) && node.content.frontpage_node_id == @node.id)
-
-        content = create_menu_link(node, :class => classes.join(' '))
-
-        if has_sub_menu_items
-          content += content_tag(:ul, sub_menu_items.map { |item| create_sub_menu_item(item, self_and_ancestors_except_root_ids, show_private_items_in_sub_menu) }.join("\n").html_safe)
-        end
-
-        options[:class] = options[:class] ? "#{options[:class]} expanded" : "expanded"
-
-        content_tag(:li, content, options)
-      end
-    end
-
-    def create_menu_link(node, opts = {})
-      link_to_node(h(node.menu_title), node, {}, { :title => h(node.menu_title) }.merge(opts))
-    end
 
     # Returns the HTML for any children belonging to this node.
     def render_images_and_attachments

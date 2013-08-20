@@ -140,11 +140,10 @@ module NodeExtensions::Layouting
   # Retrieve content representations for a given target
   # Can inherit from parent node (defaults to true)
   def find_content_representations(target, inherit = true)
-    # Do not inherit if this node is a Site node, as this is undesirable
     conditions = {}
     conditions.update(:target => target) if target
-    
-    if !content_representations.exists?(conditions) && inherit && parent && content_class != Site
+
+    if !content_representations.exists?(conditions) && inherit && parent
       parent.find_content_representations(target, inherit) 
     else
       content_representations.where(conditions).includes(:content)

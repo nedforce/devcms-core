@@ -1,0 +1,185 @@
+body:after 
+  content: url(image_path('lightbox/closelabel.gif')) url(image_path('lightbox/loading.gif')) url(image_path('lightbox/prevlabel.gif')) url(image_path('lightbox/nextlabel.gif'))
+  display: none
+
+
+.lightboxOverlay 
+  position: absolute
+  top: 0
+  left: 0
+  z-index: 9999
+  background-color: black
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80)
+  opacity: 0.8
+  display: none
+
+
+.lightbox 
+  position: absolute
+  left: 0
+  width: 100%
+  z-index: 10000
+  text-align: center
+  line-height: 0
+  font-weight: normal
+
+  .lb-image 
+    display: block
+    height: auto
+    max-width: inherit
+    -webkit-border-radius: 3px
+    -moz-border-radius: 3px
+    -ms-border-radius: 3px
+    -o-border-radius: 3px
+    border-radius: 3px
+
+
+  a img 
+    border: none
+
+  .lb-outerContainer 
+    position: relative
+    background-color: white
+    *zoom: 1
+    width: 250px
+    height: 250px
+    margin: 0 auto
+    border: 5px solid white
+
+    &:after 
+      content: ""
+      display: table
+      clear: both
+
+  .lb-container 
+    padding: 4px
+
+  .lb-loader 
+    position: absolute
+    top: 43%
+    left: 0%
+    height: 25%
+    width: 100%
+    text-align: center
+    line-height: 0
+
+  .lb-cancel 
+    display: block
+    width: 32px
+    height: 32px
+    margin: 0 auto
+    background: url(image_path('lightbox/loading.gif')) no-repeat
+
+  .lb-nav 
+    position: absolute
+    top: 0
+    left: 0
+    height: 100%
+    width: 100%
+    z-index: 10
+
+  .lb-container > .nav 
+    left: 0
+
+  .lb-nav a 
+    outline: none
+
+  .lb-prev, .lb-next 
+    width: 49%
+    height: 100%
+    cursor: pointer
+    /* Trick IE into showing hover */
+    display: block
+
+  .lb-prev 
+    left: 0
+    float: left
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0)
+    opacity: 0
+    -webkit-transition: opacity 0.6s
+    -moz-transition: opacity 0.6s
+    -o-transition: opacity 0.6s
+    transition: opacity 0.6s
+
+    &:hover 
+      filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100)
+      opacity: 1
+      background: url(image_path('lightbox/prevlabel.gif')) left 48% no-repeat
+
+
+  .lb-next 
+    right: 0
+    float: right
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0)
+    opacity: 0
+    -webkit-transition: opacity 0.6s
+    -moz-transition: opacity 0.6s
+    -o-transition: opacity 0.6s
+    transition: opacity 0.6s
+
+
+    &:hover 
+      filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100)
+      opacity: 1
+      background: url(image_path('lightbox/nextlabel.gif')) right 48% no-repeat
+
+
+  .lb-dataContainer 
+    background-color: white
+    margin: 0 auto
+    *zoom: 1
+    width: 100%
+    border: 5px solid white
+    border-top: 0
+
+    &:after 
+      content: ""
+      display: table
+      clear: both
+
+
+  .lb-data 
+    padding: 0 4px
+    color: $default
+
+
+    .lb-details 
+      width: 58%
+      float: left
+      text-align: left
+      line-height: 1.1em
+
+    .lb-caption 
+      font-size: 13px
+      font-weight: bold
+      line-height: 1em
+
+    .lb-number 
+      display: block
+      clear: left
+      font-size: 12px
+      color: $gray
+      white-space: nowrap
+      margin-top: 8px  
+
+  
+    .lb-close 
+      margin-top: -4px
+      display: block
+      float: right
+      width: 61px
+      height: 22px
+      background: url(image_path('lightbox/closelabel.gif')) top right no-repeat
+      text-align: right
+      outline: none
+      filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=70)
+      opacity: 0.7
+      -webkit-transition: opacity 0.2s
+      -moz-transition: opacity 0.2s
+      -o-transition: opacity 0.2s
+      transition: opacity 0.2s
+
+      &:hover 
+        cursor: pointer
+        filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100)
+        opacity: 1

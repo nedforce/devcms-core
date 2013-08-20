@@ -233,19 +233,19 @@ protected
     unless node
       node                = current_site
       node.layout_variant = 'default'
-    end        
+    end
     
     @layout_configuration = node.own_or_inherited_layout_configuration
-    layout                = node.own_or_inherited_layout
-    variant               = node.own_or_inherited_layout_variant
-    parent                = layout.parent
+    @layout               = node.own_or_inherited_layout
+    @layout_variant       = node.own_or_inherited_layout_variant
+    parent                = @layout.parent
     
     prepend_view_path("#{parent.path}/views") if parent.present?
-    prepend_view_path("#{layout.path}/views")
+    prepend_view_path("#{@layout.path}/views")
     
-    if variant && variant[:id] != 'default'
-      prepend_view_path("#{parent.path}/#{variant[:id]}/views") if parent.present?
-      prepend_view_path("#{layout.path}/#{variant[:id]}/views")
+    if @layout_variant && @layout_variant[:id] != 'default'
+      prepend_view_path("#{parent.path}/#{@layout_variant[:id]}/views") if parent.present?
+      prepend_view_path("#{@layout.path}/#{@layout_variant[:id]}/views")
     end 
   end
   

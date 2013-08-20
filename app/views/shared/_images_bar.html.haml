@@ -1,4 +1,4 @@
-#images_bar
+#images_bar.images-bar
   - images.each do |image|
     = link_to_node(image_tag(content_node_path(image, :action => :thumbnail,  :format => :jpg), :alt => image.alt.to_s) + content_tag('div', image.description.to_s, :class => 'hidden'), image.node, { :action => :full, :format => :jpg}, { :data => { :lightbox => "lightbox[#{rel}]" }, :title => 'Vergroot deze afbeelding' })
 

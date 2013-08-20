@@ -23,5 +23,5 @@
       %p.clearfix
         %label.left{ :for => "weblog_post_images" }
           = t 'weblogs.images'
-      #images_bar.clearfix
+      #images_bar.images-bar.clearfix
         = render :partial => 'image', :collection => @images, :locals => { :is_form => false }

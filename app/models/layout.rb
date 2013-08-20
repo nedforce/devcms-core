@@ -12,7 +12,7 @@ class Layout
 
   def variants
     self.config.collect do |variant, config|
-      [config["name"], variant] unless ['extends', "target_defaults"].include?(variant) || !config
+      [config["name"], variant] unless ['extends', "target_defaults"].include?(variant) || !config || !config['name']
     end.compact
   end
 

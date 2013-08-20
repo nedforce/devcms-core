@@ -1,0 +1,149 @@
+// polls styling */
+
+// Background colours for poll content boxes
+
+.poll_content_box .default
+  background: $default none !important
+
+// Poll */
+#poll_question_main
+  border-top: 1px solid $default
+  padding: 3px
+
+  .question
+    color: $default
+    font-size: 11px
+    font-weight: bold
+    margin-top: 2px
+    margin-bottom: 2px
+
+  .answers
+    padding-bottom: 4px
+    border-bottom: 1px solid $default
+    input
+      padding: 0
+      position: relative
+      top: 3px
+
+  .button
+    input
+      margin-top: 5px
+      margin-left: 0
+      background: $blueHighlight
+      float: left
+      border: 1px solid $default
+    a
+      height: 15px
+      margin-top: 5px
+      color: $default
+      text-decoration: underline
+
+    .view_results
+      float: right
+
+#poll_results_main
+  border-top: 1px solid $default
+  border-bottom: 1px solid $default
+  
+  .question
+    width: 100%
+    float: left
+    color: $default
+    font-size: 11px
+    font-weight: bold
+    margin-top: 5px
+    margin-bottom: 7px
+  
+  .number_of_votes
+    float: left
+    color: $darkGray
+  
+  .results, .option
+    float: left
+
+  .answer
+    padding-left: 7px
+    padding-right: 3px
+    padding-bottom: 5px
+    float: left
+    width: 165px
+    overflow: hidden
+  
+  .result_bar_ct
+    border: 1px solid $blueHighlight
+    background: $whiteSmoke
+    float: left
+    width: 210px
+    margin-right: 5px
+  
+  img.result_bar
+    background: $default
+    float: left
+  
+  div.result_number
+    float: right
+
+#earlier_questions
+  margin-top: 15px
+  
+// Content boxes */
+// Polls
+
+.poll_content_box
+  .content_box_wrapper
+    padding-bottom: 10px
+    .content
+      padding-right: 10px
+  .header
+    padding: 0 !important
+  .content
+    .not_active
+      color: white
+      margin-left: 36px
+    .question
+      color: white
+      font-weight: bold
+      padding-left: 35px
+    .poll_content_box_form
+      padding-top: 9px
+    .option
+      color: white
+      padding: 0 0 4px 34px
+      background: transparent url(image_path('arrow_white.png'))13px 4px no-repeat
+      input
+        margin: 0
+        padding: 0
+        vertical-align: middle
+    .buttons
+      margin-top: 5px
+      padding-left: 35px
+      img
+        width: 15px
+        height: 15px
+        padding: 0
+        margin: 0 3px 0 0
+      .vote, .results
+        float: left
+      .vote
+        margin-left: 6px
+      .results
+        width: 80px
+      .vote_link, .results_link
+        color: white !important
+        text-decoration: underline
+    .poll_results
+      color: white
+      padding: 0 10px 4px 35px
+      .text
+        margin-bottom: 2px
+      .bar
+        height: 6px
+        background-color: $orange
+        position: relative
+        img
+          height: 6px
+          position: absolute
+          top: 0
+          left: 0
+    .number_of_votes
+      margin-top: 8px

@@ -32,6 +32,14 @@ class Image < ActiveRecord::Base
   HEADER_BIG_IMAGE_SIZE   = { :height => 190, :width => 980 }
   NEWSLETTER_BANNER_SIZE  = { :height => 118, :width => 540 }
 
+  MIME_TYPES = {
+    :png => 'image/png',
+    :jpg => 'image/jpeg',
+    :gif => 'image/gif',
+  }
+
+  DEFAULT_IMAGE_TYPE = :jpg
+
   # An +Image+ can be a carrousel item
   has_many :carrousel_items, :as => :item, :dependent => :destroy
 

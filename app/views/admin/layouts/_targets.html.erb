@@ -19,6 +19,7 @@
         renderTo: '<%= target -%>',
         height: <%= config["height"] %>,
         width: <%= config["width"] %>,
+        bodyStyle: '<%= config["css"] %>',
         targetable: <%= targetable %>,
         items: <%= raw (@current_sortlets && @current_sortlets[target] ? @current_sortlets[target].to_json : '[]') %>,
         maxItems: <%= config["max_items"] || -1 %>,

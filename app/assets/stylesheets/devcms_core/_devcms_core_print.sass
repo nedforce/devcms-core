@@ -1,0 +1,52 @@
+@import "devcms_core/application/variables"
+@import "devcms_core/application/mixins"
+
+@import "devcms_core/bundles/components"
+
+body
+  background-color: white !important
+  text-align: left !important
+  color: black !important
+  font-size: 11pt !important
+
+#header
+  margin-bottom: 1cm
+  position: auto
+  height: 100%
+
+#footer
+  border-top: 0.05cm solid #cccccc
+  margin: 0.5cm 0 0 0 !important
+  padding-top: 0.2cm !important
+  font-style: italic
+  font-size: 9pt
+  background: none !important
+
+a.print
+  display: none
+
+.lastUpdateDate
+  float: left !important
+
+@media screen
+  #print_btn
+    float: right
+  div
+    &.print
+      display: none
+    &.social_buttons
+      display: none
+  body
+    margin: 5px 30px 5px 30px
+
+
+@media print
+  #print_btn, #back_btn
+    display: none
+  div
+    &.print
+      display: none
+    &.social_buttons
+      display: none
+  body
+    margin: 0

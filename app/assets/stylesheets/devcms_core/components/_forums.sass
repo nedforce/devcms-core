@@ -1,0 +1,156 @@
+// forums styling
+
+.forumThreadsOverview, .forumPostsOverview, .weblogsOverview 
+  h2
+    float: left
+
+.no_items
+  padding-bottom: 5px
+
+.forum, .forumTopic, .forumThread, .createForumThread, .editForumThread
+  border: 0 !important
+
+.forumTopic, .forumThread, .forumFormPage 
+  h1 .prefix
+    font-size: 15px
+    color: $gray
+    display: block
+    line-height: 18px
+
+.forumThread
+  h1.closed .prefix
+    padding-left: 20px
+
+  p.forumThreadDetails
+    color: $gray
+    margin: 0
+  .forumThreadBody
+    overflow: hidden
+
+.forum, .forumTopic, .forumFormPage 
+  .forumTopicDescription
+    font-weight: bold
+    overflow: hidden
+
+.forum, .forumTopic, .forumThread 
+  .forumPostsOverview
+    border-top: 1px solid $default
+    border-bottom: 1px solid $default
+
+.forum .forumTopicsOverview
+  margin-top: 15px
+
+.forumTopic
+  .forumThreadsOverview
+    margin-top: 15px
+  a.new_thread_link
+    float: right
+
+.forumThread a
+  &.new_post_link, &.edit_post_link, &.delete_post_link, &.edit_thread_link, &.delete_thread_link, &.lock_thread_link, &.unlock_thread_link
+    float: right
+
+  &.new_thread_link
+    float: left
+
+  &.edit_thread_link, &.lock_thread_link, &.unlock_thread_link, &.edit_post_link
+    margin-right: 10px
+
+.forumTopic .forumThreadsOverview h3.closed, .forumThread h1.closed
+  background-image: url(image_path('icons/locked.png'))
+  background-repeat: no-repeat
+  background-position: top left
+
+.forumTopic .forumThreadsOverview h3.closed
+  background-position: center right
+
+.forum
+  .forumDescription
+    margin-top: 15px
+  .forumTopics
+    margin-top: 15px
+    margin-bottom: 8px
+
+.forumTopic div.forumThreads, .forumThread div.forumPosts
+  margin-bottom: 8px
+
+.forum .forumTopics
+  .oddForumTopic, .evenForumTopic
+    padding: 3px 6px 3px 6px
+
+.forumTopic .forumThreads
+  .oddForumThread, .evenForumThread
+    padding: 3px 6px 3px 6px
+
+.forumThread .forumPosts
+  .oddForumPost, .evenForumPost
+    padding: 3px 6px 3px 6px
+
+.forum, .forumTopic, .forumThread 
+  .forumPosts .oddForumPost
+    background-color: $lightestGray
+
+.forum .forumTopics .forumTopicDescription, .forumTopic .forumThreads .forumThreadBody
+  float: left
+  width: 250px
+  overflow: hidden
+
+.forumThread .forumPosts .forumPostBody
+  overflow: hidden
+
+.forum .forumTopics .forumTopicDetails, .forumTopic .forumThreads .forumThreadDetails, .forumThread .forumPosts p.forumPostDetails
+  color: $gray
+
+.forum .forumTopics .forumTopicDetails, .forumTopic .forumThreads .forumThreadDetails
+  float: right
+  text-align: right
+
+.forumThread .forumPosts p.forumPostDetails, .forum .forumTopics .forumTopicDetails p, .forumTopic .forumThreads .forumThreadDetails p
+  margin: 0
+
+.forum div.forumTopics h3, .forumTopic div.forumThreads h3
+  font-family: $headerFontFamily
+  font-size: 15px
+  font-weight: normal
+  line-height: 16px
+  margin-bottom: 3px
+  margin-top: 1px
+  color: $default
+
+.forumFormPage
+  .forumForm
+    border-top: 1px solid $default
+    margin-top: 10px
+    .userName label
+      padding: 4px 0
+      float: left
+      width: 50px
+  h1 a
+    text-decoration: none
+    &:hover
+      text-decoration: underline
+
+// Content boxes
+
+.forum_content_box .content
+  li
+    background: none
+    padding: 2px 0
+    .date
+      display: block
+      float: left
+    .link
+      display: block
+      float: left
+      a
+        background: transparent none
+        padding: 0
+    .date
+      width: 80px
+      color: $darkGray
+      font-weight: bold
+    .link
+      width: 150px
+      overflow: hidden
+  .read_more_link
+    margin-left: 80px !important

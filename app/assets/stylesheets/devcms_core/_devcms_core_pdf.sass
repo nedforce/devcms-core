@@ -1,0 +1,43 @@
+@import "devcms_core/application/variables"
+@import "devcms_core/application/mixins"
+
+@import "devcms_core/bundles/components"
+
+#pdfDocument
+  color: $darkerGray
+  font-family: $sansFontFamily
+  p, li, div, span
+    font-size: 11px
+    line-height: 16px
+  .htmlField 
+    & > span.label
+      font-size: 15px
+    & > p, > ul
+      page-break-inside: avoid
+
+#header
+  border: 0
+  margin: 0
+  padding-bottom: 20px
+
+#content
+  margin-left: 75px
+  margin-right: 75px
+
+/* Common */
+
+h1
+  margin-top: 0
+  font-family: $headerFontFamily
+
+h2
+  color: $default
+  font-family: $headerFontFamily
+  font-size: 19px
+  font-weight: normal
+  line-height: 23px
+  margin-bottom: 8px
+  margin-top: 3px
+
+.break
+  page-break-after: always

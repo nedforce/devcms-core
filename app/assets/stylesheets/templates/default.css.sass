@@ -1,3 +1,5 @@
+@import "devcms_core/application/variables"
+
 #header
   background: transparent url(image_path('header_background_default.png')) repeat-x
 
@@ -10,7 +12,7 @@ h2
 div.htmlField h2, div.htmlField h3
   color: #8d0101
   font-size: 14px !important
-  font-family: 'Trebuchet MS', sans-serif
+  font-family: $headerFontFamily
   
 .background_base, .hover_background_base:hover
   background-color: #436677 !important
@@ -44,11 +46,11 @@ div.htmlField h2, div.htmlField h3
   background-color: #AAA
   color: #888
   a
-    color: #FFF
+    color: $white
 
 body
   background-image: url(image_path('stripe.png'))
-  background-color: #333
+  background-color: $darkerGray
   font-size: 12px
   #content
     .metadata, .buttons

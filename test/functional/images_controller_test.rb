@@ -9,10 +9,10 @@ class ImagesControllerTest < ActionController::TestCase
   
   def test_should_show_image
     ImageUploader.any_instance.expects(:full).returns(@full_version_stub) 
-        
+     
     get :show, :id => images(:test_image).id
     assert_response :success
-    assert assigns(:image)
+    assert assigns :image
   end
 
   def test_should_show_full_image

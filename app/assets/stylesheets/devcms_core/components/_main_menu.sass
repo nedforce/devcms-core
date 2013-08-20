@@ -1,0 +1,67 @@
+// Style the top level ul
+
+.main-menu
+  list-style: none outside none
+  margin: 0
+  padding: 0
+  height: 41px
+  position: relative
+  z-index: 20
+  li
+    float: left
+    padding: 10px 10px 0
+    height: 31px
+
+    +menu-color("default",   $default,   $defaultLight)
+    +menu-color("green",     $green,     $greenLight)
+    +menu-color("turquoise", $turquoise, $turquoiseLight)
+    +menu-color("orange",    $orange,    $orangeLight)
+    +menu-color("bordeaux",  $bordeaux,  $bordeauxLight)
+    +menu-color("purple",    $purple,    $purpleLight)
+    +menu-color("pink",      $pink,      $pinkLight)
+    +menu-color("orangered", $orangered, $orangeredLight)
+    +menu-color("crimson",   $crimson,   $crimsonLight)
+    +menu-color("bronze",    $bronze,    $bronzeLight)
+
+    .main-menu-link
+      color: white
+      font-family: $headerFontFamily
+      font-size: 13px
+      font-weight: bold
+      text-decoration: none
+      white-space: nowrap
+    .sub-menu-wrapper
+      width: 100%
+      position: absolute
+      top: 41px
+      left: 0
+      display: none
+      z-index: 30
+      padding: 10px 0 0
+    &:hover
+      a
+        color: $white
+      .sub-menu-wrapper
+        display: block
+    .sub-menu
+      list-style: none outside none
+      margin: 0
+      padding: 2px 0 5px
+      li
+        float: none
+        height: auto
+        margin: 0
+        padding: 0 0 0 23px
+        background: transparent url(image_path('arrow_black.png')) no-repeat scroll 8px 6px
+        w\idth: 726px
+        width: 703px
+
+
+        &:hover
+          background-color: white
+        .sub-menu-link
+          color: black
+          display: block
+          width: 100%
+          text-decoration: none
+    

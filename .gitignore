@@ -13,3 +13,6 @@ test/dummy/log/*.log
 coverage
 .sass-cache
 database.yml
+vendor/bundle/
+.bundle/
+.tm_properties

@@ -1,0 +1,200 @@
+// calendars styling */
+
+
+// Calendar element in main page
+
+.calendarContainer
+  td
+    text-align: center
+    color: $blue
+  .calendar
+    text-align: center
+    font-size: 11px
+    a
+      color: $white
+    abbr
+      border: 0
+    th, td
+      width: 30px
+    .monthInfo th
+      text-align: center
+      font-weight: bold
+      font-size: 12px
+      background-color: #9ca231
+  .weekName, .dayName
+    background-color: $blue
+    color: $white
+  .week
+    background-color: $lighterGray
+    color: $white
+  .weekIsSelected
+    background-color: $lightGray
+    color: $white
+  .otherMonthDay
+    color: $lighterGray
+  .hasCalendarItems
+    background: $blue !important
+    a
+      color: $white
+  .today
+    font-weight: bold
+    
+//* Calendars and calendar items styles *
+
+#calendarMain
+  .header
+    padding-bottom: 10px
+  .headerWrapper
+    float: left
+    width: 190px
+
+.calendarWrapper
+  float: right
+  width: 250px
+
+.calendarContainer
+  border: 1px solid $blue
+
+#calendarMain
+  .monthInfo
+    width: 248px
+    padding: 0
+    float: right
+    text-align: center
+    font-size: 11px
+    color: $white
+    background: $blue
+    border-left: 1px solid $blue
+    border-right: 1px solid $blue
+    padding-bottom: 1px
+    .monthName
+      margin-top: 2px
+  h2
+    font-family: $headerFontFamily
+    font-size: 17px
+    font-weight: normal
+    margin: 0 0 10px
+
+.calendarWeek
+  .weekNavigation
+    font-size:        16px
+    color:            $default
+    margin-bottom:    10px
+    position:         relative
+    a
+      text-decoration:  none
+      padding:  0 5px
+    .previousWeek
+      position: absolute
+      top:      0
+      left:     0
+    .currentWeek
+      text-align: center
+    .nextWeek
+      position: absolute
+      top:      0
+      right:    0
+.calendarDay
+  font-size: 13px
+  color: $black
+  padding-bottom: 10px
+  h2
+    float: right
+    padding: 3px 6px 3px 3px
+    font-size: 13px
+    color: $black
+    font-weight: normal
+    line-height: 16px
+    margin: 0
+    font-family: $sansFontFamily
+  .dayName
+    padding-bottom: 3px
+    border: 1px solid $default
+    background: $lighterGray
+    padding: 3px 3px 3px 3px
+
+.calendarItem
+  border-left: 1px solid $lightGray
+  border-right: 1px solid $lightGray
+  padding-top: 3px
+  padding-bottom: 2px
+  border-bottom: 1px solid $lightGray
+  color: $lightGray
+  .title
+    color: $default
+    font-weight: bold
+    padding-left: 3px
+  .metaInfo
+    padding-left: 8px
+    font-size: 11px
+    .time
+      float: right
+      padding-right: 2px
+      font-size: 12px
+
+#calendarItemMain
+  border-top: 1px solid $default
+  border-bottom: 1px solid $default
+  padding-bottom: 5px
+  .details
+    margin-bottom: 10px
+    .dynamic_attributes div, .category, .start_time, .end_time, .location
+      font-size: 10px
+      color: $darkGray
+  .body, .agendaItems
+    margin-bottom: 10px
+  h3
+    font-family: $headerFontFamily
+    font-size: 15px
+    font-weight: normal
+    line-height: 16px
+    margin-bottom: 6px
+    margin-top: 1px
+    color: $default
+
+#registration_container
+  border-bottom: 1px solid $default
+  padding-bottom: 5px
+  .fieldWithErrors
+    display: inline
+
+div.calendar_item div.buttons a
+  color: $default
+  padding-left: 18px
+  background-repeat: no-repeat
+  background-position: center left
+
+.calendarItems .buttons
+  margin-top: 0
+  padding-top: 2px
+  padding-left: 2px
+  font-size: 11px    
+  
+// Content boxes */
+
+// Calendars and combined calendars
+
+.calendar_content_box, .combined_calendar_content_box 
+  .content li
+    background: none
+    padding: 2px 0
+
+    .date, .link
+      display: block
+      float: left
+
+    .date
+      width: 50px
+      color: $darkGray
+      font-weight: bold
+      
+    .link 
+      width: 180px
+      overflow: hidden
+      a
+        background: transparent none
+        padding: 0
+
+
+    .read_more_link
+      margin-left: 50px

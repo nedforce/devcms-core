@@ -65,7 +65,7 @@
     <h1>Template en layout instellingen</h1>
     <%= admin_form_for(@node) do |form| %>
     <div id="layout">
-      <p>Kies een template of overerven om van de bovenliggende pagina te overerven. Na de keuze voor een template worden eventuele varianten getoont.</p>
+      <p>Kies een template of overerven om van de bovenliggende pagina te overerven. Na de keuze voor een template worden eventuele varianten getoond.</p>
       <% options = @node.root? ? {} : { :include_blank => "Overerven (#{@node.inherited_layout.name})" } %>
       <%= wrap_with_label(form.collection_select(:layout, Layout.all, :id, :name, options, {:disabled => !current_user.has_role?("admin")}), :text => "Template:") %>
       <%= observe_field('node_layout', :update => :variants_settings_and_targets,

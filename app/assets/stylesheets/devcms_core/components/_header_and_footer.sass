@@ -1,0 +1,203 @@
+// Upper header (Logo, language selection, login)
+
+#top_header
+  padding: 0 0 4px
+  height: 75px
+  position: absolute
+  width: 980px
+
+#logo
+  float: left
+
+#language_selection_and_rss
+  float: left
+  padding: 5px 0 0 60px
+
+#rss img
+  position: relative
+  top: 3px
+
+div#login
+  padding-right: 10px
+  padding-top: 10px
+  float: right
+  color: $darkGray
+  font-family: $headerFontFamily
+  w\idth: 365px
+  width: 355px
+  label
+    padding-right: 5px
+    padding-top: 2px
+    float: right
+    display: inline
+  div.field_wrapper
+    float: right
+    display: inline
+    border: 1px solid #ccc
+  input
+    width: 128px
+    border: 0
+    padding: 0
+    color: $darkGray
+    font-size: 11px
+    &.submit
+      width: 70px
+      float: right
+      margin: 4px 0 0
+      background: transparent url(image_path('pointer_right.png')) center right no-repeat
+      cursor: pointer
+  .login_password_container
+    margin-top: 4px
+  .links
+    display: inline
+    float: left
+    width: 230px
+    a
+      color: $darkGray
+      font-size: 10px
+      text-decoration: none
+      padding: 4px 10px 0 20px
+      background: transparent url(image_path('arrow_black.png')) no-repeat scroll 9px 10px
+      &:hover
+        text-decoration: underline
+    .signup_link
+      float: left
+    .request_password_link
+      float: right
+
+// Main header (Main menu, search)
+#header
+  height: 200px
+  position: absolute
+  z-index: 10
+  .corner
+    height: 50px
+    width: 100px
+    position: absolute
+    top: 0
+    left: 0
+        
+#header-slideshow 
+  img
+    position: absolute
+    top: 0
+    left: 0
+
+#main_menu_and_meta_links
+  clear: both
+  .meta_links
+    width: 150px
+    float: left
+    z-index: 40
+    padding-top: 8px
+    margin-left: 35px
+    margin-right: 65px
+  #main_menu
+    width: 730px
+    height: 40px
+    float: left
+    li
+      height: 30px
+      .sub_menu_wrapper
+        top: 40px
+        .sub_menu li
+          w\idth: 730px
+          width: 707px
+          height: auto !important
+    
+#meta_links_and_search
+  float: left
+  padding: 35px 27px 0
+  w\idth: 254px
+  width: 200px
+  .meta_links
+    height: 25px
+    font-size: 11px !important
+    a
+      display: inline
+      color: white
+    img
+      position: relative
+      top: 3px
+
+#fontsize
+  display: inline
+  vertical-align: bottom
+  border: 0
+  margin: 0
+  padding: 0
+  img
+    cursor: pointer
+
+#search
+  margin-top: 35px
+  font-family: $headerFontFamily
+  form
+    a
+      display: inline-block
+      margin-top: 5px
+      color: white
+    .search_terms input, select
+      font-size: 11px
+    .search_terms input
+      w\idth: 200px
+      width: 190px
+    select
+      w\idth: 209px
+      width: 200px
+    .submit
+      margin: 8px 0 0 0
+      padding: 0
+      border: 0
+      cursor: pointer
+      float: right
+      color: $white
+      font-size: 12px
+      background: transparent none
+      font-weight: bold
+    .search_options
+      margin-top: 8px
+
+#main_menu_and_header_photo
+  float: left
+  width: 726px
+  position: relative
+  .header_photo
+    height: 159px
+    overflow: hidden
+    position: relative
+    .overlay
+      position: absolute
+      top: 0
+      left: 0
+      width: 100%
+      height: 159px
+
+
+// Footer styles
+
+#footer
+  background: $whiteSmoke repeat-y
+  color: $gray
+  margin: auto
+  padding: 20px 25px 0
+  width: 970px
+  height: 35px
+  a
+    padding: 0 5px
+    color: $gray
+    text-decoration: none
+    &:hover
+      text-decoration: underline
+  .meta_links
+    float: left
+  .menu_links
+    float: right
+// Positioning of header and columns_wrapper
+#main_container
+  #top_header
+    top: 0
+  #header
+    top: 79px
+  #columns_wrapper
+    padding-top: 294px

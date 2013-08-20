@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.add_dependency  'dsl_accessor', '0.3.3'
   s.add_dependency  'dynamic_attributes', '~> 1.2.0'
   s.add_dependency  'feed-normalizer', '~> 1.5.2'
-  s.add_dependency  'haml', '~> 3.0'
+  s.add_dependency  'haml', '~> 4.0'
   s.add_dependency  'libxml-ruby', '~> 2.2.0'
   s.add_dependency  'pg'
   s.add_dependency  'settler', '~> 1.2.3'

@@ -1,0 +1,153 @@
+// weblogs styling */
+
+// user profile page */
+#weblogs
+  margin-top: 15px
+  margin-bottom: 30px  
+  
+//* Weblog styles *
+p.weblogInfo
+  color: $gray
+  margin: 0
+  margin-bottom: 10px
+  
+.weblogArchive, .weblog, .createWeblog, .editWeblog
+  border: 0 !important
+
+.weblogPost
+  border-bottom: 1px solid $default
+
+.weblogArchive, .weblog, .weblogPost, .weblogFormPage 
+  h1 .prefix
+    font-size: 15px
+    color: $gray
+    display: block
+    line-height: 18px
+
+.weblog
+  p.weblogDetails
+    color: $gray
+    margin: 0
+  div.weblogDescription
+    overflow: hidden
+  .preamble
+    font-weight: bold
+    margin-bottom: 6px
+    overflow: hidden
+
+.weblogPost .weblogPostBody
+  overflow: hidden
+
+.weblogArchive, .weblogFormPage 
+  .weblogArchiveDescription
+    font-weight: bold
+    overflow: hidden
+
+.weblogArchive, .weblog 
+  .weblogPostsOverview
+    border-top: 1px solid $default
+    border-bottom: 1px solid $default
+
+.weblogArchive
+  div.weblogsOverview
+    margin-top: 15px
+  a.new_weblog_link
+    float: left
+    margin-right: 8px
+
+.weblog a
+  &.new_post_link, &.show_post_link
+    float: left
+    margin-right: 8px
+
+.weblogArchive .weblogs, .weblog .weblogPosts
+  margin-bottom: 15px
+
+.weblogArchive .weblogs
+  .oddWeblog, .evenWeblog
+    padding: 3px 6px 3px 6px
+
+.weblog .weblogPosts
+  .oddWeblogPost, .evenWeblogPost
+    padding: 3px 6px 3px 6px
+
+.weblogArchive .weblogs .oddWeblog, .weblog .weblogPosts .oddWeblogPost
+  background-color: $lightestGray
+
+.weblogArchive .weblogs .weblogDescription
+  float: left
+  width: 250px
+  overflow: hidden
+
+.weblog .weblogPosts .weblogPostBody
+  overflow: hidden
+
+.weblogArchive .weblogs
+  div.weblogDetails
+    color: $gray
+    float: right
+    text-align: right
+    p
+      margin: 0
+  h3
+    font-family: $headerFontFamily
+    font-size: 15px
+    font-weight: normal
+    line-height: 16px
+    margin-bottom: 3px
+    margin-top: 1px
+    color: $default
+
+.weblog .weblogPosts h3
+  font-family: $headerFontFamily
+  font-size: 15px
+  font-weight: normal
+  line-height: 16px
+  margin-bottom: 3px
+  margin-top: 1px
+  color: $default
+
+.weblogFormPage
+  .weblogForm, .weblogPostForm
+    border-top: 1px solid $default
+    margin-top: 10px
+
+  h1 a
+    text-decoration: none
+    &:hover
+      text-decoration: underline
+  
+  p.blueFields select
+    border: 1px solid $default
+
+.weblogPostImage
+  float: left
+  margin-right: 5px
+  
+// Content boxes */
+
+.weblog_content_box, .weblog_archive_content_box 
+  .content li
+    background: none
+    padding: 2px 0
+
+    .date, .link
+      display: block
+      float: left
+
+    .link 
+      width: 150px
+      overflow: hidden
+      a
+        background: transparent none
+        padding: 0
+
+    .date
+      width: 80px
+      color: $darkGray
+      font-weight: bold
+      
+    .read_more_link
+      margin-left: 80px !important
+  
+  

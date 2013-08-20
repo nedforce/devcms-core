@@ -4,7 +4,7 @@ class ImagesController < ApplicationController
   
   skip_before_filter :confirm_destroy, :set_search_scopes, :set_private_menu, :find_accessible_content_children_for_menu, :set_rss_feed_url, :set_view_paths
   
-  before_filter :find_image
+  before_filter :find_image, :set_image_format
   
   before_filter :redirect_private, :except => :show
   
@@ -15,23 +15,23 @@ class ImagesController < ApplicationController
   caches_page :full, :sidebox, :header, :thumbnail, :content_box_header, :big_header, :newsletter_banner
 
   def full
-    render_jpg_image @image.file.full.path
+    render_image @image.file.full.path
   end
 
   def header
-    render_jpg_image_data @image.resize!(:size => "#{Image::HEADER_IMAGE_SIZE[:width]}x#{Image::HEADER_IMAGE_SIZE[:height]}", :crop => true, :upsample => true, :quality => 90, :format => 'jpg')
+    render_image_data @image.resize!(:size => "#{Image::HEADER_IMAGE_SIZE[:width]}x#{Image::HEADER_IMAGE_SIZE[:height]}", :crop => true, :upsample => true, :quality => 90, :format => @image_format)
   end
   
   def big_header
-    render_jpg_image_data @image.resize!(:size => "#{Image::HEADER_BIG_IMAGE_SIZE[:width]}x#{Image::HEADER_BIG_IMAGE_SIZE[:height]}", :crop => true, :upsample => true, :quality => 90, :format => 'jpg')
+    render_image_data @image.resize!(:size => "#{Image::HEADER_BIG_IMAGE_SIZE[:width]}x#{Image::HEADER_BIG_IMAGE_SIZE[:height]}", :crop => true, :upsample => true, :quality => 90, :format => @image_format)
   end
 
   def content_box_header
-    render_jpg_image_data @image.resize!(:size => "#{Image::CONTENT_BOX_SIZE[:width]}x#{Image::CONTENT_BOX_SIZE[:height]}", :offset => @image.offset, :crop => true, :upsample => false, :quality => 80, :format => 'jpg')
+    render_image_data @image.resize!(:size => "#{Image::CONTENT_BOX_SIZE[:width]}x#{Image::CONTENT_BOX_SIZE[:height]}", :offset => @image.offset, :crop => true, :upsample => false, :quality => 80, :format => @image_format)
   end
 
   def newsletter_banner
-    render_jpg_image_data @image.resize!(:size => "#{Image::NEWSLETTER_BANNER_SIZE[:width]}x#{Image::NEWSLETTER_BANNER_SIZE[:height]}", :crop => true, :upsample => false, :quality => 80, :format => 'jpg')
+    render_image_data @image.resize!(:size => "#{Image::NEWSLETTER_BANNER_SIZE[:width]}x#{Image::NEWSLETTER_BANNER_SIZE[:height]}", :crop => true, :upsample => false, :quality => 80, :format => @image_format)
   end
 
   def thumbnail
@@ -48,11 +48,11 @@ class ImagesController < ApplicationController
       offset = nil
     end
 
-    render_jpg_image_data @image.resize!(:size => "100x100", :crop => true, :quality => 80, :offset => offset, :upsample => true, :format => 'jpg')
+    render_image_data @image.resize!(:size => "100x100", :crop => true, :quality => 80, :offset => offset, :upsample => true, :format => @image_format)
   end
 
   def sidebox
-    render_jpg_image_data @image.resize!(:size => "#{Image::CONTENT_BOX_SIZE[:width]}x1024", :quality => 90, :format => 'jpg')
+    render_image_data @image.resize!(:size => "#{Image::CONTENT_BOX_SIZE[:width]}x1024", :quality => 90, :format => @image_format)
   end
 
   def private_full
@@ -86,32 +86,45 @@ protected
     @image = Image.accessible.find(params[:id])
   end
 
+  def set_image_format
+    @image_format = ['jpg', 'jpeg', 'gif', 'png'].include?(params[:format]) ? params[:format].to_sym : nil
+    @image_format = :jpg if @image_format == :jpeg
+  end
+
   def redirect_to_jpg
-    unless params.has_key?(:format) && params[:format] == 'jpg'
-      redirect_to :format => 'jpg'
+    unless params.has_key?(:format)
+      redirect_to :format => Image::DEFAULT_IMAGE_TYPE
     end
   end
 
   def redirect_private
     if !params[:action].include?("private_") && @image.node.private?
-      redirect_to url_for(:id => @image.id, :action => "private_#{params[:action]}", :format => 'jpg' )
+      redirect_to url_for(:id => @image.id, :action => "private_#{params[:action]}", :format => @image_format )
     end
   end
   
-  def render_jpg_image(image_path)
-    respond_to do |format|
-      headers['Cache-Control'] = (@image.node.private? ? 'private' : 'public') # this can be cached by proxy servers
-      format.any do
-        send_file(image_path, :type => 'image/jpeg', :disposition => 'inline')   
-      end      
-    end
-  end  
+  # Wrapper functions for render_image
+  # def render_image(image_path); render_image(image_path, :file); end
+  def render_image_data(image_data); render_image(image_data, :data); end
 
-  def render_jpg_image_data(image_data)
-    respond_to do |format|
-      headers['Cache-Control'] = (@image.node.private? ? 'private' : 'public') # this can be cached by proxy servers
-      format.jpg do
-        send_data(image_data, :type => 'image/jpeg', :disposition => 'inline')   
+  # Render image file or data in diferent formats
+  def render_image image_data_or_file, type = :file
+    if @image_format
+      respond_to do |format|
+        headers['Cache-Control'] = (@image.node.private? ? 'private' : 'public') # this can be cached by proxy servers
+
+        options = {
+          :type => Image::MIME_TYPES[@image_format],
+          :disposition => 'inline'
+        }
+
+        format.send(@image_format) do
+          if type == :data
+            send_data image_data_or_file, options
+          elsif type == :file
+            send_file image_data_or_file, options
+          end         
+        end
       end      
     end
   end
