@@ -1,0 +1,10 @@
+failed_login_attempt_11_seconds_ago:
+  ip: 11.11.11.11
+  user_login: admin
+  success: false
+  created_at: <%= 11.seconds.ago %>
+successful_login_attempt:
+  ip: 123.45.67.89
+  user_login: admin
+  success: true
+  created_at: <%= Time.now %>
