@@ -398,8 +398,11 @@ Rails.application.routes.draw do
       resource :layout, :only => [:edit, :update]
       
       resources :layouts, :only => [] do
+        collection do
+          post :variants_settings_and_targets, constraints: { id: /.+/ }
+        end
+        
         member do
-          post :variants_settings_and_targets
           get :targets
         end      
       end
