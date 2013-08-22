@@ -36,29 +36,29 @@ module NodeExtensions::Layouting
 
   # The inherited layout.
   def own_or_inherited_layout
-    Layout.find(self.layout) || self.inherited_layout
+    Layout.find(layout) || inherited_layout
   end
   
   def inherited_layout
-    if self.parent
-      return self.parent.own_or_inherited_layout
+    if parent
+      return parent.own_or_inherited_layout
     else
       raise "node has no parent to inherit layout from"
     end
   end
   
   def own_or_inherited_layout_variant
-    if self.layout_variant.present?
-      self.own_or_inherited_layout.find_variant(self.layout_variant)
+    if layout_variant.present?
+      own_or_inherited_layout.find_variant(self.layout_variant)
     else 
-      self.inherited_layout_variant
+      inherited_layout_variant
     end
   end
   
   # Find the inherited layout, fall back to default if it is not inheritable
   def inherited_layout_variant
     if self.parent
-      var = self.parent.own_or_inherited_layout_variant
+      var = parent.own_or_inherited_layout_variant
       return var['inheritable'] ? var : own_or_inherited_layout.find_variant('default')
     else
       raise "node has no parent to inherit layout from"
@@ -81,19 +81,22 @@ module NodeExtensions::Layouting
       return false unless update_attributes(layout_config[:node])
       
       # Find the layout and variant used to set the representations
-      layout  = Layout.find(layout_config[:node][:layout]) || self.inherited_layout
-      variant = layout.find_variant(layout_config[:node][:layout_variant]) || self.inherited_layout_variant
+      layout  = Layout.find(layout_config[:node][:layout]) || inherited_layout
+      variant = layout.find_variant(layout_config[:node][:layout_variant]) || inherited_layout_variant
+
+      # Remove representations for variant that don't exist for this layout variant
+      content_representations.where('target NOT IN (?)', layout_config[:targets].keys).destroy_all
 
       # Remove any moved or removed representations
       layout_config[:targets].each do |target, content_ids|
         content_ids = content_ids.select { |cid| cid.present? }
         # Destroy removed representations
         if content_ids.empty?
-          self.content_representations.all(:conditions => ["content_representations.target = ? ", target]).each {|cr| cr.destroy }
+          content_representations.where("content_representations.target = ?", target).destroy_all
         else
           custom_types = content_ids.select { |ci| ci.to_i.to_s != ci }
           content_ids  = content_ids.select { |ci| ci.to_i.to_s == ci }
-          self.content_representations.all(:conditions => ["target = :target AND ((content_id IS NOT NULL AND ((:content_ids) IS NULL OR content_id NOT IN (:content_ids))) OR (custom_type IS NOT NULL AND ((:custom_types) IS NULL OR custom_type NOT IN (:custom_types))))", {:target => target, :content_ids => content_ids, :custom_types => custom_types}]).each {|cr| cr.destroy }
+          content_representations.where("target = :target AND ((content_id IS NOT NULL AND ((:content_ids) IS NULL OR content_id NOT IN (:content_ids))) OR (custom_type IS NOT NULL AND ((:custom_types) IS NULL OR custom_type NOT IN (:custom_types))))", {:target => target, :content_ids => content_ids, :custom_types => custom_types}).destroy_all
         end
       end
 
@@ -106,18 +109,18 @@ module NodeExtensions::Layouting
           content_ids.each_with_index do |content_id, i|
             # Check wether this is a custom rep. or a normal content representation and handle accordingly
             if content_id.to_i.to_s != content_id
-              representation = self.content_representations.first(:conditions => ["content_representations.target = ? AND content_representations.custom_type = ?", target, content_id])
+              representation = content_representations.where("content_representations.target = ? AND content_representations.custom_type = ?", target, content_id).first
               if representation.present?
                 representation.update_attributes!(:position => i+1)
               else
-                self.content_representations.create!(:custom_type => content_id, :target => target, :position => i+1)
+                content_representations.create!(:custom_type => content_id, :target => target, :position => i+1)
               end
             else
-              representation = self.content_representations.first(:conditions => ["content_representations.target = ? AND content_representations.content_id = ?", target, content_id])
+              representation = content_representations.where("content_representations.target = ? AND content_representations.content_id = ?", target, content_id).first
               if representation.present?
                 representation.update_attributes!(:position => i+1)
               else
-                self.content_representations.create!(:content => Node.find(content_id), :target => target, :position => i+1)
+                content_representations.create!(:content => Node.find(content_id), :target => target, :position => i+1)
               end
             end
           end
@@ -128,9 +131,9 @@ module NodeExtensions::Layouting
   
   # Merges parent layout config with own layout config
   def own_or_inherited_layout_configuration
-    config = parent.own_or_inherited_layout_configuration unless self.root? || self.content_class == Site
+    config = parent.own_or_inherited_layout_configuration unless root? || content_class == Site
     config ||= {}
-    config.merge(self.layout_configuration || {})
+    config.merge(layout_configuration || {})
   end
   
   
@@ -141,16 +144,16 @@ module NodeExtensions::Layouting
     conditions = {}
     conditions.update(:target => target) if target
     
-    if !self.content_representations.exists?(conditions) && inherit && self.parent && self.content_class != Site
-      self.parent.find_content_representations(target, inherit) 
+    if !content_representations.exists?(conditions) && inherit && parent && content_class != Site
+      parent.find_content_representations(target, inherit) 
     else
-      self.content_representations.all(:conditions => conditions, :include => :content)
+      content_representations.where(conditions).includes(:content)
     end
   end
   
   # Find header image(s) for this node, either those set on this node or on one of its parents.
   def header_images
-    Image.accessible.all(:conditions => { :is_for_header => true, 'nodes.ancestry' => self.header_container_ancestry })
+    Image.accessible.where(:is_for_header => true, 'nodes.ancestry' => self.header_container_ancestry)
   end
 
   # Find the ancestry for the first parent or self containing header images
@@ -161,7 +164,7 @@ module NodeExtensions::Layouting
       ancestries << last_path.push(parent_id).join("/")
       last_path
     end
-    container_ancestry = Image.includes(:node).where(["is_for_header = ? and nodes.ancestry IN (?)", true, ancestries]).group('nodes.ancestry').count.keys.last
+    container_ancestry = Image.includes(:node).where("is_for_header = ? and nodes.ancestry IN (?)", true, ancestries).group('nodes.ancestry').count.keys.last
     if container_ancestry.present? && container_ancestry != Node.root.id.to_s
       container_ancestry
     else
@@ -175,12 +178,12 @@ module NodeExtensions::Layouting
 
   # Returns a random header image for this node.
   def random_header_image
-    self.header_images.sample
+    header_images.sample
   end
   
   # Returns true if this node is a frontpage, false otherwise.
   def is_frontpage?
-    self.sections.any?
+    sections.any?
   end
 
   # Returns true if this node is the global front page, false otherwise.
@@ -197,11 +200,11 @@ module NodeExtensions::Layouting
 
   # Prevents a +Node+ from being hidden if it is, or contains the +global+ frontpage.
   def should_not_hide_global_frontpage
-    errors.add(:base, :cant_hide_frontpage) if (self.private? || self.hidden?) && (self.is_global_frontpage? || self.contains_global_frontpage?)
+    errors.add(:base, :cant_hide_frontpage) if (private? || hidden?) && (is_global_frontpage? || contains_global_frontpage?)
   end
   
   def set_default_layout
-    if self.sub_content_type == 'Site'
+    if sub_content_type == 'Site'
       self.layout = Node.roots.present? ? Node.root.layout : 'default'
       self.layout_variant = 'default'
       self.layout_configuration = {}
