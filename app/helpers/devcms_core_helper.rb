@@ -121,7 +121,7 @@ module DevcmsCoreHelper
       top_level_main_menu_items = current_site.closure_for(menu_scope).values.first
 
       if top_level_main_menu_items.any?
-        content_tag(:ul, top_level_main_menu_items.map { |item, sub_items| create_main_menu_item(item, sub_items.keys) }.join("\n").html_safe, :id => 'main_menu', :class => 'clearfix')
+        content_tag(:ul, top_level_main_menu_items.map { |item, sub_items| create_main_menu_item(item, sub_items.keys) }.join("\n").html_safe, :id => 'main_menu', :class => 'clearfix main-menu')
       else
         raw '&nbsp;' # No menu if no top level main menu items
       end
