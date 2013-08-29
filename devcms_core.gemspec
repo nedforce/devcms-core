@@ -28,6 +28,7 @@ Gem::Specification.new do |s|
   s.add_dependency  'tidy_ffi', '~> 0.1.4'
   s.add_dependency  'whenever', '>= 0.4'
   s.add_dependency  'roo', '~> 1.10.1'
+  s.add_dependency  'rubyzip', '~> 0.9.1'
   s.add_dependency  'rmagick', '>= 2.13.1'
   s.add_dependency  'acts_as_ferret', '~> 0.5.4'
   s.add_dependency  'calendar_date_select'
