@@ -74,9 +74,9 @@
 class Node < ActiveRecord::Base
   # A node is commentable
   acts_as_commentable
-
-  # Nodes are taggable with alterative titles
-  acts_as_taggable_on :title_alternatives
+ 
+  # Nodes are taggable with alterative titles & tags
+  acts_as_taggable_on :title_alternatives, :tags
   
   # Prevents the root +Node+ from being destroyed.
   before_destroy :prevent_root_destruction
@@ -150,7 +150,8 @@ class Node < ActiveRecord::Base
   
   validate  :ensure_publication_start_date_is_present_when_publication_end_date_is_present,
             :ensure_publication_end_date_after_publication_start_date,
-            :ensure_content_box_number_of_items_should_be_greater_than_two
+            :ensure_content_box_number_of_items_should_be_greater_than_two,
+            :ensure_maximum_tags
 
   # A private copy of the original destroy method that is used for overloading.
   alias_method :original_destroy, :destroy
@@ -293,8 +294,8 @@ class Node < ActiveRecord::Base
     end.map(&:first)
   end
 
-  def related_content
-    find_related_tags[0..9]
+  def related_content(limit = nil)
+    find_related_tags[0..(limit || self.content_box_number_of_items || 10) - 1]
   end
 
   # Returns a hash representing this node's config properties for an Ext.dvtr.AsyncTreeNode javascript object.
@@ -626,8 +627,8 @@ class Node < ActiveRecord::Base
     super.map(&:name).join(',')
   end
 
-  def self.tags
-    ActsAsTaggableOn::Tag.all.map { |tag_data| tag_data.name }.uniq
+  def self.available_tags
+    ActsAsTaggableOn::Tag.select('DISTINCT(name)').joins(:taggings).where(:taggings => {:context => :tags}).map &:name
   end
 
 protected
@@ -705,6 +706,10 @@ protected
     if self.content_box_number_of_items
       self.errors.add(:base, I18n.t('acts_as_content_node.content_box_number_of_items_should_be_greater_than_two')) if self.content_box_number_of_items.to_i <= 2
     end
+  end
+
+  def ensure_maximum_tags
+    self.errors.add(:tags, I18n.t('node.number_of_tags_should_be_lt_3')) if self.tags.count > 3
   end
   
   ActiveSupport.run_load_hooks(:node, self)  
