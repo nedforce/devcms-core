@@ -18,8 +18,8 @@ class NodesController < ApplicationController
     else
       raise ::AbstractController::ActionNotFound
     end
-  end
-
+  end  
+  
 private
 
   def find_node
