@@ -7,23 +7,8 @@ module OwmsMetadataHelper
     metadata << owms_mantle_metadata_for(node)
     metadata << owms_permit_metadata_for(node) if node.content_type == 'Permit'
 
-    node.tag_list.each do |tag|
-      metadata << meta_tag('tags', tag)
-    end
+    metadata << meta_tag('keywords', node.tag_list.join(","))
 
-    unless node.categories.empty?
-      categories = node.categories.categories
-
-      (node.categories.root_categories + categories.map(&:parent)).uniq.each do |root_category|
-        metadata << meta_tag('programma', root_category.id)
-      end
-
-      categories.each do |category|
-        metadata << meta_tag('project', category.id)
-        metadata << meta_tag('DCTERMS.alternative', category.synonyms) if category.synonyms.present?
-      end
-    end
-    
     metadata << meta_tag('DCTERMS.alternative', node.title_alternative_list.to_s) if node.title_alternative_list.present?
     
     metadata.flatten.join('').html_safe
