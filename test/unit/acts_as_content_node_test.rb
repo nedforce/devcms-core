@@ -275,21 +275,6 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
     assert !page.valid?
     assert page.errors[:'node.base'].any?
   end
-
-  def test_should_save_category_attributes_to_node_associated_categories_on_save
-    category1 = Category.create(:name => 'Categorie 1')
-    category2 = Category.create(:name => 'Categorie 2')
-
-    page = create_page(:category_ids => [ category1.id, category2.id ])
-    
-    assert page.update_attributes(:title => "update title", :category_attributes => {
-      category1.id => { :synonyms => 'Categorie 1' },
-      category2.id => { :synonyms => 'Categorie 2' },
-    }), page.errors.full_messages.to_sentence
-
-    assert_equal 'Categorie 1', category1.reload.synonyms
-    assert_equal 'Categorie 2', category2.reload.synonyms
-  end
   
   def test_should_accept_empty_title_alternatives
     assert_difference 'Page.count' do

@@ -80,8 +80,6 @@ nl:
         display_time: Weergavetijd
         animation: Animatie
         transition_time: Overgangstijd
-      category:
-        name: Naam
       combined_calendar:
         description: Beschrijving
         title: Titel
@@ -257,12 +255,6 @@ nl:
           attributes:
             base:
               too_many_carrousel_items: Er mogen maximaal 9 items toegevoegd worden aan een carrousel.
-        category:
-          attributes:
-            base:
-              elements_still_present: Er zijn nog elementen in deze categorie.
-            name:
-              must_be_unique: moet uniek zijn.
         content_copy:
           attributes:
             base:

@@ -27,12 +27,6 @@
         %td{ :colspan => 3 }
           = node ? bread_crumbs_track_for(node) : link_to(url, url)
 
-      - if node && node.last_set_category
-        %tr
-          %th{ :scope => 'row' }= t 'search.theme'
-          %td{ :colspan => 3 }
-            = print_category(node.last_set_category)
-
       %tr
         %th{ :scope => 'row' }= t 'search.type'
         %td.type

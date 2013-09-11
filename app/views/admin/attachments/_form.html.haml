@@ -9,7 +9,5 @@
   = f.file_field :file, :label => t('attachments.data')
 
   = hidden_field_tag :parent_node_id, params[:parent_node_id]
-
-  = category_settings_for @attachment
   
   = f.submit t('attachments.add')

@@ -31,8 +31,6 @@ class Admin::AdminController < ApplicationController
   before_filter :set_actions,               :only => [ :show, :previous ]
 
   before_filter :set_for_approval,          :only => [ :edit, :update ]
-
-  before_filter :parse_category_parameters, :only => [ :create, :update, :bulk_update ]
   
   # Skip the filter that increments the hits for nodes
   skip_after_filter :increment_hits
@@ -42,7 +40,7 @@ class Admin::AdminController < ApplicationController
 
   layout :layout?
 
-  helper Admin::NewsletterArchiveHelper, Admin::AgendaItemsHelper, Admin::AdminHelper, Admin::AdminFormBuilderHelper, Admin::CategoriesHelper, Admin::DiffHelper, Admin::CropperHelper
+  helper Admin::NewsletterArchiveHelper, Admin::AgendaItemsHelper, Admin::AdminHelper, Admin::AdminFormBuilderHelper, Admin::DiffHelper, Admin::CropperHelper
   
   cache_sweeper :node_sweeper, :only => [ :create, :update, :destroy, :approve, :set_visibility, :set_accessibility, :move, :bulk_update, :bulk_destroy, :sort_children ]
 
@@ -169,13 +167,6 @@ protected
     # do nothing
   end
   
-  def parse_category_parameters
-    model_name = controller_name.singularize.to_sym
-    params[model_name] ||= {}
-    params[model_name][:category_ids]        = params[:category_ids]  || [] if params[:has_categories].present?
-    params[model_name][:category_attributes] = params[:category_attributes] if params[:has_categories].present? && params[:category_attributes].present?
-  end
-
   def parse_start_and_end_times
     type = if params.has_key?(:calendar_item)
       :calendar_item

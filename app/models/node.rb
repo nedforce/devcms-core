@@ -113,9 +113,6 @@ class Node < ActiveRecord::Base
 
   attr_protected :hits, :content_type, :sub_content_type
 
-  has_many :node_categories, :dependent => :destroy, :inverse_of => :node
-  has_many :categories, :through => :node_categories
-
   has_many :combined_calendar_nodes, :dependent => :destroy
   has_many :combined_calendars, :through => :combined_calendar_nodes
 
@@ -156,8 +153,6 @@ class Node < ActiveRecord::Base
   # A private copy of the original destroy method that is used for overloading.
   alias_method :original_destroy, :destroy
   
-  attr_accessor :category_attributes
-  
   attr_protected :publishable, :deleted_at
 
   before_validation :set_publication_start_date_to_current_time_if_blank
@@ -171,8 +166,6 @@ class Node < ActiveRecord::Base
   end
   
   after_update { |node| node.reindex_self_and_children if @private_changed || @hidden_changed || @publishable_changed; true }
-
-  after_save :save_category_attributes
 
   # Remove from list on paranoid delete
   before_paranoid_delete :remove_from_list
@@ -566,19 +559,10 @@ class Node < ActiveRecord::Base
     (options[:top_node] ? options[:top_node].children : Node.scoped).accessible.public.includes(:node_categories).limit(options[:limit] || 5).where([ 'node_categories.category_id in (?) AND nodes.id <> ?', node.category_ids, node.id ])
   end
 
-  def self.bulk_update(nodes, attributes, user = nil, keep_existing_categories = false)
+  def self.bulk_update(nodes, attributes, user = nil)
     Node.transaction do
       nodes.each do |node|
         content = node.content
-
-        new_category_ids = attributes.delete(:category_ids)
-        if new_category_ids.present?
-          attributes[:category_ids] = if keep_existing_categories
-            new_category_ids + node.category_ids
-          else
-            new_category_ids
-          end.reject(&:blank?).map(&:to_i).uniq
-        end
 
         if content.class.requires_editor_approval? && user.present?
           content.update_attributes!(attributes.merge(:user => user))
@@ -591,10 +575,6 @@ class Node < ActiveRecord::Base
     true
   rescue ActiveRecord::RecordInvalid
     false
-  end
-  
-  def last_set_category
-    @last_set_category ||= self.node_categories.first(:order => 'created_at DESC').try(:category)
   end
   
   # Determines the "content date" of the content
@@ -660,8 +640,8 @@ protected
       # Unset frontpage for Sections
       Section.update_all({ :frontpage_node_id => nil }, { :frontpage_node_id => nodes_to_be_paranoid_deleted_ids })
 
-      # Delete any node categories, role assignments, synonyms or abbreviations that are associated with any of the nodes in the subtree
-      [ NodeCategory, RoleAssignment, Synonym, Abbreviation, CombinedCalendarNode ].each do |klass|
+      # Delete any role assignments, synonyms or abbreviations that are associated with any of the nodes in the subtree
+      [ RoleAssignment, Synonym, Abbreviation, CombinedCalendarNode ].each do |klass|
         klass.delete_all(:node_id => nodes_to_be_paranoid_deleted_ids)
       end
     
@@ -670,14 +650,6 @@ protected
     
       # Delete content representations where appropriate 
       ContentRepresentation.delete_all [ 'parent_id IN (:nodes_to_be_paranoid_deleted_ids) OR content_id IN (:nodes_to_be_paranoid_deleted_ids)', { :nodes_to_be_paranoid_deleted_ids => nodes_to_be_paranoid_deleted_ids } ]
-    end
-  end
-  
-  def save_category_attributes
-    if self.category_attributes.present?
-      self.category_attributes.each do |id, attrs|
-        self.categories.find(id).update_attributes(attrs)
-      end
     end
   end
   

@@ -45,7 +45,6 @@ Ext.dvtr.AsyncContentTreeNode = function (config) {
         this.isPrivate                       = config.isPrivate;
         this.hasPrivateAncestor              = config.hasPrivateAncestor;
         this.hasHiddenAncestor               = config.hasHiddenAncestor;
-        this.category                        = config.category;
         this.hasImport                       = config.hasImport;
         this.hasSync                         = config.hasSync;
         this.hasEditItems                    = config.hasEditItems;
@@ -606,88 +605,7 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
             }
         });
     },
-
-    onAssignCategory: function () {
-        promptText = '';
-        node = this;
-
-        if (this.category) {
-            promptText += I18n.t('current', 'categories') + ' <i>' + this.category + '</i>.';
-        }
-        wnd = new Ext.Window({
-            modal: true,
-            layout: 'fit',
-            height: 135,
-            width: 285,
-            title: I18n.t('assign_title', 'categories'),
-            items: [{
-                xtype: 'form',
-                itemId: 'category',
-                bodyStyle: 'padding:5px',
-                items: [{
-                    xtype: 'panel',
-                    border: false,
-                    html: promptText
-                }, {
-                    xtype: 'combo',
-                    itemId: 'category_combo',
-                    emptyText: I18n.t('choose', 'categories'),
-                    fieldLabel: 'Categorie',
-                    store: new Ext.data.Store({
-                        proxy: new Ext.data.HttpProxy({
-                            url: '/admin/categories/categories.json',
-                            method: 'GET'
-                        }),
-
-                        reader: new Ext.data.JsonReader({
-                            root: 'categories',
-                            id: 'id',
-                            totalProperty: 'total_count'
-                        }, [ 'id', 'label' ])
-                    }),
-                    valueField: 'id',
-                    displayField: 'label',
-                    forceSelection: true,
-                    triggerAction: 'all',
-                    editable: false,
-                    mode: 'remote',
-                    width: 150,
-                    hiddenName: 'node[category_id]'
-                }]
-            }],
-            buttonAlign: 'center',
-            buttons: [{
-                xtype: 'button',
-                text: I18n.t('submit', 'categories'),
-                type: 'submit',
-                handler: function (e) {
-                    wnd.getComponent('category').getForm().submit({
-                        url: '/admin/nodes/' + node.id + '.json',
-                        method: 'PUT',
-                        failure: function (response, options) {
-                            var responseJson = Ext.util.JSON.decode(response.responseText);
-                            Ext.Msg.alert('Error', responseJson.errors[0]);
-                        },
-                        success: function () {
-                            var combo = wnd.getComponent('category').getComponent('category_combo');
-                            node.category = combo.getRawValue();
-                            wnd.close();
-                            Ext.Msg.alert(I18n.t('success', 'categories'), I18n.t('element_added_to', 'categories') + ' \'' + node.category + '\'.');
-                        }
-                    });
-                }
-            }, {
-                xtype: 'button',
-                text: I18n.t('cancel', 'categories'),
-                type: 'reset',
-                handler: function (e) {
-                    wnd.close();
-                }
-            }]
-        });
-        wnd.show();
-    },
-
+    
     onLayoutConfig: function () {
         rightPanel.load({
             url: '/admin/nodes/' + this.id + '/layout/edit',

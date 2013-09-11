@@ -39,15 +39,6 @@ I18n.locale['nl'] = {
 		repeating_calendar_delete_message: 'Dit is een herhalend kalender item. Wilt u naast dit kalender item tevens alle herhalingen verwijderen?',
 		delete_failed: 'Sorry, het verwijderen is mislukt.'
 	},
-	categories: {
-		assign_title: 'Categorie toewijzen',
-		cancel: 'Annuleren',
-		choose: 'Kies een categorie',
-		current: 'Huidig project:',
-		element_added_to: 'Element toegevoegd aan categorie',
-		submit: 'OK',
-		success: 'Succes'
-	},
 	context_menu: {
 		assign_role: 'Rol toewijzen',
     layout_settings: 'Layout & template instellingen',
