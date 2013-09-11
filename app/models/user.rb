@@ -54,8 +54,6 @@ require 'digest'
 require 'digest/sha2'
 
 class User < ActiveRecord::Base
-  # Override default of include_root_in_json (Ext cannot use additional nesting)
-  Category.include_root_in_json = false if Category.respond_to?(:include_root_in_json)
   
   SEXES = {
     'm' => :male,
@@ -93,9 +91,6 @@ class User < ActiveRecord::Base
 
   # A +User+ can have created many forum posts.
   has_many :forum_posts,     :dependent => :destroy
-  
-  has_many :user_categories, :dependent => :destroy
-  has_many :categories,      :through => :user_categories
   
   has_many :versions,        :foreign_key => :editor_id, :dependent => :destroy
   
@@ -366,16 +361,6 @@ class User < ActiveRecord::Base
   # Aliases +login+ as +to_param+.
   def to_param
     login
-  end
-
-  # Add a given +category+ to the favorite categories (i.e. user_categories) of the user.
-  def add_category_to_favorites(category)
-    self.categories << category unless self.categories.include?(category)
-  end
-
-  # Remove a given +category+ from the favorite categories (i.e. user_categories) of the user.
-  def remove_category_from_favorites(category)
-    self.categories.delete(category) if self.categories.include?(category)
   end
 
   def to_s

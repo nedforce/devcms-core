@@ -91,7 +91,7 @@ class Admin::NodesController < Admin::AdminController
 
   def bulk_update
     respond_to do |format|
-      if Node.bulk_update(@nodes, params[:node], current_user, params[:keep_existing_categories])
+      if Node.bulk_update(@nodes, params[:node], current_user)
         format.html # bulk_update.html.erb
       else
         format.html { render :action => 'bulk_edit' }

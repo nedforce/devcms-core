@@ -186,20 +186,6 @@ Rails.application.routes.draw do
 
     resources :carrousels, :except => [:index, :destroy]
     
-    resources :categories, :only => [:index, :create, :update, :destroy] do
-      collection do
-        get :categories
-        get :root_categories
-      end
-      
-      member do
-        put :add_to_favorites
-        put :remove_from_favorites
-        get :category_options
-        get :synonyms
-      end    
-    end
-    
     resources :combined_calendars, :except => [:index, :destroy]
     resources :comments, :only => [:index, :update, :destroy]
     resources :contact_boxes, :except => [:index, :destroy]
@@ -429,7 +415,6 @@ Rails.application.routes.draw do
   match '/signup' => 'users#new', :as => :signup
   
   if SETTLER_LOADED && Settler[:search_enabled_engines].present?
-    match '/search/projects' => 'search#projects', :as => :search_projects
     match '/search(/:search_engine)' => 'search#index', :as => :search
   end
   

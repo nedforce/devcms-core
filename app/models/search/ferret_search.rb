@@ -13,7 +13,7 @@ class Search::FerretSearch
     end
 
     query = "(#{search_tokens.join(' ')})"
-    query = self.expand_query(query, top_node, options.delete(:zipcode), options.delete(:from), options.delete(:to), options.delete(:programme), options.delete(:project), options.delete(:content_types_to_include), options.delete(:content_types_to_exclude))
+    query = self.expand_query(query, top_node, options.delete(:zipcode), options.delete(:from), options.delete(:to), options.delete(:content_types_to_include), options.delete(:content_types_to_exclude))
     options = {:sort => Ferret::Search::SortField.new(:updated_at_to_index, :reverse => true) }.merge(options) if options.delete(:sort) == 'date'
     self.paginating_ferret_search({ :q => query, :page_size => page_size, :current => page, :limit => 250 }.merge(options))
   end
@@ -62,7 +62,7 @@ private
     search_string
   end
 
-  def self.expand_query(query, top_node = nil, zipcode = nil, from = nil, to = nil, programme = nil, project = nil, content_types_to_include = nil, content_types_to_exclude = nil)
+  def self.expand_query(query, top_node = nil, zipcode = nil, from = nil, to = nil, content_types_to_include = nil, content_types_to_exclude = nil)
     now  = DateTime.now.strftime(Node::INDEX_DATETIME_FORMAT)
     from =         from.strftime(Node::INDEX_DATETIME_FORMAT) if from.present?
     to   =           to.strftime(Node::INDEX_DATETIME_FORMAT) if to.present?
@@ -73,8 +73,6 @@ private
     query << " AND (publication_end_date_to_index: >= #{now} OR publication_end_date_to_index:none)"
     query << " AND (ancestry_to_index:XX#{top_node.child_ancestry.gsub(/\//, 'X')}X*)" unless top_node.root?
     query << " AND is_hidden_to_index:false"
-    query << " AND categories_to_index:*X#{project}X*"   if project.present?   && programme.present?
-    query << " AND categories_to_index:*X#{programme}X*" if programme.present? && project.blank?
     query << " AND zipcodes_to_index:*#{zipcode}*"       if zipcode.present?
 
     if from && to

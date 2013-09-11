@@ -21,7 +21,6 @@ module Search::Modules::Ferret::FerretNodeExtension
                    :updated_at_to_index             => { :index => :untokenized },
                    :zipcodes_to_index               => {},
                    :ancestry_to_index               => {},
-                   :categories_to_index             => {},
                    :is_hidden_to_index              => {},
                    :url_alias                       => { :store => :yes }
                  },
@@ -55,12 +54,6 @@ module Search::Modules::Ferret::FerretNodeExtension
     # Returns the latest approved content title for indexing.
     def content_title_to_index
       content.content_title
-    end
-
-    def categories_to_index
-      cats = self.categories.collect(&:id)
-      cats + self.categories.collect { |cat| cat.parent }.compact.uniq
-      "XX#{cats.uniq.join("X")}XX"
     end
 
     def zipcodes_to_index

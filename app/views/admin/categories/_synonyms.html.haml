@@ -1,5 +1,0 @@
-- unless category.is_root_category?
-  .category_synonyms_field
-    .formFieldCt.clearfix
-      = label_tag "category_attributes[#{category.id}][synonyms]", t('categories.synonyms')
-      = text_field_tag "category_attributes[#{category.id}][synonyms]", category.synonyms, :id => nil

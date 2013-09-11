@@ -394,18 +394,16 @@ class NodeTest < ActiveSupport::TestCase
      assert_equal 200, third_page_node.reload.hits
    end
 
-  def test_should_accept_category
-    category = Category.create(:name => 'Economy')
-    @economie_section_node.categories << category
+  def test_should_accept_tag
+    @economie_section_node.update_attributes :tag_list => 'tag'
     assert @economie_section_node.valid?
-    assert !@economie_section_node.categories.empty?
+    assert !@economie_section_node.tag_list.empty?
   end
 
   def test_should_find_related_nodes
-    category = Category.create(:name => 'Related')
-    @economie_section_node.categories << category
-    @about_page_node.categories << category
-    assert Node.find_related_nodes(@economie_section_node, :top_node => @root_node).include?(@about_page_node)
+    @economie_section_node.update_attributes :tag_list => 'tag'
+    @about_page_node.update_attributes :tag_list => 'tag'
+    assert @economie_section_node.related_content.include? @about_page_node
   end
 
   def test_should_set_position_on_create
@@ -416,49 +414,6 @@ class NodeTest < ActiveSupport::TestCase
     assert n.last?
 
     assert_not_nil create_node.position
-  end
-
-  def test_should_set_categories_while_keeping_existing_on_bulk_update
-    n = create_node
-
-    category1 = Category.create(:name => 'Categorie 1')
-    category2 = Category.create(:name => 'Categorie 2')
-
-    Node.bulk_update([n], {:category_ids => [ category1.id, category2.id ]}, nil, true)
-
-    assert n.categories.include?(category1)
-    assert n.categories.include?(category2)
-
-    category3 = Category.create(:name => 'Categorie 3')
-    category4 = Category.create(:name => 'Categorie 4')
-
-    Node.bulk_update([n], {:category_ids => [ category3.id, category4.id ]}, nil, true)
-
-    assert n.categories.include?(category1)
-    assert n.categories.include?(category2)
-    assert n.categories.include?(category3)
-    assert n.categories.include?(category4)
-  end
-
-  def test_should_set_categories_while_not_keeping_existing_on_bulk_update
-    n = create_node
-
-    category1 = Category.create(:name => 'Categorie 1')
-    category2 = Category.create(:name => 'Categorie 2')
-    
-    Node.bulk_update([n], {:category_ids => [ category1.id, category2.id ]}, nil, true)
-
-    assert n.categories.include?(category1)
-    assert n.categories.include?(category2)
-
-    category3 = Category.create(:name => 'Categorie 3')
-    category4 = Category.create(:name => 'Categorie 4')
-    
-    Node.bulk_update([n], {:category_ids => [ category2.id, category3.id, category4.id ]}, nil, false)
-
-    assert n.categories.include?(category2)
-    assert n.categories.include?(category3)
-    assert n.categories.include?(category4)
   end
 
   def test_bulk_update_should_return_true_if_updating_succeeds_for_all_nodes
@@ -478,23 +433,6 @@ class NodeTest < ActiveSupport::TestCase
     assert_equal false, Node.bulk_update([ node1, node2 ], {})
   end
   
-  def test_should_save_category_attributes_to_associated_categories_on_save
-    n = create_node
-
-    category1 = Category.create(:name => 'Categorie 1')
-    category2 = Category.create(:name => 'Categorie 2')
-
-    n.category_ids=([ category1.id, category2.id ])
-
-    n.update_attributes(:category_attributes => {
-      category1.id => { :synonyms => 'Categorie 1' },
-      category2.id => { :synonyms => 'Categorie 2' },
-    })
-
-    assert_equal 'Categorie 1', category1.reload.synonyms
-    assert_equal 'Categorie 2', category2.reload.synonyms
-  end
-
   def test_containing_site
     assert_equal nodes(:root_section_node),     nodes(:help_page_node).containing_site
     assert_equal nodes(:sub_site_section_node), nodes(:yet_another_page_node).containing_site

@@ -74,7 +74,6 @@ nl:
   admin:
     abbreviations_button: Afkortingen
     approvals_button: Goedkeuringen
-    categories_button: Categorieën
     comments_button: Reacties
     data_warnings_button: Meldingen
     content_type_not_allowed: Het is niet mogelijk dit contenttype aan deze node toe te voegen
@@ -283,49 +282,6 @@ nl:
       minutes: minuten
       months: maanden
       seconds: seconden
-  categories:
-    add_new_combination: Nieuwe categorie-combinatie aanmaken
-    add_to_favorites: Voeg categorie-combinatie toe aan uw favorieten
-    cancel: Annuleren
-    category: Categorie
-    category_name: Naam
-    choose_main_category: Kies een categorie
-    confirm_deletion: Weet u zeker dat u dit subcategorie wilt verwijderen?
-    could_not_delete: "Sorry, kan het subcategorie niet verwijderen."
-    could_not_save: "Sorry, kon het subcategorie niet opslaan."
-    created_at: Aangemaakt om
-    del_tooltip: Klik hier om het geselecteerde subcategorie te verwijderen
-    delete: Verwijderen
-    delete_combination: Verwijder combinatie
-    deleting: Bezig met verwijderen
-    edit: Bewerken
-    edit_category: Subcategorie bewerken
-    edit_tooltip: Klik hier om het geselecteerde subcategorie te wijzigen
-    error: Fout
-    favorites: Uw favoriete categorie-combinaties
-    group: Categorie
-    insert_combination: Voeg categorie-combinatie toe aan de content
-    item: Subcategorie
-    items: Subcategorieen
-    keep_existing: Bewaar bestaande metadata
-    main_category: Categorie
-    message: Bericht
-    name: Subcategorie
-    name_cannot_be_blank: Naam mag niet blanco zijn
-    new_category: Nieuw subcategorie
-    new_category_tooltip: Klik hier om een nieuw subcategorie aan te maken
-    new_group: Nieuw categorie
-    new_group_tooltip: Klik hier om een nieuw categorie aan te maken
-    no_favorites: U heeft nog geen favoriete categorie-combinaties.
-    program: Categorie
-    project: Subcategorie
-    remove_from_favorites: Verwijder categorie-combinatie uit uw favorieten
-    root_category: Algemeen
-    save: Opslaan
-    select_one: Kies tenminste een subcategorie
-    settings: Categorie-instellingen
-    synonyms: Synoniemen
-    updated_at: Laatst gewijzigd
   combined_calendars:
     add_to: Gecombineerde kalender toevoegen aan
     edit: Bewerken van gecombineerde kalender
@@ -943,7 +899,6 @@ nl:
     private: Leesgerechtigde
   search:
     advanced_search: Uitgebreid zoeken
-    all_in_programme: Alles in categorie
     after: Zoek recente informatie van
     all: Alle pagina's
     attachments: Documenten
@@ -958,8 +913,6 @@ nl:
     in: in
     in_category: Zoek op thema
     in_period: Zoek in periode van/tot
-    in_programme: Zoek op categorie
-    in_project: Zoek op subcategorie
     modified_at: Laatste wijziging
     news: Nieuws
     news_items: Nieuws
@@ -983,8 +936,6 @@ nl:
     search: Zoek
     search_in: Zoek in
     search_results: Zoekresultaten
-    select_programme: -- selecteer categorie --
-    select_project: -- selecteer subcategorie --
     show_advanced_options: Toon uitgebreide zoekopties
     simple_search: Simpel zoeken
     site: Gehele site

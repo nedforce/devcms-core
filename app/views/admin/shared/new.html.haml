@@ -18,7 +18,6 @@
     - elsif record.node.expiration_required? || record.node.expired?
       = hidden_field_tag "#{ActiveModel::Naming.param_key(record)}[expires_on]", Settler[:default_expiration_time].days.from_now
 
-    = category_settings_for record
     = content_box_settings_for record
     = meta_fields_for record
   

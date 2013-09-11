@@ -14,10 +14,6 @@
     $('top_search_button').removeClassName("hidden");
     $('show_advanced_options').removeClassName("hidden");
   }
-  document.observe('dom:loaded', function () {
-    if($('static_programme_and_project_selector')) $('static_programme_and_project_selector').hide();
-    if($('dynamic_programme_and_project_selectors')) $('dynamic_programme_and_project_selectors').removeClassName("hidden");
-  });
   <% end %>
 <% end %>
 
@@ -58,35 +54,6 @@
           <%= calendar_date_select_tag 'to',   @to,   :image => 'icons/calendar.png' %>
         </div>
       </div>
-
-      <div id="static_programme_and_project_selector" class="search_field_wrapper clearfix">
-        <div class='search_description'><%=t 'search.in_category' -%>: </div>
-        <div class='search_field'>
-          <% categories = Category.root_categories.map do |category|
-              children = category.children.map { |cat| [ cat.name, cat.id ] }
-               [
-                   category.name,
-                   children.unshift([t('search.all_in_programme'), category.id]) 
-               ]
-             end %>
-          <%= select_tag 'category', grouped_options_for_select(categories, @category.present? ? @category.id : nil, t('search.select_programme')) -%>
-       </div>
-      </div>
-
-      <% if Category.root_categories.present? %>
-        <div id="dynamic_programme_and_project_selectors" class='hidden'>
-            <div class="search_field_wrapper clearfix">
-              <div class='search_description'><%=t 'search.in_programme' -%>: </div>
-              <div class='search_field'>
-                <%= select_tag 'programme', options_for_select(Category.root_categories.map { |category| [ category.name, category.id ] }.unshift( [ t('search.select_programme'), nil ]), @programme.present? ? @programme.id : nil) -%>
-             </div>
-            </div>
-
-            <div id="project_selection_field">
-              <%= render :partial => 'project_select' -%>
-            </div>
-        </div>
-      <% end %>
 
       <div class="search_field_wrapper clearfix">
         <div class='search_description'><%= t 'search.sort_by' -%>: </div>

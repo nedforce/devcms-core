@@ -18,8 +18,6 @@
 
   = f.file_field :file, :label => t('images.data')
 
-  = category_settings_for @image
-
   = hidden_field_tag :parent_node_id, params[:parent_node_id]
 
   = approval_fields f

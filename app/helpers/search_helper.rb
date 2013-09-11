@@ -27,22 +27,6 @@ module SearchHelper
     raw result
   end
 
-  def print_category(category)
-    default_options = {
-     :advanced      => true,
-     :query         => '',
-     :search_engine => params[:search_engine]
-    }
-    default_options[:programme] = category.parent ? category.parent_id : category.id
-    if category.parent
-      link_to(category.parent.name, search_path(default_options)) + 
-      ' | ' +
-      link_to(category.name, search_path({:project => category.id}.merge(default_options)))
-    else
-      link_to category.name, search_path(default_options)
-    end
-  end
-
   def print_content_type(content_type)
     case(content_type)
       when 'Product'

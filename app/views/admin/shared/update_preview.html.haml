@@ -4,7 +4,7 @@
   = remote_form_for record, :method => :get, :url => { :action => :edit, :format => 'html' }, :update => 'right_panel_body' do |form|
     = default_preview_fields form
     = render :partial => 'preview_form', :locals => { :form => form, :record => record }
-    = category_hidden_fields form
+
     = content_box_hidden_fields form
     = approval_hidden_fields form
     
@@ -13,7 +13,7 @@
   = remote_form_for record, :url => { :action => :update, :format => 'html' }, :update => 'right_panel_body' do |form|
     = default_preview_fields form
     = render :partial => 'preview_form', :locals => { :form => form, :record => record }
-    = category_hidden_fields form
+
     = content_box_hidden_fields form
     = approval_hidden_fields form
     
@@ -21,4 +21,3 @@
       = render :partial => 'admin/shared/responsible_user_hidden_fields', :locals => {:form => form}
     
     = form.submit t('shared.save')
-

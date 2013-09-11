@@ -8,6 +8,4 @@
 - @carrousel_items.each do |item_id, excerpt|
   = hidden_field_tag("carrousel_items[#{item_id}]", excerpt, :id => "carrousel_items_#{item_id}")
 
-= category_hidden_fields form
-
 = approval_hidden_fields form

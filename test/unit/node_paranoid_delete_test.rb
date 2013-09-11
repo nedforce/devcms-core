@@ -10,7 +10,6 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
     @economie_section = sections(:economie_section)
     @economie_section_node = nodes(:economie_section_node)
     @economie_poll_node = nodes(:economie_poll_node)
-    @category = categories(:category_blaat)
   end
   
   def test_should_not_paranoid_delete_root
@@ -110,10 +109,7 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
     
     c1 = create_comment(@economie_section_node)
     c2 = create_comment(node)
-    
-    nc1 = create_node_category(@economie_section_node)
-    nc2 = create_node_category(node)
-    
+        
     assert_equal @economie_section_node, Node.global_frontpage
         
     assert Node.exists?(@economie_section_node)
@@ -143,10 +139,7 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
     
     assert Comment.exists?(c1)
     assert Comment.exists?(c2)
-    
-    assert NodeCategory.exists?(nc1)
-    assert NodeCategory.exists?(nc2)
-                
+                    
     @economie_section_node.paranoid_delete!
 
     assert_equal @root_section_node, Node.global_frontpage
@@ -180,9 +173,6 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
     
     assert !Comment.exists?(c1)
     assert !Comment.exists?(c2)
-    
-    assert !NodeCategory.exists?(nc1)
-    assert !NodeCategory.exists?(nc2)
   end
 
   def test_paranoid_delete_should_also_delete_associated_versions
@@ -383,10 +373,6 @@ protected
   
   def create_abbreviation(target_node)
     Abbreviation.create({ :abbr => "snafu", :definition => "Situation Normal All Fucked Up", :node => target_node})
-  end
-  
-  def create_node_category(target_node)
-    NodeCategory.create({ :node => target_node, :category => @category })
   end
   
   def create_comment(target_node)

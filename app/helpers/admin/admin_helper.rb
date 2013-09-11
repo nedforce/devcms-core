@@ -32,11 +32,6 @@ module Admin::AdminHelper
       :url  => { :controller => 'admin/comments', :action => :index },
       :text => I18n.t('admin.comments_button')
     }
-    categories = {
-      :page => :categories,
-      :url  => { :controller => 'admin/categories', :action => :index },
-      :text => I18n.t('admin.categories_button')
-    }
     settings = {
       :page => :settings,
       :url  => { :controller => 'admin/settings', :action => :index },
@@ -59,7 +54,7 @@ module Admin::AdminHelper
     }    
 
     menu_items = [sitemap]
-    menu_items += [permissions, categories, settings] if current_user.has_role?('admin')
+    menu_items += [permissions, settings] if current_user.has_role?('admin')
 
     if current_user.has_role?('admin', 'final_editor')
       menu_items << privileged_users
@@ -109,14 +104,6 @@ module Admin::AdminHelper
     if Node.content_type_configuration(form.object.class.name)[:available_content_representations].include?('content_box')
       render :partial => 'admin/shared/content_box_hidden_fields', :locals => { :form => form }
     end
-  end
-
-  def category_settings_for(content)
-    render :partial => 'admin/shared/category_fields', :locals => { :content => content }
-  end
-
-  def category_hidden_fields(form)
-    render :partial => 'admin/shared/category_hidden_fields', :locals => { :form => form }
   end
   
   def meta_fields_for(content)
