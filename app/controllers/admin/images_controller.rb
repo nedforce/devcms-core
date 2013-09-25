@@ -75,6 +75,9 @@ class Admin::ImagesController < Admin::AdminController
   # * GET /admin/images/:id/edit
   def edit
     @show_image_url_control = can_set_image_url?
+    respond_to do |format|
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @image }}
+    end
   end
 
   # * POST /admin/images
