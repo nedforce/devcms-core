@@ -4,10 +4,10 @@ module Admin::CropperHelper
     html_options ||= {}
     html_options.merge!(:id => "image_cropper_#{image.id}")
     
-    locals = { :image => image, :is_header => is_header = image.node.parent.content_type == 'NewsItem' && image.node.previous_item.blank? }  
+    locals = { :image => image }  
       
     content_tag :div, html_options do
-      if image.orientation == :vertical || is_header
+      if image.orientation == :vertical
         render :partial => 'cropper_vertical', :locals => locals
       else
         render :partial => 'cropper_horizontal', :locals => locals

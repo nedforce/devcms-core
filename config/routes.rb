@@ -68,14 +68,14 @@ Rails.application.routes.draw do
       get :thumbnail
       get :sidebox
       get :full
-      get :content_box_header
+      get :banner
       get :header
       get :big_header
       get :newsletter_banner
       get :private_thumbnail
       get :private_sidebox
       get :private_full
-      get :private_content_box_header
+      get :private_banner
       get :private_header
     end  
   end
@@ -236,7 +236,7 @@ Rails.application.routes.draw do
         get :preview
         get :thumbnail
         get :thumbnail_preview
-        get :content_box_header_preview
+        get :banner_preview
       end    
     end
 

@@ -6,7 +6,7 @@ class Admin::ImagesController < Admin::AdminController
 
   before_filter :find_image,             :except => [ :new, :create ]
   
-  before_filter :find_node,                :only => [ :update, :destroy, :edit, :show, :preview, :thumbnail, :thumbnail_preview, :content_box_header_preview, :previous ]
+  before_filter :find_node,                :only => [ :update, :destroy, :edit, :show, :preview, :thumbnail, :thumbnail_preview, :banner_preview, :previous ]
 
   before_filter :clean_is_for_header,      :only => [ :create, :update ]
 
@@ -61,7 +61,7 @@ class Admin::ImagesController < Admin::AdminController
     end
   end
   
-  def content_box_header_preview
+  def banner_preview
     render_jpg_image_data @image.resize!(:size => "#{Image::CONTENT_BOX_SIZE[:width]}x", :upsample => true, :quality => 80, :format => 'jpg')
   end
 

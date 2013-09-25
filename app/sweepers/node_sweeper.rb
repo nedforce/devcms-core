@@ -51,7 +51,7 @@ protected
       expire_page(:host => Settler[:host], :controller => '/images', :action => :big_header,         :id => node.content_id, :format => 'jpg')
       expire_page(:host => Settler[:host], :controller => '/images', :action => :full,               :id => node.content_id, :format => 'jpg')
       expire_page(:host => Settler[:host], :controller => '/images', :action => :sidebox,            :id => node.content_id, :format => 'jpg')
-      expire_page(:host => Settler[:host], :controller => '/images', :action => :content_box_header, :id => node.content_id, :format => 'jpg')
+      expire_page(:host => Settler[:host], :controller => '/images', :action => :banner, :id => node.content_id, :format => 'jpg')
     end
   end
 end

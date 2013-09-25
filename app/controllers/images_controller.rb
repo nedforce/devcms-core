@@ -12,7 +12,7 @@ class ImagesController < ApplicationController
 
   layout false
 
-  caches_page :full, :sidebox, :header, :thumbnail, :content_box_header, :big_header, :newsletter_banner
+  caches_page :full, :sidebox, :header, :thumbnail, :banner, :big_header, :newsletter_banner
 
   def full
     render_image @image.file.full.path
@@ -26,8 +26,20 @@ class ImagesController < ApplicationController
     render_image_data @image.resize!(:size => "#{Image::HEADER_BIG_IMAGE_SIZE[:width]}x#{Image::HEADER_BIG_IMAGE_SIZE[:height]}", :crop => true, :upsample => true, :quality => 90, :format => @image_format)
   end
 
-  def content_box_header
-    render_image_data @image.resize!(:size => "#{Image::CONTENT_BOX_SIZE[:width]}x#{Image::CONTENT_BOX_SIZE[:height]}", :offset => @image.offset, :crop => true, :upsample => false, :quality => 80, :format => @image_format)
+  def banner
+    offset = @image.offset
+    if @image.orientation == :vertical
+      ratio  = (100.0/Image::CONTENT_BOX_SIZE[:width].to_f)
+      offset = 0 if offset.nil?
+      offset = ((offset + (Image::CONTENT_BOX_SIZE[:height].to_f/2)) * ratio) - 50
+      offset = 0 if offset < 0
+      resized_height = @image.calculate_other_dimension_with(:width => 100)
+      offset = resized_height - 100 if (resized_height - offset) < 100
+    elsif @image.orientation == :horizontal
+      offset = nil
+    end
+
+    render_image_data @image.resize!(:size => "#{Image::CONTENT_BOX_SIZE[:width]}x#{Image::CONTENT_BOX_SIZE[:height]}", :offset => offset, :crop => true, :upsample => false, :quality => 80, :format => @image_format)
   end
 
   def newsletter_banner
@@ -35,20 +47,7 @@ class ImagesController < ApplicationController
   end
 
   def thumbnail
-    offset = @image.offset
-    is_header = @image.node.parent.content_type == 'NewsItem' && @image.node.previous_item.blank?
-    if @image.orientation == :vertical && is_header
-      ratio  = (100.0/Image::CONTENT_BOX_SIZE[:width].to_f)
-      offset = 0 if offset.nil?
-      offset = ((offset + (Image::CONTENT_BOX_SIZE[:height].to_f/2)) * ratio) - 50
-      offset = 0 if offset < 0
-      resized_height = @image.calculate_other_dimension_with(:width => 100)
-      offset = resized_height - 100 if (resized_height - offset) < 100
-    elsif @image.orientation == :horizontal && is_header
-      offset = nil
-    end
-
-    render_image_data @image.resize!(:size => "100x100", :crop => true, :quality => 80, :offset => offset, :upsample => true, :format => @image_format)
+    render_image_data @image.resize!(:size => "100x100", :crop => true, :quality => 80, :offset => @image.offset, :upsample => true, :format => @image_format)
   end
 
   def sidebox
@@ -63,8 +62,8 @@ class ImagesController < ApplicationController
     header
   end
 
-  def private_content_box_header
-    content_box_header
+  def private_banner
+    banner
   end
 
   def private_thumbnail

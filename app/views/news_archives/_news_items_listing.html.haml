@@ -4,7 +4,7 @@
   - header_image = first_item.node.children.accessible.with_content_type('Image').first
 
   - if header_image
-    = image_tag(content_node_url(header_image, :action => :content_box_header, :format => :jpg, :host => header_image.containing_site.content.domain), :alt => header_image.content.alt.to_s, :class => 'content_box_header')
+    = image_tag(content_node_url(header_image, :action => :banner, :format => :jpg, :host => header_image.containing_site.content.domain), :alt => header_image.content.alt.to_s, :class => 'banner')
 
   .firstNewsItem
     %h2= link_to_content_node first_item.content_title, first_item, { :type => :url, :host => first_item.node.containing_site.content.domain }

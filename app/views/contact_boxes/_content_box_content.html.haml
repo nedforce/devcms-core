@@ -2,7 +2,7 @@
   - content = node.content
   - header_image = node.children.accessible.with_content_type('Image').include_content.first.try(:content)
   - if header_image.present?
-    = image_tag(content_node_path(header_image, :action => :sidebox,  :format => :jpg), :alt => header_image.alt.to_s, :class => 'content_box_header')
+    = image_tag(content_node_path(header_image, :action => :sidebox,  :format => :jpg), :alt => header_image.alt.to_s, :class => 'banner')
   - else
     = image_tag 'contact_box_header.png', :alt => ''
 
