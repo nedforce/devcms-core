@@ -141,7 +141,7 @@ class Node < ActiveRecord::Base
   validates_inclusion_of :commentable,       :in => [ false, true ], :allow_nil => true
   
   validates_inclusion_of :content_box_colour, :in => Devcms.content_box_colours, :allow_blank => true
-  validates_inclusion_of :content_box_icon, :in => Devcms.content_box_icons, :allow_blank => true
+  validates_inclusion_of :content_box_icon, :in => Devcms.content_box_icons, :allow_blank => true, :if => Proc.new {Rails.application.config.use_devcms_icons}
   
   validates_length_of    :content_box_title, :in => 2..255, :allow_blank => true
   

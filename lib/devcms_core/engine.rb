@@ -28,6 +28,8 @@ module DevcmsCore
     config.airbrake_redmine_secure   = false
     config.airbrake_redmine_login    = 'exception_notifier'        
 
+    config.use_devcms_icons = true
+
     register_cms_modules
 
     initializer "haml_configuration" do |app|
