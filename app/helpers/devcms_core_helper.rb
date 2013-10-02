@@ -195,31 +195,39 @@ module DevcmsCoreHelper
     return { :title => header_title, :image_tag => image_tag, :url => image_url }
   end
 
-  def header_slideshow(node, big_header = false)
-    string_cache(:header_slideshow_for => (node.present? ? node.header_container_ancestry : current_site.child_ancestry)) do
-      capture do
-        available_header_images_nodes = node.present? ? node.header_images : []
-        available_header_images_nodes << header_image(node, big_header)[:url] if available_header_images_nodes.empty?
-
-        available_header_images = available_header_images_nodes.map.each_with_index do |header_image, index|
-          if header_image.is_a?(String)
-            {
-              :url   => header_image,
-              :id    => "header-image-#{index}",
-              :alt   => '',
-              :title => nil
-            }
-          else
-            {
-              :url   => big_header ? content_node_path(header_image, :action => :big_header,  :format => :jpg) : content_node_path(header_image, :action => :header,  :format => :jpg),
-              :id    => "ss-image-#{header_image.id}",
-              :alt   => header_image.alt.to_s,
-              :title => header_image.title
-            }
-          end
-        end
-        render :partial => '/layouts/partials/header_slideshow', :locals => { :available_header_images => available_header_images }
+  def header_slideshow(node, big_header = false, cache_slidehow = true)
+    if cache_slidehow
+      string_cache(:header_slideshow_for => (node.present? ? node.header_container_ancestry : current_site.child_ancestry)) do
+        header_slideshow_content node, big_header
       end
+    else
+      header_slideshow_content node, big_header
+    end
+  end
+
+  def header_slideshow_content(node, big_header)
+    capture do
+      available_header_images_nodes = node.present? ? node.header_images : []
+      available_header_images_nodes << header_image(node, big_header)[:url] if available_header_images_nodes.empty?
+
+      available_header_images = available_header_images_nodes.map.each_with_index do |header_image, index|
+        if header_image.is_a?(String)
+          {
+            :url   => header_image,
+            :id    => "header-image-#{index}",
+            :alt   => '',
+            :title => nil
+          }
+        else
+          {
+            :url   => big_header ? content_node_path(header_image, :action => :big_header,  :format => :jpg) : content_node_path(header_image, :action => :header,  :format => :jpg),
+            :id    => "ss-image-#{header_image.id}",
+            :alt   => header_image.alt.to_s,
+            :title => header_image.title
+          }
+        end
+      end
+      render :partial => '/layouts/partials/header_slideshow', :locals => { :available_header_images => available_header_images }
     end
   end
 
