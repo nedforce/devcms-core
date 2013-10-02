@@ -23,7 +23,7 @@ protected
 
   def sweep(node)
     # If title, url_alias, show_in_menu, private, deleted_at or ancestry changed, we'll need to expire some things
-    if node.content.blank? || (node.changed & %w(title url_alias ancestry show_in_menu private deleted_at publication_start_date publication_end_date position)).present? || node.changed == ["updated_at"]
+    if node.content.blank? || (node.changed & %w(title url_alias ancestry show_in_menu private deleted_at publication_start_date publication_end_date position layout_configuration)).present? || node.changed == ["updated_at"]
       # But only if we where shown in the menu or are shown there now
       if node.show_in_menu || node.show_in_menu_changed?
         if node.parent.present?        
@@ -34,7 +34,7 @@ protected
         expire_fragment(:main_menu_for_site => node.containing_site.id) if node.depth - node.containing_site.depth <= Devcms.main_menu_depth
       end
       # Expire slideshow on delete/destroy
-      expire_fragment(:header_slideshow_for => node.child_ancestry ) if node.deleted_at.present?
+      expire_fragment(:header_slideshow_for => node.child_ancestry ) if node.layout_configuration_changed? || node.deleted_at.present?
     end
 
     #TODO: Expire content boxes => based on content type etc. Might be path, parent or grandparent etc..        
