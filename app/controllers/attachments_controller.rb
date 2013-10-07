@@ -27,7 +27,7 @@ class AttachmentsController < ApplicationController
                 :filename    => @attachment.filename,
                 :disposition => 'attachment')
     else
-      render :status => 404
+      raise ActionController::RoutingError.new('File not found')
     end
   end
 
