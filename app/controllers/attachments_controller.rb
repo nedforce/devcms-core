@@ -20,10 +20,15 @@ class AttachmentsController < ApplicationController
 
   def upload_file(cache_control = 'public')
     headers['Cache-Control'] = cache_control # This can be cached by proxy servers
-    send_file(@attachment.file.path,
-              :type        => @attachment.content_type, 
-              :filename    => @attachment.filename,
-              :disposition => 'attachment')
+
+    if File.exist?(@attachment.file.path)
+      send_file(@attachment.file.path,
+                :type        => @attachment.content_type, 
+                :filename    => @attachment.filename,
+                :disposition => 'attachment')
+    else
+      render :status => 404
+    end
   end
 
   def find_attachment
