@@ -69,8 +69,8 @@ module DevcmsCore
         'iepngfix_tilebg.js',
         'print.js',
         'admin/prototype16.js',
-        'imports/ie8_text_content.js',
-        'imports/ie9_create_contextual_fragment.js'
+        'modules/ie8_text_content.js',
+        'modules/ie9_create_contextual_fragment.js'
       ]
     end
 
