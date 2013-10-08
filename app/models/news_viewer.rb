@@ -39,7 +39,7 @@ class NewsViewer < ActiveRecord::Base
 
   # TODO: Documentation
   def self.tree_icon_class
-    NewsArchive.tree_icon_class    
+    NewsArchive.tree_icon_class
   end
 
   # Returns the image file name to be used for icons on the front end website.
@@ -61,7 +61,7 @@ class NewsViewer < ActiveRecord::Base
   def last_updated_at
     image = news_items.newest.accessible.first(:order => 'news_viewer_items.position, nodes.publication_start_date DESC').children.with_content_type('Image').first rescue nil
     [ news_items.newest.accessible.maximum(:updated_at), 
-      self.updated_at,
+      node.updated_at,
       image.try(:last_updated_at)
     ].compact.max
   end
