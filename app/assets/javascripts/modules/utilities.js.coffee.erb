@@ -14,8 +14,12 @@ $.fn.replaceNewsletterArchiveSubmitButton = () ->
       $form.submit()
   
     $buttons.append($submitImage).append($submitLink)       
-  
-jQuery ->
+
+
+$.fn.exists = () ->
+  this.length != 0
+
+$ ->
   # Font resize
   $fontBox = $('#fontsize')  
   if $fontBox.length > 0

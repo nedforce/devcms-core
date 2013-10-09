@@ -1,0 +1,115 @@
+.slider-container
+  position: relative
+
+  .slider-items-wrapper
+    width: 100%
+    display: block
+    position: relative
+
+  .slider-items
+    min-width: 100px
+
+  .slider-image
+    left: 0px
+    min-width: 100px
+    position: relative
+
+    .slider-item-title
+      bottom: 0
+      left: 0
+      right: 0
+      z-index: 5
+      background-color: rgba($default, 0.8)
+      padding: 7px      
+      font-size: 15px
+      line-height: 20px
+      display: block
+      color: $white
+      font-family: $headerFontFamily
+      text-decoration: none
+  
+  // Slider navigation
+  // ---------------------------
+  .slider-navigation
+    position: absolute
+    display: none
+    bottom: 0
+    left: 0
+    right: 0
+    z-index: 6
+    height: $sliderNavigationHeight
+    background-color: $default
+    padding-left: $sliderNavigationHeight / 4
+    
+    .slider-navigation-link, .slider-control
+      text-align: center
+      display: block
+      float: left
+      height: $sliderNavigationHeight / 2
+      width: $sliderNavigationHeight / 2
+      margin-right: 3px
+
+    .slider-navigation-link
+      text-decoration: none
+      background-color: lighten( $default, 50% )
+      color: $default
+      font-size: 11px
+      line-height: $sliderNavigationHeight / 2
+      margin-top: $sliderNavigationHeight / 4
+      &.active
+        background-color: $white
+
+    .slider-control      
+      font-size: 19px
+      color: $white
+      line-height: 20px
+      margin-top: 3px
+
+    .slider-navigation-wrapper .read-more-link
+      float: right
+      color: $white
+      margin-top: $sliderNavigationHeight / 4
+
+  // Left-right || next-previous navigation
+  // --------------------------------------------
+  .slider-lateral-navigation
+    display: none
+    .slider-navigation-previous, .slider-navigation-next
+      text-decoration: none
+      position: absolute
+      z-index: 7
+      font-size: 20px
+      line-height: 25px
+      width: 25px
+      height: 25px
+      margin-top: -12.5px
+      text-align: center
+      color: $white
+      background-color: $black
+      opacity: 0.5
+      display: none
+
+    .slider-navigation-previous
+      left: 0
+      top: 50%
+
+    .slider-navigation-next
+      right: 0
+      top: 50%
+
+
+  &:hover .slider-lateral-navigation
+    .slider-navigation-previous, .slider-navigation-next
+      display: block
+
+  &.with-fader
+    .slider-image
+      top: 0
+      left: 0
+      z-index: 1
+      &.previous
+        z-index: 2
+      &.active
+        z-index: 3
+
+

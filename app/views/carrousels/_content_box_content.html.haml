@@ -1,38 +1,23 @@
-- content        = node.content
-- carrousel_item = content.current_item
-- frequency      = content.display_time > 0 ? content.display_time.to_s : '0.4'
-- duration       = content.transition_time_in_seconds
+.slider-container{ :data => carousel_data(node.content) }
+  .slider-items-wrapper
+    .slider-lateral-navigation
+      %a.slider-navigation-previous{:href => "#"} &laquo;
+      %a.slider-navigation-next{:href => "#"} &raquo;
 
-- if content.animation == Carrousel::ANIMATION_NONE || content.animation.blank?
-  - carrousel_item = content.current_item
-  - if carrousel_item
-    .carrousel_item.clearfix
-      = render :partial => '/carrousels/carrousel_item', :object => carrousel_item, :locals => { :content => content, :node => node }
+    .slider-navigation
+      .slider-navigation-wrapper
+        - node.content.carrousel_items.each_with_index do |item, index|
+          %a.slider-navigation-link{ :href => "#", :data => {:toggle => "slider"}}= index + 1
+        = icon_tag_link_to 'pause-1', '#', :class => 'slider-control pause-control'
+        = icon_tag_link_to 'play-1', '#', :class => 'slider-control play-control'
 
-- else
-  .carousel-wrapper{ :id => "carousel-wrapper-#{content.id}" }
-    %span.carousel-control.carousel-control-left
-      &laquo;
-    %span.carousel-control.carousel-control-right
-      &raquo;
-    .carousel-content-wrapper{ :id => "carousel-#{content.id}" }
-      .carousel-content
-        - content.carrousel_items.each do |carrousel_item|
-          .slide
-            = render :partial => '/carrousels/carrousel_item', :object => carrousel_item, :locals => { :content => content, :node => node }
-        - if [ Carrousel::ANIMATION_SLIDE, Carrousel::ANIMATION_DIA, Carrousel::ANIMATION_SPRING ].include?(content.animation)
-          .slide
-            = render :partial => '/carrousels/carrousel_item', :object => content.carrousel_items.first, :locals => { :content => content, :node => node }
+    .slider-items
+      - node.content.carrousel_items.each do |item|
+        .slider-image
+          - url = (item.is_a?(Image) && item.url.present? && item.url) || content_node_url(item.node)
 
-  - # We set float:left here, instead of in CSS, so the banners are shown if JavaScript is disabled (Drempelvrij).
-  = javascript_tag "$$('#carousel-#{content.id} .carousel-content .slide').invoke('setStyle', 'float:left');"
-
-  / JQuery TODO
-  / - if content.animation == Carrousel::ANIMATION_FADE_IN
-  /   = javascript_tag "new Carousel('carousel-#{content.id}', 'carousel-wrapper-#{content.id}', $$('#carousel-#{content.id} .carousel-content .slide'), $$('#carousel-wrapper-#{content.id} span.carousel-control', 'a.carousel-jumper'), {auto:true, autoPause:true, duration:#{duration}, frequency:#{frequency}, effect:'fade'});"
-  / - elsif content.animation == Carrousel::ANIMATION_DIA
-  /   = javascript_tag "new Carousel('carousel-#{content.id}', 'carousel-wrapper-#{content.id}', $$('#carousel-#{content.id} .carousel-content .slide'), $$('#carousel-wrapper-#{content.id} span.carousel-control', 'a.carousel-jumper'), {auto:true, autoPause:true, duration:#{duration}, frequency:#{frequency}, circular:true});"
-  / - elsif content.animation == Carrousel::ANIMATION_SPRING
-  /   = javascript_tag "new Carousel('carousel-#{content.id}', 'carousel-wrapper-#{content.id}', $$('#carousel-#{content.id} .carousel-content .slide'), $$('#carousel-wrapper-#{content.id} span.carousel-control', 'a.carousel-jumper'), {auto:true, autoPause:true, transition:'spring', duration:#{duration}, frequency:#{frequency}, circular:true});"
-  / - elsif content.animation == Carrousel::ANIMATION_SLIDE
-  /   = javascript_tag "new Carousel('carousel-#{content.id}', 'carousel-wrapper-#{content.id}', $$('#carousel-#{content.id} .carousel-content .slide'), $$('#carousel-wrapper-#{content.id} span.carousel-control', 'a.carousel-jumper'), {auto:true, autoPause:true, transition:'linear', duration:#{duration}, frequency:#{frequency}, circular:true});"
+          - if item.image
+            = image_tag(content_node_url(item.image, :action => :sidebox, :format => :jpg), :alt => item.image.alt, :title => item.image.description)
+            
+          - if item.blank? || !item.item.is_a?(Image)
+            .slider-item-title= (item.try(:item) || content).title
