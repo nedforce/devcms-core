@@ -12,7 +12,7 @@
 - if current_user.has_role?('admin')
   = form.check_box :is_for_header,  :label => t('images.is_for_header')
 
-- if record.new_record?
+- if @image.new_record?
   = form.file_field :file, :label => t('images.data')
 - else
   = wrap_with_label render_cropper(@image, :style => 'margin-left: 120px'), :text => t('images.cropped'), :for => "image_#{@image.id}"
