@@ -48,6 +48,7 @@ $ ->
         $('.slider-navigation .pause-control', @element).show()
         $('.slider-navigation .play-control', @element).hide()
 
+      @_checkDimensions()
       $('.slider-items').imagesLoaded().always =>
         @_checkDimensions()
 
@@ -58,7 +59,9 @@ $ ->
       $('.slider-image', @element).width(@itemWidth)
 
       if $('.slider-image img', @element).exists()
-        @itemHeight =  Math.max.apply(Math, $('.slider-image img', @element).map( () -> $(@).height() ))
+        heights = []
+        $('.slider-image img', @element).each( () -> heights.push $(@).height() )
+        @itemHeight =  Math.max.apply(Math, heights)
       else
         @itemHeight = $('.slider-image').first().height()
 
