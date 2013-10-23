@@ -48,4 +48,4 @@ jQuery ->
     fadeOutStartToFadeInStartDelay: 0
   }
   
-  headerSlideShow.start() if headerSlideShow.slides.length > 1    
+  headerSlideShow.start() if headerSlideShow.slides? && headerSlideShow.slides.length > 1

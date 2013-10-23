@@ -70,8 +70,9 @@ $ ->
       $('.slider-image', @element).height(@itemHeight)
       $('.slider-items', @element).width(@itemWidth * @itemCount)
 
-        
-      $('.slider-items-wrapper', @element).height(@itemHeight + 30)
+      
+      navigationSliderHeight = $('.slider-navigation', @element).height() || 0
+      $('.slider-items-wrapper', @element).height(@itemHeight + navigationSliderHeight)
 
       animate = @options.animate
       @options.animate = false
