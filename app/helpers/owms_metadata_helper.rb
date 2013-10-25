@@ -21,7 +21,8 @@ module OwmsMetadataHelper
   # * dcterms:language (Taal)
   # * dcterms:creator (Maker)
   # * dcterms:modified (Wijzigingsdatum)
-  # * dcterms:available (Publicatiedatum)
+  # * dcterms:created (Aanmaakdatum)
+  # * dcterms:available (Publicatiedatum range)
   # * dcterms:spatial (Locatie)
   # * dcterms:temporal (Dekking in tijd)
   def owms_core_metadata_for(node)
@@ -33,7 +34,11 @@ module OwmsMetadataHelper
     tags << meta_tag('DCTERMS.language',   'nl-NL',                                                                                   'DCTERMS.RFC4646')
     tags << meta_tag('DCTERMS.creator',    Settler[:site_name],                                                                       'OVERHEID.Gemeente')
     tags << meta_tag('DCTERMS.modified',  (content.updated_at || content.created_at).utc.to_s(:w3cdtfutc),                            'DCTERMS.W3CDTF')
-    # tags << meta_tag('DCTERMS.available',  content.publication_start_date.utc.to_s(:w3cdtfutc),                                       'DCTERMS.W3CDTF')
+    tags << meta_tag('DCTERMS.created',    content.created_at.utc.to_s(:w3cdtfutc),                                                   'DCTERMS.W3CDTF')
+    # Construct available period
+    period = "start=#{node.publication_start_date.utc.to_s(:w3cdtfutc)};"
+    period << " end=#{node.publication_end_date.utc.to_s(:w3cdtfutc)};" if node.publication_end_date.present?
+    tags << meta_tag('DCTERMS.available',  "#{period} scheme=W3C-DTF;",                                                            'DCTERMS.Period')
     tags << meta_tag('DCTERMS.spatial',    Settler[:site_name],                                                                       'OVERHEID.Gemeente')
     tags << meta_tag('DCTERMS.temporal',   content.respond_to?(:owms_temporal) ? content.owms_temporal : '',                          'ODCTERMS.Period')
     tags
