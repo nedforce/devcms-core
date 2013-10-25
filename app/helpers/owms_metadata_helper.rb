@@ -38,7 +38,7 @@ module OwmsMetadataHelper
     # Construct available period
     period = "start=#{node.publication_start_date.utc.to_s(:w3cdtfutc)};"
     period << " end=#{node.publication_end_date.utc.to_s(:w3cdtfutc)};" if node.publication_end_date.present?
-    tags << meta_tag('DCTERMS.available',  "#{period} scheme=W3C-DTF;",                                                            'DCTERMS.Period')
+    tags << meta_tag('DCTERMS.available',  "#{period} scheme=W3C-DTF;",                                                               'DCTERMS.Period')
     tags << meta_tag('DCTERMS.spatial',    Settler[:site_name],                                                                       'OVERHEID.Gemeente')
     tags << meta_tag('DCTERMS.temporal',   content.respond_to?(:owms_temporal) ? content.owms_temporal : '',                          'ODCTERMS.Period')
     tags
