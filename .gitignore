@@ -16,3 +16,4 @@ database.yml
 vendor/bundle/
 .bundle/
 .tm_properties
+.ruby-version
