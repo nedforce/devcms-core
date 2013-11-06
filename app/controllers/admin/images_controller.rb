@@ -145,7 +145,7 @@ class Admin::ImagesController < Admin::AdminController
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else
-        format.html { render :action => 'edit', :status => :unprocessable_entity }
+        format.html { render :template => 'admin/shared/edit', :locals => { :record => @image }, :status => :unprocessable_entity }
         format.xml  { render :xml => @image.errors, :status => :unprocessable_entity }
       end
     end
