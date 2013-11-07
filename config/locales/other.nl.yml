@@ -532,6 +532,8 @@ nl:
     uploaded_images: Toegevoegde afbeelding(en)
     url: URL (optioneel)
     url_explanation: De afbeelding linkt naar dit adres wanneer deze geplaatst is in een zijkolom.
+  internal_links:
+    drag_and_drop: Sleep een item uit de sitemap in het veld
   layouts:
     administration: Websitebeheer
     administration_alt: Icoon van een potlood dat iets bewerkt
@@ -581,13 +583,10 @@ nl:
   links:
     add_to_internal: Interne link toevoegen aan
     add_to_external: Externe link toevoegen aan
-    drag_and_drop: Sleep een item uit de sitemap in het veld
     edit: Bewerken van link
     external: Externe link
     failed: Kon link niet opslaan.
     internal: Interne link
-    node: Node
-    node_id: Node id
     prev_version: Vorige versie
     saved: Link opgeslagen!
     type: Type
@@ -955,7 +954,6 @@ nl:
     begin_time: Publicatie begintijd
     domain: Domein
     drag_and_drop: Sleep een item uit de sitemap in het veld hieronder om een startpagina voor deze sectie in te stellen.
-    drag_and_drop_site: Sleep een item uit de sitemap in het veld hieronder om een startpagina voor deze site in te stellen.
     edit: Bewerken van sectie
     edit_site: Bewerken van site
     editor_comment: Commentaar voor eindredacteur
@@ -965,7 +963,6 @@ nl:
     expiration_notification_sent: Notificaties verzonden!
     failed: Kon sectie niet opslaan.
     failed_site: Kon site niet opslaan
-    frontpage_node: Startpagina node
     none: geen
     not_found: Geen gerelateerde secties gevonden.
     related_content: Deel van thema
@@ -1024,6 +1021,7 @@ nl:
     analytics_code: Google analytics code (UA-1234567-89)
     piwik_site_id: Piwik site ID
     edit: Bewerken van site
+    drag_and_drop: Sleep een item uit de sitemap in het veld hieronder om een startpagina voor deze site in te stellen.    
   social_media_links_boxes:
     add_to: Social media links box toevoegen aan
     edit: Bewerken van social media links box

@@ -1,10 +1,2 @@
 = form.text_area :description, :label => t('shared.description'), :rows => 2
-- txt = "#{t 'links.node_id'}<br/><small>#{t 'links.drag_and_drop'}</small>".html_safe
-= wrap_with_label content_tag(:div, '', :id => 'node_selector'), { :text => txt, :for => 'inter_link_linked_node_id' }, { :id => 'internal_link_linked_node_id_wrapper' }
-:javascript
-  ndf = new Ext.dvtr.NodeDropField({
-      renderTo: 'node_selector',
-      ddGroup: 'TreeAndSorterDD',
-      name: 'internal_link[linked_node_id]',
-      id: 'link_linked_node_id'
-  });
+= form.node_selector :linked_node_id

@@ -155,6 +155,7 @@ nl:
         title: Titel
       internal_link:
         linked_node: Gelinkte node
+        linked_node_id: Gelinkte node
       links_box:
         title: Titel
       link_theme:
@@ -205,10 +206,11 @@ nl:
         original_domain: Domein
         expiration_email_subject: Onderwerp
         expiration_email_body: Tekst
+        frontpage_node_id: Startpagina node
       setting:
         key: Instelling
         alt: Omschrijving
-        value: Waarde
+        value: Waarde      
       share:
         from_email_address: Uw e-mailadres
         from_name: Uw naam
