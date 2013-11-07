@@ -60,7 +60,7 @@ module DevcmsCore
       ]
 
       app.config.assets.precompile += [
-        'devcms_core.js',
+        'devcms-core.js',
         'devcms_core_admin.js',
         'entropy.js',
         'ext/dvtr/*.js',
