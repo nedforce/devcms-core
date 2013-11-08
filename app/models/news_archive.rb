@@ -48,4 +48,8 @@ class NewsArchive < ActiveRecord::Base
   def self.owms_type
     I18n.t('owms.overview_page')
   end
+
+  def last_updated_at
+    node.descendants.maximum(:updated_at)
+  end
 end
