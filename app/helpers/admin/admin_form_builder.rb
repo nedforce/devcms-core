@@ -65,6 +65,31 @@ class Admin::AdminFormBuilder < ActionView::Helpers::FormBuilder
   def help_text(txt)
     @template.content_tag(:div, txt, :class => 'formFieldCt helpText')
   end
+  
+  def node_selector(attr, options = {})
+    id, name    = id_and_name(attr)
+    val         = options[:value] || @object.read_attribute(attr)
+    label       = options[:label] || @object.class.human_attribute_name(attr)
+    label       += "<br/><small>#{I18n.t "#{@object.class.name.tableize}.drag_and_drop"}</small>" unless options[:label] || options[:hint] == false
+    node        = @object.send(attr.to_s.gsub('_id', ''))
+
+    html = [@template.wrap_with_label(@template.content_tag(:div, '', :id => "#{id}_node_selector"), { :text => label.html_safe, :for => id }, { :id => "#{id}_wrapper" }.merge(options.delete(:wrapper)||{}))]
+    html << @template.javascript_tag do
+      <<-EOS.html_safe
+      new Ext.dvtr.NodeDropField({
+        renderTo: '#{id}_node_selector',
+        ddGroup: 'TreeAndSorterDD',
+        name: '#{@object.class.name.underscore}[#{attr}]',
+        id: '#{id}',
+        value: '#{val}',
+        text: '#{node.try(:title)}',
+        width: 60
+      });
+      EOS
+    end
+
+    html.join("\n").html_safe
+  end
 
   protected
 

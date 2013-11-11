@@ -53,7 +53,7 @@ Ext.extend(Ext.dvtr.NodeDropField, Ext.form.TextField, {
     setImage : function (url) {
         this.textLabel.update('<img src="'+url+'"/>')
     },
-
+    
     onRender: function (ct, position) {
         Ext.dvtr.NodeDropField.superclass.onRender.call(this, ct, position);
 
@@ -63,8 +63,24 @@ Ext.extend(Ext.dvtr.NodeDropField, Ext.form.TextField, {
             id: this.id + '_txt',
             html: this.originalText
         };
+        
+        var clear = {
+            tag: 'a',
+            cls: 'x-node-drop-field-clear',
+            id: this.id + '_clear',
+            html: '&times;'
+        };
 
+        this.clearLink = Ext.DomHelper.insertAfter(this.el.dom, clear, true);
         this.textLabel = Ext.DomHelper.insertAfter(this.el.dom, span, true);
+        
+        this.clearLink.on('click', function () {
+          this.setRawValue('');
+          this.setText('');
+          this.clearLink.addClass('hidden')
+        }, this);  
+        
+        if(this.value == '') this.clearLink.addClass('hidden')
     }
 });
 
@@ -124,6 +140,9 @@ Ext.extend(Ext.dvtr.NodeDropField.DropTarget, Ext.dd.DropTarget, {
             }  
 
             this.nodeDropField.el.removeClass('x-node-drop-field-over');
+            
+            if(this.nodeDropField.getRawValue() == '') this.nodeDropField.clearLink.addClass('hidden')
+            else this.nodeDropField.clearLink.removeClass('hidden')
         }
     }
 });
