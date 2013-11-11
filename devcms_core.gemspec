@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
 
   s.add_dependency  'rails', '>= 3.2.3', '< 4.0.0'
-  s.add_dependency  'acts-as-taggable-on', '~> 2.2.2'
+  s.add_dependency  'acts-as-taggable-on', '~> 2.4.0'
   s.add_dependency  'addressable', '~> 2.1'
   s.add_dependency  'ancestry', '~> 1.3.0'
   s.add_dependency  'dsl_accessor', '0.3.3'
