@@ -1,0 +1,49 @@
+.regularPage.searchPage
+
+  - if @query
+    %h1= t 'search.search_results'
+  - else
+    %h1= t 'search.to_search'
+
+  = form_tag search_path(@engine), :method => :get, :class => 'clearfix', :id => 'main_search_form' do
+    #controls.clearfix
+      = text_field_tag(:query, @query, :class => 'query')
+      %p= t 'search.in'
+      = render :partial => 'search_options'
+
+      #top_search_button{ :class => ('hidden' if params[:advanced]) }
+        = submit_tag(t('search.search'), :class => 'submit')
+
+      #show_advanced_options{ :class => ('hidden' if params[:advanced]) }
+        = link_to t('search.advanced_search'), search_path(@engine, :advanced => true), :clss => 'show-advanced-search-options'
+        = image_tag 'blue_pointer_down.png', :alt => t('search.show_advanced_options')
+
+    #advanced_search{ :class => ('hidden' unless params[:advanced]) }
+      .search_field_wrapper.clearfix
+        .search_description== #{t 'search.for_zipcode'}:
+        .search_field= text_field_tag(:zipcode, params[:zipcode], :size => 6)
+
+      .search_field_wrapper.clearfix
+        .search_description== #{t 'search.in_period'}:
+        .search_field
+          = text_field_tag 'from', @from, :class => 'datepicker'
+          = text_field_tag 'to',   @to,   :class => 'datepicker'
+
+      .search_field_wrapper.clearfix
+        .search_description== #{t 'search.sort_by'}:
+        .search_field
+          = radio_button_tag('sort', 'relevance', params[:sort] != 'date')
+          = t 'search.relevance'
+          = radio_button_tag('sort', 'date', params[:sort] == 'date')
+          = t 'search.date'
+
+      .clearfix
+        #bottom_search_button
+          = submit_tag(t('search.search'), :class => 'submit', :name => 'advanced')
+
+        #hide_advanced_options
+          = link_to t('search.simple_search'), search_path(@engine), :class => 'hide-advanced-search-options'
+          = image_tag 'blue_pointer_up.png', :alt => t('search.hide_advanced_options')
+
+  - if @query
+    = render :partial => 'results'
