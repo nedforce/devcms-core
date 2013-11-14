@@ -15,7 +15,7 @@
         = submit_tag(t('search.search'), :class => 'submit')
 
       #show_advanced_options{ :class => ('hidden' if params[:advanced]) }
-        = link_to t('search.advanced_search'), search_path(@engine, :advanced => true), :clss => 'show-advanced-search-options'
+        = link_to t('search.advanced_search'), search_path(@engine, :advanced => true), :class => 'show-advanced-search-options'
         = image_tag 'blue_pointer_down.png', :alt => t('search.show_advanced_options')
 
     #advanced_search{ :class => ('hidden' unless params[:advanced]) }
