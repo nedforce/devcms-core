@@ -15,4 +15,4 @@
   / End Piwik Code
 
   %noscript
-    %div= image_tag "#{request.protocol}#{Settler[:piwik_analytics_domain]}/piwik.php?idsite=#{piwik_site_id }&amp;rec=1", style: "border:0", alt: ''
+    .piwik= image_tag "#{request.protocol}#{Settler[:piwik_analytics_domain]}/piwik.php?idsite=#{piwik_site_id }&amp;rec=1", alt: ''

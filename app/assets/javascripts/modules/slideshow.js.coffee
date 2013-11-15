@@ -34,7 +34,7 @@ class SlideShow
 
   # Do not call this function directly.
   buildCurrentSlide: (slide) ->
-    @currentSlide = $("<img src='#{slide['url']}' id='#{slide['id']}' title='#{slide['title']}' style='display: none' />")
+    @currentSlide = $("<img src='#{slide['url']}' id='#{slide['id']}' alt='#{slide['alt']}' title='#{slide['title']}' style='display: none' />")
 
     @container.append(@currentSlide)
     @fadePreviousSlideOut()

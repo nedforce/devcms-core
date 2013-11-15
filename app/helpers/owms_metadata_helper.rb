@@ -121,7 +121,7 @@ module OwmsMetadataHelper
   end
 
   def meta_tag(name, content, scheme = nil)
-    content_tag(:meta, nil, :name => name, :scheme => scheme, :content => content) unless content.nil?
+    tag(:meta, :name => name, :scheme => scheme, :content => content) unless content.nil?
   end
 
   def node_url(node)
