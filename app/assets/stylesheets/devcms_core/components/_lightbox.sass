@@ -39,7 +39,6 @@ body:after
   .lb-outerContainer 
     position: relative
     background-color: white
-    *zoom: 1
     width: 250px
     height: 250px
     margin: 0 auto
@@ -93,23 +92,20 @@ body:after
   .lb-prev 
     left: 0
     float: left
-    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0)
     opacity: 0
     -webkit-transition: opacity 0.6s
     -moz-transition: opacity 0.6s
     -o-transition: opacity 0.6s
     transition: opacity 0.6s
 
-    &:hover 
-      filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100)
+    &:hover
       opacity: 1
       background: url(image_path('lightbox/prevlabel.gif')) left 48% no-repeat
 
 
-  .lb-next 
+  .lb-next
     right: 0
     float: right
-    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0)
     opacity: 0
     -webkit-transition: opacity 0.6s
     -moz-transition: opacity 0.6s
@@ -117,8 +113,7 @@ body:after
     transition: opacity 0.6s
 
 
-    &:hover 
-      filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100)
+    &:hover
       opacity: 1
       background: url(image_path('lightbox/nextlabel.gif')) right 48% no-repeat
 
@@ -126,7 +121,6 @@ body:after
   .lb-dataContainer 
     background-color: white
     margin: 0 auto
-    *zoom: 1
     width: 100%
     border: 5px solid white
     border-top: 0
@@ -171,7 +165,6 @@ body:after
       background: url(image_path('lightbox/closelabel.gif')) top right no-repeat
       text-align: right
       outline: none
-      filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=70)
       opacity: 0.7
       -webkit-transition: opacity 0.2s
       -moz-transition: opacity 0.2s
@@ -180,5 +173,4 @@ body:after
 
       &:hover 
         cursor: pointer
-        filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100)
         opacity: 1
