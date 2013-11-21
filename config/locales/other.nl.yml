@@ -532,6 +532,15 @@ nl:
     uploaded_images: Toegevoegde afbeelding(en)
     url: URL (optioneel)
     url_explanation: De afbeelding linkt naar dit adres wanneer deze geplaatst is in een zijkolom.
+    types:
+      original: Origineel
+      thumbnail: Thumbnail
+      full: Volledig
+      sidebox: Sidebox
+      banner: Banner
+      newsletter_banner: Nieuwsbrief banner
+      header: Header
+      big_header: Grote header
   internal_links:
     drag_and_drop: Sleep een item uit de sitemap in het veld
   layouts:

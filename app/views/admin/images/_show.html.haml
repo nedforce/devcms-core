@@ -6,9 +6,15 @@
     - if record.description
       .htmlField.imageDescription= record.description
 
-  %hr/
+  %hr
 
   - if params[:action] == 'show'
+    %h1 Publieke urls
+    
+    %p
+      - [:original, :thumbnail, :banner , :header].each do |type|
+        = link_to t(type, scope: 'images.types'), aliased_or_delegated_url(record, action: (type unless type == :original), format: 'jpg'), target: :blank
+
     %h1 Thumbnail uitsnede
 
     .cropper{ :id => "image_cropper_#{record.id}" }
