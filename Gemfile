@@ -15,7 +15,6 @@ gem 'data_checker', :git => 'git@git.nedforce.nl:data_checker.git', :branch => '
 
 group :test do
   gem 'turn', :require => false
-  gem 'shoulda-context'
 end
 
 gemspec
