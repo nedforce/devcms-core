@@ -162,6 +162,10 @@ $ ->
         @_moveToNext()
         @pause()
 
+      @element.on 'click', '.slider-navigation-play-pause', (event) =>
+        event.preventDefault()
+        @toggle()
+
     # Effects
 
     _slideHorizontal: ->

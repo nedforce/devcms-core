@@ -74,7 +74,7 @@
   // --------------------------------------------
   .slider-lateral-navigation
     display: none
-    .slider-navigation-previous, .slider-navigation-next
+    .slider-navigation-previous, .slider-navigation-next, .slider-navigation-play-pause
       text-decoration: none
       position: absolute
       z-index: 7
@@ -97,9 +97,17 @@
       right: 0
       top: 50%
 
+    .slider-navigation-play-pause
+      right: 45%
+      top: 50%
+
+      img
+        top: 0
+        left: 0
+
 
   &:hover .slider-lateral-navigation
-    .slider-navigation-previous, .slider-navigation-next
+    .slider-navigation-previous, .slider-navigation-next, .slider-navigation-play-pause
       display: block
 
   &.with-fader
