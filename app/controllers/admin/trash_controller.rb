@@ -23,7 +23,7 @@ class Admin::TrashController < Admin::AdminController
         trash_items_for_json = @trash_items.collect do |ti|
           { 
             :title => ti.title,
-            :content_type => ti.sub_content_type,
+            :content_type => (ti.sub_content_type.constantize.model_name.human rescue ti.sub_content_type),
             :path => ti.ancestors_including_deleted.map(&:title).join(" / "),
             :deleted_at => ti.deleted_at,
             :id => ti.id
