@@ -10,10 +10,10 @@ end
 
 every 1.day, :at => '5pm' do
   runner 'NewsletterEditionMailerWorker.new.send_newsletter_editions'
-end  
+end
 
 every 1.day, :at => '4:30am' do
-  runner 'Node.rebuild_index'    
+  runner 'Node.rebuild_index'
 end
 
 every :friday, :at => '11:59pm' do
@@ -22,7 +22,7 @@ end
 
 every 5.minutes do
   runner 'NewsViewer.update_news_items; NodeSweeper.sweep_nodes', :timeout => "15m"
-end  
+end
 
 every :hour do
   runner 'Event.send_registration_notifications'
@@ -34,4 +34,4 @@ end
 
 every :month do
   runner 'DevcmsCore::ContentNodeCheckerRunner.run!'
-end  
+end

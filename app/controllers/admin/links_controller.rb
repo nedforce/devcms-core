@@ -1,4 +1,4 @@
-# This +RESTful+ controller is used to orchestrate and control the flow of 
+# This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +ExternalLink+ objects.
 class Admin::LinksController < Admin::AdminController
 
@@ -24,7 +24,7 @@ class Admin::LinksController < Admin::AdminController
       format.html { render :partial => 'show', :locals => { :record => @link }, :layout => 'admin/admin_show' }
       format.xml  { render :xml => @link }
     end
-  end 
+  end
 
   # * GET /admin/links/:id/previous
   # * GET /admin/links/:id/previous.xml
@@ -72,7 +72,7 @@ class Admin::LinksController < Admin::AdminController
   # * PUT /admin/links/:id.xml
   def update
     @link.attributes = params[@type]
-    
+
     respond_to do |format|
       if @commit_type == 'preview' && @link.valid?
         format.html { render :template => 'admin/shared/update_preview', :locals => { :record => @link }, :layout => 'admin/admin_preview' }

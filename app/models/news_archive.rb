@@ -32,7 +32,7 @@ class NewsArchive < ActiveRecord::Base
   # Extend this class with methods to find items based on their publication date.
   acts_as_archive :items_name => :news_items
 
-  # A +NewsArchive+ can have many +NewsItem+ children.  
+  # A +NewsArchive+ can have many +NewsItem+ children.
   has_children :news_items, :order => 'nodes.publication_start_date DESC'
 
   # See the preconditions overview for an explanation of these validations.
@@ -50,6 +50,6 @@ class NewsArchive < ActiveRecord::Base
   end
 
   def last_updated_at
-    node.descendants.maximum(:updated_at)
+    node.descendants.maximum(:updated_at) || updated_at
   end
 end

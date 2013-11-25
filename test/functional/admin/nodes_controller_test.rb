@@ -9,7 +9,7 @@ class Admin::NodesControllerTest < ActionController::TestCase
     get :index
     assert_response :redirect
   end
-  
+
   def test_should_show_tree_from_root
     login_as :sjoerd
     get :index
@@ -93,15 +93,15 @@ class Admin::NodesControllerTest < ActionController::TestCase
     get :index
     assert_redirected_to root_path
   end
-  
+
   def test_should_get_previous_diffed_for_approved_page_with_new_same_as_previous
     login_as :sjoerd
     get :previous_diffed, :id => nodes(:about_page_node).id
-    assert_response :success    
+    assert_response :success
     assert assigns(:content)
     assert assigns(:previous_content)
     assert_equal assigns(:content), assigns(:previous_content)
-  end    
+  end
 
   def test_should_sort_children
     login_as :arthur
@@ -133,17 +133,8 @@ class Admin::NodesControllerTest < ActionController::TestCase
     node1 = nodes(:root_section_node)
     node2 = nodes(:economie_section_node)
 
-    category1 = categories(:category_blaat)
-    category2 = categories(:category_foo)
-
-    put :bulk_update, :ids => [ node1.id, node2.id ], :category_ids => [ category1.id, category2.id ], :has_categories => 1
+    put :bulk_update, :ids => [ node1.id, node2.id ]
     assert_response :success
-
-    assert node1.categories.include?(category1)
-    assert node1.categories.include?(category2)
-
-    assert node2.categories.include?(category1)
-    assert node2.categories.include?(category2)
   end
 
   def test_should_render_bulk_edit_when_bulk_update_fails
@@ -152,12 +143,9 @@ class Admin::NodesControllerTest < ActionController::TestCase
     node1 = nodes(:root_section_node)
     node2 = nodes(:economie_section_node)
 
-    category1 = categories(:category_blaat)
-    category2 = categories(:category_foo)
-
     Node.expects(:bulk_update => false)
 
-    put :bulk_update, :ids => [ node1.id, node2.id ], :category_ids => [ category1.id, category2.id ]
+    put :bulk_update, :ids => [ node1.id, node2.id ]
     assert_template 'edit'
   end
 

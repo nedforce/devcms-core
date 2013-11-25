@@ -5,7 +5,7 @@ class Admin::ImagesController < Admin::AdminController
   before_filter :find_sibling_images,      :only => [ :new, :create ]
 
   before_filter :find_image,             :except => [ :new, :create ]
-  
+
   before_filter :find_node,                :only => [ :update, :destroy, :edit, :show, :preview, :thumbnail, :thumbnail_preview, :banner_preview, :previous ]
 
   before_filter :clean_is_for_header,      :only => [ :create, :update ]
@@ -54,13 +54,13 @@ class Admin::ImagesController < Admin::AdminController
   end
 
   def thumbnail_preview
-    if @image.orientation == :vertical 
+    if @image.orientation == :vertical
       render_jpg_image_data @image.resize!(:size => "100x", :upsample => true, :quality => 80, :format => 'jpg')
     else
       render_jpg_image_data @image.resize!(:size => [nil, 100], :upsample => true, :quality => 80, :format => 'jpg')
     end
   end
-  
+
   def banner_preview
     render_jpg_image_data @image.resize!(:size => "#{Image::CONTENT_BOX_SIZE[:width]}x", :upsample => true, :quality => 80, :format => 'jpg')
   end
@@ -68,7 +68,7 @@ class Admin::ImagesController < Admin::AdminController
   # * GET /admin/images/new
   def new
     @image = Image.new
-    @image.parent           = @parent_node    
+    @image.parent           = @parent_node
     @show_image_url_control = can_set_image_url?
   end
 
@@ -97,7 +97,7 @@ class Admin::ImagesController < Admin::AdminController
         format.js do
           responds_to_parent do |page|
             page << "if(Ext.get('no_images_row')) Ext.get('no_images_row').remove();"
-            
+
             if current_user.has_role?('admin')
               page.insert_html(:bottom, "uploaded_images", "<tr id=\"uploaded_image_#{@image.id}\">
                 <td>#{@image.title}</td>
@@ -110,12 +110,12 @@ class Admin::ImagesController < Admin::AdminController
                 <td>#{@image.title}</td>
                 <td>#{image_tag(thumbnail_admin_image_path(@image, :format => :jpg), :alt => @image.alt.to_s)}</td>
                 <td><div id='image_cropper_#{@image.id}'></div> </td>
-              </tr>")           
+              </tr>")
             end
-            
+
             page.call("treePanel.refreshNodesOf", @parent_node.id)
             page.replace_html("image_cropper_#{@image.id}", :partial => "cropper_#{@image.orientation}", :locals => { :image => @image })
-            
+
             @image = Image.new # To reset fields
             page.replace_html("right_panel_form", :partial => 'form')
           end
@@ -143,7 +143,7 @@ class Admin::ImagesController < Admin::AdminController
     respond_to do |format|
       if @image.save(:user => current_user, :approval_required => @for_approval)
         format.html { render :template => 'admin/shared/update' }
-        format.js do 
+        format.js do
           responds_to_parent do |page|
             page.replace_html("right_panel_content", :template => 'admin/shared/update')
           end
@@ -174,8 +174,8 @@ class Admin::ImagesController < Admin::AdminController
     def render_jpg_image_data(image_data)
       respond_to do |format|
         format.any do
-          send_data(image_data, :type => 'image/jpeg', :disposition => 'inline')   
-        end      
+          send_data(image_data, :type => 'image/jpeg', :disposition => 'inline')
+        end
       end
     end
 

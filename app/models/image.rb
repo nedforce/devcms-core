@@ -2,9 +2,9 @@
 # It has specified +acts_as_content_node+ from Acts::ContentNode::ClassMethods.
 #
 # *Specification*
-# 
+#
 # Attributes
-# 
+#
 # * +title+ - The title of the image.
 # * +data+ - The binary image data.
 # * +offset+ - The offset used when cropping the image to function as a header image for a context box.
@@ -18,9 +18,9 @@
 # * Requires the presence of +title+.
 # * Requires the presence of +data+.
 # * Requires +data+ to contain a valid image.
-# 
+#
 # Child/parent type constraints
-# 
+#
 # * An Image does not accept any child nodes.
 # * An Image can only be inserted into Page or NewsItem nodes.
 #
@@ -44,7 +44,7 @@ class Image < ActiveRecord::Base
   has_many :carrousel_items, :as => :item, :dependent => :destroy
 
   # Carrierwave uploader
-  mount_uploader :file, ImageUploader  
+  mount_uploader :file, ImageUploader
 
   # Adds content node functionality to images.
   acts_as_content_node({

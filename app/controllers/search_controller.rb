@@ -8,7 +8,7 @@ class SearchController < ApplicationController
 
     @from = Date.parse(params[:from]) rescue nil
     @to   = Date.parse(params[:to])   rescue nil
-    
+
     @advanced = params[:advanced]
     if @query
       @results = Searcher(@engine).search(@query, :page => params[:page], :for => current_user, :zipcode => params[:zipcode], :from => @from, :to => @to, :sort => params[:sort], :content_types_to_include => @content_types_to_include, :content_types_to_exclude => @content_types_to_exclude, :top_node => @top_node)
@@ -24,9 +24,9 @@ protected
   end
 
   def parse_search_scope
-    @top_node = Node.find(@search_scope[1].scan(/\d+/).first)
+    @top_node = (@search_scope[1].present? ? Node.where(id: @search_scope[1].scan(/\d+/).first).first : nil)
   end
-  
+
   def set_search_engine
     @engine = params[:search_engine] if params[:search_engine].present?
     @engine = Devcms.search_configuration[:default_search_engine] unless Devcms.search_configuration[:enabled_search_engines].include?(@engine)

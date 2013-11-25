@@ -9,7 +9,7 @@ class Admin::CarrouselsController < Admin::AdminController
   before_filter :find_carrousel,               :only => [ :show, :edit, :update ]
 
   # Parse the publication start date for the +create+ and +update+ actions.
-  before_filter :parse_publication_start_date, :only => [ :create, :update ]  
+  before_filter :parse_publication_start_date, :only => [ :create, :update ]
 
   before_filter :set_commit_type,              :only => [ :create, :update ]
 
@@ -23,7 +23,7 @@ class Admin::CarrouselsController < Admin::AdminController
   # * GET /admin/carrousels/:id.xml
   def show
     @animation = Carrousel::ANIMATION_NAMES[@carrousel.animation]
-    
+
     respond_to do |format|
       format.html { render :partial => 'show', :locals => { :record => @carrousel }, :layout => 'admin/admin_show' }
       format.xml  { render :xml => @carrousel }
@@ -70,7 +70,7 @@ class Admin::CarrouselsController < Admin::AdminController
         format.xml  { render :xml => @carrousel, :status => :created, :location => @carrousel }
       else
         @item_sortlets = item_sortlet_hash_for_ids(@item_ids, @carrousel_items)
-        format.html { render :action => :new, :status => :unprocessable_entity }
+        format.html { render :action => :new }
         format.xml  { render :xml => @carrousel.errors.to_xml, :status => :unprocessable_entity }
       end
     end
@@ -109,7 +109,7 @@ class Admin::CarrouselsController < Admin::AdminController
 
   def get_item_ids
     @item_ids        = params[:items]           || []
-    @carrousel_items = params[:carrousel_items] || [] 
+    @carrousel_items = params[:carrousel_items] || []
   end
 
   def get_approved_content_items

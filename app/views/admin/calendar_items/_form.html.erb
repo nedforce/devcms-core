@@ -55,7 +55,11 @@
 
 <%- now = Time.now -%>
 
-<div class="formFieldCt"><%= record.errors.full_messages.to_sentence %></div>
+<% if record.errors.any? %>
+  <div class='formFieldCt'>
+    <span class="error"><%= record.errors.full_messages.to_sentence.capitalize %></span>
+  </div>
+<% end %>
 
 <%= form.date_field  :date,                 :label => t('calendars.date'),            :value => record.start_time || now %>
 <%= form.time_field  :start_time,           :label => t('calendars.start_time_time'), :value => record.start_time || now %>

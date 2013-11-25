@@ -1,3 +1,5 @@
+require 'csv'
+
 # This model is used to represent a response from a contact_form
 #
 # A +Response+ has many +ResponseField+ objects.
@@ -20,9 +22,11 @@ class Response < ActiveRecord::Base
   validates_presence_of :contact_form_id, :ip, :time
 
   def self.to_csv_file(options = {})
+    return '' unless any?
+
     CSV.generate(options) do |csv|
       header_fields = []
-      self.first.contact_form.contact_form_fields.order('position ASC').each do |field|
+      first.contact_form.contact_form_fields.order('position ASC').each do |field|
         header_fields << field.label
       end
       csv << header_fields

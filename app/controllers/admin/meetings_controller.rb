@@ -1,7 +1,7 @@
-# This +RESTful+ controller is used to orchestrate and control the flow of 
+# This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +Meeting+ objects.
 class Admin::MeetingsController < Admin::AdminController
-  before_filter :default_format_json,  :only => :destroy 
+  before_filter :default_format_json,  :only => :destroy
 
   # The +new+ and +create+ actions needs a parent +Node+ object.
   prepend_before_filter :find_parent_node,  :only => [ :new, :create ]
@@ -32,7 +32,7 @@ class Admin::MeetingsController < Admin::AdminController
       format.html { render :partial => '/admin/meetings/show', :locals => { :record => @meeting }, :layout => 'admin/admin_show' }
       format.xml  { render :xml => @meeting }
     end
-  end 
+  end
 
   # * GET /admin/meetings/:id/previous
   # * GET /admin/meetings/:id/previous.xml
@@ -49,7 +49,7 @@ class Admin::MeetingsController < Admin::AdminController
       format.html { render :template => 'admin/shared/new', :locals => { :record => @meeting }}
     end
   end
-  
+
   # * GET /admin/meetings/:id/edit
   def edit
     @meeting.attributes = params[:meeting]
@@ -81,7 +81,7 @@ class Admin::MeetingsController < Admin::AdminController
         end
         format.xml  { render :xml => @meeting, :status => :created, :location => @meeting }
       else
-        format.html do 
+        format.html do
           find_meeting_categories
           render :template => 'admin/shared/new', :locals => { :record => @meeting }, :status => :unprocessable_entity
         end
@@ -106,7 +106,7 @@ class Admin::MeetingsController < Admin::AdminController
         format.html { render :template => 'admin/shared/update' }
         format.xml  { head :ok }
       else
-        format.html do 
+        format.html do
           find_meeting_categories
           render :template => 'admin/shared/edit', :locals => { :record => @meeting }, :status => :unprocessable_entity
         end
@@ -122,7 +122,7 @@ class Admin::MeetingsController < Admin::AdminController
     respond_to do |format|
       format.xml  { head :ok }
       format.json { render :json => { :notice => I18n.t('calendars.succesfully_destroyed') }.to_json, :status => :ok }
-    end  
+    end
   end
 
 protected

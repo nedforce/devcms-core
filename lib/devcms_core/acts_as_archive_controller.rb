@@ -1,13 +1,13 @@
-module DevcmsCore  
+module DevcmsCore
   module ActsAsArchiveController
-    extend ActiveSupport::Concern    
-    
+    extend ActiveSupport::Concern
+
     included do
       cattr_accessor :content_class_name, :singular_name, :date_attribute, :weeks
-      
-      before_filter :default_format_json, :only => :index      
+
+      before_filter :default_format_json, :only => :index
     end
-      
+
     module CreateMethods
       def new
         instance_variable_set("@#{self.class.singular_name}", self.class.content_class_name.constantize.new(params[self.class.singular_name.to_sym]))
@@ -20,7 +20,7 @@ module DevcmsCore
       def create
         record = self.class.content_class_name.constantize.new(params[self.class.singular_name.to_sym])
 
-        instance_variable_set("@#{self.class.singular_name}", record)        
+        instance_variable_set("@#{self.class.singular_name}", record)
         record.parent = @parent_node
 
         respond_to do |format|
@@ -63,7 +63,7 @@ module DevcmsCore
           end
         end
       end
-    end          
+    end
 
     def show
       respond_to do |format|
@@ -75,7 +75,7 @@ module DevcmsCore
     def index
       respond_to do |format|
         node_id     = params[:super_node] || params[:node]
-        record_node = Node.find(node_id)          
+        record_node = Node.find(node_id)
         instance_variable_set("@#{self.class.singular_name}_node", record_node)
 
         active_node = params[:active_node_id] ? Node.find(params[:active_node_id]) : nil
@@ -168,7 +168,7 @@ module DevcmsCore
             }
           }.reverse_merge(common_hash)
         end
-        
+
         @nodes = record_node.children.with_content_type(%w(Image Attachment)).all(:include => [:content, :role_assignments]).map{|node| node.to_tree_node_for(current_user, {:expand_if_ancestor_of => active_node})}
 
         render :json => (@nodes + @years ).to_json

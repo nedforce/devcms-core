@@ -4,9 +4,10 @@ class Admin::ImagesControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
   def setup
-    ImageUploader.any_instance.stubs(:path).returns(File.join(File.dirname(__FILE__), '../../fixtures/files/test.jpg'))    
+    ImageUploader.any_instance.stubs(:blank?).returns(false)
+    ImageUploader.any_instance.stubs(:path).returns(File.join(File.dirname(__FILE__), '../../fixtures/files/test.jpg'))
     @image = images(:test_image)
-  end  
+  end
 
   def test_should_get_show
     login_as :sjoerd
@@ -18,7 +19,7 @@ class Admin::ImagesControllerTest < ActionController::TestCase
   def test_should_get_previous
     @image = Image.find(@image.id)
     @image.save :user => User.find_by_login('editor')
-    
+
     login_as :sjoerd
     get :previous, :id => @image
     assert_response :success
@@ -52,15 +53,14 @@ class Admin::ImagesControllerTest < ActionController::TestCase
     end
   end
 
-  # Cant run this test, causes a double render error. disable respond_to_parent first to test.
-#  def test_should_create_image_for_editor_js
-#    login_as :editor
-#
-#    assert_difference 'Image.count' do
-#      create_image(:parent_node_id => nodes(:help_page_node).id, :format => 'js')
-#      assert_response :success
-#    end
-#  end
+  def test_should_create_image_for_editor_js
+   login_as :editor
+
+   assert_difference 'Image.count' do
+     create_image(:parent_node_id => nodes(:help_page_node).id, :format => 'js')
+     assert_response :success
+   end
+  end
 
   def test_should_not_create_image
     login_as :sjoerd

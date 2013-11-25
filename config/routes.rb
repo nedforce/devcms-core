@@ -5,12 +5,12 @@ Rails.application.routes.draw do
     member do
       get :changes
     end
-    
+
     resources :comments, :only => [:create, :destroy]
   end
 
   match '/alphabetic_indices/:id/:letter' => 'alphabetic_indices#letter', :as => :letter
-  
+
   resource :sitemap, :only => :show do
     collection do
       get :changes
@@ -21,32 +21,32 @@ Rails.application.routes.draw do
   resources :alphabetic_indices, :only => :show
   resources :attachments, :only => :show
 
-  resources :calendars, :only => [:index, :show] do  
+  resources :calendars, :only => [:index, :show] do
     member do
       get :tomorrow
     end
   end
-  
+
   resources :carrousels, :only => :show
 
   resources :combined_calendars do
     member do
       get :tomorrow
-    end  
+    end
   end
 
   resources :contact_boxes, :only => :show
 
-  resources :contact_forms, :only => :show do  
+  resources :contact_forms, :only => :show do
     member do
       post :send_message
-    end  
+    end
   end
 
   resources :events, :only => :show do
     resources :event_registrations, :only => [ :create, :destroy ]
   end
-  
+
   resources :feeds, :only => :show
   resources :forums, :only => :show
 
@@ -62,7 +62,7 @@ Rails.application.routes.draw do
   end
 
   resources :html_pages, :only => :show
-  
+
   resources :images, :only => :show do
     member do
       get :thumbnail
@@ -77,7 +77,7 @@ Rails.application.routes.draw do
       get :private_full
       get :private_banner
       get :private_header
-    end  
+    end
   end
 
   resources :links, :only => :show
@@ -87,7 +87,7 @@ Rails.application.routes.draw do
     member do
       post :subscribe
       match :unsubscribe
-    end  
+    end
   end
 
   resources :newsletter_editions, :only => :show
@@ -112,7 +112,7 @@ Rails.application.routes.draw do
     member do
       put :vote
       get :results
-    end  
+    end
   end
 
   resources :search_pages, :only => :show
@@ -133,15 +133,15 @@ Rails.application.routes.draw do
 
   resources :weblogs, :except => :index
 
-  resources :weblog_archives, :only => :show do  
-    resources :weblogs, :except => :index do 
+  resources :weblog_archives, :only => :show do
+    resources :weblogs, :except => :index do
       resources :weblog_posts, :except => :index do
         member do
           get :confirm_destroy
           delete :destroy_image
-        end        
+        end
       end
-      
+
       member do
         get :confirm_destroy
       end
@@ -151,14 +151,14 @@ Rails.application.routes.draw do
   resources :weblog_posts, :except => :index
 
 # =============== ADMIN NAMESPACE ===============
-  
+
   namespace :admin do
     resources :abbreviations, :except => [:show, :edit]
-    
-    resources :agenda_items, :except => [:index, :destroy] do    
+
+    resources :agenda_items, :except => [:index, :destroy] do
       member do
         get :previous
-      end    
+      end
     end
 
     resources :alphabetic_indices, :except => [:index, :destroy]
@@ -167,77 +167,77 @@ Rails.application.routes.draw do
       collection do
         match :categories
       end
-      
+
       member do
         get :previous
         get :preview
-      end    
+      end
     end
 
     resources :attachment_themes, :except => :index, :controller => 'themes', :defaults => { :type => 'attachment_theme' }
-    
+
     resources :calendars, :except => :destroy
-    
-    resources :calendar_items, :except => :index do    
+
+    resources :calendar_items, :except => :index do
       member do
         get :previous
-      end    
+      end
     end
 
     resources :carrousels, :except => [:index, :destroy]
-    
+
     resources :combined_calendars, :except => [:index, :destroy]
     resources :comments, :only => [:index, :update, :destroy]
     resources :contact_boxes, :except => [:index, :destroy]
-    
-    resources :contact_forms do  
+
+    resources :contact_forms do
       resources :contact_form_fields
 
-      resources :responses, :only => [:index, :update, :destroy] do      
+      resources :responses, :only => [:index, :update, :destroy] do
         member do
           match :import_csv
           match :upload_csv
         end
-        
+
         resources :response_fields, :only => [] do
           member do
             get :file
-          end        
+          end
         end
       end
     end
-      
+
     resources :content_copies, :only => [:show, :create] do
       member do
         get :previous
       end
     end
-    
+
     resources :data_warnings, :only => [ :index, :destroy ] do
       collection do
         delete :clear
-      end    
+      end
     end
-    
+
     resources :external_links, :except => [:index, :destroy], :controller => 'links', :defaults => { :type => 'external_link' } do
       member do
         get :previous
       end
     end
-      
+
     resources :feeds, :except => [:index, :destroy]
     resources :forums, :except => [:index, :destroy]
     resources :forum_topics, :except => [:index, :destroy]
     resources :html_pages, :except => [:index, :destroy]
-      
-    resources :images, :except => [:index, :destroy] do    
+
+    resources :images, :except => [:index, :destroy] do
       member do
         get :previous
         get :preview
         get :thumbnail
         get :thumbnail_preview
         get :banner_preview
-      end    
+      end
     end
 
     resources :internal_links, :except => [:index, :destroy], :controller => 'links', :defaults => { :type => 'internal_link' } do
@@ -245,44 +245,48 @@ Rails.application.routes.draw do
         get :previous
       end
     end
-    
+
     resources :links_boxes, :except => [:index, :destroy]
 
-    resources :meetings, :except => :index do    
+    resources :meetings, :except => :index do
       member do
         get :previous
-      end    
+      end
     end
-    
+
     resources :newsletter_archives, :except => :destroy
 
-    resources :newsletter_editions, :except => [:index, :destroy] do    
+    resources :newsletter_editions, :except => [:index, :destroy] do
       member do
         get :previous
-      end    
+      end
     end
 
-    resources :newsletter_subscriptions, :only => [:show, :destroy] do    
+    resources :newsletter_subscriptions, :only => [:show, :destroy] do
+      collection do
+        get :list
+      end
+
       member do
         match :subscriptions
       end
-      
+
       resources :users, :only => [:show, :destroy]
     end
-    
+
     resources :news_archives, :except => :destroy
-    
+
     resources :news_items, :except => [:index, :destroy] do
       member do
         get :previous
-      end    
+      end
     end
 
-    resources :news_viewers, :except => [:index, :destroy] do    
+    resources :news_viewers, :except => [:index, :destroy] do
       member do
         get :edit_items
       end
-      
+
       resources :news_viewer_items, :only => [:index, :create] do
         collection do
           match :available_news_items
@@ -298,24 +302,24 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :pages, :except => [:index, :destroy] do    
+    resources :pages, :except => [:index, :destroy] do
       member do
         get :previous
-      end    
+      end
     end
-    
+
     resources :polls, :except => [:index, :destroy]
     resources :poll_questions, :except => [:index, :destroy]
     resources :role_assignments, :only => [:index, :new, :create, :destroy]
     resources :search_pages, :except => [:index, :destroy]
 
-    resources :sections, :except => [:index, :destroy] do    
+    resources :sections, :except => [:index, :destroy] do
       member do
         get :previous
         match :send_expiration_notifications
         get :import
         post :build
-      end    
+      end
     end
 
     resources :settings, :only => [:index, :update]
@@ -324,12 +328,12 @@ Rails.application.routes.draw do
     resources :synonyms, :only => [:index, :create, :update, :destroy]
     resources :link_themes, :except => :index, :controller => 'themes', :defaults => { :type => 'link_theme' }
     resources :top_hits_pages, :except => [:index, :destroy]
-    
+
     resources :trash, :only => [ :index ] do
       collection do
         delete :clear
       end
-      
+
       member do
         put :restore
       end
@@ -342,20 +346,20 @@ Rails.application.routes.draw do
         post :invite
         get :privileged
       end
-      
+
       member do
         get :accessible_newsletter_archives
         get :interests
         post :switch_user_type
         post :revoke
-      end    
+      end
     end
 
     resources :versions, :only => :index do
       member do
         put :approve
         put :reject
-      end    
+      end
     end
 
     resources :weblogs, :only => [:index, :show, :edit, :update]
@@ -367,7 +371,7 @@ Rails.application.routes.draw do
         get :bulk_edit
         put :bulk_update
       end
-      
+
       member do
         put :set_visibility
         put :set_accessibility
@@ -380,47 +384,47 @@ Rails.application.routes.draw do
         get :previous_diffed
         get :export_newsletter
       end
-      
+
       resource :layout, :only => [:edit, :update]
-      
+
       resources :layouts, :only => [] do
         collection do
           post :variants_settings_and_targets, constraints: { id: /.+/ }
         end
-        
+
         member do
           get :targets
-        end      
+        end
       end
     end
-        
+
     match 'nodes/:parent_id/:year/:month' => 'nodes#bulk_destroy', :year => /\d{4}/, :month => /\d{1,2}/, :parent_id => /\d+/
     match 'nodes/:parent_id/:year' => 'nodes#bulk_destroy', :year => /\d{4}/, :parent_id => /\d+/
-    
+
     match 'final_editor' => 'versions#index'
     match 'versions.:format' => 'versions#index', :via => :post
-    
-    root :to => 'nodes#index'  
+
+    root :to => 'nodes#index'
   end
-  
+
   root  :to => 'pages#home'
 
 # =============== CUSTOM ROUTES ===============
-    
+
   match '/attachments/:id/:basename' => 'attachments#show'
   match '/attachments/:action/:id/:basename' => 'attachments#index'
   match '/attachments/:id/:basename.:format' => 'attachments#show', :as => :download
   match '/login' => 'sessions#new', :as => :login
   match '/logout' => 'sessions#destroy', :as => :logout
   match '/signup' => 'users#new', :as => :signup
-  
+
   if SETTLER_LOADED && Settler[:search_enabled_engines].present?
     match '/search(/:search_engine)' => 'search#index', :as => :search
   end
-  
+
   match '/profile' => 'users#profile', :as => :profile
   match '/synonyms.txt' => 'application#synonyms', :as => :synonyms, :format => :txt
 
-  match "/404", :to => "application#handle_404"  
-  match "/500", :to => "application#handle_500"    
+  match "/404", :to => "application#handle_404"
+  match "/500", :to => "application#handle_500"
 end

@@ -71,7 +71,7 @@ class Admin::UsersControllerTest < ActionController::TestCase
   def test_should_not_destroy_user
     login_as :jan
     assert_no_difference 'User.all.count' do
-      delete :destroy, :id => users(:sjoerd).id, :format => 'json'   
+      delete :destroy, :id => users(:sjoerd).id, :format => 'json'
     end
   end
 
@@ -89,7 +89,7 @@ class Admin::UsersControllerTest < ActionController::TestCase
 
   def test_should_page_for_extjs
     login_as :sjoerd
-    get :index, :start => '2', :limit => '2', :format => 'xml'
+    get :privileged, :start => '2', :limit => '2', :format => 'xml'
     assert_response :success
     assert_equal 2, assigns(:users).size
     assert_tag :tag => 'users'
@@ -97,21 +97,21 @@ class Admin::UsersControllerTest < ActionController::TestCase
 
   def test_should_sort_for_extjs
     login_as :sjoerd
-    get :index, :sort => 'email_address', :dir => 'DESC', :format => 'xml'
+    get :privileged, :sort => 'email_address', :dir => 'DESC', :format => 'xml'
     assert_response :success
     assert_equal users(:gerjan).email_address, assigns(:users).first.email_address
   end
 
   def test_should_sort_newsletter_archives_for_extjs
     login_as :sjoerd
-    get :index, :sort => 'newsletter_archives', :dir => 'DESC', :format => 'xml'
+    get :privileged, :sort => 'newsletter_archives', :dir => 'DESC', :format => 'xml'
     assert_response :success
     assert_equal users(:sjoerd).email_address, assigns(:users).first.email_address
   end
 
   def test_should_page_and_sort_for_extjs
     login_as :sjoerd
-    get :index, :sort => 'email_address', :dir => 'DESC', :start => '2', :limit => '2', :format => 'xml'
+    get :privileged, :sort => 'email_address', :dir => 'DESC', :start => '2', :limit => '2', :format => 'xml'
     assert_response :success
     assert_equal 2, assigns(:users).size
     assert_not_equal users(:gerjan).email_address, assigns(:users).first.email_address
@@ -119,7 +119,7 @@ class Admin::UsersControllerTest < ActionController::TestCase
 
   def test_should_filter_for_extjs
     login_as :sjoerd
-    get :index, :filter => { 0 => { :data => { :type => 'string', :value => 'a' }, :field => 'login' } }, :format => 'xml'
+    get :privileged, :filter => { 0 => { :data => { :type => 'string', :value => 'a' }, :field => 'login' } }, :format => 'xml'
 
     assert_response :success
     assert_equal 1, assigns(:users).size
@@ -136,7 +136,7 @@ class Admin::UsersControllerTest < ActionController::TestCase
     assert_equal 1, ActionMailer::Base.deliveries.size
 
     email = ActionMailer::Base.deliveries.first
-    
+
     assert email.to.include?('test@test.nl')
   end
 

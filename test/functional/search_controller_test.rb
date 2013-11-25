@@ -2,10 +2,10 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 
 class SearchControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
-  
+
   @@index_built = false
 
-  def setup
+  setup do
     # unless @@index_built
     #   Node.rebuild_index
     #   Synonym.rebuild_index

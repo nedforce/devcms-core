@@ -1,6 +1,6 @@
 # This administrative controller is used to manage the website's nodes.
 class Admin::NodesController < Admin::AdminController
-  before_filter :default_format_json,  :only => :destroy  
+  before_filter :default_format_json,  :only => :destroy
 
   # Only allow XHMLHttpRequests some actions.
   before_filter :verify_xhr, :only => [ :move, :count_children, :sort_children, :set_visibility, :set_accessibility, :export_newsletter ]
@@ -11,7 +11,7 @@ class Admin::NodesController < Admin::AdminController
 
   # Require a role for the current node on update, destroy and move
   require_role 'admin', :only => :set_accessibility
-  
+
   require_role ['admin', 'final_editor'], :except => [ :index, :update, :set_visibility, :set_accessibility, :bulk_edit, :bulk_update, :destroy, :export_newsletter ]
 
   require_role ['admin', 'final_editor', 'editor'], :only => [ :update, :bulk_edit, :bulk_update, :set_visibility, :destroy, :move, :sort_children, :count_children ]
@@ -91,7 +91,7 @@ class Admin::NodesController < Admin::AdminController
 
   def bulk_update
     respond_to do |format|
-      if Node.bulk_update(@nodes, params[:node], current_user)
+      if Node.bulk_update(@nodes, params[:node] || {}, current_user)
         format.html # bulk_update.html.erb
       else
         format.html { render :action => 'bulk_edit' }
@@ -107,22 +107,22 @@ class Admin::NodesController < Admin::AdminController
       return access_denied unless current_user.has_role_on?(@node.content_type_configuration[:allowed_roles_for_destroy], @node)
 
       @node.content_type == 'ContentCopy' ? @node.destroy : @node.paranoid_delete!
-      
+
       format.xml  { head :ok }
       format.json { render :json => { :notice => I18n.t('nodes.succesfully_destroyed')}.to_json, :status => :ok }
     end
   end
-  
+
   def bulk_destroy
     respond_to do |format|
       parent_node = Node.find(params[:parent_id])
       return access_denied unless current_user.has_role_on?("admin", parent_node)
       #                                                                                  paranoid_delete
       parent_node.content.destroy_items_for_year_or_month(params[:year], params[:month], true)
-              
+
       format.xml  { head :ok }
       format.json { render :json => { :notice => I18n.t('nodes.succesfully_destroyed')}.to_json, :status => :ok }
-    end    
+    end
   end
 
 
@@ -169,10 +169,10 @@ class Admin::NodesController < Admin::AdminController
   # * XHR PUT /admin/nodes/2/move?next_sibling=1
   def move
     begin
-      
+
       next_sibling = Node.find(params[:next_sibling]) if params[:next_sibling].present?
       parent = Node.find(params[:parent]) if params[:parent].present?
-      
+
       if next_sibling.present? && (parent.blank? || parent == next_sibling.parent)
         @node.move_to_left_of next_sibling
         render :text => I18n.t('nodes.succesfully_moved'), :status => :ok
@@ -211,34 +211,24 @@ class Admin::NodesController < Admin::AdminController
     @controller_path  = content.controller_name
   end
 
+  # Handles a normal edit in a side panel
+  # GET /admin/nodes/1/edit
+  def edit url_options = {}
+    if @node.content_class == InternalLink || @node.content_class == ExternalLink
+      @current_url = edit_admin_link_url(@node.content, url_options)
+    else
+      @current_url = polymorphic_url [ :admin, @node.content ], url_options.merge(action: :edit)
+    end
+
+    render :action => :edit, :layout => false
+  end
+
   # Used for approving content of a given node
   #
   # GET /admin/nodes/1/audit_edit
   def audit_edit
-    if @node.content_class == InternalLink || @node.content_class == ExternalLink
-      @current_url = edit_admin_link_url(@node.content, :for_approval => true)
-    elsif @node.content_class == Meeting
-      @current_url = edit_admin_calendar_item_url(@node.content, :for_approval => true)
-    else
-      @current_url = polymorphic_url([ :admin, @node.content ], :action => :edit) + '?for_approval=true'
-    end
-
-    render :action => :audit_edit, :layout => false
+    edit for_approval: true
   end
-  
-  # Handles a normal edit in a side panel
-  # GET /admin/nodes/1/edit
-  def edit
-    if @node.content_class == InternalLink || @node.content_class == ExternalLink
-      @current_url = edit_admin_link_url(@node.content)
-    elsif @node.content_class == Meeting
-      @current_url = edit_admin_calendar_item_url(@node.content)
-    else
-      @current_url = polymorphic_url([ :admin, @node.content ], :action => :edit)
-    end
-
-    render :action => :audit_edit, :layout => false
-  end  
 
   # Request the number of children. Returned as a plain text string.
   #
@@ -284,7 +274,7 @@ class Admin::NodesController < Admin::AdminController
       end
     end
   end
-  
+
   def set_accessibility
     respond_to do |format|
       if @node.set_accessibility!(!params[:private].to_boolean)
@@ -296,7 +286,7 @@ class Admin::NodesController < Admin::AdminController
       end
     end
   end
-  
+
 protected
 
   def find_node
@@ -306,10 +296,10 @@ protected
   def find_nodes
     @nodes = Node.find(params[:ids])
   end
-  
+
 private
 
-  def verify_xhr  
+  def verify_xhr
     render(:text => '400 Bad Request', :status => 400) unless request.xhr?
   end
 end

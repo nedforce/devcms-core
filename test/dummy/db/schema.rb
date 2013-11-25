@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130611100167) do
+ActiveRecord::Schema.define(:version => 20130911082407) do
 
   create_table "abbreviations", :force => true do |t|
     t.string   "abbr",       :null => false
@@ -601,15 +601,6 @@ ActiveRecord::Schema.define(:version => 20130611100167) do
   add_index "newsletter_editions", ["deleted_at"], :name => "index_newsletter_editions_on_deleted_at"
   add_index "newsletter_editions", ["published"], :name => "index_newsletter_editions_on_published"
   add_index "newsletter_editions", ["updated_at"], :name => "index_newsletter_editions_on_updated_at"
-
-  create_table "node_categories", :force => true do |t|
-    t.integer  "node_id",     :null => false
-    t.integer  "category_id", :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "node_categories", ["node_id", "category_id"], :name => "index_node_categories_on_node_id_and_category_id", :unique => true
 
   create_table "nodes", :force => true do |t|
     t.string   "content_type",                                          :null => false

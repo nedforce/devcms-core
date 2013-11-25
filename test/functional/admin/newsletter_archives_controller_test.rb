@@ -170,7 +170,7 @@ class Admin::NewsletterArchivesControllerTest < ActionController::TestCase
 protected
 
   def create_newsletter_archive(attributes = {}, options = {})
-    post :create, { :parent_node_id => nodes(:root_section_node).id, :newsletter_archive => { :title => "Good news, everyone!", :description => "I'm sending you all on a highly controversial mission.", :header => Settler[:newsletter_archive_header_default] }.merge(attributes) }.merge(options)
+    post :create, { :parent_node_id => nodes(:root_section_node).id, :newsletter_archive => { :title => "Good news, everyone!", :description => "I'm sending you all on a highly controversial mission." }.merge(attributes) }.merge(options)
   end
 
   def create_newsletter_edition(options = {})

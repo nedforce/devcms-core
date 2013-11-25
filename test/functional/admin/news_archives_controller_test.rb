@@ -4,13 +4,13 @@ class Admin::NewsArchivesControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
   def test_should_show_news_archive
-    login_as :sjoerd    
+    login_as :sjoerd
 
     get :show, :id => news_archives(:devcms_news).id
     assert_response :success
     assert assigns(:news_archive)
     assert_equal news_archives(:devcms_news).node, assigns(:node)
-  end  
+  end
 
   def test_should_get_index
     login_as :sjoerd

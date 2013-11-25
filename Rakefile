@@ -28,7 +28,7 @@ require 'rake/testtask'
 Rake::TestTask.new(:test) do |t|
   t.libs << 'lib'
   t.libs << 'test'
-  t.pattern = 'test/{unit,functional}/*_test.rb'
+  t.pattern = 'test/{unit,functional}/**/*_test.rb'
   t.verbose = false
 end
 
@@ -39,43 +39,43 @@ namespace :test do
     t.pattern = 'test/unit/*_test.rb'
     t.verbose = false
   end
-  
+
   Rake::TestTask.new(:integrations) do |t|
     t.libs << 'lib'
     t.libs << 'test'
     t.pattern = 'test/integration/*_test.rb'
     t.verbose = false
-  end  
-  
+  end
+
   Rake::TestTask.new(:functionals) do |t|
     t.libs << 'lib'
     t.libs << 'test'
     t.pattern = 'test/functional/**/*_test.rb'
     t.verbose = false
   end
-  
+
   namespace :public do
     Rake::TestTask.new(:functionals) do |t|
       t.libs << 'lib'
       t.libs << 'test'
       t.pattern = 'test/functional/*_test.rb'
       t.verbose = false
-    end    
-  end  
-  
+    end
+  end
+
   namespace :admin do
     Rake::TestTask.new(:functionals) do |t|
       t.libs << 'lib'
       t.libs << 'test'
       t.pattern = 'test/functional/admin/*_test.rb'
       t.verbose = false
-    end    
+    end
   end
 end
 
 STATS_DIRECTORIES = [
   %w(Controllers        app/controllers),
-  %w(Helpers            app/helpers), 
+  %w(Helpers            app/helpers),
   %w(Models             app/models),
   %w(Mailers            app/mailers),
   %w(Sweepers           app/sweepers),
