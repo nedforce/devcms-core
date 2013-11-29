@@ -259,8 +259,9 @@ module DevcmsCoreHelper
     link_to(image_tag("icons/#{image}", :alt => alt, :title => alt, :class => 'icon'), new_share_path(:node_id => @node.id), :rel => 'nofollow')
   end
 
-  def read_more_link(content, text = t('shared.read_more'))
-    link_to_content_node text, content, {}, :class => 'read_more_link'
+  def read_more_link(content, text = t('shared.read_more'), options = {})
+    options.reverse_merge! :title => t('shared.read_more')
+    link_to_content_node text, content, {}, :class => 'read_more_link', :title => options[:title]
   end
 
   def new_button(title = nil, &block)
