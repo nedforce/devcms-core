@@ -1,7 +1,7 @@
-module DevcmsCore  
+module DevcmsCore
   module ActsAsContentNode
-    extend ActiveSupport::Concern      
-    
+    extend ActiveSupport::Concern
+
     DEFAULT_CONTENT_TYPE_CONFIGURATION = {
       :enabled => true,
       :allowed_child_content_types => [],
@@ -26,8 +26,8 @@ module DevcmsCore
       :expiration_container => false,
       :nested_resource => false
     }
-  
-    included do      
+
+    included do
       define_callbacks :before_paranoid_delete, :after_paranoid_delete, :before_paranoid_restore, :after_paranoid_restore
 
       has_one :node, :as => :content, :autosave => true, :validate => true
@@ -47,11 +47,11 @@ module DevcmsCore
       after_update  :update_url_alias_if_title_changed
 
       after_save :update_search_index
-          
+
       before_paranoid_delete :delete_all_associated_versions
-      
+
       after_paranoid_delete :copy_deleted_at_from_node
-      
+
       after_paranoid_restore :clear_deleted_at, :set_url_alias
 
       delegate :update_search_index, :expirable?, :expiration_required?, :expired?, :expiration_container?, :to => :node
@@ -67,12 +67,12 @@ module DevcmsCore
                         :defer_geocoding, :location,
                         :short_title, :locale, :to => :node
     end
-    
+
     module ClassMethods
-      def before_paranoid_delete(*args, &block);  set_callback(:before_paranoid_delete, :before, *args, &block)   end  
-      def after_paranoid_delete(*args, &block);   set_callback(:after_paranoid_delete, :after, *args, &block)     end     
+      def before_paranoid_delete(*args, &block);  set_callback(:before_paranoid_delete, :before, *args, &block)   end
+      def after_paranoid_delete(*args, &block);   set_callback(:after_paranoid_delete, :after, *args, &block)     end
       def before_paranoid_restore(*args, &block); set_callback(:before_paranoid_restore, :before, *args, &block)  end
-      def after_paranoid_restore(*args, &block);  set_callback(:after_paranoid_restore, :after, *args, &block)    end        
+      def after_paranoid_restore(*args, &block);  set_callback(:after_paranoid_restore, :after, *args, &block)    end
 
       # Register that this is now a content node.
       def is_content_node?
@@ -100,7 +100,7 @@ module DevcmsCore
 
       def delegate_accessor(*args)
         options = args.extract_options!
-  
+
         args.each do |m|
           delegate m, "#{m}=", options
         end
@@ -109,60 +109,60 @@ module DevcmsCore
       def has_parent(type, options = {})
         class_name = (options.delete(:class_name) || type.to_s.classify)
         klass = class_name.constantize
-  
+
         define_method(type) {
           (parent || node.try(:parent)).present? ? klass.first(:include => :node, :conditions => ['nodes.id = ?', parent || node.try(:parent) ]) : nil
         }
-  
+
         (class << self; self; end).send(:define_method, :parent_type) { klass }
       end
-          
+
       def has_children(type, options = {})
         class_name = (options.delete(:class_name) || type.to_s.classify)
-        define_method(type) { class_name.constantize.with_parent(node, options) }          
+        define_method(type) { class_name.constantize.with_parent(node, options) }
       end
-    end    
+    end
 
     # Generate a path to suffix the URL alias with. Defaults to the
     # properly formatted content title.
     def path_for_url_alias(node)
       content_title
     end
-  
+
     attr_accessor :draft
 
     def draft?
       draft == '1' || draft == true
     end
-    
+
     def node
       (super || associate_node).tap{|node| node.content = self }
     end
-    
+
     def associate_node
       build_node.tap{|node| node.sub_content_type = (self.respond_to?(:copied_content_class) ? self.copied_content_class : self.class).name}
     end
 
     def save(*args)
       versioning_options = args.extract_options!
-      
+
       if user = versioning_options.delete(:user)
         if new_record?
           self.node.created_by = user
         else
           self.node.updated_by = user
         end
-      end      
-    
+      end
+
       versioning_options[:should_create_version] = versioning_options[:should_create_version] || self.draft?
       versioning_options[:extra_version_attributes] ||= {}
       versioning_options[:extra_version_attributes][:status] = Version::STATUSES[:drafted] if self.draft?
-    
+
       self.with_versioning(versioning_options) do
         super(*args)
       end
     end
-  
+
     def save!(*args)
       self.save(*args) || raise(ActiveRecord::RecordNotSaved, self.errors.full_messages.join(', '))
     end
@@ -240,11 +240,11 @@ module DevcmsCore
       # Bit of a hack. Should only be defined for content classes that allow attachments as a child
       node.children.with_content_type('AttachmentTheme').accessible
     end
-    
+
     def to_label
       title
     end
-  
+
     private
 
     def update_url_alias_if_title_changed
@@ -254,7 +254,7 @@ module DevcmsCore
         # Save base_url_alias for later use
         base_url_alias = node.reload.url_alias.sub(/-\d+\Z/, '') # chomp off -1, -2, etc.
         # Search siblings for nodes with identiacal aliases
-        node.siblings.all(:conditions => ["url_alias like ?", base_url_alias + '-%']).each do |dupe| 
+        node.siblings.all(:conditions => ["url_alias like ?", base_url_alias + '-%']).each do |dupe|
           dupe.update_subtree_url_aliases
         end
       end
@@ -263,11 +263,11 @@ module DevcmsCore
     def touch_node
       self.node.updated_at = Time.now
     end
-  
+
     def copy_deleted_at_from_node
       Node.unscoped do
         node_deleted_at = self.node.deleted_at
-        
+
         self.deleted_at = node_deleted_at
         self.updated_at = node_deleted_at
 
@@ -278,7 +278,7 @@ module DevcmsCore
     def delete_all_associated_versions
       self.versions.delete_all
     end
-     
+
     def clear_deleted_at
       node_updated_at = self.node.updated_at
 
@@ -289,11 +289,11 @@ module DevcmsCore
        self.class.update_all({ :deleted_at => nil, :updated_at => node_updated_at }, self.class.primary_key => id)
       end
     end
-    
+
     def set_url_alias
       node.set_url_alias
       node.save!
-    end       
+    end
   end
-  
+
 end
