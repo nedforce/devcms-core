@@ -76,7 +76,8 @@ class Node < ActiveRecord::Base
   acts_as_commentable
 
   # Nodes are taggable with alterative titles & tags
-  acts_as_taggable_on :title_alternatives, :tags
+  acts_as_taggable_on :title_alternatives
+  acts_as_ordered_taggable_on :tags
 
   # Prevents the root +Node+ from being destroyed.
   before_destroy :prevent_root_destruction

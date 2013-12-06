@@ -1,4 +1,4 @@
-# This +RESTful+ controller is used to orchestrate and control the flow of 
+# This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to NewsItem objects.
 class Admin::NewsItemsController < Admin::AdminController
 
@@ -62,7 +62,7 @@ class Admin::NewsItemsController < Admin::AdminController
   # * POST /admin/news_items
   # * POST /admin/news_items.xml
   def create
-    @news_item        = @news_archive.news_items.build(params[:news_item])    
+    @news_item        = @news_archive.news_items.build(params[:news_item])
     @news_item.parent = @parent_node
 
     respond_to do |format|

@@ -5,8 +5,8 @@
 # and the +destroy+ action logs the user out.
 
 class SessionsController < ApplicationController
-  
-  before_filter :confirm_destroy, :only => :destroy, :unless => lambda{ request.delete? } 
+
+  before_filter :confirm_destroy, :only => :destroy, :unless => lambda{ request.delete? }
 
   # Makes sure that users that are already logged in
   # can't request the login form, or login again.
@@ -25,7 +25,7 @@ class SessionsController < ApplicationController
   # * POST /session
   def create
     trusted_user = Settler[:whitelisted_ips].present? && Settler[:whitelisted_ips].split(',').include?(request.remote_ip)
-    
+
     if !trusted_user && login_enabled_at = LoginAttempt.is_ip_blocked?(request.remote_ip)
       flash[:warning] = I18n.t('sessions.logins_disabled') + ' ' + I18n.l(login_enabled_at, :format => :long) + '.'
       render_login_form
@@ -46,7 +46,7 @@ class SessionsController < ApplicationController
         flash[:notice] = "#{I18n.t('sessions.logged_in_as')} '#{self.current_user.login}'."
         redirect_back_or_default(profile_path, false)
       elsif @user && !@user.verified?
-        flash.now[:notice] = I18n.t('sessions.not_yet_verified') + ' ' + I18n.t('sessions.no_email?') + " <a href = \"#{send_verification_email_user_path(@user)}\">#{I18n.t('sessions.request_new_code')}</a>"
+        flash.now[:notice] = (I18n.t('sessions.not_yet_verified') + ' ' + I18n.t('sessions.no_email?') + " <a href = \"#{send_verification_email_user_path(@user)}\">#{I18n.t('sessions.request_new_code')}</a>").html_safe
         render_login_form
       elsif @user && @user.blocked?
         flash[:warning] = I18n.t('sessions.account_blocked')
@@ -90,7 +90,7 @@ class SessionsController < ApplicationController
   def set_page_title
     @page_title = I18n.t('sessions.log_in')
   end
-  
+
   def render_login_form
     render :action => 'new', :status => :unprocessable_entity
   end
