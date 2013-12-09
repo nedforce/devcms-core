@@ -2,11 +2,11 @@
 # a word). It is used when searching, so when someone searches on
 # a word, its synonyms are taken into account. The synonyms are
 # only used when Ferret is used as a search engine.
-# 
+#
 # *Specification*
-# 
+#
 # Attributes
-# 
+#
 # * +name+ - The synonym.
 # * +original+ - The original word.
 # * +weight+ - The weight of the synonym when searching.
@@ -21,7 +21,7 @@
 #
 class Synonym < ActiveRecord::Base
   # Synonyms are only used when Ferret is configured as the search engine.
-  if SETTLER_LOADED && Devcms.search_configuration[:enabled_search_engines].include?('ferret')
+  if SETTLER_LOADED && Devcms.search_configuration[:enabled_search_engines].is_a?(Array) &&Devcms.search_configuration[:enabled_search_engines].include?('ferret')
     extend Search::Modules::Ferret::FerretSynonymExtension
     acts_as_searchable
   end

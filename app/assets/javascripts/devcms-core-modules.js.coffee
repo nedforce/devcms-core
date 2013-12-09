@@ -5,3 +5,4 @@
 #= require modules/i18n_object
 #= require modules/readspeaker
 #= require modules/slideshow
+#= require modules/search
