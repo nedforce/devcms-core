@@ -17,4 +17,4 @@
     - news_items.each do |news_item|
       %li= link_to_content_node truncate(h(news_item.content_title), :length => 60), news_item, { :type => :url, :host => news_item.node.containing_site.content.domain }
 
-= read_more_link(content, t('shared.read_more'), :title => t('shared.read_more_news'))
+= read_more_link(content, t('shared.read_more_news'), :title => t('shared.read_more_news'))
