@@ -5,6 +5,7 @@ jQuery ->
     $('#dynamic_programme_and_project_selectors').removeClass('hidden') if $('#dynamic_programme_and_project_selectors').length > 0
     
     $('.show-advanced-search-options').click (event) ->
+      event.preventDefault()
       $('#advanced_search').removeClass 'hidden'
       $('#top_search_button').addClass 'hidden'
       $('#show_advanced_options').addClass 'hidden'
