@@ -3,9 +3,9 @@
 # can contain multiple +NewsItem+ objects. It has specified +acts_as_content_node+ from Acts::ContentNode::ClassMethods.
 #
 # *Specification*
-# 
+#
 # Attributes
-# 
+#
 # * +title+ - The title of the newsletter edition.
 # * +body+ - The description of the newsletter edition.
 # * +newsletter_archive+ - The newsletter archive that this newsletter edition belongs to.
@@ -16,9 +16,9 @@
 # * Requires the presence of +title+.
 # * Requires the presence of +body+.
 # * Requires the presence of +newsletter_archive+.
-# 
+#
 # Child/parent type constraints
-# 
+#
 #  * A NewsLetterEdition only accepts +news_item+ child nodes.
 #  * A NewsLetterEdition can only be inserted into NewsLetterArchive nodes.
 #
@@ -57,19 +57,19 @@ class NewsletterEdition < ActiveRecord::Base
   def items_count
     self.newsletter_edition_items.count
   end
-  
+
   # Adds items to a +NewsletterEdition+, which must be a +Page+ or a +NewsItem+. Old associations are removed first.
   #
-  # Parameters: An array containing node IDs. The order of the items in the array determines the positions of the items 
+  # Parameters: An array containing node IDs. The order of the items in the array determines the positions of the items
   # in the newsletter edition.
   def associate_items(items)
     # Use delete_all instead of destroy_all (quicker).
     NewsletterEditionItem.delete_all "newsletter_edition_id = #{self.id}"
-    
+
     # Add the new items.
     if items
-      items.each_index do |index| 
-        self.newsletter_edition_items.create(:item => Node.find(items.at(index)).content, :position => index)   
+      items.each_index do |index|
+        self.newsletter_edition_items.create(:item => Node.find(items.at(index)).content, :position => index)
       end
     end
   end
@@ -99,5 +99,5 @@ protected
     self.newsletter_edition_items.destroy_all
     self.newsletter_edition_queues.destroy_all
   end
-  
+
 end

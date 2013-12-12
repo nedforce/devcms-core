@@ -2,7 +2,11 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 
 class NewsletterSubscriptionTest < ActionMailer::TestCase
   tests NewsletterSubscription
-  
+
+  setup do
+    @newsletter_edition = newsletter_editions(:example_newsletter_edition)
+  end
+
   def test_edition_for_noreply
     @newsletter_edition = newsletter_editions(:devcms_newsletter_edition)
     @user = users(:roderick)
@@ -11,30 +15,32 @@ class NewsletterSubscriptionTest < ActionMailer::TestCase
   end
 
   def test_edition_for_custom_reply
-    @newsletter_edition = newsletter_editions(:example_newsletter_edition)
     @user = users(:arthur)
     create_and_test_default
     assert @response.from.to_s =~ /webmaster@example\.nl/
   end
-  
+
   def test_no_edition_for_non_subscriber
-    newsletter_edition = newsletter_editions(:example_newsletter_edition)
     user = users(:roderick)
-    assert_raise (RuntimeError) { NewsletterSubscription.edition_for(newsletter_edition, user) }
+    assert_raise (RuntimeError) { NewsletterSubscription.edition_for(@newsletter_edition, user) }
   end
-  
+
+  def test_should_render_newsletter_header_image
+    @newsletter_edition.header_image_node = Image.create({:parent => nodes(:devcms_news_item_node), :title => "Dit is een image.", :file => fixture_file_upload("files/test.jpg") }).node
+    assert NewsletterSubscription.edition_for(@newsletter_edition, users(:arthur)).parts.second.body.include?('http://www.example.com/nieuws-voor-iedereen/dit-is-een-image/newsletter_banner.jpg')
+  end
+
   protected
+
     def create_and_test_default
       @response = NewsletterSubscription.edition_for(@newsletter_edition, @user)
       body = @response.parts.first.body
 
       assert @response.to.to_s =~ /#{@user.email_address}/
       assert @response.subject =~ /#{@newsletter_edition.title}/
-      
-      
       assert body =~ /#{@newsletter_edition.body}/
 
-      for item in @newsletter_edition.items
+      @newsletter_edition.items.each do |item|
         assert body =~ /#{item.title}/
         if item.respond_to?(:preamble)
           assert body =~ /#{item.preamble}/
