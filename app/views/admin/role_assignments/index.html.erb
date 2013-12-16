@@ -98,8 +98,9 @@ Ext.onReady(function(){
                     waitMsg: '<%= I18n.t("permissions.deleting") %>',
                     url: 'role_assignments/' + item.id + '.json',
                     method: 'POST',
+                    headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' }
 
-                    params: "_method=delete&authenticity_token=<%= form_authenticity_token -%>",
+                    params: "_method=delete",
                     callback: function(options, success, response){
                       if(!success){
                           Ext.ux.alertResponseError(response)

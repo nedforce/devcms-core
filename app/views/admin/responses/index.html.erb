@@ -144,8 +144,8 @@ Ext.onReady(function() {
           waitMsg: '<%= I18n.t("contact_forms.deleting") %>',
           url: '/admin/contact_forms/<%= @contact_form.id %>/responses/'+item.id+'.json',
           method: 'POST',
-
-          params: "_method=delete&authenticity_token=<%= form_authenticity_token -%>",
+          headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' }
+          params: "_method=delete",
           callback: function(options, success, response){
             if(!success){
                 Ext.ux.alertResponseError(response)
@@ -163,8 +163,8 @@ Ext.onReady(function() {
           waitMsg: '<%= I18n.t("contact_forms.saving")%>',
           url: '/admin/contact_forms/<%= @contact_form.id %>/responses/' + editEvent.record.id + '.xml',
           method: 'POST',
-
-          params: "_method=put&authenticity_token=<%= form_authenticity_token -%>" +
+          headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' }
+          params: "_method=put" +
                   "&response_field[value]=" + editEvent.value +"&contact_form_field_id=" + 
                   editEvent.field.split("_")[1] + "&response_id=" + editEvent.record.id,
 

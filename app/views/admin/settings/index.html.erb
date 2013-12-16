@@ -115,8 +115,8 @@ Ext.onReady(function(){
             waitMsg: '<%= I18n.t("settings.saving") %>',
             url: 'settings/' + editEvent.record.id + '.json',
             method: 'POST',
-
-            params: "_method=put&authenticity_token=<%= form_authenticity_token -%>" +
+            headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' }
+            params: "_method=put" +
                     "&setting[" + editEvent.field + "]=" + editEvent.value,
 
             failure: function(response,options) {

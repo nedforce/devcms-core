@@ -370,8 +370,8 @@ Ext.onReady(function(){
                     waitMsg: '<%= I18n.t("users.deleting") %>',
                     url: '/admin/users/' + item.id + '.json',
                     method: 'POST',
-
-                    params: "_method=delete&authenticity_token=<%= form_authenticity_token -%>",
+                    headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' }
+                    params: "_method=delete",
                     callback: function(options, success, response){
                       if(!success){
                           Ext.ux.alertResponseError(response)
@@ -397,8 +397,8 @@ Ext.onReady(function(){
             waitMsg: '<%= I18n.t("users.saving")%>',
             url: '/admin/users/' + editEvent.record.id + '.xml',
             method: 'POST',
-
-            params: "_method=put&authenticity_token=<%= form_authenticity_token -%>" +
+            headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' }
+            params: "_method=put" +
                     "&user[" + editEvent.field + "]=" + editEvent.value,
 
             failure: function(response,options) {
@@ -518,7 +518,7 @@ Ext.onReady(function(){
           waitMsg: message,
           url: '/admin/users/' + item.id + '/switch_user_type.json',
           method: 'POST',
-          params: 'authenticity_token=<%= form_authenticity_token %>',
+          headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' }
           callback: function(options, success, response) {
             if(success) {
               store.reload();
@@ -538,7 +538,7 @@ Ext.onReady(function(){
               waitMsg: '<%= I18n.t("users.revoking") %>',
               url: '/admin/users/' + item.id + '/revoke.json',
               method: 'POST',
-              params: "authenticity_token=<%= form_authenticity_token %>",
+              headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' }
               callback: function(option, success, response) {
                 if(success) {
                   store.reload();
