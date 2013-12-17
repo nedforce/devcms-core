@@ -23,7 +23,7 @@ module DevcmsCore
     # Finds all items for the week determined by the given +year+, +week+ combination.
     # Extra parameters can be specified with +args+, these will be passed along to the internal +find+ call.
     def find_all_items_for_week(year, week, args = {})
-      start_of_week = DateTime.commercial(year,week,1,0,0,0,::Time.zone.formatted_offset).beginning_of_week
+      start_of_week = date_commercial(year,week,1).beginning_of_week
       start_of_next_week = start_of_week.end_of_week + 1.day
       date_field_database_name = self.acts_as_archive_configuration[:date_field_database_name]
       options = { :conditions => [ date_field_database_name + ' >= ? AND ' + date_field_database_name + ' < ?', start_of_week, start_of_next_week ], :order => "#{date_field_database_name} DESC" }
@@ -89,8 +89,8 @@ module DevcmsCore
     def find_weeks_with_items_for_year(year)
       @weeks = []
 
-      start_of_cwyear = Date.commercial(year, 1, 7).beginning_of_week
-      star_of_next_cwyear = (Date.valid_commercial?(year, 53, 7) ? Date.commercial(year, 53, 7) : Date.commercial(year, 52, 7)).end_of_week + 1.day
+      start_of_cwyear = commercial_date(year, 1, 7).beginning_of_week
+      star_of_next_cwyear = (Date.valid_commercial?(year, 53, 7) ? commercial_date(year, 53, 7) : commercial_date(year, 52, 7)).end_of_week + 1.day
 
       date_field_model_name = self.acts_as_archive_configuration[:date_field_model_name]
       date_field_database_name = self.acts_as_archive_configuration[:date_field_database_name]
@@ -121,6 +121,10 @@ module DevcmsCore
       (1..12).each do |month|
         destroy_items_for_month(year, month, paranoid_delete)
       end
+    end
+
+    def commercial_date(year, week, day = 1)
+      DateTime.commercial(year,week,day,0,0,0,::Time.zone.formatted_offset)
     end
 
     # Destroys all items for the given month in the given year
