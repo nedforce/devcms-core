@@ -1,5 +1,5 @@
 module DevcmsCore
-  
+
   module ActsAsArchive
     extend ActiveSupport::Concern
 
@@ -19,25 +19,25 @@ module DevcmsCore
       options.update(args)
       self.acts_as_archive_items.all(options)
     end
-  
+
     # Finds all items for the week determined by the given +year+, +week+ combination.
     # Extra parameters can be specified with +args+, these will be passed along to the internal +find+ call.
     def find_all_items_for_week(year, week, args = {})
-      start_of_week = Date.commercial(year, week).beginning_of_week
+      start_of_week = DateTime.commercial(year,week,1,0,0,0,::Time.zone.formatted_offset).beginning_of_week
       start_of_next_week = start_of_week.end_of_week + 1.day
       date_field_database_name = self.acts_as_archive_configuration[:date_field_database_name]
       options = { :conditions => [ date_field_database_name + ' >= ? AND ' + date_field_database_name + ' < ?', start_of_week, start_of_next_week ], :order => "#{date_field_database_name} DESC" }
       options.update(self.acts_as_archive_configuration[:sql_options]) if self.acts_as_archive_configuration[:sql_options]
       options.update(args)
       self.acts_as_archive_items.all(options)
-    end      
+    end
 
     # Returns an array with all years for which this archive has items.
     def find_years_with_items
       @years = []
 
       date_field_model_name = self.acts_as_archive_configuration[:date_field_model_name]
-    
+
       self.acts_as_archive_items.all.each do |item|
         year = item.send(date_field_model_name).year
         @years << year unless @years.include?(year)
@@ -48,19 +48,19 @@ module DevcmsCore
 
     # Returns an array with all years for which this archive has items. This method will be used if weeks
     # are rendered instead of months, as the commercial year can be different for the first week
-    # of a new year.     
+    # of a new year.
     def find_commercial_years_with_items
       @years = []
 
       date_field_model_name = self.acts_as_archive_configuration[:date_field_model_name]
-    
+
       self.acts_as_archive_items.all.each do |item|
         year = item.send(date_field_model_name).to_date.cwyear
         @years << year unless @years.include?(year)
       end
 
       @years.sort { |a,b| b <=> a }
-    end      
+    end
 
     # Returns an array with all months of the given +year+ for which this archive has items.
     def find_months_with_items_for_year(year)
@@ -82,7 +82,7 @@ module DevcmsCore
 
       @months.sort { |a,b| b <=> a }
     end
-  
+
     # Returns an array with all weeks of the given +year+ for which this archive has items. Note that
     # this takes into account that a given day in a commercial week can be in a new year, while the commercial
     # week itself can still belong to the previous year.
@@ -105,8 +105,8 @@ module DevcmsCore
       end
 
       @weeks.sort { |a,b| b <=> a }
-    end      
-  
+    end
+
     # Destroys all items for the given year or month in a year
     def destroy_items_for_year_or_month(year, month = nil, paranoid_delete = false)
       if month.nil?
@@ -122,7 +122,7 @@ module DevcmsCore
         destroy_items_for_month(year, month, paranoid_delete)
       end
     end
-  
+
     # Destroys all items for the given month in the given year
     def destroy_items_for_month(year, month, paranoid_delete = false)
       find_all_items_for_month(year, month).each do |item|
