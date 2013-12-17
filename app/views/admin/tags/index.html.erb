@@ -1,0 +1,98 @@
+<script type="text/javascript">
+//<![CDATA[
+
+Ext.onReady(function(){
+    perPage = 25
+
+    Ext.QuickTips.init();
+
+    // shorthand alias
+    var fm = Ext.form;
+
+    // the column model has information about grid columns
+    // dataIndex maps the column to the specific data field in
+    // the data store (created below)
+    var cm = new Ext.grid.ColumnModel({
+      columns: 
+        [{
+             id: 'id',
+             header: "<%= I18n.t('tags.name') %>",
+             dataIndex: 'name',
+             width: 500,
+             editor: new fm.TextField()
+          }
+      ]
+    });
+
+    // by default columns are sortable
+    cm.defaultSortable = true;
+
+    // create the Data Store
+    var store = new Ext.data.Store({
+        proxy: new Ext.data.HttpProxy({
+          url: '/admin/tags.json',
+          method: 'GET'
+        }),
+
+        remoteSort: true,
+
+        reader: new Ext.data.JsonReader({
+          root: 'tags',
+          id: 'id',
+          totalProperty: 'total_count'
+        },
+          [ 'name' ]
+        ),
+
+        autoLoad: {params: {start: 0, limit: perPage}}
+    });
+
+    // create the grid
+    grid = new Ext.grid.EditorGridPanel({
+        store: store,
+        cm: cm,
+        stripeRows: true,
+        autoExpandColumn: 0,
+        clicksToEdit: 2,
+        margins: '0 5 5 5',
+        selModel: new Ext.grid.RowSelectionModel({singleSelect:false}),
+        loadMask: true,
+
+        bbar: new Ext.PagingToolbar({
+            store: store,
+            pageSize: perPage,
+            displayInfo: true,
+            displayMsg: '<%= I18n.t("tags.count_msg") %>',
+            emptyMsg: '<%= I18n.t("tags.empty_msg") %>',
+            afterPageText: '<%= I18n.t("tags.of_page") %>',
+            beforePageText: '<%= I18n.t("tags.page") %>'
+        }),
+        tbar: [],
+        listeners:{
+            'afteredit': handleEdit
+        }
+    });
+
+    function handleEdit(editEvent) {
+        Ext.Ajax.request({
+            waitMsg: '<%= I18n.t("tags.saving") %>',
+            url: 'tags/' + editEvent.record.id + '.json',
+            method: 'POST',
+            headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' },
+            params: "_method=put" +
+                    "&tag[" + editEvent.field + "]=" + editEvent.value,
+
+            failure: function(response,options) {
+                Ext.MessageBox.alert('<%= I18n.t("tags.error") %>',response.responseText);
+            },
+            success: function(response,options) {
+                store.commitChanges();
+            }
+        });
+    }
+
+    initViewport(grid);
+});
+
+//]]>
+</script>
