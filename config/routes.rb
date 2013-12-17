@@ -322,7 +322,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :settings, :only => [:index, :update]
+    resources :settings, :tags, :only => [:index, :update]
     resources :sites, :except => [:index, :destroy]
     resources :social_media_links_boxes, :except => [:index, :destroy]
     resources :synonyms, :only => [:index, :create, :update, :destroy]

@@ -52,6 +52,11 @@ module Admin::AdminHelper
       :url  => { :controller => 'admin/data_warnings', :action => :index },
       :text => I18n.t('admin.data_warnings_button')
     }    
+    tags = {
+      :page => :tags,
+      :url  => { :controller => 'admin/tags', :action => :index },
+      :text => I18n.t('admin.tags_button')
+    }    
 
     menu_items = [sitemap]
     menu_items += [permissions, settings] if current_user.has_role?('admin')
@@ -63,6 +68,7 @@ module Admin::AdminHelper
       menu_items << comments
       menu_items << url_aliases
       menu_items << data_warnings
+      menu_items << tags
       menu_items.unshift versions
     end
 

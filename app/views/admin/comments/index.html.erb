@@ -125,7 +125,7 @@ Ext.onReady(function(){
                 Ext.Ajax.request({
                     url: 'comments/' + item.id + '.json',
                     method: 'POST',
-                    headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' }
+                    headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' },
                     params: "_method=delete&comment_type=" + store.baseParams.comment_type,
                     callback: function(options, success, response){
                       if(!success){
@@ -143,7 +143,7 @@ Ext.onReady(function(){
         Ext.Ajax.request({
             url: 'comments/' + editEvent.record.id + '.json',
             method: 'POST',
-            headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' }
+            headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' },
             params: "_method=put&comment_type=" + store.baseParams.comment_type +
                     "&comment[" + editEvent.field + "]=" + editEvent.value,
 

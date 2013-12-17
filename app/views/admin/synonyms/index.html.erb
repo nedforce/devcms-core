@@ -116,7 +116,7 @@ Ext.onReady(function(){
                     waitMsg: '<%= I18n.t("synonyms.deleting")%>',
                     url: 'synonyms/' + item.id + '.json',
                     method: 'POST',
-                    headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' }
+                    headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' },
                     params: "_method=delete" +
                             "&node_id=<%= @node.id -%>",
                     callback: function(options, success, response){
@@ -136,7 +136,7 @@ Ext.onReady(function(){
             waitMsg: '<%= I18n.t("synonyms.saving")%>',
             url: 'synonyms/' + editEvent.record.id + '.json',
             method: 'POST',
-            headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' }
+            headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' },
             params: "_method=put" +
                     "&node_id=<%= @node.id -%>" +
                     "&synonym[" + editEvent.field + "]=" + editEvent.value,

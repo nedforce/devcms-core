@@ -111,7 +111,7 @@ Ext.onReady(function(){
                     waitMsg: '<%= I18n.t("abbreviations.deleting") %>',
                     url: 'abbreviations/' + item.id + '.json',
                     method: 'POST',
-                    headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' }
+                    headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' },
                     params: "_method=delete" +
                             "&node_id=<%= @node.id -%>",
                     callback: function(options, success, response){
@@ -131,7 +131,7 @@ Ext.onReady(function(){
             waitMsg: '<%= I18n.t("abbreviations.saving") %>',
             url: 'abbreviations/' + editEvent.record.id + '.json',
             method: 'POST',
-            headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' }
+            headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' },
             params: "_method=put" +
                     "&node_id=<%= @node.id -%>" +
                     "&abbreviation[" + editEvent.field + "]=" + editEvent.value,

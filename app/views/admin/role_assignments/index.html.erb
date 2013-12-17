@@ -98,7 +98,7 @@ Ext.onReady(function(){
                     waitMsg: '<%= I18n.t("permissions.deleting") %>',
                     url: 'role_assignments/' + item.id + '.json',
                     method: 'POST',
-                    headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' }
+                    headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' },
 
                     params: "_method=delete",
                     callback: function(options, success, response){

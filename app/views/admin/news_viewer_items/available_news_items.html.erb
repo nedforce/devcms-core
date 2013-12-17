@@ -35,7 +35,7 @@ Ext.onReady(function() {
       // load using HTTP
       proxy: new Ext.data.HttpProxy({
         url: '/admin/news_viewers/<%= @news_viewer.id %>/news_viewer_items/available_news_items.xml?news_archive_id=<%= @news_archive.id %>',
-        headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' }
+        headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' },
       }),
       // the return will be XML, so lets set up a reader
       reader: new Ext.data.XmlReader({

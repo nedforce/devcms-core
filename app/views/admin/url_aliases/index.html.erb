@@ -71,7 +71,7 @@ Ext.onReady(function() {
     Ext.Ajax.request({
       url: '/admin/url_aliases/' + e.record.id + '.json',
       method: 'POST',
-      headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' }
+      headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' },
       params: '_method=put&node[' + e.field + ']=' + e.value,
       failure: function(response, options) {
         errors = Ext.util.JSON.decode(response.responseText);
@@ -91,7 +91,7 @@ Ext.onReady(function() {
             waitMsg: '<%= t 'nodes.deleting_alias' %>',
             url: '/admin/url_aliases/' + grid.selModel.getSelected().id + '.json',
             method: 'POST',
-            headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' }
+            headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' },
             params: '_method=delete',
             failure: function(response, options) {
               Ext.ux.alertResponseError(response);

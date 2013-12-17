@@ -81,6 +81,7 @@ nl:
     edit: Bewerken
     rights: Rechten
     settings_button: Instellingen
+    tags_button: Tagbeheer
     trash_button: Prullenbak
     sitemap: Sitemap
     succesfully_deleted: Kolomelement succesvol verwijderd.
@@ -1072,6 +1073,17 @@ nl:
     edit: Bewerken van top 10 pagina
     failed: Kon top 10 pagina niet opslaan.
     saved: Top 10 pagina opgeslagen!
+  tags:
+    name: Tag
+    could_not_save: 'Sorry, kon de tag niet opslaan.'
+    count_msg: 'Tag {0} tot {1} van {2} worden weergegeven'
+    empty_msg: Geen tags om weer te geven
+    error: Fout
+    message: Bericht
+    no_settings_found: Geen tags gevonden.
+    of_page: "van {0}"
+    page: Pagina
+    saving: Bezig met opslaan
   trash:
     content_type: Content-type
     title: Titel
