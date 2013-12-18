@@ -19,4 +19,19 @@ class Admin::TagsControllerTest < ActionController::TestCase
     assert_response :success    
   end
 
+  def test_should_destroy_tag
+    login_as :sjoerd
+    assert_difference "ActsAsTaggableOn::Tag.count", -1 do
+      delete :destroy, :id => ActsAsTaggableOn::Tag.last.id, :format => 'json'
+    end
+    assert_response :success
+  end
+
+  def test_should_not_destroy_tag
+    login_as :jan
+    assert_no_difference 'ActsAsTaggableOn::Tag.count' do
+      delete :destroy, :id => ActsAsTaggableOn::Tag.last.id, :format => 'json'
+    end
+  end
+
 end
