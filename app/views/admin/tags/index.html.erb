@@ -57,7 +57,6 @@ Ext.onReady(function(){
         margins: '0 5 5 5',
         selModel: new Ext.grid.RowSelectionModel({singleSelect:false}),
         loadMask: true,
-
         bbar: new Ext.PagingToolbar({
             store: store,
             pageSize: perPage,
@@ -67,7 +66,14 @@ Ext.onReady(function(){
             afterPageText: '<%= I18n.t("tags.of_page") %>',
             beforePageText: '<%= I18n.t("tags.page") %>'
         }),
-        tbar: [],
+        tbar: [
+          {
+            text: '<%= I18n.t("tags.delete") %>',
+            tooltip: '<%= I18n.t("tags.del_tooltip") %>',
+            handler: handleDelete,
+            iconCls: 'menu_item_delete'
+          }
+        ],
         listeners:{
             'afteredit': handleEdit
         }
@@ -90,6 +96,43 @@ Ext.onReady(function(){
             }
         });
     }
+
+    function handleDelete(e) {
+        var selectedItems = grid.selModel.getSelections();
+        if (selectedItems.length > 0)
+        {
+            Ext.MessageBox.confirm('<%= I18n.t("tags.message") %>','<%= I18n.t("tags.confirm_deletion") %>', deleteRecords);
+        }
+        else
+        {
+            Ext.MessageBox.alert('<%= I18n.t("tags.message") %>','<%= I18n.t("tags.select_one") %>');
+        }
+
+    }
+
+    function deleteRecords(button) {
+        if (button == 'yes')
+        {
+            var selectedRows = grid.selModel.getSelections();
+            selectedRows.each(function(item) {
+
+                Ext.Ajax.request({
+                    waitMsg: '<%= I18n.t("tags.deleting") %>',
+                    url: '/admin/tags/' + item.id + '.json',
+                    method: 'POST',
+                    headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' },
+                    params: "_method=delete",
+                    callback: function(options, success, response){
+                      if(!success){
+                          Ext.ux.alertResponseError(response)
+                      }else{
+                          store.reload();
+                      }
+                    }
+                });
+            });
+        }
+    };
 
     initViewport(grid);
 });

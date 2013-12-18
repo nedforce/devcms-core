@@ -1084,6 +1084,13 @@ nl:
     of_page: "van {0}"
     page: Pagina
     saving: Bezig met opslaan
+    confirm_deletion: "Weet u zeker dat u deze tag(s) wilt verwijderen?"
+    delete: Verwijderen
+    delete_user: Tag verwijderen
+    deleting: Bezig met verwijderen
+    deletion_of: Tag verwijderen van
+    message: Bericht
+    select_one: Kies tenminste één tag
   trash:
     content_type: Content-type
     title: Titel

@@ -322,12 +322,14 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :settings, :tags, :only => [:index, :update]
-    resources :sites, :except => [:index, :destroy]
+    resources :settings,  :only => [:index, :update]
+    resources :sites,     :except => [:index, :destroy]
     resources :social_media_links_boxes, :except => [:index, :destroy]
-    resources :synonyms, :only => [:index, :create, :update, :destroy]
-    resources :link_themes, :except => :index, :controller => 'themes', :defaults => { :type => 'link_theme' }
-    resources :top_hits_pages, :except => [:index, :destroy]
+    resources :synonyms,  :only => [:index, :create, :update, :destroy]
+    resources :link_themes,     :except => :index, :controller => 'themes', :defaults => { :type => 'link_theme' }
+    resources :top_hits_pages,  :except => [:index, :destroy]
+    resources :tags,      :only => [:index, :update, :destroy]
+
 
     resources :trash, :only => [ :index ] do
       collection do
