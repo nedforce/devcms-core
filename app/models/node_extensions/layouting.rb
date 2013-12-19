@@ -83,44 +83,46 @@ module NodeExtensions::Layouting
       # Find the layout and variant used to set the representations
       layout  = Layout.find(layout_config[:node][:layout]) || inherited_layout
       variant = layout.find_variant(layout_config[:node][:layout_variant]) || inherited_layout_variant
-
       # Remove representations for variant that don't exist for this layout variant
       content_representations.where('target NOT IN (?)', layout_config[:targets].keys).destroy_all
-
       # Remove any moved or removed representations
       layout_config[:targets].each do |target, content_ids|
-        content_ids = content_ids.select { |cid| cid.present? }
-        # Destroy removed representations
-        if content_ids.empty?
-          content_representations.where("content_representations.target = ?", target).destroy_all
-        else
-          custom_types = content_ids.select { |ci| ci.to_i.to_s != ci }
-          content_ids  = content_ids.select { |ci| ci.to_i.to_s == ci }
-          content_representations.where("target = :target AND ((content_id IS NOT NULL AND ((:content_ids) IS NULL OR content_id NOT IN (:content_ids))) OR (custom_type IS NOT NULL AND ((:custom_types) IS NULL OR custom_type NOT IN (:custom_types))))", {:target => target, :content_ids => content_ids, :custom_types => custom_types}).destroy_all
+        if content_ids
+          content_ids = content_ids.select { |cid| cid.present? && !cid.empty? }
+          # Destroy removed representations
+          if content_ids.empty?
+            content_representations.where("content_representations.target = ?", target).destroy_all
+          else
+            custom_types = content_ids.select { |ci| ci.to_i.to_s != ci }
+            content_ids  = content_ids.select { |ci| ci.to_i.to_s == ci }
+            content_representations.where("target = :target AND ((content_id IS NOT NULL AND ((:content_ids) IS NULL OR content_id NOT IN (:content_ids))) OR (custom_type IS NOT NULL AND ((:custom_types) IS NULL OR custom_type NOT IN (:custom_types))))", {:target => target, :content_ids => content_ids, :custom_types => custom_types}).destroy_all
+          end
         end
       end
 
       # Move or create representations for each target
       layout_config[:targets].each do |target, content_ids|
-        content_ids = content_ids.select { |cid| cid.present? }          
-        if variant[target].try(:[], 'main_content') && self.content_type == 'Section'
-          content.update_attributes(:frontpage_node_id => content_ids.first.blank? ? nil : content_ids.first)
-        else
-          content_ids.each_with_index do |content_id, i|
-            # Check wether this is a custom rep. or a normal content representation and handle accordingly
-            if content_id.to_i.to_s != content_id
-              representation = content_representations.where("content_representations.target = ? AND content_representations.custom_type = ?", target, content_id).first
-              if representation.present?
-                representation.update_attributes!(:position => i+1)
+        if content_ids
+          content_ids = content_ids.select { |cid| cid.present? }          
+          if variant[target].try(:[], 'main_content') && self.content_type == 'Section'
+            content.update_attributes(:frontpage_node_id => content_ids.first.blank? ? nil : content_ids.first)
+          else
+            content_ids.each_with_index do |content_id, i|
+              # Check wether this is a custom rep. or a normal content representation and handle accordingly
+              if content_id.to_i.to_s != content_id
+                representation = content_representations.where("content_representations.target = ? AND content_representations.custom_type = ?", target, content_id).first
+                if representation.present?
+                  representation.update_attributes!(:position => i+1)
+                else
+                  content_representations.create!(:custom_type => content_id, :target => target, :position => i+1)
+                end
               else
-                content_representations.create!(:custom_type => content_id, :target => target, :position => i+1)
-              end
-            else
-              representation = content_representations.where("content_representations.target = ? AND content_representations.content_id = ?", target, content_id).first
-              if representation.present?
-                representation.update_attributes!(:position => i+1)
-              else
-                content_representations.create!(:content => Node.find(content_id), :target => target, :position => i+1)
+                representation = content_representations.where("content_representations.target = ? AND content_representations.content_id = ?", target, content_id).first
+                if representation.present?
+                  representation.update_attributes!(:position => i+1)
+                else
+                  content_representations.create!(:content => Node.find(content_id), :target => target, :position => i+1)
+                end
               end
             end
           end
