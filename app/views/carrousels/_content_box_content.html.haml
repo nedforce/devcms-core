@@ -9,8 +9,8 @@
       .slider-navigation-wrapper
         - node.content.carrousel_items.each_with_index do |item, index|
           %a.slider-navigation-link{ :href => "#", :data => {:toggle => "slider"}}= index + 1
-        = icon_tag_link_to 'pause-1', '#', :class => 'slider-control pause-control'
-        = icon_tag_link_to 'play-1', '#', :class => 'slider-control play-control'
+        = icon_tag_link_to 'pause-1', '#', :class => 'slider-control pause-control', title: content_tag(:span, 'Play', class: 'text-alternative')
+        = icon_tag_link_to 'play-1', '#', :class => 'slider-control play-control', title: content_tag(:span, 'Play', class: 'text-alternative')
 
     .slider-items
       - node.content.carrousel_items.each do |item|
