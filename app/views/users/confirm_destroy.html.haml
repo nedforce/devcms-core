@@ -2,7 +2,7 @@
 
 = error_messages_for :user
 
-= form_for @user, :url => secure_url(:url_for, { :action => 'destroy', :id => @user }), :html => {:method => 'delete'} do |f|
+= form_for :user, :url => secure_url(:url_for, { :action => 'destroy', :id => @user }), :html => {:method => 'delete'} do |f|
 
   = t 'users.confirm_user_deletion'
 
