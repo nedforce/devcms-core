@@ -281,6 +281,8 @@ module DevcmsCoreHelper
   end
 
   def skippable(id, &block)
+    # Add random number to prevent duplicate ids
+    id = "#{id}-#{SecureRandom.random_number(1000)}"
     link_to(t('shared.skip_to_bottom'), "\#bottom_of_#{id}", :id => "top_of_#{id}", :class => 'text-alternative') +
     capture(&block) +
     link_to(t('shared.skip_to_top'),    "\#top_of_#{id}", :id => "bottom_of_#{id}", :class => 'text-alternative')
