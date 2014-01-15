@@ -55,7 +55,7 @@ offset            = image.offset || slider_top / 2
 </div>
 <%= hidden_field_tag "offset_#{image.id}", image.offset %>
 <%= observe_field( "offset_#{image.id}",
-      :url => admin_image_path(image, :format => :jpg),
+      :url => admin_image_path(image, :format => :xml),
       :frequency => 1,
       :method => :put,
       :with => "'image[offset]=' + encodeURIComponent($F('offset_#{image.id}'))") -%>
