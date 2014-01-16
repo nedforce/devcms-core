@@ -46,7 +46,7 @@ class UsersController < ApplicationController
       redirect_to new_user_path
     else
       cookies.delete :auth_token
-      @user = User.new(params[:user])
+      @user = User.new(params[:user].except(:username))
 
       respond_to do |format|
         # user.save will fail if the e-mail has already been used, but we because
