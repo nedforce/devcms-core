@@ -39,6 +39,14 @@ class Admin::TagsController < Admin::AdminController
     end
   end
 
+  # * DELETE /admin/tags/1.json
+  def destroy
+    ActsAsTaggableOn::Tag.find(params[:id]).destroy
+    respond_to do |format|
+      format.json { head :ok }
+    end
+  end
+
   protected
 
   # Finds sorting parameters.

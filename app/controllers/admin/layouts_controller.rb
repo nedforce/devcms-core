@@ -9,7 +9,7 @@ class Admin::LayoutsController < Admin::AdminController
   def edit
   end
   
-  def update  
+  def update
     # Parameters: { "node"=>{"layout"=>"deventer", "layout_variant"=>"default", "template_color"=>"default"}, 
     #               "targets"=>{"primary_column"=>["1"], "main_content_column"=>["4","5"], "secondary_column"=>[nil]}}
     if params['node'].present?

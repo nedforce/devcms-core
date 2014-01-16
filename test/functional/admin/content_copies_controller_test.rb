@@ -34,7 +34,7 @@ class Admin::ContentCopiesControllerTest < ActionController::TestCase
       
       assert_response :success
       assert !assigns(:content_copy).new_record?, assigns(:content_copy).errors.full_messages.join('; ')
-      assert_equal assigns(:content_copy).node, nodes(:economie_section_node).reload.right_sibling
+      assert nodes(:economie_section_node).parent.children.include? assigns(:content_copy).node
     end
   end
   

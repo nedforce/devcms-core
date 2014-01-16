@@ -433,7 +433,7 @@ nl:
     page_not_found: Pagina niet gevonden
     page_was_not_found: De door u opgegeven pagina kon helaas niet worden gevonden.
     search_page_in: U kunt de gewenste pagina opzoeken in de
-    use_search_field: U kunt hiervoor ook het zoekveld linksboven gebruiken.
+    use_search_field: U kunt hiervoor ook het zoekveld gebruiken.
   feeds:
     add_to: RSS feed toevoegen aan
     edit: Bewerken van RSS feed
@@ -1084,6 +1084,13 @@ nl:
     of_page: "van {0}"
     page: Pagina
     saving: Bezig met opslaan
+    confirm_deletion: "Weet u zeker dat u deze tag(s) wilt verwijderen?"
+    delete: Verwijderen
+    delete_user: Tag verwijderen
+    deleting: Bezig met verwijderen
+    deletion_of: Tag verwijderen van
+    message: Bericht
+    select_one: Kies tenminste één tag
   trash:
     content_type: Content-type
     title: Titel

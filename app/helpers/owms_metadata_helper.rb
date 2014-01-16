@@ -2,9 +2,11 @@ module OwmsMetadataHelper
   def generate_metadata_for(node)
     metadata = []
 
+    metadata << tag(:link, rel: 'schema.DCTERMS', href: 'http://purl.org/dc/terms')
+    metadata << tag(:link, rel: 'schema.OVERHEID', href: 'http://standaarden.overheid.nl/owms/terms')
+
     metadata << indexing_metadata_for(node)    
     metadata << owms_core_metadata_for(node)
-    metadata << owms_mantle_metadata_for(node)
     metadata << owms_permit_metadata_for(node) if node.content_type == 'Permit'
 
     metadata << meta_tag('keywords', node.tag_list.join(","))
@@ -42,12 +44,6 @@ module OwmsMetadataHelper
     tags << meta_tag('DCTERMS.spatial',    Settler[:site_name],                                                                       'OVERHEID.Gemeente')
     tags << meta_tag('DCTERMS.temporal',   content.respond_to?(:owms_temporal) ? content.owms_temporal : '',                          'ODCTERMS.Period')
     tags
-  end
-
-  # OWMS Mantle metadata
-  # * dcterms:accessrights. Change behavior to publish the ancestors of the current node (#3415)
-  def owms_mantle_metadata_for(node)
-    node.path.collect{ |n| meta_tag('ancestry', n.id.to_s) } if node.visible?
   end
 
   # OWMS fields specifically meant for announcements (bm) and permits (vg)
@@ -115,13 +111,12 @@ module OwmsMetadataHelper
   # Metadata that should be added to a SOLR search index
   def indexing_metadata_for(node)
     tags = []    
-    tags << meta_tag('node', @node.id) 
     tags << meta_tag('DCTERMS.alternative', node.content.product_synonyms.map(&:synonym).join(',')) if node.content_type == "Product"
     tags  
   end
 
   def meta_tag(name, content, scheme = nil)
-    tag(:meta, :name => name, :scheme => scheme, :content => content) unless content.nil?
+    tag(:meta, :name => name, :datatype => scheme, :content => content) unless content.nil?
   end
 
   def node_url(node)

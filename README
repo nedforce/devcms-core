@@ -1,10 +1,3 @@
-# For DevCMS to run, you need to add some gems that are only available on Github. Add this to your Gemfile:
-
-source 'http://gems.github.com'
-
-gem 'calendar_date_select', :git => 'https://github.com/emyl/calendar_date_select.git', :branch => 'rails3_1'
-gem 'prototype_legacy_helper', '0.0.0', :git => 'http://github.com/willbryant/prototype_legacy_helper.git'
-
 # A default layout and configuration files for DevCMS can be created by using the DevCMS generator:
 
 rails generate devcms
@@ -15,12 +8,8 @@ register_cms_modules
 
 # Notes
 
-* For calendar_date_select to work, run the following rake task:
-
-  rake calendar:install
-  
 * For new DevCMS applications, you should remove the default ApplicationController. If you'd like to keep it, you need to make it an extension of DevcmsCore:
-  
+
   extension_of DevcmsCore
   class ApplicationController < ActionController::Base
     ...

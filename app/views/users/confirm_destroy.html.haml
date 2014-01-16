@@ -2,7 +2,7 @@
 
 = error_messages_for :user
 
-= form_for @user, :url => secure_url(:url_for, { :action => 'destroy', :id => @user }), :html => {:method => 'delete'} do |f|
+= form_for :user, :url => secure_url(:url_for, { :action => 'destroy', :id => @user }), :html => {:method => 'delete'} do |f|
 
   = t 'users.confirm_user_deletion'
 
@@ -13,4 +13,4 @@
 
   .formButtonCt
     = submit_tag t('users.delete_user'), :class => 'left submit'
-    = link_to    t('users.back'), @user, :class => 'right'
+    = link_to    t('users.back'), user_path(@user), :class => 'right'

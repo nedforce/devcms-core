@@ -260,7 +260,7 @@ module DevcmsCoreHelper
   end
 
   def read_more_link(content, text = t('shared.read_more'), options = {})
-    options.reverse_merge! :title => t('shared.read_more')
+    options.reverse_merge! :title => "#{t('shared.read_more')} uit #{content.title}"
     link_to_content_node text, content, {}, :class => 'read_more_link', :title => options[:title]
   end
 
@@ -281,9 +281,11 @@ module DevcmsCoreHelper
   end
 
   def skippable(id, &block)
-    link_to(t('shared.skip_to_bottom'), "\#bottom_of_#{id}", :id => "top_of_#{id}", :class => 'hidden') +
+    # Add random number to prevent duplicate ids
+    id = "#{id}-#{SecureRandom.random_number(1000)}"
+    link_to(t('shared.skip_to_bottom'), "\#bottom_of_#{id}", :id => "top_of_#{id}", :class => 'text-alternative') +
     capture(&block) +
-    link_to(t('shared.skip_to_top'),    "\#top_of_#{id}", :id => "bottom_of_#{id}", :class => 'hidden')
+    link_to(t('shared.skip_to_top'),    "\#top_of_#{id}", :id => "bottom_of_#{id}", :class => 'text-alternative')
   end
 
   protected
