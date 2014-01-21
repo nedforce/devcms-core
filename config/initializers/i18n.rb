@@ -1,3 +1,5 @@
+I18n.enforce_available_locales = true
+
 # Tell the I18n library where to find the translation files.
 I18n.load_path += Dir[DevcmsCore::Engine.root.join('config', 'locales', '*')]
 
