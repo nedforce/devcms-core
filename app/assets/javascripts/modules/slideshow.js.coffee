@@ -41,7 +41,6 @@ class SlideShow
       
 # Slideshow
 jQuery ->
-  
   headerSlideShow = new SlideShow $('#header-slideshow'), {
     fadeDuration: 3000,
     displayDuration: 6000,
