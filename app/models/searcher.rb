@@ -7,8 +7,8 @@
 # NOTE: The Ferret search engine is capable of using synonyms;
 #       see the +Synonym+ model for more info.
 #
-if Devcms.search_configuration[:enabled_search_engines].include?('ferret')
-  class Searcher
+class Searcher
+  if Devcms.search_configuration[:enabled_search_engines].include?('ferret')
     require 'acts_as_ferret'  
     
     # The supported search engines.
@@ -44,8 +44,8 @@ if Devcms.search_configuration[:enabled_search_engines].include?('ferret')
       engine.search(query, page, page_size, user, top_node, options)
     end
   end
+end
 
-  def Searcher(engine)
-    Searcher.new(engine.to_s)
-  end
+def Searcher(engine)
+  Searcher.new(engine.to_s)
 end
