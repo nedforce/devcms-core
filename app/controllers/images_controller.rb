@@ -43,7 +43,7 @@ class ImagesController < ApplicationController
   end
 
   def newsletter_banner
-    render_image_data @image.resize!(:size => "#{Image::NEWSLETTER_BANNER_SIZE[:width]}x#{Image::NEWSLETTER_BANNER_SIZE[:height]}", :crop => true, :upsample => false, :quality => 80, :format => @image_format)
+    render_image_data @image.resize!(:size => "#{Image::NEWSLETTER_BANNER_SIZE[:width]}x", :upsample => true, :quality => 80, :format => @image_format)
   end
 
   def thumbnail
