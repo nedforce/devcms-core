@@ -291,6 +291,8 @@ module Acts
           node.update_subtree_url_aliases
           # Save base_url_alias for later use
           base_url_alias = node.reload.url_alias.sub(/-\d+\Z/, '') # chomp off -1, -2, etc.
+          # Reset the title, as the node was reloaded.
+          node.title = self.title
           # Search siblings for nodes with identiacal aliases
           node.siblings.all(:conditions => ["url_alias like ?", base_url_alias + '-%']).each do |dupe| 
             dupe.update_subtree_url_aliases
