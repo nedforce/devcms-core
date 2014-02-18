@@ -8,7 +8,6 @@
 # 
 # * +title+        - The title of the social media links box.
 # * +twitter_url+  - A Twitter URL.
-# * +hyves_url+    - A Hyves URL.
 # * +facebook_url+ - A Facebook URL.
 # * +linkedin_url+ - A LinkedIn URL.
 # * +youtube_url+  - A YouTube URL.
@@ -36,6 +35,5 @@ class SocialMediaLinksBox < ActiveRecord::Base
   validates_presence_of :title
   validates_length_of   :title, :in => 2..255
 
-  validates_format_of :twitter_url,  :hyves_url,   :facebook_url, :with => VALID_URL_REGEXP, :allow_blank => true
-  validates_format_of :linkedin_url, :youtube_url, :flickr_url,   :with => VALID_URL_REGEXP, :allow_blank => true
+  validates_format_of :twitter_url, :facebook_url, :linkedin_url, :youtube_url, :flickr_url, :with => VALID_URL_REGEXP, :allow_blank => true
 end

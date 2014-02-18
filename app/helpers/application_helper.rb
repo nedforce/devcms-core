@@ -295,7 +295,6 @@ module ApplicationHelper
   end  
 
   def social_media_buttons(page)
-    social_media_button(page, 'social_hyves.png',    t('application.add_to_hyves'),    'http://www.hyves.nl/profilemanage/add/tips/?name={{title}}&amp;text=[url={{url}}]{{title}}[/url]&amp;type=12') +
     social_media_button(page, 'social_twitter.png',  t('application.add_to_twitter'),  'http://twitter.com/?status={{title}}%20{{url}}') +
     social_media_button(page, 'social_facebook.png', t('application.add_to_facebook'), 'http://www.facebook.com/sharer.php?u={{url}}&amp;t={{title}}') +
     social_media_button(page, 'social_linkedin.png', t('application.add_to_linkedin'), 'http://www.linkedin.com/shareArticle?mini=true&amp;url={{url}}&amp;title={{title}}&amp;source={{title}}') +
