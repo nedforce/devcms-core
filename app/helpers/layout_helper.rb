@@ -55,7 +55,7 @@ module LayoutHelper
     link_options = {:id => "toggle_section_#{dom_id}", :class => 'toggable_section_link' }
 
     if link_or_link_title.is_a?(Link)
-      html = link_to_content_node(truncate(h(link_or_link_title.content_title), :length => 60), link_or_link_title, {}, link_options)
+      html = link_to_node_url(truncate(h(link_or_link_title.content_title), :length => 60), link_or_link_title, {}, link_options)
     else
       html = content_tag options[:element_type] || :span, link_or_link_title, link_options
     end
