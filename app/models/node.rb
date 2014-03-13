@@ -317,7 +317,7 @@ class Node < ActiveRecord::Base
       :allowChildren => (user_is_final_editor or user_is_admin),
       :expanded      => active_node && active_node.ancestry.present? ? active_node.ancestry.starts_with?(self.child_ancestry) : false,
       :creatableChildContentTypes => self.content_type_configuration[:allowed_child_content_types].inject([]) do |array, child_content_type|
-        child_content_type_configuration = Node.content_type_configuration(child_content_type)
+        child_content_type_configuration = Node.content_type_configuration(child_content_type) || {}
         klass = child_content_type.constantize
 
         if child_content_type_configuration[:enabled] && child_content_type_configuration[:allowed_roles_for_create].include?(role_name)
