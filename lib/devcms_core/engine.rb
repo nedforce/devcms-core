@@ -22,7 +22,6 @@ module DevcmsCore
     # Airbrake configuration
     config.airbrake_redmine_project  = 'devcms'
     config.airbrake_development_environments = %w(development test cucumber)
-    config.airbrake_redmine_api_key  = 'GYM6UFON3M4XhvRivnGZ'
     config.airbrake_redmine_host     = 'projects.nedforce.nl'
     config.airbrake_redmine_port     = 80
     config.airbrake_redmine_secure   = false
