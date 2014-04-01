@@ -43,7 +43,7 @@ class Admin::UsersController < Admin::AdminController
   def last_sign_ins
     respond_to do |format|
       format.csv do
-        @users = User.exclusive.joins('left outer join login_attempts on login_attempts.user_login = users.login and login_attempts.success = true').joins('left outer join newsletter_archives_users on users.id = newsletter_archives_users.user_id').select('users.id, users.email_address, max(login_attempts.created_at) AS last_sign_in_at, count(newsletter_archives_users.user_id) as newsletter_subscription_count').group('users.id, users.email_address')
+        @users = User.joins('left outer join login_attempts on login_attempts.user_login = users.login and login_attempts.success = true').joins('left outer join newsletter_archives_users on users.id = newsletter_archives_users.user_id').select('users.id, users.type, users.email_address, max(login_attempts.created_at) AS last_sign_in_at, count(newsletter_archives_users.user_id) as newsletter_subscription_count').group('users.id, users.email_address, users.type')
         render :action => :last_sign_ins, :layout => false
       end
     end

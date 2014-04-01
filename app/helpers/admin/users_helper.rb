@@ -6,4 +6,8 @@ module Admin::UsersHelper
   def has_news_letter_subscription(user)
     user.newsletter_subscription_count.to_i > 0 ? 'yes' : 'no'
   end
+
+  def user_type user
+    user.type == 'PrivilegedUser' ? I18n.t('users.cms_user') : I18n.t('users.normal_user')
+  end
 end

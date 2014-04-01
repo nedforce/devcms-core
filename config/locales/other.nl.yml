@@ -1229,6 +1229,9 @@ nl:
     last_sign_in_at: Laatste login
     unknown_last_sign_in_at: Onbekend
     has_news_letter_subscription: Ontvangt nieuwsbrief?
+    type: Type
+    cms_user: CMS gebruiker
+    normal_user: Normale gebruiker
   video:
     enter_video_id: Vul het YouTube video ID in
     insert_video: Video invoegen
