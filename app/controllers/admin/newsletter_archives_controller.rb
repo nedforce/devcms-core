@@ -15,7 +15,6 @@ class Admin::NewsletterArchivesController < Admin::AdminController
   def index
     respond_to do |format|
       format.csv do
-        require 'csv'
         @newsletters = NewsletterArchive.all
         render :action => :index, :layout => false
       end

@@ -1,3 +1,7 @@
-<% @users.each do |user| %>
-<%= CSV.generate_line([user.email_address,user.first_name,user.surname,user.sex, ]).html_safe %>
-<% end %>
+<%=
+  raw(CSV.generate do |csv|
+    @users.each do |user|
+      csv << [user.email_address,user.first_name,user.surname,user.sex]
+    end
+  end)
+%>
