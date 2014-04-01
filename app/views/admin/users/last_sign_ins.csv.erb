@@ -1,0 +1,5 @@
+<%= CSV.generate_line([User.human_attribute_name(:email), t('users.last_sign_in_at'), t('users.has_news_letter_subscription')]) %>
+
+<% @users.each do |user| %>
+<%= CSV.generate_line([user.email_address, last_sign_in_at(user), has_news_letter_subscription(user)]).html_safe %>
+<% end %>

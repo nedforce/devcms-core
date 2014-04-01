@@ -185,7 +185,14 @@ Ext.onReady(function(){
                   tooltip: '<%= I18n.t("users.export_tooltip") %>',
                   handler: handleExport,
                   iconCls: 'attachment_icon'
-              },<% end -%>
+              }, {
+                  text: '<%= I18n.t("users.last_sign_in_export") %>',
+                  tooltip: '<%= I18n.t("users.last_sign_in_export_tooltip") %>',
+                  handler: handleLastSignInExport,
+                  iconCls: 'attachment_icon'
+              },
+
+              <% end -%>
               {
                   text: '<%= I18n.t("users.export_newsletter_counts") %>',
                   tooltip: '<%= I18n.t("users.export_newsletter_counts_tooltip") %>',
@@ -390,6 +397,10 @@ Ext.onReady(function(){
     
     function handleNewsletterExport() {
       window.location = "<%= admin_newsletter_archives_path(:format => 'csv') %>"
+    }
+
+    function handleLastSignInExport() {
+      window.location = "<%= last_sign_ins_admin_users_path(:format => 'csv') %>"
     }
 
     function handleEdit(editEvent) {

@@ -347,6 +347,7 @@ Rails.application.routes.draw do
       collection do
         post :invite
         get :privileged
+        get :last_sign_ins
       end
 
       member do

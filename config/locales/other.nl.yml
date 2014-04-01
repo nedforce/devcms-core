@@ -366,6 +366,8 @@ nl:
     export_csv_tooltip: Klik hier om de inzendingen als CSV op te slaan
     export_xls: Exporteren als Excel
     export_xls_tooltip: Klik hier om de inzendingen als een Excel-bestand op te slaan
+
+
     import_csv: CSV Importeren
     message: Bericht
     new_contact_field: Nieuw invoerveld
@@ -1150,6 +1152,8 @@ nl:
     export_newsletter_counts: Exporteer nieuwsbrief abonnementen
     export_newsletter_counts_tooltip: Klik hier om het aantal abonnementen per nieuwsbrief als een CSV bestand op te slaan
     exporting: Bezig met het genereren van de gebruikerslijst
+    last_sign_in_export: Exporteer login datums
+    last_sign_in_export_tooltip: Exporteer alle gebruikers en hun laatste login datums
     female: Vrouw
     first_name: Voornaam
     full_name: Naam
@@ -1222,6 +1226,9 @@ nl:
     weblog_title: Titel van het weblog
     welcome: Welkom als gebruiker van deze website. Voordat u kunt inloggen dient u uw e-mailadres te verifiëren. U kunt dit doen door de instructies te volgen in de e-mail die zojuist naar u is verstuurd.
     wrong_password: Verkeerd wachtwoord ingevoerd.
+    last_sign_in_at: Laatste login
+    unknown_last_sign_in_at: Onbekend
+    has_news_letter_subscription: Ontvangt nieuwsbrief?
   video:
     enter_video_id: Vul het YouTube video ID in
     insert_video: Video invoegen

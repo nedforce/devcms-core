@@ -1,7 +1,7 @@
 # This administrative controller is used to manage the website users. It is
 # set up to communicate with ExtJS components using XML.
 class Admin::UsersController < Admin::AdminController
-  before_filter :find_user, :except => [ :index, :create, :invite, :privileged ]
+  before_filter :find_user, :except => [ :index, :create, :invite, :privileged, :last_sign_ins ]
   before_filter :set_paging,  :only => [ :index, :create, :privileged ]
   before_filter :set_sorting, :only => [ :index, :create, :privileged ]
 
@@ -36,6 +36,17 @@ class Admin::UsersController < Admin::AdminController
         require 'csv'
         @users = user_scope
         render :action => :index, :layout => false
+      end
+    end
+  end
+
+  # * GET /admin/users/last_sign_in.csv
+  def last_sign_ins
+    respond_to do |format|
+      format.csv do
+        require 'csv'
+        @users = User.exclusive.joins('left outer join login_attempts on login_attempts.user_login = users.login and login_attempts.success = true').joins('left outer join newsletter_archives_users on users.id = newsletter_archives_users.user_id').select('users.id, users.email_address, max(login_attempts.created_at) AS last_sign_in_at, count(newsletter_archives_users.user_id) as newsletter_subscription_count').group('users.id, users.email_address')
+        render :action => :last_sign_ins, :layout => false
       end
     end
   end
