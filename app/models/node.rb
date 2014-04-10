@@ -179,6 +179,10 @@ class Node < ActiveRecord::Base
   # Make sure the associated meta content is removed (or marked as deleted) for the entire subtree when the current node is marked as deleted
   before_paranoid_delete :remove_associated_meta_content
 
+  after_paranoid_delete do
+    NodeSweeper.instance.after_update(self)
+  end
+
   scope :sorted_by_position, :order => 'nodes.position'
 
   scope :exclude_subtrees_of, (lambda do |nodes_to_exclude|
