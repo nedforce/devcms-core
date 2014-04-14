@@ -2,13 +2,13 @@
 # the application relating to +NewsletterArchive+ objects.
 class NewsletterArchivesController < ApplicationController
 
-  # All actions needs a +NewsletterArchive+ object to work with.  
+  # All actions need a +NewsletterArchive+ object to work with.
   before_filter :find_newsletter_archive, :only => [ :show, :subscribe, :unsubscribe ]
 
   # Require user to be logged in for the +subscribe+ and +unsubscribe+ actions.
   before_filter :login_required, :only => [ :subscribe, :unsubscribe ]
 
-  # Enable unsubscrubing using regular hyperlinks and <tt>:method => :delete</tt>.
+  # Enable unsubscribing using regular hyperlinks and <tt>:method => :delete</tt>.
   # See ApplicationController for more details.
   verify :method => [:get, :delete], :only => :unsubscribe
   before_filter :confirm_destroy,    :only => :unsubscribe
@@ -20,7 +20,7 @@ class NewsletterArchivesController < ApplicationController
 
     first_page = !params[:page] || params[:page]==1
     @latest_newsletter_editions    = []
-    @newsletter_editions_for_table = @newsletter_editions.to_a 
+    @newsletter_editions_for_table = @newsletter_editions.to_a
     if first_page
       @latest_newsletter_editions     = @newsletter_editions_for_table[0..5]
       @newsletter_editions_for_table -= @latest_newsletter_editions 
@@ -94,7 +94,7 @@ class NewsletterArchivesController < ApplicationController
     end
   end
 
-protected
+  protected
 
   # Finds the +NewsletterArchive+ object corresponding to the passed in +id+ parameter.
   def find_newsletter_archive
