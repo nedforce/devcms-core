@@ -4,7 +4,6 @@
   <%- unless @newsletter_archive.new_record? -%>
   <div class="metadata">
     <p class="lastUpdateDate"><%=t 'shared.last_updated' -%>: <%= l(@newsletter_archive.last_updated_at, :format => :long) -%></p>
-    <p><%= link_to 'Lijst met abonnementen', subscription_emails_admin_newsletter_archive_path(@newsletter_archive) %></p>
   </div>
   <%- end -%>
 

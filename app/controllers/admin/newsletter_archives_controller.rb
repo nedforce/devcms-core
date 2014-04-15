@@ -28,10 +28,12 @@ class Admin::NewsletterArchivesController < Admin::AdminController
     @newsletter = NewsletterArchive.find(params[:id])
     @subscriber_users = @newsletter.users
 
-    send_data @subscriber_users.map(&:email_address).join(', '), :filename => 'newsletter_subscriptions.txt'
+    send_data @subscriber_users.map(&:email_address).join(', '), :filename => 'subscription_emails.txt'
   end
 
   def show
+    @actions << { :url => { :action => :subscription_emails }, :text => I18n.t('newsletters.subscription_emails'), :method => :get, :ajax => false }
+
     respond_to do |format|
       format.csv do
         require 'csv'

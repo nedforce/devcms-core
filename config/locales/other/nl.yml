@@ -681,6 +681,7 @@ nl:
     is_not_published: Deze editie is nog niet gepubliceerd.
     items: Items in deze editie
     items_and_pages: Nieuwsberichten en pagina's
+    items_caption: Overzicht van items in deze editie
     items_count: Aantal items
     message: Bericht
     newsletter_title: Titel van de nieuwsbrief
@@ -688,6 +689,7 @@ nl:
     no_items: Geen items in deze editie...
     not_news_items: Er zijn op dit moment geen nieuwsberichten.
     of_page: "van {0}"
+    older_editions_caption: Overzicht van oudere edities van deze nieuwsbrief
     older_newsletter_editions: Oudere edities
     page: Pagina
     publication_date: Publicatiedatum
@@ -700,6 +702,7 @@ nl:
     subscribe_successfull: U bent succesvol geabonneerd op deze nieuwsbrief
     subscribe_to_this_newsletter: Abonneren op deze nieuwsbrief
     subscribe_unsuccessfull: U bent reeds geabonneerd op deze nieuwsbrief
+    subscription_emails: E-mailadressen
     subscriptions: Abonnees van nieuwsbrief
     text: Tekst
     time: Tijd
@@ -714,8 +717,6 @@ nl:
     unsubscribing: Bezig met afmelden gebruiker
     unsubscription_failed: Afmelden van gebruiker mislukt
     user: Gebruiker
-    items_caption: Overzicht van items in deze editie
-    older_editions_caption: Overzicht van oudere edities van deze nieuwsbrief
   news_viewers:
     add_to: Nieuwsselectie toevoegen aan
     edit: Bewerken van nieuwsselectie
