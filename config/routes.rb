@@ -86,7 +86,7 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :links, :except => [ :index, :destroy ], :member => { :previous => :get }
     admin.resources :links_boxes, :except => [ :index, :destroy ]
     admin.resources :meetings, :except => :index, :member => { :previous => :get }
-    admin.resources :newsletter_archives, :except => :destroy
+    admin.resources :newsletter_archives, :except => [:destroy], :member => {:subscription_emails => :get}
     admin.resources :newsletter_editions, :except => [ :index, :destroy ], :member => { :previous => :get }
     admin.resources :newsletter_subscriptions, :only => [ :show, :destroy ], :member => { :subscriptions => :any } do |admin_newsletter_subscriptions|
       admin_newsletter_subscriptions.resources :users, :only => [ :show, :destroy ], :controller => 'newsletter_subscriptions'
