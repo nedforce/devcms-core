@@ -1145,7 +1145,7 @@ nl:
     message: Bericht
     new_password_reset: Nieuw wachtwoord instellen
     new_verification_email: Vraag een nieuwe verificatie-e-mail aan
-    newsletter_subscriptions: Nieuwsbrief abonnementen
+    newsletter_subscriptions: Abonnementen
     newsletter_title: Titel van de nieuwsbrief
     not_public: Uw e-mailadres wordt niet aan anderen dan u getoond
     of_page: "van {0}"
