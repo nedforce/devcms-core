@@ -36,4 +36,7 @@ Dummy::Application.configure do
   config.active_support.deprecation = :stderr
 
   USE_X_SENDFILE = false    
+
+  config.airbrake_redmine_project = 'devmcms-core'
+  config.airbrake_redmine_api_key = ''
 end
