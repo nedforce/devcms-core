@@ -53,6 +53,9 @@ module Dummy
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.1'
+
+    config.airbrake_redmine_project = 'DevCMS-core-dummy'
+    config.airbrake_redmine_api_key = ''
     
   end
 end

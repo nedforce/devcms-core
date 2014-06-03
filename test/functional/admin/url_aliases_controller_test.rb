@@ -62,4 +62,19 @@ class Admin::UrlAliasesControllerTest < ActionController::TestCase
     assert_equal 2, assigns(:nodes).size
     assert_not_equal nodes(:yet_another_page_node).content.title, assigns(:nodes).first.content.title
   end
+
+  def test_should_not_show_deleted_pages
+    login_as :sjoerd
+    node = nodes(:standard_search_page_node)
+    
+    get :index, format: :json
+    body = JSON.parse(response.body)
+    assert body['nodes'].detect {|p| p['id'] == node.id }.present?
+
+    node.paranoid_delete!
+
+    get :index, format: :json
+    body = JSON.parse(response.body)
+    assert body['nodes'].detect {|p| p['id'] == node.id }.nil?
+  end
 end
