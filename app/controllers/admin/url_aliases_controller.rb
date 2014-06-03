@@ -8,7 +8,7 @@ class Admin::UrlAliasesController < Admin::AdminController
 
   def index
     @active_page = :url_aliases
-    @nodes       = Node.unscoped { Node.where('custom_url_suffix IS NOT NULL').where('nodes.deleted_at IS NULL').order("#{@sort_field} #{@sort_direction}").page(@current_page).per(@page_limit) }
+    @nodes       = Node.unscoped { Node.where('custom_url_suffix IS NOT NULL').order("#{@sort_field} #{@sort_direction}").page(@current_page).per(@page_limit) }
     @node_count  = Node.where('custom_url_suffix IS NOT NULL').count
     
     respond_to do |format|
@@ -40,14 +40,14 @@ class Admin::UrlAliasesController < Admin::AdminController
   end
 
   def destroy
-    @node.update_attribute :custom_url_suffix, nil
+    @node.update_column(:custom_url_suffix, nil)
     head :ok
   end
 
   protected
   
   def find_node
-    @node = Node.find params[:id]
+    @node = Node.unscoped.find params[:id]
   end
   
   # Finds sorting parameters.
