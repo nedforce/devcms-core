@@ -4,7 +4,8 @@ class NewsletterSubscription < ActionMailer::Base
       raise "User #{user.id} is not subscribed to archive #{edition.newsletter_archive.id} for edition #{edition.id}!"
     end
 
-    default_url_options[:host] = host = "#{Settler[:host]}"
+    default_url_options[:host] = "#{Settler[:host]}" if default_url_options[:host].blank?
+    host = default_url_options[:host]
     archive = edition.newsletter_archive
 
     implicit_parts_order ["text/html", "text/plain"]
