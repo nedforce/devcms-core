@@ -1127,7 +1127,7 @@ nl:
     confirm_promote: "Weet u zeker dat u deze gebruiker wil promoveren?"
     confirm_revoke: "Weet u zeker dat u deze gebruiker wil ontgrendelen?"
     could_not_delete: "Sorry, kon de gebruiker(s) niet verwijderen."
-    couldnt_find_user: Login naam / E-mailadres niet gevonden
+    couldnt_find_user: Loginnaam / E-mailadres niet gevonden
     count_msg: "Gebruikers {0} tot {1} van {2} worden weergegeven"
     created_at: Aangemaakt op
     del_tooltip: Klik hier om de geselecteerde gebruiker(s) te verwijderen
@@ -1148,9 +1148,9 @@ nl:
     empty_msg: Geen gebruikers om weer te geven
     error: Fout
     export: Exporteren
-    export_tooltip: Klik hier om de gebruikerslijst op te slaan als CSV bestand
+    export_tooltip: Klik hier om de gebruikerslijst op te slaan als CSV-bestand
     export_newsletter_counts: Exporteer nieuwsbrief abonnementen
-    export_newsletter_counts_tooltip: Klik hier om het aantal abonnementen per nieuwsbrief als een CSV bestand op te slaan
+    export_newsletter_counts_tooltip: Klik hier om het aantal abonnementen per nieuwsbrief als een CSV-bestand op te slaan
     exporting: Bezig met het genereren van de gebruikerslijst
     last_sign_in_export: Exporteer login datums
     last_sign_in_export_tooltip: Exporteer alle gebruikers en hun laatste login datums
@@ -1163,7 +1163,7 @@ nl:
     leave_blank_to_preserve_password: Alleen invullen als u uw wachtwoord wilt wijzigen.
     leave_empty: Niet invullen
     login: Loginnaam
-    login_email: Login naam / E-mailadres
+    login_email: Loginnaam / E-mailadres
     login_info_message: Onderstaande velden zijn verplicht
     login_information: Kies uw inloggegevens
     male: Man
@@ -1182,8 +1182,8 @@ nl:
     password_confirmation: Bevestig wachtwoord
     password_reset: Wachtwoord opnieuw instellen
     password_reset_expired: Uw wachtwoord herstel-link is verlopen!
-    password_reset_text: Vul hieronder uw login naam of e-mailadres in. U krijgt per e-mail een link om een nieuw wachtwoord in te stellen.
-    password_reset_sent: Er is een mail naar u gestuurd om uw wachtwoord opnieuw in te stellen.
+    password_reset_text: Vul hieronder uw loginnaam of e-mailadres in. U krijgt per e-mail een link om een nieuw wachtwoord in te stellen.
+    password_reset_sent: Er is een e-mail naar u gestuurd om uw wachtwoord opnieuw in te stellen.
     password_reset_succesful: Uw wachtwoord is succesvol aangepast. U kunt nu met uw nieuwe wachtwoord inloggen.
     privacy_explanation: Deze gegevens worden door de gemeente gebruikt om u nog beter van informatie te voorzien. Deze gegevens worden niet aan derden verstrekt.
     privacy_statement: Hoe gaat de gemeente om met uw privacy?
