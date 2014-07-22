@@ -38,7 +38,7 @@ class EventRegistrationsController < ApplicationController
           end
         }
       else
-        render :status => :unprocessable_entry
+        render :status => :unprocessable_entity
       end
     end
   end
