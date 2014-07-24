@@ -143,8 +143,8 @@ class Admin::SocialMediaLinksBoxesControllerTest < ActionController::TestCase
   def create_social_media_links_box(attributes = {}, options = {})
     post :create, {:parent_node_id => nodes(:root_section_node).id,
          :social_media_links_box => { :title => 'new title',
-         :twitter_url  => 'http://www.twitter.com',  :hyves_url    => 'http://www.hyves.nl',
-         :facebook_url => 'http://www.facebook.com', :linkedin_url => 'http://www.linkedin.com',
-         :youtube_url  => 'http://www.youtube.com',  :flickr_url   => 'http://www.flickr.com' }.merge(attributes)}.merge(options)
+         :twitter_url  => 'http://www.twitter.com',  :facebook_url => 'http://www.facebook.com',
+         :linkedin_url => 'http://www.linkedin.com', :youtube_url  => 'http://www.youtube.com',
+         :flickr_url   => 'http://www.flickr.com' }.merge(attributes)}.merge(options)
   end
 end

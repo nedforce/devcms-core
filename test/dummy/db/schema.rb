@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130911082407) do
+ActiveRecord::Schema.define(:version => 20140724145050) do
 
   create_table "abbreviations", :force => true do |t|
     t.string   "abbr",       :null => false
@@ -1064,7 +1064,6 @@ ActiveRecord::Schema.define(:version => 20130911082407) do
   create_table "social_media_links_boxes", :force => true do |t|
     t.string   "title",        :null => false
     t.string   "twitter_url"
-    t.string   "hyves_url"
     t.string   "facebook_url"
     t.string   "linkedin_url"
     t.string   "youtube_url"

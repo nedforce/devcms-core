@@ -102,7 +102,6 @@ nl:
   application:
     add_to_blogger: Voeg deze pagina toe aan uw blog op Blogger
     add_to_facebook: Deel deze pagina op Facebook
-    add_to_hyves: Tip deze pagina op Hyves
     add_to_linkedin: Deel deze pagina op LinkedIn
     add_to_twitter: Twitter deze pagina
     content_type_not_allowed: Content type niet toegestaan.
@@ -1041,7 +1040,6 @@ nl:
     facebook_url: Facebook URL
     failed: Kon social media links box niet opslaan.
     flickr_url: Flickr URL
-    hyves_url: Hyves URL
     linkedin_url: LinkedIn URL
     saved: Social media links box opgeslagen!
     twitter_url: Twitter URL
