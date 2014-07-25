@@ -1,9 +1,9 @@
 class Admin::SynonymsController < Admin::AdminController
-  before_filter :set_paging,  :only => [ :index, :create ]
-  before_filter :set_sorting, :only => [ :index, :create ]
+  before_filter :set_paging,  :only => [:index, :create]
+  before_filter :set_sorting, :only => [:index, :create]
 
   skip_before_filter :set_actions
-  before_filter :find_node,   :only => [ :index, :create, :update, :destroy ]
+  before_filter :find_node, :only => [:index, :create, :update, :destroy]
 
   require_role 'admin'
 
@@ -18,10 +18,10 @@ class Admin::SynonymsController < Admin::AdminController
     respond_to do |format|
       format.html
       format.json do
-        synonyms = @synonyms.collect do |s|
+        synonyms = @synonyms.map do |s|
           { :original => s.original,
             :name     => s.name,
-            :weight   => s.weight,   
+            :weight   => s.weight,
             :id       => s.id
           }
         end

@@ -62,11 +62,11 @@ module Node::Expiration
   end
 
   def expiration_required?
-    !!content_type_configuration[:expiration_required] 
+    !!content_type_configuration[:expiration_required]
   end
 
   def expiration_container?
-    !!content_type_configuration[:expiration_container] 
+    !!content_type_configuration[:expiration_container]
   end
 
   def no_expiration_required?
@@ -90,7 +90,7 @@ module Node::Expiration
   end
 
   def cascade_expires_on!
-    self.descendants.update_all({:expires_on => Date.parse(cascade_expires_on)}, { :content_type => Node.expirable_content_types } )
+    self.descendants.update_all({ :expires_on => Date.parse(cascade_expires_on) }, { :content_type => Node.expirable_content_types })
   end
 
   def cascade_expires_on?
@@ -103,7 +103,7 @@ module Node::Expiration
 
   module ClassMethods
     def expirable_content_types
-      Node.content_types_configuration.collect { |ct, config| ct if config[:expirable] || config[:expiration_required] }.compact
+      Node.content_types_configuration.map { |ct, config| ct if config[:expirable] || config[:expiration_required] }.compact
     end
   end
 end

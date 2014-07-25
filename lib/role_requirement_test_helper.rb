@@ -52,7 +52,7 @@ private
   def assert_user_access_check(should_access, user, actions, params = {})
     params = HashWithIndifferentAccess.new(params)
 
-    (Array===actions ? actions : [actions]).each { |action|
+    (Array === actions ? actions : [actions]).each do |action|
       # reset the controller, request, and response
       @controller = @controller.class.new
       @request = @request.class.new
@@ -63,7 +63,7 @@ private
       else
         assert ! request_passes_role_security_system?(action, params), "request to #{@controller.class}##{action} with user #{user} and params #{params.inspect} should have been denied"
       end
-    }
+    end
   end
 
   # This is the core of the test system.

@@ -113,7 +113,7 @@ class ApplicationController < ActionController::Base
       raise ActionController::UnknownAction
     end
   end
-  
+
   # GET /synonyms.txt
   def synonyms
     synonyms = {}
@@ -121,17 +121,17 @@ class ApplicationController < ActionController::Base
       synonyms[syn.original] ||= [syn.original]
       synonyms[syn.original] << syn.name
     end
-    synonyms = synonyms.collect { |key, set| set.uniq.join(", ") }
+    synonyms = synonyms.map { |key, set| set.uniq.join(", ") }
     send_data synonyms.join("\n"), :filename => 'synonyms.txt', :type => 'text/plain', :disposition => 'attachment'
   end
-  
+
 protected
 
   # Renders a custom 404 page.
   def handle_404(exception)
     @page_title = t('errors.page_not_found')
     respond_to do |f|
-      f.html do 
+      f.html do
         if request.xhr?
           render :json => { :error => I18n.t('application.page_not_found') }.to_json, :status => 404
         else
@@ -157,7 +157,7 @@ protected
       puts "\n#{exception.message}"
       puts exception.backtrace.join("\n") 
     end
-    
+
     send_exception_notification(exception)
     error = {:error => "#{exception} (#{exception.class})", :backtrace => exception.backtrace.join('\n')}
     @page_title = t('errors.internal_server_error')
@@ -187,26 +187,26 @@ protected
   def current_site
     @current_site ||= Node.with_content_type('Site').find_by_id(params[:site_id]) || Site.find_by_domain(request.domain).try(:node) || raise(ActionController::RoutingError, 'No root site found!')
   end
-  
+
   # Used to find the operated node (if present and accessible)
   def find_node
     @node = current_site.subtree.accessible.include_content.find(params[:node_id]) if params[:node_id]
   end
-  
+
   # Used to find the context node (for authorization purposes)
   def find_context_node
     if @node.present?
-      if @node.content_type == "Section"
+      if @node.content_type == 'Section'
         @context_node = @node
       else
         @context_node = @node.self_and_ancestors.sections.include_content.last
       end
     else
       resource_type = params[:controller].classify.constantize rescue nil
-      
+
       if resource_type
         parent_resource_type = resource_type.parent_type rescue nil
-        
+
         # Nested controller access
         if parent_resource_type
           name = parent_resource_type.name
@@ -219,10 +219,10 @@ protected
         @context_node = current_site
       end
     end
-    
+
     raise(ActionController::RoutingError, 'No context node found!') unless @context_node
   end
-  
+
   # Performs authorization
   def check_authorization
     raise ActiveRecord::RecordNotFound.new('Access denied') unless @context_node.accessible_for_user?(current_user)
@@ -247,18 +247,18 @@ protected
   # Default to current site, with default variant
   # Return the default print template if param 'layout' equals 'print'.
   def set_layout
-    if params[:layout] == "print"
-      return "print"
-    elsif params[:layout] == "plain"
-      return "plain"
+    if params[:layout] == 'print'
+      return 'print'
+    elsif params[:layout] == 'plain'
+      return 'plain'
     else
       node = @node
-      
+
       unless node
-        node                = current_site
+        node = current_site
         node.layout_variant = 'default'
-      end        
-      
+      end
+
       @layout_configuration = node.own_or_inherited_layout_configuration
       layout                = node.own_or_inherited_layout
       variant               = node.own_or_inherited_layout_variant
@@ -267,7 +267,7 @@ protected
       if variant
         prepend_view_path((Rails.root + "app/layouts/#{layout.parent.id}/#{variant[:id]}/views").to_s) if layout.parent.present?
         prepend_view_path((Rails.root + "app/layouts/#{layout.id}/#{variant[:id]}/views").to_s)
-      end  
+      end
       return 'default'
     end
   end
@@ -299,7 +299,7 @@ protected
   end
 
   ## SSL related functionality ##
-  
+
   # Returns true if SSL encryption is required, else false.
   def ssl_required?
     return false if disable_ssl?
@@ -353,10 +353,10 @@ protected
       @private_menu_items = []
     end
   end
-  
+
   def find_accessible_private_items_for(user)
     role_assignments = user.role_assignments.all
-    
+
     Node.accessible.private.sections.all(:order => :position).select do |node|
       role_assignments.any? { |ra| node.self_and_ancestor_ids.include?(ra.node_id) }
     end
@@ -412,7 +412,7 @@ protected
 
   def parse_date(field)
     model = controller_name.classify.tableize.singularize.to_sym
-    
+
     if params[model]
       date = params[model].delete("#{field}_day")
       time = params[model].delete("#{field}_time")
@@ -445,11 +445,11 @@ protected
 
     @search_scopes += @accessible_children_for_menu.map { |c| [ c.title, "node_#{c.id}" ]}
   end
-  
+
   def find_accessible_children_for_menus
     @accessible_children_for_menu = current_site.children.accessible.public.shown_in_menu.all(:order => 'nodes.position ASC')
   end
-  
+
   def redirect_to_full_domain
     redirect_to "#{request.protocol}#{current_site.content.domain}:#{request.port}#{request.request_uri}" unless request.local? || request.host == current_site.content.domain rescue false
   end

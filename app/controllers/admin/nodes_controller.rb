@@ -108,7 +108,7 @@ class Admin::NodesController < Admin::AdminController
       @node.paranoid_delete!
 
       format.xml  { head :ok }
-      format.json { render :json => { :notice => I18n.t('nodes.succesfully_destroyed')}.to_json, :status => :ok }
+      format.json { render :json => { :notice => I18n.t('nodes.succesfully_destroyed') }.to_json, :status => :ok }
     end
   end
 
@@ -120,7 +120,7 @@ class Admin::NodesController < Admin::AdminController
       parent_node.content.destroy_items_for_year_or_month(params[:year], params[:month], true)
 
       format.xml  { head :ok }
-      format.json { render :json => { :notice => I18n.t('nodes.succesfully_destroyed')}.to_json, :status => :ok }
+      format.json { render :json => { :notice => I18n.t('nodes.succesfully_destroyed') }.to_json, :status => :ok }
     end
   end
 
@@ -128,11 +128,11 @@ class Admin::NodesController < Admin::AdminController
     if @node.content.is_a?(NewsletterArchive)
       #redirect_to @node.content, :action => 'show', :id => @node.content.id
       respond_to do |format|
-          format.json { render :json => { :id => @node.content.id,:notice => I18n.t('nodes.newsletter_subscribers_export')}.to_json, :status => :ok }
+        format.json { render :json => { :id => @node.content.id, :notice => I18n.t('nodes.newsletter_subscribers_export') }.to_json, :status => :ok }
       end
     else
       respond_to do |format|
-        format.json { render :json => { :error => I18n.t('nodes.newsletter_not_found')}.to_json, :status => :precondition_failed }
+        format.json { render :json => { :error => I18n.t('nodes.newsletter_not_found') }.to_json, :status => :precondition_failed }
       end
     end
   end
@@ -143,17 +143,17 @@ class Admin::NodesController < Admin::AdminController
   def make_global_frontpage
     if !@node.visible?
       respond_to do |format|
-        format.json { render :json => { :error => I18n.t('nodes.frontpage_cant_be_hidden')}.to_json, :status => :precondition_failed }
+        format.json { render :json => { :error => I18n.t('nodes.frontpage_cant_be_hidden') }.to_json, :status => :precondition_failed }
         format.xml  { head :precondition_failed }
       end
     else
       if Node.root.content.set_frontpage!(@node)
         respond_to do |format|
-          format.json { render :json => { :notice => I18n.t('nodes.frontpage_set')}.to_json, :status => :ok }
+          format.json { render :json => { :notice => I18n.t('nodes.frontpage_set') }.to_json, :status => :ok }
           format.xml  { head :ok }
         end
       else
-        format.json { render :json => { :error => I18n.t('nodes.frontpage_cant_be_set')}.to_json, :status => :precondition_failed }
+        format.json { render :json => { :error => I18n.t('nodes.frontpage_cant_be_set') }.to_json, :status => :precondition_failed }
         format.xml  { head :precondition_failed }
       end
     end
@@ -251,10 +251,10 @@ class Admin::NodesController < Admin::AdminController
     options = {}
 
     case params[:sort_by]
-      when 'title'
-        options[:sort_by] = :content_title
-      when 'date'
-        options[:sort_by] = :created_at
+    when 'title'
+      options[:sort_by] = :content_title
+    when 'date'
+      options[:sort_by] = :created_at
     end
 
     options[:order] = params[:order] || 'asc'

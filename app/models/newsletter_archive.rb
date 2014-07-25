@@ -46,14 +46,14 @@ class NewsletterArchive < ActiveRecord::Base
   def last_updated_at
     nle = self.newsletter_editions.accessible.first(:include => :node, :conditions => [ 'newsletter_editions.published <> ?', 'unpublished' ], :order => 'nodes.publication_start_date DESC')
     last_nle_update = nle ? nle.node.publication_start_date : nil
-    
+
     [ last_nle_update, self.updated_at].compact.max
   end
 
   # Returns all header images that can be used in a +NewsletterArchive+.
   def self.header_images
     path = Rails.root.join('public', 'images', 'newsletter', "#{Settler[:newsletter_archive_header_prefix]}*")
-    Dir.glob(path).collect { |file| file.split("/").last }
+    Dir.glob(path).map { |file| file.split("/").last }
   end
 
   # Returns the header for this +NewsletterArchive+.

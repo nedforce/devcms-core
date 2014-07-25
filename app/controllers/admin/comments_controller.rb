@@ -7,9 +7,9 @@ class Admin::CommentsController < Admin::AdminController
   before_filter :set_sorting, :only => :index
 
   skip_before_filter :set_actions
-  skip_before_filter :find_node    
+  skip_before_filter :find_node
 
-  require_role [ 'admin', 'final_editor' ], :any_node => true
+  require_role ['admin', 'final_editor'], :any_node => true
 
   layout false
 
@@ -24,7 +24,7 @@ class Admin::CommentsController < Admin::AdminController
     respond_to do |format|
       format.html { render :layout => 'admin' }
       format.json do
-        comments = (@comments[start_index, @page_limit] || []).collect do |comment|
+        comments = (@comments[start_index, @page_limit] || []).map do |comment|
           {
             :id         => comment.id,
             :user_name  => comment.user_name,

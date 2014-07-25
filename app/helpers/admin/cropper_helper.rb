@@ -15,5 +15,4 @@ module Admin::CropperHelper
       end
     end
   end
-
 end

@@ -4,18 +4,18 @@
 class WeblogPostsController < ApplicationController
 
   # Require the user to be logged in for the +new+, +create+, +edit+, +update+, +destroy+ and +destroy_image+ actions.
-  before_filter :login_required,                    :only => [ :new, :create, :edit, :update, :destroy, :destroy_image ]
+  before_filter :login_required, :only => [:new, :create, :edit, :update, :destroy, :destroy_image]
 
   # The +new+, +create+, +edit+, +update+, +destroy+ and +destroy_image+ actions need a parent +Weblog+ object to work with.
-  before_filter :find_weblog, :only => [ :new, :create, :edit, :update, :destroy, :destroy_image ]
+  before_filter :find_weblog, :only => [:new, :create, :edit, :update, :destroy, :destroy_image]
 
   # The +show+, +edit+, +update+, +destroy+ and +destroy_image+ actions need a +WeblogPost+ object to work with.
-  before_filter :find_weblog_post,                  :only => [ :show, :edit, :update, :destroy, :destroy_image ]
+  before_filter :find_weblog_post, :only => [:show, :edit, :update, :destroy, :destroy_image]
 
   # Check whether the user is authorized to perform the +new+, +create+, +edit+, +update+, +destroy+ and +destroy_image+ actions.
-  before_filter :check_authorization_for_weblog_post,               :only => [ :new, :create, :edit, :update, :destroy, :destroy_image ]
+  before_filter :check_authorization_for_weblog_post, :only => [:new, :create, :edit, :update, :destroy, :destroy_image]
 
-  before_filter :find_images_and_attachments,       :only => [ :show, :edit ]
+  before_filter :find_images_and_attachments, :only => [:show, :edit]
 
   # The maximum number of images allowed in a post.
   MAX_IMAGES = 4
@@ -53,8 +53,8 @@ class WeblogPostsController < ApplicationController
     @weblog_post.parent = @weblog.node
 
     if params[:images]
-      @images = params[:images].values.reject{ |image| image[:data].is_a?(String) }
-      images  = @images[0..MAX_IMAGES-1].collect { |image| Image.new(:data => image[:data], :title => image[:data].original_filename) }
+      @images = params[:images].values.reject { |image| image[:data].is_a?(String) }
+      images  = @images[0..MAX_IMAGES-1].map { |image| Image.new(:data => image[:data], :title => image[:data].original_filename) }
     end
 
     respond_to do |format|
@@ -86,8 +86,8 @@ class WeblogPostsController < ApplicationController
     allowed_extra_images = MAX_IMAGES - @weblog_post.node.children.size
 
     if params[:images]
-      @images = params[:images].values.reject{ |image| image[:data].is_a?(String) }
-      images = @images[0..allowed_extra_images-1].collect { |image| Image.new(:parent => @weblog_post.node, :data => image[:data], :title => image[:data].original_filename) }
+      @images = params[:images].values.reject { |image| image[:data].is_a?(String) }
+      images = @images[0..allowed_extra_images-1].map { |image| Image.new(:parent => @weblog_post.node, :data => image[:data], :title => image[:data].original_filename) }
     end
 
     @weblog_post.attributes = params[:weblog_post]

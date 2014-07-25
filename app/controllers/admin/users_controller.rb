@@ -1,13 +1,13 @@
 # This administrative controller is used to manage the website users. It is
 # set up to communicate with ExtJS components using XML.
 class Admin::UsersController < Admin::AdminController
-  before_filter :find_user, :except => [ :index, :create, :invite, :privileged ]
-  before_filter :set_paging,  :only => [ :index, :create, :privileged ]
-  before_filter :set_sorting, :only => [ :index, :create, :privileged ]
+  before_filter :find_user, :except => [:index, :privileged, :create, :invite]
+  before_filter :set_paging,  :only => [:index, :privileged, :create]
+  before_filter :set_sorting, :only => [:index, :privileged, :create]
 
   skip_before_filter :set_actions
   skip_before_filter :find_node
-  
+
   require_role 'admin', :except => :privileged
   require_role ['admin', 'final_editor', 'editor'], :only => :privileged
 
@@ -47,11 +47,11 @@ class Admin::UsersController < Admin::AdminController
       end
     end
   end
-  
+
   # * GET /admin/users/privileged.json
   def privileged
     @active_page = :privileged_users
-    
+
     respond_to do |format|
       format.html do
         @privileged = true
@@ -116,7 +116,7 @@ class Admin::UsersController < Admin::AdminController
     respond_to do |format|
       format.json do
         newsletter_archives = NewsletterArchive.accessible.all(:select => "#{NewsletterArchive.quoted_table_name}.id, #{NewsletterArchive.quoted_table_name}.title", :order => 'newsletter_archives.title')
-        newsletter_archives = newsletter_archives.collect do |na|
+        newsletter_archives = newsletter_archives.map do |na|
           {
             :id      => na.id,
             :title   => na.title,
@@ -134,7 +134,7 @@ class Admin::UsersController < Admin::AdminController
     respond_to do |format|
       format.json do
         interests = Interest.all(:order => 'title')
-        interests = interests.collect do |i|
+        interests = interests.map do |i|
               {
                 :id      => i.id,
                 :title   => i.title,
@@ -181,7 +181,7 @@ class Admin::UsersController < Admin::AdminController
       end
     end
   end
-  
+
   def revoke
     respond_to do |format|
       format.json do
@@ -232,7 +232,7 @@ class Admin::UsersController < Admin::AdminController
     # Generates SQL conditions based on the filter parameter
     def generate_filter_conditions
       filters = params[:filter]
-      conditions = filters.keys.collect do |key|
+      conditions = filters.keys.map do |key|
         filter      = filters[key]
         filterType  = filter[:data][:type]
         filterValue = filter[:data][:value]
@@ -258,6 +258,6 @@ class Admin::UsersController < Admin::AdminController
         end
       end
 
-      [conditions.collect{ |condition| condition.first }.join(" AND ")] + conditions.collect{ |condition| condition.last(condition.size-1) }.flatten
+      [conditions.map { |condition| condition.first }.join(" AND ")] + conditions.map { |condition| condition.last(condition.size-1) }.flatten
     end
 end

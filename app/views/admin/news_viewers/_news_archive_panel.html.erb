@@ -3,79 +3,79 @@ var news_archives = [<%= @news_archives.collect{ |archive| "[#{archive.id}, '#{e
 var selModel = new Ext.grid.SmartCheckboxSelectionModel({
   excel: false,
   singleSelect:true,
-  alwaysSelectOnCheck:false,    
+  alwaysSelectOnCheck:false,
   email: true, 
   dataIndex: 'checked'
 });
 
 // create the data store
 var archive_store = new Ext.data.SimpleStore({
-    id: 0,
-    fields: [
-       {name: 'id'},    
-       {name: 'title'},
-       {name: 'checked'}       
-    ]
+  id: 0,
+  fields: [
+    {name: 'id'},
+    {name: 'title'},
+    {name: 'checked'}
+  ]
 });
 archive_store.loadData(news_archives);
 
 var newsArchivePanel = new Ext.Panel({
-    contentEl: 'news_archive_panel',
-    border: false,
-    autoScroll: true,
-    defaults: {autoHeight: true},
-    minSize: 185, 
-    maxSize: 185,
-    style: "border-right: 1px solid #99BBE8;",
-    items: [
-      new Ext.grid.GridPanel({
-        store: archive_store,
-        selModel: selModel,        
-        border: false,        
-        frame: false,  
-        enableColumnResize: false,          
-        columns: [
-          selModel, 
-          {id:'id', header: "<%= escape_javascript NewsArchive.human_name %>", width: 185, sortable: true, dataIndex: 'title'}               
-        ],
-        stripeRows: true
-      })
-    ]
+  contentEl: 'news_archive_panel',
+  border: false,
+  autoScroll: true,
+  defaults: {autoHeight: true},
+  minSize: 185,
+  maxSize: 185,
+  style: "border-right: 1px solid #99BBE8;",
+  items: [
+    new Ext.grid.GridPanel({
+      store: archive_store,
+      selModel: selModel,
+      border: false,
+      frame: false,
+      enableColumnResize: false,
+      columns: [
+        selModel,
+        {id:'id', header: "<%= escape_javascript NewsArchive.human_name %>", width: 185, sortable: true, dataIndex: 'title'}               
+      ],
+      stripeRows: true
+    })
+  ]
 });
 
 selModel.addListener('rowselect', onRowSelect);
 selModel.addListener('checkboxchange', onCheckboxChange);
 
 var newsItemPanel = new Ext.Panel({
-    contentEl: 'news_item_panel',
-    border: false,
-    defaults: {autoHeight: true},
-    style: "border-left: 1px solid #99BBE8;"
+  contentEl: 'news_item_panel',
+  border: false,
+  defaults: {autoHeight: true},
+  style: "border-left: 1px solid #99BBE8;"
 });
 
 var archivePanel = new Ext.Panel({
-    layout: 'border',
-    renderTo: 'archive_panel',
-    border: false,
-    width:  '100%',
-    height: Ext.get('right_panel_body').getHeight()-30,
-    items:[
-      Ext.apply(newsArchivePanel, {region: 'west', split: true, width: 185}),
-      Ext.apply(newsItemPanel, {region: 'center'})      
-    ]
+  layout: 'border',
+  renderTo: 'archive_panel',
+  border: false,
+  width:  '100%',
+  height: Ext.get('right_panel_body').getHeight()-30,
+  items:[
+    Ext.apply(newsArchivePanel, {region: 'west', split: true, width: 185}),
+    Ext.apply(newsItemPanel, {region: 'center'})
+  ]
 });
 
 // Events
 function onRowSelect(selModel, rowIndex, record) {
   newsItemPanel.load({
     url: '/admin/news_viewers/<%= @news_viewer.id %>/news_viewer_items/available_news_items?news_archive_id=' + record.id,
-     params: Ext.ux.prepareParams(defaultParams, {format: 'html'}),
-     method: 'GET',
-     callback: function(options, success, response) {
-       if(!success)
-         Ext.ux.alertResponseError(response)
-       }
-      });
+    params: Ext.ux.prepareParams(defaultParams, {format: 'html'}),
+    method: 'GET',
+    callback: function(options, success, response) {
+      if(!success)
+        Ext.ux.alertResponseError(response)
+    }
+  });
 }
 
 function onCheckboxChange(selModel, record) {
@@ -83,32 +83,32 @@ function onCheckboxChange(selModel, record) {
   else removeNewsArchive(record);
 }
 
-function addNewsArchive (record) {                    
+function addNewsArchive (record) {
   Ext.Ajax.request({
-      url: '/admin/news_viewers/<%= @news_viewer.id %>/news_viewer_archives',
-      method: 'POST',
-      params: Ext.urlEncode({ authenticity_token: '<%= form_authenticity_token -%>', news_archive_id: record.id }),
-      callback: function(options, success, response){
-        if(!success && response.status == 422){
-          var responseJson = Ext.util.JSON.decode(response.responseText)
-          Ext.Msg.alert('<%= I18n.t("news_viewer_archives.error") %>', responseJson.errors )
-        }
-        else if(!success) Ext.ux.alertResponseError(response, '<%= I18n.t("news_viewer_archives.create_failed") %>')
+    url: '/admin/news_viewers/<%= @news_viewer.id %>/news_viewer_archives',
+    method: 'POST',
+    params: Ext.urlEncode({ authenticity_token: '<%= form_authenticity_token -%>', news_archive_id: record.id }),
+    callback: function(options, success, response) {
+      if(!success && response.status == 422) {
+        var responseJson = Ext.util.JSON.decode(response.responseText)
+        Ext.Msg.alert('<%= I18n.t("news_viewer_archives.error") %>', responseJson.errors )
       }
-  });  
-}    
+      else if(!success) Ext.ux.alertResponseError(response, '<%= I18n.t("news_viewer_archives.create_failed") %>')
+    }
+  });
+}
 
-function removeNewsArchive (record) {        
+function removeNewsArchive (record) {
   Ext.Ajax.request({
-      url: '/admin/news_viewers/<%= @news_viewer.id %>/news_viewer_archives/delete_news_archive',
-      method: 'DELETE',
-      params: Ext.urlEncode({ authenticity_token: '<%= form_authenticity_token -%>', news_archive_id: record.id }),
-      callback: function(options, success, response){
-        if(!success && response.status == 422){
-          var responseJson = Ext.util.JSON.decode(response.responseText)
-          Ext.Msg.alert('<%= I18n.t("news_viewer_archives.error") %>', responseJson.errors )
-        }
-        else if(!success) Ext.ux.alertResponseError(response, '<%= I18n.t("news_viewer_archives.delete_failed") %>')
+    url: '/admin/news_viewers/<%= @news_viewer.id %>/news_viewer_archives/delete_news_archive',
+    method: 'DELETE',
+    params: Ext.urlEncode({ authenticity_token: '<%= form_authenticity_token -%>', news_archive_id: record.id }),
+    callback: function(options, success, response){
+      if(!success && response.status == 422) {
+        var responseJson = Ext.util.JSON.decode(response.responseText)
+        Ext.Msg.alert('<%= I18n.t("news_viewer_archives.error") %>', responseJson.errors )
       }
-  }); 
-} 
+      else if(!success) Ext.ux.alertResponseError(response, '<%= I18n.t("news_viewer_archives.delete_failed") %>')
+    }
+  });
+}

@@ -406,7 +406,7 @@ module ApplicationHelper
       if object = options.delete(:object)
         objects = [object].flatten
       else
-        objects = params.collect { |object_name| instance_variable_get("@#{object_name}") }.compact
+        objects = params.map { |object_name| instance_variable_get("@#{object_name}") }.compact
       end
 
       count = objects.inject(0) { |sum, object| sum + object.errors.count }

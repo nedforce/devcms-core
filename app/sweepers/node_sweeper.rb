@@ -18,7 +18,7 @@ protected
   def sweep(node)
     if Node.content_type_configuration(node.sub_content_type)[:show_in_menu] && node.show_in_menu
       expire_fragment(:host => Settler[:host], :controller => '/nodes', :action => :footer,    :site => node.containing_site.id) if node.ancestry_depth <= 1
-      expire_fragment(:host => Settler[:host], :controller => '/nodes', :action => :main_menu, :site => node.containing_site.id) if node.ancestry_depth <= 2  
+      expire_fragment(:host => Settler[:host], :controller => '/nodes', :action => :main_menu, :site => node.containing_site.id) if node.ancestry_depth <= 2
     end
 
     if node.sub_content_type == 'Image'

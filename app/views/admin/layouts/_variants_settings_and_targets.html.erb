@@ -5,8 +5,8 @@
     selected = @node.layout_variant || (@node.root? ? "default" : nil)
   %>
   <%= wrap_with_label(select_tag(:node_layout_variant, options_for_select(options, selected), :name => "node[layout_variant]", :disabled => !current_user.has_role?("admin")), :text => "Variant:") %>
-  <%= observe_field(:node_layout_variant, 
-    :update => :targets, 
+  <%= observe_field(:node_layout_variant,
+    :update => :targets,
     :url    => { :controller => :layouts, :action => :targets, :node_id => @node.id, :id => @layout.id },
     :method => :get,
     :with   => "'variant_id=' + encodeURIComponent($F('node_layout_variant'))" )

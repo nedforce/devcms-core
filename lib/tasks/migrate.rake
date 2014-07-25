@@ -13,7 +13,7 @@ namespace :db do
     p "Truncating the schema migrations table..."
     ActiveRecord::Base.connection.execute("TRUNCATE TABLE #{schema_migrations_table}")
     migrator = ActiveRecord::Migrator.new(:up, File.join(Rails.root,'db','migrate'))
-    migrator.migrations.map(&:version).each{ |version| p "Inserting migration version #{version}..."; ActiveRecord::Base.connection.insert("INSERT INTO #{schema_migrations_table} (version) VALUES ('#{version}')") }    
+    migrator.migrations.map(&:version).each{ |version| p "Inserting migration version #{version}..."; ActiveRecord::Base.connection.insert("INSERT INTO #{schema_migrations_table} (version) VALUES ('#{version}')") }
     p "All done!"
   end
 end

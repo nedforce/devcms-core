@@ -17,7 +17,7 @@ class Admin::CategoriesController < Admin::AdminController
       format.html { render :layout => 'admin' }
       format.json do
         @categories = Category.all
-        categories  = @categories.collect do |category|
+        categories  = @categories.map do |category|
           {
             :id         => category.id,
             :table_name => (category.is_root_category? ? "#{I18n.t('categories.root_category')}" : category.name),
@@ -76,7 +76,7 @@ class Admin::CategoriesController < Admin::AdminController
     @root_categories = Category.root_categories.all(:order => :name)
     respond_to do |format|
       format.json do
-        categories = @root_categories.collect do |category|
+        categories = @root_categories.map do |category|
           {
             :id   => category.id,
             :name => category.name
@@ -91,7 +91,7 @@ class Admin::CategoriesController < Admin::AdminController
     @categories = Category.all
     respond_to do |format|
       format.json do
-        categories = @categories.collect do |category|
+        categories = @categories.map do |category|
           {
             :id    => category.id,
             :label => category.to_label

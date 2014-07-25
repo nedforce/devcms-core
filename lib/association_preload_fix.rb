@@ -107,7 +107,6 @@ module AssociationPreloadFix
     set_association_collection_records(id_to_record_map, reflection.name, associated_records, 'the_parent_record_id')
   end
 
-
 #   def find_associated_records(ids, reflection, preload_options)
 #     options = reflection.options
 #     table_name = reflection.klass.quoted_table_name

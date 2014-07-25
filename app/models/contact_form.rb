@@ -52,7 +52,7 @@ class ContactForm < ActiveRecord::Base
 
   # Returns an array with the ids of the +ContactFormField+ objects that are obligatory.
   def obligatory_field_ids
-    contact_form_fields.obligatory.map{ |field| field.id }
+    contact_form_fields.obligatory.map { |field| field.id }
   end
 
   def email_address_field_ids
@@ -121,5 +121,4 @@ class ContactForm < ActiveRecord::Base
     self.contact_form_fields.destroy_all
     self.responses.destroy_all
   end
-
 end

@@ -11,7 +11,7 @@ class Layout
   end
 
   def variants
-    self.config.collect do |variant, config|
+    self.config.map do |variant, config|
       [config["name"], variant] unless ['extends', "target_defaults"].include?(variant) || !config
     end.compact
   end
@@ -19,7 +19,7 @@ class Layout
   def find_variant(id)
     var = self.config[id]
     if var
-      var[:id]=id
+      var[:id] = id
       # Set column defaults
       self.config["target_defaults"].each do |col, conf|
         if var.has_key?(col)
@@ -67,13 +67,13 @@ class Layout
       Dir[File.join(Rails.root, 'app', 'layouts', '*'), File.join(DevCMS.core_root, 'app', 'layouts', '*')].each do |layout_path|
         configs[layout_path.split('/').last] = YAML.load_file( File.join(layout_path, 'config.yml')).merge({'path' => layout_path})
       end
-      @all_layouts = configs.collect do |id, config|
+      @all_layouts = configs.map do |id, config|
         if parent = config['extends']
-          config = configs[parent].merge(config) 
+          config = configs[parent].merge(config)
         end
         self.new(id, config.dup)
       end
     end
     return @all_layouts
-  end  
+  end
 end
