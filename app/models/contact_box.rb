@@ -28,10 +28,10 @@
 #  * A +TopHitsPage+ can be inserted into nodes of any accepting type.
 #
 class ContactBox < ActiveRecord::Base
-   # Adds content node functionality to contact boxes.
+  # Adds content node functionality to contact boxes.
   acts_as_content_node({
      :allowed_child_content_types => %w( Image ),
-     :show_in_menu => false,      
+     :show_in_menu => false,
      :allowed_roles_for_create  => %w( admin ),
      :allowed_roles_for_destroy => %w( admin ),
      :available_content_representations => ['content_box'],
@@ -44,7 +44,7 @@ class ContactBox < ActiveRecord::Base
   validates_length_of :title, :in => 3..255
 
   validates_length_of :contact_information, :default_text, :minimum => 3
-  
+
   validates_length_of :monday_text,
                       :tuesday_text,
                       :wednesday_text,

@@ -1,4 +1,4 @@
-# This +RESTful+ controller is used to orchestrate and control the flow of 
+# This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +Weblog+ objects.
 class Admin::WeblogsController < Admin::AdminController
   before_filter :default_format_json,  :only => :index

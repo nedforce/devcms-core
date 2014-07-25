@@ -31,6 +31,4 @@ protected
     @engine = params[:search_engine] if params[:search_engine].present?
     @engine = Devcms.search_configuration[:default_search_engine] unless Devcms.search_configuration[:enabled_search_engines].include?(@engine)
   end
-
 end
-

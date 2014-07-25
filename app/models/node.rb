@@ -391,7 +391,7 @@ class Node < ActiveRecord::Base
 
   # Returns the text that should be displayed in the node tree
   def tree_text
-    tree_text = ""
+    tree_text = ''
 
     latest_version = self.content.versions.current
 
@@ -692,4 +692,3 @@ protected
 
   ActiveSupport.run_load_hooks(:node, self)
 end
-

@@ -1,4 +1,4 @@
-# This +RESTful+ controller is used to orchestrate and control the flow of 
+# This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to HtmlPage objects.
 class HtmlPagesController < ApplicationController
   before_filter :find_html_page,              :only => :show

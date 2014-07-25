@@ -1,6 +1,7 @@
 module DevcmsCore
   module AuthenticatedSystem
     protected
+
       # Returns true or false if the user is logged in.
       # Preloads @current_user with the user model if they're logged in.
       def logged_in?
@@ -17,7 +18,6 @@ module DevcmsCore
       def current_user=(new_user)
         session[:user_id] = new_user ? new_user.id : nil
         @current_user = new_user || false
-
       end
 
       # Check if the user is authorized

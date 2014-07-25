@@ -1,17 +1,17 @@
 class SitemapsController < ApplicationController
   skip_before_filter :find_node
-  
+
   before_filter :set_node_to_root, :only => :changes
 
   # Shows the sitemap.
   #
   # * GET /sitemap
-  def show  
+  def show
     respond_to do |format|
       format.html # index.html.erb
-    end  
+    end
   end
-  
+
   # Shows the changes since params[:interval] in seconds
   #
   # * GET /sitemap/changes
@@ -19,7 +19,7 @@ class SitemapsController < ApplicationController
     respond_to do |format|
       format.xml do
         raise ::AbstractController::ActionNotFound if params[:interval].blank?
-        @changes = Node.all_including_deleted(:conditions => ["updated_at > ?", Time.now - params[:interval].to_i], :order => "updated_at DESC" )
+        @changes = Node.all_including_deleted(:conditions => ['updated_at > ?', Time.now - params[:interval].to_i], :order => 'updated_at DESC')
       end
       format.any(:rss, :atom) do
         @nodes = @node.last_changes(:all, { :limit => 25 })
@@ -27,13 +27,13 @@ class SitemapsController < ApplicationController
       end
     end
   end
-  
+
 protected
 
   def set_node_to_root
     @node = current_site
   end
-  
+
   def set_rss_feed_url
     @rss_feed_url = changes_sitemap_url(:format => 'atom')
   end

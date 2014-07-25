@@ -1,8 +1,8 @@
-# This +RESTful+ controller is used to orchestrate and control the flow of 
+# This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +NewsArchive+ objects.
 class NewsArchivesController < ApplicationController
 
-  # The +show+ action needs a +NewsArchive+ object to work with.  
+  # The +show+ action needs a +NewsArchive+ object to work with.
   before_filter :find_news_archive, :only => [:show, :archive]
 
   # See application controller
@@ -18,7 +18,7 @@ class NewsArchivesController < ApplicationController
     respond_to do |format|
       format.html # show.html.haml
       format.any(:rss, :atom) { render :layout => false }
-      format.xml  { render :xml => @news_archive }
+      format.xml { render :xml => @news_archive }
     end
   end
 
@@ -39,6 +39,7 @@ class NewsArchivesController < ApplicationController
   end
 
 protected
+
   # Finds the +NewsArchive+ object corresponding to the passed in +id+ parameter.
   def find_news_archive
     @news_archive = @node.content

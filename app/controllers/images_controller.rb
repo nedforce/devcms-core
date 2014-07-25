@@ -1,13 +1,12 @@
 class ImagesController < ApplicationController
-  
   prepend_before_filter :redirect_to_jpg, :except => :show
-  
+
   skip_before_filter :confirm_destroy, :set_search_scopes, :set_private_menu, :find_accessible_content_children_for_menu, :set_rss_feed_url, :set_view_paths
-  
+
   before_filter :find_image, :set_image_format
-  
+
   before_filter :redirect_private, :except => :show
-  
+
   skip_after_filter :increment_hits
 
   layout false
@@ -21,7 +20,7 @@ class ImagesController < ApplicationController
   def header
     render_image_data @image.resize!(:size => "#{Image::HEADER_IMAGE_SIZE[:width]}x#{Image::HEADER_IMAGE_SIZE[:height]}", :crop => true, :upsample => true, :quality => 90, :format => @image_format)
   end
-  
+
   def big_header
     render_image_data @image.resize!(:size => "#{Image::HEADER_BIG_IMAGE_SIZE[:width]}x#{Image::HEADER_BIG_IMAGE_SIZE[:height]}", :crop => true, :upsample => true, :quality => 90, :format => @image_format)
   end
@@ -97,11 +96,11 @@ protected
   end
 
   def redirect_private
-    if !params[:action].include?("private_") && @image.node.private?
-      redirect_to url_for(:id => @image.id, :action => "private_#{params[:action]}", :format => @image_format )
+    if !params[:action].include?('private_') && @image.node.private?
+      redirect_to url_for(:id => @image.id, :action => "private_#{params[:action]}", :format => @image_format)
     end
   end
-  
+
   # Wrapper functions for render_image
   # def render_image(image_path); render_image(image_path, :file); end
   def render_image_data(image_data); render_image(image_data, :data); end
@@ -122,9 +121,9 @@ protected
             send_data image_data_or_file, options
           elsif type == :file
             send_file image_data_or_file, options
-          end         
+          end
         end
-      end      
+      end
     end
   end
 end

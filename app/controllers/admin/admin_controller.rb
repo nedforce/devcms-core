@@ -10,41 +10,42 @@ class Admin::AdminController < ApplicationController
 
   # Don't set search scopes in backend
   skip_before_filter :set_search_scopes
-  
+
   skip_before_filter :set_private_menu
-  
+
   skip_before_filter :find_accessible_content_children_for_menu
-  
+
   skip_before_filter :set_page_title
-  
+
   skip_before_filter :set_rss_feed_url
-  
+
   skip_before_filter :check_authorization
-  
+
   # Require the user to be logged in for all actions.
   before_filter :login_required
 
   # Require users to have at least one of the roles +admin+, +final_editor+ and +editor+.
-  require_role [ 'admin', 'final_editor', 'editor' ], :any_node => true
+  require_role ['admin', 'final_editor', 'editor'], :any_node => true
 
   # Set the action buttons for the +show+ and +previous+ actions.
-  before_filter :set_actions,               :only => [ :show, :previous ]
+  before_filter :set_actions, :only => [:show, :previous]
 
-  before_filter :set_for_approval,          :only => [ :edit, :update ]
-  
+  before_filter :set_for_approval, :only => [:edit, :update]
+
   # Skip the filter that increments the hits for nodes
   skip_after_filter :increment_hits
-  
+
   # Politely ask browsers to not cache anything in the admin namespace..
-  before_filter :set_cache_buster, :only => [:show, :edit, :update, :previous, :import, :build ]
+  before_filter :set_cache_buster, :only => [:show, :edit, :update, :previous, :import, :build]
 
   layout :layout?
 
   helper Admin::NewsletterArchiveHelper, Admin::AgendaItemsHelper, Admin::AdminHelper, Admin::AdminFormBuilderHelper, Admin::DiffHelper, Admin::CropperHelper
-  
-  cache_sweeper :node_sweeper, :only => [ :create, :update, :destroy, :approve, :set_visibility, :set_accessibility, :move, :bulk_update, :bulk_destroy, :sort_children ]
+
+  cache_sweeper :node_sweeper, :only => [:create, :update, :destroy, :approve, :set_visibility, :set_accessibility, :move, :bulk_update, :bulk_destroy, :sort_children]
 
 protected
+
   def default_format_json
     if(request.headers["HTTP_ACCEPT"].nil? &&
        params[:format].nil?)
@@ -62,12 +63,12 @@ protected
     return unless params[:id].present? && controller_model.respond_to?(:is_content_node?) && controller_model.is_content_node?
     @node = Node.include_content.where([ 'content_type = ? AND content_id = ?', controller_model.base_class.name, params[:id] ]).first!    
   end
-  
+
   # Finds the Node object corresponding to the passed in +parent_node_id+ parameter.
   def find_parent_node
     @parent_node ||= Node.find(params[:parent_node_id]) if params[:parent_node_id]
   end
-  
+
   def find_children
     @children = (@calendar_item || @meeting).node.children.accessible.exclude_content_types(%w( Image Attachment ContentCopy )).include_content.map { |n| n.content }
     find_images_and_attachments
@@ -148,7 +149,7 @@ protected
 
     unless params[:show_actions] == 'false' || @node.blank?
       role = current_user.role_on(@node)
-      
+
       if role && @node.content_type_configuration[:allowed_roles_for_update].include?(role.name)
         @actions << { :url => { :action => :edit }, :text => I18n.t('admin.edit'), :method => :get }
       end
@@ -166,14 +167,14 @@ protected
   def set_page_title
     # do nothing
   end
-  
+
   def parse_start_and_end_times
     type = if params.has_key?(:calendar_item)
       :calendar_item
     elsif params.has_key?(:meeting)
       :meeting
     end
-    
+
     if type.present?
       params[type][:start_time] = Time.parse(params[type].delete(:start_time)) rescue nil if params[type][:start_time].present?
       params[type][:end_time]   = Time.parse(params[type].delete(:end_time))   rescue nil if params[type][:end_time].present?  

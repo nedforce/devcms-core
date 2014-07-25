@@ -414,6 +414,7 @@ module PrototypeHelper
   end
 
   protected
+
     def build_observer(klass, name, options = {})
       if options[:with] && (options[:with] !~ /[\{=(.]/)
         options[:with] = "'#{options[:with]}=' + encodeURIComponent(value)"

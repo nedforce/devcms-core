@@ -1,21 +1,21 @@
 module NodeExtensions::Layouting
-  extend ActiveSupport::Concern    
-    
+  extend ActiveSupport::Concern
+
   included do
     # Scopes, validations & associations
-    
+
     has_many :sections, :foreign_key => :frontpage_node_id
     validate :should_not_hide_global_frontpage
-    
+
     has_many :content_representations, :dependent => :destroy, :foreign_key => :parent_id, :order => :position
     has_many :representations,         :dependent => :destroy, :class_name => 'ContentRepresentation', :foreign_key => :content_id
-    
+
     serialize :layout_configuration, Hash
-    
+
     before_create :set_default_layout
   end
 
-  module ClassMethods  
+  module ClassMethods
     # Class methods
     # Returns the global frontpage node.
     def global_frontpage
@@ -23,7 +23,7 @@ module NodeExtensions::Layouting
       root.content.has_frontpage? ? root.content.frontpage_node : root
     end
   end
-  
+
   # [Rails3] Serialized attributes may return an internal object. Should be fixed in 3.2.4.
   def layout_configuration
     value = super
@@ -38,15 +38,15 @@ module NodeExtensions::Layouting
   def own_or_inherited_layout
     Layout.find(layout) || inherited_layout
   end
-  
+
   def inherited_layout
     if parent
       return parent.own_or_inherited_layout
     else
-      raise "node has no parent to inherit layout from"
+      raise 'node has no parent to inherit layout from'
     end
   end
-  
+
   def own_or_inherited_layout_variant
     if layout_variant.present?
       own_or_inherited_layout.find_variant(self.layout_variant)
@@ -54,23 +54,23 @@ module NodeExtensions::Layouting
       inherited_layout_variant
     end
   end
-  
+
   # Find the inherited layout, fall back to default if it is not inheritable
   def inherited_layout_variant
     if self.parent
       var = parent.own_or_inherited_layout_variant
       return var['inheritable'] ? var : own_or_inherited_layout.find_variant('default')
     else
-      raise "node has no parent to inherit layout from"
+      raise 'node has no parent to inherit layout from'
     end
   end
-  
+
   # Remove all layout elements and settings for this node
   def reset_layout
     content_representations.clear
     update_attributes(:layout => nil, :layout_configuration => nil, :layout_variant => nil)
   end
-  
+
   # Update and save the layout condiguration given as node attributes
   # TODO: Refactor to use setters and a writer for the representations
   def update_layout(layout_config = {})
@@ -130,15 +130,14 @@ module NodeExtensions::Layouting
       end
     end
   end
-  
+
   # Merges parent layout config with own layout config
   def own_or_inherited_layout_configuration
     config = parent.own_or_inherited_layout_configuration unless root? || content_class == Site
     config ||= {}
     config.merge(layout_configuration || {})
   end
-  
-  
+
   # Retrieve content representations for a given target
   # Can inherit from parent node (defaults to true)
   def find_content_representations(target, inherit = true)
@@ -151,7 +150,7 @@ module NodeExtensions::Layouting
       content_representations.where(conditions).includes(:content)
     end
   end
-  
+
   # Find header image(s) for this node, either those set on this node or on one of its parents.
   def header_images
     Image.accessible.where(:is_for_header => true, 'nodes.ancestry' => self.header_container_ancestry)
@@ -162,7 +161,7 @@ module NodeExtensions::Layouting
   def header_container_ancestry
     ancestries = []
     path_ids.reduce([]) do |last_path, parent_id|
-      ancestries << last_path.push(parent_id).join("/")
+      ancestries << last_path.push(parent_id).join('/')
       last_path
     end
     container_ancestry = Image.includes(:node).where("is_for_header = ? and nodes.ancestry IN (?)", true, ancestries).group('nodes.ancestry').count.keys.last
@@ -181,7 +180,7 @@ module NodeExtensions::Layouting
   def random_header_image
     header_images.sample
   end
-  
+
   # Returns true if this node is a frontpage, false otherwise.
   def is_frontpage?
     sections.any?
@@ -196,14 +195,14 @@ module NodeExtensions::Layouting
   def contains_global_frontpage?
     Node.global_frontpage.is_descendant_of?(self)
   end
-  
+
   protected
 
   # Prevents a +Node+ from being hidden if it is, or contains the +global+ frontpage.
   def should_not_hide_global_frontpage
     errors.add(:base, :cant_hide_frontpage) if (private? || hidden?) && (is_global_frontpage? || contains_global_frontpage?)
   end
-  
+
   def set_default_layout
     if sub_content_type == 'Site'
       self.layout = Node.roots.present? ? Node.root.layout : 'default'
@@ -211,5 +210,4 @@ module NodeExtensions::Layouting
       self.layout_configuration = {}
     end
   end
-
 end

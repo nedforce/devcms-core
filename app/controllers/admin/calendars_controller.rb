@@ -1,4 +1,4 @@
-# This +RESTful+ controller is used to orchestrate and control the flow of 
+# This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +Calendar+ objects.
 class Admin::CalendarsController < Admin::AdminController
   before_filter :default_format_json,  :only => :index

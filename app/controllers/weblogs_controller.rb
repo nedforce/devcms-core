@@ -1,4 +1,4 @@
-# This +RESTful+ controller is used to orchestrate and control the flow of 
+# This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +Weblog+ objects. It offers special actions
 # to allow registered users to create, update and delete their own weblogs.
 class WeblogsController < ApplicationController

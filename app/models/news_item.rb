@@ -41,16 +41,16 @@ class NewsItem < ActiveRecord::Base
 
   # A +NewsItem+ can be a carrousel item
   has_many :carrousel_items, :as => :item, :dependent => :destroy
-  
+
   # A +NewsItem+ has many +NewsViewerItem+ objects, destroy if this object is destroyed.
   has_many :news_viewer_items, :dependent => :destroy
-  
+
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of :title, :body, :news_archive
   validates_length_of   :title, :in => 2..255, :allow_blank => true
-  
+
   scope :newest, lambda{ includes(:node).where(['nodes.publication_start_date >= ?', (Settler['news_viewer_time_period'] ? Settler['news_viewer_time_period'].to_i : 2).weeks.ago]) } 
-  
+
   after_paranoid_delete :remove_associated_content
 
   # Alternative text for tree nodes.
@@ -72,7 +72,7 @@ class NewsItem < ActiveRecord::Base
   def self.owms_type
     I18n.t('owms.news_item')
   end
-  
+
 protected
 
   def remove_associated_content

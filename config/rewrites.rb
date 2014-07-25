@@ -1,5 +1,5 @@
 Rails.application.config.rewriter.append do
-  
+
   rewrite /^\/(?<query>\?.+)?$/, (lambda do |match, rack_env| 
     begin
       query = match[:query].present? ? match[:query] : ''
@@ -19,7 +19,7 @@ Rails.application.config.rewriter.append do
       match.string
     end
   end)
-  
+
   rewrite /(?<url_alias>(?<slug>[a-zA-Z0-9_\-]+)(\/[a-zA-Z0-9_\-]+)*)\/(?<action>changes.*)(?<query>\?.+)?/, (lambda do |match, rack_env|
     begin
       query = match[:query] rescue ''
@@ -28,15 +28,15 @@ Rails.application.config.rewriter.append do
     rescue ActiveRecord::RecordNotFound
       match.string
     end
-  end)  
-    
+  end)
+
   rewrite /(?<url_alias>(?<slug>[a-zA-Z0-9_\-]+)(\/[a-zA-Z0-9_\-]+)*)(?<format>\.[a-zA-Z]+)?(?<query>\?.+)?/, (lambda do |match, rack_env|
     unless Rails.application.config.reserved_slugs.include?(match[:slug])
-      begin 
+      begin
         site   = Site.find_by_domain!(rack_env['SERVER_NAME'])
         format = match[:format] rescue ''
         query  = match[:query] rescue ''
-        
+
         node = Node.find_node_for_url_alias!(match[:url_alias], site)
         remaining_path = match[:url_alias].sub(/^#{node.url_alias}/, '')
         rewritten_path = Node.path_for_node(node, remaining_path, format, query)
@@ -44,11 +44,10 @@ Rails.application.config.rewriter.append do
       rescue ActiveRecord::RecordNotFound
         match.string
       end
-      
+
     else
       match.string
     end
   end)
-  
-end
 
+end
