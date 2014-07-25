@@ -40,7 +40,6 @@ class AbbreviationTest < ActiveSupport::TestCase
   protected
 
   def create_abbreviation(options = {})
-    Abbreviation.create({ :abbr => "snafu", :definition => "Situation Normal All Fucked Up", :node => nodes(:root_section_node)}.merge(options))
+    Abbreviation.create({ :abbr => 'snafu', :definition => 'Situation Normal All Fucked Up', :node => nodes(:root_section_node) }.merge(options))
   end
-
 end

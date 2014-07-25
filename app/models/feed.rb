@@ -31,7 +31,7 @@ class Feed < ActiveRecord::Base
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of :url
   validate :valid_feed?
-  
+
   def parsed_feed
     # cache hit?
     return YAML::load(cached_parsed_feed) if cached_parsed_feed
@@ -55,19 +55,19 @@ class Feed < ActiveRecord::Base
   def entries
     parsed_feed.try(:entries) || []
   end
-  
+
   # Update the feed
   def update_feed
     self.xml = nil
     save # will call read_feed
   end
-  
+
   # Set a new URL and clear the XML cache
   def url=(new_url)
     super(new_url)
     self.xml = nil
   end
-  
+
   # Sets the new XML and clears the parsed feed cache
   def xml=(new_xml)
     super(new_xml)

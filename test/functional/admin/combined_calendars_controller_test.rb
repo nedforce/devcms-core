@@ -2,19 +2,19 @@ require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::CombinedCalendarsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
-  
+
   def test_should_show_combined_calendar
     login_as :sjoerd
-    
+
     get :show, :id => combined_calendars(:combined_calendar).id
     assert_response :success
     assert assigns(:combined_calendar)
     assert_equal nodes(:combined_calendar_node), assigns(:node)
-  end  
-  
+  end
+
   def test_should_get_new
     login_as :sjoerd
-    
+
     get :new, :parent_node_id => nodes(:root_section_node).id
     assert_response :success
     assert assigns(:combined_calendar)
@@ -28,10 +28,10 @@ class Admin::CombinedCalendarsControllerTest < ActionController::TestCase
     assert assigns(:combined_calendar)
     assert_equal 'foo', assigns(:combined_calendar).title
   end
-  
+
   def test_should_create_calendar
     login_as :sjoerd
-    
+
     assert_difference('CombinedCalendar.count') do
       create_combined_calendar
       assert_response :success
@@ -62,22 +62,22 @@ class Admin::CombinedCalendarsControllerTest < ActionController::TestCase
       assert_template 'new'
     end
   end
-  
+
   def test_should_require_title
     login_as :sjoerd
-    
+
     assert_no_difference('CombinedCalendar.count') do
       create_combined_calendar({ :title => nil })
     end
-    
+
     assert_response :unprocessable_entity
     assert assigns(:combined_calendar).new_record?
     assert assigns(:combined_calendar).errors[:title].any?
   end
-  
+
   def test_should_get_edit
     login_as :sjoerd
-    
+
     get :edit, :id => combined_calendars(:combined_calendar).id
     assert_response :success
     assert assigns(:combined_calendar)
@@ -91,12 +91,12 @@ class Admin::CombinedCalendarsControllerTest < ActionController::TestCase
     assert assigns(:combined_calendar)
     assert_equal 'foo', assigns(:combined_calendar).title
   end
-  
+
   def test_should_update_combined_calendar
     login_as :sjoerd
-    
-    put :update, :id => combined_calendars(:combined_calendar).id, :combined_calendar => {:title => 'updated title', :description => 'updated_body'}
-    
+
+    put :update, :id => combined_calendars(:combined_calendar).id, :combined_calendar => { :title => 'updated title', :description => 'updated_body' }
+
     assert_response :success
     assert_equal 'updated title', assigns(:combined_calendar).title
   end
@@ -129,16 +129,15 @@ class Admin::CombinedCalendarsControllerTest < ActionController::TestCase
 
   def test_should_not_update_combined_calendar
     login_as :sjoerd
-    
-    put :update, :id => combined_calendars(:combined_calendar).id, :combined_calendar => {:title => nil}
+
+    put :update, :id => combined_calendars(:combined_calendar).id, :combined_calendar => { :title => nil }
     assert_response :unprocessable_entity
     assert assigns(:combined_calendar).errors[:title].any?
   end
 
 protected
-  
+
   def create_combined_calendar(attributes = {}, options = {})
     post :create, { :parent_node_id => nodes(:root_section_node).id, :combined_calendar => { :title => "Amazing combined calendar", :description => "Wow!" }.merge(attributes) }.merge(options)
   end
-  
 end

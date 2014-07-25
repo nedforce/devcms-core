@@ -29,7 +29,7 @@ class PollQuestionsController < ApplicationController
     respond_to do |format|
       format.html do
         if request.xhr?
-          render :partial => 'results_side_box', :locals => {:question => @poll_question}
+          render :partial => 'results_side_box', :locals => { :question => @poll_question }
         else
           render
         end
@@ -55,7 +55,7 @@ class PollQuestionsController < ApplicationController
   # PUT /poll_questions/:id/vote.js
   #
   # *parameters*
-  # 
+  #
   # +poll_option_id+ - The id of this question's option to cast a vote for. (Required)
   def vote
     already_voted = already_voted_for?(@poll_question)
@@ -77,7 +77,7 @@ class PollQuestionsController < ApplicationController
         else # redirect to results page
           flash[:notice]  = I18n.t('polls.you_voted')
         end
-        redirect_to results_poll_question_url(@poll_question)        
+        redirect_to results_poll_question_url(@poll_question)
       end
       format.js do
         render :update do |page|

@@ -80,7 +80,7 @@ class Admin::SearchPagesControllerTest < ActionController::TestCase
   def test_should_not_update_search_page
     login_as :sjoerd
 
-    put :update, :id => search_pages(:standard_search_page).id, :search_page => {:title => nil}
+    put :update, :id => search_pages(:standard_search_page).id, :search_page => { :title => nil }
     assert_response :unprocessable_entity
     assert assigns(:search_page).errors[:title].any?
   end

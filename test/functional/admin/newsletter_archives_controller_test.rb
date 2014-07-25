@@ -127,7 +127,7 @@ class Admin::NewsletterArchivesControllerTest < ActionController::TestCase
   def test_should_update_newsletter_archive
     login_as :sjoerd
 
-    put :update, :id => newsletter_archives(:devcms_newsletter_archive).id, :newsletter_archive => {:title => 'updated title', :description => 'updated_body'}
+    put :update, :id => newsletter_archives(:devcms_newsletter_archive).id, :newsletter_archive => { :title => 'updated title', :description => 'updated_body' }
 
     assert_response :success
     assert_equal 'updated title', assigns(:newsletter_archive).title
@@ -162,7 +162,7 @@ class Admin::NewsletterArchivesControllerTest < ActionController::TestCase
   def test_should_not_update_section
     login_as :sjoerd
 
-    put :update, :id => newsletter_archives(:devcms_newsletter_archive).id, :newsletter_archive => {:title => nil}
+    put :update, :id => newsletter_archives(:devcms_newsletter_archive).id, :newsletter_archive => { :title => nil }
     assert_response :unprocessable_entity
     assert assigns(:newsletter_archive).errors[:title].any?
   end
@@ -176,6 +176,4 @@ protected
   def create_newsletter_edition(options = {})
     NewsletterEdition.create({ :parent => nodes(:newsletter_archive_node), :title => 'Het maandelijkse nieuws!', :published => 'publishing', :body => 'O o o wat is het weer een fijne maand geweest.' }.merge(options))
   end
-
 end
-

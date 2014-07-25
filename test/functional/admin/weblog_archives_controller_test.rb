@@ -191,7 +191,7 @@ class Admin::WeblogArchivesControllerTest < ActionController::TestCase
   def test_should_not_update_weblog_archive
     login_as :sjoerd
 
-    put :update, :id => weblog_archives(:devcms_weblog_archive).id, :weblog_archive => {:title => nil}
+    put :update, :id => weblog_archives(:devcms_weblog_archive).id, :weblog_archive => { :title => nil }
     assert_response :unprocessable_entity
     assert assigns(:weblog_archive).errors[:title].any?
   end

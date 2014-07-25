@@ -1,16 +1,16 @@
 # A content copy is a content node that represents a copy of another content node
-# i.e., it acts as a symbolic link. It has specified +acts_as_content_node+ 
+# i.e., it acts as a symbolic link. It has specified +acts_as_content_node+
 # from Acts::ContentNode::ClassMethods.
-# 
-# To prevent circular references, it is not allowed that the linked Node instance 
+#
+# To prevent circular references, it is not allowed that the linked Node instance
 # (as identified by +copied_node+) is associated with a ContentCopy content node.
-# 
+#
 # NOTE: +node+ is the associated Node, +copied_node+ is the Node that is copied.
-# 
+#
 # *Specification*
-# 
+#
 # Attributes
-# 
+#
 # * +copied_node+ - The node whose content this content copy copies.
 #
 # Preconditions
@@ -49,10 +49,10 @@ class ContentCopy < ActiveRecord::Base
   def title_changed?
     self.copied_node.content.title_changed?
   end
-  
+
   # Returns the CSS class name to be used for icons in tree view.
   def tree_icon_class
-    self.copied_node.content_type.underscore + "_icon"
+    self.copied_node.content_type.underscore + '_icon'
   end
 
   # Returns the image file name to be used for icons in a Section's show view.
@@ -64,7 +64,7 @@ class ContentCopy < ActiveRecord::Base
   def copied_content_class
     self.copied_node.blank? ? self.class : copied_node.content_class
   end
-  
+
   # Try to delegate unknown methods to the copied node's content
   def method_missing(method_name, *args)
     if self.copied_node.present? && self.copied_node.content.respond_to?(method_name)
@@ -73,7 +73,7 @@ class ContentCopy < ActiveRecord::Base
       super
     end
   end
-  
+
   # Necessary because we override method_missing
   def respond_to?(*args)
     if self.copied_node.present? && self.copied_node.content.respond_to?(*args)
@@ -84,17 +84,17 @@ class ContentCopy < ActiveRecord::Base
   end
 
 protected
-  
+
   def copy_publication_and_expiration_dates
     return unless self.copied_node.present?
-    
-    self.expires_on = self.copied_node.expires_on
+
+    self.expires_on             = self.copied_node.expires_on
     self.publication_start_date = self.copied_node.publication_start_date
     self.publication_end_date   = self.copied_node.publication_end_date
   end
 
-  # To prevent circular references, we must ensure that the copied Node instance 
-  # (as identified by +copied_node+) is not associated with a ContentCopy content 
+  # To prevent circular references, we must ensure that the copied Node instance
+  # (as identified by +copied_node+) is not associated with a ContentCopy content
   # node.
   def ensure_copied_node_is_not_associated_with_a_content_copy_content_node
     errors.add(:base, :copied_content_cannot_be_content_copy) if self.copied_node && self.copied_node.content.is_a?(ContentCopy)
@@ -104,5 +104,4 @@ protected
   def ensure_copied_node_is_associated_with_a_copyable_content_node
     errors.add(:base, :copied_content_must_be_copyable) if self.copied_node && !self.copied_node.content_type_configuration[:copyable]
   end
-
 end

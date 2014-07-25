@@ -2,7 +2,7 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 
 class NewsArchivesControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
-  
+
   def test_should_show_news_archive
     get :show, :id => news_archives(:devcms_news).id
     assert_response :success
@@ -12,7 +12,7 @@ class NewsArchivesControllerTest < ActionController::TestCase
     assert_nil assigns(:news_items_for_table)
     assert_equal nodes(:devcms_news_node), assigns(:node)
   end
-  
+
   def test_should_show_news_archive_atom
     get :show, :id => news_archives(:devcms_news).id, :format => 'atom'
     assert_response :success
@@ -33,7 +33,7 @@ class NewsArchivesControllerTest < ActionController::TestCase
   end
 
   def test_should_show_news_archive_archive_action_from_search
-    get :archive, :id => news_archives(:devcms_news).id, :date => {:month => Date.today.month, :year => Date.today.year}
+    get :archive, :id => news_archives(:devcms_news).id, :date => { :month => Date.today.month, :year => Date.today.year }
     assert_response :success
     assert assigns(:news_archive)
     assert assigns(:start_date)

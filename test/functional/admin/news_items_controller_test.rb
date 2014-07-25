@@ -6,29 +6,29 @@ class Admin::NewsItemsControllerTest < ActionController::TestCase
   def setup
     @news_item = news_items(:devcms_news_item)
   end
-  
+
   def test_should_show_news_item
     login_as :sjoerd
-    
+
     get :show, :id => @news_item
     assert assigns(:news_item)
     assert_response :success
     assert_equal @news_item.node, assigns(:node)
   end
-  
+
   def test_should_get_previous
     @news_item.save :user => User.find_by_login('editor')
-    
+
     login_as :sjoerd
 
     get :previous, :id => @news_item
     assert_response :success
     assert assigns(:news_item)
-  end  
-  
+  end
+
   def test_should_get_new
     login_as :sjoerd
-    
+
     get :new, :parent_node_id => nodes(:devcms_news_node).id
     assert_response :success
     assert assigns(:news_item)
@@ -42,10 +42,10 @@ class Admin::NewsItemsControllerTest < ActionController::TestCase
     assert assigns(:news_item)
     assert_equal 'foo', assigns(:news_item).title
   end
-  
+
   def test_should_create_news_item
     login_as :sjoerd
-    
+
     assert_difference('NewsItem.count') do
       create_news_item
       assert_response :success
@@ -76,22 +76,22 @@ class Admin::NewsItemsControllerTest < ActionController::TestCase
       assert_template 'new'
     end
   end
-  
+
   def test_should_require_title
     login_as :sjoerd
-    
+
     assert_no_difference('NewsItem.count') do
       create_news_item(:title => nil)
     end
-    
+
     assert_response :unprocessable_entity
     assert assigns(:news_item).new_record?
     assert assigns(:news_item).errors[:title].any?
   end
-  
+
   def test_should_get_edit
     login_as :sjoerd
-    
+
     get :edit, :id => news_items(:devcms_news_item).id
     assert_response :success
     assert assigns(:news_item)
@@ -105,12 +105,12 @@ class Admin::NewsItemsControllerTest < ActionController::TestCase
     assert assigns(:news_item)
     assert_equal 'foo', assigns(:news_item).title
   end
-  
+
   def test_should_update_news_item
     login_as :sjoerd
-    
+
     put :update, :id => news_items(:devcms_news_item).id, :news_item => { :title => 'updated title', :body => 'updated body' }
-    
+
     assert_response :success
     assert_equal 'updated title', assigns(:news_item).title
   end
@@ -138,10 +138,10 @@ class Admin::NewsItemsControllerTest < ActionController::TestCase
     assert_equal old_title, news_item.reload.title
     assert_template 'edit'
   end
-  
+
   def test_should_not_update_news_item
     login_as :sjoerd
-    
+
     put :update, :id => news_items(:devcms_news_item).id, :news_item => { :title => nil }
     assert_response :unprocessable_entity
     assert assigns(:news_item).errors[:title].any?

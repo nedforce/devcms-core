@@ -27,29 +27,29 @@
 #
 class Event < ActiveRecord::Base
   acts_as_content_node
-  
+
   needs_editor_approval
-  
+
   # Adds support for optional attributes
   has_dynamic_attributes
-  
+
   attr_accessor :date
-  
+
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of :title, :calendar
   validates_length_of   :title, :in => 2..255, :allow_blank => true
-  
+
   before_validation :set_start_and_end_time, :if => :start_time
-  
+
   has_parent :calendar
-  
+
   has_many :event_registrations, :dependent => :destroy
   has_many :users, :through => :event_registrations
-  
+
   scope :with_ancestry, lambda { |ancestry| includes(:node).where('nodes.ancestry' => ancestry).order('start_time DESC') } do
     include DevcmsCore::CalendarItemsAssociationExtensions
   end
-  
+
   # Returns a URL alias for a given +node+.
   def path_for_url_alias(node)
     "#{self.start_time.year}/#{self.start_time.month}/#{self.start_time.day}/#{self.title}"
@@ -59,14 +59,14 @@ class Event < ActiveRecord::Base
   def self.owms_type
     I18n.t('owms.meeting_info')
   end
-  
+
   def self.send_registration_notifications
     all(:conditions => ["start_time <= ? AND subscription_enabled = ?", Time.now + 1.day, true]).each do |event|
       event.update_attribute :subscription_enabled, false
       EventMailer.event_registrations(event).deliver if event.event_registrations.any?
     end
-  end  
-  
+  end
+
 protected
 
   def set_start_and_end_time

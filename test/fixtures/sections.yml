@@ -22,7 +22,7 @@ hidden_section:
 
 not_hidden_section:
   title: Niet prive sectie
-  description: Prive, is deze niet.
+  description: "Prive, is deze niet."
 
 editor_section:
   title: Te bewerken door redacteurs

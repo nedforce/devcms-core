@@ -1,9 +1,9 @@
-<% now = Time.now %>
+<% now = Time.zone.now %>
 
 events_calendar_item_one:
   type: CalendarItem
   title: Kermis
-  body: Kermis, hoezee!
+  body: "Kermis, hoezee!"
   location_description: Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch
   start_time: <%= now.to_s(:db) %>
   end_time: <%= (now + 1.hour).to_s(:db) %>

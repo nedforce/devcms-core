@@ -5,17 +5,17 @@ class Admin::AgendaItemsControllerTest < ActionController::TestCase
 
   def test_should_show_agenda_item
     login_as :sjoerd
-    
+
     get :show, :id => agenda_items(:agenda_item_one).id
 
     assert assigns(:agenda_item)
     assert_response :success
     assert_equal nodes(:agenda_item_one_node), assigns(:node)
   end
-  
+
   def test_should_get_new
     login_as :sjoerd
-    
+
     get :new, :parent_node_id => nodes(:meetings_calendar_meeting_one_node).id
     assert_response :success
     assert assigns(:agenda_item)
@@ -29,10 +29,10 @@ class Admin::AgendaItemsControllerTest < ActionController::TestCase
     assert assigns(:agenda_item)
     assert_equal 'foo', assigns(:agenda_item).body
   end
-  
+
   def test_should_create_agenda_item
     login_as :sjoerd
-    
+
     assert_difference('AgendaItem.count') do
       create_agenda_item
       assert_response :success
@@ -63,22 +63,22 @@ class Admin::AgendaItemsControllerTest < ActionController::TestCase
       assert_template 'new'
     end
   end
-  
+
   def test_should_require_description
     login_as :sjoerd
-    
+
     assert_no_difference('AgendaItem.count') do
       create_agenda_item(:description => nil)
     end
-    
+
     assert_response :unprocessable_entity
     assert assigns(:agenda_item).new_record?
     assert assigns(:agenda_item).errors[:description].any?
   end
-  
+
   def test_should_get_edit
     login_as :sjoerd
-    
+
     get :edit, :id => agenda_items(:agenda_item_one).id
     assert_response :success
     assert assigns(:agenda_item)
@@ -92,12 +92,12 @@ class Admin::AgendaItemsControllerTest < ActionController::TestCase
     assert assigns(:agenda_item)
     assert_equal 'foo', assigns(:agenda_item).body
   end
-  
+
   def test_should_update_agenda_item
     login_as :sjoerd
-    
+
     put :update, :id => agenda_items(:agenda_item_one).id, :agenda_item => { :description => 'updated title', :body => 'updated body' }
-    
+
     assert_response :success
     assert_equal 'updated title', assigns(:agenda_item).description
   end
@@ -127,18 +127,18 @@ class Admin::AgendaItemsControllerTest < ActionController::TestCase
     assert_equal old_description, agenda_item.reload.description
     assert_template 'edit'
   end
-  
+
   def test_should_not_update_agenda_item_with_invalid_title
     login_as :sjoerd
-    
+
     put :update, :id => agenda_items(:agenda_item_one).id, :agenda_item => { :description => nil }
     assert_response :unprocessable_entity
     assert assigns(:agenda_item).errors[:description].any?
   end
 
 protected
-  
+
   def create_agenda_item(attributes = {}, options = {})
-    post :create, { :parent_node_id => nodes(:meetings_calendar_meeting_one_node).id, :agenda_item => { :description => 'description', :body => 'Lorem ipsum', :agenda_item_category_name => agenda_item_categories(:hamerstukken).name }.merge(attributes)}.merge(options)
+    post :create, { :parent_node_id => nodes(:meetings_calendar_meeting_one_node).id, :agenda_item => { :description => 'description', :body => 'Lorem ipsum', :agenda_item_category_name => agenda_item_categories(:hamerstukken).name }.merge(attributes) }.merge(options)
   end
 end

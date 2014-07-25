@@ -2,20 +2,20 @@ require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::CalendarItemsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
-  
+
   def setup
     @calendar_item = events(:events_calendar_item_one)
   end
 
   def test_should_show_calendar_item
     login_as :sjoerd
-    
+
     get :show, :id => @calendar_item
     assert assigns(:calendar_item)
-    assert_response :success    
+    assert_response :success
     assert_equal nodes(:events_calendar_item_one_node), assigns(:node)
   end
-  
+
   def test_should_get_previous
     @calendar_item.title = 'foo'
     @calendar_item.save :user => User.find_by_login('editor')
@@ -23,14 +23,14 @@ class Admin::CalendarItemsControllerTest < ActionController::TestCase
     login_as :sjoerd
 
     get :previous, :id => @calendar_item
-    
+
     assert_response :success
     assert assigns(:calendar_item)
   end
-  
+
   def test_should_get_new
     login_as :sjoerd
-    
+
     get :new, :parent_node_id => nodes(:events_calendar_node).id
     assert_response :success
     assert assigns(:calendar_item)
@@ -44,10 +44,10 @@ class Admin::CalendarItemsControllerTest < ActionController::TestCase
     assert assigns(:calendar_item)
     assert_equal 'foo', assigns(:calendar_item).title
   end
-  
+
   def test_should_create_calendar_item
     login_as :sjoerd
-    
+
     assert_difference('CalendarItem.count', 1) do
       create_calendar_item_request
       assert_response :success
@@ -78,22 +78,22 @@ class Admin::CalendarItemsControllerTest < ActionController::TestCase
       assert_template 'new'
     end
   end
-  
+
   def test_should_require_title
     login_as :sjoerd
-    
+
     assert_no_difference('CalendarItem.count') do
       create_calendar_item_request(:title => nil)
     end
-    
+
     assert_response :unprocessable_entity
     assert assigns(:calendar_item).new_record?
     assert assigns(:calendar_item).errors[:title].any?
   end
-  
+
   def test_should_get_edit
     login_as :sjoerd
-    
+
     get :edit, :id => events(:events_calendar_item_one).id
     assert_response :success
     assert assigns(:calendar_item)
@@ -107,12 +107,12 @@ class Admin::CalendarItemsControllerTest < ActionController::TestCase
     assert assigns(:calendar_item)
     assert_equal 'foo', assigns(:calendar_item).title
   end
-  
+
   def test_should_update_calendar_item
     login_as :sjoerd
-    
+
     put :update, :id => events(:events_calendar_item_one).id, :calendar_item => { :title => 'updated title', :body => 'updated body' }
-    
+
     assert_response :success
     assert_equal 'updated title', assigns(:calendar_item).title
   end
@@ -142,10 +142,10 @@ class Admin::CalendarItemsControllerTest < ActionController::TestCase
     assert_equal old_title, calendar_item.reload.title
     assert_template 'edit'
   end
-  
+
   def test_should_not_update_calendar_item_with_invalid_title
     login_as :sjoerd
-    
+
     old_title = events(:events_calendar_item_one).title
     put :update, :id => events(:events_calendar_item_one).id, :calendar_item => { :title => nil }
     assert_response :unprocessable_entity
@@ -159,12 +159,12 @@ class Admin::CalendarItemsControllerTest < ActionController::TestCase
     assert_difference 'CalendarItem.count', -1 do
       delete :destroy, :id => events(:events_calendar_item_one)
       assert_response :success
-    end 
+    end
   end
 
   def test_should_delete_repeating_calender_item_and_its_repetitions
     login_as :sjoerd
-    
+
     now = Time.now
 
     ci = create_repeating_calendar_item({
@@ -185,11 +185,11 @@ class Admin::CalendarItemsControllerTest < ActionController::TestCase
   end
 
 protected
-  
+
   def create_calendar_item_request(attributes = {}, options = {})
     now = Time.now
-    
-    post :create, { :parent_node_id => nodes(:events_calendar_node).id, :calendar_item => { :title => 'new title', :repeating => false, :date => now.strftime("%d-%m-%Y"), :start_time => now.strftime("%H:%M"), :end_time => (now + 1.hour).strftime("%H:%M") }.merge(attributes)}.merge(options)
+
+    post :create, { :parent_node_id => nodes(:events_calendar_node).id, :calendar_item => { :title => 'new title', :repeating => false, :date => now.strftime("%d-%m-%Y"), :start_time => now.strftime("%H:%M"), :end_time => (now + 1.hour).strftime("%H:%M") }.merge(attributes) }.merge(options)
   end
 
   def create_calendar_item(options = {})
@@ -217,5 +217,4 @@ protected
 
     amount
   end
-  
 end

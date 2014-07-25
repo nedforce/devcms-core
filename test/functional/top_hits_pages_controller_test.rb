@@ -9,5 +9,4 @@ class TopHitsPagesControllerTest < ActionController::TestCase
     assert assigns(:top_hits_page)
     assert_equal nodes(:top_ten_page_node), assigns(:node)
   end
-
 end

@@ -14,7 +14,6 @@
 # * Requires the uniqueness of +name+.
 #
 class MeetingCategory < ActiveRecord::Base
-
   # The meetings that belong to this category.
   has_many :calendar_items, :dependent => :destroy
 

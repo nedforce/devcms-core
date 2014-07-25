@@ -39,7 +39,7 @@ class Admin::ContactBoxesControllerTest < ActionController::TestCase
     assert_no_difference('ContactBox.count') do
       create_contact_box(:title => nil)
     end
-    
+
     assert_response :unprocessable_entity
     assert assigns(:contact_box).new_record?
     assert assigns(:contact_box).errors[:title].any?

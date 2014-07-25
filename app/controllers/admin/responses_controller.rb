@@ -57,12 +57,12 @@ class Admin::ResponsesController < Admin::AdminController
     end
   end
 
-    # [ ] TODO: Form maken waarmee je file kunt uploaden
+  # [ ] TODO: Form maken waarmee je file kunt uploaden
   def upload_csv
     # Determine the required order of files for the uploaded csv
     fields = []
-    ContactFormField.all(:order => "position asc", :conditions => {:contact_form_id => @contact_form.id}).each do |field|
-        fields << field.label
+    ContactFormField.all(:order => 'position asc', :conditions => { :contact_form_id => @contact_form.id }).each do |field|
+      fields << field.label
     end
     @csv_headers = fields.join(',');
     fields = nil
@@ -88,7 +88,7 @@ class Admin::ResponsesController < Admin::AdminController
       else
         field_labels = []
         fields = {}
-        ContactFormField.all(:order => "position asc", :conditions => {:contact_form_id => @contact_form.id}).each do |field|
+        ContactFormField.all(:order => 'position asc', :conditions => { :contact_form_id => @contact_form.id }).each do |field|
           fields[field.id] = field.label
           field_labels << field.label
         end

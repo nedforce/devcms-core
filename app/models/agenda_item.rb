@@ -1,12 +1,12 @@
 # This model is used to represent an agenda item of a particular meeting,
-# which in turn is represented by the Meeting model. A Meeting optionally belongs 
-# to an associated AgendaItemCategory. It has specified +acts_as_content_node+ 
+# which in turn is represented by the Meeting model. A Meeting optionally belongs
+# to an associated AgendaItemCategory. It has specified +acts_as_content_node+
 # from Acts::ContentNode::ClassMethods.
-# 
+#
 # *Specification*
-# 
+#
 # Attributes
-# 
+#
 # * +meeting+ - The meeting this agenda item belongs to.
 # * +agenda_item_category+ - The category that this agenda item belongs to (optional).
 # * +description+ - A short description of this agenda item.
@@ -23,9 +23,9 @@
 # * Requires +agenda_item_category_id+ to point to a AgendaItemCategory instance, if present.
 # * Requires the presence of +description+.
 # * Requires +speaking_rights+ to be a key of +SPEAKING_RIGHT_OPTIONS+, or +nil+. 
-# 
+#
 # Child/parent type constraints
-# 
+#
 # * An AgendaItem only accepts Attachment children.
 # * An AgendaItem can only be inserted into Meeting nodes.
 #

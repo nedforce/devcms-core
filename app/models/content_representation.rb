@@ -44,10 +44,10 @@ class ContentRepresentation < ActiveRecord::Base
   validates_uniqueness_of   :content_id, :scope => :parent_id,    :unless => :custom_type
   validates_numericality_of :parent_id
   validates_numericality_of :content_id,                          :unless => :custom_type
-  
+
   validate :content_should_not_be_hidden,                         :unless => :custom_type
   validate :content_should_not_be_private,                        :unless => :custom_type
-  
+
   validate :content_should_be_allowed_as_content_representation,  :unless => :custom_type
   validate :custom_type_should_exist_for_parent,                  :if     => :custom_type
 
@@ -61,13 +61,13 @@ class ContentRepresentation < ActiveRecord::Base
       layout_variant['representation'] + '_content' if layout_variant
     end
   end
-  
+
 protected
 
   def content_should_not_be_hidden
     errors.add(:content, :should_not_be_hidden) if self.content && self.content.hidden?
   end
-  
+
   def content_should_not_be_private
     if self.content && self.content.private?
       errors.add(:content, :should_not_be_private) if self.content.top_level_private_ancestor != self.parent.top_level_private_ancestor
@@ -81,17 +81,17 @@ protected
 
   # Checks whether +content+ is allowed as content box content (as indicated by +available_content_representations?+)
   def content_should_be_allowed_as_content_representation
-    errors.add(:content, :not_allowed_as) unless 
-      self.content && 
+    errors.add(:content, :not_allowed_as) unless
+      self.content &&
       self.parent &&
       self.parent.own_or_inherited_layout_variant[self.target].present? &&
       self.content.content_type_configuration[:available_content_representations].include?(self.parent.own_or_inherited_layout_variant[self.target]['representation'])
   end
-  
+
   def custom_type_should_exist_for_parent
     errors.add(:base, :non_existant_custom_type) unless self.parent && self.parent.own_or_inherited_layout.custom_representations.present? && self.parent.own_or_inherited_layout.custom_representations.keys.include?(self.custom_type)
   end
-    
+
   def nillify_custom_type
     self.custom_type = nil
   end

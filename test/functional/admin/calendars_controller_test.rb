@@ -10,7 +10,7 @@ class Admin::CalendarsControllerTest < ActionController::TestCase
     assert_response :success
     assert assigns(:calendar)
     assert_equal calendars(:events_calendar).node, assigns(:node)
-  end  
+  end
 
   def test_should_get_index
     login_as :sjoerd

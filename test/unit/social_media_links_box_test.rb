@@ -27,6 +27,6 @@ class SocialMediaLinksBoxTest < ActiveSupport::TestCase
     SocialMediaLinksBox.create({ :title => 'Social Media Links Box',
                                  :twitter_url  => 'http://www.twitter.com',  :facebook_url => 'http://www.facebook.com',
                                  :linkedin_url => 'http://www.linkedin.com', :youtube_url  => 'http://www.youtube.com',
-                                 :flickr_url   => 'http://www.flickr.com',   :parent => nodes(:root_section_node)}.merge(options))
+                                 :flickr_url   => 'http://www.flickr.com',   :parent => nodes(:root_section_node) }.merge(options))
   end
 end

@@ -1,41 +1,41 @@
 <div id='weblog_post_image_<%= image.id -%>' class='weblogPostImage'>
-  <%= 
+  <%=
       link_to_node(
         image_tag(content_node_path(image.node, :action => :thumbnail), :alt => image.alt.to_s) + content_tag('div', image.description.to_s, :class => 'hidden'),
         image.node,
         { :action => :full },
-        { :data    => { :lightbox => "lightbox[#{@weblog_post.node.id}]" }, :title => 'Vergroot deze afbeelding' }
+        { :data   => { :lightbox => "lightbox[#{@weblog_post.node.id}]" }, :title => 'Vergroot deze afbeelding' }
       )
     -%>
   <br/>
   <% if logged_in? && (@weblog_post.weblog.is_owned_by_user?(current_user) || current_user.has_role?('admin')) %>
     <% if !is_form %>
-      <%= link_to_remote( 'Verwijderen', 
-                        :update => "weblog_post_image_#{image.id}", 
-                        :url => { :action            => :destroy_image, 
-                                  :format            => :js, 
-                                  :id                => @weblog_post.id, 
-                                  :image_id          => image.id, 
+      <%= link_to_remote( 'Verwijderen',
+                        :update => "weblog_post_image_#{image.id}",
+                        :url => { :action            => :destroy_image,
+                                  :format            => :js,
+                                  :id                => @weblog_post.id,
+                                  :image_id          => image.id,
                                   :weblog_archive_id => @weblog_post.weblog.weblog_archive.id,
-                                  :weblog_id         => @weblog_post.weblog.id},                              
-                        :html => {:href => url_for({ :action   => :destroy_image, 
-                                            :format            => :html, 
-                                            :id                => @weblog_post.id, 
-                                            :image_id          => image.id, 
+                                  :weblog_id         => @weblog_post.weblog.id },
+                        :html => { :href => url_for({ :action  => :destroy_image,
+                                            :format            => :html,
+                                            :id                => @weblog_post.id,
+                                            :image_id          => image.id,
                                             :weblog_archive_id => @weblog_post.weblog.weblog_archive.id,
-                                            :weblog_id         => @weblog_post.weblog.id})})%>
+                                            :weblog_id         => @weblog_post.weblog.id }) }) %>
     <% else %>
       <%= javascript_tag do %>
         document.write (
-        "<%= escape_javascript(link_to_remote( 'Verwijderen', 
-                        :update => "weblog_post_image_#{image.id}", 
+        "<%= escape_javascript(link_to_remote( 'Verwijderen',
+                        :update => "weblog_post_image_#{image.id}",
                         :url => { :action            => :destroy_image,
                                   :is_form           => is_form,
                                   :format            => :js,
-                                  :id                => @weblog_post.id, 
-                                  :image_id          => image.id, 
+                                  :id                => @weblog_post.id,
+                                  :image_id          => image.id,
                                   :weblog_archive_id => @weblog_post.weblog.weblog_archive.id,
-                                  :weblog_id         => @weblog.id}))  %>"
+                                  :weblog_id         => @weblog.id })) %>"
          );
       <% end %>
     <% end %>

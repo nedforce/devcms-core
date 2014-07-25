@@ -144,7 +144,7 @@ class Admin::CarrouselsControllerTest < ActionController::TestCase
     assert_response :success
     assert_equal 3, assigns(:carrousel).items.size
     assert_equal [5,'hours'], assigns(:carrousel).human_display_time
-    assert_equal 18000, assigns(:carrousel).display_time
+    assert_equal 18_000, assigns(:carrousel).display_time
     assert_equal 'Help page', assigns(:carrousel).carrousel_items.first.excerpt
   end
 

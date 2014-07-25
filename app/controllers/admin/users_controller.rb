@@ -101,7 +101,7 @@ class Admin::UsersController < Admin::AdminController
           flash[:error] = error
           redirect_to admin_users_path
         end
-        format.json { render :json => {:errors => @user.errors.full_messages}.to_json, :status => :unprocessable_entity }
+        format.json { render :json => { :errors => @user.errors.full_messages }.to_json, :status => :unprocessable_entity }
       else
         @user.destroy
         format.html { redirect_to admin_users_path }
@@ -123,7 +123,7 @@ class Admin::UsersController < Admin::AdminController
             :checked => @user.newsletter_archives.include?(na)
           }
         end
-        render :json => {:newsletter_archives => newsletter_archives, :success => true, :total_count => newsletter_archives.size}.to_json, :status => :ok
+        render :json => { :newsletter_archives => newsletter_archives, :success => true, :total_count => newsletter_archives.size }.to_json, :status => :ok
       end
     end
   end
@@ -135,13 +135,13 @@ class Admin::UsersController < Admin::AdminController
       format.json do
         interests = Interest.all(:order => 'title')
         interests = interests.map do |i|
-              {
-                :id      => i.id,
-                :title   => i.title,
-                :checked => @user.interests.include?(i)
-              }
+          {
+            :id      => i.id,
+            :title   => i.title,
+            :checked => @user.interests.include?(i)
+          }
         end
-        render :json => {:interests => interests, :success => true, :total_count => interests.size}.to_json, :status => :ok
+        render :json => { :interests => interests, :success => true, :total_count => interests.size }.to_json, :status => :ok
       end
     end
   end
@@ -167,7 +167,7 @@ class Admin::UsersController < Admin::AdminController
       index
     end
   end
-  
+
   def switch_user_type
     respond_to do |format|
       format.json do
@@ -194,9 +194,8 @@ class Admin::UsersController < Admin::AdminController
     end
   end
 
-
   protected
-  
+
     def find_users(user_scope = User.scoped)
       if !@sort_by_newsletter_archives
         # Don't eager load newsletter_archives lest the XML builder will fail.
@@ -213,7 +212,7 @@ class Admin::UsersController < Admin::AdminController
         @users      = @users.reverse if @sort_direction == 'DESC'
         @user_count = @users.size
         @users      = @users.values_at((@page_limit * (@current_page - 1))..(@page_limit * @current_page - 1)).compact
-      end       
+      end
     end
 
     def find_user

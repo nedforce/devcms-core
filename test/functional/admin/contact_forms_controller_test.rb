@@ -93,7 +93,7 @@ class Admin::ContactFormsControllerTest < ActionController::TestCase
   def test_should_update_contact_form
     login_as :sjoerd
 
-    put :update, :id => contact_forms(:help_form).id, :contact_form => {:title => 'updated title'}
+    put :update, :id => contact_forms(:help_form).id, :contact_form => { :title => 'updated title' }
 
     assert_response :success
     assert_equal 'updated title', assigns(:contact_form).title
@@ -128,7 +128,7 @@ class Admin::ContactFormsControllerTest < ActionController::TestCase
   def test_should_not_update_contact_form
     login_as :sjoerd
 
-    put :update, :id => contact_forms(:help_form).id, :contact_form => {:title => nil}
+    put :update, :id => contact_forms(:help_form).id, :contact_form => { :title => nil }
     assert_response :unprocessable_entity
     assert assigns(:contact_form).errors[:title].any?
   end

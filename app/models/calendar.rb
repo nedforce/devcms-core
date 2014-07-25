@@ -3,9 +3,9 @@
 # +acts_as_content_node+ from Acts::ContentNode::ClassMethods.
 #
 # *Specification*
-# 
+#
 # Attributes
-# 
+#
 # * +title+ - The title of the calendar.
 # * +description+ - The description of the calendar.
 #
@@ -28,10 +28,10 @@ class Calendar < ActiveRecord::Base
 
   # Extend this class with methods to find items based on their start time.
   acts_as_archive :date_field_model_name =>  :start_time, :date_field_database_name => 'start_time', :items_name => :calendar_items, :sql_options => nil
-  
+
   # A +Calendar+ can have many +Event+ children.
   has_children :calendar_items, :class_name => 'Event', :order => 'start_time DESC', :extend => DevcmsCore::CalendarItemsAssociationExtensions
-  
+
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of :title
   validates_length_of   :title, :in => 2..255, :allow_blank => true

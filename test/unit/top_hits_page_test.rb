@@ -73,7 +73,7 @@ class TopHitsPageTest < ActiveSupport::TestCase
     excluded_content_types = create_excluded_content_types
 
     excluded_content_types.each do |excluded_content_type|
-      excluded_content_type.node.update_attribute(:hits, 100000)
+      excluded_content_type.node.update_attribute(:hits, 100_000)
     end
 
     found_top_hits = @top_ten_page.find_top_hits(:limit => excluded_content_types.size).map(&:content)

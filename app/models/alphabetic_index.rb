@@ -34,7 +34,7 @@ class AlphabeticIndex < ActiveRecord::Base
       else
         klass = Page
       end
-      
+
       conditions = node.parent.descendant_conditions
       conditions = ["(#{conditions.shift})" + " AND (UPPER(#{klass.table_name}.title) LIKE UPPER(?) OR (taggings.context = 'title_alternatives' AND UPPER(tags.name) LIKE UPPER(?)))", conditions, "#{letter}%", "#{letter}%"].flatten
 

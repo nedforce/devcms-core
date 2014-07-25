@@ -28,7 +28,7 @@ class ExternalLinkTest < ActiveSupport::TestCase
   end
 
   def test_should_strip_http_for_url_alias
-    link = create_external_link(:title => '', :description => '', :url => "http://www.example.com" )
+    link = create_external_link(:title => '', :description => '', :url => 'http://www.example.com')
     assert_equal 'www.example.com', link.path_for_url_alias(link.node)
   end
 
@@ -45,7 +45,7 @@ class ExternalLinkTest < ActiveSupport::TestCase
   end
 
   def test_should_require_valid_url
-    [ ' ', 'blaat', 'http://www. blaat.nl', 'http://www.bla_at.nl', 'http://a.b.c' ].each do |url|
+    [' ', 'blaat', 'http://www. blaat.nl', 'http://www.bla_at.nl', 'http://a.b.c'].each do |url|
       assert_no_difference 'ExternalLink.count' do
         external_link = create_external_link(:url => url)
         assert external_link.errors[:url].any?

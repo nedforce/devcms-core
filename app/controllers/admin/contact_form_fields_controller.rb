@@ -1,19 +1,19 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to administering +ContactFormField+ objects.
-class Admin::ContactFormFieldsController < Admin::AdminController
 
+class Admin::ContactFormFieldsController < Admin::AdminController
   # A +ContactFormField+ object is always associated with a +ContactForm+ object.
   before_filter :find_contact_form
 
   # The +show+, +edit+ and +update+ actions need a +ContactFormField+ object to act upon.
-  before_filter :find_contact_form_field, :only => [ :show, :edit, :update, :destroy ]
+  before_filter :find_contact_form_field, :only => [:show, :edit, :update, :destroy]
 
-  before_filter :set_field_types,         :only => [ :new, :edit ]
+  before_filter :set_field_types,         :only => [:new, :edit]
 
-  before_filter :set_commit_type,         :only => [ :create, :update ]
-  
+  before_filter :set_commit_type,         :only => [:create, :update]
+
   skip_before_filter :find_node, :only => [:edit, :update]
-  
+
   layout false
 
   # * GET /admin/contact_forms/:contact_form_id/contact_form_fields/:id
@@ -47,11 +47,11 @@ class Admin::ContactFormFieldsController < Admin::AdminController
 
     respond_to do |format|
       format.html { render :partial => 'edit' }
-      format.js   {
+      format.js do
         render :update do |page|
           page.replace_html "contact_form_field_#{@contact_form_field.id}", :partial => 'edit'
         end
-      }
+      end
     end
   end
 
@@ -94,9 +94,7 @@ class Admin::ContactFormFieldsController < Admin::AdminController
 
     respond_to do |format|
       if @commit_type == 'preview' && @contact_form_field.valid?
-        format.html do
-          render :action => 'update_preview', :layout => 'admin/admin_preview'
-        end
+        format.html { render :action => 'update_preview', :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @contact_form_field, :status => :created, :location => @contact_form_field }
       elsif @commit_type == 'save' && @contact_form_field.save
         format.html # update.html.erb
@@ -147,5 +145,4 @@ class Admin::ContactFormFieldsController < Admin::AdminController
   def set_field_types
     @field_types = ContactFormField::FIELD_TYPES.map { |field| [ContactFormField.human_field_type_for(field), field] }
   end
-  
 end

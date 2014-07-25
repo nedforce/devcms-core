@@ -136,10 +136,9 @@ class Admin::TopHitsPagesControllerTest < ActionController::TestCase
     assert assigns(:top_hits_page).errors[:title].any?
   end
 
-
 protected
 
   def create_top_hits_page(attributes = {}, options = {})
-    post :create, {:parent_node_id => nodes(:root_section_node).id, :top_hits_page => { :title => 'new title' }.merge(attributes)}.merge(options)
+    post :create, {:parent_node_id => nodes(:root_section_node).id, :top_hits_page => { :title => 'new title' }.merge(attributes) }.merge(options)
   end
 end

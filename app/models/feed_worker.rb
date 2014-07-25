@@ -8,7 +8,7 @@ class FeedWorker
 
   # Updates all feeds.
   def update_feeds
-    logger.info "Updating all feeds..."
+    logger.info 'Updating all feeds...'
     Feed.all.each do |feed|
       logger.info "Updating feed #{feed.id} from url #{feed.url}..."
       feed.update_feed

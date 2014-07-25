@@ -183,7 +183,7 @@ class WeblogPostsControllerTest < ActionController::TestCase
 
   def test_should_create_with_images
     login_as :henk
-    image = fixture_file_upload("files/test.jpg")
+    image = fixture_file_upload('files/test.jpg')
     assert_difference('WeblogPost.count', 1) do
       assert_difference('Image.count', 2) do
         create_weblog_post({},{:images => { :image_0 => { :title => 'An Image', :file => image },:image_1 => { :title => 'Another Image', :file => image }}})
@@ -199,14 +199,14 @@ class WeblogPostsControllerTest < ActionController::TestCase
 
   def test_should_not_create_with_more_than_four_images
     login_as :henk
-    image = fixture_file_upload("files/test.jpg")
+    image = fixture_file_upload('files/test.jpg')
     assert_difference('WeblogPost.count', 1) do
       assert_difference('Image.count', 4) do
-        create_weblog_post({}, { :images => {:image_0 => { :file => image },
+        create_weblog_post({}, { :images => { :image_0 => { :file => image },
                     :image_1 => { :file => image },
                     :image_2 => { :file => image },
                     :image_4 => { :file => image },
-                    :image_3 => { :file => image}}})
+                    :image_3 => { :file => image } } })
 
         assert_response :redirect
         assert_equal 4, assigns(:weblog_post).node.children.size
@@ -216,15 +216,15 @@ class WeblogPostsControllerTest < ActionController::TestCase
 
   def test_should_add_images_on_update
     login_as :henk
-    image = fixture_file_upload("files/test.jpg")
+    image = fixture_file_upload('files/test.jpg')
     assert_difference('Image.count', 3) do
       put :update,  :weblog_archive_id => weblog_archives(:devcms_weblog_archive).id,
                     :weblog_id => weblogs(:henk_weblog).id,
                     :id => weblog_posts(:henk_weblog_post_one).id,
-                    :images => {:image_0 => { :file => image },
-                                :image_1 => { :file => image },
-                                :image_2 => { :file => image },
-                                :image_3 => { :file => image}}
+                    :images => { :image_0 => { :file => image },
+                                 :image_1 => { :file => image },
+                                 :image_2 => { :file => image },
+                                 :image_3 => { :file => image } }
     end
     assert_response :redirect
   end
@@ -256,8 +256,6 @@ class WeblogPostsControllerTest < ActionController::TestCase
  protected
 
   def create_weblog_post(attributes = {}, options = {})
-    post :create, { :weblog_archive_id => weblog_archives(:devcms_weblog_archive).id, :weblog_id => weblogs(:henk_weblog).id, :weblog_post => { :title => 'Some title.', :body => 'Some body', :publication_start_date => Time.now }.merge(attributes)}.merge(options)
+    post :create, { :weblog_archive_id => weblog_archives(:devcms_weblog_archive).id, :weblog_id => weblogs(:henk_weblog).id, :weblog_post => { :title => 'Some title.', :body => 'Some body', :publication_start_date => Time.now }.merge(attributes) }.merge(options)
   end
-
 end
-

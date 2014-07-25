@@ -130,7 +130,7 @@ class Admin::ForumsControllerTest < ActionController::TestCase
   def test_should_not_update_forum
     login_as :sjoerd
 
-    put :update, :id => forums(:bewoners_forum).id, :forum => {:title => nil}
+    put :update, :id => forums(:bewoners_forum).id, :forum => { :title => nil }
     assert_response :unprocessable_entity
     assert assigns(:forum).errors[:title].any?
   end

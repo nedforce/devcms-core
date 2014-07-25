@@ -54,23 +54,9 @@ class CommentsControllerTest < ActionController::TestCase
     end
   end
 
-  # Not possible in rails3  
-  # def test_should_render_confirmation_with_get
-  #   login_as :gerjan
-  #   create_comment
-  # 
-  #   assert_no_difference 'Comment.count' do
-  #     get :destroy, :node_id => nodes(:devcms_news_item_node).id, :id => assigns(:comment).id
-  #     assert_response :success
-  #     assert_template 'confirm_destroy'
-  #   end
-  # end
-
 protected
 
   def create_comment(attributes = {}, options = {})
-    post :create, { :node_id => nodes(:devcms_news_item_node).id, :comment => { :comment => 'My comment' }.merge(attributes)}.merge(options)
+    post :create, { :node_id => nodes(:devcms_news_item_node).id, :comment => { :comment => 'My comment' }.merge(attributes) }.merge(options)
   end
-
 end
-

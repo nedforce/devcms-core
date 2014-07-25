@@ -34,16 +34,16 @@ protected
         expire_fragment(:main_menu_for_site => node.containing_site.id) if node.depth - node.containing_site.depth <= Devcms.main_menu_depth
       end
       # Expire slideshow on delete/destroy
-      expire_fragment(:header_slideshow_for => node.child_ancestry ) if node.layout_configuration_changed? || node.deleted_at.present?
+      expire_fragment(:header_slideshow_for => node.child_ancestry) if node.layout_configuration_changed? || node.deleted_at.present?
     end
 
-    #TODO: Expire content boxes => based on content type etc. Might be path, parent or grandparent etc..        
+    #TODO: Expire content boxes => based on content type etc. Might be path, parent or grandparent etc.
 
     if node.sub_content_type == 'Image'
       if (node.parent.present? rescue false)
         if node.content.blank? || node.changed == ['updated_at'] || node.content.is_for_header_changed? || ((node.changed & %w(url_alias ancestry private deleted_at)).present? && node.content.is_for_header)
-          expire_fragment(:header_slideshow_for => node.parent.header_container_ancestry ) # Expire parent or ancestor container
-          expire_fragment(:header_slideshow_for => node.ancestry ) #expire parent in case the was the last header image for this parent
+          expire_fragment(:header_slideshow_for => node.parent.header_container_ancestry) # Expire parent or ancestor container
+          expire_fragment(:header_slideshow_for => node.ancestry) # Expire parent in case the was the last header image for this parent
         end
       end
       expire_page(:host => Settler[:host], :controller => '/images', :action => :thumbnail,  :id => node.content_id, :format => 'jpg')

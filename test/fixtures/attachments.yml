@@ -13,7 +13,7 @@ verslag_attachment:
   filename: 20080409VERSLAGRaadsvergadering.doc
   created_at: <%= Time.parse('2008-04-09').to_s(:db) %>
 hidden_attachment:
-  title: 2008-04-09 VERSLAG Raadsvergadering, maar dan prive
+  title: "2008-04-09 VERSLAG Raadsvergadering, maar dan prive"
   file: 20080409VERSLAGRaadsvergadering.doc
   size: 129536
   content_type: application/msword

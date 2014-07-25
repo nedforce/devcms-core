@@ -19,7 +19,6 @@
 #  * A +Forum+ only accepts +ForumTopic+ children.
 #
 class Forum < ActiveRecord::Base
-  
   # Adds content node functionality to forums.
   acts_as_content_node({
     :allowed_child_content_types => %w( ForumTopic ),
@@ -28,10 +27,10 @@ class Forum < ActiveRecord::Base
     :available_content_representations => ['content_box'],
     :children_can_be_sorted => false
   })
-      
+
   # A +Forum+ can have many +ForumTopic+ children.
   has_children :forum_topics, :order => 'forum_topics.title'
-    
+
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of   :title
   validates_uniqueness_of :title

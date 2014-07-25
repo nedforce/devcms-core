@@ -10,5 +10,4 @@ class EventRegistrationMailer < ActionMailer::Base
     @body[:event] = event
     @body[:host]  = options[:host] || Settler[:host]
   end
-
 end

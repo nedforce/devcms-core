@@ -481,12 +481,11 @@ protected
     Page.create({ :user => @arthur, :parent => nodes(:root_section_node), :title => 'foo', :preamble => 'xuu', :body => 'bar' }.merge(options))
   end
 
-  def create_section(options={})
+  def create_section(options = {})
     Section.create({ :user => @arthur, :parent => nodes(:root_section_node), :title => 'new section', :description => 'new description for section.' }.merge(options))
   end
 
   def create_editor_content_node(options = {})
     Page.create({ :user => users(:editor), :parent => nodes(:editor_section_node), :title => 'foo', :preamble => 'xuu', :body => 'bar', :expires_on => 1.day.from_now.to_date }.merge(options))
   end
-
 end

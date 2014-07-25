@@ -1,18 +1,18 @@
 test_image:
   title: A test image for the tests!
-  file: test.jpg 
+  file: test.jpg
 
 test_image_two:
   title: Another test image for the tests!
-  file: test.jpg   
+  file: test.jpg
 
 hidden_image:
   title: A hidden image!
-  file: test.jpg   
+  file: test.jpg
 
 henks_weblog_image:
   title: Henks image
-  file: test.jpg   
+  file: test.jpg
 
 root_section_image:
   title: An image in a section!

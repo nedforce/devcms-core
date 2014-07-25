@@ -111,6 +111,8 @@ class Admin::MeetingsControllerTest < ActionController::TestCase
 
     put :update, :id => @meeting, :meeting => { :title => 'updated title', :body => 'updated body' }
 
+    assert assigns(:meeting)
+    puts assigns(:meeting).errors
     assert_response :success
     assert_equal 'updated title', assigns(:meeting).title
   end
@@ -185,7 +187,7 @@ protected
   def create_meeting_request(attributes = {}, options = {})
     now = Time.now
 
-    post :create, { :parent_node_id => nodes(:events_calendar_node).id, :meeting => { :title => 'new title', :repeating => false, :start_time => now.strftime("%H:%M"), :date => now.strftime("%d-%m-%Y"), :end_time => (now + 1.hour).strftime("%H:%M"), :meeting_category_name => 'problem' }.merge(attributes)}.merge(options)
+    post :create, { :parent_node_id => nodes(:events_calendar_node).id, :meeting => { :title => 'new title', :repeating => false, :start_time => now.strftime("%H:%M"), :date => now.strftime("%d-%m-%Y"), :end_time => (now + 1.hour).strftime("%H:%M"), :meeting_category_name => 'problem' }.merge(attributes) }.merge(options)
   end
 
   def create_meeting(options = {})
@@ -213,5 +215,4 @@ protected
 
     amount
   end
-
 end

@@ -100,7 +100,7 @@ class Admin::SocialMediaLinksBoxesControllerTest < ActionController::TestCase
   def test_should_update_social_media_links_box
     login_as :sjoerd
 
-    put :update, :id => @social_media_links_box.id, :social_media_links_box => {:title => 'updated title', :twitter_url => 'http://www.twitter.com/nedforce'}
+    put :update, :id => @social_media_links_box.id, :social_media_links_box => { :title => 'updated title', :twitter_url => 'http://www.twitter.com/nedforce' }
 
     assert_response :success
     assert_equal 'updated title', assigns(:social_media_links_box).title
@@ -111,7 +111,7 @@ class Admin::SocialMediaLinksBoxesControllerTest < ActionController::TestCase
 
     smlb = @social_media_links_box
     old_title = smlb.title
-    put :update, :id => smlb.id, :social_media_links_box => {:title => 'updated title', :twitter_url => 'http://www.twitter.com/nedforce'}, :commit_type => 'preview'
+    put :update, :id => smlb.id, :social_media_links_box => { :title => 'updated title', :twitter_url => 'http://www.twitter.com/nedforce' }, :commit_type => 'preview'
     assert_response :success
     assert_equal 'updated title', assigns(:social_media_links_box).title
     assert_equal old_title, smlb.reload.title
@@ -123,7 +123,7 @@ class Admin::SocialMediaLinksBoxesControllerTest < ActionController::TestCase
 
     smlb = @social_media_links_box
     old_title = smlb.title
-    put :update, :id => smlb.id, :social_media_links_box => {:title => nil, :twitter_url => 'http://www.twitter.com/nedforce'}, :commit_type => 'preview'
+    put :update, :id => smlb.id, :social_media_links_box => { :title => nil, :twitter_url => 'http://www.twitter.com/nedforce' }, :commit_type => 'preview'
     assert_response :unprocessable_entity
     assert assigns(:social_media_links_box).errors[:title].any?
     assert_equal old_title, smlb.reload.title
@@ -133,7 +133,7 @@ class Admin::SocialMediaLinksBoxesControllerTest < ActionController::TestCase
   def test_should_not_update_social_media_links_box
     login_as :sjoerd
 
-    put :update, :id => @social_media_links_box.id, :social_media_links_box => {:title => nil}
+    put :update, :id => @social_media_links_box.id, :social_media_links_box => { :title => nil }
     assert_response :unprocessable_entity
     assert assigns(:social_media_links_box).errors[:title].any?
   end
@@ -145,6 +145,6 @@ class Admin::SocialMediaLinksBoxesControllerTest < ActionController::TestCase
          :social_media_links_box => { :title => 'new title',
          :twitter_url  => 'http://www.twitter.com',  :facebook_url => 'http://www.facebook.com',
          :linkedin_url => 'http://www.linkedin.com', :youtube_url  => 'http://www.youtube.com',
-         :flickr_url   => 'http://www.flickr.com' }.merge(attributes)}.merge(options)
+         :flickr_url   => 'http://www.flickr.com' }.merge(attributes) }.merge(options)
   end
 end

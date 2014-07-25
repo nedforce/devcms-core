@@ -27,7 +27,7 @@ class Admin::FeedsControllerTest < ActionController::TestCase
     assert_no_difference('Feed.count') do
       create_feed(:url => nil)
     end
-    
+
     assert_response :unprocessable_entity
     assert assigns(:feed).new_record?
     assert assigns(:feed).errors[:url].any?
@@ -42,6 +42,7 @@ class Admin::FeedsControllerTest < ActionController::TestCase
     assert_response :success
     assert assigns(:feed)
   end
+
   def test_should_create_test_with_title
     login_as :sjoerd
 
@@ -53,6 +54,6 @@ class Admin::FeedsControllerTest < ActionController::TestCase
   protected
 
   def create_feed(attributes = {}, options = {})
-    post :create, { :parent_node_id => nodes(:root_section_node).id, :feed => { :url => "http://www.nedforce.nl/blog.rss" }.merge(attributes)}.merge(options)
+    post :create, { :parent_node_id => nodes(:root_section_node).id, :feed => { :url => 'http://www.nedforce.nl/blog.rss' }.merge(attributes) }.merge(options)
   end
 end

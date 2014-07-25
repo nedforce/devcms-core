@@ -36,25 +36,25 @@ class Attachment < ActiveRecord::Base
     :show_in_menu            => false,
     :show_content_box_header => false
   }, {
-    :exclude => [ :id, :created_at, :updated_at, :size, :height, :width, :db_file_id, :parent_id, :filename, :thumbnail, :content_type ]
+    :exclude => [:id, :created_at, :updated_at, :size, :height, :width, :db_file_id, :parent_id, :filename, :thumbnail, :content_type]
   })
 
   # This content type needs approval when created or altered by an editor.
   needs_editor_approval
-  
+
   mount_uploader :file, AttachmentUploader
 
   # Clean the +filename+.
   before_validation :clean_filename
-  
-  # Store metadata  
+
+  # Store metadata
   before_validation :set_metadata
-  
+
   validates_presence_of     :content_type, :size
   validates_numericality_of :size, :height, :width, :allow_nil => true
 
   # The binary data of the attachment is stored in a separate +db_file+ model.
-  belongs_to              :db_file
+  belongs_to :db_file
 
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of :title
@@ -81,18 +81,18 @@ class Attachment < ActiveRecord::Base
   def content_tokens
     filename
   end
-  
+
   # Returns the OWMS type.
   def self.owms_type
     I18n.t('owms.official_publication')
   end
-  
+
   def path_for_url_alias(node)
     self.basename.gsub(/[^a-z0-9\-_]/i, '-')
   end
 
 protected
-    
+
   # Clean up the +filename+ for storage.
   def clean_filename
     if filename.present?
@@ -100,8 +100,8 @@ protected
       cleaned_filename = "#{cleaned_basename}.#{extension.downcase}" if extension
       self.filename    = cleaned_filename
     end
-  end  
-  
+  end
+
   def set_metadata
     if file?
       self.content_type ||= file.file.content_type || Mime::Type.lookup_by_extension(file.file.extension)

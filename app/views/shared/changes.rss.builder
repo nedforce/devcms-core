@@ -1,1 +1,1 @@
-xml << render(:partial => 'shared/feed', :locals => {:items => @nodes.map(&:content), :content_node => @node.content, :title => I18n.t('sitemaps.all_changes'), :url => content_node_path(@node, :format => 'atom', :action => :changes)})
+xml << render(:partial => 'shared/feed', :locals => { :items => @nodes.map(&:content), :content_node => @node.content, :title => I18n.t('sitemaps.all_changes'), :url => content_node_path(@node, :format => 'atom', :action => :changes) })

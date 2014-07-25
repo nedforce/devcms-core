@@ -7,7 +7,7 @@ class ContentRepresentationTest < ActiveSupport::TestCase
     @root_section_node = nodes(:root_section_node)
     @external_link_node = nodes(:external_link_node)
     @economie_section_node = nodes(:economie_section_node)
-    @first_root_content_representation = Node.root.content_representations.create(:target => 'primary_column', :content => Node.root.children.last(:conditions => {:content_type => "Section"}))
+    @first_root_content_representation = Node.root.content_representations.create(:target => 'primary_column', :content => Node.root.children.last(:conditions => { :content_type => 'Section' }))
     @devcms_news_item_node = nodes(:devcms_news_item_node)
   end
 

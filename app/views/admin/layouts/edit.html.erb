@@ -1,7 +1,6 @@
 <script type="text/javascript">
-    
     var sorters = []
-    
+
     onSubmitForm = function(e) {
         e.stop();
         new Ajax.Request('/admin/nodes/<%= @node.id %>/layout',{
@@ -24,8 +23,8 @@
 
     /* Define sorter event handlers */
     validateRepresentation = function(e){
-      sortlets = e.sorter.items != null ? e.sorter.items.items : [];      
-      
+      sortlets = e.sorter.items != null ? e.sorter.items.items : [];
+
         if(e.sorter.targetable == true) {
             // Frontpage node
             valid = sortlets.length < 1
@@ -39,7 +38,7 @@
             if (e.sorter.node.isPrivate) { // If the sortlet is private, then the node should be in the same private subtree
               valid = valid && node.topLevelPrivateAncestorId == e.sorter.node.topLevelPrivateAncestorId;
             }
-            
+
             valid = valid && !(sorters.any(function(sorter){ return sorter.nodeIds().include(node.id);}) && Object.isUndefined(e.sortlet)); //Sortlet should not exist in any sorter yet, unless it is a sortlet
             valid = valid && node.availableContentRepresentations.include(e.sorter.representation); // The content type should have a valid representation for this target
         } else {
@@ -47,7 +46,7 @@
         }
         return valid;
     }
-    
+
     serializeSorters = function(form) {
         params = {};
         sorters.each(function(sorter){
@@ -55,9 +54,8 @@
         });
         return params;
     }
-    
-    $('edit_node_<%= @node.id%>').observe("submit", onSubmitForm);
 
+    $('edit_node_<%= @node.id%>').observe("submit", onSubmitForm);
 </script>
 
 <div id="layout_manager_panel">
@@ -69,17 +67,15 @@
       <% options = @node.root? ? {} : { :include_blank => "Overerven (#{@node.inherited_layout.name})" } %>
       <%= wrap_with_label(form.collection_select(:layout, Layout.all, :id, :name, options, {:disabled => !current_user.has_role?("admin")}), :text => "Template:") %>
       <%= observe_field('node_layout', :update => :variants_settings_and_targets,
-            :url => variants_settings_and_targets_admin_node_layouts_path(@node), 
+            :url => variants_settings_and_targets_admin_node_layouts_path(@node),
             :with => "'id=' + encodeURIComponent($F('node_layout'))" ) %>
     </div>
     <div id="variants_settings_and_targets">
-      <% if @layout.present? %> 
-        <%= render :partial => 'variants_settings_and_targets', :locals => {:form => form} %>
+      <% if @layout.present? %>
+        <%= render :partial => 'variants_settings_and_targets', :locals => { :form => form } %>
       <% end %>
     </div>
-    <%= form.submit "Layout toepassen", :id => 'layout_submit' %>
+    <%= form.submit 'Layout toepassen', :id => 'layout_submit' %>
     <% end %>
   </div>
 </div>
-
-

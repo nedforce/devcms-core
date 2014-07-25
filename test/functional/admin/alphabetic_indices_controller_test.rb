@@ -91,6 +91,6 @@ class Admin::AlphabeticIndicesControllerTest < ActionController::TestCase
 protected
 
   def create_alphabetic_index(attributes = {}, options = {})
-    post :create, {:parent_node_id => nodes(:root_section_node).id, :alphabetic_index => { :title => 'new title' }.merge(attributes)}.merge(options)
+    post :create, {:parent_node_id => nodes(:root_section_node).id, :alphabetic_index => { :title => 'new title' }.merge(attributes) }.merge(options)
   end
 end

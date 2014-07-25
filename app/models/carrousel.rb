@@ -1,9 +1,9 @@
 # This model is used to represent a carrousel.
 #
 # *Specification*
-# 
+#
 # Attributes
-# 
+#
 # * +title+ - The title of the carrousel.
 # * +display_time+ - The display time in seconds of a carrousel item.
 # * +current_carrousel_item_id+ - The item that is currently being shown
@@ -12,14 +12,14 @@
 # Preconditions
 #
 # * Requires the presence of +title+.
-# 
+#
 # Child/parent type constraints
-# 
+#
 #  * A Carrousel only accepts +CarrouselItem+ child nodes.
 #
 class Carrousel < ActiveRecord::Base
-  ALLOWED_TIME_UNITS = [ 'seconds', 'minutes', 'hours', 'days', 'months' ]
-  
+  ALLOWED_TIME_UNITS = ['seconds', 'minutes', 'hours', 'days', 'months']
+
   ANIMATION_NONE          = 0
   ANIMATION_FADE_IN       = 1
   ANIMATION_SLIDE         = 2
@@ -27,7 +27,7 @@ class Carrousel < ActiveRecord::Base
   ANIMATION_SPRING        = 4
   ALLOWED_ANIMATION_TYPES = (0..4).to_a
   ANIMATION_NAMES         = { 0 => 'None', 1 => 'Fade', 2 => 'Slide', 3 => 'Dia', 4 => 'Spring' }
-  
+
   # Adds content node functionality to news archives.
   acts_as_content_node({
     :show_in_menu                      => false,
@@ -38,28 +38,28 @@ class Carrousel < ActiveRecord::Base
     :allowed_roles_for_destroy         => %w( admin ),
     :available_content_representations => ['content_box']
   })
-  
+
   belongs_to :current_carrousel_item, :class_name => 'CarrouselItem', :dependent => :destroy
-  
+
   # A +Carrousel+ has many +CarrouselItem+ objects and many items through +CarrouselItem+.
   has_many :carrousel_items, :autosave => true
-  
+
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of     :title
-  validates_length_of       :title, :in => 2..255,    :allow_blank => true
-  validates_numericality_of :display_time, :allow_blank => true, :integer_only => true, :greater_than_or_equal_to => 0
-  validates_numericality_of :animation, :integer_only => true, :greater_than_or_equal_to => 0
-  
+  validates_length_of       :title, :in => 2..255, :allow_blank => true
+  validates_numericality_of :display_time,         :allow_blank => true, :integer_only => true, :greater_than_or_equal_to => 0
+  validates_numericality_of :animation,            :integer_only => true, :greater_than_or_equal_to => 0
+
   after_paranoid_delete :remove_associated_content
-  
+
   def last_updated_at
-    [ self.carrousel_items.maximum(:updated_at), self.updated_at ].compact.max
+    [self.carrousel_items.maximum(:updated_at), self.updated_at].compact.max
   end
-  
+
   def animation
     super.to_i
   end
-  
+
   # Finds sthe current carrousel item and cycles it is necessary.
   def find_current_carrousel_item
     fetch_or_cycle_current_carrousel_item
@@ -69,7 +69,7 @@ class Carrousel < ActiveRecord::Base
   def items
     carrousel_items.all.map { |ci| ci.item }
   end
-  
+
   # Number of items in this carrousel.
   def items_count
     carrousel_items.count
@@ -88,19 +88,19 @@ class Carrousel < ActiveRecord::Base
 
     # Add the items
     if items
-      items.each_with_index do |item, index| 
-        carrousel_items.build(:item => Node.find(item).content, :position => index, :excerpt => (excerpts.empty? ? nil : excerpts[item]))   
+      items.each_with_index do |item, index|
+        carrousel_items.build(:item => Node.find(item).content, :position => index, :excerpt => (excerpts.empty? ? nil : excerpts[item]))
       end
     end
     true
   end
-  
+
   # Set and returns an item to be shown.
   def current_item
     @current_item ||= self.find_current_carrousel_item
     return @current_item
   end
-  
+
   # Custom title for the content box
   def custom_content_box_title
     (current_item.try(:item) || self).title
@@ -115,7 +115,7 @@ class Carrousel < ActiveRecord::Base
   def self.indexable?
     false
   end
-  
+
   def transition_time_in_seconds
     if transition_time.present? && transition_time > 0
       transition_time.to_f/1000.0
@@ -129,12 +129,12 @@ class Carrousel < ActiveRecord::Base
         1
       end
     end
-  end  
-  
+  end
+
   # Get display time
   def display_time
     read_attribute(:display_time) || 0
-  end  
+  end
 
   # Set display time
   def display_time=(time)
@@ -157,9 +157,9 @@ class Carrousel < ActiveRecord::Base
       [display_time/(60*60),         'hours']
     when display_time < (30*(60*60*24))
       [display_time/(60*60*24),      'days']
-    else 
+    else
       [display_time/(30*(60*60*24)), 'months']
-    end    
+    end
   end
 
 protected
@@ -188,5 +188,4 @@ private
       self.current_carrousel_item
     end
   end
-  
 end

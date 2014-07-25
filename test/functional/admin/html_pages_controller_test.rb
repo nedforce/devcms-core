@@ -2,7 +2,7 @@ require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::HtmlPagesControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
-  
+
   def setup
     @html_page = html_pages(:about_html_page)
   end
@@ -97,7 +97,7 @@ class Admin::HtmlPagesControllerTest < ActionController::TestCase
   def test_should_update_html_page
     login_as :arthur
 
-    put :update, :id => @html_page, :html_page => {:title => 'updated title', :body => 'updated_body'}
+    put :update, :id => @html_page, :html_page => { :title => 'updated title', :body => 'updated_body' }
 
     assert_response :success
     assert_equal 'updated title', assigns(:html_page).title
@@ -108,7 +108,7 @@ class Admin::HtmlPagesControllerTest < ActionController::TestCase
 
     html_page = @html_page
     old_title = html_page.title
-    put :update, :id => html_page.id, :html_page => {:title => 'updated title', :body => 'updated_body'}, :commit_type => 'preview'
+    put :update, :id => html_page.id, :html_page => { :title => 'updated title', :body => 'updated_body' }, :commit_type => 'preview'
     assert_response :success
     assert_equal 'updated title', assigns(:html_page).title
     assert_equal old_title, html_page.reload.title
@@ -120,7 +120,7 @@ class Admin::HtmlPagesControllerTest < ActionController::TestCase
 
     html_page = @html_page
     old_title = html_page.title
-    put :update, :id => html_page.id, :html_page => {:title => nil, :body => 'updated_body'}, :commit_type => 'preview'
+    put :update, :id => html_page.id, :html_page => { :title => nil, :body => 'updated_body' }, :commit_type => 'preview'
     assert_response :unprocessable_entity
     assert assigns(:html_page).errors[:title].any?
     assert_equal old_title, html_page.reload.title
@@ -130,7 +130,6 @@ class Admin::HtmlPagesControllerTest < ActionController::TestCase
 protected
 
   def create_html_page(attributes = {}, options = {})
-    post :create, {:parent_node_id => nodes(:root_section_node).id, :html_page => { :title => 'new title', :body => 'Lorem ipsum' }.merge(attributes)}.merge(options)
+    post :create, { :parent_node_id => nodes(:root_section_node).id, :html_page => { :title => 'new title', :body => 'Lorem ipsum' }.merge(attributes) }.merge(options)
   end
-
 end

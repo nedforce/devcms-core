@@ -65,10 +65,10 @@ class Admin::PollsControllerTest < ActionController::TestCase
     assert assigns(:poll).new_record?
     assert assigns(:poll).errors[:title].any?
   end
-  
+
   def test_should_get_edit
     login_as :sjoerd
-    
+
     get :edit, :id => polls(:healthcare_poll).id
     assert_response :success
     assert assigns(:poll)
@@ -82,12 +82,12 @@ class Admin::PollsControllerTest < ActionController::TestCase
     assert assigns(:poll)
     assert_equal 'foo', assigns(:poll).title
   end
-  
+
   def test_should_update_poll
     login_as :sjoerd
-    
-    put :update, :id => polls(:healthcare_poll).id, :poll => {:title => 'updated title'}
-    
+
+    put :update, :id => polls(:healthcare_poll).id, :poll => { :title => 'updated title' }
+
     assert_response :success
     assert_equal 'updated title', assigns(:poll).title
   end

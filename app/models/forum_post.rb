@@ -24,7 +24,6 @@
 # * Requires the +ForumPost+ to be not the start post of a +ForumThread+ to allow it to be destroyed.
 #
 class ForumPost < ActiveRecord::Base
-
   # A ForumPost belongs to a ForumThread.
   belongs_to :forum_thread
 
@@ -41,9 +40,9 @@ class ForumPost < ActiveRecord::Base
 
   validates_numericality_of :user_id, :forum_thread_id, :allow_nil => false
   validate :ensure_thread_not_closed, :on => :create
-  
+
   before_destroy :ensure_start_post_cannot_be_destroyed
-  
+
   # Note: NOT ForumThread, as ForumThreads are no content nodes either
   def self.parent_type
     ForumTopic
@@ -76,7 +75,7 @@ class ForumPost < ActiveRecord::Base
   # Added to make ForumPosts similar to Comments. This is used to allow admins
   # to update and delete reactions of weblog and forum posts in the same view.
   def comment; body end
-  def comment=(text); self.body = text  end
+  def comment=(text); self.body = text end
 
   # Pretend to have a title
   def title; "Re: #{forum_thread.title}" end

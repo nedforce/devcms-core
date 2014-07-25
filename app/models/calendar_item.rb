@@ -145,7 +145,7 @@ class CalendarItem < Event
   end
 
   def registration_for_user(user)
-    event_registrations.first(:conditions => {:user_id => user.id})
+    event_registrations.first(:conditions => { :user_id => user.id })
   end
 
 protected

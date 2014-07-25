@@ -115,7 +115,7 @@ class SectionTest < ActiveSupport::TestCase
   
 protected
   
-  def create_section(options={})
+  def create_section(options = {})
     Section.create({ :parent => nodes(:root_section_node), :title => 'new section', :description => 'new description for section.' }.merge(options))
   end
 

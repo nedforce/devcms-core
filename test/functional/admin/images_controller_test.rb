@@ -100,7 +100,7 @@ class Admin::ImagesControllerTest < ActionController::TestCase
   def test_should_update_image
     login_as :sjoerd
 
-    put :update, :id => images(:test_image).id, :image => {:title => 'updated title'}
+    put :update, :id => images(:test_image).id, :image => { :title => 'updated title' }
 
     assert_response :success
     assert_equal 'updated title', assigns(:image).title
@@ -109,7 +109,7 @@ class Admin::ImagesControllerTest < ActionController::TestCase
   def test_should_not_update_image
     login_as :sjoerd
 
-    put :update, :id => images(:test_image).id, :image => {:title => nil}
+    put :update, :id => images(:test_image).id, :image => { :title => nil }
     assert_response :unprocessable_entity
     assert assigns(:image).errors[:title].any?
   end
@@ -172,9 +172,7 @@ class Admin::ImagesControllerTest < ActionController::TestCase
 
   protected
 
-    def create_image(attributes = {}, options = {})
-      post :create, {:parent_node_id => nodes(:about_page_node).id, :image => { :title => 'An Image', :file => fixture_file_upload("files/test.jpg") }}.merge(attributes).merge(options)
-    end
-
+  def create_image(attributes = {}, options = {})
+    post :create, {:parent_node_id => nodes(:about_page_node).id, :image => { :title => 'An Image', :file => fixture_file_upload("files/test.jpg") }}.merge(attributes).merge(options)
+  end
 end
-

@@ -1,16 +1,16 @@
 .slider-container{ :data => carousel_data(node.content) }
   .slider-items-wrapper
     .slider-lateral-navigation
-      %a.slider-navigation-previous{:href => "#"} &laquo;
-      %a.slider-navigation-play-pause{:href => "#"}= image_tag 'play_pause.png'
-      %a.slider-navigation-next{:href => "#"} &raquo;
+      %a.slider-navigation-previous{ :href => '#' } &laquo;
+      %a.slider-navigation-play-pause{ :href => '#' }= image_tag 'play_pause.png'
+      %a.slider-navigation-next{ :href => '#' } &raquo;
 
     .slider-navigation
       .slider-navigation-wrapper
         - node.content.carrousel_items.each_with_index do |item, index|
-          %a.slider-navigation-link{ :href => "#", :data => {:toggle => "slider"}}= index + 1
+          %a.slider-navigation-link{ :href => "#", :data => { :toggle => 'slider' } }= index + 1
         = icon_tag_link_to 'pause-1', '#', :class => 'slider-control pause-control', title: content_tag(:span, 'Play', class: 'text-alternative')
-        = icon_tag_link_to 'play-1', '#', :class => 'slider-control play-control', title: content_tag(:span, 'Play', class: 'text-alternative')
+        = icon_tag_link_to 'play-1',  '#', :class => 'slider-control play-control',  title: content_tag(:span, 'Play', class: 'text-alternative')
 
     .slider-items
       - node.content.carrousel_items.each do |item|
@@ -19,6 +19,6 @@
 
           - if item.image
             = link_to image_tag(content_node_url(item.image, :action => :sidebox, :format => :jpg), :alt => item.image.alt, :title => item.image.description), url
-            
+
           - if item.blank? || !item.item.is_a?(Image)
             = link_to (item.try(:item) || content).title, url, class: 'slider-item-title'

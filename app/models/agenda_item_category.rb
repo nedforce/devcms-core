@@ -1,10 +1,10 @@
-# An AgendaItemCategory is used to group common agenda items. Thus, it can contain 
+# An AgendaItemCategory is used to group common agenda items. Thus, it can contain
 # many agenda items, each represented with the AgendaItem content type.
-# 
+#
 # *Specification*
-# 
+#
 # Attributes
-# 
+#
 # * +agenda_items+ - The agenda items that belong to this category.
 # * +name+ - The name of this category.
 #
@@ -14,7 +14,6 @@
 # * Requires the uniqueness of +name+.
 #
 class AgendaItemCategory < ActiveRecord::Base
-
   # The agenda items that belong to this category.
   has_many :agenda_items, :dependent => :nullify
 

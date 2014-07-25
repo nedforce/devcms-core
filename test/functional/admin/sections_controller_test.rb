@@ -14,7 +14,7 @@ class Admin::SectionsControllerTest < ActionController::TestCase
     assert_response :success
     assert assigns(:section)
   end
-  
+
   def test_should_get_previous
     @editor_section.save :user => User.find_by_login('editor')
 
@@ -24,10 +24,10 @@ class Admin::SectionsControllerTest < ActionController::TestCase
     assert_response :success
     assert assigns(:section)
   end
-  
+
   def test_should_get_new
     login_as :sjoerd
-    
+
     get :new, :parent_node_id => nodes(:root_section_node).id
     assert_response :success
     assert assigns(:section)
@@ -41,16 +41,15 @@ class Admin::SectionsControllerTest < ActionController::TestCase
     assert assigns(:section)
     assert_equal 'foo', assigns(:section).title
   end
-  
+
   def test_should_create_section
     login_as :sjoerd
-    
+
     assert_difference('Section.count') do
       create_section
       assert_response :success
       assert !assigns(:section).new_record?, assigns(:section).errors.full_messages.join('; ')
     end
-    
   end
 
   def test_should_get_valid_preview_for_create
@@ -76,12 +75,11 @@ class Admin::SectionsControllerTest < ActionController::TestCase
       assert assigns(:section).errors[:title].any?
       assert_template 'new'
     end
-
   end
-  
+
   def test_should_not_create_section
     login_as :sjoerd
-    
+
     assert_no_difference('Section.count') do
       create_section({ :title => nil })
     end
@@ -89,10 +87,10 @@ class Admin::SectionsControllerTest < ActionController::TestCase
     assert assigns(:section).new_record?
     assert assigns(:section).errors[:title].any?
   end
-  
+
   def test_should_get_edit
     login_as :sjoerd
-    
+
     get :edit, :id => sections(:economie_section).id
     assert_response :success
     assert assigns(:section)
@@ -110,7 +108,7 @@ class Admin::SectionsControllerTest < ActionController::TestCase
   def test_should_update_section
     login_as :sjoerd
     
-    put :update, :id => sections(:economie_section).id, :section => {:title => 'updated title', :description => 'updated_body'}
+    put :update, :id => sections(:economie_section).id, :section => { :title => 'updated title', :description => 'updated_body' }
     
     assert_response :success
     assert_equal 'updated title', assigns(:section).title
@@ -121,7 +119,7 @@ class Admin::SectionsControllerTest < ActionController::TestCase
 
     section = sections(:economie_section)
     old_title = section.title
-    put :update, :id => section.id, :section => {:title => 'updated title', :description => 'updated_body'}, :commit_type => 'preview'
+    put :update, :id => section.id, :section => { :title => 'updated title', :description => 'updated_body' }, :commit_type => 'preview'
     assert_response :success
     assert_equal 'updated title', assigns(:section).title
     assert_equal old_title, section.reload.title
@@ -133,7 +131,7 @@ class Admin::SectionsControllerTest < ActionController::TestCase
 
     section = sections(:economie_section)
     old_title = section.title
-    put :update, :id => section.id, :section => {:title => nil, :description => 'updated_body'}, :commit_type => 'preview'
+    put :update, :id => section.id, :section => { :title => nil, :description => 'updated_body' }, :commit_type => 'preview'
     assert_response :unprocessable_entity
     assert assigns(:section).errors[:title].any?
     assert_equal old_title, section.reload.title
@@ -143,7 +141,7 @@ class Admin::SectionsControllerTest < ActionController::TestCase
   def test_should_not_update_section
     login_as :sjoerd
 
-    put :update, :id => sections(:economie_section).id, :section => {:title => nil}
+    put :update, :id => sections(:economie_section).id, :section => { :title => nil }
     assert_response :unprocessable_entity
     assert assigns(:section).errors[:title].any?
   end
@@ -173,7 +171,7 @@ class Admin::SectionsControllerTest < ActionController::TestCase
     assert_equal nodes(:economie_poll_node).id, assigns(:section).frontpage_node_id
   end
 
-  def test_should_show_frontpage_controls_to_final_editors    
+  def test_should_show_frontpage_controls_to_final_editors
     login_as :final_editor
 
     get :edit, :id => sections(:economie_section).id
@@ -200,7 +198,7 @@ class Admin::SectionsControllerTest < ActionController::TestCase
     login_as :sjoerd
 
     date = 1.year.from_now
-    
+
     put :update, :id => sections(:economie_section),
                  :section => { :publication_start_date_day => date.strftime("%d-%m-%Y"), :publication_start_date_time => date.strftime("%H:%M") }
 
@@ -209,10 +207,9 @@ class Admin::SectionsControllerTest < ActionController::TestCase
   end
 
 protected
-  
+
   def create_section(attributes = {}, options = {})
     publication_start_date = attributes.delete(:publication_start_date) || Time.now
-    post :create, {:parent_node_id => nodes(:root_section_node).id, :section => { :title => 'new title', :description => 'Lorem ipsum', :publication_start_date_day => publication_start_date.strftime("%d-%m-%Y"), :publication_start_date_time => publication_start_date.strftime("%H:%M") }.merge(attributes)}.merge(options)
+    post :create, { :parent_node_id => nodes(:root_section_node).id, :section => { :title => 'new title', :description => 'Lorem ipsum', :publication_start_date_day => publication_start_date.strftime("%d-%m-%Y"), :publication_start_date_time => publication_start_date.strftime("%H:%M") }.merge(attributes) }.merge(options)
   end
-
 end

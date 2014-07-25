@@ -28,7 +28,7 @@ class Admin::CommentsControllerTest < ActionController::TestCase
 
   def test_should_get_index_for_final_editor
     login_as :final_editor
-    
+
     get :index
     assert_response :success
     assert assigns(:comments).empty?
@@ -45,7 +45,7 @@ class Admin::CommentsControllerTest < ActionController::TestCase
     login_as :sjoerd
 
     assert_difference('Comment.count', -1) do
-      delete :destroy, :id =>@comment, :format => 'json'
+      delete :destroy, :id => @comment, :format => 'json'
       assert_response :success
     end
   end
@@ -88,7 +88,7 @@ class Admin::CommentsControllerTest < ActionController::TestCase
     login_as :sjoerd
 
     assert_difference('ForumPost.count', -1) do
-      delete :destroy, :comment_type => 'forum_post', :id =>@forum_post, :format => 'json'
+      delete :destroy, :comment_type => 'forum_post', :id => @forum_post, :format => 'json'
       assert_response :success
     end
   end
@@ -97,10 +97,8 @@ class Admin::CommentsControllerTest < ActionController::TestCase
     login_as :sjoerd
 
     assert_no_difference('Comment.count') do
-      delete :destroy, :comment_type => 'forum_post', :id =>@forum_start_post, :format => 'json'
+      delete :destroy, :comment_type => 'forum_post', :id => @forum_start_post, :format => 'json'
       assert_response 422
     end
   end
-
 end
-

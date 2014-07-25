@@ -286,7 +286,7 @@ module DevcmsCore
       self.updated_at = node_updated_at
 
       self.class.send(:with_exclusive_scope) do
-       self.class.update_all({ :deleted_at => nil, :updated_at => node_updated_at }, self.class.primary_key => id)
+        self.class.update_all({ :deleted_at => nil, :updated_at => node_updated_at }, self.class.primary_key => id)
       end
     end
 
@@ -295,5 +295,4 @@ module DevcmsCore
       node.save!
     end
   end
-
 end

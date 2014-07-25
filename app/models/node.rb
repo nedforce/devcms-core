@@ -142,7 +142,7 @@ class Node < ActiveRecord::Base
   validates_inclusion_of :commentable,       :in => [ false, true ], :allow_nil => true
 
   validates_inclusion_of :content_box_colour, :in => Devcms.content_box_colours, :allow_blank => true
-  validates_inclusion_of :content_box_icon, :in => Devcms.content_box_icons, :allow_blank => true, :if => Proc.new {Rails.application.config.use_devcms_icons}
+  validates_inclusion_of :content_box_icon,   :in => Devcms.content_box_icons,   :allow_blank => true, :if => Proc.new { Rails.application.config.use_devcms_icons }
 
   validates_length_of    :content_box_title, :in => 2..255, :allow_blank => true
 
@@ -160,8 +160,8 @@ class Node < ActiveRecord::Base
 
   # After update to private or hidden or publishable reindex all children
   before_update do |node|
-    @private_changed = node.private_changed?
-    @hidden_changed = node.hidden_changed?
+    @private_changed     = node.private_changed?
+    @hidden_changed      = node.hidden_changed?
     @publishable_changed = node.publishable_changed?
     true
   end
@@ -193,7 +193,7 @@ class Node < ActiveRecord::Base
     if Node.content_to_hide_from_menu.present?
       { :conditions => [ 'nodes.show_in_menu = true AND nodes.sub_content_type NOT IN (?)', Node.content_to_hide_from_menu ] }
     else
-      { :conditions => { 'nodes.show_in_menu' => true }}
+      { :conditions => { 'nodes.show_in_menu' => true } }
     end
   end)
 
@@ -614,7 +614,7 @@ class Node < ActiveRecord::Base
   end
 
   def self.available_tags
-    ActsAsTaggableOn::Tag.select('DISTINCT(name)').joins(:taggings).where(:taggings => {:context => :tags}).map &:name
+    ActsAsTaggableOn::Tag.select('DISTINCT(name)').joins(:taggings).where(:taggings => { :context => :tags }).map &:name
   end
 
 protected
