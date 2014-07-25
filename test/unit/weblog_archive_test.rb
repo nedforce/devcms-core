@@ -97,6 +97,6 @@ class WeblogArchiveTest < ActiveSupport::TestCase
 protected
 
   def create_weblog_archive(options = {})
-    WeblogArchive.create({:parent => nodes(:root_section_node), :title => 'DevCMS weblogs, the best there are!', :description => 'Enjoy!'}.merge(options))
+    WeblogArchive.create({ :parent => nodes(:root_section_node), :title => 'DevCMS weblogs, the best there are!', :description => 'Enjoy!' }.merge(options))
   end
 end

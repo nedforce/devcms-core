@@ -67,7 +67,7 @@ class Admin::CombinedCalendarsControllerTest < ActionController::TestCase
     login_as :sjoerd
     
     assert_no_difference('CombinedCalendar.count') do
-      create_combined_calendar({:title => nil})
+      create_combined_calendar({ :title => nil })
     end
     
     assert_response :unprocessable_entity

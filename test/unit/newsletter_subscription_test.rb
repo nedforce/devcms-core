@@ -26,7 +26,7 @@ class NewsletterSubscriptionTest < ActionMailer::TestCase
   end
 
   def test_should_render_newsletter_header_image
-    @newsletter_edition.header_image_node = Image.create({:parent => nodes(:devcms_news_item_node), :title => "Dit is een image.", :file => fixture_file_upload("files/test.jpg") }).node
+    @newsletter_edition.header_image_node = Image.create({ :parent => nodes(:devcms_news_item_node), :title => 'Dit is een image.', :file => fixture_file_upload('files/test.jpg') }).node
     assert NewsletterSubscription.edition_for(@newsletter_edition, users(:arthur)).parts.second.body.include?('http://www.example.com/nieuws-voor-iedereen/dit-is-een-image/newsletter_banner.jpg')
   end
 

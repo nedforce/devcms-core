@@ -110,7 +110,7 @@ module DevcmsCoreHelper
 
   # Prints error messages for an AR object in a minimal, side box fitting layout element.
   def side_box_error_messages_for(obj)
-    list_items = obj.errors.full_messages.map{ |msg| content_tag(:li, msg) }.join("\n").html_safe
+    list_items = obj.errors.full_messages.map { |msg| content_tag(:li, msg) }.join("\n").html_safe
     content_tag(:ul, list_items, :class => 'errors')
   end
 
@@ -311,10 +311,10 @@ module DevcmsCoreHelper
       if object = options.delete(:object)
         objects = [object].flatten
       else
-        objects = params.collect {|object_name| instance_variable_get("@#{object_name}") }.compact
+        objects = params.map { |object_name| instance_variable_get("@#{object_name}") }.compact
       end
 
-      count = objects.inject(0) {|sum, object| sum + object.errors.count }
+      count = objects.inject(0) { |sum, object| sum + object.errors.count }
 
       unless count.zero?
         html = {}
@@ -331,7 +331,7 @@ module DevcmsCoreHelper
         options[:object_name]  ||= params.first
         options[:header_message] = t('application.save_error') unless options.include?(:header_message)
         options[:message]      ||= (count > 1) ? t('application.field_errors') : t('application.field_error') unless options.include?(:message)
-        error_messages = objects.map {|object| object.errors.full_messages.map {|msg| content_tag(:li, msg) } }
+        error_messages = objects.map { |object| object.errors.full_messages.map { |msg| content_tag(:li, msg) } }
 
         contents = ''
         contents << content_tag(options[:header_tag] || :h2, options[:header_message]) if options[:header_message].present?

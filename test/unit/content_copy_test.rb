@@ -86,7 +86,7 @@ class ContentCopyTest < ActiveSupport::TestCase
 protected
 
   def create_content_copy(options = {})
-    ContentCopy.create({:parent => @root_node, :copied_node => @section_node }.merge(options))
+    ContentCopy.create({ :parent => @root_node, :copied_node => @section_node }.merge(options))
   end
   
 end

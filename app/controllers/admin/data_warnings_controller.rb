@@ -21,7 +21,7 @@ class Admin::DataWarningsController < Admin::AdminController
     respond_to do |format|
       format.html { render :layout => 'admin' }
       format.json do
-        data_warnings_for_json = @data_warnings.collect do |warning|
+        data_warnings_for_json = @data_warnings.map do |warning|
           { 
             :subject => (
               if warning.subject

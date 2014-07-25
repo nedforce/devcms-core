@@ -24,7 +24,7 @@ class Admin::CommentsController < Admin::AdminController
     respond_to do |format|
       format.html { render :layout => 'admin' }
       format.json do
-        comments = (@comments[start_index, @page_limit] || []).collect do |comment|
+        comments = (@comments[start_index, @page_limit] || []).map do |comment|
           {
             :id         => comment.id,
             :user_name  => comment.user_name,

@@ -41,7 +41,7 @@ class Admin::RoleAssignmentsControllerTest < ActionController::TestCase
     login_as :sjoerd
 
     assert_no_difference('RoleAssignment.count') do
-      create_role_assignment({:name => nil})
+      create_role_assignment({ :name => nil })
     end
     assert_response :success
     assert assigns(:role_assignment).new_record?
@@ -52,7 +52,7 @@ class Admin::RoleAssignmentsControllerTest < ActionController::TestCase
     login_as :sjoerd
 
     assert_no_difference('RoleAssignment.count') do
-      create_role_assignment({:name => 'geen_rol'})
+      create_role_assignment({ :name => 'geen_rol' })
     end
     assert_response :success
     assert assigns(:role_assignment).new_record?
@@ -63,7 +63,7 @@ class Admin::RoleAssignmentsControllerTest < ActionController::TestCase
     login_as :sjoerd
 
     assert_no_difference('RoleAssignment.count') do
-      create_role_assignment({:user_login => nil})
+      create_role_assignment({ :user_login => nil })
     end
     assert_response :success
     assert assigns(:role_assignment).new_record?
@@ -81,7 +81,7 @@ class Admin::RoleAssignmentsControllerTest < ActionController::TestCase
     login_as :sjoerd
     get :index, :sort => 'node_title', :dir => 'DESC', :format => 'json'
     assert_response :success
-    assert_equal RoleAssignment.all(:include => :node).collect{|ra| ra.node.content.content_title }.sort.last, assigns(:role_assignments).first.node.content.content_title 
+    assert_equal RoleAssignment.all(:include => :node).map { |ra| ra.node.content.content_title }.sort.last, assigns(:role_assignments).first.node.content.content_title
   end
 
   def test_should_sort_users_for_extjs

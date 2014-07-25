@@ -24,7 +24,7 @@ class NodeExpirationMailerWorkerTest < ActionMailer::TestCase
     assert_equal 3, Node.expired.count
     assert_difference('ActionMailer::Base.deliveries.size', 3) do
       NodeExpirationMailerWorker.notify_authors
-      assert ActionMailer::Base.deliveries.all? {|message| message.subject.include? "Content onder uw beheer"}
+      assert ActionMailer::Base.deliveries.all? { |message| message.subject.include? 'Content onder uw beheer' }
     end
   end
   
@@ -32,14 +32,14 @@ class NodeExpirationMailerWorkerTest < ActionMailer::TestCase
     assert Node.root.content.update_attribute :expiration_email_subject, "Aangepast onderwerp"
     assert_difference('ActionMailer::Base.deliveries.size', 3) do
       NodeExpirationMailerWorker.notify_authors
-      assert ActionMailer::Base.deliveries.all? {|message| message.subject.include? "Aangepast onderwerp"}
+      assert ActionMailer::Base.deliveries.all? { |message| message.subject.include? 'Aangepast onderwerp' }
     end
   end
   
   def test_notify_final_editors
     assert_difference('ActionMailer::Base.deliveries.size', 1) do
       NodeExpirationMailerWorker.notify_final_editors
-      assert ActionMailer::Base.deliveries.all? {|message| message.subject.include? "Content onder uw beheer"}
+      assert ActionMailer::Base.deliveries.all? { |message| message.subject.include? 'Content onder uw beheer' }
     end
   end
   

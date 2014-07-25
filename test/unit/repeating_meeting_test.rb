@@ -96,11 +96,11 @@ protected
   def create_meeting(options = {})
     now = Time.now
 
-    Meeting.create({:parent => @meetings_calendar.node,
-      :meeting_category => @meeting_category,
-      :title => "New meeting",
-      :start_time => now,
-      :end_time => now + 1.hour
+    Meeting.create({ :parent           => @meetings_calendar.node,
+                     :meeting_category => @meeting_category,
+                     :title            => 'New meeting',
+                     :start_time       => now,
+                     :end_time         => now + 1.hour
     }.merge(options))
   end
 

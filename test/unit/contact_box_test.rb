@@ -72,10 +72,11 @@ class ContactBoxTest < ActiveSupport::TestCase
   protected
 
   def create_contact_box(options = {})
-    ContactBox.create({:parent => @root_node,
-      :title => 'Contactinformatie',
+    ContactBox.create({
+      :parent              => @root_node,
+      :title               => 'Contactinformatie',
       :contact_information => 'Contact info',
-      :default_text => 'Interessante default text'
+      :default_text        => 'Interessante default text'
     }.merge(options))
   end
 end

@@ -8,7 +8,7 @@
 
     %div{ :id => "poll_content_box_content_#{content.id}" }
       - if already_voted_for?(active_question)
-        - cache({:poll_results_content_box_for => content.id, :site => current_site.id}, { :expires_in => 15.minutes }) do
+        - cache({ :poll_results_content_box_for => content.id, :site => current_site.id }, { :expires_in => 15.minutes }) do
           = render :partial => '/poll_questions/results_side_box', :locals => { :question => active_question }
       - else
         = form_tag vote_poll_question_url(active_question), :method => :put, :remote => true, :data => { :type => 'html' }, :id => "poll_content_box_form_#{content.id}", :class => 'poll_content_box_form' do

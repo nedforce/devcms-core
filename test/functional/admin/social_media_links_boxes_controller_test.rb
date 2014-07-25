@@ -73,7 +73,7 @@ class Admin::SocialMediaLinksBoxesControllerTest < ActionController::TestCase
     login_as :sjoerd
 
     assert_no_difference('SocialMediaLinksBox.count') do
-      create_social_media_links_box({:title => nil})
+      create_social_media_links_box({ :title => nil })
     end
     assert_response :unprocessable_entity
     assert assigns(:social_media_links_box).new_record?

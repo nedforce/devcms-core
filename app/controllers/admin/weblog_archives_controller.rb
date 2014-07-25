@@ -126,10 +126,10 @@ class Admin::WeblogArchivesController < Admin::AdminController
 
     respond_to do |format|
       if @commit_type == 'preview' && @weblog_archive.valid?
-        format.html {
+        format.html do
           find_weblogs
           render :template => 'admin/shared/update_preview', :locals => { :record => @weblog_archive }, :layout => 'admin/admin_preview'
-        }
+        end
         format.xml  { render :xml => @weblog_archive, :status => :created, :location => @weblog_archive }
       elsif @commit_type == 'save' && @weblog_archive.save(:user => current_user)
         format.html { render :template => 'admin/shared/update' }

@@ -294,7 +294,7 @@ module Diff
       result.reverse!
       result = result[-n..-1]
     end
-    result.collect { |score, x| x }
+    result.map { |score, x| x }
   end
 
   def self.count_leading(line, ch)

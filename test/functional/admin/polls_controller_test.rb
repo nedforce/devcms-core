@@ -59,7 +59,7 @@ class Admin::PollsControllerTest < ActionController::TestCase
     login_as :sjoerd
 
     assert_no_difference('Poll.count') do
-      create_poll({:title => nil})
+      create_poll({ :title => nil })
     end
     assert_response :unprocessable_entity
     assert assigns(:poll).new_record?

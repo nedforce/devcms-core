@@ -110,10 +110,10 @@ class NewsletterEditionTest < ActiveSupport::TestCase
     image.move_to_child_of(nodes(:newsletter_archive_node))
     assert_equal image, create_newsletter_edition.header
   end
-  
+
 protected
-  
+
   def create_newsletter_edition(options = {})
-    NewsletterEdition.create({:parent => nodes(:newsletter_archive_node), :title => "Het maandelijkse nieuws uit Nederland!", :body => "O o o wat is het weer een fijne maand geweest." }.merge(options))
+    NewsletterEdition.create({ :parent => nodes(:newsletter_archive_node), :title => 'Het maandelijkse nieuws uit Nederland!', :body => 'O o o wat is het weer een fijne maand geweest.' }.merge(options))
   end
 end

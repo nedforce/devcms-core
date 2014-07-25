@@ -43,17 +43,17 @@ class Admin::WeblogPostsController < Admin::AdminController
 
     respond_to do |format|
       if @commit_type == 'preview' && @weblog_post.valid?
-        format.html {
+        format.html do
           find_images_and_attachments
           find_content
           render :template => 'admin/shared/update_preview', :locals => { :record => @weblog_post }, :layout => 'admin/admin_preview'
-        }
+        end
         format.xml  { render :xml => @weblog_post, :status => :created, :location => @weblog_post }
       elsif @commit_type == 'save' && @weblog_post.save(:user => current_user)
-        format.html {
+        format.html do
           @refresh = true
           render :template => 'admin/shared/update'
-        }
+        end
         format.xml  { head :ok }
       else
         format.html { render :template => 'admin/shared/edit', :locals => { :record => @weblog_post }, :status => :unprocessable_entity }

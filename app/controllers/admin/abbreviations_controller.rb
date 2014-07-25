@@ -20,7 +20,7 @@ class Admin::AbbreviationsController < Admin::AdminController
     respond_to do |format|
       format.html # index.html.erb
       format.json do
-        abbreviations = @abbreviations.collect do |s|
+        abbreviations = @abbreviations.map do |s|
           { :abbr       => s.abbr,
             :definition => s.definition,
             :id         => s.id

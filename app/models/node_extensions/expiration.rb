@@ -10,7 +10,7 @@ module NodeExtensions::Expiration
   
     before_validation :set_default_expires_on, :if => :expiration_required?
     
-    validate :expires_on_valid?, :ensure_valid_responsible_user_role, :if => lambda {|node| node.expires_on_changed? || (node.content && node.content.changed?) }
+    validate :expires_on_valid?, :ensure_valid_responsible_user_role, :if => lambda { |node| node.expires_on_changed? || (node.content && node.content.changed?) }
     
     if SETTLER_LOADED
       validates_presence_of :expires_on, :if => :expiration_required?
@@ -26,7 +26,7 @@ module NodeExtensions::Expiration
   
   module ClassMethods  
     def expirable_content_types
-      Node.content_types_configuration.collect {|ct, config| ct if config[:expirable] || config[:expiration_required]}.compact
+      Node.content_types_configuration.map { |ct, config| ct if config[:expirable] || config[:expiration_required]}.compact
     end
   end
     
@@ -93,7 +93,7 @@ module NodeExtensions::Expiration
   end
   
   def cascade_expires_on!
-    self.descendants.update_all({:expires_on => Date.parse(cascade_expires_on)}, { :content_type => Node.expirable_content_types } )
+    self.descendants.update_all({ :expires_on => Date.parse(cascade_expires_on) }, { :content_type => Node.expirable_content_types })
   end
   
   def cascade_expires_on?

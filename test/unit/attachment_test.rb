@@ -47,7 +47,7 @@ class AttachmentTest < ActiveSupport::TestCase
     attachment = create_attachment(:filename => '2008.68936_Bijlage_Startnotitie_procesaanpak_Toekomstvisie_2030.pdf')
     assert_equal '2008-68936_Bijlage_Startnotitie_procesaanpak_Toekomstvisie_2030.pdf', attachment.filename
   end
-  
+
   protected
     def assert_attachment_difference
       assert_difference 'Attachment.count' do
@@ -60,8 +60,8 @@ class AttachmentTest < ActiveSupport::TestCase
         yield
       end
     end
-    
+
     def create_attachment(options = {})
-      Attachment.create({:parent => nodes(:downloads_page_node), :title => 'Park Zandweerd Matrix plannen', :file => fixture_file_upload(FIXTURE_FILE, 'application/msword') }.merge(options))
+      Attachment.create({ :parent => nodes(:downloads_page_node), :title => 'Park Zandweerd Matrix plannen', :file => fixture_file_upload(FIXTURE_FILE, 'application/msword') }.merge(options))
     end
 end

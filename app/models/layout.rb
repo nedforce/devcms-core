@@ -11,7 +11,7 @@ class Layout
   end
 
   def variants
-    self.config.collect do |variant, config|
+    self.config.map do |variant, config|
       [config["name"], variant] unless ['extends', "target_defaults"].include?(variant) || !config || !config['name']
     end.compact
   end
@@ -31,7 +31,7 @@ class Layout
   end
 
   def targets_for_variant(variant)
-    variant.select { |key,val| ![:id, "name", 'inheritable'].include?(key) }  
+    variant.select { |key, val| ![:id, 'name', 'inheritable'].include?(key) }
   end
 
   def settings_partial
@@ -69,11 +69,11 @@ class Layout
     if @all_layouts.blank?
       configs = {}
 
-      Rails.application.config.layout_paths.collect(&:existent).flatten.each do |layout_path|
+      Rails.application.config.layout_paths.map(&:existent).flatten.each do |layout_path|
         configs[layout_path.split('/').last] = YAML.load_file( File.join(layout_path, 'config.yml')).merge({'path' => layout_path})
       end
 
-      @all_layouts = configs.collect do |id, config|
+      @all_layouts = configs.map do |id, config|
         if parent = config['extends']
           config = configs[parent].merge(config) 
         end

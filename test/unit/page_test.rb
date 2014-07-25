@@ -58,7 +58,7 @@ class PageTest < ActiveSupport::TestCase
 
   protected
     def create_page(options = {})
-      Page.create({:parent => nodes(:root_section_node), :title => "Page title", :body => "Page body" }.merge(options))
+      Page.create({ :parent => nodes(:root_section_node), :title => 'Page title', :body => 'Page body' }.merge(options))
     end
 end
 

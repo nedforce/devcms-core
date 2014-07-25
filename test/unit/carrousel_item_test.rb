@@ -30,7 +30,7 @@ class CarrouselItemTest < ActiveSupport::TestCase
 protected
   
   def create_carrousel(options = {})
-    Carrousel.create({:parent => nodes(:root_section_node), :title => "Mijn content carrousel" }.merge(options))
+    Carrousel.create({ :parent => nodes(:root_section_node), :title => 'Mijn content carrousel' }.merge(options))
   end
   
   def create_carrousel_item(carrousel, options = {})

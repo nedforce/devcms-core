@@ -87,10 +87,10 @@ class Admin::CarrouselsController < Admin::AdminController
         format.html { render :template => 'admin/shared/update_preview', :locals => { :record => @carrousel }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @carrousel, :status => :created, :location => @carrousel }
       elsif @commit_type == 'save' && @carrousel.save(:user => current_user)
-        format.html {
+        format.html do
           @refresh = true
           render :template => 'admin/shared/update'
-        }
+        end
         format.xml  { head :ok }
       else
         @item_sortlets = item_sortlet_hash_for_ids(@item_ids)

@@ -46,7 +46,7 @@ class Admin::AlphabeticIndicesControllerTest < ActionController::TestCase
     login_as :sjoerd
 
     assert_no_difference('AlphabeticIndex.count') do
-      create_alphabetic_index({:title => nil})
+      create_alphabetic_index({ :title => nil })
     end
 
     assert_response :unprocessable_entity

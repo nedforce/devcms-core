@@ -30,7 +30,7 @@ class AlphabeticIndexTest < ActiveSupport::TestCase
   def test_should_order_by_title_or_tag
     # Page.create
     pages = alphabetic_indices(:root_alphabetic_index).items
-    assert_equal pages.collect {|p| p.title.upcase }, pages.collect {|p| p.title.upcase }.sort
+    assert_equal pages.map { |p| p.title.upcase }, pages.map { |p| p.title.upcase }.sort
     page = Page.create :title => "Not with an A", :body => "....", :parent => nodes(:root_section_node), :title_alternative_list => "Alternative", :expires_on => 1.day.from_now.to_date
     
     sleep 1

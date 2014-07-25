@@ -41,10 +41,10 @@ module DevcmsCore
 
     initializer "register_cms_modules" do |app|
       config.model_paths.reverse.each do |model_path|
-        config.registered_models += model_path.existent.collect{|model| model.split('/').last[0..-4].camelize }
+        config.registered_models += model_path.existent.map { |model| model.split('/').last[0..-4].camelize }
       end
 
-      config.reserved_slugs += config.registered_models.collect(&:tableize)
+      config.reserved_slugs += config.registered_models.map(&:tableize)
     end
 
     initializer "devcms_precompile" do |app|

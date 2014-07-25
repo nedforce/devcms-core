@@ -61,7 +61,7 @@ protected
 
   def create_page(attributes = {}, options = {})
     parent_node = options.delete(:parent_node) || nodes(:root_section_node)
-    Page.create({:parent => parent_node, :title => "Page title", :preamble => "Ambule", :body => "Page body" }.merge(options))
+    Page.create({ :parent => parent_node, :title => 'Page title', :preamble => 'Ambule', :body => 'Page body' }.merge(options))
   end
 
 end

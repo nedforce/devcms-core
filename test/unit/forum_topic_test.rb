@@ -83,10 +83,10 @@ class ForumTopicTest < ActiveSupport::TestCase
       i = i + 1
     end
   end
-  
+
 protected
-  
+
   def create_forum_topic(options = {})
-    ForumTopic.create({:parent => @bewoners_forum.node, :title => "DevCMS forum topics, the best there are!", :description => "Enjoy!" }.merge(options))
+    ForumTopic.create({ :parent => @bewoners_forum.node, :title => 'DevCMS forum topics, the best there are!', :description => 'Enjoy!' }.merge(options))
   end
 end

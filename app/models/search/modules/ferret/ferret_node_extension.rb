@@ -34,7 +34,7 @@ module Search::Modules::Ferret::FerretNodeExtension
   module InstanceMethods
     # Returns the path with ids for this node for indexing.
     def path_to_index
-      "/#{self.self_and_ancestors.collect(&:id).join("/")}/"
+      "/#{self.self_and_ancestors.map(&:id).join("/")}/"
     end
 
     def ancestry_to_index
@@ -58,7 +58,7 @@ module Search::Modules::Ferret::FerretNodeExtension
 
     def zipcodes_to_index
       if self.content_type == "Permit"
-        self.content.addresses.collect { |address| address.postal_code }
+        self.content.addresses.map { |address| address.postal_code }
       end
     end
 

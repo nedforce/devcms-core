@@ -134,10 +134,10 @@ class Admin::CalendarsController < Admin::AdminController
 
     respond_to do |format|
       if @commit_type == 'preview' && @calendar.valid?
-        format.html {
+        format.html do
           find_calendar_items
           render :template => 'admin/shared/update_preview', :locals => { :record => @calendar }, :layout => 'admin/admin_preview'
-        }
+        end
         format.xml  { render :xml => @calendar, :status => :created, :location => @calendar }
       elsif @commit_type == 'save' && @calendar.save(:user => current_user)
         format.html { render :template => 'admin/shared/update' }
@@ -157,6 +157,6 @@ protected
   end
 
   def find_calendar_items
-    @calendar_items = @calendar.calendar_items.find_all_for_month_of(Date.today).group_by {|ci| ci.start_time.mday }
+    @calendar_items = @calendar.calendar_items.find_all_for_month_of(Date.today).group_by { |ci| ci.start_time.mday }
   end
 end

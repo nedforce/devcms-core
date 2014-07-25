@@ -20,12 +20,12 @@ class NodeURLAliasTest < ActiveSupport::TestCase
   end
   
   def test_should_create_url_alias_for_frontpage_child
-    ni = NewsItem.create({:parent => nodes(:devcms_news_node), :title => 'foo', :preamble => 'xuu', :body => 'bar', :publication_start_date => '2008-05-20 12:00' })
+    ni = NewsItem.create({ :parent => nodes(:devcms_news_node), :title => 'foo', :preamble => 'xuu', :body => 'bar', :publication_start_date => '2008-05-20 12:00' })
     assert_equal '2008/5/20/foo', ni.node.url_alias
   end
 
   def test_should_remove_trailing_slashes_from_url_aliases
-    p = Page.create({:parent => nodes(:root_section_node), :title => 'foo/', :preamble => 'xuu', :body => 'bar', :expires_on => 1.day.from_now.to_date, :publication_start_date => '2008-05-20 12:00' })
+    p = Page.create({ :parent => nodes(:root_section_node), :title => 'foo/', :preamble => 'xuu', :body => 'bar', :expires_on => 1.day.from_now.to_date, :publication_start_date => '2008-05-20 12:00' })
     assert_equal 'foo', p.node.url_alias
   end
   
@@ -153,21 +153,21 @@ class NodeURLAliasTest < ActiveSupport::TestCase
     node = nodes(:devcms_news_node)
     Node.root.content.set_frontpage!(nil)
     node.descendants.update_all(:url_alias => "placeholder")
-    assert node.descendants.all? {|n| n.url_alias == "placeholder"}, "Should have set all descendants url_aliasses!"
+    assert node.descendants.all? { |n| n.url_alias == 'placeholder' }, 'Should have set all descendants url_aliasses!'
     assert nodes(:economie_section_node).url_alias.size > 1
     node.move_to_child_of nodes(:economie_section_node)
-    assert node.descendants.all? {|n| n.url_alias.include? nodes(:economie_section_node).url_alias }, "Should have prefixed url_aliasses"
+    assert node.descendants.all? { |n| n.url_alias.include? nodes(:economie_section_node).url_alias }, 'Should have prefixed url_aliasses'
   end
 
   def test_should_update_url_aliases_of_subtree_on_rename
     node = nodes(:devcms_news_node)
     Node.root.content.set_frontpage!(nil)
     node.descendants.update_all(:url_alias => "placeholder")
-    assert node.descendants.all? {|n| n.url_alias == "placeholder"}, "Should have set all descendants url_aliasses!"
+    assert node.descendants.all? { |n| n.url_alias == 'placeholder' }, 'Should have set all descendants url_aliasses!'
     node.content.update_attributes :title => "Nieuwe Nieuws Sectie Naam"
     node.reload
     assert_not_nil node.url_alias
-    assert node.descendants.all? {|n| n.url_alias.include? node.url_alias }, "Should have prefixed url_aliasses"
+    assert node.descendants.all? { |n| n.url_alias.include? node.url_alias }, 'Should have prefixed url_aliasses'
   end
   
   def test_url_alias_length_restrictions

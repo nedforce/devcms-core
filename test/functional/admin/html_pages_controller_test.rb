@@ -70,7 +70,7 @@ class Admin::HtmlPagesControllerTest < ActionController::TestCase
     login_as :arthur
 
     assert_no_difference('HtmlPage.count') do
-      create_html_page({:title => nil})
+      create_html_page({ :title => nil })
     end
     assert_response :unprocessable_entity
     assert assigns(:html_page).new_record?

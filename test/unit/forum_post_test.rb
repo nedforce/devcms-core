@@ -126,8 +126,8 @@ class ForumPostTest < ActiveSupport::TestCase
   end
 
   def test_should_not_return_start_posts
-    assert !ForumPost.all.select{|fp| fp.is_start_post? }.empty?
-    assert ForumPost.replies.select{|fp| fp.is_start_post? }.empty?
+    assert !ForumPost.all.select { |fp| fp.is_start_post? }.empty?
+    assert ForumPost.replies.select { |fp| fp.is_start_post? }.empty?
   end
 
   def test_should_get_and_set_body

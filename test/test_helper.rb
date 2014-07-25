@@ -23,7 +23,7 @@ Turn.config.format = :pretty
 # I18n.exception_handler = :just_raise
 
 # Truncate all tables first
-ActiveRecord::Base.connection.tables.each{ |table| ActiveRecord::Base.connection.execute("TRUNCATE #{table} CASCADE") }
+ActiveRecord::Base.connection.tables.each { |table| ActiveRecord::Base.connection.execute("TRUNCATE #{table} CASCADE") }
 
 # Initialize Settler
 Settler.load!

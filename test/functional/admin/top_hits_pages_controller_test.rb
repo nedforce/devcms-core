@@ -70,7 +70,7 @@ class Admin::TopHitsPagesControllerTest < ActionController::TestCase
     login_as :sjoerd
 
     assert_no_difference('TopHitsPage.count') do
-      create_top_hits_page({:title => nil})
+      create_top_hits_page({ :title => nil })
     end
 
     assert_response :unprocessable_entity

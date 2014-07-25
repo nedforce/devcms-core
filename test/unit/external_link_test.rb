@@ -95,7 +95,6 @@ class ExternalLinkTest < ActiveSupport::TestCase
 protected
 
   def create_external_link(options = {})
-    ExternalLink.create({:parent => nodes(:root_section_node), :title => "Dit is een external link.", :description => "Geen fratsen!", :url => "http://www.google.com" }.merge(options))
+    ExternalLink.create({ :parent => nodes(:root_section_node), :title => 'Dit is een external link.', :description => 'Geen fratsen!', :url => 'http://www.google.com' }.merge(options))
   end
 end
-

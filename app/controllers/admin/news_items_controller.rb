@@ -92,10 +92,10 @@ class Admin::NewsItemsController < Admin::AdminController
         end
         format.xml  { render :xml => @news_item, :status => :created, :location => @news_item }
       elsif @commit_type == 'save' && @news_item.save(:user => current_user, :approval_required => @for_approval)
-        format.html {
+        format.html do
           @refresh = true
           render :template => 'admin/shared/update'
-        }
+        end
         format.xml  { head :ok }
       else
         format.html { render :template => 'admin/shared/edit', :locals => { :record => @news_item }, :status => :unprocessable_entity }

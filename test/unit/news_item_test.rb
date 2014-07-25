@@ -93,10 +93,10 @@ class NewsItemTest < ActiveSupport::TestCase
     created_at = ni.created_at
     assert_equal "#{created_at.day}/#{created_at.month} #{ni.title}", ni.node.tree_text
   end
-  
+
 protected
-  
+
   def create_news_item(options = {})
-    NewsItem.create({:parent => nodes(:devcms_news_node), :title => "Slecht weer!", :body => "Het zonnetje schijnt niet en de mensen zijn ontevreden." }.merge(options))
+    NewsItem.create({ :parent => nodes(:devcms_news_node), :title => 'Slecht weer!', :body => 'Het zonnetje schijnt niet en de mensen zijn ontevreden.' }.merge(options))
   end
 end

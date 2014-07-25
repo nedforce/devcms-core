@@ -170,7 +170,7 @@ class Admin::CarrouselsControllerTest < ActionController::TestCase
     assert_equal 3, assigns(:carrousel).items.size
     assert_equal [2,'days'], assigns(:carrousel).human_display_time
     assert_equal 60*60*24*2, assigns(:carrousel).display_time
-    assigns(:carrousel).carrousel_items.each{|ci| assert_nil ci.excerpt }
+    assigns(:carrousel).carrousel_items.each { |ci| assert_nil ci.excerpt }
   end
 
 protected

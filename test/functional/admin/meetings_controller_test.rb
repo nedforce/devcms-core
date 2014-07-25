@@ -190,7 +190,7 @@ protected
 
   def create_meeting(options = {})
     now = Time.now
-    Meeting.create({:parent => calendars(:events_calendar).node, :repeating => false, :title => "New event", :start_time => now, :end_time => now + 1.hour, :meeting_category_name => 'problem' }.merge(options))
+    Meeting.create({ :parent => calendars(:events_calendar).node, :repeating => false, :title => 'New event', :start_time => now, :end_time => now + 1.hour, :meeting_category_name => 'problem' }.merge(options))
   end
 
   def create_repeating_meeting(options = {})

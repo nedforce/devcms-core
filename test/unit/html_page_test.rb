@@ -59,7 +59,7 @@ class HtmlPageTest < ActiveSupport::TestCase
 protected
 
   def create_html_page(options = {})
-    HtmlPage.create({:parent => nodes(:root_section_node), :title => "HtmlPage title", :body => "HtmlPage body" }.merge(options))
+    HtmlPage.create({ :parent => nodes(:root_section_node), :title => 'HtmlPage title', :body => 'HtmlPage body' }.merge(options))
   end
   
 end

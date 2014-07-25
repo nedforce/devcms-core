@@ -51,15 +51,15 @@ class ForumPost < ActiveRecord::Base
 
   # Returns replies only.
   def self.replies(options = {})
-    ForumPost.all(options).reject{|fp| fp.is_start_post? }
+    ForumPost.all(options).reject { |fp| fp.is_start_post? }
   end
 
   # Returns the comments that can be edited by the given +user+.
   def self.editable_comments_for(user, options = {})
     if user.has_role?('editor')
-      user.forum_posts({ :include => :forum_thread }.merge(options)).reject{|fp| fp.is_start_post? }
+      user.forum_posts({ :include => :forum_thread }.merge(options)).reject { |fp| fp.is_start_post? }
     else
-      ForumPost.replies({ :include => { :forum_thread => :forum_topic } }.merge(options)).select{ |post| post.user == user || user.has_role_on?(['admin', 'final_editor'], post.forum_thread.forum_topic.node) }
+      ForumPost.replies({ :include => { :forum_thread => :forum_topic } }.merge(options)).select { |post| post.user == user || user.has_role_on?(['admin', 'final_editor'], post.forum_thread.forum_topic.node) }
     end
   end
 

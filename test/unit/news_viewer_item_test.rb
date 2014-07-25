@@ -19,11 +19,10 @@ private
   end
 
   def create_news_viewer(options = {})
-    NewsViewer.create({:parent => nodes(:root_section_node), :publication_start_date => 1.day.ago, :title => "General NewsViewer", :description => "Gecombineerd nieuws"}.merge(options))    
+    NewsViewer.create({ :parent => nodes(:root_section_node), :publication_start_date => 1.day.ago, :title => 'General NewsViewer', :description => 'Gecombineerd nieuws' }.merge(options))
   end
-  
-  def create_news_item(options = {})
-    NewsItem.create({:parent => nodes(:devcms_news_node), :publication_start_date => 1.day.ago, :title => "Slecht weer!", :body => "Het zonnetje schijnt niet en de mensen zijn ontevreden." }.merge(options))
-  end  
 
+  def create_news_item(options = {})
+    NewsItem.create({ :parent => nodes(:devcms_news_node), :publication_start_date => 1.day.ago, :title => 'Slecht weer!', :body => 'Het zonnetje schijnt niet en de mensen zijn ontevreden.' }.merge(options))
+  end
 end

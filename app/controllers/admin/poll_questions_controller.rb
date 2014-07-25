@@ -78,10 +78,10 @@ class Admin::PollQuestionsController < Admin::AdminController
         format.html { render :template => 'admin/shared/update_preview', :locals => { :record => @poll_question }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @poll_question, :status => :created, :location => @poll_question }
       elsif @commit_type == 'save' && @poll_question.save(:user => current_user)
-        format.html {
+        format.html do
           @refresh = true
           render :template => 'admin/shared/update'
-        }
+        end
         format.xml  { head :ok }
       else
         format.html { render :action => :edit }

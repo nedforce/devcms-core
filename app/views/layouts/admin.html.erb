@@ -49,7 +49,7 @@
                     </tr>
                     <tr>
                         <th><%= I18n.t('layouts.roles') %></th>
-                        <td><%=h current_user.role_assignments.collect {|ra|"#{RoleAssignment::ROLES[ra.name.intern]} van #{ra.node.content.content_title}"}.to_sentence -%></td>
+                        <td><%=h current_user.role_assignments.map { |ra|"#{RoleAssignment::ROLES[ra.name.intern]} van #{ra.node.content.content_title}" }.to_sentence -%></td>
                     </tr>
                 </table>
             </div>

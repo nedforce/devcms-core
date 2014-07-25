@@ -352,11 +352,11 @@ protected
   end
   
   def create_content_copy(parent_node, node_to_copy)
-    ContentCopy.create!({:parent => parent_node, :copied_node => node_to_copy })
+    ContentCopy.create!({ :parent => parent_node, :copied_node => node_to_copy })
   end
 
   def create_internal_link(parent_node, node_to_link)
-    InternalLink.create!({:parent => parent_node, :title => "Dit is een internal link.", :description => "Geen fratsen!", :linked_node => node_to_link })
+    InternalLink.create!({ :parent => parent_node, :title => 'Dit is een internal link.', :description => 'Geen fratsen!', :linked_node => node_to_link })
   end
   
   def create_content_representation(parent_node, content_node)
@@ -364,11 +364,11 @@ protected
   end
   
   def create_role_assignment(target_node)
-    RoleAssignment.create({ :user => users(:editor), :node => target_node, :name => "final_editor" })
+    RoleAssignment.create({ :user => users(:editor), :node => target_node, :name => 'final_editor' })
   end
   
   def create_synonym(target_node, name)
-    Synonym.create({ :original => "foo", :name => name, :weight => "0.25", :node => target_node })
+    Synonym.create({ :original => 'foo', :name => name, :weight => '0.25', :node => target_node })
   end
   
   def create_abbreviation(target_node)

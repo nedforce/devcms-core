@@ -73,11 +73,11 @@ class Admin::CombinedCalendarsController < Admin::AdminController
 
     respond_to do |format|
       if @commit_type == 'preview' && @combined_calendar.valid?
-        format.html {
+        format.html do
           @calendar = @combined_calendar
           find_calendar_items
           render :action => 'update_preview', :layout => 'admin/admin_preview'
-        }
+        end
         format.xml  { render :xml => @combined_calendar, :status => :created, :location => @combined_calendar }
       elsif @commit_type == 'save' && @combined_calendar.save(:user => current_user)
         format.html { render :template => 'admin/shared/update' }

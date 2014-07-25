@@ -99,7 +99,7 @@ module DevcmsCore
       if size.is_a?(Array) && size.size == 2
         size
       elsif size.to_s.include?('x')
-        size.split('x').collect(&:to_i)
+        size.split('x').map(&:to_i)
       else
         [size.to_i, size.to_i]
       end

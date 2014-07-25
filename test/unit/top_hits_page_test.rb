@@ -86,26 +86,24 @@ class TopHitsPageTest < ActiveSupport::TestCase
 protected
 
   def create_top_hits_page(options = {})
-    TopHitsPage.create({:parent => @root_node, :title => "Top hits page" }.merge(options))
+    TopHitsPage.create({ :parent => @root_node, :title => 'Top hits page' }.merge(options))
   end
 
   def create_page(options = {})
-    Page.create({:parent => @root_node, :title => "Page title", :preamble => "Ambule", :body => "Page body" }.merge(options))
+    Page.create({ :parent => @root_node, :title => 'Page title', :preamble => 'Ambule', :body => 'Page body' }.merge(options))
   end
 
   def create_excluded_content_types
     [
-      Image.create({:parent => nodes(:devcms_news_item_node), :title => "Dit is een image.", :file => fixture_file_upload("files/test.jpg")}),
-      Calendar.create({:parent => @root_node, :title => "New calendar", :description => "This is a new calendar." }),
-      CombinedCalendar.create({:parent => @root_node, :title => "New combined calendar", :description => "This is a new combined calendar." }),
-      NewsArchive.create({:parent => @root_node, :title => "Good news, everyone!", :description => "I'm sending you all on a highly controversial mission." }),
-      NewsletterArchive.create({:parent => @root_node, :title => "Good news, everyone!", :description => "I'm sending you all on a highly controversial mission." }),
-      Section.create({:parent => @root_node, :title => 'new section', :description => 'new description for section.' }),      
-      Forum.create({:parent => @root_node, :title => "DevCMS forums, the best there are!", :description => "Enjoy!" }),
-      ForumTopic.create({:parent => nodes(:bewoners_forum_node), :title => "DevCMS forum topics, the best there are!", :description => "Enjoy!" }),
-      WeblogArchive.create({:parent => @root_node, :title => "DevCMS weblogs, the best there are!", :description => "Enjoy!" })      
+      Image.create({ :parent => nodes(:devcms_news_item_node), :title => 'Dit is een image.', :file => fixture_file_upload('files/test.jpg')}),
+      Calendar.create({ :parent => @root_node, :title => 'New calendar', :description => 'This is a new calendar.' }),
+      CombinedCalendar.create({ :parent => @root_node, :title => 'New combined calendar', :description => 'This is a new combined calendar.' }),
+      NewsArchive.create({ :parent => @root_node, :title => 'Good news, everyone!', :description => "I'm sending you all on a highly controversial mission." }),
+      NewsletterArchive.create({ :parent => @root_node, :title => 'Good news, everyone!', :description => "I'm sending you all on a highly controversial mission." }),
+      Section.create({ :parent => @root_node, :title => 'new section', :description => 'new description for section.' }),
+      Forum.create({ :parent => @root_node, :title => 'DevCMS forums, the best there are!', :description => 'Enjoy!' }),
+      ForumTopic.create({ :parent => nodes(:bewoners_forum_node), :title => 'DevCMS forum topics, the best there are!', :description => 'Enjoy!' }),
+      WeblogArchive.create({ :parent => @root_node, :title => 'DevCMS weblogs, the best there are!', :description => 'Enjoy!' })
     ]
   end
-
 end
-

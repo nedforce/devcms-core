@@ -61,7 +61,7 @@ class Admin::VersionsController < Admin::AdminController
   protected
   
     def find_versions
-      @versions = Version.unapproved.select { |version| current_user.has_role_on?(['admin','final_editor'], version.versionable.node )}
+      @versions = Version.unapproved.select { |version| current_user.has_role_on?(['admin', 'final_editor'], version.versionable.node ) }
     end
   
     def find_version

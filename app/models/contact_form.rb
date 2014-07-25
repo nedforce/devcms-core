@@ -57,7 +57,7 @@ class ContactForm < ActiveRecord::Base
 
   # Returns an array with the ids of the +ContactFormField+ objects that are obligatory.
   def obligatory_field_ids
-    contact_form_fields.obligatory.map{ |field| field.id }
+    contact_form_fields.obligatory.map { |field| field.id }
   end
 
   protected
@@ -78,11 +78,11 @@ class ContactForm < ActiveRecord::Base
           if delete_contact_form_field == '1'
             @deleted_contact_form_fields << contact_form_field_id
           else
-            inst = self.contact_form_fields.select {|s| s.id == contact_form_field_id.to_i }.first
+            inst = self.contact_form_fields.select { |s| s.id == contact_form_field_id.to_i }.first
             inst.attributes = options
           end
         else
-          inst = ContactFormField.new( options.merge({:contact_form => self}.merge(options)))
+          inst = ContactFormField.new( options.merge({ :contact_form => self }.merge(options)))
           self.contact_form_fields << inst
         end
       end
@@ -99,7 +99,7 @@ class ContactForm < ActiveRecord::Base
 
   # Validate the +ContactFormField+ objects that are updated.
   def validate_updated_contact_form_fields
-    self.errors.add(:contact_form_fields, :invalid_contact_form_field) unless self.contact_form_fields.all? {|s| s.valid? || s.new_record? }
+    self.errors.add(:contact_form_fields, :invalid_contact_form_field) unless self.contact_form_fields.all? { |s| s.valid? || s.new_record? }
   end
 
   # Save the +ContactFormField+ objects that are updated.

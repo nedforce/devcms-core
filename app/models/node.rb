@@ -221,7 +221,7 @@ class Node < ActiveRecord::Base
 
   scope :include_content, { :include => :content }
 
-  scope :path_children_by_depth, lambda{|node| { :order => 'nodes.ancestry_depth desc, nodes.position asc', :conditions => { :ancestry => node.path_child_ancestries } } }
+  scope :path_children_by_depth, lambda { |node| { :order => 'nodes.ancestry_depth desc, nodes.position asc', :conditions => { :ancestry => node.path_child_ancestries } } }
 
   def move_to_with_reindexing(*args)
     self.move_to_without_reindexing(*args)

@@ -28,9 +28,9 @@ class Admin::RoleAssignmentsController < Admin::AdminController
     respond_to do |format|
       format.html { render :layout => 'admin'}
       format.json do
-        permissions = @role_assignments.collect do |ra| 
+        permissions = @role_assignments.map do |ra|
           { :user_login => ra.user.login,
-            :node_title => ra.node.path.all(:include => :content).collect{ |n| n.content.content_title }.join(" > "),
+            :node_title => ra.node.path.all(:include => :content).map { |n| n.content.content_title }.join(' > '),
             :name       => RoleAssignment::ROLES[ra.name.intern],
             :id         => ra.id
           }

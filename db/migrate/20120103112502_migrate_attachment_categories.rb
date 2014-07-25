@@ -12,7 +12,7 @@ class MigrateAttachmentCategories < ActiveRecord::Migration
       attachment.update_attributes :parent => theme
       p "Moved attachment #{attachment.title} to theme #{theme.title}"
     end
-    if Attachment.all(:conditions => "category != ''").any? {|attachment| attachment.parent.title != attachment.category }
+    if Attachment.all(:conditions => "category != ''").any? { |attachment| attachment.parent.title != attachment.category }
       raise "Something went wrong, rolling back.."
     end
     remove_column :attachments, :category

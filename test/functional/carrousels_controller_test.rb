@@ -50,7 +50,7 @@ class CarrouselsControllerTest < ActionController::TestCase
 protected
 
   def create_carrousel(options = {})
-    Carrousel.create({:parent => nodes(:root_section_node), :publication_start_date => 1.day.ago, :title => "Mijn content carrousel" }.merge(options))
+    Carrousel.create({ :parent => nodes(:root_section_node), :publication_start_date => 1.day.ago, :title => 'Mijn content carrousel' }.merge(options))
   end
 
   def create_carrousel_item(carrousel, options = {})

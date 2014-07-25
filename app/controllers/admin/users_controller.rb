@@ -15,12 +15,12 @@ class Admin::UsersController < Admin::AdminController
   # * GET /admin/users.json
   def index
     @active_page ||= :users
-    @roles ||= current_user.role_assignments.map{|role_assignment| role_assignment.name}
+    @roles ||= current_user.role_assignments.map { |role_assignment| role_assignment.name }
     user_scope = (@active_page == :privileged_users) ? PrivilegedUser.scoped : User.exclusive
       
 
     respond_to do |format|
-      format.html do 
+      format.html do
         find_users(user_scope)
         render :action => :index
       end
@@ -54,9 +54,9 @@ class Admin::UsersController < Admin::AdminController
     @active_page = :privileged_users
 
     respond_to do |format|
-      format.html{ index }
-      format.xml{ index }
-      format.csv{ index }
+      format.html { index }
+      format.xml  { index }
+      format.csv  { index }
       format.json do
         node = Node.find(params[:node])
         users = PrivilegedUser.select('users.login, users.id').includes(:role_assignments).where(["users.login LIKE ? AND role_assignments.node_id IN (?) AND role_assignments.name in (?)", "#{params[:query]}%", node.path_ids, ['editor', 'final_editor']])
@@ -73,10 +73,10 @@ class Admin::UsersController < Admin::AdminController
 
     respond_to do |format|
       if @user.update_attributes(params[:user])
-        format.html {
+        format.html do
           flash[:notice] = I18n.t('users.user_update_succesful')
           redirect_to admin_users_path
-        }
+        end
         format.xml  { head :ok }
         format.json { render :json => { :success => 'true' } }
       else
@@ -97,10 +97,10 @@ class Admin::UsersController < Admin::AdminController
         error = I18n.t('users.cant_destroy_yourself')
         @user.errors.add(:base, error)
 
-        format.html {
+        format.html do
           flash[:error] = error
           redirect_to admin_users_path
-        }
+        end
         format.json { render :json => {:errors => @user.errors.full_messages}.to_json, :status => :unprocessable_entity }
       else
         @user.destroy
@@ -116,7 +116,7 @@ class Admin::UsersController < Admin::AdminController
     respond_to do |format|
       format.json do
         newsletter_archives = NewsletterArchive.accessible.all(:select => "#{NewsletterArchive.quoted_table_name}.id, #{NewsletterArchive.quoted_table_name}.title", :order => 'newsletter_archives.title')
-        newsletter_archives = newsletter_archives.collect do |na|
+        newsletter_archives = newsletter_archives.map do |na|
           {
             :id      => na.id,
             :title   => na.title,
@@ -134,7 +134,7 @@ class Admin::UsersController < Admin::AdminController
     respond_to do |format|
       format.json do
         interests = Interest.all(:order => 'title')
-        interests = interests.collect do |i|
+        interests = interests.map do |i|
               {
                 :id      => i.id,
                 :title   => i.title,
@@ -209,7 +209,7 @@ class Admin::UsersController < Admin::AdminController
         @users      = user_scope.page(@current_page).per(@page_limit)
       else
         @users      = user_scope.includes([ :newsletter_archives, :interests ]).where(filter_conditions).order("login #{@sort_direction}")
-        @users      = @users.sort_by { |user| user.newsletter_archives.sort_by { |archive| archive.title.upcase }.map{ |archive| archive.title }.join(', ') }
+        @users      = @users.sort_by { |user| user.newsletter_archives.sort_by { |archive| archive.title.upcase }.map { |archive| archive.title }.join(', ') }
         @users      = @users.reverse if @sort_direction == 'DESC'
         @user_count = @users.size
         @users      = @users.values_at((@page_limit * (@current_page - 1))..(@page_limit * @current_page - 1)).compact
@@ -252,7 +252,7 @@ class Admin::UsersController < Admin::AdminController
     # Generates SQL conditions based on the filter parameter
     def generate_filter_conditions
       filters = params[:filter]
-      conditions = filters.keys.collect do |key|
+      conditions = filters.keys.map do |key|
         filter      = filters[key]
         filterType  = filter[:data][:type]
         filterValue = filter[:data][:value]
@@ -278,6 +278,6 @@ class Admin::UsersController < Admin::AdminController
         end
       end
 
-      [conditions.collect{ |condition| condition.first }.join(" AND ")] + conditions.collect{ |condition| condition.last(condition.size-1) }.flatten
+      [conditions.map { |condition| condition.first }.join(' AND ')] + conditions.map { |condition| condition.last(condition.size-1) }.flatten
     end
 end

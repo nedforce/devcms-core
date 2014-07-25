@@ -137,10 +137,10 @@ class AgendaItemTest < ActiveSupport::TestCase
   def test_content_title_should_return_description
     assert_equal @agenda_item.description, @agenda_item.content_title
   end
-  
+
 protected
-  
+
   def create_agenda_item(options = {})
-    AgendaItem.create({:parent => nodes(:meetings_calendar_meeting_one_node), :agenda_item_category => @agenda_item_category, :description => "Spannend!", :body => 'Geen grappen!'}.merge(options))
+    AgendaItem.create({ :parent => nodes(:meetings_calendar_meeting_one_node), :agenda_item_category => @agenda_item_category, :description => 'Spannend!', :body => 'Geen grappen!' }.merge(options))
   end
 end

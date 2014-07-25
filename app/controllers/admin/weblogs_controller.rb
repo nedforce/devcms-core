@@ -100,16 +100,16 @@ class Admin::WeblogsController < Admin::AdminController
 
     respond_to do |format|
       if @commit_type == 'preview' && @weblog.valid?
-        format.html {
+        format.html do
           find_weblog_posts
           render :template => 'admin/shared/update_preview', :locals => { :record => @weblog }, :layout => 'admin/admin_preview'
-        }
+        end
         format.xml  { render :xml => @weblog, :status => :created, :location => @weblog }
       elsif @commit_type == 'save' && @weblog.save(:user => current_user)
-        format.html {
+        format.html do
           @refresh = true
           render :template => 'admin/shared/update'
-        }
+        end
         format.xml  { head :ok }
       else
         format.html { render :template => 'admin/shared/edit', :locals => { :record => @weblog }, :status => :unprocessable_entity }

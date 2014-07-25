@@ -137,11 +137,10 @@ class NewsArchiveTest < ActiveSupport::TestCase
 protected
 
   def create_news_archive(options = {})
-    NewsArchive.create({:parent => nodes(:root_section_node), :title => "Good news, everyone!", :description => "I'm sending you all on a highly controversial mission.", :publication_start_date => 2.days.ago }.merge(options))
+    NewsArchive.create({ :parent => nodes(:root_section_node), :title => 'Good news, everyone!', :description => "I'm sending you all on a highly controversial mission.", :publication_start_date => 2.days.ago }.merge(options))
   end
 
   def create_news_item(news_archive, options = {})
-    NewsItem.create({:parent => news_archive.node, :title => "Slecht weer!", :body => "Het zonnetje schijnt niet en de mensen zijn ontevreden.", :publication_start_date => Time.now }.merge(options))
+    NewsItem.create({ :parent => news_archive.node, :title => 'Slecht weer!', :body => 'Het zonnetje schijnt niet en de mensen zijn ontevreden.', :publication_start_date => Time.now }.merge(options))
   end
 end
-

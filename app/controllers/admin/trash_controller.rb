@@ -20,7 +20,7 @@ class Admin::TrashController < Admin::AdminController
     respond_to do |format|
       format.html { render :layout => 'admin' }
       format.json do
-        trash_items_for_json = @trash_items.collect do |ti|
+        trash_items_for_json = @trash_items.map do |ti|
           { 
             :title => ti.title,
             :content_type => (ti.sub_content_type.constantize.model_name.human rescue ti.sub_content_type),

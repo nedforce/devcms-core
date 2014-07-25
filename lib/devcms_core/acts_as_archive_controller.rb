@@ -169,7 +169,7 @@ module DevcmsCore
           }.reverse_merge(common_hash)
         end
 
-        @nodes = record_node.children.with_content_type(%w(Image Attachment)).all(:include => [:content, :role_assignments]).map{|node| node.to_tree_node_for(current_user, {:expand_if_ancestor_of => active_node})}
+        @nodes = record_node.children.with_content_type(%w(Image Attachment)).all(:include => [:content, :role_assignments]).map { |node| node.to_tree_node_for(current_user, { :expand_if_ancestor_of => active_node }) }
 
         render :json => (@nodes + @years ).to_json
       end

@@ -189,12 +189,12 @@ protected
   def create_calendar_item_request(attributes = {}, options = {})
     now = Time.now
     
-    post :create, { :parent_node_id => nodes(:events_calendar_node).id, :calendar_item => { :title => 'new title', :repeating => false, :date=> now.strftime("%d-%m-%Y"), :start_time => now.strftime("%H:%M"), :end_time => (now + 1.hour).strftime("%H:%M") }.merge(attributes)}.merge(options)
+    post :create, { :parent_node_id => nodes(:events_calendar_node).id, :calendar_item => { :title => 'new title', :repeating => false, :date => now.strftime("%d-%m-%Y"), :start_time => now.strftime("%H:%M"), :end_time => (now + 1.hour).strftime("%H:%M") }.merge(attributes)}.merge(options)
   end
 
   def create_calendar_item(options = {})
     now = Time.now
-    CalendarItem.create({:parent => calendars(:events_calendar).node, :repeating => false, :title => "New event", :date=> now, :start_time => now, :end_time => (now + 1.hour) }.merge(options))
+    CalendarItem.create({ :parent => calendars(:events_calendar).node, :repeating => false, :title => 'New event', :date => now, :start_time => now, :end_time => (now + 1.hour) }.merge(options))
   end
 
   def create_repeating_calendar_item(options = {})

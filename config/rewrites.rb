@@ -4,7 +4,7 @@ Rails.application.config.rewriter.append do
     begin
       query = match[:query].present? ? match[:query] : ''
       node = Site.find_by_domain!(rack_env['SERVER_NAME']).node
-      Node.path_for_node(node, '', '', query).tap{|path| Rails.logger.debug "[DevcmsCore] Rewritten #{match.string} to #{path}" }
+      Node.path_for_node(node, '', '', query).tap { |path| Rails.logger.debug "[DevcmsCore] Rewritten #{match.string} to #{path}" }
     rescue ActiveRecord::RecordNotFound
       match.string
     end
@@ -14,7 +14,7 @@ Rails.application.config.rewriter.append do
     begin
       node = Node.find(match[:slug])
       query = match[:query] rescue ''
-      Node.path_for_node(node, '', '', query).tap{|path| Rails.logger.debug "[DevcmsCore] Rewritten #{match.string} to #{path}" }
+      Node.path_for_node(node, '', '', query).tap { |path| Rails.logger.debug "[DevcmsCore] Rewritten #{match.string} to #{path}" }
     rescue ActiveRecord::RecordNotFound     
       match.string
     end
@@ -40,7 +40,7 @@ Rails.application.config.rewriter.append do
         node = Node.find_node_for_url_alias!(match[:url_alias], site)
         remaining_path = match[:url_alias].sub(/^#{node.url_alias}/, '')
         rewritten_path = Node.path_for_node(node, remaining_path, format, query)
-        rewritten_path.tap{|path| Rails.logger.debug "[DevcmsCore] Rewritten #{match.string} to #{path}" }
+        rewritten_path.tap { |path| Rails.logger.debug "[DevcmsCore] Rewritten #{match.string} to #{path}" }
       rescue ActiveRecord::RecordNotFound
         match.string
       end

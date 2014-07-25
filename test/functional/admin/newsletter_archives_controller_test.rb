@@ -100,7 +100,7 @@ class Admin::NewsletterArchivesControllerTest < ActionController::TestCase
     login_as :sjoerd
 
     assert_no_difference('NewsletterArchive.count') do
-      create_newsletter_archive({:title => nil})
+      create_newsletter_archive({ :title => nil })
     end
     assert_response :unprocessable_entity
     assert assigns(:newsletter_archive).new_record?
@@ -170,11 +170,11 @@ class Admin::NewsletterArchivesControllerTest < ActionController::TestCase
 protected
 
   def create_newsletter_archive(attributes = {}, options = {})
-    post :create, { :parent_node_id => nodes(:root_section_node).id, :newsletter_archive => { :title => "Good news, everyone!", :description => "I'm sending you all on a highly controversial mission." }.merge(attributes) }.merge(options)
+    post :create, { :parent_node_id => nodes(:root_section_node).id, :newsletter_archive => { :title => 'Good news, everyone!', :description => "I'm sending you all on a highly controversial mission." }.merge(attributes) }.merge(options)
   end
 
   def create_newsletter_edition(options = {})
-    NewsletterEdition.create({:parent => nodes(:newsletter_archive_node), :title => "Het maandelijkse nieuws!", :published => 'publishing', :body => "O o o wat is het weer een fijne maand geweest." }.merge(options))
+    NewsletterEdition.create({ :parent => nodes(:newsletter_archive_node), :title => 'Het maandelijkse nieuws!', :published => 'publishing', :body => 'O o o wat is het weer een fijne maand geweest.' }.merge(options))
   end
 
 end

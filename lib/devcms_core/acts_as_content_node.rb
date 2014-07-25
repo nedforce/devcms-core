@@ -34,7 +34,7 @@ module DevcmsCore
 
       default_scope where("#{table_name}.deleted_at IS NULL")
 
-      scope :with_parent, lambda { |node, options| options.merge({:include => :node, :conditions => [ 'nodes.ancestry = ?', node.child_ancestry ] }) }
+      scope :with_parent, lambda { |node, options| options.merge({ :include => :node, :conditions => [ 'nodes.ancestry = ?', node.child_ancestry ] }) }
       scope :accessible,  lambda { { :include => :node, :conditions => Node.accessibility_and_visibility_conditions } }
 
       validates_presence_of :node
@@ -136,11 +136,11 @@ module DevcmsCore
     end
 
     def node
-      (super || associate_node).tap{|node| node.content = self }
+      (super || associate_node).tap { |node| node.content = self }
     end
 
     def associate_node
-      build_node.tap{|node| node.sub_content_type = (self.respond_to?(:copied_content_class) ? self.copied_content_class : self.class).name}
+      build_node.tap { |node| node.sub_content_type = (self.respond_to?(:copied_content_class) ? self.copied_content_class : self.class).name }
     end
 
     def save(*args)

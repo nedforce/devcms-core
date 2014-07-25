@@ -66,10 +66,10 @@ class Admin::ForumsController < Admin::AdminController
 
     respond_to do |format|
       if @commit_type == 'preview' && @forum.valid?
-        format.html {
+        format.html do
           find_forum_topics
           render :template => 'admin/shared/update_preview', :locals => { :record => @forum }, :layout => 'admin/admin_preview'
-        }
+        end
         format.xml  { render :xml => @forum, :status => :created, :location => @forum }
       elsif @commit_type == 'save' && @forum.save(:user => current_user)
         format.html { render :template => 'admin/shared/update' }

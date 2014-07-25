@@ -140,7 +140,7 @@ class NodeVisibilityAndAccessibilityFunctionalityTest < ActiveSupport::TestCase
 protected
 
   def create_node(options = {}, parent_node = nodes(:root_section_node))
-    create_page({:parent => parent_node}.merge(options)).node
+    create_page({ :parent => parent_node }.merge(options)).node
   end
   
   def create_page(options = {})

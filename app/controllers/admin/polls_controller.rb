@@ -71,10 +71,10 @@ class Admin::PollsController < Admin::AdminController
 
     respond_to do |format|
       if @commit_type == 'preview' && @poll.valid?
-        format.html {
+        format.html do
           find_poll_questions
           render :template => 'admin/shared/update_preview', :locals => { :record => @poll }, :layout => 'admin/admin_preview'
-        }
+        end
         format.xml  { render :xml => @poll, :status => :created, :location => @poll }
       elsif @commit_type == 'save' && @poll.save(:user => current_user)
         format.html { render :template => 'admin/shared/update' }

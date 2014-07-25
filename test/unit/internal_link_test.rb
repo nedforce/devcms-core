@@ -81,10 +81,10 @@ class InternalLinkTest < ActiveSupport::TestCase
       assert internal_link.errors[:base].any?
     end
   end
-  
+
 protected
 
   def create_internal_link(options = {})
-    InternalLink.create({:parent => nodes(:root_section_node), :title => "Dit is een internal link.", :description => "Geen fratsen!", :linked_node => @root_node }.merge(options))
+    InternalLink.create({ :parent => nodes(:root_section_node), :title => 'Dit is een internal link.', :description => 'Geen fratsen!', :linked_node => @root_node }.merge(options))
   end
 end

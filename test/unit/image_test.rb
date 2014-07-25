@@ -66,6 +66,6 @@ class ImageTest < ActiveSupport::TestCase
 protected
 
   def create_image(options = {})
-    Image.create({:parent => nodes(:devcms_news_item_node), :title => "Dit is een image.", :file => fixture_file_upload("files/test.jpg") }.merge(options))
+    Image.create({ :parent => nodes(:devcms_news_item_node), :title => 'Dit is een image.', :file => fixture_file_upload('files/test.jpg') }.merge(options))
   end
 end

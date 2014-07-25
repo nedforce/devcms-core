@@ -45,7 +45,7 @@ class PollTest < ActiveSupport::TestCase
   end
   
   def test_should_return_nil_without_active_question
-    @hc_poll.poll_questions.each{|pq| pq.update_attribute(:active, false) }
+    @hc_poll.poll_questions.each { |pq| pq.update_attribute(:active, false) }
     assert_nil @hc_poll.active_question
   end
 end

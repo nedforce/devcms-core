@@ -34,8 +34,8 @@ module DevcmsCore
         end
       end
 
-      options.delete(:action).tap{|action| address = "#{address}/#{action}" if action.present? }      
-      options.delete(:format).tap{|format| address = "#{address}.#{format}" if format.present? }
+      options.delete(:action).tap { |action| address = "#{address}/#{action}" if action.present? }
+      options.delete(:format).tap { |format| address = "#{address}.#{format}" if format.present? }
 
       address = URI.parse(address)
       address.query = options.to_query if options.present?

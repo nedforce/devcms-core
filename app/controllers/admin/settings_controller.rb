@@ -21,7 +21,7 @@ class Admin::SettingsController < Admin::AdminController
     respond_to do |format|
       format.html { render :layout => 'admin' }
       format.json do
-        settings = @settings.collect do |s|
+        settings = @settings.map do |s|
           { :key   => s.key,
             :alt   => s.alt,
             :value => s.type == 'password' ? '********' : s.value,

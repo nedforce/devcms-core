@@ -20,7 +20,7 @@ class Admin::SynonymsController < Admin::AdminController
     respond_to do |format|
       format.html
       format.json do
-        synonyms = @synonyms.collect do |s|
+        synonyms = @synonyms.map do |s|
           { :original => s.original,
             :name     => s.name,
             :weight   => s.weight,   

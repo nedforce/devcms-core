@@ -53,8 +53,8 @@ class WeblogPostsController < ApplicationController
     @weblog_post.parent = @weblog.node
 
     if params[:images]
-      @images = params[:images].values.select{ |image| image[:file].respond_to?(:original_filename) }
-      images  = @images[0..MAX_IMAGES-1].collect {|image| Image.new(:file => image[:file], :title => image[:file].original_filename) }
+      @images = params[:images].values.select { |image| image[:file].respond_to?(:original_filename) }
+      images  = @images[0..MAX_IMAGES-1].map { |image| Image.new(:file => image[:file], :title => image[:file].original_filename) }
     end
 
     respond_to do |format|
@@ -86,8 +86,8 @@ class WeblogPostsController < ApplicationController
     allowed_extra_images = MAX_IMAGES - @weblog_post.node.children.size
 
     if params[:images]
-      @images = params[:images].values.select{ |image| image[:file].respond_to?(:original_filename) }
-      images = @images[0..allowed_extra_images-1].collect {|image| Image.new(:parent => @weblog_post.node, :file => image[:file], :title => image[:file].original_filename) }
+      @images = params[:images].values.select { |image| image[:file].respond_to?(:original_filename) }
+      images = @images[0..allowed_extra_images-1].map { |image| Image.new(:parent => @weblog_post.node, :file => image[:file], :title => image[:file].original_filename) }
     end
     
     @weblog_post.attributes = params[:weblog_post]

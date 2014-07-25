@@ -98,6 +98,6 @@ class WeblogPostTest < ActiveSupport::TestCase
 protected
   
   def create_weblog_post(options = {})
-    WeblogPost.create({:parent => @henk_weblog.node, :title => "Some interesting title.", :body => "Some interesting body." }.merge(options))
+    WeblogPost.create({ :parent => @henk_weblog.node, :title => 'Some interesting title.', :body => 'Some interesting body.' }.merge(options))
   end
 end

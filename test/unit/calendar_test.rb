@@ -117,12 +117,12 @@ class CalendarTest < ActiveSupport::TestCase
   end
 
 protected
-  
+
   def create_calendar(options = {})
-    Calendar.create({:parent => nodes(:root_section_node), :title => "New calendar", :description => "This is a new calendar.", :publication_start_date => 2.days.ago }.merge(options))
+    Calendar.create({ :parent => nodes(:root_section_node), :title => 'New calendar', :description => 'This is a new calendar.', :publication_start_date => 2.days.ago }.merge(options))
   end
-  
+
   def create_calendar_item(options = {})
-    CalendarItem.create({:parent => options[:calendar] ? options.delete(:calendar).node : @events_calendar.node, :repeating => false, :title => "New event", :start_time => DateTime.now.to_s(:db), :end_time => (DateTime.now + 1.hour).to_s(:db) }.merge(options))
+    CalendarItem.create({ :parent => options[:calendar] ? options.delete(:calendar).node : @events_calendar.node, :repeating => false, :title => 'New event', :start_time => DateTime.now.to_s(:db), :end_time => (DateTime.now + 1.hour).to_s(:db) }.merge(options))
   end
 end

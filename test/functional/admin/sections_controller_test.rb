@@ -83,7 +83,7 @@ class Admin::SectionsControllerTest < ActionController::TestCase
     login_as :sjoerd
     
     assert_no_difference('Section.count') do
-      create_section({:title => nil})
+      create_section({ :title => nil })
     end
     assert_response :unprocessable_entity
     assert assigns(:section).new_record?

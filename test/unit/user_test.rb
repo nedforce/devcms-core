@@ -220,7 +220,7 @@ class UserTest < ActiveSupport::TestCase
     assert users(:editor).give_role_on('read_access', Node.root)
     assert_difference("User.find(users(:editor).id).role_assignments.count", -6) do
       users(:editor).demote!
-      assert !User.find(users(:editor).id).role_assignments.any? {|ra| ra.is_privileged? }
+      assert !User.find(users(:editor).id).role_assignments.any? { |ra| ra.is_privileged? }
     end
   end
   

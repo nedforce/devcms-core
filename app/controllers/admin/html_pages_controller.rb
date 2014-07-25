@@ -71,10 +71,10 @@ class Admin::HtmlPagesController < Admin::AdminController
 
     respond_to do |format|
       if @commit_type == 'preview' && @html_page.valid?
-        format.html {
+        format.html do
           find_images_and_attachments
           render :template => 'admin/shared/update_preview', :locals => { :record => @html_page }, :layout => 'admin/admin_preview'
-        }
+        end
         format.xml  { render :xml => @html_page, :status => :created, :location => @html_page }
       elsif @commit_type == 'save' && @html_page.save(:user => current_user)
         format.html { render :template => 'admin/shared/update' }

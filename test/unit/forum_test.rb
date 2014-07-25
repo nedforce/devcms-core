@@ -80,10 +80,10 @@ class ForumTest < ActiveSupport::TestCase
       end
     end
   end
-    
+
 protected
-  
+
   def create_forum(options = {})
-    Forum.create({:parent => nodes(:root_section_node), :title => "DevCMS forums, the best there are!", :description => "Enjoy!" }.merge(options))
+    Forum.create({ :parent => nodes(:root_section_node), :title => 'DevCMS forums, the best there are!', :description => 'Enjoy!' }.merge(options))
   end
 end

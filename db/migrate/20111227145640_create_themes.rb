@@ -5,7 +5,7 @@ class CreateThemes < ActiveRecord::Migration
       add_column    :themes, :type, :string, :null => true
       Theme.reset_column_information
       Theme.update_all :type => 'ResearchTheme'
-      Node.update_all({:content_type => 'Theme', :sub_content_type => "ResearchTheme"},{:content_type => 'ResearchTheme'} )
+      Node.update_all({ :content_type => 'Theme', :sub_content_type => 'ResearchTheme' }, { :content_type => 'ResearchTheme' })
       change_column :themes, :type, :string, :null => false
     else
       create_table :themes do |t|

@@ -18,7 +18,7 @@ Rails.application.config.rewriter.append do
   # rewrite '/faq', (lambda do |match, rack_env| 
   #   begin
   #     node = Node.where([ 'url_alias = ? OR custom_url_alias = ?', 'faq', 'faq' ]).first!
-  #     Node.path_for_node(node).tap{|path| Rails.logger.info "Rewritten #{match.string} to #{path}" }
+  #     Node.path_for_node(node).tap { |path| Rails.logger.info "Rewritten #{match.string} to #{path}" }
   #   rescue ActiveRecord::RecordNotFound     
   #     match.string
   #   end

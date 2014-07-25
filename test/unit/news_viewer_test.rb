@@ -60,7 +60,7 @@ class NewsViewerTest < ActiveSupport::TestCase
     @news_viewer.news_viewer_items.create(:news_item => n3, :position => 2)
     @news_viewer.news_viewer_items.create(:news_item => n4, :position => 3)
 
-    @news_viewer.accessible_news_items.each{|ni| assert ni.publication_start_date >= 2.weeks.ago.beginning_of_day }
+    @news_viewer.accessible_news_items.each { |ni| assert ni.publication_start_date >= 2.weeks.ago.beginning_of_day }
     assert_equal [n1], @news_viewer.accessible_news_items
   end
 
@@ -113,24 +113,23 @@ class NewsViewerTest < ActiveSupport::TestCase
     news_item = create_news_item(:title => 'Add me!')
 
     @news_viewer.news_archives << news_archives(:devcms_news)
-    (0..30).each{|n| @news_viewer.news_items << create_news_item(:publication_start_date => n.days.ago, :title => (n.days.ago >= 2.weeks.ago) ? 'Keep me!' : 'Remove me!') }
+    (0..30).each { |n| @news_viewer.news_items << create_news_item(:publication_start_date => n.days.ago, :title => (n.days.ago >= 2.weeks.ago) ? 'Keep me!' : 'Remove me!') }
 
     assert_no_difference "NewsItem.count" do
       NewsViewer.update_news_items
     end
 
-    @news_viewer.news_items.reload.each{|ni| assert ni.publication_start_date >= 2.weeks.ago.beginning_of_day }
+    @news_viewer.news_items.reload.each { |ni| assert ni.publication_start_date >= 2.weeks.ago.beginning_of_day }
     assert @news_viewer.news_items.include?(news_item)
   end
 
 private
 
   def create_news_viewer(options = {})
-    NewsViewer.create({:parent => nodes(:root_section_node), :publication_start_date => 1.day.ago, :title => "General NewsViewer", :description => "Gecombineerd nieuws"}.merge(options))
+    NewsViewer.create({ :parent => nodes(:root_section_node), :publication_start_date => 1.day.ago, :title => 'General NewsViewer', :description => 'Gecombineerd nieuws' }.merge(options))
   end
 
   def create_news_item(options = {})
-    NewsItem.create({:parent => nodes(:devcms_news_node), :publication_start_date => 1.day.ago, :title => "Slecht weer!", :body => "Het zonnetje schijnt niet en de mensen zijn ontevreden." }.merge(options))
+    NewsItem.create({ :parent => nodes(:devcms_news_node), :publication_start_date => 1.day.ago, :title => 'Slecht weer!', :body => 'Het zonnetje schijnt niet en de mensen zijn ontevreden.' }.merge(options))
   end
-
 end

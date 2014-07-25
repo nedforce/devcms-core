@@ -82,18 +82,16 @@ class CombinedCalendarTest < ActiveSupport::TestCase
   end
 
 protected
-  
+
   def create_combined_calendar(options = {})
-    CombinedCalendar.create({:parent => nodes(:root_section_node), :title => "New combined calendar", :description => "This is a new combined calendar." }.merge(options))
+    CombinedCalendar.create({ :parent => nodes(:root_section_node), :title => 'New combined calendar', :description => 'This is a new combined calendar.' }.merge(options))
   end
 
   def create_calendar_item(calendar, options = {})
-    CalendarItem.create({:parent => calendar.node, :repeating => false, :title => "New event", :start_time => DateTime.now.to_s(:db), :end_time => (DateTime.now + 1.hour).to_s(:db) }.merge(options))
+    CalendarItem.create({ :parent => calendar.node, :repeating => false, :title => 'New event', :start_time => DateTime.now.to_s(:db), :end_time => (DateTime.now + 1.hour).to_s(:db) }.merge(options))
   end
-  
+
   def create_calendar(options = {})
-    Calendar.create({:parent => nodes(:root_section_node), :title => "New calendar", :description => "This is a new calendar.", :publication_start_date => 2.days.ago }.merge(options))
-  end  
-
+    Calendar.create({ :parent => nodes(:root_section_node), :title => 'New calendar', :description => 'This is a new calendar.', :publication_start_date => 2.days.ago }.merge(options))
+  end
 end
-

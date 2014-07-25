@@ -41,9 +41,9 @@ module DevcmsCore
     #     [:show, :edit], 
     #     {:listing_id => 1})
     def assert_users_access(users_access_list, actions, params = {})
-      users_access_list.each_pair {|user, access| 
+      users_access_list.each_pair do |user, access|
         assert_user_access_check(access, user, actions, params)
-      }
+      end
     end
   
     alias :assert_user_cannot_access :assert_user_cant_access

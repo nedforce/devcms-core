@@ -118,7 +118,6 @@ protected
 
   def create_calendar_item(options = {})
     now = Time.now
-    CalendarItem.create({:parent => @events_calendar.node, :repeating => false, :title => "New event", :start_time => now, :end_time => now + 1.hour }.merge(options))
+    CalendarItem.create({ :parent => @events_calendar.node, :repeating => false, :title => 'New event', :start_time => now, :end_time => now + 1.hour }.merge(options))
   end
-
 end

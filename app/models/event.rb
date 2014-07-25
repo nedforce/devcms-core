@@ -46,7 +46,7 @@ class Event < ActiveRecord::Base
   has_many :event_registrations, :dependent => :destroy
   has_many :users, :through => :event_registrations
   
-  scope :with_ancestry, lambda{|ancestry| includes(:node).where('nodes.ancestry' => ancestry).order('start_time DESC') }  do
+  scope :with_ancestry, lambda { |ancestry| includes(:node).where('nodes.ancestry' => ancestry).order('start_time DESC') } do
     include DevcmsCore::CalendarItemsAssociationExtensions
   end
   

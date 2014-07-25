@@ -78,7 +78,7 @@ class ApplicationController < ActionController::Base
       synonyms[syn.original] ||= [syn.original]
       synonyms[syn.original] << syn.name
     end
-    synonyms = synonyms.collect { |key, set| set.uniq.join(", ") }
+    synonyms = synonyms.map { |key, set| set.uniq.join(', ') }
     send_data synonyms.join("\n"), :filename => 'synonyms.txt', :type => 'text/plain', :disposition => 'attachment'
   end
   

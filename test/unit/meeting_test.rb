@@ -97,11 +97,10 @@ class MeetingTest < ActiveSupport::TestCase
     assert items.include?(agenda_items(:agenda_item_one))
     assert items.include?(agenda_items(:agenda_item_two))
   end
-  
+
 protected
-  
+
   def create_meeting(options = {})
-    Meeting.create({:parent => nodes(:meetings_calendar_node), :repeating => false, :meeting_category => @meeting_category, :title => "New meeting", :start_time => DateTime.now.to_s(:db), :end_time => (DateTime.now + 1.hour).to_s(:db) }.merge(options))
+    Meeting.create({ :parent => nodes(:meetings_calendar_node), :repeating => false, :meeting_category => @meeting_category, :title => 'New meeting', :start_time => DateTime.now.to_s(:db), :end_time => (DateTime.now + 1.hour).to_s(:db) }.merge(options))
   end
-  
 end

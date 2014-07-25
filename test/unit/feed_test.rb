@@ -73,7 +73,7 @@ class FeedTest < ActiveSupport::TestCase
 protected
 
   def create_feed(options = {})
-    Feed.create({:parent => nodes(:root_section_node), :url => "http://office.nedforce.nl/correct.rss" }.merge(options))
+    Feed.create({ :parent => nodes(:root_section_node), :url => 'http://office.nedforce.nl/correct.rss' }.merge(options))
   end
   
 end

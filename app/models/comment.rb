@@ -46,7 +46,7 @@ class Comment < ActiveRecord::Base
     if user.has_role?('editor')
       user.comments.all({ :include => :node }.merge(options))
     else
-      Comment.all({ :include => :node }.merge(options)).select{ |comment| comment.user == user || user.has_role_on?(['admin', 'final_editor'], comment.node) }
+      Comment.all({ :include => :node }.merge(options)).select { |comment| comment.user == user || user.has_role_on?(['admin', 'final_editor'], comment.node) }
     end
   end
 

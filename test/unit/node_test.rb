@@ -323,7 +323,7 @@ class NodeTest < ActiveSupport::TestCase
 
    def test_changes_should_not_include_feeds
      assert_not_nil Node.all(:conditions => { :content_type => 'Feed'}), "Should have at least one feed to test for exclusion"
-     assert @root_node.last_changes(:all).select{ |n| n.content_class == Feed }.empty?
+     assert @root_node.last_changes(:all).select { |n| n.content_class == Feed }.empty?
    end
 
    def test_changes_should_only_include_accessible_children
@@ -441,24 +441,24 @@ class NodeTest < ActiveSupport::TestCase
   end
   
   def test_should_register_content_type_and_configuration
-    Node.register_content_type(Page, Node.content_type_configuration('Page').merge({:enabled => "TestTestTest"}))
+    Node.register_content_type(Page, Node.content_type_configuration('Page').merge({ :enabled => 'TestTestTest' }))
     assert_not_nil Node.content_type_configuration('Page')
-    assert_equal "TestTestTest", Node.content_type_configuration('Page')[:enabled]
-    Node.register_content_type(Page, Node.content_type_configuration('Page').merge({:enabled => true}))
+    assert_equal 'TestTestTest', Node.content_type_configuration('Page')[:enabled]
+    Node.register_content_type(Page, Node.content_type_configuration('Page').merge({ :enabled => true }))
   end
 
   def test_should_not_update_postions_in_subtree_on_move
     node = nodes(:devcms_news_node)
     node.descendants.update_all(:position => 99)
-    assert node.descendants.all? {|n| n.position == 99}, "Should have set all descendant positions!"
+    assert node.descendants.all? { |n| n.position == 99 }, 'Should have set all descendant positions!'
     node.move_to_child_of nodes(:economie_section_node)
-    assert node.descendants.all? {|n| n.position == 99}, "Should not have updated positions!"
+    assert node.descendants.all? { |n| n.position == 99 }, 'Should not have updated positions!'
   end
 
 protected
 
   def create_node(options = {}, parent_node = nodes(:root_section_node))
-    create_page({:parent => parent_node}.merge(options)).node
+    create_page({ :parent => parent_node }.merge(options)).node
   end
 
   def create_news_item(options = {})

@@ -44,7 +44,7 @@ class Admin::NewsletterEditionsController < Admin::AdminController
 
   # * GET /admin/newsletter_editions/new
   def new
-    @newsletter_edition = @newsletter_archive.newsletter_editions.build({:parent => @newsletter_archive.node}.merge(params[:newsletter_edition] || {}))
+    @newsletter_edition = @newsletter_archive.newsletter_editions.build({ :parent => @newsletter_archive.node }.merge(params[:newsletter_edition] || {}))
 
     if params[:items]
       @item_sortlets = item_sortlet_hash_for_ids(params[:items])
@@ -104,10 +104,10 @@ class Admin::NewsletterEditionsController < Admin::AdminController
       elsif @commit_type == 'save' && @newsletter_edition.save(:user => current_user, :approval_required => @for_approval)
         # Replace the items for the edition (if any)
         @newsletter_edition.associate_items(@item_ids)
-        format.html {
+        format.html do
           @refresh = true
           render :template => 'admin/shared/update'
-        }
+        end
         format.xml  { head :ok }
       else
         @item_sortlets = item_sortlet_hash_for_ids(@item_ids)

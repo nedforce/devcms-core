@@ -150,14 +150,14 @@ class WeblogTest < ActiveSupport::TestCase
       end
     end
   end
-  
+
 protected
-  
+
   def create_weblog(options = {})
-    Weblog.create({:parent => @devcms_weblog_archive.node, :user => users(:gerjan), :title => "Uitermate interessante weblog", :description => "Beschrijving komt hier." }.merge(options))
+    Weblog.create({ :parent => @devcms_weblog_archive.node, :user => users(:gerjan), :title => 'Uitermate interessante weblog', :description => 'Beschrijving komt hier.' }.merge(options))
   end
 
   def create_weblog_post(weblog, options = {})
-    WeblogPost.create({:parent => weblog.node, :title => "Some interesting title.", :body => "Some interesting body." }.merge(options))
+    WeblogPost.create({ :parent => weblog.node, :title => 'Some interesting title.', :body => 'Some interesting body.' }.merge(options))
   end
 end

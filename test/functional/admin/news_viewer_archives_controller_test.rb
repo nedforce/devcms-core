@@ -25,7 +25,7 @@ class Admin::NewsViewerArchivesControllerTest < ActionController::TestCase
 protected
 
   def create_news_viewer(options = {})
-    NewsViewer.create({:parent => nodes(:economie_section_node), :publication_start_date => 1.day.ago, :title => "General NewsViewer", :description => "Gecombineerd nieuws"}.merge(options))    
+    NewsViewer.create({ :parent => nodes(:economie_section_node), :publication_start_date => 1.day.ago, :title => 'General NewsViewer', :description => 'Gecombineerd nieuws' }.merge(options))    
   end
   
   def create_news_viewer_archive(options = {})

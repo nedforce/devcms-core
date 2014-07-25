@@ -31,12 +31,12 @@ module DevcmsCore
   
     # restore all 
     def restore
-      @method_stores.each_pair{|klass, method_stores|
-        method_stores.reverse_each{ |method_name, method| 
+      @method_stores.each_pair do |klass, method_stores|
+        method_stores.reverse_each do |method_name, method|
           klass.send :undef_method, method_name
           klass.send :define_method, method_name, method if method
-        }
-      }
+        end
+      end
       @method_stores.clear
       true
     rescue

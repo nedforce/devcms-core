@@ -128,12 +128,12 @@ module NodeExtensions::ParanoidDelete
 
   # Use this method to retrieve all descendant record ids, including the ones that have been marked as paranoid deleted
   def descendant_including_deleted_ids
-    self.class.unscoped { self.base_class.all(:conditions => descendant_conditions, :select => self.base_class.primary_key).collect(&self.base_class.primary_key.to_sym) }
+    self.class.unscoped { self.base_class.all(:conditions => descendant_conditions, :select => self.base_class.primary_key).map(&self.base_class.primary_key.to_sym) }
   end
 
   # Use this method to retrieve all ancestor record ids, including the ones that have been marked as paranoid deleted
   def ancestor_including_deleted_ids
-    self.class.unscoped { self.base_class.all(:conditions => ancestor_conditions, :select => self.base_class.primary_key).collect(&self.base_class.primary_key.to_sym) }
+    self.class.unscoped { self.base_class.all(:conditions => ancestor_conditions, :select => self.base_class.primary_key).map(&self.base_class.primary_key.to_sym) }
   end
 
   private

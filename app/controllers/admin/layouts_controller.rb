@@ -10,8 +10,8 @@ class Admin::LayoutsController < Admin::AdminController
   end
   
   def update
-    # Parameters: { "node"=>{"layout"=>"deventer", "layout_variant"=>"default", "template_color"=>"default"}, 
-    #               "targets"=>{"primary_column"=>["1"], "main_content_column"=>["4","5"], "secondary_column"=>[nil]}}
+    # Parameters: { "node" => { "layout" => "deventer", "layout_variant" => "default", "template_color" => "default" },
+    #               "targets" => { "primary_column" => ["1"], "main_content_column" => ["4","5"], "secondary_column" => [nil] } }
     if params['node'].present?
       success = @node.update_layout(:node => params['node'], :targets => params['targets']) rescue false
       
@@ -55,7 +55,7 @@ class Admin::LayoutsController < Admin::AdminController
 
     @current_sortlets = {}
     # Setup the custom representations
-    @current_sortlets[:custom_representations] = @node.own_or_inherited_layout.custom_representations.collect do |type, config|
+    @current_sortlets[:custom_representations] = @node.own_or_inherited_layout.custom_representations.map do |type, config|
       { 
         :title                 => I18n.t("#{@node.content_type.tableize}.#{type}", :default => config["name"]),
         :representation        => config["representation"],
@@ -67,7 +67,7 @@ class Admin::LayoutsController < Admin::AdminController
     end
 
     @layout.targets_for_variant(@variant).each do |target, config|
-      @current_sortlets[target] = @node.content_representations.select{ |cbe| cbe.target == target }.map do |el|
+      @current_sortlets[target] = @node.content_representations.select { |cbe| cbe.target == target }.map do |el|
         if el.custom_type.present?
           ct = @current_sortlets[:custom_representations].select { |ct| ct[:nodeId] == el.custom_type }.first
           @current_sortlets[:custom_representations].delete(ct)

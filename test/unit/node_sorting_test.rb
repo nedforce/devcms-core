@@ -11,7 +11,7 @@ class NodeSortingTest < ActiveSupport::TestCase
 
   def test_root_children_should_be_sorted_after_setup
     assert Node.root.children.broken_list_ancestries.empty?
-    assert_equal Node.root.children.collect(&:position), (1..Node.root.children.count).to_a
+    assert_equal Node.root.children.map(&:position), (1..Node.root.children.count).to_a
   end
 
   def test_should_sort_children

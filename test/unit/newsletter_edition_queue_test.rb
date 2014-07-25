@@ -33,6 +33,6 @@ class NewsletterEditionQueueTest < ActiveSupport::TestCase
 
   protected
     def create_newsletter_edition_queue(options = {})
-      NewsletterEditionQueue.create({:user => users(:henk), :newsletter_edition => newsletter_editions(:devcms_newsletter_edition)}.merge(options))
+      NewsletterEditionQueue.create({ :user => users(:henk), :newsletter_edition => newsletter_editions(:devcms_newsletter_edition) }.merge(options))
     end
 end

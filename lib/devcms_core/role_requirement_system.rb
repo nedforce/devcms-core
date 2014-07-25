@@ -58,7 +58,7 @@ module DevcmsCore
         for key in [:only, :except]
           if options.has_key?(key)
             options[key] = [options[key]] unless Array === options[key]
-            options[key] = options[key].compact.collect{|v| v.to_sym}
+            options[key] = options[key].compact.map { |v| v.to_sym }
           end 
         end
       

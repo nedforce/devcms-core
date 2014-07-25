@@ -6,7 +6,7 @@ module NodeExtensions::TreeDelegation
     # sortable :scope => :ancestry
     acts_as_list :scope => :ancestry
 
-    validate :parent_should_be_valid, :unless => lambda {|n| Node.count.zero? || (Node.root && Node.root == n ) }
+    validate :parent_should_be_valid, :unless => lambda { |n| Node.count.zero? || (Node.root && Node.root == n ) }
     validate :parent_should_allow_type
 
     scope :broken_list_ancestries, select(:ancestry).group(:ancestry).having('max(nodes.position)!=(SELECT COUNT(*) FROM nodes n2 WHERE n2.ancestry=nodes.ancestry AND deleted_at IS NULL) OR sum(nodes.position)!=(SELECT SUM(DISTINCT position) FROM nodes n3 WHERE n3.ancestry=nodes.ancestry AND deleted_at IS NULL)').reorder(:ancestry)
@@ -206,7 +206,7 @@ module NodeExtensions::TreeDelegation
         ordered_ids = ids.flatten.uniq
         ordered_ids.each do |child_id|
           position = ordered_ids.index(child_id) + 1
-          self.class.update_all({:position => position}, {:id => child_id})
+          self.class.update_all({ :position => position }, { :id => child_id })
         end
       end
     end
@@ -226,7 +226,7 @@ module NodeExtensions::TreeDelegation
   end
   
   def path_child_ancestries
-    path_ids.enum_for(:each_with_index).collect{ |item, index| path_ids[0..(path_ids.length - index - 1)]}.map{|result| result.join('/') }    
+    path_ids.enum_for(:each_with_index).map { |item, index| path_ids[0..(path_ids.length - index - 1)]}.map { |result| result.join('/') }
   end
   
   def path_children_by_depth
