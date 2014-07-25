@@ -76,39 +76,39 @@ require 'iconv'
 class Node < ActiveRecord::Base
   # A node is commentable
   acts_as_commentable
-  
+
   # Nodes are taggable with alterative titles
   acts_as_taggable_on :title_alternatives
-  
+
   # Prevents the root +Node+ from being destroyed.
   before_destroy :prevent_root_destruction
-    
+
   # Delegate tree calls to use Ancestry. Ensure this is added *after* other before/after filters.
   include Node::TreeDelegation
-  
+
   # Load paranoid delete functionality. Make sure this is loaded after Node::TreeDelegation and before any other extensions.
   include Node::ParanoidDelete
-  
+
   # Load visibility & accessibility functionality
   include Node::VisibilityAndAccessibility
-  
+
   # Load expiration functionality
   include Node::Expiration
-  
+
   # Load layout & template functionality
   include Node::Layouting
-  
+
   # It seems serialize has broken...
   def layout_configuration
     self.attributes["layout_configuration"] || {}
   end
-    
+
   # Load Url Aliasing functionality
   include Node::UrlAliasing
-  
+
   # Load content type configuration functionality
   include Node::ContentTypeConfiguration
-  
+
   alias_method_chain :move_to, :update_url_aliases
 
   if SETTLER_LOADED && DevCMS.search_configuration[:enabled_search_engines].include?('ferret')
@@ -135,36 +135,36 @@ class Node < ActiveRecord::Base
 
   has_many :abbreviations, :dependent => :destroy
   has_many :synonyms,      :dependent => :destroy
-  
+
   belongs_to :created_by, :class_name => 'User'
   belongs_to :updated_by, :class_name => 'User'
 
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of   :content, :sub_content_type, :publication_start_date
-  
+
   validates_presence_of   :deleted_at, :if => lambda { |node| node.parent.try(:deleted_at) }
-  
+
   validates_uniqueness_of :content_id, :scope => :content_type
 
   validates_inclusion_of :publishable,       :in => [ false, true ], :allow_nil => false
-  
+
   validates_inclusion_of :commentable,       :in => [ false, true ], :allow_nil => true
   validates_inclusion_of :hide_right_column, :in => [ false, true ], :allow_nil => true
-  
+
   validates_inclusion_of :content_box_colour, :in => DevCMS.content_box_colours, :allow_blank => true
   validates_inclusion_of :content_box_icon, :in => DevCMS.content_box_icons, :allow_blank => true
-  
+
   validates_length_of    :content_box_title, :in => 2..255, :allow_blank => true
-  
+
   validate  :ensure_publication_start_date_is_present_when_publication_end_date_is_present,
             :ensure_publication_end_date_after_publication_start_date,
             :ensure_content_box_number_of_items_should_be_greater_than_two
 
   # A private copy of the original destroy method that is used for overloading.
   alias_method :original_destroy, :destroy
-  
+
   attr_accessor :category_attributes
-  
+
   attr_protected :publishable, :deleted_at
 
   before_validation :set_publication_start_date_to_current_time_if_blank
@@ -176,7 +176,7 @@ class Node < ActiveRecord::Base
     @publishable_changed = node.publishable_changed? 
     true
   end
-  
+
   after_update { |node| node.reindex_self_and_children if @private_changed || @hidden_changed || @publishable_changed; true }
 
   after_save :save_category_attributes
@@ -186,13 +186,13 @@ class Node < ActiveRecord::Base
 
   # Make sure the associated meta content is removed (or marked as deleted) for the entire subtree when the current node is marked as deleted
   before_paranoid_delete :remove_associated_meta_content
-  
+
   named_scope :sorted_by_position, :order => 'nodes.position'
-  
+
   named_scope :exclude_subtrees_of, (lambda do |nodes_to_exclude|
     Node.exclude_subtrees_conditions_for(nodes_to_exclude)
   end)
-  
+
   named_scope :shown_in_menu, (lambda do
     if Node.content_to_hide_from_menu.present?
       { :conditions => [ 'nodes.show_in_menu = true AND nodes.sub_content_type NOT IN (?)', Node.content_to_hide_from_menu ] }
@@ -200,10 +200,10 @@ class Node < ActiveRecord::Base
       { :conditions => { 'nodes.show_in_menu' => true }}
     end
   end)
-  
+
   named_scope :with_content_type, (lambda do |content_types_to_include|
     content_types_to_include = Array(content_types_to_include)
-    
+
     if content_types_to_include.present?
       { :conditions => [ 'nodes.sub_content_type IN (?)', content_types_to_include ] }
     else
@@ -213,25 +213,25 @@ class Node < ActiveRecord::Base
 
   named_scope :exclude_content_types, (lambda do |content_types_to_exclude|
     content_types_to_exclude = Array(content_types_to_exclude)
-    
+
     if content_types_to_exclude.present?
       { :conditions => [ 'nodes.sub_content_type NOT IN (?)', content_types_to_exclude ] }
     else
       { :conditions => {} }
     end
   end)
-  
+
   named_scope :sections, { :conditions => [ 'nodes.sub_content_type IN (?)', %w( Section Site ) ] }
-  
+
   named_scope :include_content, { :include => :content }
-  
-  named_scope :path_children_by_depth, lambda{|node| { :order => 'nodes.ancestry_depth desc, nodes.position asc', :conditions => { :ancestry => node.path_child_ancestries } } }
+
+  named_scope :path_children_by_depth, lambda{ |node| { :order => 'nodes.ancestry_depth desc, nodes.position asc', :conditions => { :ancestry => node.path_child_ancestries } } }
 
   def move_to_with_reindexing(*args)
     self.move_to_without_reindexing(*args)
     self.reindex_self_and_children
   end
-  
+
   alias_method_chain :move_to, :reindexing
 
   # A proxy method for accessing the SanitizeHelper through the Helper class.
@@ -252,7 +252,7 @@ class Node < ActiveRecord::Base
     return true if content_class.name == 'ProductCatalogue' && content.opus_plus_importer
     super
   end
-  
+
   # Destroys this node and its associated content node.
   #
   # The destruction of self is delegated to the content node through its
@@ -294,7 +294,7 @@ class Node < ActiveRecord::Base
       end
     end
   end
-  
+
   def self.content_to_hide_from_menu
     @content_to_hide_from_menu ||= self.content_types_configuration.select do |content_type, configuration|
       !configuration[:show_in_menu]
@@ -402,7 +402,7 @@ class Node < ActiveRecord::Base
 
     if latest_version.present?
       tree_text += " <i>("
-      
+
       if latest_version.drafted?
         tree_text += I18n.t('nodes.draft')
       elsif latest_version.rejected?
@@ -410,7 +410,7 @@ class Node < ActiveRecord::Base
       else
         tree_text += I18n.t('nodes.unapproved')
       end
-      
+
       tree_text += ")</i>"
     end
 
@@ -420,7 +420,7 @@ class Node < ActiveRecord::Base
   # Returns the site that directly contains this node as a descendant
   def containing_site
     return @containing_site if @containing_site
-    
+
     @containing_site = if self.depth.zero?
       Node.root
     else
@@ -435,7 +435,7 @@ class Node < ActiveRecord::Base
     
     self.publication_start_date <= now && (self.publication_end_date.blank? || self.publication_end_date >= now)
   end
-  
+
   def visible?
     !self.hidden? && !self.private? && self.publishable?
   end
@@ -539,7 +539,7 @@ class Node < ActiveRecord::Base
   # Use this instead of +@node.content.class+.
   def content_class
     return @content_class if @content_class
-    
+
     if self.sub_content_type.nil? || self.sub_content_type == 'ContentCopy'
       content_class = self.sub_content_type.nil? ? self.content.class : self.content.copied_content_class
       @content_class = content_class unless content_class == ContentCopy
@@ -568,7 +568,7 @@ class Node < ActiveRecord::Base
       :include    => :node_categories,
       :limit      => options[:limit] || 5
     }
-    
+
     if options[:top_node]
       options[:top_node].children.accessible.public.all(conditions)
     else
@@ -588,32 +588,32 @@ class Node < ActiveRecord::Base
         end
       end
     end
-    
+
     true
   rescue
     false
   end
 
   attr_accessor :keep_existing_categories
-  
+
   alias_method :original_category_ids=, :category_ids=
-  
+
   def category_ids=(new_category_ids)
     new_category_ids = new_category_ids.reject(&:blank?).map(&:to_i)
 
     return if new_category_ids.empty?  
-    
+
     if keep_existing_categories
       self.original_category_ids = (new_category_ids + category_ids).uniq
     else
       self.original_category_ids = new_category_ids.uniq
     end
   end
-  
+
   def last_set_category
     @last_set_category ||= self.node_categories.first(:order => 'created_at DESC').try(:category)
   end
-  
+
   # Override ancestry setter to correctly check wether the sortable scope is changed. This will prevent subtree repositioning issues.
   def ancestry=(value)
     sortable_scope_changes << :ancestry unless sortable_scope_changes.include?(:ancestry) || new_record? || (send(:ancestry).present? && value.to_s.split("/").last == send(:ancestry).to_s.split("/").last) || !self.class.sortable_lists.any? { |list_name, configuration| configuration[:scope].include?(:ancestry) }
@@ -631,21 +631,21 @@ protected
   def prevent_root_destruction
     raise ActiveRecord::ActiveRecordError, I18n.t('activerecord.errors.models.node.attributes.base.cant_remove_root') if self.root?
   end
-  
+
   def remove_associated_meta_content
     nodes_to_be_paranoid_deleted_ids = self.subtree_ids
-  
+
     self.transaction do
       # Destroy all content copies that are associated with any of the nodes in the subtree and are not a descendant
       ContentCopy.find_each(:include => :node, :conditions => [ 'copied_node_id IN (:nodes_to_be_paranoid_deleted_ids) AND NOT nodes.id IN (:nodes_to_be_paranoid_deleted_ids)', { :nodes_to_be_paranoid_deleted_ids => nodes_to_be_paranoid_deleted_ids } ]) do |content_copy|
         content_copy.destroy
       end
-    
+
       # Destroy all internal links that are associated with any of the nodes in the subtree and are not a descendant
       InternalLink.find_each(:include => :node, :conditions => [ 'linked_node_id IN (:nodes_to_be_paranoid_deleted_ids) AND NOT nodes.id IN (:nodes_to_be_paranoid_deleted_ids)', { :nodes_to_be_paranoid_deleted_ids => nodes_to_be_paranoid_deleted_ids } ]) do |internal_link|
         internal_link.destroy
       end
-          
+
       # Unset frontpage for Sections
       Section.update_all({ :frontpage_node_id => nil }, { :frontpage_node_id => nodes_to_be_paranoid_deleted_ids })
 
@@ -653,10 +653,10 @@ protected
       [ NodeCategory, RoleAssignment, Synonym, Abbreviation ].each do |klass|
         klass.delete_all(:node_id => nodes_to_be_paranoid_deleted_ids)
       end
-    
+
       # Do the same for all comments
       Comment.delete_all(:commentable_id => nodes_to_be_paranoid_deleted_ids)
-    
+
       # Delete content representations where appropriate 
       ContentRepresentation.delete_all [ 'parent_id IN (:nodes_to_be_paranoid_deleted_ids) OR content_id IN (:nodes_to_be_paranoid_deleted_ids)', { :nodes_to_be_paranoid_deleted_ids => nodes_to_be_paranoid_deleted_ids } ]
     end
@@ -687,7 +687,7 @@ protected
 
     content_date
   end
-  
+
   def save_category_attributes
     if self.category_attributes.present?
       self.category_attributes.each do |id, attrs|
@@ -695,7 +695,7 @@ protected
       end
     end
   end
-  
+
   # Sets the publication_end_date to current time if none is specified
   def set_publication_start_date_to_current_time_if_blank
     self.publication_start_date = Time.now unless self.publication_start_date
@@ -704,7 +704,7 @@ protected
 private
 
   # Validation methods
-  
+
   def ensure_publication_start_date_is_present_when_publication_end_date_is_present
     if self.publication_end_date
       self.errors.add_to_base(I18n.t('acts_as_content_node.publication_start_date_should_be_present')) unless self.publication_start_date
@@ -721,6 +721,5 @@ private
     if self.content_box_number_of_items
       self.errors.add_to_base(I18n.t('acts_as_content_node.content_box_number_of_items_should_be_greater_than_two')) if self.content_box_number_of_items.to_i <= 2
     end
-  end  
+  end
 end
-

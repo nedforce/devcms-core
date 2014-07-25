@@ -7,18 +7,18 @@ class NodeURLAliasTest < ActiveSupport::TestCase
     @about_page_node = nodes(:about_page_node)
     @economie_section_node = nodes(:economie_section_node)
   end
-  
+
   def test_should_create_url_alias
     cn = create_page
     assert_equal 'foo', cn.node.url_alias
   end
-  
+
   def test_should_create_custom_url_alias
     cn = create_page
     cn.node.update_attributes(:custom_url_suffix => 'test')
     assert_equal 'test', cn.node.custom_url_alias
   end
-  
+
   def test_should_create_url_alias_for_frontpage_child
     ni = NewsItem.create({:parent => nodes(:devcms_news_node), :title => 'foo', :preamble => 'xuu', :body => 'bar', :publication_start_date => '2008-05-20 12:00' })
     assert_equal '2008/5/20/foo', ni.node.url_alias
@@ -28,21 +28,21 @@ class NodeURLAliasTest < ActiveSupport::TestCase
     p = Page.create({:parent => nodes(:root_section_node), :title => 'foo/', :preamble => 'xuu', :body => 'bar', :expires_on => 1.day.from_now.to_date, :publication_start_date => '2008-05-20 12:00' })
     assert_equal 'foo', p.node.url_alias
   end
-  
+
   def test_should_always_generate_unique_alias
     cn = create_page
     assert_equal 'foo', cn.node.url_alias
     cn2 = create_page
     assert_equal 'foo-1', cn2.node.url_alias
   end
-  
+
   def test_should_change_url_alias_when_title_changes
     cn = create_page
     assert_equal 'foo', cn.node.url_alias
     cn.update_attributes(:title => 'foobar')
     assert_equal 'foobar', Node.find(cn.node.id).url_alias
   end
-  
+
   def test_should_change_url_alias_when_title_changes_for_non_unique_title
     cn = create_page
     assert_equal 'foo', cn.node.url_alias
@@ -51,7 +51,7 @@ class NodeURLAliasTest < ActiveSupport::TestCase
     cn2.update_attributes(:title => 'foo')
     assert_equal 'foo-1', Node.find(cn2.node.id).url_alias
   end
-  
+
   def test_should_always_generate_unique_custom_url_alias
     cn = create_page
     cn.node.update_attributes(:custom_url_suffix => 'test')
@@ -67,7 +67,7 @@ class NodeURLAliasTest < ActiveSupport::TestCase
     cn.node.update_attributes(:url_alias => 'bar')
     assert_equal 'foo', cn.node.url_alias
   end
-  
+
   def test_should_protect_custom_url_alias
     cn = create_page
     cn.node.update_attributes(:custom_url_suffix => 'foo')
@@ -75,20 +75,20 @@ class NodeURLAliasTest < ActiveSupport::TestCase
     cn.node.update_attributes(:custom_url_alias => 'bar')
     assert_equal 'foo', cn.node.custom_url_alias
   end
-  
+
   def test_should_append_parent_url_alias_if_node_has_parent
     wa = WeblogArchive.create(:parent => @root_node, :title => 'weblogs', :description => 'weblogs')
     parent_node_alias = wa.node.url_alias
     w = wa.weblogs.create(:parent => wa.node, :user => @arthur, :title => 'foobar', :description => 'foobar')
     assert_equal "#{parent_node_alias}/foobar", w.node.url_alias
   end
-  
+
   def test_should_set_custom_url_alias_to_custom_url_suffix_if_node_has_no_parent
     page = create_page :title => 'foobarbaz'
     page.node.update_attributes(:custom_url_suffix => 'test')
     assert_equal 'test', page.node.custom_url_alias
   end
-  
+
   def test_should_append_custom_url_suffix_to_parent_url_alias_if_node_has_parent
     wa = WeblogArchive.create(:parent => @root_node, :title => 'weblogs', :description => 'weblogs')
     parent_node_alias = wa.node.url_alias
@@ -96,25 +96,25 @@ class NodeURLAliasTest < ActiveSupport::TestCase
     w.node.update_attributes(:custom_url_suffix => 'test')
     assert_equal "#{parent_node_alias}/test", w.node.custom_url_alias
   end
-  
+
   def test_should_set_custom_url_alias_to_custom_url_suffix_if_custom_url_suffix_starts_with_forward_slash
     wa = WeblogArchive.create(:parent => @root_node, :title => 'weblogs', :description => 'weblogs')
     w = wa.weblogs.create(:parent => wa.node, :user => @arthur, :title => 'foobar', :description => 'foobar')
     w.node.update_attributes(:custom_url_suffix => '/test')
     assert_equal "test", w.node.custom_url_alias
   end
-  
+
   def test_should_set_custom_url_alias_to_unique_custom_url_suffix_if_custom_url_suffix_starts_with_forward_slash
     page = create_page :title => 'foobarbaz'
     page.node.update_attributes(:custom_url_suffix => '/test')
     assert_equal 'test', page.node.custom_url_alias
-    
+
     wa = WeblogArchive.create(:parent => @root_node, :title => 'weblogs', :description => 'weblogs')
     w = wa.weblogs.create(:parent => wa.node, :user => @arthur, :title => 'foobar', :description => 'foobar')
     w.node.update_attributes(:custom_url_suffix => '/test')
     assert_equal "test-1", w.node.custom_url_alias
   end
-  
+
   def test_should_update_url_alias_after_moving_node
     n = create_page.node
     assert_equal(@root_node, n.parent)
@@ -131,7 +131,7 @@ class NodeURLAliasTest < ActiveSupport::TestCase
     n.move_to_child_of @economie_section_node
     assert_equal "#{@economie_section_node.url_alias}/bar", n.reload.custom_url_alias
   end
-  
+
   def test_should_set_custom_url_alias_to_custom_url_suffix_after_moving_node_if_custom_url_suffix_starts_with_forward_slash
     n = create_page.node
     assert_equal(@root_node, n.parent)
@@ -145,23 +145,23 @@ class NodeURLAliasTest < ActiveSupport::TestCase
     node = nodes(:devcms_news_node)
     Node.root.content.set_frontpage!(nil)
     node.descendants.update_all(:url_alias => "placeholder")
-    assert node.descendants.all? {|n| n.url_alias == "placeholder"}, "Should have set all descendants url_aliasses!"
+    assert node.descendants.all? { |n| n.url_alias == "placeholder"}, "Should have set all descendants url_aliasses!"
     assert nodes(:economie_section_node).url_alias.size > 1
     node.move_to_child_of nodes(:economie_section_node)
-    assert node.descendants.all? {|n| n.url_alias.include? nodes(:economie_section_node).url_alias }, "Should have prefixed url_aliasses"
+    assert node.descendants.all? { |n| n.url_alias.include? nodes(:economie_section_node).url_alias }, "Should have prefixed url_aliasses"
   end
 
   def test_should_update_url_aliases_of_subtree_on_rename
     node = nodes(:devcms_news_node)
     Node.root.content.set_frontpage!(nil)
     node.descendants.update_all(:url_alias => "placeholder")
-    assert node.descendants.all? {|n| n.url_alias == "placeholder"}, "Should have set all descendants url_aliasses!"
+    assert node.descendants.all? { |n| n.url_alias == "placeholder"}, "Should have set all descendants url_aliasses!"
     node.content.update_attributes :title => "Nieuwe Nieuws Sectie Naam"
     node.reload
     assert_not_nil node.url_alias
-    assert node.descendants.all? {|n| n.url_alias.include? node.url_alias }, "Should have prefixed url_aliasses"
+    assert node.descendants.all? { |n| n.url_alias.include? node.url_alias }, "Should have prefixed url_aliasses"
   end
-  
+
   def test_url_alias_length_restrictions
     cn = create_page
     cn.node.url_alias = "a"
@@ -177,7 +177,7 @@ class NodeURLAliasTest < ActiveSupport::TestCase
     assert !cn.node.valid?
     assert cn.node.errors.on(:url_alias)
   end
-  
+
   def test_custom_url_alias_length_restrictions
     cn = create_page
     cn.node.custom_url_alias = "a"
@@ -193,7 +193,7 @@ class NodeURLAliasTest < ActiveSupport::TestCase
     assert !cn.node.valid?
     assert cn.node.errors.on(:custom_url_alias)
   end
-  
+
   def test_should_clear_aliases_on_paranoid_destroy
     cn = create_page(:title => 'foobarbaz').node
     assert 'foobarbaz', cn.url_alias
@@ -206,7 +206,7 @@ class NodeURLAliasTest < ActiveSupport::TestCase
     assert_equal [], Node.all_including_deleted(:conditions => "url_alias = 'foobarbaz'")
     assert cn2.valid?, cn2.errors.full_messages.to_sentence
   end
-  
+
 protected
 
   def create_page(options = {})
@@ -214,4 +214,3 @@ protected
   end
 
 end
-

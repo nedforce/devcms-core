@@ -1,69 +1,69 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="nl" lang="nl">
-    <head>
-        <meta http-equiv="X-UA-Compatible" content="IE=8" />
-        <title><%= I18n.t('layouts.control_panel') -%></title>
-        <link rel="SHORTCUT ICON" href="http://<%= h(Settler[:host]) %>/favicon.ico" type="image/vnd.microsoft.icon" />
-        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-        <meta name="language" content="NL"/>
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=8" />
+    <title><%= I18n.t('layouts.control_panel') -%></title>
+    <link rel="SHORTCUT ICON" href="http://<%= h(Settler[:host]) %>/favicon.ico" type="image/vnd.microsoft.icon" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <meta name="language" content="NL"/>
 
-        <%= stylesheet_link_tag '../javascripts/ext/resources/css/ext-all.css', :plugin => 'devcms-core' %>
+    <%= stylesheet_link_tag '../javascripts/ext/resources/css/ext-all.css', :plugin => 'devcms-core' %>
 
-        <%= stylesheet_link_tag 'admin' %>
+    <%= stylesheet_link_tag 'admin' %>
 
-        <%= javascript_include_tag 'application', 'date.js', 'prototype-1.6.0.3.js', 'effects.js', 'controls.js', (RAILS_ENV == 'development' ? 'tiny_mce/tiny_mce_src.js' : 'tiny_mce/tiny_mce.js'), :plugin => 'devcms-core' %>
+    <%= javascript_include_tag 'application', 'date.js', 'prototype-1.6.0.3.js', 'effects.js', 'controls.js', (RAILS_ENV == 'development' ? 'tiny_mce/tiny_mce_src.js' : 'tiny_mce/tiny_mce.js'), :plugin => 'devcms-core' %>
 
-        <%= javascript_include_merged(:admin) %>
-        
-        <%= calendar_date_select_includes :locale => :nl %>
-        
-        <!-- Include Ext Js-->
-        <%= javascript_include_tag 'ext/adapter/ext/ext-base.js', 'ie9_create_contextual_fragment.js',
-          (RAILS_ENV == 'development' ? 'ext/ext-all-debug.js' : 'ext/ext-all.js'), :plugin => 'devcms-core' %>
+    <%= javascript_include_merged(:admin) %>
 
-        <!-- Init Ext Js -->
-        <% javascript_tag do %>
-          Ext.namespace('Ext.dvtr')
-          Ext.BLANK_IMAGE_URL = '/images/blank.gif'
-          Ext.QuickTips.init() // required for html editor fields
-          Ext.Msg.minWidth = 300
-          Ext.Updater.defaults.loadScripts = true
-        <% end %>
+    <%= calendar_date_select_includes :locale => :nl %>
 
-        <%= javascript_include_tag 'admin/categories', 'admin/poll_options', 'admin/init_viewport', 'admin/reset_tiny_mce',
-          'ext/dvtr/TreeNodeContextMenu', 'ext/dvtr/VirtualTreeNodeContextMenu',
-          'ext/dvtr/MultipleTreeNodeContextMenu', 'ext/dvtr/Panel', 'ext/dvtr/TreeLoader',
-          'ext/dvtr/AsyncContentTreeNode', 'ext/dvtr/AsyncVirtualTreeNode', 'ext/dvtr/Sorter',
-          'ext/dvtr/ContentNodeFormPanel', 'ext/dvtr/Sortlet', 'ext/dvtr/NodeDropField', 'ext/dvtr/RemovableTextField', 'ext/dvtr/RemovableFieldSet',
-          'ext/ux/ext-extensions.js', 'ext/ux/grid/SmartCheckboxSelectionModel.js', :plugin => 'devcms-core' %>
+    <!-- Include Ext Js-->
+    <%= javascript_include_tag 'ext/adapter/ext/ext-base.js', 'ie9_create_contextual_fragment.js',
+      (RAILS_ENV == 'development' ? 'ext/ext-all-debug.js' : 'ext/ext-all.js'), :plugin => 'devcms-core' %>
 
-    </head>
-    <body>
-        <div class="clearfix" id="header">
-            <%= render '/admin/header' -%>
-            <div class="properties_box" id="logged_in_box">
-                <div class="top_bar">
-                    <%= link_to I18n.t('layouts.logout'), session_path, :method => :delete, :class => 'align_right' %>
-                    <h1><%= I18n.t('layouts.logged_in_as') %>: <%=h current_user.login -%></h1>
-                </div>
-                <table cellpadding="0" cellspacing="0">
-                    <tr>
-                        <th><%= I18n.t('layouts.email') %></th>
-                        <td><%=h current_user.email_address -%></td>
-                    </tr>
-                    <tr>
-                        <th><%= I18n.t('layouts.roles') %></th>
-                        <td><%=h current_user.role_assignments.collect {|ra|"#{RoleAssignment::ROLES[ra.name.intern]} van #{ra.node.content.content_title}"}.to_sentence -%></td>
-                    </tr>
-                </table>
-            </div>
+    <!-- Init Ext Js -->
+    <% javascript_tag do %>
+      Ext.namespace('Ext.dvtr')
+      Ext.BLANK_IMAGE_URL = '/images/blank.gif'
+      Ext.QuickTips.init() // required for html editor fields
+      Ext.Msg.minWidth = 300
+      Ext.Updater.defaults.loadScripts = true
+    <% end %>
+
+    <%= javascript_include_tag 'admin/categories', 'admin/poll_options', 'admin/init_viewport', 'admin/reset_tiny_mce',
+      'ext/dvtr/TreeNodeContextMenu', 'ext/dvtr/VirtualTreeNodeContextMenu',
+      'ext/dvtr/MultipleTreeNodeContextMenu', 'ext/dvtr/Panel', 'ext/dvtr/TreeLoader',
+      'ext/dvtr/AsyncContentTreeNode', 'ext/dvtr/AsyncVirtualTreeNode', 'ext/dvtr/Sorter',
+      'ext/dvtr/ContentNodeFormPanel', 'ext/dvtr/Sortlet', 'ext/dvtr/NodeDropField', 'ext/dvtr/RemovableTextField', 'ext/dvtr/RemovableFieldSet',
+      'ext/ux/ext-extensions.js', 'ext/ux/grid/SmartCheckboxSelectionModel.js', :plugin => 'devcms-core'
+    %>
+
+  </head>
+  <body>
+    <div class="clearfix" id="header">
+      <%= render '/admin/header' -%>
+      <div class="properties_box" id="logged_in_box">
+        <div class="top_bar">
+          <%= link_to t('layouts.logout'), session_path, :method => :delete, :class => 'align_right' %>
+          <h1><%= t 'layouts.logged_in_as' %>: <%=h current_user.login -%></h1>
         </div>
+        <table cellpadding="0" cellspacing="0">
+          <tr>
+            <th><%= t 'layouts.email' %></th>
+            <td><%=h current_user.email_address -%></td>
+          </tr>
+          <tr>
+            <th><%= t 'layouts.roles' %></th>
+            <td><%=h current_user.role_assignments.collect { |ra|"#{RoleAssignment::ROLES[ra.name.intern]} van #{ra.node.content.content_title}" }.to_sentence -%></td>
+          </tr>
+        </table>
+      </div>
+    </div>
 
-        <div class="top_bar menu" id="menu">
-            <%= create_admin_menu -%>
-        </div>
+    <div class="top_bar menu" id="menu">
+      <%= create_admin_menu -%>
+    </div>
 
-        <%= yield %>
-    </body>
+    <%= yield %>
+  </body>
 </html>
-

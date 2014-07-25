@@ -441,7 +441,7 @@ class NodeTest < ActiveSupport::TestCase
 
     category1 = Category.create(:name => 'Categorie 1')
     category2 = Category.create(:name => 'Categorie 2')
-    
+
     n.keep_existing_categories = true
     n.category_ids=([ category1.id, category2.id ])
 
@@ -450,7 +450,7 @@ class NodeTest < ActiveSupport::TestCase
 
     category3 = Category.create(:name => 'Categorie 3')
     category4 = Category.create(:name => 'Categorie 4')
-    
+
     n.keep_existing_categories = false
     n.category_ids=([ category2.id, category3.id, category4.id ])
 
@@ -469,13 +469,13 @@ class NodeTest < ActiveSupport::TestCase
     content = stub(:class => { :requires_editor_approval? => false })
     content.stubs(:update_attributes!).raises(ActiveRecord::RecordInvalid)
     node1 = stub(:content => content)
-    
+
     content = stub(:update_attributes! => true, :class => stub(:requires_editor_approval? => false))
     node2 = stub(:content => content)
-    
+
     assert_equal false, Node.bulk_update([ node1, node2 ], {})
   end
-  
+
   def test_should_save_category_attributes_to_associated_categories_on_save
     n = create_node
 
@@ -510,9 +510,9 @@ class NodeTest < ActiveSupport::TestCase
   def test_should_not_update_postions_in_subtree_on_move
     node = nodes(:devcms_news_node)
     node.descendants.update_all(:position => 99)
-    assert node.descendants.all? {|n| n.position == 99}, "Should have set all descendant positions!"
+    assert node.descendants.all? { |n| n.position == 99 }, 'Should have set all descendant positions!'
     node.move_to_child_of nodes(:economie_section_node)
-    assert node.descendants.all? {|n| n.position == 99}, "Should not have updated positions!"
+    assert node.descendants.all? { |n| n.position == 99 }, 'Should not have updated positions!'
   end
 
 protected

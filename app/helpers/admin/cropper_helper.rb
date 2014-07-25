@@ -5,7 +5,7 @@ module Admin::CropperHelper
     html_options.merge!(:id => "image_cropper_#{image.id}")
 
     is_header = image.node.parent.content_type == 'NewsItem'
-    locals = { :image => image, :is_header => is_header }  
+    locals = { :image => image, :is_header => is_header }
 
     content_tag :div, html_options do
       if image.orientation == :vertical || is_header

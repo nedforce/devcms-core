@@ -1,6 +1,6 @@
 # A LinksBox is a content node that represents a collection of Links.
 class LinksBox < ActiveRecord::Base
-  
+
   acts_as_content_node({
     :allowed_child_content_types => %w(
       LinkTheme Image InternalLink ExternalLink
@@ -14,32 +14,32 @@ class LinksBox < ActiveRecord::Base
     :show_in_menu => false,
     :copyable => false
   })
-  
+
   # This content type needs approval when created or altered by an editor.
   needs_editor_approval
-  
+
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of     :title
   validates_length_of       :title, :in => 2..255
-  
+
   # Returns the last update date
   def last_updated_at
-    ([self.node.subtree.accessible.maximum('nodes.updated_at')] + self.node.children.with_content_type("InternalLink").collect {|link_node| link_node.content.linked_node.updated_at }).compact.max
+    ([self.node.subtree.accessible.maximum('nodes.updated_at')] + self.node.children.with_content_type("InternalLink").collect { |link_node| link_node.content.linked_node.updated_at }).compact.max
   end
-  
+
   # Returns the description as the token for indexing.
   def content_tokens
     description
   end
-  
+
   def sub_themes
     node.children.with_content_type('LinkTheme').accessible
   end
-  
+
   def content_children
     node.children.exclude_content_types(%w(Image LinkTheme)).accessible
   end
-  
+
   # Returns the OWMS type.
   def self.owms_type
     I18n.t('owms.overview_page')

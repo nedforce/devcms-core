@@ -5,7 +5,7 @@ module ActionView
       def option_html_attributes(element)
         return "" unless Array === element
         html_attributes = []
-        element.select { |e| Hash === e }.inject({}){|m,v| m.merge(v)}.each do |k, v|
+        element.select { |e| Hash === e }.inject({}){ |m,v| m.merge(v) }.each do |k, v|
           html_attributes << " #{k}=\"#{html_escape(v.to_s)}\""
         end
         html_attributes.join

@@ -5,7 +5,7 @@ if defined?(PhusionPassenger)
   class DRb::DRbConn
     def self.close_all
       @mutex.synchronize do
-        @pool.each {|c| c.close}
+        @pool.each { |c| c.close }
         @pool = []
       end
     end

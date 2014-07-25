@@ -6,11 +6,11 @@ class Admin::CalendarsController < Admin::AdminController
   prepend_before_filter :find_parent_node,    :only => [ :new, :create ]
 
   # The +show+, +edit+ and +update+ actions need a +Calendar+ object to act upon.
-  before_filter         :find_calendar,       :only => [ :show, :edit, :update ]
+  before_filter :find_calendar,       :only => [ :show, :edit, :update ]
 
-  before_filter         :find_calendar_items, :only => :show
+  before_filter :find_calendar_items, :only => :show
 
-  before_filter         :set_commit_type,     :only => [ :create, :update ]
+  before_filter :set_commit_type,     :only => [ :create, :update ]
 
   layout false
 
@@ -23,12 +23,12 @@ class Admin::CalendarsController < Admin::AdminController
       format.html { render :partial => 'show', :layout => 'admin/admin_show' }
       format.xml  { render :xml => @calendar }
     end
-  end  
+  end
 
   # * GET /admin/calendars.json?node=1&active_node_id=2
-  # 
+  #
   # *parameters*
-  # 
+  #
   # +node+ - Id of the node of which the children are requested.
   # +super_node+ - Id of the node of which the children are requested, when also a year and/or month is specified.
   # +active_node_id+ - (Optional) Id of the active node. If the active node is contained by this calendar, the containing year and month will auto-expand.
@@ -56,7 +56,7 @@ class Admin::CalendarsController < Admin::AdminController
               active_node_date           = active_node.content.publication_start_date if archive_includes_active_node
               month_includes_active_node = archive_includes_active_node && (active_node_date.year == @year && active_node_date.month == m)
 
-              { 
+              {
                 :text        => Date::MONTHNAMES[m].capitalize,
                 :expanded    => month_includes_active_node || (!archive_includes_active_node && (@year == now.year && m == now.month)),
                 :extraParams => {
@@ -71,7 +71,7 @@ class Admin::CalendarsController < Admin::AdminController
           else
             @years = @calendar_node.content.find_years_with_items.map do |y|
               year_includes_active_node = archive_includes_active_node ? (active_node.content.publication_start_date.year == y) : false
-              { 
+              {
                 :text        => y,
                 :expanded    => year_includes_active_node || (!archive_includes_active_node && (y == now.year)),
                 :extraParams => {
@@ -156,6 +156,6 @@ protected
   end
 
   def find_calendar_items
-    @calendar_items = @calendar.calendar_items.find_all_for_month_of(Date.today).group_by {|ci| ci.start_time.mday }
+    @calendar_items = @calendar.calendar_items.find_all_for_month_of(Date.today).group_by { |ci| ci.start_time.mday }
   end
 end

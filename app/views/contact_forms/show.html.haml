@@ -1,6 +1,6 @@
 - content_for :javascript do
   = calendar_date_select_includes :locale => :nl
-  
+
 %h1= h @contact_form.title
 
 - if @contact_form.description_before_contact_fields
@@ -14,7 +14,7 @@
   %p
     %b= t 'contact_forms.should_enter_valid_email_address'
 
-- form_tag "/contact_forms/#{@contact_form.id}/send_message", :method => :post, :multipart => @contact_form_fields.any?{|field| field.field_type == 'file' } do
+- form_tag "/contact_forms/#{@contact_form.id}/send_message", :method => :post, :multipart => @contact_form_fields.any?{ |field| field.field_type == 'file' } do
   %table.contact_form_field
     %caption Contactformulier velden
     - @contact_form_fields.each do |contact_form_field|

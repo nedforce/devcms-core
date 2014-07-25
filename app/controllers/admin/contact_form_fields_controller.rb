@@ -11,9 +11,9 @@ class Admin::ContactFormFieldsController < Admin::AdminController
   before_filter :set_field_types,         :only => [ :new, :edit ]
 
   before_filter :set_commit_type,         :only => [ :create, :update ]
-  
+
   skip_before_filter :find_node, :only => [:edit, :update]
-  
+
   layout false
 
   # * GET /admin/contact_forms/:contact_form_id/contact_form_fields/:id
@@ -145,7 +145,7 @@ class Admin::ContactFormFieldsController < Admin::AdminController
   end
 
   def set_field_types
-    @field_types = ContactFormField::FIELD_TYPES.map{|field| [ContactFormField.human_field_type_for(field), field] }
+    @field_types = ContactFormField::FIELD_TYPES.map{ |field| [ContactFormField.human_field_type_for(field), field] }
   end
-  
+
 end

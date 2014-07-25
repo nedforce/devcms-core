@@ -54,7 +54,7 @@ class WeblogPostsController < ApplicationController
 
     if params[:images]
       @images = params[:images].values.reject{ |image| image[:data].is_a?(String) }
-      images  = @images[0..MAX_IMAGES-1].collect {|image| Image.new(:data => image[:data], :title => image[:data].original_filename) }
+      images  = @images[0..MAX_IMAGES-1].collect { |image| Image.new(:data => image[:data], :title => image[:data].original_filename) }
     end
 
     respond_to do |format|
@@ -87,9 +87,9 @@ class WeblogPostsController < ApplicationController
 
     if params[:images]
       @images = params[:images].values.reject{ |image| image[:data].is_a?(String) }
-      images = @images[0..allowed_extra_images-1].collect {|image| Image.new(:parent => @weblog_post.node, :data => image[:data], :title => image[:data].original_filename) }
+      images = @images[0..allowed_extra_images-1].collect { |image| Image.new(:parent => @weblog_post.node, :data => image[:data], :title => image[:data].original_filename) }
     end
-    
+
     @weblog_post.attributes = params[:weblog_post]
 
     respond_to do |format|

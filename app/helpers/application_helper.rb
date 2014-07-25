@@ -406,10 +406,10 @@ module ApplicationHelper
       if object = options.delete(:object)
         objects = [object].flatten
       else
-        objects = params.collect {|object_name| instance_variable_get("@#{object_name}") }.compact
+        objects = params.collect { |object_name| instance_variable_get("@#{object_name}") }.compact
       end
 
-      count = objects.inject(0) {|sum, object| sum + object.errors.count }
+      count = objects.inject(0) { |sum, object| sum + object.errors.count }
 
       unless count.zero?
         html = {}
@@ -426,7 +426,7 @@ module ApplicationHelper
         options[:object_name]  ||= params.first
         options[:header_message] = t('application.save_error') unless options.include?(:header_message)
         options[:message]      ||= (count > 1) ? t('application.field_errors') : t('application.field_error') unless options.include?(:message)
-        error_messages = objects.map {|object| object.errors.full_messages.map {|msg| content_tag(:li, msg) } }
+        error_messages = objects.map { |object| object.errors.full_messages.map { |msg| content_tag(:li, msg) } }
 
         contents = ''
         contents << content_tag(options[:header_tag] || :h2, options[:header_message]) if options[:header_message].present?

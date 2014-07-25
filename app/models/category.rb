@@ -67,7 +67,7 @@ class Category < ActiveRecord::Base
 
   # Ensures the names of the root categories remain unique.
   def root_category_unique
-    errors.add(:name, :must_be_unique) if Category.root_categories.all.map {|c| c.name unless c == self }.include?(self.name)
+    errors.add(:name, :must_be_unique) if Category.root_categories.all.map { |c| c.name unless c == self }.include?(self.name)
   end
 
   # Ensures the list of comma-separated synonyms is in a standard format.

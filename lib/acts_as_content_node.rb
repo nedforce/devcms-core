@@ -54,14 +54,14 @@ class ActiveRecord::Base
 
   def self.acts_as_content_node(configuration = {}, versioning_configuration = {})
     configuration.assert_valid_keys(Acts::ContentNode::DEFAULT_CONTENT_TYPE_CONFIGURATION.keys)
-  
+
     # Register content type and configuration
     Node.register_content_type(self, Acts::ContentNode::DEFAULT_CONTENT_TYPE_CONFIGURATION.merge(configuration))
-  
+
     versioning_configuration.reverse_merge!(:exclude => [ :id, :created_at, :updated_at ])
-  
+
     acts_as_versioned versioning_configuration
-    
+
     include Acts::ContentNode unless self.include?(Acts::ContentNode)
   end
 end
@@ -91,15 +91,15 @@ module Acts
       :expiration_required => false,
       :expiration_container => false
     }
-    
+
     def self.included(base)
       base.class_eval do
         include InstanceMethods
         extend ClassMethods
-      
+
         define_callbacks  :before_paranoid_delete, :after_paranoid_delete,
                           :before_paranoid_restore, :after_paranoid_restore
-  
+
         has_one :node, :as => :content, :autosave => true, :validate => true
 
         if base.content_columns.any? { |column| column.name == 'deleted_at' }
@@ -114,20 +114,20 @@ module Acts
         before_destroy do |content|
           content.node.destroy(:destroy_content_node => false)
         end
-  
+
         before_update :touch_node
         after_update :update_url_alias_if_title_changed
 
         after_save :update_search_index
-        
+
         before_paranoid_delete :delete_all_associated_versions
-        
+
         after_paranoid_delete :copy_deleted_at_from_node
-        
+
         after_paranoid_restore :clear_deleted_at, :set_url_alias
-  
+
         delegate :update_search_index, :expirable?, :expiration_required?, :expired?, :expiration_container?, :to => :node
-  
+
         delegate_accessor :commentable,
                           :content_box_title, :content_box_icon, :content_box_colour, :content_box_number_of_items,
                           :categories, :category_attributes, :category_ids, :keep_existing_categories,
@@ -138,9 +138,8 @@ module Acts
                           :title_alternative_list, :title_alternatives, :location, :pin_id, :to => :node
       end
     end
-      
+
     module InstanceMethods
-    
       # Ugly hack necessary to associate node before attributes are set, as we use delegate to node for some attributes
       def initialize(attributes = nil)
         @attributes = attributes_from_column_definition
@@ -160,7 +159,7 @@ module Acts
       def path_for_url_alias(node)
         content_title
       end
-      
+
       attr_accessor :draft
 
       def draft?
@@ -169,7 +168,7 @@ module Acts
 
       def save(*args)
         versioning_options = args.extract_options!
-        
+
         if user = versioning_options.delete(:user)
           if new_record?
             self.node.created_by = user
@@ -181,12 +180,12 @@ module Acts
         versioning_options[:should_create_version] = versioning_options[:should_create_version] || self.draft?
         versioning_options[:extra_version_attributes] ||= {}
         versioning_options[:extra_version_attributes][:status] = Version::STATUSES[:drafted] if self.draft?
-        
+
         self.with_versioning(versioning_options) do
           super(*args)
         end
       end
-      
+
       def save!(*args)
         self.save(*args) || raise(ActiveRecord::RecordNotSaved, self.errors.full_messages.join(', '))
       end
@@ -196,16 +195,16 @@ module Acts
         self.write_attribute(:title, value)
         self.node.write_attribute(:title, value)
       end
-    
+
       # Returns the last update date
       def last_updated_at
         self.node.subtree.accessible.maximum('nodes.updated_at')
       end
-    
+
       def touch!
         self.update_attribute(:updated_at, Time.now)
       end
-    
+
       def content_title
         self.respond_to?(:title) ? self.title : "#{self.class.name} #{self.id}"
       end
@@ -249,37 +248,37 @@ module Acts
       def show_content_box_header
         Node.content_type_configuration(self.class.to_s)[:show_content_box_header]
       end
-    
+
       def show_in_menu
         Node.content_type_configuration(self.class.to_s)[:show_in_menu]
       end
-    
+
       def controller_name
         self.class.controller_name
       end
-    
+
       def sub_themes
         # Bit of a hack. Should only be defined for content classes that allow attachments as a child
         node.children.with_content_type('AttachmentTheme').accessible
       end
-      
+
       # Fix error reporting when there are multiple errors on the associated node's base
       def valid?
         result = super
-        
+
         self.errors.instance_variable_get('@errors').delete('node.base')
-        
+
         if self.node.errors.on_base
           self.node.errors.on_base.each do |error|
             self.errors.add_to_base(error)
           end
         end
-        
+
         result
       end
-      
+
     private
-  
+
       def associate_node
         node = self.build_node :content => self
         node.sub_content_type = self.class.name
@@ -294,7 +293,7 @@ module Acts
           # Reset the title, as the node was reloaded.
           node.title = self.title
           # Search siblings for nodes with identiacal aliases
-          node.siblings.all(:conditions => ["url_alias like ?", base_url_alias + '-%']).each do |dupe| 
+          node.siblings.all(:conditions => ["url_alias like ?", base_url_alias + '-%']).each do |dupe|
             dupe.update_subtree_url_aliases
           end
         end
@@ -303,14 +302,14 @@ module Acts
       def touch_node
         self.node.updated_at = Time.now
       end
-      
+
       def copy_deleted_at_from_node
         Node.unscoped do
           node_deleted_at = self.node.deleted_at
-          
+
           self.deleted_at = node_deleted_at
           self.updated_at = node_deleted_at
-          
+
           self.class.update_all({ :deleted_at => node_deleted_at, :updated_at => node_deleted_at }, self.class.primary_key => id)
         end
       end
@@ -318,13 +317,13 @@ module Acts
       def delete_all_associated_versions
         self.versions.delete_all
       end
-      
+
       def clear_deleted_at
         node_updated_at = self.node.updated_at
-        
+
         self.deleted_at = nil
         self.updated_at = node_updated_at
-        
+
         self.class.send(:with_exclusive_scope) do
           self.class.update_all({ :deleted_at => nil, :updated_at => node_updated_at }, self.class.primary_key => id)
         end
@@ -335,14 +334,13 @@ module Acts
         node.save!
       end
     end
-  
+
     module ClassMethods
-    
       # Register that this is now a content node.
       def is_content_node?
         true
       end
-    
+
       def requires_editor_approval?
         false
       end
@@ -351,39 +349,39 @@ module Acts
       def indexable?
         true
       end
-    
+
       def controller_name
         Node.content_type_configuration(self.to_s)[:controller_name] || self.table_name
       end
-    
+
       def valid_parent_class?(klass)
         Node.content_type_configuration(klass.to_s)[:allowed_child_content_types].any? do |content_type|
           self <= content_type.constantize
         end
       end
-    
+
       def delegate_accessor(*args)
         options = args.extract_options!
-      
+
         args.each do |m|
           delegate m, "#{m}=", options
         end
       end
-    
+
       def has_parent(type, options = {})
         class_name = (options.delete(:class_name) || type.to_s.classify)
         klass = class_name.constantize
-      
-        define_method(type) {
+
+        define_method(type) do
           (parent || node.try(:parent)).present? ? klass.first(:include => :node, :conditions => ['nodes.id = ?', parent || node.try(:parent) ]) : nil
-        }
-      
+        end
+
         (class << self; self; end).send(:define_method, :parent_type) { klass }
       end
-              
+
       def has_children(type, options = {})
         class_name = (options.delete(:class_name) || type.to_s.classify)
-        define_method(type) { class_name.constantize.with_parent(node, options) }          
+        define_method(type) { class_name.constantize.with_parent(node, options) }
       end
     end
   end

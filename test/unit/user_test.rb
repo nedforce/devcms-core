@@ -28,7 +28,7 @@ class UserTest < ActiveSupport::TestCase
     end
 
     assert_no_difference 'User.count' do
-      u = create_user(:password => "   ")
+      u = create_user(:password => '   ')
       assert u.errors.on(:password)
     end
   end
@@ -169,16 +169,16 @@ class UserTest < ActiveSupport::TestCase
   def test_should_have_any_role
     assert users(:arthur).has_any_role?
   end
-  
+
   def test_should_not_have_any_role
     assert !users(:normal_user).has_any_role?
   end
-  
+
   def test_should_return_role_on_node
     assert_equal users(:arthur).role_on(nodes(:help_page_node)).name, "admin"
     assert_equal users(:editor).role_on(nodes(:devcms_news_node)).name, "editor"
     assert_nil   users(:editor).role_on(nodes(:contact_page_node))
- end
+  end
 
   def test_should_give_role_on_node
     success = users(:editor).give_role_on("editor", nodes(:contact_page_node))
@@ -198,7 +198,7 @@ class UserTest < ActiveSupport::TestCase
       users(:arthur).remove_role_from(Node.root)
     end
   end
-  
+
   def test_should_demote_and_promote
     assert_equal 'PrivilegedUser', users(:arthur).type
     users(:arthur).demote!
@@ -212,26 +212,26 @@ class UserTest < ActiveSupport::TestCase
     users(:arthur).demote!
     assert !User.find(users(:arthur).id).has_any_role?
   end
-  
+
   def test_should_keep_non_privileged_roles_after_demote
     assert users(:editor).give_role_on('read_access', Node.root)
     assert_difference("User.find(users(:editor).id).role_assignments.count", -6) do
       users(:editor).demote!
-      assert !User.find(users(:editor).id).role_assignments.any? {|ra| ra.is_privileged? }
+      assert !User.find(users(:editor).id).role_assignments.any? { |ra| ra.is_privileged? }
     end
   end
-  
+
   def test_should_have_roles_after_demote
     users(:arthur).demote!
     assert !User.find(users(:arthur).id).has_role?("admin", "editor", "final-editor")
   end
-  
+
   def test_should_return_role_on_node_after_demote
    users(:arthur).demote!
    assert_nil User.find(users(:arthur).id).role_on(nodes(:help_page_node))
    assert_nil User.find(users(:arthur).id).role_on(nodes(:devcms_news_node))
   end
-  
+
   def test_should_strip_sensitive_information_from_xml
     xml = users(:arthur).to_xml
     User::SECRETS.each { |secret| assert !xml.include?(secret.dasherize) }
@@ -450,7 +450,7 @@ class UserTest < ActiveSupport::TestCase
     assert email.to.include?(email_address)
     assert email.body.include?(I18n.t('layouts.forgot_password'))
   end
-  
+
 protected
 
   def create_user(options = {})

@@ -40,58 +40,58 @@ module RoleRequirementSystem
         :for, :only, 
         :for_all_except, :except, :any_node
       )
-      
+
       # only declare that before filter once
       unless (@before_filter_declared ||= false)
         @before_filter_declared = true
         before_filter :check_roles
       end
-      
+
       # convert to an array if it isn't already
-      roles = [roles] unless Array===roles
-      
+      roles = [roles] unless Array === roles
+
       options[:only] ||= options[:for] if options[:for]
       options[:except] ||= options[:for_all_except] if options[:for_all_except]
-      
+
       # convert any actions into symbols
       for key in [:only, :except]
         if options.has_key?(key)
           options[key] = [options[key]] unless Array === options[key]
-          options[key] = options[key].compact.collect{|v| v.to_sym}
-        end 
+          options[key] = options[key].compact.collect{ |v| v.to_sym }
+        end
       end
-      
-      self.role_requirements||=[]
+
+      self.role_requirements ||= []
       self.role_requirements << {:roles => roles, :options => options }
     end
-    
+
     # This is the core of RoleRequirement.  Here is where it discerns if a user can access a controller or not./
     def user_authorized_for?(user, node, params = {}, binding = self.binding)
-      return true unless Array===self.role_requirements
+      return true unless Array === self.role_requirements
       self.role_requirements.each do | role_requirement|
         roles = role_requirement[:roles]
         options = role_requirement[:options]
         # do the options match the params?
-        
+
         # check the action
         if options.has_key?(:only)
-          next unless options[:only].include?( (params[:action]||"index").to_sym )
+          next unless options[:only].include?( (params[:action] || "index").to_sym )
         end
-        
+
         if options.has_key?(:except)
-          next if options[:except].include?( (params[:action]||"index").to_sym)
+          next if options[:except].include?( (params[:action] || "index").to_sym)
         end
-        
+
         if options.has_key?(:if)
           # execute the proc.  if the procedure returns false, we don't need to authenticate these roles
           next unless ( String===options[:if] ? eval(options[:if], binding) : options[:if].call([params,node]) )
         end
-        
+
         if options.has_key?(:unless)
           # execute the proc.  if the procedure returns true, we don't need to authenticate these roles
           next if ( String===options[:unless] ? eval(options[:unless], binding) : options[:unless].call([params,node]) )
         end
-        
+
         # check to see if they have one of the required roles
         passed = false
 
@@ -107,16 +107,16 @@ module RoleRequirementSystem
 
         return false unless passed
       end
-      
+
       return true
     end
   end
-  
+
   module RoleSecurityInstanceMethods
     def self.included(klass)
       raise "Because role_requirement extends acts_as_authenticated, You must include AuthenticatedSystem first before including RoleRequirementSystem!" unless klass.included_modules.include?(AuthenticatedSystem)
     end
-    
+
     def access_denied
       if logged_in?
         flash[:warning] = I18n.t('role_requirement_system.not_authorized')
@@ -125,10 +125,10 @@ module RoleRequirementSystem
         super
       end
     end
-    
-    def check_roles       
+
+    def check_roles
       node = @parent_node || @node || @nodes
-      
+
       unless self.class.user_authorized_for?(current_user, node, params, binding)
        if node && (node.is_a?(Array) ? node.any? { |n| !n.visible? } : !node.visible?)
          raise ActionController::RoutingError, I18n.t('role_requirement_system.node_not_found')
@@ -136,11 +136,12 @@ module RoleRequirementSystem
          return access_denied
        end
       end
-      
+
       true
     end
-    
+
   protected
+
     # receives a :controller, :action, and :params.  Finds the given controller and runs user_authorized_for? on it.
     # This can be called in your views, and is for advanced users only.  If you are using :if / :unless eval expressions, 
     #   then this may or may not work (eval strings use the current binding to execute, not the binding of the target 

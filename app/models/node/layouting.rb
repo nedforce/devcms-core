@@ -1,30 +1,30 @@
 module Node::Layouting
-    
+
   def self.included(base)
     # Scopes, validations & associations
-    
+
     base.has_many :sections, :foreign_key => :frontpage_node_id
     base.validate :should_not_hide_global_frontpage
-    
+
     base.has_many :content_representations, :dependent => :destroy, :foreign_key => :parent_id, :order => :position
     base.has_many :representations,         :dependent => :destroy, :class_name => 'ContentRepresentation', :foreign_key => :content_id
-    
+
     base.serialize :layout_configuration
-    
+
     base.before_create :set_default_layout
-    
+
     base.extend(ClassMethods)
   end
-  
+
   def layout_configuration
     self.attributes["layout_configuration"] || {}
   end
-  
+
   # The inherited layout.
   def own_or_inherited_layout
     Layout.find(self.layout) || self.inherited_layout
   end
-  
+
   def inherited_layout
     if self.parent
       return self.parent.own_or_inherited_layout
@@ -32,7 +32,7 @@ module Node::Layouting
       raise "node has no parent to inherit layout from"
     end
   end
-  
+
   def own_or_inherited_layout_variant
     if self.layout_variant.present?
       self.own_or_inherited_layout.find_variant(self.layout_variant)
@@ -40,7 +40,7 @@ module Node::Layouting
       self.inherited_layout_variant
     end
   end
-  
+
   # Find the inherited layout, fall back to default if it is not inheritable
   def inherited_layout_variant
     if self.parent
@@ -50,22 +50,22 @@ module Node::Layouting
       raise "node has no parent to inherit layout from"
     end
   end
-  
+
   # Remove all layout elements and settings for this node
   def reset_layout
     content_representations.clear
     update_attributes(:layout => nil, :layout_configuration => nil, :layout_variant => nil)
   end
-  
+
   # Update and save the layout condiguration given as node attributes
   # TODO: Refactor to use setters and a writer for the representations
   def update_layout(layout_config = {})
     without_search_reindex do
       # Delete any empty settings from the configuration and save everything
       layout_config[:node][:layout_configuration].delete_if { |k,v| v.blank? } unless layout_config[:node][:layout_configuration].blank?
-      
+
       return false unless update_attributes(layout_config[:node])
-      
+
       # Find the layout and variant used to set the representations
       layout  = Layout.find(layout_config[:node][:layout]) || self.inherited_layout
       variant = layout.find_variant(layout_config[:node][:layout_variant]) || self.inherited_layout_variant
@@ -75,11 +75,11 @@ module Node::Layouting
         content_ids = content_ids.select { |cid| cid.present? }
         # Destroy removed representations
         if content_ids.empty?
-          self.content_representations.all(:conditions => ["content_representations.target = ? ", target]).each {|cr| cr.destroy }
+          self.content_representations.all(:conditions => ["content_representations.target = ? ", target]).each { |cr| cr.destroy }
         else
           custom_types = content_ids.select { |ci| ci.to_i.to_s != ci }
           content_ids  = content_ids.select { |ci| ci.to_i.to_s == ci }
-          self.content_representations.all(:conditions => ["target = :target AND ((content_id IS NOT NULL AND ((:content_ids) IS NULL OR content_id NOT IN (:content_ids))) OR (custom_type IS NOT NULL AND ((:custom_types) IS NULL OR custom_type NOT IN (:custom_types))))", {:target => target, :content_ids => content_ids, :custom_types => custom_types}]).each {|cr| cr.destroy }
+          self.content_representations.all(:conditions => ["target = :target AND ((content_id IS NOT NULL AND ((:content_ids) IS NULL OR content_id NOT IN (:content_ids))) OR (custom_type IS NOT NULL AND ((:custom_types) IS NULL OR custom_type NOT IN (:custom_types))))", { :target => target, :content_ids => content_ids, :custom_types => custom_types }]).each { |cr| cr.destroy }
         end
       end
 

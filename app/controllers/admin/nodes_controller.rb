@@ -10,7 +10,7 @@ class Admin::NodesController < Admin::AdminController
 
   # Require a role for the current node on update, destroy and move
   require_role 'admin', :only => :set_accessibility
-  
+
   require_role ['admin', 'final_editor'], :except => [ :index, :update, :set_visibility, :set_accessibility, :bulk_edit, :bulk_update, :destroy, :export_newsletter ]
 
   require_role ['admin', 'final_editor', 'editor'], :only => [ :update, :bulk_edit, :bulk_update, :set_visibility, :destroy, :move, :sort_children, :count_children ]
@@ -49,14 +49,14 @@ class Admin::NodesController < Admin::AdminController
       format.json do
         active_node = params.has_key?(:active_node_id) ? Node.find(params[:active_node_id]) : nil
         @nodes = @root_node.children.all(:include => [:content, :role_assignments])
-        render :json => @nodes.map{|node| node.to_tree_node_for(current_user, {:expand_if_ancestor_of => active_node})}.to_json
+        render :json => @nodes.map{ |node| node.to_tree_node_for(current_user, { :expand_if_ancestor_of => active_node }) }.to_json
       end
     end
   end
 
   # Updates a node's attributes
-  # * PUT /admin/nodes/1.json
-  # * PUT /admin/nodes/1.xml
+  # * PUT /admin/nodes/:id.json
+  # * PUT /admin/nodes/:id.xml
   def update
     # Find and set template for this node if given.
     # TODO: Refactor this!
@@ -80,7 +80,7 @@ class Admin::NodesController < Admin::AdminController
         format.json { render :json => { :success => 'true' } }
       else
         format.xml  { render :xml => @node.errors.to_xml, :status => :unprocessable_entity }
-        format.json { render :json => {:errors => @node.errors.map{|e|e.join(' ')}}.to_json, :status => :unprocessable_entity }
+        format.json { render :json => { :errors => @node.errors.map{ |e| e.join(' ') }}.to_json, :status => :unprocessable_entity }
       end
     end
   end
@@ -99,31 +99,30 @@ class Admin::NodesController < Admin::AdminController
   end
 
   # Destroys a node, and all of its descendants.
-  # * DELETE /admin/nodes/1.xml
-  # * DELETE /admin/nodes/1.json
+  # * DELETE /admin/nodes/:id.xml
+  # * DELETE /admin/nodes/:id.json
   def destroy
     respond_to do |format|
       return access_denied unless current_user.has_role_on?(@node.content_type_configuration[:allowed_roles_for_destroy], @node)
 
       @node.paranoid_delete!
-      
+
       format.xml  { head :ok }
       format.json { render :json => { :notice => I18n.t('nodes.succesfully_destroyed')}.to_json, :status => :ok }
     end
   end
-  
+
   def bulk_destroy
     respond_to do |format|
       parent_node = Node.find(params[:parent_id])
       return access_denied unless current_user.has_role_on?("admin", parent_node)
-      
+
       parent_node.content.destroy_items_for_year_or_month(params[:year], params[:month], true)
-              
+
       format.xml  { head :ok }
       format.json { render :json => { :notice => I18n.t('nodes.succesfully_destroyed')}.to_json, :status => :ok }
-    end    
+    end
   end
-
 
   def export_newsletter
     if @node.content.is_a?(NewsletterArchive)
@@ -276,7 +275,7 @@ class Admin::NodesController < Admin::AdminController
       end
     end
   end
-  
+
   def set_accessibility
     respond_to do |format|
       if @node.set_accessibility!(!params[:private].to_bool)
@@ -288,7 +287,7 @@ class Admin::NodesController < Admin::AdminController
       end
     end
   end
-  
+
 protected
 
   def find_nodes

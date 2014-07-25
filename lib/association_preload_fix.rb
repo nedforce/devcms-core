@@ -2,7 +2,7 @@
 
 module AssociationPreloadFix
   private
-  
+
   def preload_belongs_to_association(records, reflection, preload_options={})
     return if records.first.send("loaded_#{reflection.name}?")
     options = reflection.options
@@ -43,7 +43,7 @@ module AssociationPreloadFix
 
       table_name = klass.quoted_table_name
       primary_key = reflection.options[:primary_key] || klass.primary_key
-      column_type = klass.columns.detect{|c| c.name == primary_key}.type
+      column_type = klass.columns.detect{ |c| c.name == primary_key }.type
       ids = id_map.keys.map do |id|
         if column_type == :integer
           id.to_i
@@ -93,7 +93,7 @@ module AssociationPreloadFix
   def preload_has_and_belongs_to_many_association(records, reflection, preload_options={})
     table_name = reflection.klass.quoted_table_name
     id_to_record_map, ids = construct_id_map(records)
-    records.each {|record| record.send(reflection.name).loaded}
+    records.each { |record| record.send(reflection.name).loaded }
     options = reflection.options
 
     conditions = "t0.#{reflection.primary_key_name} #{in_or_equals_for_ids(ids)}"
@@ -106,8 +106,8 @@ module AssociationPreloadFix
     associated_records = reflection.klass.send(reflection.klass == self ? :with_exclusive_scope : :with_scope, :find => find_options) { reflection.klass.all }
     set_association_collection_records(id_to_record_map, reflection.name, associated_records, 'the_parent_record_id')
   end
-  
- 
+
+
 #   def find_associated_records(ids, reflection, preload_options)
 #     options = reflection.options
 #     table_name = reflection.klass.quoted_table_name

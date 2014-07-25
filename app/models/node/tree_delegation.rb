@@ -5,7 +5,7 @@ module Node::TreeDelegation
 
       sortable :scope => :ancestry
 
-      validate :parent_should_be_valid, :unless => lambda {|n| Node.count.zero? || (Node.root && Node.root == n ) }
+      validate :parent_should_be_valid, :unless => lambda { |n| Node.count.zero? || (Node.root && Node.root == n ) }
 
       validate :parent_should_allow_type
 
@@ -176,11 +176,11 @@ module Node::TreeDelegation
         self.errors.add_to_base(I18n.t('node.parent_invalid'))
       end
     end
-    
+
     def path_child_ancestries
-      path_ids.enum_for(:each_with_index).collect{ |item, index| path_ids[0..(path_ids.length - index - 1)]}.map{|result| result.join('/') }    
+      path_ids.enum_for(:each_with_index).collect{ |item, index| path_ids[0..(path_ids.length - index - 1)] }.map{ |result| result.join('/') }
     end
-    
+
     def path_children_by_depth
       Node.path_children_by_depth(self)
     end
@@ -210,7 +210,7 @@ module Node::TreeDelegation
 
       return { :conditions => {} } unless nodes.present?
 
-      sql = ""
+      sql = ''
       values = {}
 
       node_ids = nodes.map { |n| n.id }
@@ -225,7 +225,7 @@ module Node::TreeDelegation
         sql += " AND nodes.ancestry NOT LIKE :#{symbol}"
         values.update(symbol => "#{child_ancestry}/%")
       end
-      
+
       sql += " OR nodes.ancestry IS NULL"
 
       { :conditions => [ sql, values ] }
