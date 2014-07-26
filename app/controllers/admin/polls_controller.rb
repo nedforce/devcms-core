@@ -1,21 +1,21 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to administering +Poll+ objects.
-class Admin::PollsController < Admin::AdminController
 
+class Admin::PollsController < Admin::AdminController
   # The +create+ action needs the parent +Node+ object to link the new +Poll+ content node to.
-  prepend_before_filter :find_parent_node, :only => [ :new, :create ]
+  prepend_before_filter :find_parent_node, :only => [:new, :create]
 
   # The +show+, +edit+ and +update+ actions need a +Poll+ object to act upon.
-  before_filter :find_poll,                :only => [ :show, :edit, :update ]
+  before_filter :find_poll,                :only => [:show, :edit, :update]
 
   before_filter :find_poll_questions,      :only => :show
 
-  before_filter :set_commit_type,          :only => [ :create, :update ]
+  before_filter :set_commit_type,          :only => [:create, :update]
 
   layout false
 
   # Editors can not administer +Poll+ nodes.
-  require_role [ 'admin', 'final_editor'], :except => :show
+  require_role ['admin', 'final_editor'], :except => :show
 
   # * GET /admin/polls/:id
   # * GET /admin/polls/:id.xml
@@ -24,14 +24,14 @@ class Admin::PollsController < Admin::AdminController
       format.html { render :partial => 'show', :layout => 'admin/admin_show' }
       format.xml  { render :xml => @poll }
     end
-  end  
-  
+  end
+
    # * GET /admin/polls/new
   def new
     @poll = Poll.new(params[:poll])
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :record => @poll }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @poll } }
     end
   end
 
@@ -40,7 +40,7 @@ class Admin::PollsController < Admin::AdminController
     @poll.attributes = params[:poll]
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :record => @poll }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @poll } }
     end
   end
 

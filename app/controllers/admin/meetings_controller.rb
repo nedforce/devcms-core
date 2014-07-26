@@ -46,7 +46,7 @@ class Admin::MeetingsController < Admin::AdminController
     @meeting = Meeting.new(params[:meeting] || {})
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :record => @meeting }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @meeting } }
     end
   end
 
@@ -54,7 +54,7 @@ class Admin::MeetingsController < Admin::AdminController
   def edit
     @meeting.attributes = params[:meeting]
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :record => @meeting }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @meeting } }
     end
   end
 

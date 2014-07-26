@@ -1,24 +1,25 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to administering +PollQuestion+ objects.
-class Admin::PollQuestionsController < Admin::AdminController
 
-  # The +show+, +new+, +create+, +edit+ and +update+ actions need the parent +Node+ object to link the new +PollQuestion+ content node to.
-  prepend_before_filter :find_parent_node,     :only => [ :new, :create ]
+class Admin::PollQuestionsController < Admin::AdminController
+  # The +show+, +new+, +create+, +edit+ and +update+ actions need the
+  # parent +Node+ object to link the new +PollQuestion+ content node to.
+  prepend_before_filter :find_parent_node,     :only => [:new, :create]
 
   # Find the parent +Poll+ object.
-  before_filter :find_poll,                    :only => [ :new, :create ]
+  before_filter :find_poll,                    :only => [:new, :create]
 
   # The +show+, +edit+ and +update+ actions need a +PollQuestion+ object to act upon.
-  before_filter :find_poll_question,           :only => [ :show, :edit, :update ]
+  before_filter :find_poll_question,           :only => [:show, :edit, :update]
 
   # Parse the publication start date for the +create+ and +update+ actions.
-  before_filter :parse_publication_start_date, :only => [ :create, :update ]
+  before_filter :parse_publication_start_date, :only => [:create, :update]
 
-  before_filter :set_commit_type,              :only => [ :create, :update ]
+  before_filter :set_commit_type,              :only => [:create, :update]
 
   layout false
 
-  require_role [ 'admin', 'final_editor', 'editor']
+  require_role ['admin', 'final_editor', 'editor']
 
   # Shows the question and a voting form if the requested question is active
   # shows the question's results otherwise.
@@ -29,8 +30,8 @@ class Admin::PollQuestionsController < Admin::AdminController
     respond_to do |format|
       format.html { render :partial => 'show', :layout => 'admin/admin_show' }
       format.xml  { render :xml => @poll_question.to_xml(:include => :poll_options) }
-    end    
-  end  
+    end
+  end
 
   # * GET /admin/poll_questions/new
   def new

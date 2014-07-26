@@ -1,5 +1,4 @@
 class Admin::ResponseFieldsController < Admin::AdminController
-
   before_filter :find_contact_form, :find_response, :find_response_field
 
   layout false
@@ -25,5 +24,4 @@ private
   def find_response_field
     @response_field = @response.response_fields.find(params[:id])
   end
-
 end

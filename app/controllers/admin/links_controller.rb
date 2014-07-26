@@ -37,14 +37,14 @@ class Admin::LinksController < Admin::AdminController
   def new
     @link = @subclass.new
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :record => @link }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @link } }
     end
   end
 
   # * GET /admin/links/:id/edit
   def edit
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :record => @link }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @link } }
     end
   end
 

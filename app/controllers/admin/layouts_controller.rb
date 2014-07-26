@@ -13,7 +13,7 @@ class Admin::LayoutsController < Admin::AdminController
     #               "targets" => { "primary_column" => ["1"], "main_content_column" => ["4","5"], "secondary_column" => [nil] } }
     if params['node'].present?
       success = @node.update_layout(:node => params['node'], :targets => params['targets']) rescue false
-      
+
       if success
         render :text => 'ok', :status => :ok
       else
