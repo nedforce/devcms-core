@@ -3,12 +3,12 @@ require File.expand_path('../boot', __FILE__)
 require 'rails/all'
 
 Bundler.require
-require "devcms_core"
+require 'devcms_core'
 
 module Dummy
   class Application < Rails::Application
     register_cms_modules
-        
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
@@ -54,8 +54,8 @@ module Dummy
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.1'
 
+    # Dummy Airbrake settings
     config.airbrake_redmine_project = 'DevCMS-core-dummy'
     config.airbrake_redmine_api_key = ''
-    
   end
 end

@@ -23,13 +23,12 @@
 #  * A Section can be inserted into nodes of any accepting type.
 #
 class Section < ActiveRecord::Base
-
   # Adds content node functionality to sections.
   acts_as_content_node({
     :allowed_child_content_types => %w(
       AlphabeticIndex Attachment AttachmentTheme Calendar Carrousel CombinedCalendar ContactBox ContactForm Feed Forum
       HtmlPage Image LinksBox InternalLink ExternalLink NewsArchive NewsletterArchive NewsViewer
-      Page Poll SearchPage Section SocialMediaLinksBox TopHitsPage WeblogArchive
+      Page Poll SearchPage Section SocialMediaLinksBox TopHitsPage
     ),
     :allowed_roles_for_create  => %w( admin final_editor ),
     :allowed_roles_for_destroy => %w( admin final_editor ),
@@ -43,7 +42,7 @@ class Section < ActiveRecord::Base
   needs_editor_approval
 
   # The node that is the frontpage of this Section. Can be blank.
-  belongs_to :frontpage_node, :class_name => "Node"
+  belongs_to :frontpage_node, :class_name => 'Node'
 
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of     :title
@@ -55,10 +54,10 @@ class Section < ActiveRecord::Base
 
   # Ensures +frontpage_node+ should be nil when the +Section+ is created.
   validate :frontpage_node_is_nil, :on => :create
-  
+
   # Ensures the +frontpage_node+ should be a descendant.
   # validate :frontpage_node_is_a_descendant, :on => :update
-    
+
   # Ensures the +frontpage_node+ is no +Section+ with a frontpage node.
   validate :frontpage_node_is_no_section_with_frontpage_node, :on => :update
 

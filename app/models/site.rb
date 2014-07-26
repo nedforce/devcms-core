@@ -15,7 +15,7 @@ class Site < Section
     :allowed_child_content_types => %w(
       AlphabeticIndex Attachment AttachmentTheme Calendar Carrousel CombinedCalendar ContactBox ContactForm Feed Forum
       HtmlPage Image LinksBox InternalLink ExternalLink NewsArchive NewsletterArchive NewsViewer
-      Page Poll SearchPage Section Site SocialMediaLinksBox TopHitsPage WeblogArchive
+      Page Poll SearchPage Section Site SocialMediaLinksBox TopHitsPage
     ),
     :allowed_roles_for_create  => %w( admin ),
     :allowed_roles_for_update  => %w( admin ),

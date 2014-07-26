@@ -111,8 +111,6 @@ class Admin::MeetingsControllerTest < ActionController::TestCase
 
     put :update, :id => @meeting, :meeting => { :title => 'updated title', :body => 'updated body' }
 
-    assert assigns(:meeting)
-    puts assigns(:meeting).errors
     assert_response :success
     assert_equal 'updated title', assigns(:meeting).title
   end
