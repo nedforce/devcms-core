@@ -11,7 +11,6 @@
 #
 # * Requires the format of +domain+ to conform to VALID_DOMAIN_REGEXP, if specified.
 class Site < Section
-  
   acts_as_content_node({
     :allowed_child_content_types => %w(
       AlphabeticIndex Attachment AttachmentTheme Calendar Carrousel CombinedCalendar ContactBox ContactForm Feed Forum
@@ -28,29 +27,29 @@ class Site < Section
     :copyable => false,
     :expiration_container=> true
   })
-  
-  VALID_DOMAIN_REGEXP = /\A((?:[A-Z0-9\-]+\.)+(?:[A-Z]{2,4}|museum|travel|local)|localhost)\Z/i
+
+  VALID_DOMAIN_REGEXP = /\A((?:[A-Z0-9\-]+\.)+(?:[A-Z]{2,4}|museum|travel|local)|localhost)\z/i
 
   validates_presence_of   :original_domain, :unless => Proc.new { |s| s.parent.blank? }
   validates_format_of     :domain, :with => VALID_DOMAIN_REGEXP, :unless => Proc.new { |s| s.original_domain.nil? }
-  validates_uniqueness_of :domain, :case_sensitive => false, :unless => Proc.new { |s| s.original_domain.nil? }
-  
-  validates_format_of     :analytics_code, :allow_nil => true, :with => /^(|UA-\d*-\d*)$/i
+  validates_uniqueness_of :domain, :case_sensitive => false,     :unless => Proc.new { |s| s.original_domain.nil? }
+
+  validates_format_of     :analytics_code, :allow_nil => true, :with => /\A(|UA-\d*-\d*)\z/i
 
   validate :ensure_parent_is_root
 
   def self.find_by_domain(domain)
-    domain ||= ""
-    parts = domain.split(".")
-    parts.shift if parts.first == "www"
-    domain = parts.join(".")
+    domain ||= ''
+    parts = domain.split('.')
+    parts.shift if parts.first == 'www'
+    domain = parts.join('.')
     Site.first(:include => :node, :conditions => [ 'lower(sections.domain) = ? OR lower(sections.domain) = ?', domain.downcase, 'www.' + domain.downcase ]) || Node.root.content
   end
-  
+
   def original_domain
     self.read_attribute(:domain)
   end
-  
+
   def domain
     self.original_domain || Settler[:host]
   end

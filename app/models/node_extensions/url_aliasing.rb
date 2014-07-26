@@ -1,52 +1,51 @@
 module NodeExtensions::UrlAliasing
-  extend ActiveSupport::Concern    
-  
+  extend ActiveSupport::Concern
+
   MAXIMUM_URL_ALIAS_LENGTH = 255
   MAXIMUM_CURSTOM_URL_SUFFIX_LENGTH = 50
 
-  VALID_URL_ALIAS_FORMAT = /\A[a-z0-9_\-]((\/)?[a-z0-9_\-])*\Z/i
-  VALID_CUSTOM_URL_SUFFIX_FORMAT = /\A\/?[a-z0-9_\-]+\Z/i
-  
+  VALID_URL_ALIAS_FORMAT = /\A[a-z0-9_\-]((\/)?[a-z0-9_\-])*\z/i
+  VALID_CUSTOM_URL_SUFFIX_FORMAT = /\A\/?[a-z0-9_\-]+\z/i
+
   included do
     # Scopes, validations & associations
     attr_protected :url_alias, :custom_url_alias
-    
+
     # Validate url_alias. Sync regexp to routes.rb!
     validates_format_of :url_alias, :with => VALID_URL_ALIAS_FORMAT, :allow_nil => true
     validates_length_of :url_alias, :in => (2..MAXIMUM_URL_ALIAS_LENGTH), :allow_nil => true
-    
+
     # Validate custom_url_alias. Sync regexp to routes.rb!
     validates_format_of :custom_url_alias, :with => VALID_URL_ALIAS_FORMAT, :allow_nil => true
     validates_length_of :custom_url_alias, :in => (2..MAXIMUM_URL_ALIAS_LENGTH), :allow_nil => true
-    
+
     # Validate custom URL suffix.
     validates_format_of :custom_url_suffix, :with => VALID_CUSTOM_URL_SUFFIX_FORMAT, :allow_nil => true
     validates_length_of :custom_url_suffix, :in => (2..MAXIMUM_CURSTOM_URL_SUFFIX_LENGTH), :allow_nil => true
-    
+
     # Do not run uniqueness validation if url_alias length exceeds MAXIMUM_URL_ALIAS_LENGTH, as this will cause
     # an ActiveRecord::StatementInvalid exception being thrown
     # validates_uniqueness_of :url_alias, :allow_nil => true, :unless => Proc.new { |node| node.url_alias.present? && node.url_alias.length > MAXIMUM_URL_ALIAS_LENGTH }
-    
+
     # Do not run uniqueness validation if url_alias length exceeds MAXIMUM_URL_ALIAS_LENGTH, as this will cause
     # an ActiveRecord::StatementInvalid exception being thrown
     # validates_uniqueness_of :custom_url_alias, :allow_nil => true, :unless => Proc.new { |node| node.custom_url_alias.present? && node.custom_url_alias.length > MAXIMUM_URL_ALIAS_LENGTH }
-    
+
     validate :should_not_have_reserved_url_alias
     validate :should_not_have_reserved_custom_url_alias
     validate :should_have_unique_url_alias_in_site
     validate :should_have_unique_custom_url_alias_in_site
-            
+
     # Set an URL alias
     before_create :set_url_alias
 
     # Set a custom URL alias
     before_update :set_custom_url_alias
-    
-    before_paranoid_delete :clear_aliases
 
+    before_paranoid_delete :clear_aliases
   end
 
-  module ClassMethods  
+  module ClassMethods
     # Class methods
     # Returns if the specified URL alias has been reserved.
     def url_alias_reserved?(alias_to_check)
@@ -63,7 +62,7 @@ module NodeExtensions::UrlAliasing
         end
       end
     end
-    
+
     # Helper method for constructing a content url path for a node, used for rewrites
     def path_for_node(node, action = '', format = '', query = '') 
       case
@@ -74,22 +73,22 @@ module NodeExtensions::UrlAliasing
       when DevcmsCore::Engine.content_type_configuration(node.content_type)[:nested_resource]
         path_builder = lambda do |node|
           if DevcmsCore::Engine.content_type_configuration(node.content_type)[:nested_resource]
-            path_builder.call(node.parent) + "/#{node.content_type.tableize}/#{node.content_id}"  
+            path_builder.call(node.parent) + "/#{node.content_type.tableize}/#{node.content_id}"
           else
-            "/#{node.content_type.tableize}/#{node.content_id}"  
+            "/#{node.content_type.tableize}/#{node.content_id}"
           end
         end
 
         "#{path_builder.call(node)}#{action}#{format}#{query}"
       else
-        "/#{node.content_type.tableize}/#{node.content_id}#{action}#{format}#{query}"      
+        "/#{node.content_type.tableize}/#{node.content_id}#{action}#{format}#{query}"
       end
     end
-    
+
     def find_node_for_url_alias!(url_alias, site)
       find_node_for_url_alias(url_alias, site) || raise(ActiveRecord::RecordNotFound)
     end
-    
+
     def find_node_for_url_alias(url_alias, site)
       slugs = []
       url_alias.split('/').each do |part|
@@ -108,7 +107,6 @@ module NodeExtensions::UrlAliasing
         site.node.subtree.where([ 'url_alias IN (:slugs) OR custom_url_alias IN (:slugs)', { :slugs => slugs }]).reorder('url_alias DESC').first
       end
     end
-
   end
 
   # Instance Methods
@@ -125,11 +123,11 @@ module NodeExtensions::UrlAliasing
       node.touch
     end
   end
-  
+
   # Generates an URL alias based on the ancestors of this node and a path
   # specified by its content node.
   def generate_url_alias
-    generated_url_alias = ""
+    generated_url_alias = ''
 
     if parent_url_alias
       generated_url_alias << "#{parent_url_alias}/"
@@ -139,25 +137,25 @@ module NodeExtensions::UrlAliasing
 
     generated_url_alias
   end
-  
+
   # Generates a custom URL alias based on the ancestors of this node and a path
   # specified by its content node.
   def generate_custom_url_alias
-    generated_custom_url_alias = ""
+    generated_custom_url_alias = ''
 
     if !self.custom_url_suffix.starts_with?('/') && parent_url_alias
       generated_custom_url_alias << "#{parent_url_alias}/"
     end
-    
+
     generated_custom_url_alias << clean_for_url(self.custom_url_suffix.starts_with?('/') ? self.custom_url_suffix[1..-1] : self.custom_url_suffix)
 
     generated_custom_url_alias
   end
-  
+
   def parent_url_alias
     parent.url_alias if self.parent && !self.parent.is_global_frontpage? && !self.parent.root? && self.parent.sub_content_type != "Site"
   end
-  
+
   def generate_unique_url_alias
     uniqify_url_alias(self.generate_url_alias[0..(MAXIMUM_URL_ALIAS_LENGTH - 6)])
   end
@@ -165,7 +163,7 @@ module NodeExtensions::UrlAliasing
   def generate_unique_custom_url_alias
     uniqify_url_alias(self.generate_custom_url_alias[0..(MAXIMUM_URL_ALIAS_LENGTH - 6)])
   end
-  
+
   # Sets an URL alias if none has been specified on create or +force+ is true.
   def set_url_alias(force = false)
     self.url_alias = generate_unique_url_alias if self.url_alias.blank? || force
@@ -213,7 +211,7 @@ module NodeExtensions::UrlAliasing
   def should_not_have_reserved_custom_url_alias
     errors.add(:url_alias, :reserved_custom_url_alias) if self.class.url_alias_reserved?(self.custom_url_alias)
   end
-  
+
   def should_have_unique_url_alias_in_site
     if url_alias.present? && url_alias.size <= MAXIMUM_URL_ALIAS_LENGTH
       errors.add(:url_alias, :taken) if containing_site.self_and_descendants.exclude_subtrees_of(nodes_to_exclude).where(["url_alias = ? AND id != ?", url_alias, (id || 0)]).any?
@@ -233,5 +231,4 @@ module NodeExtensions::UrlAliasing
   def nodes_to_exclude
     containing_site.root? ? containing_site.children.with_content_type('Site') : nil
   end
-
 end
