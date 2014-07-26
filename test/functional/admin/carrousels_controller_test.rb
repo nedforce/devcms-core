@@ -139,7 +139,7 @@ class Admin::CarrouselsControllerTest < ActionController::TestCase
     post :create, :parent_node_id => nodes(:root_section_node),
                  :carrousel => { :title => 'updated title', :display_time => [5, 'hours'] },
                  :items => [ nodes(:help_page_node).id, nodes(:devcms_news_item_node).id, nodes(:devcms_news_item_voor_vorige_maand_node).id ],
-                 :carrousel_items => {nodes(:help_page_node).id.to_s => 'Help page' }
+                 :carrousel_items => { nodes(:help_page_node).id.to_s => 'Help page' }
 
     assert_response :success
     assert_equal 3, assigns(:carrousel).items.size
