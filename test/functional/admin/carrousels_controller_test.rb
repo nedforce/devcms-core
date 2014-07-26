@@ -10,7 +10,7 @@ class Admin::CarrouselsControllerTest < ActionController::TestCase
   def test_should_create_carrousel
     login_as :sjoerd
     assert !@carrousel.new_record?
-    assert_equal [0,'seconds'], @carrousel.human_display_time
+    assert_equal [0, 'seconds'], @carrousel.human_display_time
     assert_equal 0, @carrousel.display_time
   end
 
@@ -137,13 +137,13 @@ class Admin::CarrouselsControllerTest < ActionController::TestCase
     login_as :sjoerd
 
     post :create, :parent_node_id => nodes(:root_section_node),
-                 :carrousel => { :title => 'updated title', :display_time => [5,'hours'] },
+                 :carrousel => { :title => 'updated title', :display_time => [5, 'hours'] },
                  :items => [ nodes(:help_page_node).id, nodes(:devcms_news_item_node).id, nodes(:devcms_news_item_voor_vorige_maand_node).id ],
                  :carrousel_items => {nodes(:help_page_node).id.to_s => 'Help page' }
 
     assert_response :success
     assert_equal 3, assigns(:carrousel).items.size
-    assert_equal [5,'hours'], assigns(:carrousel).human_display_time
+    assert_equal [5, 'hours'], assigns(:carrousel).human_display_time
     assert_equal 18_000, assigns(:carrousel).display_time
     assert_equal 'Help page', assigns(:carrousel).carrousel_items.first.excerpt
   end
@@ -155,20 +155,20 @@ class Admin::CarrouselsControllerTest < ActionController::TestCase
 
     assert_response :success
     assert_equal 300, assigns(:carrousel).display_time
-    assert_equal [5,'minutes'], assigns(:carrousel).human_display_time
+    assert_equal [5, 'minutes'], assigns(:carrousel).human_display_time
   end
 
   def test_should_add_items_and_display_time_to_carrousel
     login_as :sjoerd
 
     put :update, :id => @carrousel.id,
-                 :carrousel => { :title => 'updated title', :display_time => [2,'days'] },
+                 :carrousel => { :title => 'updated title', :display_time => [2, 'days'] },
                  :items => [ nodes(:help_page_node).id, nodes(:devcms_news_item_node).id, nodes(:devcms_news_item_voor_vorige_maand_node).id ]
 
     assert_response :success
     assert_equal 'updated title', assigns(:carrousel).title
     assert_equal 3, assigns(:carrousel).items.size
-    assert_equal [2,'days'], assigns(:carrousel).human_display_time
+    assert_equal [2, 'days'], assigns(:carrousel).human_display_time
     assert_equal 60*60*24*2, assigns(:carrousel).display_time
     assigns(:carrousel).carrousel_items.each { |ci| assert_nil ci.excerpt }
   end
@@ -179,10 +179,10 @@ protected
     login_as :sjoerd
 
     post :create, {
-      :parent_node_id => nodes(:root_section_node).id,
-      :commit_type => 'save',
-      :carrousel => { :title => 'new title' }.merge(attributes),
-      :items => [ nodes(:help_page_node).id ],
+      :parent_node_id  => nodes(:root_section_node).id,
+      :commit_type     => 'save',
+      :carrousel       => { :title => 'new title' }.merge(attributes),
+      :items           => [ nodes(:help_page_node).id ],
       :carrousel_items => { nodes(:help_page_node).id => 'Help page' }
     }.merge(options)
 

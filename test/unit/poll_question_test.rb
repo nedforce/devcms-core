@@ -63,7 +63,7 @@ class PollQuestionTest < ActiveSupport::TestCase
 
   def test_should_not_allow_multiple_active_questions_for_single_poll_after_create
     2.times do |i|
-      create_poll_question :question => 'Vraag '+(i+1).to_s
+      create_poll_question :question => 'Vraag ' + (i + 1).to_s
     end
     assert_equal 1, polls(:economy_poll).poll_questions.count(:conditions => { :active => true })
   end
@@ -104,7 +104,7 @@ class PollQuestionTest < ActiveSupport::TestCase
     pq = poll_questions(:hc_question_1)
 
     assert_difference('pq.poll_options.count', 2) do
-      pq.new_poll_option_attributes= [ { :text => 'Option 1' }, { :text => 'Option 2' } ]
+      pq.new_poll_option_attributes = [ { :text => 'Option 1' }, { :text => 'Option 2' } ]
       assert pq.save
     end
   end
@@ -221,7 +221,7 @@ class PollQuestionTest < ActiveSupport::TestCase
     pq = poll_questions(:hc_question_1)
     pq.poll.update_attribute :requires_login, true
 
-    poll_option = pq.poll_options.first    
+    poll_option = pq.poll_options.first
     assert_difference('poll_option.reload.number_of_votes', 1) do
       assert_difference('pq.user_votes.count', 1) do
         pq.vote(poll_option, users(:arthur))

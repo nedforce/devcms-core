@@ -1,7 +1,6 @@
 require File.expand_path('../../test_helper.rb', __FILE__)
 
 class NewsViewerTest < ActiveSupport::TestCase
-
   def setup
     @news_viewer = create_news_viewer
   end
@@ -19,7 +18,7 @@ class NewsViewerTest < ActiveSupport::TestCase
     end
 
     assert_no_difference 'NewsViewer.count' do
-      news_viewer = create_news_viewer(:title => "  ")
+      news_viewer = create_news_viewer(:title => '  ')
       assert news_viewer.errors[:title].any?
     end
   end
@@ -36,14 +35,14 @@ class NewsViewerTest < ActiveSupport::TestCase
   def test_should_destroy_news_viewer
     assert @news_viewer.valid? && !@news_viewer.new_record?
 
-    assert_difference "NewsViewer.count", -1 do
+    assert_difference 'NewsViewer.count', -1 do
       @news_viewer.destroy
     end
   end
 
   def test_should_have_linked_news_items
     assert @news_viewer.news_items.empty?
-    5.times{ @news_viewer.news_items << create_news_item }
+    5.times { @news_viewer.news_items << create_news_item }
     assert_equal 5, @news_viewer.news_items.count
   end
 
@@ -104,7 +103,7 @@ class NewsViewerTest < ActiveSupport::TestCase
   end
 
   def test_should_destroy_associated_viewer_items_on_destroy
-    5.times{ @news_viewer.news_items << create_news_item }
+    5.times { @news_viewer.news_items << create_news_item }
     @news_viewer.destroy
     assert NewsViewerItem.all.empty?
   end
@@ -115,7 +114,7 @@ class NewsViewerTest < ActiveSupport::TestCase
     @news_viewer.news_archives << news_archives(:devcms_news)
     (0..30).each { |n| @news_viewer.news_items << create_news_item(:publication_start_date => n.days.ago, :title => (n.days.ago >= 2.weeks.ago) ? 'Keep me!' : 'Remove me!') }
 
-    assert_no_difference "NewsItem.count" do
+    assert_no_difference 'NewsItem.count' do
       NewsViewer.update_news_items
     end
 

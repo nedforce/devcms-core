@@ -4,7 +4,7 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 # the exceptions middleware is not properly initialized in that case.
 class RewriteTest < ActionController::IntegrationTest
   fixtures :nodes, :pages, :news_archives, :news_items, :images
-  
+
   setup do
     @site = Site.first
     @site.update_attribute(:domain, 'www.example.com')
@@ -14,47 +14,47 @@ class RewriteTest < ActionController::IntegrationTest
     get '/'
     assert_equal @site.frontpage_node, assigns(:node)
   end
-  
+
   def test_should_rewrite_to_site_node_print_preview
     get '/?layout=print'
     assert_equal @site.frontpage_node, assigns(:node)
     assert response.body.include?('Afdrukken:')
   end
-  
+
   def test_should_not_rewrite_for_unknown_domain
-    @site.update_attribute(:domain, 'www.otherdomain.com')    
+    @site.update_attribute(:domain, 'www.otherdomain.com')
     get '/'
     assert_response :redirect
   end
-  
+
   def test_should_rewrite_finds_by_node_id
     @node = Node.root.descendants.with_content_type('Section').all.sample
     get "/content/#{@node.id}"
     assert_equal @node, assigns(:node)
     assert response.body.include?(@node.content.title)
   end
-  
+
   def test_should_rewrite_finds_by_url_alias
-    @node = Page.includes(:node).where('nodes.url_alias is not null').first!.node    
+    @node = Page.includes(:node).where('nodes.url_alias is not null').first!.node
     get @node.url_alias
-    assert_equal @node, assigns(:node)    
+    assert_equal @node, assigns(:node)
     assert response.body.include?(@node.content.title)
-  end 
-  
+  end
+
   def test_should_rewrite_finds_by_custom_url_alias
     @node = Page.all.sample.node
     assert @node.update_attributes(:custom_url_suffix => 'dobedobedo'), @node.errors.full_messages.to_sentence
     get '/' + @node.custom_url_alias
-    assert_equal @node, assigns(:node)    
+    assert_equal @node, assigns(:node)
     assert response.body.include?(@node.content.title)
-  end     
+  end
 
   def test_should_not_rewrite_with_remaining_slugs
     @node = Page.first.node
     @node.set_url_alias true
     @node.save
     get @node.url_alias + '/1/2013'
-    assert_response :not_found 
+    assert_response :not_found
   end
 
   def test_should_prefer_longest_matched_url_alias
@@ -70,18 +70,15 @@ class RewriteTest < ActionController::IntegrationTest
     @node.set_url_alias true
     @node.save
     get @node.url_alias + '/changes.atom'
-    assert_equal @node, assigns(:node)    
+    assert_equal @node, assigns(:node)
     assert response.body.include?(@node.content.title)
   end
-
 
   def test_should_not_rewrite_for_news_archive_archive_with_invalid_date
     @node = NewsArchive.first.node
     @node.set_url_alias true
     @node.save
     get @node.url_alias + '/bla/bla'
-    assert_response :not_found  
+    assert_response :not_found
   end
-
-
 end

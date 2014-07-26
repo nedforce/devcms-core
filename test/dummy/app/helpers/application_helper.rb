@@ -1,6 +1,5 @@
 module ApplicationHelper
-
-  def content_box_icon_alt_for node
+  def content_box_icon_alt_for(node)
     return if node.content_box_icon.blank?
 
     case node.content_box_icon
