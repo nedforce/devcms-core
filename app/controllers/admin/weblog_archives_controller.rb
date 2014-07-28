@@ -86,7 +86,7 @@ class Admin::WeblogArchivesController < Admin::AdminController
     @weblog_archive = WeblogArchive.new(params[:weblog_archive])
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :record => @weblog_archive }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @weblog_archive } }
     end
   end
 
@@ -95,7 +95,7 @@ class Admin::WeblogArchivesController < Admin::AdminController
     @weblog_archive.attributes = params[:weblog_archive]
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :record => @weblog_archive }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @weblog_archive } }
     end
   end
 
@@ -110,7 +110,7 @@ class Admin::WeblogArchivesController < Admin::AdminController
         format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @weblog_archive }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @weblog_archive, :status => :created, :location => @weblog_archive }
       elsif @commit_type == 'save' && @weblog_archive.save(:user => current_user)
-        format.html { render :template => 'admin/shared/create' }
+        format.html { render 'admin/shared/create' }
         format.xml  { render :xml => @weblog_archive, :status => :created, :location => @weblog_archive }
       else
         format.html { render :template => 'admin/shared/new', :locals => { :record => @weblog_archive }, :status => :unprocessable_entity }
@@ -132,7 +132,7 @@ class Admin::WeblogArchivesController < Admin::AdminController
         end
         format.xml  { render :xml => @weblog_archive, :status => :created, :location => @weblog_archive }
       elsif @commit_type == 'save' && @weblog_archive.save(:user => current_user)
-        format.html { render :template => 'admin/shared/update' }
+        format.html { render 'admin/shared/update' }
         format.xml  { head :ok }
       else
         format.html { render :template => 'admin/shared/edit', :locals => { :record => @weblog_archive }, :status => :unprocessable_entity }

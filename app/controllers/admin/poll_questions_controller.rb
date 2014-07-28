@@ -48,7 +48,7 @@ class Admin::PollQuestionsController < Admin::AdminController
   # * POST /admin/poll_questions
   # * POST /admin/poll_questions.xml
   def create
-    params[:poll_question][:active] = !params[:poll_question][:active].blank?
+    params[:poll_question][:active] = params[:poll_question][:active].present?
     @poll_question                  = @poll.poll_questions.build(params[:poll_question])
     @poll_question.parent           = @parent_node
 
@@ -57,7 +57,7 @@ class Admin::PollQuestionsController < Admin::AdminController
         format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @poll_question }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @poll_question, :status => :created, :location => @poll_question }
       elsif @commit_type == 'save' && @poll_question.save(:user => current_user)
-        format.html { render :template => 'admin/shared/create' }
+        format.html { render 'admin/shared/create' }
         format.xml  { render :xml => @poll_question, :status => :created, :location => @poll_question }
       else
         format.html { render :action => :new }
@@ -81,7 +81,7 @@ class Admin::PollQuestionsController < Admin::AdminController
       elsif @commit_type == 'save' && @poll_question.save(:user => current_user)
         format.html do
           @refresh = true
-          render :template => 'admin/shared/update'
+          render 'admin/shared/update'
         end
         format.xml  { head :ok }
       else

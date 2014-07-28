@@ -4,13 +4,13 @@ class Admin::LinksBoxesController < Admin::AdminController
 
   # The +create+ action needs the parent +Node+ object to link the new +LinksBox+ content node to.
   prepend_before_filter :find_parent_node,     :only => [ :new, :create ]
-  
+
   # The +show+, +edit+ and +update+ actions need a +LinksBox+ object to act upon.
   before_filter :find_links_box,                :only => [ :show,  :previous, :edit, :update ]
 
   # Parse the publication start date for the +create+ and +update+ actions.
   before_filter :parse_publication_start_date, :only => [ :create, :update ]
-  
+
   before_filter :find_images_and_attachments,  :only => [ :show, :previous ]
 
   before_filter :find_children,                :only => [ :show, :previous ]
@@ -29,7 +29,7 @@ class Admin::LinksBoxesController < Admin::AdminController
       format.xml  { render :xml => @links_box }
     end
   end
-  
+
   # * GET /admin/links_boxes/:id/previous
   # * GET /admin/links_boxes/:id/previous.xml
   def previous
@@ -41,7 +41,7 @@ class Admin::LinksBoxesController < Admin::AdminController
   def new
     @links_box = LinksBox.new(params[:links_box])
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :record => @links_box }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @links_box } }
     end
   end
 
@@ -49,7 +49,7 @@ class Admin::LinksBoxesController < Admin::AdminController
   def edit
     @links_box.attributes     = params[:links_box]
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :record => @links_box }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @links_box } }
     end
   end
 
@@ -64,7 +64,7 @@ class Admin::LinksBoxesController < Admin::AdminController
         format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @links_box }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @links_box, :status => :created, :location => @links_box }
       elsif @commit_type == 'save' && @links_box.save(:user => current_user)
-        format.html { render :template => 'admin/shared/create' }
+        format.html { render 'admin/shared/create' }
         format.xml  { render :xml => @links_box, :status => :created, :location => @links_box }
       else
         format.html { render :template => 'admin/shared/new', :locals => { :record => @links_box }, :status => :unprocessable_entity }
@@ -87,7 +87,7 @@ class Admin::LinksBoxesController < Admin::AdminController
         end
         format.xml  { render :xml => @links_box, :status => :created, :location => @links_box }
       elsif @commit_type == 'save' && @links_box.save(:user => current_user, :approval_required => @for_approval)
-        format.html { render :template => '/admin/shared/update' }
+        format.html { render '/admin/shared/update' }
         format.xml  { head :ok }
       else
         format.html { render :template => 'admin/shared/edit', :locals => { :record => @links_box }, :status => :unprocessable_entity }

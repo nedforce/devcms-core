@@ -4,13 +4,13 @@ class Admin::SitesController < Admin::AdminController
 
   # The +create+ action needs the parent +Node+ object to link the new +Site+ content node to.
   prepend_before_filter :find_parent_node,     :only => [ :new, :create ]
-  
+
   # The +show+, +edit+ and +update+ actions need a +Site+ object to act upon.
   before_filter :find_site,                    :only => [ :show, :edit, :update ]
 
   # Parse the publication start date for the +create+ and +update+ actions.
   before_filter :parse_publication_start_date, :only => [ :create, :update ]
-  
+
   before_filter :find_images_and_attachments,  :only => :show
 
   before_filter :find_children,                :only => :show
@@ -34,7 +34,7 @@ class Admin::SitesController < Admin::AdminController
   def new
     @site = Site.new(params[:site])
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :record => @site }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @site } }
     end
   end
 
@@ -43,7 +43,7 @@ class Admin::SitesController < Admin::AdminController
     @show_frontpage_control = can_set_frontpage?
     @site.attributes     = params[:site]
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :record => @site }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @site } }
     end
   end
 
@@ -58,7 +58,7 @@ class Admin::SitesController < Admin::AdminController
         format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @site }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @site, :status => :created, :location => @site }
       elsif @commit_type == 'save' && @site.save(:user => current_user)
-        format.html { render :template => 'admin/shared/create' }
+        format.html { render 'admin/shared/create' }
         format.xml  { render :xml => @site, :status => :created, :location => @site }
       else
         format.html { render :template => 'admin/shared/new', :locals => { :record => @site }, :status => :unprocessable_entity }
@@ -66,7 +66,7 @@ class Admin::SitesController < Admin::AdminController
       end
     end
   end
-  
+
   # * PUT /admin/sites/:id
   # * PUT /admin/sites/:id.xml
   def update
@@ -83,7 +83,7 @@ class Admin::SitesController < Admin::AdminController
         end
         format.xml  { render :xml => @site, :status => :created, :location => @site }
       elsif @commit_type == 'save' && @site.save(:user => current_user)
-        format.html { render :template => '/admin/shared/update' }
+        format.html { render '/admin/shared/update' }
         format.xml  { head :ok }
       else
         format.html { render :template => 'admin/shared/edit', :locals => { :record => @site }, :status => :unprocessable_entity }

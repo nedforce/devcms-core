@@ -55,7 +55,7 @@ class Admin::PollsController < Admin::AdminController
         format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @poll }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @poll, :status => :created, :location => @poll }
       elsif @commit_type == 'save' && @poll.save(:user => current_user)
-        format.html { render :template => 'admin/shared/create' }
+        format.html { render 'admin/shared/create' }
         format.xml  { render :xml => @poll, :status => :created, :location => @poll }
       else
         format.html { render :template => 'admin/shared/new', :locals => { :record => @poll }, :status => :unprocessable_entity }
@@ -77,7 +77,7 @@ class Admin::PollsController < Admin::AdminController
         end
         format.xml  { render :xml => @poll, :status => :created, :location => @poll }
       elsif @commit_type == 'save' && @poll.save(:user => current_user)
-        format.html { render :template => 'admin/shared/update' }
+        format.html { render 'admin/shared/update' }
         format.xml  { head :ok }
       else
         format.html { render :template => 'admin/shared/edit', :locals => { :record => @poll }, :status => :unprocessable_entity }

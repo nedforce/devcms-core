@@ -1,15 +1,15 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +NewsViewer+ objects.
-class NewsViewersController < ApplicationController
 
-  # The +show+ action needs a +NewsArchive+ object to work with.  
+class NewsViewersController < ApplicationController
+  # The +show+ action needs a +NewsArchive+ object to work with.
   before_filter :find_news_viewer, :only => [:show, :archive]
 
   # See application controller
   before_filter :set_max_news_items, :only => [:show, :archive]
 
   # The +show+ action needs a list of recent news items to work with.
-  before_filter :find_recent_news_items, :only => :show  
+  before_filter :find_recent_news_items, :only => :show
 
   # * GET /news_viewers/:id
   # * GET /news_viewers/:id.atom
@@ -18,7 +18,7 @@ class NewsViewersController < ApplicationController
     respond_to do |format|
       format.html # show.html.erb
       format.any(:rss, :atom) { render :layout => false }
-      format.xml  { render :xml => @news_viewer }
+      format.xml { render :xml => @news_viewer }
     end
   end
 

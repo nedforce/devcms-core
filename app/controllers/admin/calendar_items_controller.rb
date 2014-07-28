@@ -44,7 +44,7 @@ class Admin::CalendarItemsController < Admin::AdminController
     @calendar_item = CalendarItem.new(params[:calendar_item] || {})
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :record => @calendar_item }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @calendar_item } }
     end
   end
 
@@ -53,7 +53,7 @@ class Admin::CalendarItemsController < Admin::AdminController
     @calendar_item.attributes = params[:calendar_item]
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :record => @calendar_item }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @calendar_item } }
     end
   end
 
@@ -73,7 +73,7 @@ class Admin::CalendarItemsController < Admin::AdminController
             @calendar_item = CalendarItem.new
             render :template => 'admin/shared/new', :locals => { :record => @calendar_item }, :status => :success
           else
-            render :template => 'admin/shared/create'
+            render 'admin/shared/create'
           end
         end
         format.xml  { render :xml => @calendar_item, :status => :created, :location => @calendar_item }
@@ -99,7 +99,7 @@ class Admin::CalendarItemsController < Admin::AdminController
       elsif @commit_type == 'save' && @calendar_item.save(:user => current_user, :approval_required => @for_approval)
         format.html do
           @refresh = true
-          render :template => 'admin/shared/update'
+          render 'admin/shared/update'
         end
         format.xml  { head :ok }
       else
@@ -116,7 +116,7 @@ class Admin::CalendarItemsController < Admin::AdminController
     respond_to do |format|
       format.xml  { head :ok }
       format.json { render :json => { :notice => I18n.t('calendars.succesfully_destroyed') }.to_json, :status => :ok }
-    end  
+    end
   end
 
 protected

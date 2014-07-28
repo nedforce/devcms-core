@@ -1,7 +1,7 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +TopHitsPage+ objects.
-class Admin::TopHitsPagesController < Admin::AdminController
 
+class Admin::TopHitsPagesController < Admin::AdminController
   # The +create+ action needs the parent +Node+ object to link the new +TopHitsPage+ content node to.
   prepend_before_filter :find_parent_node, :only => [ :new, :create ]
 
@@ -30,7 +30,7 @@ class Admin::TopHitsPagesController < Admin::AdminController
     @top_hits_page = TopHitsPage.new(params[:top_hits_page])
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :record => @top_hits_page }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @top_hits_page } }
     end
   end
 
@@ -39,7 +39,7 @@ class Admin::TopHitsPagesController < Admin::AdminController
     @top_hits_page.attributes = params[:top_hits_page]
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :record => @top_hits_page }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @top_hits_page } }
     end
   end
 
@@ -56,7 +56,7 @@ class Admin::TopHitsPagesController < Admin::AdminController
         format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @top_hits_page }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @top_hits_page, :status => :created, :location => @top_hits_page }
       elsif @commit_type == 'save' && @top_hits_page.save(:user => current_user)
-        format.html { render :template => 'admin/shared/create' }
+        format.html { render 'admin/shared/create' }
         format.xml  { head :ok }
       else
         format.html { render :template => 'admin/shared/new', :locals => { :record => @top_hits_page }, :status => :unprocessable_entity }
@@ -77,7 +77,7 @@ class Admin::TopHitsPagesController < Admin::AdminController
         format.html { render :template => 'admin/shared/update_preview', :locals => { :record => @top_hits_page }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @top_hits_page, :status => :created, :location => @top_hits_page }
       elsif @commit_type == 'save' && @top_hits_page.save(:user => current_user)
-        format.html { render :template => 'admin/shared/update' }
+        format.html { render 'admin/shared/update' }
         format.xml  { head :ok }
       else
         format.html { render :template => 'admin/shared/edit', :locals => { :record => @top_hits_page }, :status => :unprocessable_entity }

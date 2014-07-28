@@ -78,7 +78,7 @@ class Admin::NewsletterEditionsController < Admin::AdminController
       elsif @commit_type == 'save' && @newsletter_edition.save(:user => current_user)
         # Add the items to the edition (if any)
         @newsletter_edition.associate_items(@item_ids)
-        format.html { render :template => 'admin/shared/create' }
+        format.html { render 'admin/shared/create' }
         format.xml  { render :xml => @newsletter_edition, :status => :created, :location => @newsletter_edition }
       else
         @item_sortlets = item_sortlet_hash_for_ids(@item_ids)
@@ -106,7 +106,7 @@ class Admin::NewsletterEditionsController < Admin::AdminController
         @newsletter_edition.associate_items(@item_ids)
         format.html do
           @refresh = true
-          render :template => 'admin/shared/update'
+          render 'admin/shared/update'
         end
         format.xml  { head :ok }
       else

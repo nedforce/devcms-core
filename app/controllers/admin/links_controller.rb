@@ -59,7 +59,7 @@ class Admin::LinksController < Admin::AdminController
         format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @link }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @link, :status => :created, :location => @link }
       elsif @commit_type == 'save' && @link.save(:user => current_user)
-        format.html { render :template => 'admin/shared/create' }
+        format.html { render 'admin/shared/create' }
         format.xml  { render :xml => @link, :status => :created, :location => @link }
       else
         format.html { render :template => 'admin/shared/new', :locals => { :record => @link }, :status => :unprocessable_entity }
@@ -78,7 +78,7 @@ class Admin::LinksController < Admin::AdminController
         format.html { render :template => 'admin/shared/update_preview', :locals => { :record => @link }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @link, :status => :created, :location => @link }
       elsif @commit_type == 'save' && @link.save(:user => current_user)
-        format.html { render :template => 'admin/shared/update' }
+        format.html { render 'admin/shared/update' }
         format.xml  { head :ok }
       else
         format.html { render :template => 'admin/shared/edit', :locals => { :record => @link }, :status => :unprocessable_entity }

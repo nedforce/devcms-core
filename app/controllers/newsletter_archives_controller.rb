@@ -1,8 +1,8 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +NewsletterArchive+ objects.
-class NewsletterArchivesController < ApplicationController
 
-  # All actions needs a +NewsletterArchive+ object to work with.  
+class NewsletterArchivesController < ApplicationController
+  # All actions needs a +NewsletterArchive+ object to work with.
   before_filter :find_newsletter_archive, :only => [ :show, :subscribe, :unsubscribe ]
 
   # Require user to be logged in for the +subscribe+ and +unsubscribe+ actions.
@@ -10,19 +10,19 @@ class NewsletterArchivesController < ApplicationController
 
   # Enable unsubscrubing using regular hyperlinks and <tt>:method => :delete</tt>.
   # See ApplicationController for more details.
-  before_filter :confirm_destroy, :only => :unsubscribe, :unless => lambda{ request.delete? } 
+  before_filter :confirm_destroy, :only => :unsubscribe, :unless => lambda{ request.delete? }
 
   # * GET /newsletter_archives/:id
   # * GET /newsletter_archives/:id.xml
   def show
     @newsletter_editions = @newsletter_archive.newsletter_editions.accessible.where([ 'published <> ?', 'unpublished' ]).page(params[:page]).per(25)
 
-    first_page = !params[:page] || params[:page]==1
+    first_page = !params[:page] || params[:page] == 1
     @latest_newsletter_editions    = []
-    @newsletter_editions_for_table = @newsletter_editions.to_a 
+    @newsletter_editions_for_table = @newsletter_editions.to_a
     if first_page
       @latest_newsletter_editions     = @newsletter_editions_for_table[0..5]
-      @newsletter_editions_for_table -= @latest_newsletter_editions 
+      @newsletter_editions_for_table -= @latest_newsletter_editions
     end
 
     respond_to do |format|
@@ -37,7 +37,7 @@ class NewsletterArchivesController < ApplicationController
     respond_to do |format|
       unless @newsletter_archive.has_subscription_for?(current_user)
         @newsletter_archive.users << current_user
-        format.html do 
+        format.html do
           if request.xhr?
             render :partial => '/newsletter_archives/content_box_content', :locals => { :node => @node }
           else
@@ -48,7 +48,7 @@ class NewsletterArchivesController < ApplicationController
         format.xml { head :ok }
       else
         format.html do
-          if request.xhr?          
+          if request.xhr?
             render :partial => '/newsletter_archives/content_box_content', :locals => { :node => @node }
           else
             flash[:warning] = I18n.t('newsletters.subscribe_unsuccessfull')
@@ -66,7 +66,7 @@ class NewsletterArchivesController < ApplicationController
     respond_to do |format|
       if @newsletter_archive.has_subscription_for?(current_user)
         @newsletter_archive.users.delete(current_user)
-        format.html do 
+        format.html do
           if request.xhr?
             render :partial => '/newsletter_archives/content_box_content', :locals => { :node => @node }
           else
@@ -76,7 +76,7 @@ class NewsletterArchivesController < ApplicationController
         end
         format.xml { head :ok }
       else
-        format.html do 
+        format.html do
           if request.xhr?
             render :partial => '/newsletter_archives/content_box_content', :locals => { :node => @node }
           else
@@ -95,5 +95,4 @@ protected
   def find_newsletter_archive
     @newsletter_archive = @node.content
   end
-
 end

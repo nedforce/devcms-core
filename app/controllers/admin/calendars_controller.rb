@@ -94,7 +94,7 @@ class Admin::CalendarsController < Admin::AdminController
     @calendar = Calendar.new(params[:calendar])
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :record => @calendar }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @calendar } }
     end
   end
 
@@ -103,7 +103,7 @@ class Admin::CalendarsController < Admin::AdminController
     @calendar.attributes = params[:calendar]
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :record => @calendar }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @calendar } }
     end
   end
 
@@ -118,7 +118,7 @@ class Admin::CalendarsController < Admin::AdminController
         format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @calendar }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @calendar, :status => :created, :location => @calendar }
       elsif @commit_type == 'save' && @calendar.save(:user => current_user)
-        format.html { render :template => 'admin/shared/create' }
+        format.html { render 'admin/shared/create' }
         format.xml  { render :xml => @calendar, :status => :created, :location => @calendar }
       else
         format.html { render :template => 'admin/shared/new', :locals => { :record => @calendar }, :status => :unprocessable_entity }
@@ -140,7 +140,7 @@ class Admin::CalendarsController < Admin::AdminController
         end
         format.xml  { render :xml => @calendar, :status => :created, :location => @calendar }
       elsif @commit_type == 'save' && @calendar.save(:user => current_user)
-        format.html { render :template => 'admin/shared/update' }
+        format.html { render 'admin/shared/update' }
         format.xml  { head :ok }
       else
         format.html { render :template => 'admin/shared/edit', :locals => { :record => @calendar }, :status => :unprocessable_entity }

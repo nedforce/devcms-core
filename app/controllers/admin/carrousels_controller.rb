@@ -66,7 +66,7 @@ class Admin::CarrouselsController < Admin::AdminController
         format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @carrousel }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @carrousel, :status => :created, :location => @carrousel }
       elsif @commit_type == 'save' && @carrousel.save(:user => current_user)
-        format.html { render :template => 'admin/shared/create' }
+        format.html { render 'admin/shared/create' }
         format.xml  { render :xml => @carrousel, :status => :created, :location => @carrousel }
       else
         @item_sortlets = item_sortlet_hash_for_ids(@item_ids, @carrousel_items)

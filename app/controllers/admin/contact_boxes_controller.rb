@@ -6,7 +6,7 @@ class Admin::ContactBoxesController < Admin::AdminController
   prepend_before_filter :find_parent_node, :only => [ :new, :create ]
 
   # The +show+, +edit+ and +update+ actions need a +ContactBox+ object to act upon.
-  before_filter         :find_contact_box, :only => [ :show, :edit, :update ]
+  before_filter :find_contact_box, :only => [ :show, :edit, :update ]
 
   layout false
 
@@ -26,14 +26,14 @@ class Admin::ContactBoxesController < Admin::AdminController
     @contact_box = ContactBox.new(params[:contact_box])
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :record => @contact_box }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @contact_box } }
     end
   end
 
   # * GET /admin/contact_boxes/:id/edit
   def edit
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :record => @contact_box }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @contact_box } }
     end
   end
 
@@ -45,7 +45,7 @@ class Admin::ContactBoxesController < Admin::AdminController
 
     respond_to do |format|
       if @contact_box.save(:user => current_user)
-        format.html { render :template => 'admin/shared/create' }
+        format.html { render 'admin/shared/create' }
         format.xml  { head :ok }
       else
         format.html { render :template => 'admin/shared/new', :locals => { :record => @contact_box }, :status => :unprocessable_entity }
@@ -61,7 +61,7 @@ class Admin::ContactBoxesController < Admin::AdminController
     
     respond_to do |format|
       if @contact_box.save(:user => current_user)
-        format.html { render :template => 'admin/shared/update' }
+        format.html { render 'admin/shared/update' }
         format.xml  { head :ok }
       else
         format.html { render :template => 'admin/shared/edit', :locals => { :record => @contact_box }, :status => :unprocessable_entity }

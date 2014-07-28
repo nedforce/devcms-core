@@ -1,7 +1,7 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +WeblogPost+ objects.
-class Admin::WeblogPostsController < Admin::AdminController
 
+class Admin::WeblogPostsController < Admin::AdminController
   # The +show+, +edit+ and +update+ actions need a +WeblogPost+ object to act upon.
   before_filter :find_weblog_post,             :only => [ :show, :edit, :update ]
 
@@ -25,14 +25,14 @@ class Admin::WeblogPostsController < Admin::AdminController
       format.html { render :partial => 'show', :layout => 'admin/admin_show' }
       format.xml  { render :xml => @weblog_post }
     end
-  end 
+  end
 
   # * GET /admin/weblog_posts/:id/edit
   def edit
     @weblog_post.attributes = params[:weblog_post]
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :record => @weblog_post }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @weblog_post } }
     end
   end
 
@@ -52,7 +52,7 @@ class Admin::WeblogPostsController < Admin::AdminController
       elsif @commit_type == 'save' && @weblog_post.save(:user => current_user)
         format.html do
           @refresh = true
-          render :template => 'admin/shared/update'
+          render 'admin/shared/update'
         end
         format.xml  { head :ok }
       else

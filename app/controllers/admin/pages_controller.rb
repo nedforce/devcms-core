@@ -86,7 +86,7 @@ class Admin::PagesController < Admin::AdminController
         end
         format.xml  { render :xml => @page, :status => :created, :location => @page }
       elsif @commit_type == 'save' && @page.save(:user => current_user, :approval_required => @for_approval)
-        format.html { render :template => 'admin/shared/update' }
+        format.html { render 'admin/shared/update' }
         format.xml  { head :ok }
       else
         format.html { render :template => 'admin/shared/edit', :locals => { :record => @page }, :status => :unprocessable_entity }

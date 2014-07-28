@@ -31,7 +31,7 @@ class Admin::HtmlPagesController < Admin::AdminController
     @html_page = HtmlPage.new(params[:html_page])
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :record => @html_page }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @html_page } }
     end
   end
 
@@ -40,7 +40,7 @@ class Admin::HtmlPagesController < Admin::AdminController
     @html_page.attributes = params[:html_page]
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :record => @html_page }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @html_page } }
     end
   end
 
@@ -77,7 +77,7 @@ class Admin::HtmlPagesController < Admin::AdminController
         end
         format.xml  { render :xml => @html_page, :status => :created, :location => @html_page }
       elsif @commit_type == 'save' && @html_page.save(:user => current_user)
-        format.html { render :template => 'admin/shared/update' }
+        format.html { render 'admin/shared/update' }
         format.xml  { head :ok }
       else
         format.html { render :template => 'admin/shared/edit', :locals => { :record => @html_page }, :status => :unprocessable_entity }

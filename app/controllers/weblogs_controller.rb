@@ -1,18 +1,18 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +Weblog+ objects. It offers special actions
 # to allow registered users to create, update and delete their own weblogs.
-class WeblogsController < ApplicationController
 
+class WeblogsController < ApplicationController
   # Require the user to be logged in for the +new+, +create+, +edit+, +update+ and +destroy+ actions.
   before_filter :login_required,          :only => [ :new, :create, :edit, :update, :destroy ]
 
-  # The +new+, +create+, +edit+, +update+ and +destroy+ actions need a parent +WeblogArchive+ object to work with.  
+  # The +new+, +create+, +edit+, +update+ and +destroy+ actions need a parent +WeblogArchive+ object to work with.
   before_filter :find_weblog_archive,     :only => [ :new, :create, :edit, :update, :destroy ]
 
   # Check whether the user hasn't yet got a weblog for the current weblog archive, for the +new+ and +create+ actions.
   before_filter :check_absence_of_weblog, :only => [ :new, :create ]
 
-  # The +show+, +edit+, +update+ and +destroy+ actions need a +Weblog+ object to work with.  
+  # The +show+, +edit+, +update+ and +destroy+ actions need a +Weblog+ object to work with.
   before_filter :find_weblog,             :only => [ :show, :edit, :update, :destroy ]
 
   before_filter :find_weblog_posts,       :only => :show
@@ -62,8 +62,8 @@ class WeblogsController < ApplicationController
   # * PUT /weblog_archives/:weblog_archive_id/weblogs/:id.xml
   def update
     @weblog.attributes = params[:weblog]
-    
-    respond_to do |format|      
+
+    respond_to do |format|
       if @weblog.save(:user => current_user)
         format.html { redirect_to aliased_or_delegated_path(@weblog.node) }
         format.xml  { head :ok }

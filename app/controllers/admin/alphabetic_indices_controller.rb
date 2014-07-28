@@ -26,7 +26,7 @@ class Admin::AlphabeticIndicesController < Admin::AdminController
     @alphabetic_index = AlphabeticIndex.new(params[:alphabetic_index])
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :record => @alphabetic_index }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @alphabetic_index } }
     end
   end
 
@@ -35,7 +35,7 @@ class Admin::AlphabeticIndicesController < Admin::AdminController
     @alphabetic_index.attributes = params[:alphabetic_index]
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :record => @alphabetic_index }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @alphabetic_index } }
     end
   end
 
@@ -47,7 +47,7 @@ class Admin::AlphabeticIndicesController < Admin::AdminController
 
     respond_to do |format|
       if @alphabetic_index.save
-        format.html { render :template => 'admin/shared/create' }
+        format.html { render 'admin/shared/create' }
         format.xml  { head :ok }
       else
         format.html { render :template => 'admin/shared/new', :locals => { :record => @alphabetic_index }, :status => :unprocessable_entity }
@@ -63,7 +63,7 @@ class Admin::AlphabeticIndicesController < Admin::AdminController
 
     respond_to do |format|
       if @alphabetic_index.save
-        format.html { render :template => 'admin/shared/update' }
+        format.html { render 'admin/shared/update' }
         format.xml  { head :ok }
       else
         format.html { render :template => 'admin/shared/edit', :locals => { :record => @alphabetic_index }, :status => :unprocessable_entity }

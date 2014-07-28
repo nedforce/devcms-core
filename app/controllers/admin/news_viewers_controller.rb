@@ -1,6 +1,5 @@
 class Admin::NewsViewersController < Admin::AdminController
-
-   # The +create+ action needs the parent +Node+ object to link the new +NewsViewer+ content node to.
+  # The +create+ action needs the parent +Node+ object to link the new +NewsViewer+ content node to.
   prepend_before_filter :find_parent_node, :only => [ :new, :create ]
 
   # The +show+, +edit+ and +update+ actions need a +NewsViewer+ object to act upon.
@@ -29,7 +28,7 @@ class Admin::NewsViewersController < Admin::AdminController
     @news_viewer = NewsViewer.new(params[:news_viewer])
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :record => @news_viewer }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @news_viewer } }
     end
   end
 
@@ -38,10 +37,10 @@ class Admin::NewsViewersController < Admin::AdminController
     @news_viewer.attributes = params[:news_viewer]
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :record => @news_viewer }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @news_viewer } }
     end
   end
-  
+
   def edit_items
     @news_archives = NewsArchive.all(:include => :node, :conditions => @news_viewer.node.containing_site.descendant_conditions)
   end
@@ -57,7 +56,7 @@ class Admin::NewsViewersController < Admin::AdminController
         format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @news_viewer }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @news_viewer, :status => :created, :location => @news_viewer }
       elsif @commit_type == 'save' && @news_viewer.save(:user => current_user)
-        format.html { render :template => 'admin/shared/create' }
+        format.html { render 'admin/shared/create' }
         format.xml  { render :xml => @news_viewer, :status => :created, :location => @news_viewer }
       else
         format.html { render :template => 'admin/shared/new', :locals => { :record => @news_viewer }, :status => :unprocessable_entity }
@@ -76,7 +75,7 @@ class Admin::NewsViewersController < Admin::AdminController
         format.html { render :template => 'admin/shared/update_preview', :locals => { :record => @news_viewer }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @news_viewer, :status => :created, :location => @news_viewer }
       elsif @commit_type == 'save' && @news_viewer.save(:user => current_user)
-        format.html { render :template => 'admin/shared/update' }
+        format.html { render 'admin/shared/update' }
         format.xml  { head :ok }
       else
         format.html { render :template => 'admin/shared/edit', :locals => { :record => @news_viewer }, :status => :unprocessable_entity }
@@ -97,5 +96,5 @@ protected
     @news_items_for_table  = @news_items.to_a
     @latest_news_items     = @news_items_for_table[0..7]
     @news_items_for_table -= @latest_news_items
-  end  
+  end
 end

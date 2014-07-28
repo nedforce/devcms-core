@@ -1,8 +1,8 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +CombinedCalendar+ objects.
-class CombinedCalendarsController < ApplicationController
 
-  # The +show+ action needs a +CombinedCalendar+ object to work with.  
+class CombinedCalendarsController < ApplicationController
+  # The +show+ action needs a +CombinedCalendar+ object to work with.
   before_filter :find_combined_calendar, :only => [ :show, :tomorrow ]
 
   # * GET /combined_calendars/:id
@@ -17,7 +17,7 @@ class CombinedCalendarsController < ApplicationController
         raise ActiveRecord::RecordNotFound if params[:date].present? && !@calendar.calendar_items.date_in_range?(@date)
 
         @calendar_items = @calendar.calendar_items.find_all_for_month_of(@date).group_by { |ci| ci.start_time.mday }
-        render :template => 'calendars/show'
+        render 'calendars/show'
       end
       format.any(:atom, :rss) do
         @calendar_items = @calendar.calendar_items.accessible.all(:include => :node, :order => 'events.start_time DESC', :limit => 25)
@@ -47,5 +47,4 @@ protected
   def find_combined_calendar
     @calendar = @node.content
   end
-
 end

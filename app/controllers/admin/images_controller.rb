@@ -142,10 +142,10 @@ class Admin::ImagesController < Admin::AdminController
 
     respond_to do |format|
       if @image.save(:user => current_user, :approval_required => @for_approval)
-        format.html { render :template => 'admin/shared/update' }
+        format.html { render 'admin/shared/update' }
         format.js do
           responds_to_parent do |page|
-            page.replace_html("right_panel_content", :template => 'admin/shared/update')
+            page.replace_html('right_panel_content', :template => 'admin/shared/update')
           end
         end
         format.xml  { head :ok }
@@ -153,7 +153,7 @@ class Admin::ImagesController < Admin::AdminController
         format.html { render :edit, :status => :unprocessable_entity }
         format.js do
           responds_to_parent do |page|
-            page.replace_html("right_panel_content", :partial => 'form')
+            page.replace_html('right_panel_content', :partial => 'form')
           end
         end
         format.xml  { render :xml => @image.errors, :status => :unprocessable_entity }

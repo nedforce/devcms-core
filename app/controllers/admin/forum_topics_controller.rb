@@ -33,7 +33,7 @@ class Admin::ForumTopicsController < Admin::AdminController
     @forum_topic = @forum.forum_topics.build(params[:forum_topic])
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :record => @forum_topic }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @forum_topic } }
     end
   end
 
@@ -42,7 +42,7 @@ class Admin::ForumTopicsController < Admin::AdminController
     @forum_topic.attributes = params[:forum_topic]
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :record => @forum_topic }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @forum_topic } }
     end
   end
 
@@ -57,7 +57,7 @@ class Admin::ForumTopicsController < Admin::AdminController
         format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @forum_topic }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @forum_topic, :status => :created, :location => @forum_topic }
       elsif @commit_type == 'save' && @forum_topic.save(:user => current_user)
-        format.html { render :template => 'admin/shared/create' }
+        format.html { render 'admin/shared/create' }
         format.xml  { render :xml => @forum_topic, :status => :created, :location => @forum_topic }
       else
         format.html { render :template => 'admin/shared/new', :locals => { :record => @forum_topic }, :status => :unprocessable_entity }
@@ -79,7 +79,7 @@ class Admin::ForumTopicsController < Admin::AdminController
         end
         format.xml  { render :xml => @forum_topic, :status => :created, :location => @forum_topic }
       elsif @commit_type == 'save' && @forum_topic.save(:user => current_user)
-        format.html { render :template => 'admin/shared/update' }
+        format.html { render 'admin/shared/update' }
         format.xml  { head :ok }
       else
         format.html { render :template => 'admin/shared/edit', :locals => { :record => @forum_topic }, :status => :unprocessable_entity }

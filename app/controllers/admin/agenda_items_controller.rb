@@ -43,7 +43,7 @@ class Admin::AgendaItemsController < Admin::AdminController
     @agenda_item = @meeting.agenda_items.build(params[:agenda_item])
     
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :record => @agenda_item }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @agenda_item } }
     end
   end
 
@@ -54,7 +54,7 @@ class Admin::AgendaItemsController < Admin::AdminController
     @agenda_item.attributes = params[:agenda_item]
     
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :record => @agenda_item }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @agenda_item } }
     end
   end
 
@@ -76,7 +76,7 @@ class Admin::AgendaItemsController < Admin::AdminController
             @agenda_item = @meeting.agenda_items.build
             render :template => 'admin/shared/new', :locals => { :record => @agenda_item }, :status => :success
           else
-            render :template => 'admin/shared/create'
+            render 'admin/shared/create'
           end
         end
         format.xml  { render :xml => @agenda_item, :status => :created, :location => @agenda_item }
@@ -86,7 +86,7 @@ class Admin::AgendaItemsController < Admin::AdminController
           build_speaking_right_options
           render :template => 'admin/shared/new', :locals => { :record => @agenda_item }, :status => :unprocessable_entity
         end
-        format.xml  { render :xml => @agenda_item.errors, :status => :unprocessable_entity }
+        format.xml { render :xml => @agenda_item.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -104,15 +104,15 @@ class Admin::AgendaItemsController < Admin::AdminController
         end
         format.xml  { render :xml => @agenda_item, :status => :created, :location => @agenda_item }
       elsif @commit_type == 'save' && @agenda_item.save(:user => current_user, :approval_required => @for_approval)
-        format.html { render :template => 'admin/shared/update' }
+        format.html { render 'admin/shared/update' }
         format.xml  { head :ok }
       else
-        format.html do 
+        format.html do
           find_agenda_item_categories
           build_speaking_right_options
           render :template => 'admin/shared/edit', :locals => { :record => @agenda_item }, :status => :unprocessable_entity
         end
-        format.xml  { render :xml => @agenda_item.errors, :status => :unprocessable_entity }
+        format.xml { render :xml => @agenda_item.errors, :status => :unprocessable_entity }
       end
     end
   end

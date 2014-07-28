@@ -46,7 +46,7 @@ class Admin::NewsItemsController < Admin::AdminController
     @news_item = @news_archive.news_items.build(params[:news_item])
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :record => @news_item }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @news_item } }
     end
   end
 
@@ -55,7 +55,7 @@ class Admin::NewsItemsController < Admin::AdminController
     @news_item.attributes = params[:news_item]
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :record => @news_item }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @news_item } }
     end
   end
 
@@ -94,7 +94,7 @@ class Admin::NewsItemsController < Admin::AdminController
       elsif @commit_type == 'save' && @news_item.save(:user => current_user, :approval_required => @for_approval)
         format.html do
           @refresh = true
-          render :template => 'admin/shared/update'
+          render 'admin/shared/update'
         end
         format.xml  { head :ok }
       else

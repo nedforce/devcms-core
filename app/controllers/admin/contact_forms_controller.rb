@@ -28,7 +28,7 @@ class Admin::ContactFormsController < Admin::AdminController
     @contact_form = ContactForm.new(params[:contact_form])
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :record => @contact_form }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @contact_form } }
     end
   end
 
@@ -37,7 +37,7 @@ class Admin::ContactFormsController < Admin::AdminController
     @contact_form.attributes = params[:contact_form]
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :record => @contact_form }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @contact_form } }
     end
   end
 
@@ -52,7 +52,7 @@ class Admin::ContactFormsController < Admin::AdminController
         format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @contact_form }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @contact_form, :status => :created, :location => @contact_form }
       elsif @commit_type == 'save' && @contact_form.save(:user => current_user)
-        format.html { render :template => 'admin/shared/create' }
+        format.html { render 'admin/shared/create' }
         format.xml  { render :xml => @contact_form, :status => :created, :location => @contact_form }
       else
         format.html { render :template => 'admin/shared/new', :locals => { :record => @contact_form }, :status => :unprocessable_entity }
@@ -71,7 +71,7 @@ class Admin::ContactFormsController < Admin::AdminController
         format.html { render :template => 'admin/shared/update_preview', :locals => { :record => @contact_form }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @contact_form, :status => :created, :location => @contact_form }
       elsif @commit_type == 'save' && @contact_form.save(:user => current_user)
-        format.html { render :template => 'admin/shared/update' }
+        format.html { render 'admin/shared/update' }
         format.xml  { head :ok }
       else
         format.html { render :template => 'admin/shared/edit', :locals => { :record => @contact_form }, :status => :unprocessable_entity }
@@ -85,7 +85,7 @@ class Admin::ContactFormsController < Admin::AdminController
   def get_used_fields_only(contact_fields)
     used_fields = []
     @contact_form_fields.each do |field|
-      if !contact_fields[field.id].blank?
+      if contact_fields[field.id].present?
         used_fields << [ field.id, field.label, contact_fields[field.id] ]
       end
     end

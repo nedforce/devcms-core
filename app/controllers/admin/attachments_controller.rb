@@ -12,11 +12,11 @@ class Admin::AttachmentsController < Admin::AdminController
 
   # * GET /admin/attachments/:id
   # * GET /admin/attachments/:id.xml
-  def show    
+  def show
     respond_to do |format|
       format.html { render :partial => 'show', :locals => { :record =>  @attachment }, :layout => 'admin/admin_show' }
       format.xml  { render :xml => @attachment }
-    end   
+    end
   end
 
   # * GET /admin/attachments/:id/previous
@@ -39,12 +39,12 @@ class Admin::AttachmentsController < Admin::AdminController
       end
     end
   end
-  
+
   # * GET /admin/attachments/new
   def new
     @attachment = Attachment.new
   end
-  
+
   # * GET /admin/attachments/:id/edit
   def edit
   end
@@ -58,7 +58,7 @@ class Admin::AttachmentsController < Admin::AdminController
     @attachment.parent = @parent_node
 
     respond_to do |format|
-      if @attachment.save(:user => current_user)  
+      if @attachment.save(:user => current_user)
 
         format.html # create.html.erb
         format.xml  { render :xml => @attachment, :status => :created, :location => @attachment }
@@ -68,7 +68,7 @@ class Admin::AttachmentsController < Admin::AdminController
             page.insert_html(:bottom, "uploaded_attachments", "<tr id=\"uploaded_attachment_#{@attachment.id}\"><td>#{h(@attachment.title)}</td><td>#{h(@attachment.filename)}</td><td>#{(@attachment.size||0)/1024} KB</td></tr>")
             page.call("treePanel.refreshNodesOf", @parent_node.id)
             @attachment = Attachment.new # To reset fields
-            page.replace_html("right_panel_form", :partial => 'form')
+            page.replace_html('right_panel_form', :partial => 'form')
           end
         end
       else
@@ -83,15 +83,15 @@ class Admin::AttachmentsController < Admin::AdminController
       end
     end
   end
-  
+
   # * PUT /admin/attachments/:id
   # * PUT /admin/attachments/:id.xml
   def update
     @attachment.attributes = params[:attachment]
-    
-    respond_to do |format|      
+
+    respond_to do |format|
       if @attachment.save(:user => current_user, :approval_required => @for_approval)
-        format.html { render :template => 'admin/shared/update' }
+        format.html { render 'admin/shared/update' }
         format.xml  { head :ok }
       else
         format.html { render :action => :edit, :status => :unprocessable_entity }
@@ -108,10 +108,10 @@ class Admin::AttachmentsController < Admin::AdminController
 
     def upload_file
       if @attachment.filename == "#{params[:basename]}.#{params[:baseformat]}" || @attachment.filename == params[:basename]
-        send_file(@attachment.file.path, 
-                  :type        => @attachment.content_type, 
-                  :filename    => @attachment.filename, 
-                  :length      => @attachment.size, 
+        send_file(@attachment.file.path,
+                  :type        => @attachment.content_type,
+                  :filename    => @attachment.filename,
+                  :length      => @attachment.size,
                   :disposition => 'attachment',
                   :stream      => true )
       else

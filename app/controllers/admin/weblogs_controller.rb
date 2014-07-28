@@ -15,9 +15,9 @@ class Admin::WeblogsController < Admin::AdminController
   require_role [ 'admin', 'final_editor' ], :except => [ :index, :show ]
 
   # * GET /admin/weblogs.json?node=1&active_node_id=2
-  # 
+  #
   # *parameters*
-  # 
+  #
   # +node+           - Id of the node of which the children are requested
   # +super_node+     - Id of the node of which the children are requested, when also a year and/or month is specified.
   # +active_node_id+ - (Optional) Id of the active node. If the active node is contained by this weblog, the containing year and month will auto-expand.
@@ -43,7 +43,7 @@ class Admin::WeblogsController < Admin::AdminController
             @months = @weblog_node.content.find_months_with_items_for_year(@year).map do |m|
               active_node_date           = active_node.content.publication_start_date if archive_includes_active_node
               month_includes_active_node = archive_includes_active_node && (active_node_date.year == @year && active_node_date.month == m)
-              { 
+              {
                 :text        => Date::MONTHNAMES[m].capitalize,
                 :expanded    => month_includes_active_node || (!archive_includes_active_node && (@year == now.year && m == now.month)),
                 :extraParams => {
@@ -58,7 +58,7 @@ class Admin::WeblogsController < Admin::AdminController
           else
             @years = @weblog_node.content.find_years_with_items.map do |y|
               year_includes_active_node = archive_includes_active_node ? (active_node.content.publication_start_date.year == y) : false
-              { 
+              {
                 :text        => y,
                 :expanded    => year_includes_active_node || (!archive_includes_active_node && (y == now.year)),
                 :extraParams => {
@@ -89,7 +89,7 @@ class Admin::WeblogsController < Admin::AdminController
     @weblog.attributes = params[:weblog]
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :record => @weblog }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @weblog } }
     end
   end
 
@@ -108,7 +108,7 @@ class Admin::WeblogsController < Admin::AdminController
       elsif @commit_type == 'save' && @weblog.save(:user => current_user)
         format.html do
           @refresh = true
-          render :template => 'admin/shared/update'
+          render 'admin/shared/update'
         end
         format.xml  { head :ok }
       else

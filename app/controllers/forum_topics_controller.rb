@@ -1,8 +1,8 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +ForumTopic+ objects.
+
 class ForumTopicsController < ApplicationController
-  
-  # The +show+ action needs a +ForumTopic+ object to work with.  
+  # The +show+ action needs a +ForumTopic+ object to work with.
   before_filter :find_forum_topic,   :only => :show
   before_filter :find_forum_threads, :only => :show
 
@@ -25,5 +25,4 @@ protected
   def find_forum_threads
     @forum_threads = @forum_topic.forum_threads_by_last_update_date.page(params[:page]).per(25)
   end
-  
 end

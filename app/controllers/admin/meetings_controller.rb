@@ -76,7 +76,7 @@ class Admin::MeetingsController < Admin::AdminController
             @meeting = Meeting.new
             render :template => 'admin/shared/new', :locals => { :record => @meeting }, :status => :success
           else
-            render :template => 'admin/shared/create'
+            render 'admin/shared/create'
           end
         end
         format.xml  { render :xml => @meeting, :status => :created, :location => @meeting }
@@ -103,7 +103,7 @@ class Admin::MeetingsController < Admin::AdminController
         end
         format.xml  { render :xml => @meeting, :status => :created, :location => @meeting }
       elsif @commit_type == 'save' && @meeting.save(:user => current_user, :approval_required => @for_approval)
-        format.html { render :template => 'admin/shared/update' }
+        format.html { render 'admin/shared/update' }
         format.xml  { head :ok }
       else
         format.html do

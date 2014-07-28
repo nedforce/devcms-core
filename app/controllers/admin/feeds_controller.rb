@@ -6,7 +6,7 @@ class Admin::FeedsController < Admin::AdminController
   prepend_before_filter :find_parent_node, :only => [ :new, :create ]
 
   # The +edit+ and +update+ actions need a +Feed+ object to act upon.
-  before_filter         :find_feed,        :only => [ :show, :edit, :update ]
+  before_filter :find_feed, :only => [ :show, :edit, :update ]
 
   layout false
 
@@ -19,21 +19,21 @@ class Admin::FeedsController < Admin::AdminController
       format.html { render :action => 'show', :layout => 'admin/admin_show' }
       format.xml  { render :xml => @feed }
     end
-  end 
+  end
 
   # * GET /admin/feeds/new
   def new
     @feed = Feed.new
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :record => @feed }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @feed } }
     end
   end
 
   # * GET /admin/feeds/:id/edit
   def edit
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :record => @feed }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @feed } }
     end
   end
 
@@ -45,7 +45,7 @@ class Admin::FeedsController < Admin::AdminController
 
     respond_to do |format|
       if @feed.save(:user => current_user)
-        format.html { render :template => 'admin/shared/create' }
+        format.html { render 'admin/shared/create' }
         format.xml  { render :xml => @feed, :status => :created, :location => @feed }
       else
         format.html { render :template => 'admin/shared/new', :locals => { :record => @feed }, :status => :unprocessable_entity }
@@ -58,10 +58,10 @@ class Admin::FeedsController < Admin::AdminController
   # * PUT /admin/feeds/:id.xml
   def update
     @feed.attributes = params[:feed]
-    
-    respond_to do |format|      
+
+    respond_to do |format|
       if @feed.save(:user => current_user)
-        format.html { render :template => 'admin/shared/update' }
+        format.html { render 'admin/shared/update' }
         format.xml  { head :ok }
       else
         @feed.reload # to retrieve the old title

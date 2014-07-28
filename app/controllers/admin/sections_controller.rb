@@ -16,7 +16,7 @@ class Admin::SectionsController < Admin::AdminController
   before_filter :find_children,                :only => [ :show, :previous ]
 
   before_filter :set_commit_type,              :only => [ :create, :update ]
-  
+
   layout false
 
   require_role [ 'admin', 'final_editor', 'editor' ]
@@ -42,7 +42,7 @@ class Admin::SectionsController < Admin::AdminController
   def new
     @section = Section.new(params[:section])
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :record => @section }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @section } }
     end
   end
 
@@ -51,7 +51,7 @@ class Admin::SectionsController < Admin::AdminController
     @show_frontpage_control = can_set_frontpage?
     @section.attributes     = params[:section]
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :record => @section }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @section } }
     end
   end
 
@@ -66,7 +66,7 @@ class Admin::SectionsController < Admin::AdminController
         format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @section }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @section, :status => :created, :location => @section }
       elsif @commit_type == 'save' && @section.save(:user => current_user)
-        format.html { render :template => 'admin/shared/create' }
+        format.html { render 'admin/shared/create' }
         format.xml  { render :xml => @section, :status => :created, :location => @section }
       else
         format.html { render :template => 'admin/shared/new', :locals => { :record => @section }, :status => :unprocessable_entity }
@@ -99,12 +99,12 @@ class Admin::SectionsController < Admin::AdminController
       end
     end
   end
-  
+
   def send_expiration_notifications
     NodeExpirationMailerWorker.notify_authors(@section.node)
     render :text => '<div class="rightPanelDefault" id="rightPanelDefault"><table><tr><td>' + t('sections.expiration_notification_sent') + '</td></tr></table></div>'
   end
-  
+
   def import
     respond_to do |format|
       format.html { render :layout => 'admin/admin_blank' }
@@ -113,18 +113,18 @@ class Admin::SectionsController < Admin::AdminController
 
   def build
     importer = Importer.import!(params[:data], @section)
-    
+
     if importer.success?
       flash.now[:notice] = "#{importer.instances.size} content items aangemaakt."
     else
       flash.now[:notice] = "Importeren mislukt. Controleer het formaat van het opgegeven bestand en probeer opnieuw. Foutmelding: '#{importer.errors.join(', ')}'."
     end
-    
+
     respond_to do |format|
       format.js do
         responds_to_parent do |page|
-          page.call("treePanel.refreshNodesOf", @section.node.id)
-          page.replace_html("import_form", :partial => 'import_form')
+          page.call('treePanel.refreshNodesOf', @section.node.id)
+          page.replace_html('import_form', :partial => 'import_form')
         end
       end
     end

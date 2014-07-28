@@ -1,16 +1,16 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +Theme+ objects.
-class Admin::ThemesController < Admin::AdminController
 
+class Admin::ThemesController < Admin::AdminController
   # The +create+ action needs the parent +Node+ object to link the new +Theme+ content node to.
   prepend_before_filter :find_parent_node,    :only => [ :new, :create ]
-  
+
   # The +show+, +edit+ and +update+ actions need a +Theme+ object to act upon.
   before_filter         :find_theme,          :only => [ :show, :edit, :update ]
-  
+
   # Set the subclass of +Theme+ to create based on the parent node
   before_filter         :set_subclass,        :only => [ :new, :create, :edit, :update ]
-  
+
   before_filter         :set_commit_type,     :only => [ :create, :update ]
 
   layout false
@@ -24,14 +24,14 @@ class Admin::ThemesController < Admin::AdminController
       format.html { render :partial => 'show', :layout => 'admin/admin_show' }
       format.xml  { render :xml => @theme }
     end
-  end  
+  end
   
   # * GET /admin/themes/new
   def new
     @theme = @subclass.new(params[@type])
-    
+
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :record => @theme }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @theme } }
     end
   end
 
@@ -40,7 +40,7 @@ class Admin::ThemesController < Admin::AdminController
     @theme.attributes = params[@type]
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :record => @theme }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @theme } }
     end
   end
 
@@ -55,7 +55,7 @@ class Admin::ThemesController < Admin::AdminController
         format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @theme }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @theme, :status => :created, :location => @theme }
       elsif @commit_type == 'save' && @theme.save(:user => current_user)
-        format.html { render :template => 'admin/shared/create' }
+        format.html { render 'admin/shared/create' }
         format.xml  { render :xml => @theme, :status => :created, :location => @theme }
       else
         format.html { render :template => 'admin/shared/new', :locals => { :record => @theme }, :status => :unprocessable_entity }
@@ -74,7 +74,7 @@ class Admin::ThemesController < Admin::AdminController
         format.html { render :template => 'admin/shared/update_preview', :locals => { :record => @theme }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @theme, :status => :created, :location => @theme }
       elsif @commit_type == 'save' && @theme.save(:user => current_user)
-        format.html { render :template => 'admin/shared/update' }
+        format.html { render 'admin/shared/update' }
         format.xml  { head :ok }
       else
         format.html { render :template => 'admin/shared/edit', :locals => { :record => @theme }, :status => :unprocessable_entity }
@@ -89,10 +89,9 @@ protected
   def find_theme
     @theme = Theme.find(params[:id], :include => [ :node ]).current_version
   end
-  
+
   def set_subclass
     @type     = params[:type]
     @subclass = @type.classify.constantize
   end
-
 end

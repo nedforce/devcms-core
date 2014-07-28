@@ -23,14 +23,14 @@ class Admin::ForumsController < Admin::AdminController
       format.html { render :partial => 'show', :layout => 'admin/admin_show' }
       format.xml  { render :xml => @forum }
     end
-  end 
+  end
 
   # * GET /admin/forums/new
   def new
     @forum = Forum.new(params[:forum])
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :record => @forum }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @forum } }
     end
   end
 
@@ -50,7 +50,7 @@ class Admin::ForumsController < Admin::AdminController
         format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @forum }, :layout => 'admin/admin_preview' }
         format.xml  { render :xml => @forum, :status => :created, :location => @forum }
       elsif @commit_type == 'save' && @forum.save(:user => current_user)
-        format.html { render :template => 'admin/shared/create' }
+        format.html { render 'admin/shared/create' }
         format.xml  { render :xml => @forum, :status => :created, :location => @forum }
       else
         format.html { render :template => 'admin/shared/new', :locals => { :record => @forum }, :status => :unprocessable_entity }
@@ -72,7 +72,7 @@ class Admin::ForumsController < Admin::AdminController
         end
         format.xml  { render :xml => @forum, :status => :created, :location => @forum }
       elsif @commit_type == 'save' && @forum.save(:user => current_user)
-        format.html { render :template => 'admin/shared/update' }
+        format.html { render 'admin/shared/update' }
         format.xml  { head :ok }
       else
         format.html { render :action => :edit, :status => :unprocessable_entity }
