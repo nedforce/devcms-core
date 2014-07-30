@@ -131,12 +131,12 @@ class CalendarItem < Event
 
   # Set repeat interval granularity (day, week, month)
   def repeat_interval_granularity=(value)
-    @repeat_interval_granularity = value.to_i if value.is_a?(Integer) || value =~ %r(\A\d+\Z)
+    @repeat_interval_granularity = value.to_i if value.is_a?(Integer) || value =~ %r(\A\d+\z)
   end
 
   # Set repeat interval multiplier (1, 2, 3, 4, 5)
   def repeat_interval_multiplier=(value)
-    @repeat_interval_multiplier = value.to_i if value.is_a?(Integer) || value =~ %r(\A\d+\Z)
+    @repeat_interval_multiplier = value.to_i if value.is_a?(Integer) || value =~ %r(\A\d+\z)
   end
 
   # Returns the body and location_description as the tokens for indexing.

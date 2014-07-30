@@ -53,7 +53,7 @@ class AgendaItem < ActiveRecord::Base
   # An AgendaItem optionally belongs to an AgendaItemCategory.
   belongs_to :agenda_item_category
 
-  # See the preconditions overview for an explanation of these validations.  
+  # See the preconditions overview for an explanation of these validations.
   validates_presence_of     :calendar_item, :description
   validates_associated      :agenda_item_category,    :if => :has_agenda_item_category?
   validates_numericality_of :agenda_item_category_id,                             :allow_nil => true
