@@ -20,7 +20,7 @@
 #   this version should mostly fix these problems
 # ** added a Builder class to manage the creation of the final htmldiff
 # * minor changes:
-# ** use symbols instead of string to represent opcodes 
+# ** use symbols instead of string to represent opcodes
 # ** small fix to html2list
 #
 
@@ -63,7 +63,7 @@ module Diff
       @b2j = {}
       pophash = {}
       junkdict = {}
-      
+
       @b.each_with_index do |elt, i|
         if @b2j.has_key? elt
           indices = @b2j[elt]
@@ -77,11 +77,11 @@ module Diff
           @b2j[elt] = [i]
         end
       end
-        
+
       pophash.each_key { |elt| @b2j.delete elt }
-      
+
       junkdict = {}
-        
+
       unless @isjunk.nil?
         [pophash, @b2j].each do |d|
           d.each_key do |elt|
@@ -92,16 +92,16 @@ module Diff
           end
         end
       end
-      
-      @isbjunk = junkdict.method(:has_key?)
+
+      @isbjunk    = junkdict.method(:has_key?)
       @isbpopular = junkdict.method(:has_key?)
     end
-    
+
     def find_longest_match(alo, ahi, blo, bhi)
       besti, bestj, bestsize = alo, blo, 0
-      
+
       j2len = {}
-      
+
       (alo..ahi).step do |i|
         newj2len = {}
         (@b2j[@a[i]] || []).each do |j|
@@ -111,7 +111,7 @@ module Diff
           if j >= bhi
             break
           end
-          
+
           k = newj2len[j] = (j2len[j - 1] || 0) + 1
           if k > bestsize
             besti, bestj, bestsize = i - k + 1, j - k + 1, k
@@ -119,44 +119,44 @@ module Diff
         end
         j2len = newj2len
       end
-      
+
       while besti > alo and bestj > blo and
           not @isbjunk.call(@b[bestj-1]) and
           @a[besti-1] == @b[bestj-1]
         besti, bestj, bestsize = besti-1, bestj-1, bestsize+1
       end
-      
+
       while besti+bestsize < ahi and bestj+bestsize < bhi and
           not @isbjunk.call(@b[bestj+bestsize]) and
           @a[besti+bestsize] == @b[bestj+bestsize]
         bestsize += 1
       end
-      
+
       while besti > alo and bestj > blo and
           @isbjunk.call(@b[bestj-1]) and
           @a[besti-1] == @b[bestj-1]
         besti, bestj, bestsize = besti-1, bestj-1, bestsize+1
       end
-      
+
       while besti+bestsize < ahi and bestj+bestsize < bhi and
           @isbjunk.call(@b[bestj+bestsize]) and
           @a[besti+bestsize] == @b[bestj+bestsize]
         bestsize += 1
       end
-      
+
       [besti, bestj, bestsize]
     end
-    
+
     def get_matching_blocks
-      return @matching_blocks unless @matching_blocks.nil? or 
+      return @matching_blocks unless @matching_blocks.nil? or
         @matching_blocks.empty?
-      
+
       @matching_blocks = []
       la, lb = @a.length, @b.length
       match_block_helper(0, la, 0, lb, @matching_blocks)
       @matching_blocks.push [la, lb, 0]
     end
-    
+
     def match_block_helper(alo, ahi, blo, bhi, answer)
       i, j, k = x = find_longest_match(alo, ahi, blo, bhi)
       if not k.zero?
@@ -169,7 +169,7 @@ module Diff
         end
       end
     end
-    
+
     def get_opcodes
       unless @opcodes.nil? or @opcodes.empty?
         return @opcodes
@@ -182,16 +182,16 @@ module Diff
                 :replace
               elsif i < ai
                 :delete
-              elsif j < bj 
+              elsif j < bj
                 :insert
               end
 
         answer.push [tag, i, ai, j, bj] if tag
-        
+
         i, j = ai + size, bj + size
-        
+
         answer.push [:equal, ai, i, bj, j] unless size.zero?
-        
+
       end
       return answer
     end
@@ -203,7 +203,7 @@ module Diff
         tag, i1, i2, j1, j2 = codes[0]
         codes[0] = tag, [i1, i2 - n].max, i2, [j1, j2-n].max, j2
       end
-      
+
       if codes[-1][0] == :equal
         tag, i1, i2, j1, j2 = codes[-1]
         codes[-1] = tag, i1, min(i2, i1+n), j1, min(j2, j1+n)
@@ -238,7 +238,7 @@ module Diff
           @fullbcount[elt] = (@fullbcount[elt] || 0) + 1
         end
       end
-      
+
       avail = {}
       matches = 0
       @a.each do |elt|
@@ -288,7 +288,7 @@ module Diff
         result.push [s.ratio, x]
       end
     end
-    
+
     unless result.nil? or result.empty?
       result.sort
       result.reverse!
@@ -335,28 +335,28 @@ module HTMLDiff
       delete
       insert
     end
-    
+
     def insert(tagclass="diff diff-ins")
       #op_helper_simple("div", tagclass, @b[@opcode[3]...@opcode[4]])
       op_helper("span", tagclass, @b[@opcode[3]...@opcode[4]])
     end
-    
+
     def delete(tagclass="diff diff-del")
        #op_helper_simple("div", tagclass, @a[@opcode[1]...@opcode[2]])
        op_helper("span", tagclass, @a[@opcode[1]...@opcode[2]])
     end
-    
+
     def equal
       @content += @b[@opcode[3]...@opcode[4]]
     end
-  
+
     # using this as op_helper would be equivalent to the first version of diff.rb by Bill Atkins
     def op_helper_simple(tagname, tagclass, to_add)
       @content << "<#{tagname} class=\"#{tagclass}\">" 
       @content += to_add
       @content << "</#{tagname}>"
     end
-    
+
     # this tries to put <p> tags or newline chars before the opening diff tags (<ins> or <del>)
     # or after the ending diff tags
     # as a result the diff tags should be the "more inside" possible.
@@ -364,12 +364,12 @@ module HTMLDiff
     # but not sure it works if there are other tags (div, span ... ? ) around
     def op_helper(tagname, tagclass, to_add)
       @content << to_add.shift while (to_add.size > 0 and (
-                                      HTMLDiff.is_newline(to_add.first) or 
+                                      HTMLDiff.is_newline(to_add.first) or
                                       HTMLDiff.is_p_close_tag(to_add.first) or
                                       HTMLDiff.is_p_open_tag(to_add.first) ))
-      @content << "<#{tagname} class=\"#{tagclass}\">" 
+      @content << "<#{tagname} class=\"#{tagclass}\">"
       @content << to_add.shift while (to_add.size > 0 and
-                                      !HTMLDiff.is_newline(to_add.first) and 
+                                      !HTMLDiff.is_newline(to_add.first) and
                                       !HTMLDiff.is_p_close_tag(to_add.first) and
                                       !HTMLDiff.is_p_open_tag(to_add.first) )
       @content << "</#{tagname}>"
@@ -383,9 +383,8 @@ module HTMLDiff
         @content.pop
       end
     end
-
   end
-  
+
   def self.is_newline(x)
     (x == "\n") or (x == "\r") or (x == "\t")
   end
@@ -409,14 +408,14 @@ module HTMLDiff
       out.do_op(opcode)
     end
 
-    out.result 
+    out.result
   end
-  
+
   def self.html2list(x)
     mode = :char
     cur = ''
     out = []
-    
+
     x.split('').each do |c|
       if mode == :tag
         cur += c
@@ -442,5 +441,4 @@ module HTMLDiff
     out.push cur
     out.find_all { |x| x != '' }
   end
-  
 end

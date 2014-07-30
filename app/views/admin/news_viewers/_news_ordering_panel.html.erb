@@ -1,83 +1,80 @@
 var orderPanel = new Ext.dvtr.ContentNodeFormPanel({
-    labelWidth: 110, 
-    bodyStyle: 'padding:10px',
-    labelPad: 10,
-    border: false,
-    monitorValid: true,
-    defaults: {
-        //msgTarget: 'side'
-    }
+  labelWidth: 110,
+  bodyStyle: 'padding:10px',
+  labelPad: 10,
+  border: false,
+  monitorValid: true,
+  defaults: {
+    //msgTarget: 'side'
+  }
 });
 
 descPanel = new Ext.Panel({
-      width: 520,
-      border: false,
-      bodyStyle: 'padding:10px 0 10px 0',      
-      html: "<h2><%= t('news_viewers.news_order') %></h2><p><%= t('news_viewers.news_order_description') %></p>"
-    });
+  width: 520,
+  border: false,
+  bodyStyle: 'padding:10px 0 10px 0',
+  html: "<h2><%= t('news_viewers.news_order') %></h2><p><%= t('news_viewers.news_order_description') %></p>"
+});
 
 newsItemOrderPanel = new Ext.Panel({
-      width: 520,
-      title: '<%= t('news_viewers.found_news') %>',
-      border: true
-    });
+  width: 520,
+  title: '<%= t('news_viewers.found_news') %>',
+  border: true
+});
 
 newsItemSorter = new Ext.dvtr.Sorter({
-      width: 518,
-      border: false
-  });
-
+  width: 518,
+  border: false
+});
 
 orderPanel.add(descPanel);
 newsItemOrderPanel.add(newsItemSorter);
 orderPanel.add(newsItemOrderPanel);
 
 orderPanel.addButton({
-    text: '<%= I18n.t("shared.save") %>',
-    handler: function(button, e){
-			button.disable();
-			button.setText("<%= t('news_viewers.saving') %>");
-			var items_array = new Array();
-      if(newsItemSorter.items != null) newsItemSorter.items.each(function (item, index, length) { items_array.push(item.itemId); });
+  text: '<%= I18n.t("shared.save") %>',
+  handler: function(button, e) {
+    button.disable();
+    button.setText("<%= t('news_viewers.saving') %>");
+    var items_array = new Array();
+    if(newsItemSorter.items != null) newsItemSorter.items.each(function (item, index, length) { items_array.push(item.itemId); });
 
-			Ext.Ajax.request({
-				url: "/admin/news_viewers/<%= @news_viewer.id %>/news_viewer_items/update_positions",
-				method: 'PUT',
-				params: { 'items[]': items_array },
-				callback: function(options, success, response){
-					button.setText('<%= I18n.t("shared.save") %>');
-					button.enable();
-				}
-			});  
-    }// end handler
+    Ext.Ajax.request({
+      url: "/admin/news_viewers/<%= @news_viewer.id %>/news_viewer_items/update_positions",
+      method: 'PUT',
+      params: { 'items[]': items_array },
+      callback: function(options, success, response) {
+        button.setText('<%= I18n.t("shared.save") %>');
+        button.enable();
+      }
+    });
+  }// end handler
 });
 
-loadSelectedNewsItems = function(){
-	newsItemSorter.clear();
- 	Ext.Ajax.request({
-       url: "/admin/news_viewers/<%= @news_viewer.id %>/news_viewer_items.json",
-       method: 'GET',
-       callback: function(options, success, response){
-         if(success) {
-					var items = Ext.decode(response.responseText); 
-					items.each(function(item){
-						var news_item = item.news_viewer_item.news_item;
-						newsItemSorter.add(new Ext.dvtr.Sortlet({
-	              itemId: item.id,
-                title: news_item.title,
-                hideClose: true
-              }));						
-						});
-						newsItemSorter.doLayout();
-				 };
-       }
-   });  
+loadSelectedNewsItems = function() {
+  newsItemSorter.clear();
+  Ext.Ajax.request({
+    url: "/admin/news_viewers/<%= @news_viewer.id %>/news_viewer_items.json",
+    method: 'GET',
+    callback: function(options, success, response) {
+      if (success) {
+        var items = Ext.decode(response.responseText);
+        items.each(function(item) {
+          var news_item = item.news_viewer_item.news_item;
+          newsItemSorter.add(new Ext.dvtr.Sortlet({
+            itemId: item.id,
+            title: news_item.title,
+            hideClose: true
+          }));
+        });
+        newsItemSorter.doLayout();
+      };
+    }
+  });
 };
 
-tabs.on('tabchange', function(tabPanel, newTab){
+tabs.on('tabchange', function(tabPanel, newTab) {
   if(newTab.id == 'order_tab') loadSelectedNewsItems();
 });
 
 orderPanel.render('order_panel');
-
-

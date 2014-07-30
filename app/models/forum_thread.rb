@@ -3,9 +3,9 @@
 # to open and close a ForumThread.
 #
 # *Specification*
-# 
+#
 # Attributes
-# 
+#
 # * +user+ - The thread starter.
 # * +forum_topic+ - The containing forum topic.
 # * +title+ - The title of the forum thread.
@@ -18,16 +18,15 @@
 # * Requires the presence of +title+.
 #
 class ForumThread < ActiveRecord::Base
-  
   # Prevents the +closed+ attribute from being assigned in mass assignments.
   attr_protected :closed
-  
+
   # A +ForumThread+ belongs to a +ForumTopic+.
   belongs_to :forum_topic
-  
+
   # A +ForumThread+ belongs to a +User+ (i.e. the thread starter).
   belongs_to :user
-   
+
   # A +ForumThread+ can have many +ForumPost+ children.
   has_many :forum_posts, :order => 'created_at ASC', :dependent => :destroy do
 
@@ -36,8 +35,8 @@ class ForumThread < ActiveRecord::Base
       self.maximum(:created_at)
     end
   end
-  
-  # See the preconditions overview for an explanation of these validations.  
+
+  # See the preconditions overview for an explanation of these validations.
   validates_presence_of     :title, :forum_topic, :user
   validates_length_of       :title, :in => 2..255, :allow_blank => true
   validates_numericality_of :forum_topic_id, :user_id
@@ -45,7 +44,7 @@ class ForumThread < ActiveRecord::Base
   def self.parent_type
     ForumTopic
   end
-  
+
   # Returns true if this +ForumThread+ is started by the given +User+, else false.
   def is_owned_by_user?(user)
     self.user == user
@@ -75,7 +74,7 @@ class ForumThread < ActiveRecord::Base
 
   # Returns the start post of this +ForumThread+, i.e. the first +ForumPost+ of this ForumThread.
   def start_post
-    self.forum_posts.first(:order => "created_at ASC")
+    self.forum_posts.first(:order => 'created_at ASC')
   end
 
   # Returns the replies to this +ForumThread+, i.e. all +ForumPost+ children of this ForumThread, except the first one.
@@ -88,5 +87,4 @@ class ForumThread < ActiveRecord::Base
   def number_of_replies
     self.forum_posts.count - 1
   end
-  
 end

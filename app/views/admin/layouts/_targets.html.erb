@@ -1,18 +1,20 @@
 <h1>Content indeling</h1>
-<p> Sleep content vanuit de boom naar de verschillende paginadelen hieronder.
-    Lege delen erven de indeling van bovenliggende content.</p>
+<p>
+  Sleep content vanuit de boom naar de verschillende paginadelen hieronder.
+  Lege delen erven de indeling van bovenliggende content.
+</p>
 
-<div class="clearfix"> 
-    <div class="targets">
+<div class="clearfix">
+  <div class="targets">
     <%= render :file => @layout.targets_partial(@variant) %>
-    </div>
-    <div id="custom_representations" class="targets"></div>
+  </div>
+  <div id="custom_representations" class="targets"></div>
 </div>
 
 <script type="text/javascript">
   sorters = []
   <% @layout.targets_for_variant(@variant).each do |target, config| %>
-      <% targetable = (config["main_content"] == true && @node.content_type == "Section") %>
+      <% targetable = (config['main_content'] == true && @node.content_type == 'Section') %>
       /* Create the sorters */
       sorters.push(new Ext.dvtr.Sorter({
         target: '<%= target -%>',
@@ -30,7 +32,7 @@
         border: false
       }));
   <% end %>
-  
+
     custom_representations_sorter = new Ext.dvtr.Sorter({
       title: "Speciale boxes",
       target: 'custom_representations',
@@ -42,13 +44,12 @@
       ddGroup: 'TreeAndSorterDD',
       border: 2
     })
-    
+
     custom_representations_sorter.on('validatedrop', validateRepresentation)
-  
+
   /* Bind the event handlers to all sorters */
-  Ext.each(sorters, function(col){
+  Ext.each(sorters, function (col) {
       col.on('validatedrop', validateRepresentation)
       col.on('drop', function(e){ if(!(e.sortlet && e.sortlet.custom_representation == true)) e.sortlet.tools.close.show(); })
-  });  
-  
+  });
 </script>

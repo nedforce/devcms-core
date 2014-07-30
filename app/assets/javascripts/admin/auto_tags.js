@@ -1,4 +1,3 @@
-
 function setupTagComboBoxes(prefix, tagStore) {
   wrapper = new Element('div', {class: 'fieldSet'})
   $(prefix + '_tag_list_wrapper').appendChild(wrapper)
@@ -15,6 +14,6 @@ function setupTagComboBoxes(prefix, tagStore) {
   }
 }
 
-function castStringToArray(str){
+function castStringToArray(str) {
   return String.interpret(str).split(",");
 }

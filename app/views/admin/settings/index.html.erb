@@ -1,7 +1,7 @@
 <script type="text/javascript">
 //<![CDATA[
 
-Ext.onReady(function(){
+Ext.onReady(function() {
     perPage = 25
 
     Ext.QuickTips.init();
@@ -13,7 +13,7 @@ Ext.onReady(function(){
     // dataIndex maps the column to the specific data field in
     // the data store (created below)
     var cm = new Ext.grid.ColumnModel({
-      columns: 
+      columns:
         [{
              id: 'id',
              header: "<%= I18n.t('settings.key') %>",
@@ -32,20 +32,20 @@ Ext.onReady(function(){
           }
       ],
       editors: {
-      	'default': new Ext.grid.GridEditor(new Ext.form.TextField({})),        
-      	'password': new Ext.grid.GridEditor(new Ext.form.TextField({ inputType: 'password' })),
+        'default': new Ext.grid.GridEditor(new Ext.form.TextField({})),
+        'password': new Ext.grid.GridEditor(new Ext.form.TextField({ inputType: 'password' })),
         'integer': new Ext.grid.GridEditor(new Ext.form.NumberField({ style: 'text-align: left' })),
         'float': new Ext.grid.GridEditor(new Ext.form.NumberField({ style: 'text-align: left' })),
-		    'datetime': new Ext.grid.GridEditor(new Ext.form.DateField({ format: "d-m-Y" }))      	
-      },      
+        'datetime': new Ext.grid.GridEditor(new Ext.form.DateField({ format: "d-m-Y" }))
+      },
       getCellEditor: function(colIndex, rowIndex) {
-    		var field = this.getDataIndex(colIndex);
-    		if (field == 'value') {
-    			var rec = store.getAt(rowIndex);
-    			return this.editors[rec.get('type')] || this.editors['default'];
-    		}
-    		return Ext.grid.ColumnModel.prototype.getCellEditor.call(this, colIndex, rowIndex);      
-    	}
+        var field = this.getDataIndex(colIndex);
+        if (field == 'value') {
+          var rec = store.getAt(rowIndex);
+          return this.editors[rec.get('type')] || this.editors['default'];
+        }
+        return Ext.grid.ColumnModel.prototype.getCellEditor.call(this, colIndex, rowIndex);
+      }
     });
 
     // by default columns are sortable
@@ -98,13 +98,13 @@ Ext.onReady(function(){
     });
     
     function setting_value_renderer(value, metaData, record, rowIndex, colIndex,store) {
-      if(record.data.type == 'password') {
+      if (record.data.type == 'password') {
         pass = '';
         for(i=0;i < value.length; i++) pass += '*'
         
         return pass;
       }
-      else if(record.data.type == 'datetime') {
+      else if (record.data.type == 'datetime') {
         return new Date(value).format("d-m-Y");
       }
       else return value;

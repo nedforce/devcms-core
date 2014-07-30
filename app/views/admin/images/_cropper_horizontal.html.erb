@@ -14,7 +14,7 @@ offset        = image.offset || slider_top / 2
 .overlay {
   background-color: #CCC;
   opacity: 0.85;
-  filter: alpha(opacity=85);  
+  filter: alpha(opacity=85);
 }
 
 .overlay-horizontal {
@@ -47,9 +47,9 @@ offset        = image.offset || slider_top / 2
 </style>
 <div style="position: relative">
   <div id="preview_<%= image.id %>">
-  	<div id="overlay_left_<%= image.id %>"  class="overlay overlay-horizontal" style="width: <%= offset %>px"></div>
-  	<div id="overlay_mid_<%= image.id %>"   class="overlay overlay-horizontal" style="left: <%= offset %>px; width: 100px"></div>
-  	<div id="overlay_right_<%= image.id %>" class="overlay overlay-horizontal" style="left: <%= offset + 100 %>px; width: <%= slider_top - offset %>px; top: 0"></div>
+    <div id="overlay_left_<%= image.id %>"  class="overlay overlay-horizontal" style="width: <%= offset %>px"></div>
+    <div id="overlay_mid_<%= image.id %>"   class="overlay overlay-horizontal" style="left: <%= offset %>px; width: 100px"></div>
+    <div id="overlay_right_<%= image.id %>" class="overlay overlay-horizontal" style="left: <%= offset + 100 %>px; width: <%= slider_top - offset %>px; top: 0"></div>
   </div>
   <div id="slider_<%= image.id %>"></div>
 </div>
@@ -68,7 +68,7 @@ Ext.onReady(function() {
     maxValue: <%= slider_top %>,
     value: <%= image.offset.nil? ? slider_top / 2 : image.offset %>,
     listeners: {
-      change: function(slider, value) { 
+      change: function(slider, value) {
           $('overlay_left_<%= image.id %>').style.width = (value)+'px';
           $('overlay_mid_<%= image.id %>').style.left = (value)+'px';
           $('overlay_right_<%= image.id %>').style.width = (<%= slider_top %> - value)+'px';

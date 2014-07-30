@@ -22,7 +22,7 @@
 # * Requires +meeting_id+ to be present and point to a Meeting instance.
 # * Requires +agenda_item_category_id+ to point to a AgendaItemCategory instance, if present.
 # * Requires the presence of +description+.
-# * Requires +speaking_rights+ to be a key of +SPEAKING_RIGHT_OPTIONS+, or +nil+. 
+# * Requires +speaking_rights+ to be a key of +SPEAKING_RIGHT_OPTIONS+, or +nil+.
 #
 # Child/parent type constraints
 #

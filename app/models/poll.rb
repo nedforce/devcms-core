@@ -1,22 +1,22 @@
 # A +Poll+ is a content node that houses poll questions. It has specified
 # +acts_as_content_node+ from Acts::ContentNode::ClassMethods.
-# 
+#
 # A +Poll+ serves as an archive for +PollQuestion+ objects, of which only
 # 1 can be active.
 #
 # *Specification*
-# 
+#
 # Attributes
-# 
+#
 # * +title+ - The title of the poll.
 # * +requires_login+ - True if this poll requires users to be logged in to vote
 #
 # Preconditions
 #
 # * Requires the presence of +title+.
-# 
+#
 # Child/parent type constraints
-# 
+#
 #  * A Poll only accepts PollQuestion nodes.
 #  * A Poll can be inserted into nodes of any accepting type.
 #
@@ -29,7 +29,7 @@ class Poll < ActiveRecord::Base
     :available_content_representations => ['content_box'],
     :children_can_be_sorted => false
   })
-  
+
   has_children :poll_questions
 
   # See the preconditions overview for an explanation of these validations.
@@ -45,8 +45,8 @@ class Poll < ActiveRecord::Base
   def icon_filename
     'poll_question.png'
   end
-  
+
   def last_updated_at
-    [ self.updated_at, self.active_question.try(:updated_at) ].compact.max
+    [self.updated_at, self.active_question.try(:updated_at)].compact.max
   end
 end

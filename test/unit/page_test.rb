@@ -21,7 +21,7 @@ class PageTest < ActiveSupport::TestCase
     end
 
     assert_no_difference 'Page.count' do
-      page = create_page(:title => "  ")
+      page = create_page(:title => '  ')
       assert page.errors[:title].any?
     end
   end
@@ -51,14 +51,14 @@ class PageTest < ActiveSupport::TestCase
   end
 
   def test_should_destroy_page
-    assert_difference "Page.count", -1 do
+    assert_difference 'Page.count', -1 do
       @about_page.destroy
     end
   end
 
   protected
-    def create_page(options = {})
-      Page.create({ :parent => nodes(:root_section_node), :title => 'Page title', :body => 'Page body' }.merge(options))
-    end
-end
 
+  def create_page(options = {})
+    Page.create({ :parent => nodes(:root_section_node), :title => 'Page title', :body => 'Page body' }.merge(options))
+  end
+end

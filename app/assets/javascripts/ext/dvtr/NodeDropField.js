@@ -34,7 +34,7 @@ Ext.extend(Ext.dvtr.NodeDropField, Ext.form.TextField, {
             afterinserttreenode: true
         });
         this.on('validatedrop', function (e) {
-            if(e.dd.dragData.node != null && e.nodeDropField.allowedContentTypes != null)  {
+            if (e.dd.dragData.node != null && e.nodeDropField.allowedContentTypes != null) {
                 return e.nodeDropField.allowedContentTypes.indexOf(e.dd.dragData.node.attributes.ownContentType) != -1
             }
             return true;
@@ -53,7 +53,7 @@ Ext.extend(Ext.dvtr.NodeDropField, Ext.form.TextField, {
     setImage : function (url) {
         this.textLabel.update('<img src="'+url+'"/>')
     },
-    
+
     onRender: function (ct, position) {
         Ext.dvtr.NodeDropField.superclass.onRender.call(this, ct, position);
 
@@ -63,7 +63,7 @@ Ext.extend(Ext.dvtr.NodeDropField, Ext.form.TextField, {
             id: this.id + '_txt',
             html: this.originalText
         };
-        
+
         var clear = {
             tag: 'a',
             cls: 'x-node-drop-field-clear',
@@ -73,13 +73,13 @@ Ext.extend(Ext.dvtr.NodeDropField, Ext.form.TextField, {
 
         this.clearLink = Ext.DomHelper.insertAfter(this.el.dom, clear, true);
         this.textLabel = Ext.DomHelper.insertAfter(this.el.dom, span, true);
-        
+
         this.clearLink.on('click', function () {
           this.setRawValue('');
           this.setText('');
           this.clearLink.addClass('hidden')
-        }, this);  
-        
+        }, this);
+
         if(this.value == '') this.clearLink.addClass('hidden')
     }
 });
@@ -128,7 +128,7 @@ Ext.extend(Ext.dvtr.NodeDropField.DropTarget, Ext.dd.DropTarget, {
             dd instanceof Ext.tree.TreeDragZone) {
 
             // Create a new sortlet object
-            var treeNode = dd.dragData.node;         
+            var treeNode = dd.dragData.node;
             // set the node ide
             this.nodeDropField.setRawValue(treeNode.id);
 
@@ -137,10 +137,10 @@ Ext.extend(Ext.dvtr.NodeDropField.DropTarget, Ext.dd.DropTarget, {
                 this.nodeDropField.setImage('/'+treeNode.URLAlias+'/newsletter_banner.jpg');
             } else {
                 this.nodeDropField.setText(treeNode.text);
-            }  
+            }
 
             this.nodeDropField.el.removeClass('x-node-drop-field-over');
-            
+
             if(this.nodeDropField.getRawValue() == '') this.nodeDropField.clearLink.addClass('hidden')
             else this.nodeDropField.clearLink.removeClass('hidden')
         }

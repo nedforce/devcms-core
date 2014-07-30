@@ -126,7 +126,7 @@ nl:
     sayit: Lees voor
     sayit_title: Gebruik Readspeaker om de content hardop voor te lezen
     whole_site: Gehele site
-    select_a_node_left: Selecteer linksboven een item...    
+    select_a_node_left: Selecteer linksboven een item...
   approvals:
     approval_failed: Goedkeuren mislukt
     approve: Goedkeuren
@@ -419,10 +419,10 @@ nl:
     deleting: Bezig met verwijderen...
     clear: Alles verwijderen
     message_header: Bericht
-    delete_tooltip: Klik hier om de geselecteerde meldingen te verwijderen.    
+    delete_tooltip: Klik hier om de geselecteerde meldingen te verwijderen.
     clear_tooltip: Klik hier om alle meldingen te verwijderen.
-    select_one: Kies tenminste 1 melding  
-    confirm_delete: Weet u zeker dat u de geselecteerde meldingen wilt verwijderen? 
+    select_one: Kies tenminste 1 melding
+    confirm_delete: Weet u zeker dat u de geselecteerde meldingen wilt verwijderen?
     confirm_clear: Weet u zeker dat u alle meldingen wilt verwijderen? Deze actie kan niet ongedaan gemaakt worden!
     clear_failed: Verwijderen mislukt. Probeer het opnieuw.
     destroy_failed: Verwijderen mislukt. Probeer het opnieuw.
@@ -1033,7 +1033,7 @@ nl:
     analytics_code: Google analytics code (UA-1234567-89)
     piwik_site_id: Piwik site ID
     edit: Bewerken van site
-    drag_and_drop: Sleep een item uit de sitemap in het veld hieronder om een startpagina voor deze site in te stellen.    
+    drag_and_drop: Sleep een item uit de sitemap in het veld hieronder om een startpagina voor deze site in te stellen.
   social_media_links_boxes:
     add_to: Social media links box toevoegen aan
     edit: Bewerken van social media links box

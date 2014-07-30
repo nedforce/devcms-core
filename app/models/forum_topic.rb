@@ -1,11 +1,11 @@
-# This model is used to represent a forum topic that can contain multiple forum 
-# threads, which are represented using +ForumThread+ objects. It has specified 
+# This model is used to represent a forum topic that can contain multiple forum
+# threads, which are represented using +ForumThread+ objects. It has specified
 # +acts_as_content_node+ from Acts::ContentNode::ClassMethods.
 #
 # *Specification*
-# 
+#
 # Attributes
-# 
+#
 # * +forum+ - The containing forum.
 # * +title+ - The title of the forum topic.
 # * +description+ - The description of the forum topic.
@@ -18,11 +18,10 @@
 # * Requires the uniqueness of +title+.
 #
 # Child/parent type constraints
-# 
+#
 #  * A +ForumTopic+ only accepts +ForumThread+ children.
 #
 class ForumTopic < ActiveRecord::Base
-
   # Adds content node functionality to forum topics.
   acts_as_content_node({
     :allowed_roles_for_create  => %w( admin ),
@@ -33,7 +32,7 @@ class ForumTopic < ActiveRecord::Base
   # A +ForumTopic+ can have many +ForumThread+ children.
   has_many :forum_threads, :dependent => :destroy
 
-  # See the preconditions overview for an explanation of these validations.  
+  # See the preconditions overview for an explanation of these validations.
   validates_presence_of   :title, :description
   validates_uniqueness_of :title
   validates_length_of     :title, :in => 2..255
