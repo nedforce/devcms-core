@@ -20,7 +20,6 @@
 #  * A +Page+ can be inserted into nodes of any accepting type.
 #
 class Page < ActiveRecord::Base
-  
   # Adds content node functionality to pages.
   acts_as_content_node({
     :allowed_child_content_types => %w( Attachment AttachmentTheme Image ),
@@ -41,14 +40,14 @@ class Page < ActiveRecord::Base
   has_many :carrousel_items, :as => :item, :dependent => :destroy
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of :title, :body
-  validates_length_of   :title, :in => 2..255, :allow_blank => true
+  validates :title, :presence => true, :length => { :in => 2..255, :allow_blank => true }
+  validates :body,  :presence => true
 
   after_paranoid_delete :remove_associated_content
 
   # Returns the preamble and body as the tokens for indexing.
   def content_tokens
-    [ preamble, body ].join(' ')
+    [preamble, body].join(' ')
   end
 
   # Returns the OWMS type.
