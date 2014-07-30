@@ -25,7 +25,7 @@ class Admin::DataWarningsController < Admin::AdminController
           { 
             :subject => (
               if warning.subject
-                view_context.link_to_content_node(warning.subject.to_label, warning.subject, {}, target: :blank)
+                view_context.link_to_content_node(warning.subject.to_label, warning.subject, {}, target: :_blank)
               else
                 '(Sindsdien verwijderd)'
               end 
