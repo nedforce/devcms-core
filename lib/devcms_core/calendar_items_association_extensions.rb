@@ -36,19 +36,19 @@ module DevcmsCore
     end
 
     def exists_after_date?(date = Date.today) #:nodoc:
-      gregorian_date?(date) ? self.accessible.all(:conditions => ['? < date(end_time) ', date], :limit => 1).size > 0 : false
+      gregorian_date?(date) && self.accessible.all(:conditions => ['? < date(end_time) ', date], :limit => 1).size > 0
     end
 
     def exists_before_date?(date = Date.today) #:nodoc:
-      gregorian_date?(date) ? self.accessible.all(:conditions => ['? > date(start_time)', date], :limit => 1).size > 0 : false
+      gregorian_date?(date) && self.accessible.all(:conditions => ['? > date(start_time)', date], :limit => 1).size > 0
     end
-    
+
     # Checks if the date is between the first and the last known event
     def date_in_range?(date = Date.now)
       min = self.accessible.minimum(:start_time)
-      max = self.accessible.maximum(:end_time) || self.accessible.maximum(:start_time)      
-      min.present? && max.present? && gregorian_date?(date) ? (min.to_date..max.to_date).include?(date) : false      
-    end    
+      max = self.accessible.maximum(:end_time) || self.accessible.maximum(:start_time)
+      min.present? && max.present? && gregorian_date?(date) && (min.to_date..max.to_date).include?(date)
+    end
 
     def current_and_future(time = Time.now, limit = 10) #:nodoc:
       self.accessible.where(['( ? < start_time OR ? < end_time )', time, time]).limit(limit).reorder('start_time ASC')
@@ -56,7 +56,7 @@ module DevcmsCore
 
     def gregorian_date?(date)
       return false if date.nil?
-      (date.month == 2 and date.day == 29) ? Date.gregorian_leap?(date.year) : true
+      (date.month == 2 && date.day == 29) ? Date.gregorian_leap?(date.year) : true
     end
   end
 end
