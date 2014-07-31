@@ -1,20 +1,19 @@
 <%= @newsletter_edition.title %>
 <% @newsletter_edition.title.size.times do %>=<% end %>
 
-<%= strip_tags(@newsletter_edition.body) %>
-  
-<% for item in @newsletter_edition.items %>
+<%= strip_tags @newsletter_edition.body %>
+
+<% @newsletter_edition.items.each do |item| %>
   <%= item.title %>
   <% item.title.size.times do %>-<% end %>
 
-  <% if item.respond_to?(:preamble) && !item.preamble.blank? -%>
-<%= strip_tags(item.preamble) %>
+  <% if item.respond_to?(:preamble) && item.preamble.present? -%>
+<%= strip_tags item.preamble %>
   <% else -%>
-<%= strip_tags(item.body) %>
+<%= strip_tags item.body %>
   <% end -%>
 
   Volledig artikel: 
   <<%= aliased_or_delegated_url(item.node) %>>
-  
 
 <% end %>

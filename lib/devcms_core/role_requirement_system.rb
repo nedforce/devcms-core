@@ -37,7 +37,7 @@ module DevcmsCore
       #
       def require_role(roles, options = {})
         options.assert_valid_keys(:if, :unless,
-          :for, :only, 
+          :for, :only,
           :for_all_except, :except, :any_node
         )
 
@@ -48,48 +48,49 @@ module DevcmsCore
         end
 
         # Convert to an array if it isn't already
-        roles = [roles] unless Array===roles
+        roles = [roles] unless Array === roles
 
-        options[:only] ||= options[:for] if options[:for]
+        options[:only]   ||= options[:for] if options[:for]
         options[:except] ||= options[:for_all_except] if options[:for_all_except]
 
         # Convert any actions into symbols
-        for key in [:only, :except]
+        [:only, :except].each do |key|
           if options.has_key?(key)
             options[key] = [options[key]] unless Array === options[key]
             options[key] = options[key].compact.map { |v| v.to_sym }
           end
         end
 
-        self.role_requirements||=[]
-        self.role_requirements << {:roles => roles, :options => options }
+        self.role_requirements ||= []
+        self.role_requirements << { :roles => roles, :options => options }
       end
 
       # This is the core of RoleRequirement.  Here is where it discerns if a user can access a controller or not./
       def user_authorized_for?(user, node, params = {}, binding = self.binding)
-        return true unless Array===self.role_requirements
-        self.role_requirements.each do | role_requirement|
-          roles = role_requirement[:roles]
+        return true unless Array === self.role_requirements
+
+        self.role_requirements.each do |role_requirement|
+          roles   = role_requirement[:roles]
           options = role_requirement[:options]
           # do the options match the params?
 
           # check the action
           if options.has_key?(:only)
-            next unless options[:only].include?( (params[:action]||"index").to_sym )
+            next unless options[:only].include?((params[:action] || 'index').to_sym)
           end
 
           if options.has_key?(:except)
-            next if options[:except].include?( (params[:action]||"index").to_sym)
+            next if options[:except].include?((params[:action] || 'index').to_sym)
           end
 
           if options.has_key?(:if)
             # execute the proc.  if the procedure returns false, we don't need to authenticate these roles
-            next unless ( String===options[:if] ? eval(options[:if], binding) : options[:if].call([params,node]) )
+            next unless (String === options[:if] ? eval(options[:if], binding) : options[:if].call([params,node]))
           end
 
           if options.has_key?(:unless)
             # execute the proc.  if the procedure returns true, we don't need to authenticate these roles
-            next if ( String===options[:unless] ? eval(options[:unless], binding) : options[:unless].call([params,node]) )
+            next if (String === options[:unless] ? eval(options[:unless], binding) : options[:unless].call([params,node]))
           end
 
           # check to see if they have one of the required roles
