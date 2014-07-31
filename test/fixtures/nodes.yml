@@ -1,4 +1,4 @@
-<% def fixtures_to_ancestry(*names); names.map { |name| ActiveRecord::Fixtures.identify(name) }.join("/"); end %>
+<% def fixtures_to_ancestry(*names); names.map { |name| ActiveRecord::Fixtures.identify(name) }.join('/'); end %>
 
 root_section_node:
   content: root_section (Section)
