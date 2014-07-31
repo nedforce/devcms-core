@@ -24,10 +24,10 @@ class Admin::ResponsesController < Admin::AdminController
     end
 
     respond_to do |format|
-      format.html #index.html.erb
-      format.xml  #index.xml.builder
-      format.csv  { send_data @responses.to_csv_file } #index.csv.erb
-      format.xls
+      format.html # index.html.erb
+      format.xml  # index.xml.builder
+      format.csv  { send_data @responses.to_csv_file }
+      format.xls  # index.xls.erb
     end
   end
 
@@ -38,9 +38,9 @@ class Admin::ResponsesController < Admin::AdminController
 
     respond_to do |format|
       if @response_field.update_attributes(params[:response_field])
-        format.xml  { head :ok }
+        format.xml { head :ok }
       else
-        format.xml  { render :xml => @response_field.errors, :status => :unprocessable_entity }
+        format.xml { render :xml => @response_field.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -147,7 +147,7 @@ class Admin::ResponsesController < Admin::AdminController
     # Titel
     fTitle = Spreadsheet::Format.new(:color => :blue, :weight => :bold, :size => 18)
     sheet.row(0).set_format(0, fTitle)
-    sheet[0,0] = "Inzendingen"
+    sheet[0,0] = 'Inzendingen'
 
     # Kolomtitels
     fHeading = Spreadsheet::Format.new :weight => :bold

@@ -1,7 +1,7 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +ForumTopic+ objects.
-class Admin::ForumTopicsController < Admin::AdminController
 
+class Admin::ForumTopicsController < Admin::AdminController
   # The +show+, +new+, +edit+, +update+ and +create+ actions need a parent +Node+ object.
   prepend_before_filter :find_parent_node,   :only => [ :new, :create ]
 
@@ -17,7 +17,7 @@ class Admin::ForumTopicsController < Admin::AdminController
 
   layout false
 
-  require_role [ 'admin' ], :except => [ :index, :show ]
+  require_role ['admin'], :except => [:index, :show]
 
   # * GET /admin/forum_topics/:id
   # * GET /admin/forum_topics/:id.xml
@@ -26,7 +26,7 @@ class Admin::ForumTopicsController < Admin::AdminController
       format.html { render :partial => 'show', :layout => 'admin/admin_show' }
       format.xml  { render :xml => @forum_topic }
     end
-  end 
+  end
 
   # * GET /admin/forum_topics/new
   def new

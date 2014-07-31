@@ -1,14 +1,14 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +LinksBox+ objects.
-class LinksBoxesController < ApplicationController
 
+class LinksBoxesController < ApplicationController
   before_filter :find_links_box, :only => :show
 
   # * GET /links_boxes/:id
   # * GET /links_boxes/:id.xml
   def show
     respond_to do |format|
-      format.html #show.html.erb
+      format.html # show.html.haml
       format.xml { render :xml => @children }
     end
   end

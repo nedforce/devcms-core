@@ -26,7 +26,7 @@ class Admin::RoleAssignmentsController < Admin::AdminController
     @role_assignments_count = RoleAssignment.count
       
     respond_to do |format|
-      format.html { render :layout => 'admin'}
+      format.html { render :layout => 'admin' }
       format.json do
         permissions = @role_assignments.map do |ra|
           { :user_login => ra.user.login,
@@ -68,7 +68,7 @@ class Admin::RoleAssignmentsController < Admin::AdminController
   def destroy
     @ra = RoleAssignment.find(params[:id])
 
-    respond_to do |format| 
+    respond_to do |format|
       if @ra.user == current_user
         error = I18n.t('permissions.cant_destroy_from_yourself')
         @ra.errors.add(:base, error)

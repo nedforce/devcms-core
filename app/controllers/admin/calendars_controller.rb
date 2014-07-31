@@ -24,12 +24,12 @@ class Admin::CalendarsController < Admin::AdminController
       format.html { render :partial => 'show', :layout => 'admin/admin_show' }
       format.xml  { render :xml => @calendar }
     end
-  end  
+  end
 
   # * GET /admin/calendars.json?node=1&active_node_id=2
-  # 
+  #
   # *parameters*
-  # 
+  #
   # +node+ - Id of the node of which the children are requested.
   # +super_node+ - Id of the node of which the children are requested, when also a year and/or month is specified.
   # +active_node_id+ - (Optional) Id of the active node. If the active node is contained by this calendar, the containing year and month will auto-expand.
@@ -38,7 +38,7 @@ class Admin::CalendarsController < Admin::AdminController
       node_id        = params[:super_node] || params[:node]
       @calendar_node = Node.find(node_id)
 
-      active_node                  = params[:active_node_id] ? Node.find(params[:active_node_id]) : nil 
+      active_node                  = params[:active_node_id] ? Node.find(params[:active_node_id]) : nil
       archive_includes_active_node = active_node && @calendar_node.children.include?(active_node)
 
       parse_date_parameters # See +Admin::AdminController+.
@@ -57,7 +57,7 @@ class Admin::CalendarsController < Admin::AdminController
               active_node_date           = active_node.content.publication_start_date if archive_includes_active_node
               month_includes_active_node = archive_includes_active_node && (active_node_date.year == @year && active_node_date.month == m)
 
-              { 
+              {
                 :text        => Date::MONTHNAMES[m].capitalize,
                 :expanded    => month_includes_active_node || (!archive_includes_active_node && (@year == now.year && m == now.month)),
                 :extraParams => {
@@ -126,7 +126,7 @@ class Admin::CalendarsController < Admin::AdminController
       end
     end
   end
-  
+
   # * PUT /admin/calendars/:id
   # * PUT /admin/calendars/:id.xml
   def update
@@ -153,7 +153,7 @@ protected
 
   # Finds the +Calendar+ object corresponding to the passed in +id+ parameter.
   def find_calendar
-    @calendar = Calendar.find(params[:id], :include => [ :node ]).current_version
+    @calendar = Calendar.find(params[:id], :include => [:node]).current_version
   end
 
   def find_calendar_items

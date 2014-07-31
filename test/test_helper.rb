@@ -1,4 +1,4 @@
-ENV["RAILS_ENV"] = "test"
+ENV['RAILS_ENV'] = 'test'
 
 require File.expand_path('../dummy/config/environment.rb', __FILE__)
 require 'rails/test_help'
@@ -12,14 +12,14 @@ Debugger.settings[:autoeval] = true
 include ActionDispatch::TestProcess # Required to make fixture_file_upload work
 
 require 'turn/autorun'
-Turn.config.format = :pretty 
+Turn.config.format = :pretty
 
-# module I18n 
-#   def self.just_raise(*args) 
-#     raise args.first 
-#   end 
-# end 
-# 
+# module I18n
+#   def self.just_raise(*args)
+#     raise args.first
+#   end
+# end
+#
 # I18n.exception_handler = :just_raise
 
 # Truncate all tables first
@@ -59,25 +59,25 @@ class ActiveSupport::TestCase
   #
   # Note: You'll currently still have to declare fixtures explicitly in integration tests
   # -- they do not yet inherit this setting
-  self.fixture_path = File.dirname(__FILE__) + "/fixtures/"
-  
+  self.fixture_path = File.dirname(__FILE__) + '/fixtures/'
+
   fixtures :all
-            
+
   # Add more helper methods to be used by all tests here...
   include DevcmsCore::AuthenticatedTestHelper
   include DevcmsCore::RoleRequirementTestHelper
   include DevcmsCore::RoutingHelpers  
-  
+
   # Validates all controller and integration test requests if set to true:
   ApplicationController.validate_all = false
   # What html validators to use, options: :w3c, :tidy, :xmllint
-  ApplicationController.validators = [ :w3c ]
+  ApplicationController.validators = [:w3c]
   # Check all redirects
   ApplicationController.check_redirects = true
   # Don't check all links
   ApplicationController.check_urls = false
   # Comment the following line when not developing at the office
-  Html::Test::Validator.w3c_url = "http://office.nedforce.nl/w3c-validator/check"
+  Html::Test::Validator.w3c_url = 'http://office.nedforce.nl/w3c-validator/check'
 
   def get_file_as_string(filename)
     data = ''
@@ -99,14 +99,12 @@ class ActiveSupport::TestCase
 end
 
 class ActionController::IntegrationTest
-  self.fixture_path = File.dirname(__FILE__) + "/fixtures/" 
-  
-  setup     :enable_show_exceptions
+  self.fixture_path = File.dirname(__FILE__) + '/fixtures/'
+
+  setup :enable_show_exceptions
 
   def enable_show_exceptions
     Rails.application.config.consider_all_requests_local = false
-    Rails.application.config.action_dispatch.show_exceptions = true    
+    Rails.application.config.action_dispatch.show_exceptions = true
   end
-
 end
-

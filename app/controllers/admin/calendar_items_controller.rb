@@ -21,7 +21,7 @@ class Admin::CalendarItemsController < Admin::AdminController
 
   layout false
 
-  require_role [ 'admin', 'final_editor', 'editor' ]
+  require_role ['admin', 'final_editor', 'editor']
 
   # * GET /admin/calendar_items/:id
   # * GET /admin/calendar_items/:id.xml
@@ -30,7 +30,7 @@ class Admin::CalendarItemsController < Admin::AdminController
       format.html { render :partial => '/admin/calendar_items/show', :locals => { :record => @calendar_item }, :layout => 'admin/admin_show' }
       format.xml  { render :xml => @calendar_item }
     end
-  end 
+  end
 
   # * GET /admin/calendar_items/:id/previous
   # * GET /admin/calendar_items/:id/previous.xml

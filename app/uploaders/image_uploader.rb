@@ -1,6 +1,6 @@
 # encoding: utf-8
-class ImageUploader < CarrierWave::Uploader::Base
 
+class ImageUploader < CarrierWave::Uploader::Base
   # Include RMagick or ImageScience support
   include CarrierWave::RMagick
   #     include CarrierWave::ImageScience
@@ -14,10 +14,10 @@ class ImageUploader < CarrierWave::Uploader::Base
   def store_dir
     "private/uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
   end
-  
+
   def root
     Rails.env.test? ? File.join(Rails.root, 'tmp') : Rails.root
-  end   
+  end
 
   # Provide a default URL as a default if there hasn't been a file uploaded
   #     def default_url
@@ -26,9 +26,9 @@ class ImageUploader < CarrierWave::Uploader::Base
 
   # Process files as they are uploaded.
   #     process :scale => [200, 300]
-  
+
   process :resize_to_limit => [1024, 1024]
-    
+
   #
   #     def scale(width, height)
   #       # do something
@@ -54,5 +54,4 @@ class ImageUploader < CarrierWave::Uploader::Base
   #     def filename
   #       "something.jpg" if original_filename
   #     end
-
 end

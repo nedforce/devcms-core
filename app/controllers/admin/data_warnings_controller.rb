@@ -1,12 +1,11 @@
 class Admin::DataWarningsController < Admin::AdminController
-
   before_filter :set_paging,  :only => :index
   before_filter :set_sorting, :only => :index
 
   skip_before_filter :set_actions
-  skip_before_filter :find_node    
+  skip_before_filter :find_node
 
-  require_role [ 'admin', 'final_editor' ], :any_node => true
+  require_role ['admin', 'final_editor'], :any_node => true
 
   layout false
 
@@ -14,7 +13,7 @@ class Admin::DataWarningsController < Admin::AdminController
   # * GET /admin/trash.json
   def index
     @active_page = :data_warnings
-    
+
     @data_warnings_count = DataChecker::DataWarning.count
     @data_warnings = DataChecker::DataWarning.order("#{@sort_field} #{@sort_direction}").page(@current_page).per(@page_limit)
 
@@ -22,14 +21,14 @@ class Admin::DataWarningsController < Admin::AdminController
       format.html { render :layout => 'admin' }
       format.json do
         data_warnings_for_json = @data_warnings.map do |warning|
-          { 
+          {
             :subject => (
               if warning.subject
                 view_context.link_to_content_node(warning.subject.to_label, warning.subject, {}, target: :_blank)
               else
                 '(Sindsdien verwijderd)'
-              end 
-            ), 
+              end
+            ),
             :error_code => DataChecker::DataWarning.human_error_code(warning.error_code),
             :message => warning.message,
             :created_at => warning.created_at,
@@ -50,20 +49,20 @@ class Admin::DataWarningsController < Admin::AdminController
       if @data_warning.destroy
         format.json { head :ok }
       else
-        format.json { render :json => I18n.t("data_warnings.destroy_failed"), :status => :unprocessable_entity }
+        format.json { render :json => I18n.t('data_warnings.destroy_failed'), :status => :unprocessable_entity }
       end
     end
-  end  
-  
+  end
+
   # * DELETE /admin/data_warnings/:id/clear.json
   def clear
     success = DataChecker::DataWarning.delete_all rescue false
-    
+
     respond_to do |format|
       if success
         format.json { head :ok }
       else
-        format.json { render :json => I18n.t("data_warnings.clear_failed"), :status => :unprocessable_entity }
+        format.json { render :json => I18n.t('data_warnings.clear_failed'), :status => :unprocessable_entity }
       end
     end
   end

@@ -52,7 +52,8 @@ private
     hits.each do |hit|
       synonym = Synonym.find(hit[:id].to_i)
       word    = (synonym.name == token ? synonym.original : synonym.name)
-      boost   = (hit[:score]**2)*self.ferret_configuration[:synonym_weight] #calculate the boost value using a non-linear function
+      # Calculate the boost value using a non-linear function
+      boost   = (hit[:score]**2)*self.ferret_configuration[:synonym_weight]
       synonym_tokens << "(#{word}~#{self.ferret_configuration[:proximity]})^#{boost}" unless word == token
     end
 

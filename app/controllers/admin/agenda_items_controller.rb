@@ -1,7 +1,7 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to AgendaItem objects.
-class Admin::AgendaItemsController < Admin::AdminController
 
+class Admin::AgendaItemsController < Admin::AdminController
   # Only the +new+ and +create+ actions need a parent Node object.
   prepend_before_filter :find_parent_node,    :only => [ :new, :create ]
 
@@ -18,7 +18,7 @@ class Admin::AgendaItemsController < Admin::AdminController
 
   layout false
 
-  require_role [ 'admin', 'final_editor', 'editor' ]
+  require_role ['admin', 'final_editor', 'editor']
 
   # * GET /admin/agenda_items/:id
   # * GET /admin/agenda_items/:id.xml
@@ -27,7 +27,7 @@ class Admin::AgendaItemsController < Admin::AdminController
       format.html { render :partial => 'show', :locals => { :record => @agenda_item }, :layout => 'admin/admin_show' }
       format.xml  { render :xml => @agenda_item }
     end
-  end 
+  end
 
   # * GET /admin/agenda_items/:id/previous
   # * GET /admin/agenda_items/:id/previous.xml
@@ -41,7 +41,7 @@ class Admin::AgendaItemsController < Admin::AdminController
     find_agenda_item_categories
     build_speaking_right_options
     @agenda_item = @meeting.agenda_items.build(params[:agenda_item])
-    
+
     respond_to do |format|
       format.html { render :template => 'admin/shared/new', :locals => { :record => @agenda_item } }
     end
@@ -52,7 +52,7 @@ class Admin::AgendaItemsController < Admin::AdminController
     find_agenda_item_categories
     build_speaking_right_options
     @agenda_item.attributes = params[:agenda_item]
-    
+
     respond_to do |format|
       format.html { render :template => 'admin/shared/edit', :locals => { :record => @agenda_item } }
     end
@@ -136,6 +136,6 @@ protected
 
   # Builds an array for selection fields that select a speaking right option.
   def build_speaking_right_options
-    @speaking_right_options = AgendaItem::SPEAKING_RIGHT_OPTIONS.map { |k, v| [ I18n.t("calendars.speaking_rights_#{v}"), k ]}.unshift([ '', nil ])
-  end  
+    @speaking_right_options = AgendaItem::SPEAKING_RIGHT_OPTIONS.map { |k, v| [I18n.t("calendars.speaking_rights_#{v}"), k] }.unshift(['', nil])
+  end
 end

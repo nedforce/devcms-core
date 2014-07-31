@@ -387,7 +387,7 @@ protected
   # is stored as a hash, along with the used salt.
   def encrypt_password
     return if password.blank?
-    self.password_salt = [Array.new(6){rand(256).chr}.join].pack("m").chomp if new_record?
+    self.password_salt = [Array.new(6){ rand(256).chr }.join].pack("m").chomp if new_record?
     self.password_hash = encrypt(password)
   end
 
@@ -404,7 +404,7 @@ protected
 
   # Prevents information leakage, validates the email and returns false to prevent a save
   def validate_uniqueness_of_email
-    user = User.first(:conditions => ["upper(email_address) = upper(?)", email_address])
+    user = User.first(:conditions => ['upper(email_address) = upper(?)', email_address])
     UserMailer.email_used_to_create_account(user).deliver if user
     return !user
   end

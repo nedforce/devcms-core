@@ -1,7 +1,7 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +Section+ objects.
-class SectionsController < ApplicationController
 
+class SectionsController < ApplicationController
   before_filter :find_section,                :only => :show
   before_filter :find_images_and_attachments, :only => :show
   before_filter :find_children,               :only => :show
@@ -10,7 +10,7 @@ class SectionsController < ApplicationController
   # * GET /sections/:id.xml
   def show
     respond_to do |format|
-      format.html #show.html.erb
+      format.html # show.html.haml
       format.xml { render :xml => @children }
     end
   end
@@ -25,5 +25,4 @@ protected
   def find_children
     @children = @node.children.accessible.public.exclude_content_types(%w( Image Attachment SearchPage Site )).include_content.all.map { |n| n.content }
   end
-
 end

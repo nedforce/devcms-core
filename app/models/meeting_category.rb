@@ -1,10 +1,10 @@
-# A MeetingCategory is used to group common meetings. Thus, it can contain 
+# A MeetingCategory is used to group common meetings. Thus, it can contain
 # many meetings, each represented with the Meeting content type.
-# 
+#
 # *Specification*
-# 
+#
 # Attributes
-# 
+#
 # * +name+ - The name of the category.
 # * +calendar_items+ - The meetings that belong to this category.
 #
@@ -18,9 +18,7 @@ class MeetingCategory < ActiveRecord::Base
   has_many :calendar_items, :dependent => :destroy
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of   :name
-  validates_length_of     :name, :in => 2..255
-  validates_uniqueness_of :name
+  validates :name, :presence => true, :uniqueness => true, :length => { :in => 2..255 }
 
   # Finds the meeting category with the given name, or initializes a new one with
   # that name (but does *not* save it).

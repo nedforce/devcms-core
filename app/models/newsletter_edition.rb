@@ -50,7 +50,7 @@ class NewsletterEdition < ActiveRecord::Base
 
   # Retrieves the items belonging to this newsletter edition in correct order.
   def items
-    self.newsletter_edition_items.all(:order => "position ASC").map { |ed_item| ed_item.item}
+    self.newsletter_edition_items.all(:order => 'position ASC').map { |ed_item| ed_item.item }
   end
 
   # Returns the number of items belonging to this newsletter edition.
@@ -75,7 +75,7 @@ class NewsletterEdition < ActiveRecord::Base
   end
 
   def header
-    header_image_node || newsletter_archive.node.children.with_content_type("Image").first
+    header_image_node || newsletter_archive.node.children.with_content_type('Image').first
   end
 
   # Alternative text for tree nodes.
@@ -99,5 +99,4 @@ protected
     self.newsletter_edition_items.destroy_all
     self.newsletter_edition_queues.destroy_all
   end
-
 end

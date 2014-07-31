@@ -45,12 +45,12 @@ module NodeExtensions::TreeDelegation
         sql += " AND nodes.ancestry NOT LIKE :#{symbol}"
         values.update(symbol => "#{child_ancestry}/%")
       end
-      
-      sql += " OR nodes.ancestry IS NULL"
+
+      sql += ' OR nodes.ancestry IS NULL'
 
       { :conditions => [ sql, values ] }
     end
-  end  
+  end
 
   def parent_id
     super
@@ -105,12 +105,12 @@ module NodeExtensions::TreeDelegation
     base_class = self.base_class
     table_name = base_class.table_name
 
-    base_class.scoped :conditions => [ 
+    base_class.scoped :conditions => [
       "#{table_name}.#{base_class.primary_key} = :own_id OR #{table_name}.#{base_class.ancestry_column} = :child_ancestry", 
-      { 
+      {
         :own_id => self.send(base_class.primary_key),
         :child_ancestry => self.child_ancestry
-      } 
+      }
     ]
   end
 
@@ -176,7 +176,8 @@ module NodeExtensions::TreeDelegation
 
   # Move node to left, right or child of target node
   def move_to(target, position)
-    raise ActiveRecord::ActiveRecordError, "You cannot move a new node" if self.new_record?
+    raise ActiveRecord::ActiveRecordError, 'You cannot move a new node' if self.new_record?
+
     transaction do
       if position == :child
         self.parent = target
@@ -224,11 +225,11 @@ module NodeExtensions::TreeDelegation
       self.errors.add(:base, I18n.t('node.parent_invalid'))
     end
   end
-  
+
   def path_child_ancestries
-    path_ids.enum_for(:each_with_index).map { |item, index| path_ids[0..(path_ids.length - index - 1)]}.map { |result| result.join('/') }
+    path_ids.enum_for(:each_with_index).map { |item, index| path_ids[0..(path_ids.length - index - 1)] }.map { |result| result.join('/') }
   end
-  
+
   def path_children_by_depth
     Node.path_children_by_depth(self)
   end
@@ -256,7 +257,7 @@ module NodeExtensions::TreeDelegation
   protected
 
   def add_descendants_to_list
-    descendants.where("position IS NULL").each do |descendant|
+    descendants.where('position IS NULL').each do |descendant|
       descendant.add_to_list
     end
   end
@@ -269,6 +270,6 @@ module NodeExtensions::TreeDelegation
       subtree
     end
 
-    [ tree, rest ]
+    [tree, rest]
   end
 end

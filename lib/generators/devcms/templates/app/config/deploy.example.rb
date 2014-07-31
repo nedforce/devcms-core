@@ -56,20 +56,19 @@ namespace :deploy do
   # task :rebuild_index, :roles => :app do
   #   run "echo \"Node.all.each { |n| n.ferret_update } ; quit\" | #{current_path}/script/console production"
   # end
-  
+
   task :precompile_assets, :roles => :app do
     run "cd #{release_path}; RAILS_ENV=#{rails_env} #{rake} assets:precompile"  
-  end  
-  
+  end
+
   desc "Symlink uploads dir"
   task :link_uploads, :roles => :db do
     run "mkdir -p #{deploy_to}/#{shared_dir}/uploads"
     run "ln -nfs #{deploy_to}/#{shared_dir}/uploads #{release_path}/public/uploads"
-    
+
     run "mkdir -p #{deploy_to}/#{shared_dir}/private_uploads"
     run "ln -nfs #{deploy_to}/#{shared_dir}/private_uploads #{release_path}/private/uploads"
-    
-  end  
+  end
 end
 
 namespace :ferret do
@@ -91,6 +90,4 @@ namespace :configure do
     run "ln -nfs #{deploy_to}/#{shared_dir}/system/cache #{release_path}/public/cache"
     run "ln -nfs #{deploy_to}/#{shared_dir}/system/index #{release_path}/index"
   end
-
-
 end

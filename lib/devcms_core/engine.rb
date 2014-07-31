@@ -1,5 +1,4 @@
 module DevcmsCore
-
   class Engine < Rails::Engine
     config.model_paths = []
     config.layout_paths = []
@@ -77,7 +76,7 @@ module DevcmsCore
       DataChecker.config.site_url = "http://#{Settler[:host]}" if SETTLER_LOADED && Settler[:host].present?
       DataChecker.config.checker_logger = DataChecker::DatabaseLogger
     end
-    
+
     initializer "airbrake configuration" do |app|
       Airbrake.configure do |config|
         config.api_key = {
@@ -89,7 +88,7 @@ module DevcmsCore
         config.port   = DevcmsCore::Engine.config.airbrake_redmine_port
         config.secure = DevcmsCore::Engine.config.airbrake_redmine_secure
         config.development_environments = DevcmsCore::Engine.config.airbrake_development_environments
-      end      
+      end
     end
 
     config.after_initialize do |app|

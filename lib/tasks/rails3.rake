@@ -1,14 +1,14 @@
 namespace :rails3 do
-  desc "Converts DbFile attachments to Carrierwave attachments"
+  desc 'Converts DbFile attachments to Carrierwave attachments'
   task :convert_dbfile_attachments, [:overwrite] => :environment do |t, args|    
     unless Attachment.new.respond_to?(:file?)
-      p "the Attachment model needs a 'file' string column and a mounted Carrierwave uploader"
+      p "The Attachment model needs a 'file' string column and a mounted Carrierwave uploader"
       exit(1) 
     end
 
     Attachment.unscoped do
       Node.unscoped do
-        Attachment.find_in_batches do |attachments|  
+        Attachment.find_in_batches do |attachments|
           attachments.each do |attachment|
             p "Converting attachment ##{attachment.id}..."
 
@@ -25,16 +25,16 @@ namespace :rails3 do
               FileUtils.mkdir_p store_dir
               new_file_path = File.join(store_dir, file_name)
 
-              Attachment.transaction do  
+              Attachment.transaction do
                 attachment.connection.raw_connection.lo_export(attachment.db_file.loid, new_file_path)                  
                 attachment.send(:write_attribute, :file, file_name)
-                attachment.save!(Rails.version.to_i < 3 ? false : { :validate => false})
+                attachment.save!(Rails.version.to_i < 3 ? false : { :validate => false })
               end
 
               p "Attachment ##{attachment.id} updated!"
             rescue Exception => e
               p "Error with attachment ID #{attachment.id}: #{e.message}"
-            end            
+            end
           end
         end
       end
@@ -43,16 +43,16 @@ namespace :rails3 do
     true
   end
 
-  desc "Converts images to Carrierwave images"
-  task :convert_images, [:overwrite] => :environment do |t, args|    
+  desc 'Converts images to Carrierwave images'
+  task :convert_images, [:overwrite] => :environment do |t, args|
     unless Image.new.respond_to?(:file?)
-      p "the Image model needs a 'file' string column and a mounted Carrierwave uploader"
+      p "The Image model needs a 'file' string column and a mounted Carrierwave uploader"
       exit(1) 
     end
 
     Image.unscoped do
       Node.unscoped do
-        Image.find_in_batches(:select => '*') do |images|  
+        Image.find_in_batches(:select => '*') do |images|
           images.each do |image|
 
             begin
@@ -71,8 +71,8 @@ namespace :rails3 do
 
               File.open(new_file_path, 'wb'){ |f| f << image.data }
               image.send(:write_attribute, :file, file_name)
-              image.save!(Rails.version.to_i < 3 ? false : { :validate => false})
-              image.file.recreate_versions!    
+              image.save!(Rails.version.to_i < 3 ? false : { :validate => false })
+              image.file.recreate_versions!
 
               p "Image ##{image.id} updated!"
             rescue Exception => e

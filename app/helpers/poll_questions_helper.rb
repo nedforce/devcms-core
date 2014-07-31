@@ -1,5 +1,4 @@
 module PollQuestionsHelper
-
   def poll_enabled?(poll)
      !poll.requires_login? || logged_in?
   end
@@ -15,7 +14,7 @@ module PollQuestionsHelper
   # Check for a cookie that a given poll +question+ was voted for.
   def vote_cookie_for?(question)
     cookies["voted_for_#{question.id}"] == '1'
-  end 
+  end
 
   # Set a cookie with expiration date that a given poll +question+ was voted for.
   def bake_vote_cookie_for(question)

@@ -1,7 +1,7 @@
 module DevcmsCore
   module ActionControllerExtensions
     extend ActiveSupport::Concern
-    
+
     module ClassMethods
       # Mixes-in the behaviour for a controller surrounding a archive resource specified with ActsAsArchive
       # By default only adds read actions (show, index)
@@ -28,7 +28,7 @@ module DevcmsCore
 
         include DevcmsCore::ActsAsArchiveController::CreateMethods unless options[:allow_create] == false
         include DevcmsCore::ActsAsArchiveController::UpdateMethods unless options[:allow_update] == false
-      end     
+      end
     end
   end
 end

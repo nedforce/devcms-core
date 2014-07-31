@@ -1,7 +1,7 @@
 module DevcmsCore
   module ActiveRecordExtensions
     extend ActiveSupport::Concern
-    
+
     module ClassMethods
       # Mixes in the behavior for objects to function as content nodes. Objects
       # will then gain an 1:1 association called +node+ which is managed by the
@@ -60,26 +60,26 @@ module DevcmsCore
   
         # Register content type and configuration
         Node.register_content_type(self, DevcmsCore::ActsAsContentNode::DEFAULT_CONTENT_TYPE_CONFIGURATION.merge(configuration))
-  
-        versioning_configuration.reverse_merge!(:exclude => [ :id, :created_at, :updated_at ])
-  
+
+        versioning_configuration.reverse_merge!(:exclude => [:id, :created_at, :updated_at])
+
         acts_as_versioned versioning_configuration
-    
+
         include DevcmsCore::ActsAsContentNode
       end
-      
+
       def acts_as_versioned(options = {})
-        options.assert_valid_keys([ :exclude ])
-    
-        options.reverse_merge!(:exclude => [ :updated_at, :created_at ])
-            
+        options.assert_valid_keys([:exclude])
+
+        options.reverse_merge!(:exclude => [:updated_at, :created_at])
+
         cattr_accessor :acts_as_versioned_excluded_columns
-    
+
         self.acts_as_versioned_excluded_columns = Array(options[:exclude]).map(&:to_s)
-    
+
         include DevcmsCore::ActsAsVersioned
-      end      
-                  
+      end
+
       # ActsAsArchive can be used to find items of certain archives based on their publication date
       # *Options*
       # * +items_name+ 
@@ -90,7 +90,7 @@ module DevcmsCore
         options = options.dup
         options.symbolize_keys!
         options.assert_valid_keys(:items_name, :date_field_model_name, :date_field_database_name, :sql_options)
-        
+
         options.reverse_merge!({
           :date_field_database_name => 'nodes.publication_start_date',
           :date_field_model_name => :publication_start_date,
@@ -103,19 +103,19 @@ module DevcmsCore
 
         include DevcmsCore::ActsAsArchive
       end
-      
+
       def needs_editor_approval
         include DevcmsCore::NeedsEditorApproval
       end
-      
+
       def human_name
         model_name.human
       end
-      
+
     end
-    
+
     def attributes_from_column_definition
-      self.class.column_defaults.dup     
+      self.class.column_defaults.dup
     end
   end
 end

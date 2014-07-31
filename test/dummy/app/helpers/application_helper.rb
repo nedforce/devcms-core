@@ -1,6 +1,6 @@
 module ApplicationHelper
   def content_box_icon_alt_for(node)
-    return if node.content_box_icon.blank?
+    return '' if node.content_box_icon.blank?
 
     case node.content_box_icon
     when 'agenda'
@@ -29,6 +29,8 @@ module ApplicationHelper
       'Icoon van een persoon die een poll invult'
     when 'uitgelicht'
       'Icoon van een persoon die belangrijke content bekijkt'
+    else
+      ''
     end
   end
 

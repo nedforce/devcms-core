@@ -123,7 +123,7 @@ class WeblogTest < ActiveSupport::TestCase
 
     assert_nothing_raised do
       w.weblog_posts.create!(:parent => @henk_weblog.node, :body => 'foobar', :title => 'bar', :publication_start_date => Time.now)
-    end  
+    end
   end
 
   def test_find_last_published_weblog_posts

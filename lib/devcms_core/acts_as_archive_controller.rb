@@ -13,7 +13,7 @@ module DevcmsCore
         instance_variable_set("@#{self.class.singular_name}", self.class.content_class_name.constantize.new(params[self.class.singular_name.to_sym]))
 
         respond_to do |format|
-          format.html { render :template => 'admin/shared/new', :locals => { :record => record }}
+          format.html { render :template => 'admin/shared/new', :locals => { :record => record } }
         end
       end
 
@@ -28,7 +28,7 @@ module DevcmsCore
             format.html { render :template => 'admin/shared/create_preview', :locals => { :record => record }, :layout => 'admin/admin_preview' }
             format.xml  { render :xml => record, :status => :created, :location => record }
           elsif @commit_type == 'save' && record.save
-            format.html { render :template => 'admin/shared/create' }
+            format.html { render 'admin/shared/create' }
             format.xml  { render :xml => record, :status => :created, :location => record }
           else
             format.html { render :template => 'admin/shared/new', :locals => { :record => record }, :status => :unprocessable_entity }
@@ -43,7 +43,7 @@ module DevcmsCore
         record.attributes = params[self.class.singular_name.to_sym]
 
         respond_to do |format|
-          format.html { render :template => 'admin/shared/edit', :locals => { :record => record }}
+          format.html { render :template => 'admin/shared/edit', :locals => { :record => record } }
         end
       end
 
@@ -55,7 +55,7 @@ module DevcmsCore
             format.html { render :template => 'admin/shared/update_preview', :locals => { :record => record }, :layout => 'admin/admin_preview' }
             format.xml  { render :xml => record, :status => :created, :location => record }
           elsif @commit_type == 'save' && record.save
-            format.html { render :template => 'admin/shared/update' }
+            format.html { render 'admin/shared/update' }
             format.xml  { head :ok }
           else
             format.html { render :template => 'admin/shared/edit', :locals => { :record => record }, :status => :unprocessable_entity }
@@ -92,7 +92,7 @@ module DevcmsCore
             render :json => record_nodes.map { |node| node.to_tree_node_for(current_user) }.to_json
           else
             role        = current_user.role_on(record_node)
-            common_hash = { :treeLoaderName => Node.content_type_configuration(self.class.content_class_name)[:tree_loader_name], :userRole => role ? role.name : "" }
+            common_hash = { :treeLoaderName => Node.content_type_configuration(self.class.content_class_name)[:tree_loader_name], :userRole => role ? role.name : '' }
 
             if @year
               self.class.weeks == true ? render_weeks(record_node, node_id, common_hash, active_node, archive_includes_active_node) : render_months(record_node, node_id, common_hash, active_node, archive_includes_active_node)
@@ -171,7 +171,7 @@ module DevcmsCore
 
         @nodes = record_node.children.with_content_type(%w(Image Attachment)).all(:include => [:content, :role_assignments]).map { |node| node.to_tree_node_for(current_user, { :expand_if_ancestor_of => active_node }) }
 
-        render :json => (@nodes + @years ).to_json
+        render :json => (@nodes + @years).to_json
       end
   end
 end

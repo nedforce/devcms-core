@@ -1,12 +1,12 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to ContentCopy objects.
-class Admin::ContentCopiesController < Admin::AdminController
 
+class Admin::ContentCopiesController < Admin::AdminController
   # Only the +create+ action needs a parent Node object.
   prepend_before_filter :find_parent_node,  :only => :create
 
   # The +show+ action needs a ContentCopy object to act upon.
-  before_filter         :find_content_copy, :only => [ :show, :previous ]
+  before_filter         :find_content_copy, :only => [:show, :previous]
 
   layout false
 
@@ -17,7 +17,7 @@ class Admin::ContentCopiesController < Admin::AdminController
       format.html { render :partial => 'show', :locals => { :record => @content_copy }, :layout => 'admin/admin_show' }
       format.xml  { render :xml => @content_copy }
     end
-  end 
+  end
 
   # * GET /admin/content_copies/:id/previous
   # * GET /admin/content_copies/:id/previous.xml

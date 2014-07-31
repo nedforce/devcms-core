@@ -2,7 +2,7 @@ require File.expand_path('../../../test_helper.rb', __FILE__)
 
 class Admin::NewsViewersControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
-  
+
   def setup
     @news_viewer = create_news_viewer
   end
@@ -96,7 +96,7 @@ class Admin::NewsViewersControllerTest < ActionController::TestCase
     get :edit_items, :id => @news_viewer
     assert_response :success
     assert assigns(:news_archives)
-  end  
+  end
 
   def test_should_update_news_viewer
     login_as :sjoerd
@@ -142,7 +142,7 @@ class Admin::NewsViewersControllerTest < ActionController::TestCase
 protected
 
   def create_news_viewer(attributes = {}, options = {})
-    login_as :sjoerd    
+    login_as :sjoerd
     post :create, { :parent_node_id => nodes(:economie_section_node).id, :commit_type => 'save', :news_viewer => { :title => 'NewsViewer', :description => 'A News Viewer' }.merge(attributes) }.merge(options)
     assigns(:news_viewer)
   end

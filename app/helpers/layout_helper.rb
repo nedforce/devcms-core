@@ -16,7 +16,7 @@ module LayoutHelper
         render_helper = node.own_or_inherited_layout.custom_representations[element.custom_type]['helper']
         partials += send(render_helper || "render_#{element.custom_type}") || ''
       else
-        partials << render(:partial =>  partial, :locals => {  :node => element.content, :parent => element.parent, :partial => element.content_partial, :sidebox_title => element.title, :content_box_color => nil, :last => element == representations.last })
+        partials << render(:partial =>  partial, :locals => { :node => element.content, :parent => element.parent, :partial => element.content_partial, :sidebox_title => element.title, :content_box_color => nil, :last => element == representations.last })
       end
     end
 
@@ -34,12 +34,12 @@ module LayoutHelper
       render :partial => '/layouts/partials/private_menu'
     end
   end
-  
+
   def render_related_content
     return if controller_name == 'shares'
-    
+
     if @node && @node.content_type_configuration[:has_own_content_box] && !((@node.content_class == Page || @node.content_class <= Section) && @node.tags.empty?)
-      custom_partial = @node.own_or_inherited_layout.custom_representations["related_content"]["content_partial"] || 'related_content'
+      custom_partial = @node.own_or_inherited_layout.custom_representations['related_content']['content_partial'] || 'related_content'
       render :partial => '/layouts/partials/content_box',
              :locals  => {
                :node              => @node,
@@ -52,7 +52,7 @@ module LayoutHelper
   end
 
   def toggable_section_link(dom_id, link_or_link_title, options = {})
-    link_options = {:id => "toggle_section_#{dom_id}", :class => 'toggable_section_link' }
+    link_options = { :id => "toggle_section_#{dom_id}", :class => 'toggable_section_link' }
 
     if link_or_link_title.is_a?(Link)
       html = link_to_node_url(truncate(h(link_or_link_title.content_title), :length => 60), link_or_link_title, {}, link_options)
@@ -73,6 +73,6 @@ module LayoutHelper
 
   def locale_attrs
     node = (@node || current_site)
-    node.locale.present? ? {'xml:lang' => node.locale, 'lang' => node.locale} : {}
+    node.locale.present? ? { 'xml:lang' => node.locale, 'lang' => node.locale } : {}
   end
 end

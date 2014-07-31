@@ -6,7 +6,7 @@ module Search::Modules::Ferret::FerretNodeExtension
 
   def acts_as_searchable
     require 'acts_as_ferret'
-      
+
     include Search::Modules::Ferret::FerretNodeExtension::InstanceMethods
     extend  Search::Modules::Ferret::FerretMethods::ClassMethods
     include Search::Modules::Ferret::FerretMethods::InstanceMethods

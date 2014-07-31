@@ -1,11 +1,11 @@
-# This model is used to represent a forum that can contain multiple forum topics, 
+# This model is used to represent a forum that can contain multiple forum topics,
 # which are represented using +ForumTopic+ objects. It has specified
 # +acts_as_content_node+ from Acts::ContentNode::ClassMethods.
 #
 # *Specification*
-# 
+#
 # Attributes
-# 
+#
 # * +title+ - The title of the forum.
 # * +description+ - The description of the forum.
 #
@@ -15,7 +15,7 @@
 # * Requires the uniqueness of +title+.
 #
 # Child/parent type constraints
-# 
+#
 #  * A +Forum+ only accepts +ForumTopic+ children.
 #
 class Forum < ActiveRecord::Base
@@ -32,9 +32,7 @@ class Forum < ActiveRecord::Base
   has_children :forum_topics, :order => 'forum_topics.title'
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of   :title
-  validates_uniqueness_of :title
-  validates_length_of     :title, :in => 2..255
+  validates :title, :presence => true, :uniqueness => true, :length => { :in => 2..255 }
 
   # Finds the +limit+ last updated +ForumThread+ grandchildren.
   def find_last_updated_forum_threads(limit = 5, args = {})

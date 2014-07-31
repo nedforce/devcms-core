@@ -1,4 +1,4 @@
-# This model is used to represent a forum thread that can contain multiple forum 
+# This model is used to represent a forum thread that can contain multiple forum
 # posts, which are represented using ForumPost objects. Offers functionality
 # to open and close a ForumThread.
 #
@@ -29,7 +29,6 @@ class ForumThread < ActiveRecord::Base
 
   # A +ForumThread+ can have many +ForumPost+ children.
   has_many :forum_posts, :order => 'created_at ASC', :dependent => :destroy do
-
     # The date at which the last post ForumPost in the ForumThread was added (as identified by +created_at+).
     def last_posting_date
       self.maximum(:created_at)

@@ -51,12 +51,12 @@ module Admin::AdminHelper
       :page => :data_warnings,
       :url  => { :controller => 'admin/data_warnings', :action => :index },
       :text => I18n.t('admin.data_warnings_button')
-    }    
+    }
     tags = {
       :page => :tags,
       :url  => { :controller => 'admin/tags', :action => :index },
       :text => I18n.t('admin.tags_button')
-    }    
+    }
 
     menu_items = [sitemap]
     menu_items += [permissions, settings] if current_user.has_role?('admin')
@@ -81,7 +81,7 @@ module Admin::AdminHelper
       end
       menu_anchors << link_to(item[:text], item[:url], item[:options]||{})
     end
-    
+
     menu_anchors.join.html_safe
   end
 
@@ -111,11 +111,11 @@ module Admin::AdminHelper
       render :partial => 'admin/shared/content_box_hidden_fields', :locals => { :form => form }
     end
   end
-  
+
   def meta_fields_for(content)
     render :partial => 'admin/shared/meta_fields', :locals => { :content => content }
   end
-  
+
   def display_time_select_for(carrousel)    
     [
       label_tag(     'carrousel[display_time][]', Carrousel.human_attribute_name(:display_time)) + ': ',
@@ -127,14 +127,14 @@ module Admin::AdminHelper
   def transition_time_select_for(carrousel)    
     [
       label_tag(     'carrousel[transition_time]', Carrousel.human_attribute_name(:transition_time)) + ': ',
-      text_field_tag('carrousel[transition_time]', carrousel.transition_time, :size => 4) + "ms"
+      text_field_tag('carrousel[transition_time]', carrousel.transition_time, :size => 4) + 'ms'
     ].join("\n").html_safe
   end
-  
+
   def animation_select_for(carrousel)
     [
       label_tag(     'carrousel[animation]', Carrousel.human_attribute_name(:animation)) + ': ',
-      select_tag(    'carrousel[animation]', options_for_select(Carrousel::ALLOWED_ANIMATION_TYPES.map { |type| [Carrousel::ANIMATION_NAMES[type], type]}, carrousel.animation))
+      select_tag(    'carrousel[animation]', options_for_select(Carrousel::ALLOWED_ANIMATION_TYPES.map { |type| [Carrousel::ANIMATION_NAMES[type], type] }, carrousel.animation))
     ].join("\n").html_safe
   end
 
@@ -142,26 +142,26 @@ module Admin::AdminHelper
     html =  hidden_field_tag(:commit_type)
     html << form.submit(I18n.t('shared.preview'), :onclick => "$('commit_type').setValue('preview'); return true;")
     html << form.submit(I18n.t('shared.save'),    :onclick => "$('commit_type').setValue('save'); return true;")
-    
+
     if continue
       html << form.submit(I18n.t('shared.save_and_continue'), :onclick => "$('commit_type').setValue('save'); $('continue').setValue('true'); return true;")
       html << hidden_field_tag(:continue)
     end
-    
+
     html
   end
-  
+
   def default_fields_before_form(form)
     form.text_field(:title, :label => t('shared.title')) +
     form.text_field(:title_alternative_list, :label => t('shared.title_alternatives')) +
     form.text_field(:tag_list, :label => t('shared.tags')) +
-    javascript_tag("setupTagComboBoxes(#{ActiveModel::Naming.param_key(form.object).to_json}, #{Node.available_tags.to_json});") if form.object.attributes.keys.include?("title")
+    javascript_tag("setupTagComboBoxes(#{ActiveModel::Naming.param_key(form.object).to_json}, #{Node.available_tags.to_json});") if form.object.attributes.keys.include?('title')
   end
-    
+
   def default_fields_after_form(form)
-    ""
+    ''
   end
-  
+
   def default_preview_fields(form)
     fields = form.hidden_field(:publication_start_date) + form.hidden_field(:publication_end_date)
     if form.object.attributes.keys.include?('title')
@@ -172,23 +172,23 @@ module Admin::AdminHelper
 
   def approval_fields(form, obj = nil)
     html = form.check_box :draft, :label => t('pages.save_as_draft'), :for_check_box => true, :wrapper => { :class => 'formFieldCb draft-wrapper' }
-    
+
     if obj ? obj.class.requires_editor_approval? : form.object.class.requires_editor_approval?
       html << hidden_field_tag(:for_approval, true) if @for_approval
       html << form.html_editor(:editor_comment, :label => t('pages.editor_comment'), :rows => 3) if current_user.has_role?('editor')
     end
-    
+
     html
   end
-  
+
   def approval_hidden_fields(form, obj = nil)
     html = form.hidden_field(:draft)
-    
+
     if obj ? obj.class.requires_editor_approval? : form.object.class.requires_editor_approval?
       html << hidden_field_tag(:for_approval, true) if @for_approval
       html << form.hidden_field(:editor_comment) if current_user.has_role?('editor')
     end
-    
+
     html
   end
 

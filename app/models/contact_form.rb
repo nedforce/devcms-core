@@ -69,7 +69,7 @@ class ContactForm < ActiveRecord::Base
     @deleted_contact_form_fields = []
 
     unless @contact_form_fields_before_save.blank? || !@contact_form_fields_before_save.is_a?(Array)
-      @contact_form_fields_before_save.delete_if { |options| options.values.all? { |value| value.blank? }}
+      @contact_form_fields_before_save.delete_if { |options| options.values.all? { |value| value.blank? } }
       @contact_form_fields_before_save.each do |options|
         inst = nil
         delete_contact_form_field = options.delete(:delete)
@@ -111,9 +111,9 @@ class ContactForm < ActiveRecord::Base
   def set_error_messages_for_contact_form_fields
     message = I18n.t 'activerecord.errors.models.contact_form.attributes.contact_form_fields.invalid_contact_form_field'
 
-    if self.errors["contact_form_fields"].present?
+    if self.errors['contact_form_fields'].present?
       self.errors.instance_eval do
-        @errors["contact_form_fields"] = [message]
+        @errors['contact_form_fields'] = [message]
       end
     end
   end
@@ -124,5 +124,4 @@ protected
     self.contact_form_fields.destroy_all
     self.responses.destroy_all
   end
-
 end

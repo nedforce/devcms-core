@@ -95,12 +95,12 @@ class ApplicationController < ActionController::Base
             @page = @node.content
             render :template => 'pages/show', :status => :not_found
           else
-            render :template => "errors/404", :status => :not_found
+            render :template => 'errors/404', :status => :not_found
           end
         end
       end
-      f.any(:xml, :js, :atom, :rss)  { head 404 }
-      f.json { render :json => { :error => I18n.t('application.page_not_found')}.to_json, :status => 404 }
+      f.any(:xml, :js, :atom, :rss) { head 404 }
+      f.json { render :json => { :error => I18n.t('application.page_not_found') }.to_json, :status => 404 }
       f.all  { render :nothing => true, :status => :not_found }
     end
   end
@@ -113,7 +113,7 @@ class ApplicationController < ActionController::Base
         @page = @node.content
         render :template => 'pages/show', :status => :internal_server_error
       else
-        render :template => "errors/500", :status => :internal_server_error
+        render :template => 'errors/500', :status => :internal_server_error
       end
       return
     end
@@ -122,9 +122,9 @@ class ApplicationController < ActionController::Base
       puts "\n#{exception.message}"
       puts exception.backtrace.join("\n") 
     end
-  
+
     send_exception_notification(exception)
-    error = {:error => "#{exception} (#{exception.class})", :backtrace => exception.backtrace.join('\n')}
+    error = { :error => "#{exception} (#{exception.class})", :backtrace => exception.backtrace.join('\n') }
     @page_title = t('errors.internal_server_error')
 
     respond_to do |f|
@@ -137,7 +137,7 @@ class ApplicationController < ActionController::Base
             @page = @node.content
             render :template => 'pages/show', :status => :internal_server_error
           else
-            render :template => "errors/500", :status => :internal_server_error
+            render :template => 'errors/500', :status => :internal_server_error
           end
         end
       end
@@ -147,7 +147,7 @@ class ApplicationController < ActionController::Base
       f.all               { render :nothing => true,       :status => :internal_server_error }
     end
   end
-  
+
   def fullpath
     request.env['ORIGINAL_FULLPATH'] || request.fullpath
   end
@@ -158,17 +158,17 @@ protected
   def current_site
     @current_site ||= Node.with_content_type('Site').find_by_id(params[:site_id]) || Site.find_by_domain(request.host).try(:node) || raise(ActionController::RoutingError, 'No root site found!')
   end
-  
+
   # Used to find the operated node. Should be used for content nodes only
   def find_node
     return unless params[:id].present? && controller_model.respond_to?(:is_content_node?) && controller_model.is_content_node?
     @node = current_site.self_and_descendants.accessible.include_content.where([ 'content_type = ? AND content_id = ?', controller_model.base_class.name, params[:id].to_i ]).first!
   end
-  
+
   # Used to find the context node (for authorization purposes)
   def find_context_node
     if @node.present?
-      if @node.content_type == "Section"
+      if @node.content_type == 'Section'
         @context_node = @node
       else
         @context_node = @node.self_and_ancestors.sections.include_content.last
@@ -189,10 +189,10 @@ protected
         @context_node = current_site
       end
     end
-    
+
     raise(ActionController::RoutingError, 'No context node found!') unless @context_node
   end
-  
+
   # Performs authorization
   def check_authorization
     raise ActiveRecord::RecordNotFound.new('Access denied') unless @context_node.accessible_for_user?(current_user)
@@ -216,10 +216,10 @@ protected
   # Return layout to render
   # Return the default print template if param 'layout' equals 'print'.
   def set_layout
-    if params[:layout] == "print"
-      return "print"
-    elsif params[:layout] == "plain"
-      return "plain"
+    if params[:layout] == 'print'
+      return 'print'
+    elsif params[:layout] == 'plain'
+      return 'plain'
     else
       return 'default'
     end
@@ -229,26 +229,26 @@ protected
   # Default to current site, with default variant
   def set_view_paths
     node = @node
-      
+
     unless node
       node                = current_site
       node.layout_variant = 'default'
     end
-    
+
     @layout_configuration = node.own_or_inherited_layout_configuration
     @layout               = node.own_or_inherited_layout
     @layout_variant       = node.own_or_inherited_layout_variant
     parent                = @layout.parent
-    
+
     prepend_view_path("#{parent.path}/views") if parent.present?
     prepend_view_path("#{@layout.path}/views")
-    
+
     if @layout_variant && @layout_variant[:id] != 'default'
       prepend_view_path("#{parent.path}/#{@layout_variant[:id]}/views") if parent.present?
       prepend_view_path("#{@layout.path}/#{@layout_variant[:id]}/views")
-    end 
+    end
   end
-  
+
   def layout_configuration
     @layout_configuration
   end
@@ -268,19 +268,19 @@ protected
   # Find the Attachment and Image children belonging to the current Node instance.
   def find_images_and_attachments
     @image_content_nodes, @attachment_nodes = [], []
-    
+
     @node.children.accessible.with_content_type(%w(Image Attachment ContentCopy)).include_content.all.each do |node|
-      node = node.content.copied_node if node.content_type == "ContentCopy"
-      if node.content_type == "Image" && !node.content.is_for_header? && node.content.show_in_listing
+      node = node.content.copied_node if node.content_type == 'ContentCopy'
+      if node.content_type == 'Image' && !node.content.is_for_header? && node.content.show_in_listing
         @image_content_nodes << node.content
-      elsif node.content_type == "Attachment"
+      elsif node.content_type == 'Attachment'
         @attachment_nodes << node
       end
     end
   end
 
   ## SSL related functionality ##
-  
+
   # Returns true if SSL encryption is required, else false.
   def ssl_required?
     return false if disable_ssl?
@@ -319,7 +319,7 @@ protected
       @private_menu_items = []
     end
   end
-  
+
   def find_accessible_private_items_for(user)
     role_assignments = user.role_assignments.all
     Node.accessible.private.sections.order(:position).select do |node|
@@ -390,10 +390,10 @@ protected
   end
 
   def set_default_search_scopes
-    @search_scopes << [ t('application.whole_site'), "" ] 
-    
+    @search_scopes << [ t('application.whole_site'), '' ]
+
     if !current_site.root?
-      @search_scopes << [ t('application.current_site'), current_site.id ] 
+      @search_scopes << [ t('application.current_site'), current_site.id ]
     end
 
     if @node
@@ -409,11 +409,11 @@ protected
 
     @search_scopes += @accessible_children_for_menu.map { |c| [ c.title, "node_#{c.id}" ]}
   end
-  
+
   def find_accessible_children_for_menus
     @accessible_children_for_menu = current_site.children.accessible.public.shown_in_menu.all(:order => 'nodes.position ASC')
   end
-  
+
   def redirect_to_full_domain
     redirect_to "#{request.protocol}#{current_site.content.domain}:#{request.port}#{fullpath}" unless Rails.application.config.consider_all_requests_local || request.host == current_site.content.domain rescue false
   end
@@ -422,12 +422,10 @@ protected
     @controller_model ||= controller_name.classify.split('::').last.constantize rescue nil
   end
 
-
 private
-  
-  def determine_redirect_url(request, ssl)
-    protocol = ssl ? "https" : "http"
-    "#{protocol}://#{determine_host_and_port(request, ssl)}#{fullpath}"
-  end 
 
+  def determine_redirect_url(request, ssl)
+    protocol = ssl ? 'https' : 'http'
+    "#{protocol}://#{determine_host_and_port(request, ssl)}#{fullpath}"
+  end
 end
