@@ -33,8 +33,7 @@ class Poll < ActiveRecord::Base
   has_children :poll_questions
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of :title
-  validates_length_of   :title, :in => 2..255, :allow_blank => true
+  validates :title, :presence => true, :length => { :in => 2..255, :allow_blank => true }
 
   # Returns the active +PollQuestion+ of this +Poll+ if one exists, returns +nil+ otherwise.
   def active_question

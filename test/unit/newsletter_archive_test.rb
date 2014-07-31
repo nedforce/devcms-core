@@ -2,26 +2,26 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 
 class NewsletterArchiveTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
-  
+
   def setup
     @root_node = nodes(:root_section_node)
     @devcms_newsletter_archive = newsletter_archives(:devcms_newsletter_archive)
   end
-  
+
   def test_should_create_newsletter_archive
     assert_difference 'NewsletterArchive.count' do
       create_newsletter_archive
     end
   end
-   
+
   def test_should_require_title
     assert_no_difference 'NewsletterArchive.count' do
       newsletter_archive = create_newsletter_archive(:title => nil)
       assert newsletter_archive.errors[:title].any?
     end
-    
+
     assert_no_difference 'NewsletterArchive.count' do
-      newsletter_archive = create_newsletter_archive(:title => "  ")
+      newsletter_archive = create_newsletter_archive(:title => '  ')
       assert newsletter_archive.errors[:title].any?
     end
   end
@@ -34,7 +34,7 @@ class NewsletterArchiveTest < ActiveSupport::TestCase
       end
     end
   end
-  
+
   def test_should_update_newsletter_archive
     assert_no_difference 'NewsletterArchive.count' do
       @devcms_newsletter_archive.title       = 'New title'
@@ -42,16 +42,16 @@ class NewsletterArchiveTest < ActiveSupport::TestCase
       assert @devcms_newsletter_archive.save
     end
   end
-  
+
   def test_should_destroy_newsletter_archive
-    assert_difference "NewsletterArchive.count", -1 do
+    assert_difference 'NewsletterArchive.count', -1 do
       @devcms_newsletter_archive.destroy
     end
   end
-  
+
   def test_has_subscription_for?
     users = User.all
-    
+
     NewsletterArchive.all.each do |newsletter_archive|
       users.each do |user|
         if newsletter_archive.users.include?(user)
@@ -62,16 +62,16 @@ class NewsletterArchiveTest < ActiveSupport::TestCase
       end
     end
   end
-  
+
   def test_should_allow_optional_from_address
     @devcms_newsletter_archive.from_email_address = 'admin@devcms.nl'
-    assert @devcms_newsletter_archive.save    
+    assert @devcms_newsletter_archive.save
   end
-  
+
   def test_should_validate_optional_from_address
     @devcms_newsletter_archive.from_email_address = 'no_email_address'
     @devcms_newsletter_archive.save
-    assert @devcms_newsletter_archive.errors[:from_email_address].any?       
+    assert @devcms_newsletter_archive.errors[:from_email_address].any?
   end
 
   def test_find_years_with_newsletter_editions

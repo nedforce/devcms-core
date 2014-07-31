@@ -1,5 +1,4 @@
 class Admin::NewsViewerItemsController < Admin::AdminController
-
   skip_before_filter :find_node
 
   prepend_before_filter :find_news_viewer_and_node
@@ -26,7 +25,7 @@ class Admin::NewsViewerItemsController < Admin::AdminController
 
         @news_items                 = @news_viewer.news_items
         @available_news_items_count = @news_archive.news_items.newest.count
-        @available_news_items       = @news_archive.news_items.newest.all :include => :node, :order => 'nodes.publication_start_date DESC', :limit => @page_limit, :offset => @page_limit*(@current_page-1)             
+        @available_news_items       = @news_archive.news_items.newest.all :include => :node, :order => 'nodes.publication_start_date DESC', :limit => @page_limit, :offset => @page_limit*(@current_page-1)
       end
     end
   end
@@ -55,7 +54,7 @@ class Admin::NewsViewerItemsController < Admin::AdminController
 
   def update_positions
     # Use update_all to skip callbacks
-    params[:items].each_with_index{ |id, index| NewsViewerItem.update_all({ :position => index }, { :id => id }) } if params[:items].present?      
+    params[:items].each_with_index{ |id, index| NewsViewerItem.update_all({ :position => index }, { :id => id }) } if params[:items].present?
 
     render :nothing => true, :status => 200
   end

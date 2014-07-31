@@ -4,7 +4,7 @@ class RoleAssignment < ActiveRecord::Base
 
   PRIVILEGED_ROLES = %w(admin editor final_editor)
   READONLY_ROLES = %w(read_access indexer)
-  
+
   ALL_ROLES = PRIVILEGED_ROLES + READONLY_ROLES
 
   ROLES = {
@@ -27,11 +27,11 @@ class RoleAssignment < ActiveRecord::Base
   validate :content_class
   validate :root_if_admin
   validate :no_inherited_roles
-  
+
   def is_privileged?
     PRIVILEGED_ROLES.include?(self.name)
   end
-  
+
   protected
 
   def content_class
@@ -41,7 +41,7 @@ class RoleAssignment < ActiveRecord::Base
   end
 
   def root_if_admin
-    if self.node && self.name == "admin" && !self.node.root?
+    if self.node && self.name == 'admin' && !self.node.root?
       errors.add(:node, :admin_requires_root)
     end
   end
@@ -51,7 +51,7 @@ class RoleAssignment < ActiveRecord::Base
   def no_inherited_roles
     errors.add(:base, :inherited_roles) if user && user.has_role_on?(user.role_assignments.map(&:name), node)
   end
-  
+
   def secure_user_for_write_access
     unless self.user.present? && self.user.is_privileged?
       errors.add(:user, :role_requires_priviliged_user)

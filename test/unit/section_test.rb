@@ -102,19 +102,21 @@ class SectionTest < ActiveSupport::TestCase
   end
 
   def test_last_updated_at_should_return_updated_at_when_no_accessible_children_are_found
-    s = create_section :publication_start_date => 1.day.ago
+    publication_start_date = 1.day.ago
+
+    s = create_section :publication_start_date => publication_start_date
     assert_equal s.updated_at.to_i, s.last_updated_at.to_i
 
-    p = create_page s, :publication_start_date => 1.day.ago
-    
+    p = create_page s, :publication_start_date => publication_start_date
+
     p.node.hidden = true
     p.node.save!
-    
+
     assert_equal s.updated_at.to_i, s.last_updated_at.to_i
   end
-  
+
 protected
-  
+
   def create_section(options = {})
     Section.create({ :parent => nodes(:root_section_node), :title => 'new section', :description => 'new description for section.' }.merge(options))
   end

@@ -20,14 +20,13 @@
 #  * A Meeting only accepts AgendaItem children.
 #
 class Meeting < CalendarItem
-
   acts_as_content_node({
     :allowed_child_content_types => %w( Attachment AttachmentTheme AgendaItem ),
     :show_in_menu                => false,
     :copyable                    => false,
     :controller_name             => 'meetings'
   })
-  
+
   needs_editor_approval
 
   # The category that this meeting belongs to.

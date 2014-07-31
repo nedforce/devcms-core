@@ -1,8 +1,8 @@
 # This administrative controller sets defaults for the other administrative
 # controllers. It is intended as an abstract class for other admin controllers
 # to inherit.
-class Admin::AdminController < ApplicationController
 
+class Admin::AdminController < ApplicationController
   # Override non-JS DELETE hyprlinks fallback for admin pages.
   skip_before_filter :confirm_destroy
 
@@ -177,7 +177,7 @@ protected
 
     if type.present?
       params[type][:start_time] = Time.parse(params[type].delete(:start_time)) rescue nil if params[type][:start_time].present?
-      params[type][:end_time]   = Time.parse(params[type].delete(:end_time))   rescue nil if params[type][:end_time].present?  
+      params[type][:end_time]   = Time.parse(params[type].delete(:end_time))   rescue nil if params[type][:end_time].present?
       params[type][:date]       = Date.parse(params[type].delete(:date))       rescue nil if params[type][:date].present?
     end
   end

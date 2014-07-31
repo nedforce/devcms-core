@@ -3,23 +3,23 @@ module LayoutHelper
     partials        = ''
     node            = (@node || current_site)
 
-    return unless node.own_or_inherited_layout_variant[target].present?  
-    
+    return unless node.own_or_inherited_layout_variant[target].present?
+
     partial         = '/layouts/partials/' + node.own_or_inherited_layout_variant[target]['representation']
     inheritable     = node.own_or_inherited_layout_variant[target]['inheritable'].nil? || node.own_or_inherited_layout_variant[target]['inheritable']
     representations = node.find_content_representations(target, inheritable)
 
     representations.each do |element|
       next unless element.content_partial.present?
-      
+
       if element.custom_type.present?
-        render_helper = node.own_or_inherited_layout.custom_representations[element.custom_type]["helper"]
-        partials += send(render_helper || "render_#{element.custom_type}") || ""
+        render_helper = node.own_or_inherited_layout.custom_representations[element.custom_type]['helper']
+        partials += send(render_helper || "render_#{element.custom_type}") || ''
       else
         partials << render(:partial =>  partial, :locals => {  :node => element.content, :parent => element.parent, :partial => element.content_partial, :sidebox_title => element.title, :content_box_color => nil, :last => element == representations.last })
       end
     end
-    
+
     raw partials
   end
 
@@ -75,5 +75,4 @@ module LayoutHelper
     node = (@node || current_site)
     node.locale.present? ? {'xml:lang' => node.locale, 'lang' => node.locale} : {}
   end
-
 end

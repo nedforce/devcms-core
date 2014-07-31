@@ -2,16 +2,16 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 
 class ActsAsContentNodeTestTransactional < ActiveSupport::TestCase
   self.use_transactional_fixtures = false
-  
+
   def setup
     @about_page = pages(:about_page)
     @arthur = users(:arthur)
     @reader = users(:reader)
   end
-  
+
   def test_save_with_parent_should_fail_for_invalid_parent
     page = build_page(:parent => nodes(:henk_weblog_post_one_node))
-    
+
     assert_no_difference 'Page.count' do
       assert !page.save
       assert page.errors[:'node.base'].any?
@@ -25,7 +25,7 @@ class ActsAsContentNodeTestTransactional < ActiveSupport::TestCase
       end
     end
   end
-   
+
   def test_create_with_parent_should_fail_for_invalid_parent
     assert_no_difference 'Page.count' do
       page = Page.create(:parent => nodes(:henk_weblog_post_one_node), :title => "Page title", :preamble => "Ambule", :body => "Page body", :expires_on => 1.day.from_now.to_date)
@@ -38,7 +38,7 @@ class ActsAsContentNodeTestTransactional < ActiveSupport::TestCase
       end
     end
   end
-  
+
   protected
 
     def build_page(options = {})

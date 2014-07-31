@@ -16,8 +16,8 @@
 # Child/parent type constraints
 #
 #  * A WeblogArchive only accepts +Weblog+ children.
+#
 class WeblogArchive < ActiveRecord::Base
-
   # Determines how many +Weblog+ nodes are shown for each offset node in the admin controller.
   DEFAULT_OFFSET = 20
 
@@ -35,8 +35,7 @@ class WeblogArchive < ActiveRecord::Base
   has_children :weblogs, :order => 'weblogs.title'
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of :title
-  validates_length_of   :title, :in => 2..255
+  validates :title, :presence => true, :length => { :in => 2..255, :allow_blank => true }
 
   # Finds the first +DEFAULT_OFFSET+ weblogs belonging to this +WeblogArchive+,
   # starting at the given +offset+.
@@ -72,7 +71,7 @@ class WeblogArchive < ActiveRecord::Base
     first  = self.weblogs.first(:offset => offset, :limit => DEFAULT_OFFSET)
     second = self.weblogs.first(:offset => offset, :limit => DEFAULT_OFFSET, :order => 'weblogs.title DESC')
 
-    [ first, second ]
+    [first, second]
   end
 
   # Parses the given +offset+.
@@ -94,7 +93,7 @@ class WeblogArchive < ActiveRecord::Base
   # Finds the +limit+ last updated +Weblog+ children.
   def find_last_updated_weblogs(limit = 5)
     return [] if limit <= 0
-    
+
     self.weblogs.accessible.all.sort { |a, b| b.last_updated_at <=> a.last_updated_at }[0.. (limit - 1)]
   end
 

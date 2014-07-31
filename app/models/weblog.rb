@@ -56,8 +56,9 @@ class Weblog < ActiveRecord::Base
   belongs_to :user
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of :title, :weblog_archive, :user
-  validates_length_of   :title, :in => 2..255, :allow_blank => true
+  validates :title,          :presence => true, :length => { :in => 2..255, :allow_blank => true }
+  validates :weblog_archive, :presence => true
+  validates :user,           :presence => true
 
   # Returns true if this +Weblog+ is owned by the given +User+, else false.
   def is_owned_by_user?(user)

@@ -22,9 +22,8 @@ class AlphabeticIndex < ActiveRecord::Base
   })
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of  :title, :content_type
-  validates_length_of    :title,        :in => 2..255, :allow_blank => true
-  validates_inclusion_of :content_type, :in => DevcmsCore::Engine.config.allowed_content_types_for_alphabetic_index
+  validates :title,        :presence => true, :length => { :in => 2..255, :allow_blank => true }
+  validates :content_type, :presence => true, :inclusion => { :in => DevcmsCore::Engine.config.allowed_content_types_for_alphabetic_index }
 
   # Returns an alphabetic list of all the descendant Items of type ContentType of the parent.
   def items(letter = 'A', options = {})

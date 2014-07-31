@@ -16,7 +16,7 @@ class Admin::NewsViewersController < Admin::AdminController
   # * GET /news_viewers/:id
   # * GET /news_viewers/:id.xml
   def show
-    @actions << { :url => { :action => :edit_items }, :text => I18n.t('news_viewers.edit_items'), :method => :get } if current_user.has_any_role?    
+    @actions << { :url => { :action => :edit_items }, :text => I18n.t('news_viewers.edit_items'), :method => :get } if current_user.has_any_role?
     respond_to do |format|
       format.html { render :partial => 'show', :layout => 'admin/admin_show' }
       format.xml  { render :xml => @news_viewer }

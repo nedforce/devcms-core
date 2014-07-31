@@ -16,8 +16,8 @@ class ForumPostTest < ActiveSupport::TestCase
   end
 
   def test_should_not_destroy_start_post
-    assert_no_difference "ForumPost.count" do
-      assert !@bewoners_forum_post_one.destroy      
+    assert_no_difference 'ForumPost.count' do
+      assert !@bewoners_forum_post_one.destroy
     end
     assert_equal 5, @bewoners_forum_thread_one.forum_posts.size
     assert_not_nil  @bewoners_forum_thread_one.start_post
@@ -69,7 +69,6 @@ class ForumPostTest < ActiveSupport::TestCase
       forum_post = create_forum_post()
       assert forum_post.errors[:base].empty?
     end
-
   end
 
   def test_should_update_forum_post
@@ -144,13 +143,13 @@ class ForumPostTest < ActiveSupport::TestCase
     non_editable_forum_post = create_forum_post(:forum_thread => forum_threads(:bewoners_forum_thread_three))
 
     editable_forum_posts = ForumPost.editable_comments_for(users(:final_editor))
-    assert editable_forum_posts.include?(editable_forum_post)
+    assert  editable_forum_posts.include?(editable_forum_post)
     assert !editable_forum_posts.include?(non_editable_forum_post)
 
     editable_forum_post  = create_forum_post(:user => users(:editor))
     editable_forum_posts = ForumPost.editable_comments_for(users(:editor))
 
-    assert editable_forum_posts.include?(editable_forum_post)
+    assert  editable_forum_posts.include?(editable_forum_post)
     assert !editable_forum_posts.include?(non_editable_forum_post)
   end
 

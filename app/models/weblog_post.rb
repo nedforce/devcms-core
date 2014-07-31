@@ -38,8 +38,9 @@ class WeblogPost < ActiveRecord::Base
   has_parent :weblog
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of :title, :body, :weblog
-  validates_length_of   :title, :in => 2..255, :allow_blank => true
+  validates :title,  :presence => true, :length => { :in => 2..255, :allow_blank => true }
+  validates :body,   :presence => true
+  validates :weblog, :presence => true
 
   # Alternative text for tree nodes.
   def tree_text(node)
@@ -48,7 +49,7 @@ class WeblogPost < ActiveRecord::Base
 
   # Returns the preamble and body as the tokens for indexing.
   def content_tokens
-    [ preamble, body ].join(' ')
+    [preamble, body].join(' ')
   end
 
   # Returns a URL alias for a given +node+.

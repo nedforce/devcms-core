@@ -23,4 +23,3 @@ class SearchPageTest < ActiveSupport::TestCase
     SearchPage.create({ :parent => nodes(:root_section_node), :title => 'Search test page' }.merge(options))
   end
 end
-

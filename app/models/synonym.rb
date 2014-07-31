@@ -29,8 +29,8 @@ class Synonym < ActiveRecord::Base
   belongs_to :node
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of     :node
-  validates_presence_of     :name, :original, :weight
-  validates_numericality_of :weight, :greater_than => 0
-  validates_uniqueness_of   :name, :scope => :original, :case_sensitive => false
+  validates :node,     :presence => true
+  validates :name,     :presence => true, :uniqueness => { :scope => :original, :case_sensitive => false }
+  validates :original, :presence => true
+  validates :weight,   :presence => true, :numericality => { :greater_than => 0 }
 end

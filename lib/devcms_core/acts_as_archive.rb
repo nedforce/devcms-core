@@ -1,5 +1,4 @@
 module DevcmsCore
-
   module ActsAsArchive
     extend ActiveSupport::Concern
 
@@ -68,7 +67,7 @@ module DevcmsCore
       start_of_year = DateTime.civil(year, 1, 1)
       start_of_next_year = start_of_year + 1.year
 
-      date_field_model_name = self.acts_as_archive_configuration[:date_field_model_name]
+      date_field_model_name    = self.acts_as_archive_configuration[:date_field_model_name]
       date_field_database_name = self.acts_as_archive_configuration[:date_field_database_name]
 
       options = { :conditions => [ date_field_database_name + ' >= ? AND ' + date_field_database_name + ' < ?', start_of_year, start_of_next_year ] }
@@ -92,7 +91,7 @@ module DevcmsCore
       start_of_cwyear = commercial_date(year, 1, 7).beginning_of_week
       star_of_next_cwyear = (Date.valid_commercial?(year, 53, 7) ? commercial_date(year, 53, 7) : commercial_date(year, 52, 7)).end_of_week + 1.day
 
-      date_field_model_name = self.acts_as_archive_configuration[:date_field_model_name]
+      date_field_model_name    = self.acts_as_archive_configuration[:date_field_model_name]
       date_field_database_name = self.acts_as_archive_configuration[:date_field_database_name]
 
       options = { :conditions => [ date_field_database_name + ' >= ? AND ' + date_field_database_name + ' < ?', start_of_cwyear, star_of_next_cwyear ] }

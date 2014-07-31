@@ -16,7 +16,7 @@ class Date
   end
 
   def valid_gregorian_date?
-    return false if self.nil?  
+    return false if self.nil?
     (self.month == 2 and self.day == 29) ? Date.gregorian_leap?(self.year) : true
   end
 end

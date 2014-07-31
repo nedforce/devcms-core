@@ -5,9 +5,9 @@ require 'open-uri'
 # It has specified +acts_as_content_node+ from Acts::ContentNode::ClassMethods.
 #
 # *Specification*
-# 
+#
 # Attributes
-# 
+#
 # * +cached_parsed_feed+ - The cached parsed feed.
 # * +url+ - The url of the feed.
 # * +xml+ - The raw xml data of the feed.
@@ -16,9 +16,9 @@ require 'open-uri'
 #
 # * Requires the presence of +url+
 # * Requires +url+ to yield a valid RSS document
-# 
+#
 # Child/parent type constraints
-# 
+#
 #  * A Feed does not accept any child nodes.
 #  * A Feed can only be inserted into Section nodes.
 #
@@ -29,7 +29,7 @@ class Feed < ActiveRecord::Base
   })
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of :url
+  validates :url, :presence => true
   validate :valid_feed?
 
   def parsed_feed

@@ -54,12 +54,12 @@ require 'digest'
 require 'digest/sha2'
 
 class User < ActiveRecord::Base
-  
+
   SEXES = {
     'm' => :male,
     'f' => :female
   }
-  
+
   scope :exclusive, where(['users.type is null or users.type = ?', 'User'])
 
   # Virtual attribute to hold the unencrypted password
@@ -76,7 +76,7 @@ class User < ActiveRecord::Base
 
   # A +User+ has many +RoleAssignment+ objects (i.e., roles).
   has_many :role_assignments, :dependent => :destroy, :conditions => { :name => %w(read_access indexer)}
-    
+
   has_many :user_poll_question_votes, :dependent => :destroy
 
   # A +User+ has and belongs to many +NewsletterArchive+ objects (i.e., subscriptions to newsletters).
@@ -91,9 +91,9 @@ class User < ActiveRecord::Base
 
   # A +User+ can have created many forum posts.
   has_many :forum_posts,     :dependent => :destroy
-  
+
   has_many :versions,        :foreign_key => :editor_id, :dependent => :destroy
-  
+
   has_many :event_registrations, :dependent => :destroy
 
   has_many :created_nodes, :foreign_key => :created_by_id, :class_name => 'Node', :dependent => :nullify
@@ -112,12 +112,12 @@ class User < ActiveRecord::Base
 
   validates_presence_of     :email_address
 
-  validates :email_address, :email => { :allow_blank => true }  
-    
+  validates :email_address, :email => { :allow_blank => true }
+
   # To make sure editing still checks uniqueness
   validates_uniqueness_of   :email_address, :case_sensitive => false, :if => :persisted?
 
-  validates_presence_of     :verification_code
+  validates :verification_code, :presence => true
 
   validates_inclusion_of    :sex,   :in => User::SEXES.keys, :allow_blank => true
 

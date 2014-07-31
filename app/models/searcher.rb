@@ -9,10 +9,10 @@
 #
 class Searcher
   if Devcms.search_configuration[:enabled_search_engines].include?('ferret')
-    require 'acts_as_ferret'  
-    
+    require 'acts_as_ferret'
+
     # The supported search engines.
-    ENGINES = [ 'ferret' ]
+    ENGINES = ['ferret']
 
     # The structure of the result of a search.
     SEARCH_RESULT_STRUCT = Struct.new(:title, :tstamp, :content, :url, :node, :score, :highlighted_title, :highlighted_content)

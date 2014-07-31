@@ -47,15 +47,15 @@ class CalendarItem < Event
     hash[value] = key
     hash
   end.freeze
-  
+
   # Adds content node functionality to event.
-   acts_as_content_node({
-     :allowed_child_content_types => %w( Attachment AttachmentTheme ),
-     :show_in_menu => false,
-     :copyable => false,
-     :controller_name => 'calendar_items'
-   })
-   
+  acts_as_content_node({
+    :allowed_child_content_types => %w( Attachment AttachmentTheme ),
+    :show_in_menu => false,
+    :copyable => false,
+    :controller_name => 'calendar_items'
+  })
+
   needs_editor_approval
 
   # Create repeating calendar items if necessary.

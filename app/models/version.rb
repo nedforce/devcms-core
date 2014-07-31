@@ -5,17 +5,18 @@ class Version < ActiveRecord::Base #:nodoc:
     :rejected   => 'rejected'
   }
 
+  UNAPPROVED_STATUSES = ['unapproved', 'rejected']
+
   belongs_to :versionable, :polymorphic => true
   belongs_to :editor, :class_name => 'User'
 
-  validates_presence_of :status
-  validates_inclusion_of :status, :in => STATUSES.values
+  validates :status, :presence => true, :inclusion => { :in => STATUSES.values }
 
   before_create :set_number
 
   default_scope :order => 'versions.created_at DESC'
 
-  scope :unapproved, :conditions => [ 'status = ? OR status = ?', STATUSES[:unapproved], STATUSES[:rejected] ]
+  scope :unapproved, :conditions => { :status => UNAPPROVED_STATUSES }
 
   def drafted?
     self.status == STATUSES[:drafted]

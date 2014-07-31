@@ -202,7 +202,7 @@ class NodeTest < ActiveSupport::TestCase
   def test_should_sort_children_descending_by_created_at
     node = nodes(:node_for_sorting)
     node.sort_children :sort_by => :created_at, :order => 'desc'
-    assert_equal [Time.now.day, 5.days.ago.day, 10.days.ago.day], node.children.map { |n| n.content.created_at.day }
+    assert_equal [Time.zone.now.day, 5.days.ago.day, 10.days.ago.day], node.children.map { |n| n.content.created_at.day }
   end
 
   def test_global_frontpage
