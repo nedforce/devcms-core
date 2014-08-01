@@ -13,32 +13,32 @@ module DevcmsCore
     config.app_middleware.insert_before(::DevcmsCore::Rewriter, ::ActionDispatch::Static, "#{root}/public")
 
     # Honeypot defaults
-    config.honeypot_name =       "OgJhm3UT"
-    config.honeypot_value =      "DA0MEHBTDZRQnTlv"
-    config.honeypot_empty_name = "eQ8oaGMk"
-    config.honeypot_class =      "ufnskjfdsniubh"
+    config.honeypot_name       = 'OgJhm3UT'
+    config.honeypot_value      = 'DA0MEHBTDZRQnTlv'
+    config.honeypot_empty_name = 'eQ8oaGMk'
+    config.honeypot_class      = 'ufnskjfdsniubh'
     
     # Airbrake configuration
-    config.airbrake_redmine_project  = 'devcms'
+    config.airbrake_redmine_project          = 'devcms'
     config.airbrake_development_environments = %w(development test cucumber)
-    config.airbrake_redmine_host     = 'projects.nedforce.nl'
-    config.airbrake_redmine_port     = 80
-    config.airbrake_redmine_secure   = false
-    config.airbrake_redmine_login    = 'exception_notifier'        
+    config.airbrake_redmine_host             = 'projects.nedforce.nl'
+    config.airbrake_redmine_port             = 80
+    config.airbrake_redmine_secure           = false
+    config.airbrake_redmine_login            = 'exception_notifier'
 
     config.use_devcms_icons = true
 
     register_cms_modules
 
-    initializer "haml_configuration" do |app|
+    initializer 'haml_configuration' do |app|
       Haml::Template.options[:format] = :xhtml
     end
 
-    initializer "exceptions_app" do |app|
+    initializer 'exceptions_app' do |app|
       app.config.exceptions_app = app.routes
     end
 
-    initializer "register_cms_modules" do |app|
+    initializer 'register_cms_modules' do |app|
       config.model_paths.reverse.each do |model_path|
         config.registered_models += model_path.existent.map { |model| model.split('/').last[0..-4].camelize }
       end
@@ -46,7 +46,7 @@ module DevcmsCore
       config.reserved_slugs += config.registered_models.map(&:tableize)
     end
 
-    initializer "devcms_precompile" do |app|
+    initializer 'devcms_precompile' do |app|
       app.config.assets.precompile += [
         'application.css',
         'admin.css',
@@ -72,12 +72,12 @@ module DevcmsCore
       ]
     end
 
-    initializer "data checker config" do |app|
+    initializer 'data checker config' do |app|
       DataChecker.config.site_url = "http://#{Settler[:host]}" if SETTLER_LOADED && Settler[:host].present?
       DataChecker.config.checker_logger = DataChecker::DatabaseLogger
     end
 
-    initializer "airbrake configuration" do |app|
+    initializer 'airbrake configuration' do |app|
       Airbrake.configure do |config|
         config.api_key = {
           :project => DevcmsCore::Engine.config.airbrake_redmine_project,

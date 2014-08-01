@@ -1,6 +1,6 @@
 #existing_agenda_item_category_wrapper.formFieldCt.clearfix{ :style => ('display:none;' if (@categories.blank? || (record.agenda_item_category && record.agenda_item_category.new_record?))) }
   %label{ :for => 'agenda_item_category_select' }
-    =t 'calendars.agenda_item_category'
+    = t 'calendars.agenda_item_category'
   = select_tag 'agenda_item_category_select', options_from_collection_for_select_with_blank_option(@categories, 'name', 'name', record.agenda_item_category_name), :onclick => 'setAgendaItemCategoryName()', :id => 'agenda_item_category_select'
   = link_to_function t('calendars.new_category'), "toggleNewAgendaItemCategoryField()"
 

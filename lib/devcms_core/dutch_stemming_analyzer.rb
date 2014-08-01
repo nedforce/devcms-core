@@ -3,7 +3,7 @@ module DevcmsCore
   # It uses the Dutch Snowball stemmer and the list of Dutch stop words by default.
   class DutchStemmingAnalyzer < Ferret::Analysis::Analyzer
     include Ferret::Analysis
-  
+
     # Initialize the stemmer, using the Dutch stop words by default.
     #
     # *Parameters*
@@ -12,7 +12,7 @@ module DevcmsCore
     def initialize(stop_words = FULL_DUTCH_STOP_WORDS)
       @stop_words = stop_words
     end
-  
+
     # Stem a stream of tokens by converting them to lowercase and using the Dutch
     # Snowball stemmer plus the list of stop words that the stemmer has been
     # initialized with.

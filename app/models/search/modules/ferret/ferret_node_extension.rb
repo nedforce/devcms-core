@@ -44,7 +44,7 @@ module Search::Modules::Ferret::FerretNodeExtension
     def is_hidden_to_index
       hidden_from_index = false
 
-      Settler[:ferret_exclude_node_ids].split(",").each do |nid|
+      Settler[:ferret_exclude_node_ids].split(',').each do |nid|
         hidden_from_index = hidden_from_index || self.path_ids.include?(nid.to_i)
       end if Settler[:ferret_exclude_node_ids].present?
 
@@ -57,7 +57,7 @@ module Search::Modules::Ferret::FerretNodeExtension
     end
 
     def zipcodes_to_index
-      if self.content_type == "Permit"
+      if self.content_type == 'Permit'
         self.content.addresses.map { |address| address.postal_code }
       end
     end

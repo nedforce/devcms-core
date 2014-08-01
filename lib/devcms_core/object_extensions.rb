@@ -19,8 +19,8 @@ class Object
 
       if mod < Rails::Engine
         mod
-      elsif mod.const_defined?("Engine") and (mod.const_get("Engine")) < Rails::Engine
-        mod.const_get("Engine")
+      elsif mod.const_defined?('Engine') and (mod.const_get('Engine')) < Rails::Engine
+        mod.const_get('Engine')
       else
         raise "expected #{mod} to be a subclass of Rails::Engine or to have a namespace-child 'Engine' that is a subclass of Rails::Engine"
       end
@@ -28,7 +28,7 @@ class Object
 
     # get the path in the current engine
     path_in_engine = caller.first[/^#{Regexp.escape(extended_by.root.to_s)}\/([^:]*)/, 1]
-    
+
     # raise if not found
     unless path_in_engine
       raise "cannot determine the path of the file you want to extend within your engine's root. Your path: #{caller.first[/^[^:]*/]}, Your engine's root: #{extended_by.root}"
@@ -37,5 +37,4 @@ class Object
     # load the file in the engine we are extending
     require_dependency (extended_from.root + path_in_engine).to_s
   end
-  
 end

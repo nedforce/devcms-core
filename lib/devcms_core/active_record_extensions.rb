@@ -82,7 +82,7 @@ module DevcmsCore
 
       # ActsAsArchive can be used to find items of certain archives based on their publication date
       # *Options*
-      # * +items_name+ 
+      # * +items_name+
       # * +date_field_model_name+
       # * +date_field_database_name+
       # * +sql_options+

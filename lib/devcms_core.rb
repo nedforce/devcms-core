@@ -37,16 +37,16 @@ require 'airbrake'
 # Libs
 module DevcmsCore
   extend ActiveSupport::Autoload
-  
+
   autoload :ActiveRecordExtensions
   autoload :ActionControllerExtensions
   autoload :ActsAsCommentable
   autoload :ActsAsContentNode
-  autoload :ActsAsArchive  
+  autoload :ActsAsArchive
   autoload :ActsAsVersioned
-  autoload :NeedsEditorApproval  
+  autoload :NeedsEditorApproval 
   autoload :ActsAsArchiveController
-  autoload :AttachmentTestHelper  
+  autoload :AttachmentTestHelper
   autoload :AuthenticatedSystem
   autoload :AuthenticatedTestHelper
   autoload :Blowfish
@@ -60,7 +60,7 @@ module DevcmsCore
   # autoload :NewsItemsAssociationExtensions
   # autoload :PrototypeLegacyHelper
   autoload :Recaptcha
-  autoload :RespondsToParent  
+  autoload :RespondsToParent
   autoload :RoleRequirementSystem
   autoload :RoleRequirementTestHelper
   autoload :RoutingHelpers

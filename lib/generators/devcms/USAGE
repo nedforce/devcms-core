@@ -1,5 +1,5 @@
 Description:
     Sets up Devcms in your Rails project
-    
+
 Examples:
     `script/rails generate devcms`

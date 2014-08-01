@@ -1,9 +1,10 @@
 #columns_wrapper.clearfix
   #inner_columns_wrapper.clearfix
     .clearfix#content
-      = bread_crumbs_for(@node, :include_root => false, :minimum_crumbs => 2) if @node.present?
+      - if @node.present?
+        = bread_crumbs_for(@node, :include_root => false, :minimum_crumbs => 2)
       = yield_flash
-      = yield 
+      = yield
       \&nbsp;
     #second_side_bar
       = render_representations('secondary_column')

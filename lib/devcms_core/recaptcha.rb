@@ -1,7 +1,7 @@
 module DevcmsCore
   module Recaptcha
-    RECAPTCHA_API_SERVER        = 'http://www.google.com/recaptcha/api';
-    RECAPTCHA_API_SECURE_SERVER = 'https://www.google.com/recaptcha/api';
+    RECAPTCHA_API_SERVER        = 'http://www.google.com/recaptcha/api'
+    RECAPTCHA_API_SECURE_SERVER = 'https://www.google.com/recaptcha/api'
 
     SKIP_VERIFY_ENV = ['test', 'cucumber']
 

@@ -4,4 +4,4 @@
   - parent_color = (parent_color.empty? ? options : parent_color).first.first
   - options.unshift([ "Overerven (#{parent_color})", nil ])
 - selected = @node.layout_configuration.present? ? @node.layout_configuration['template_color'] : nil
-= wrap_with_label(select_tag(:color, options_for_select(options, selected), :name => "node[layout_configuration][template_color]"), :text => "Kleur:")
+= wrap_with_label(select_tag(:color, options_for_select(options, selected), :name => "node[layout_configuration][template_color]"), :text => 'Kleur:')

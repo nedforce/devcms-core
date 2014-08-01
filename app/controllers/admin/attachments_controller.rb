@@ -1,12 +1,11 @@
-class Admin::AttachmentsController < Admin::AdminController 
+class Admin::AttachmentsController < Admin::AdminController
+  prepend_before_filter :find_parent_node, :only => [:new, :create]
 
-  prepend_before_filter :find_parent_node, :only => [ :new, :create ]
-
-  before_filter :find_attachment,        :except => [ :new, :create, :ajax ]
+  before_filter :find_attachment,        :except => [:new, :create, :ajax]
 
   before_filter :login_required
 
-  require_role [ 'admin', 'final_editor', 'editor' ]
+  require_role ['admin', 'final_editor', 'editor']
 
   layout false
 
@@ -102,22 +101,22 @@ class Admin::AttachmentsController < Admin::AdminController
 
   protected
 
-    def find_attachment
-      @attachment = Attachment.find(params[:id]).current_version
-    end
+  def find_attachment
+    @attachment = Attachment.find(params[:id]).current_version
+  end
 
-    def upload_file
-      if @attachment.filename == "#{params[:basename]}.#{params[:baseformat]}" || @attachment.filename == params[:basename]
-        send_file(@attachment.file.path,
-                  :type        => @attachment.content_type,
-                  :filename    => @attachment.filename,
-                  :length      => @attachment.size,
-                  :disposition => 'attachment',
-                  :stream      => true )
-      else
-        respond_to do |format|
-          format.html { render :nothing => true, :status => :not_found }
-        end
+  def upload_file
+    if @attachment.filename == "#{params[:basename]}.#{params[:baseformat]}" || @attachment.filename == params[:basename]
+      send_file(@attachment.file.path,
+                :type        => @attachment.content_type,
+                :filename    => @attachment.filename,
+                :length      => @attachment.size,
+                :disposition => 'attachment',
+                :stream      => true )
+    else
+      respond_to do |format|
+        format.html { render :nothing => true, :status => :not_found }
       end
     end
+  end
 end

@@ -20,16 +20,16 @@ module DevcmsCore
       @target_klass = klass
       @method_stores = {}
     end
-  
+
     def hijack_class_method(method_name, eval_string = nil, arg_names = [], &block)
-      hijack_method(class_self_instance, method_name, eval_string, arg_names, &block )
+      hijack_method(class_self_instance, method_name, eval_string, arg_names, &block)
     end
-  
+
     def hijack_instance_method(method_name, eval_string = nil, arg_names = [], &block)
-      hijack_method(@target_klass, method_name, eval_string, arg_names, &block )
+      hijack_method(@target_klass, method_name, eval_string, arg_names, &block)
     end
-  
-    # restore all 
+
+    # restore all
     def restore
       @method_stores.each_pair do |klass, method_stores|
         method_stores.reverse_each do |method_name, method|
@@ -42,22 +42,22 @@ module DevcmsCore
     rescue
       false
     end
-  
-  protected  
+
+  protected
 
     def class_self_instance
       @target_klass.send :eval, "class << self; self; end;"
     end
-  
+
     def hijack_method(klass, method_name, eval_string = nil, arg_names = [], &block)
       method_name = method_name.to_s
       # You have got love ruby!  What other language allows you to pillage and plunder a class like this? 
-    
+
       (@method_stores[klass]||=[]) << [
-        method_name, 
+        method_name,
         klass.instance_methods.include?(method_name) && klass.instance_method(method_name)
       ]
-    
+
       klass.send :undef_method, method_name
       if Symbol === eval_string
         klass.send :define_method, method_name, klass.instance_methods(eval_string)
@@ -70,11 +70,10 @@ module DevcmsCore
       elsif block_given?
         klass.send :define_method, method_name, block
       end
-    
+
       true
     rescue
       false
     end
-  
   end
 end

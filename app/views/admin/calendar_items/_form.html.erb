@@ -34,20 +34,20 @@
       existingMeetingCategoryFieldWrapper.setVisibilityMode(Ext.Element.DISPLAY);
       newMeetingCategoryFieldWrapper.setVisibilityMode(Ext.Element.DISPLAY);
 
-      toggleExistingMeetingCategoryField = function() {
+      toggleExistingMeetingCategoryField = function () {
         newMeetingCategoryFieldWrapper.toggle();
         meetingCategoryNameField.value = oldSelectedMeetingCategory;
         existingMeetingCategoryFieldWrapper.toggle();
       }
 
-      toggleNewMeetingCategoryField = function() {
+      toggleNewMeetingCategoryField = function () {
         existingMeetingCategoryFieldWrapper.toggle();
         oldSelectedMeetingCategory = meetingCategoryNameField.value;
         meetingCategoryNameField.value = "";
         newMeetingCategoryFieldWrapper.toggle();
       }
 
-      setMeetingCategoryName = function() {
+      setMeetingCategoryName = function () {
         meetingCategoryNameField.value = Ext.getDom('meeting_category_select').value;
       }
     <% end %>
@@ -76,7 +76,7 @@
 
   repeatingCalendarItemFields.setVisibilityMode(Ext.Element.DISPLAY);
 
-  toggleRepeatingCalendarItemFields = function() {
+  toggleRepeatingCalendarItemFields = function () {
     repeatingCalendarItemFields.toggle();
   }
 <% end %>

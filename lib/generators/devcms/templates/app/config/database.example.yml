@@ -4,7 +4,7 @@ development:
   database: devcms_development
   username: postgres
   password: your_password
-  
+
 test:
   adapter: postgresql
   host: localhost

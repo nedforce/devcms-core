@@ -16,9 +16,9 @@ module SearchHelper
   end
 
   def show_search_results_index(prefix = 'Results')
-    first_page_record = (@results.current_page-1)*@results.limit_value+1    
-    last_page_record  = @results.current_page*@results.limit_value
-    last_page_record  = @results.size if @results.size < last_page_record    
+    first_page_record = (@results.current_page - 1) * @results.limit_value + 1
+     last_page_record = @results.current_page * @results.limit_value
+     last_page_record = @results.size if @results.size < last_page_record    
 
     result = "#{prefix} <strong>"
     result << first_page_record.to_s + ' - '

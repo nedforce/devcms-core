@@ -47,7 +47,7 @@
           <tbody>
           <% @children.each_with_index do |agenda_item, i| %>
             <tr class="<%= cycle('alt', '') -%>">
-              <td class="ISI_IGNORE width_20"><%= i+1 -%>.</td>
+              <td class="ISI_IGNORE width_20"><%= i + 1 -%>.</td>
               <td><%= link_to h(agenda_item.description), '#' -%></td>
               <td><%= h(agenda_item.agenda_item_category.name) if agenda_item.agenda_item_category -%></td>
             </tr>

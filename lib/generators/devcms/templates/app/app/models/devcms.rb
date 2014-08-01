@@ -1,9 +1,7 @@
 extension_of DevcmsCore
 
 class Devcms
-
   class << self
-
     # Override the content type configuration if needed
     # Example:  
     # { 'Calendar' => { :allowed_child_content_types => %w( CalendarItem CombinedMeeting Meeting ) },
@@ -15,7 +13,7 @@ class Devcms
 
     # Returns a hash representing this node's config properties for an Ext.dvtr.AsyncTreeNode javascript object.
     # The hash returned will be reverse merged with node.to_tree_node_for(user)
-    
+
     # def tree_node_for(node, user, options = {})
     #   {}
     # end
@@ -35,11 +33,11 @@ class Devcms
     # def content_box_colours
     #   %w( default )
     # end
-  
+
     # def content_box_icons
     #   %w( )
     # end
-    
+
     # def reserved_logins_regex
     #   /(burger?meester|wethouder|gemeente|stads|student|leerling|voorlichting|communicatie|openba?are?|brandweer|politie|ambulance|ggz|ggd|ziekenhuis|school|hospitaal|gemeente|college|stadhuis)/i
     # end
@@ -53,6 +51,5 @@ class Devcms
     #     "Frans"      => "fr"
     #   }
     # end
-   
   end
 end

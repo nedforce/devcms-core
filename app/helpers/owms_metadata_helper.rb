@@ -12,7 +12,7 @@ module OwmsMetadataHelper
     metadata << meta_tag('keywords', node.tag_list.join(","))
 
     metadata << meta_tag('DCTERMS.alternative', node.title_alternative_list.to_s) if node.title_alternative_list.present?
-    
+
     metadata.flatten.join("\n").html_safe
   end
 

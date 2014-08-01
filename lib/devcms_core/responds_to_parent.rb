@@ -6,17 +6,17 @@ module DevcmsCore
     def responds_to_parent(&block)
       script_view_context = view_context_class.new(lookup_context, view_assigns, self)
 
-			script_generator = ActionView::Helpers::PrototypeHelper::JavaScriptGenerator.new(script_view_context, &block)
+      script_generator = ActionView::Helpers::PrototypeHelper::JavaScriptGenerator.new(script_view_context, &block)
       script = script_generator.to_s
 
-			response.headers['Content-Type'] = 'text/html; charset=UTF-8'
+      response.headers['Content-Type'] = 'text/html; charset=UTF-8'
 
-			render :text => "<html><body><script type='text/javascript' charset='utf-8'>
+      render :text => "<html><body><script type='text/javascript' charset='utf-8'>
         var loc = document.location;
         with(window.parent) { setTimeout(function() { window.eval('#{self.class.helpers.escape_javascript script}'); window.loc && loc.replace('about:blank'); }, 1) }
       </script></body></html>".html_safe
     end
-    
+
     alias respond_to_parent responds_to_parent
   end
 end

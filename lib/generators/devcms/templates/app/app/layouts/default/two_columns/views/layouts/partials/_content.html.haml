@@ -1,7 +1,8 @@
 #columns_wrapper.clearfix
   #inner_columns_wrapper.clearfix
     #content_extended.clearfix
-      = bread_crumbs_for(@node, :include_root => false, :minimum_crumbs => 2) if @node.present?
+      - if @node.present?
+        = bread_crumbs_for(@node, :include_root => false, :minimum_crumbs => 2)
       = yield_flash
       = yield
       \&nbsp;
