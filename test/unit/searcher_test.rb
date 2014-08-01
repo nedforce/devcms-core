@@ -1,7 +1,6 @@
 require File.expand_path('../../test_helper.rb', __FILE__)
 
 class SearcherTest < ActiveSupport::TestCase
-
   require 'rsolr'
 
   def setup
@@ -36,6 +35,4 @@ class SearcherTest < ActiveSupport::TestCase
 
     assert_not_nil Searcher(:ferret).search('test')
   end
-
 end
-

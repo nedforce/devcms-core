@@ -16,7 +16,7 @@ class UserTest < ActiveSupport::TestCase
     end
 
     assert_no_difference 'User.count' do
-      u = create_user(:login => "   ")
+      u = create_user(:login => '   ')
       assert u.errors[:login].any?
     end
   end
@@ -28,7 +28,7 @@ class UserTest < ActiveSupport::TestCase
     end
 
     assert_no_difference 'User.count' do
-      u = create_user(:password => "   ")
+      u = create_user(:password => '   ')
       assert u.errors[:password].any?
     end
   end
@@ -49,7 +49,7 @@ class UserTest < ActiveSupport::TestCase
 
   def test_should_require_valid_email_address
     assert_no_difference 'User.count' do
-      ["email@test,org", "email@domain", "a@a@domain.com", "bla.,@bla.com", "@bla.com", "@", "bla@bla.,org", "foo@localhost"].each do |address|
+      ['email@test,org', 'email@domain', 'a@a@domain.com', 'bla.,@bla.com', '@bla.com', '@', 'bla@bla.,org', 'foo@localhost'].each do |address|
         u = create_user(:email_address => address)
         assert u.errors[:email_address].any?
       end
@@ -57,25 +57,25 @@ class UserTest < ActiveSupport::TestCase
   end
 
   def test_should_require_valid_login
-    u = create_user(:login => "A") # TOO SHORT
+    u = create_user(:login => 'A') # TOO SHORT
     assert u.errors[:login].any?
 
-    u = create_user(:login => "A"*256) # TOO LONG
+    u = create_user(:login => 'A' * 256) # TOO LONG
     assert u.errors[:login].any?
 
-    u = create_user(:login => "no%crazy)stuff*allowed")
+    u = create_user(:login => 'no%crazy)stuff*allowed')
     assert u.errors[:login].any?
 
-    u = create_user(:login => "numbers_123_underscores_and-dashes-are-OK")
+    u = create_user(:login => 'numbers_123_underscores_and-dashes-are-OK')
     assert !u.errors[:login].any?
   end
 
   def test_should_not_update_login
     assert_raises ActiveRecord::ActiveRecordError do
-      users(:sjoerd).update_attribute(:login, "henk")
+      users(:sjoerd).update_attribute(:login, 'henk')
     end
-    
-    assert_equal "sjoerd", users(:sjoerd).reload.login
+
+    assert_equal 'sjoerd', users(:sjoerd).reload.login
   end
 
   def test_should_not_reset_password_if_entropy_is_too_low
@@ -138,55 +138,55 @@ class UserTest < ActiveSupport::TestCase
   end
 
   def test_should_have_role_on_root
-    assert !users(:final_editor).has_role_on?("admin")
-    assert users(:arthur).has_role_on?("admin")
-    assert !users(:arthur).has_role_on?("editor")
+    assert !users(:final_editor).has_role_on?('admin')
+    assert  users(:arthur).has_role_on?('admin')
+    assert !users(:arthur).has_role_on?('editor')
   end
 
   def test_should_have_role_on_nodes
-    assert  users(:editor).has_role_on?("editor", nodes(:devcms_news_node))
-    assert !users(:editor).has_role_on?("editor", nodes(:contact_page_node))
-    assert  users(:editor).has_role_on?("editor", nodes(:devcms_news_item_node))
-    assert  users(:arthur).has_role_on?("admin",  nodes(:devcms_news_item_node))
+    assert  users(:editor).has_role_on?('editor', nodes(:devcms_news_node))
+    assert !users(:editor).has_role_on?('editor', nodes(:contact_page_node))
+    assert  users(:editor).has_role_on?('editor', nodes(:devcms_news_item_node))
+    assert  users(:arthur).has_role_on?('admin',  nodes(:devcms_news_item_node))
   end
 
   def test_should_have_role_with_multiple_roles_on_nodes
-    assert  users(:arthur).has_role_on?("final_editor", "admin",  nodes(:economie_section_node))
-    assert !users(:arthur).has_role_on?("final_editor", "editor", nodes(:economie_section_node))
-    assert  users(:editor).has_role_on?("final_editor", "editor", nodes(:devcms_news_node))
-    assert  users(:final_editor).has_role_on?("final_editor", "editor", nodes(:economie_section_node))
-    assert !users(:final_editor).has_role_on?(["final_editor", "editor", "admin"], nodes(:devcms_news_node))
+    assert  users(:arthur).has_role_on?('final_editor', 'admin',  nodes(:economie_section_node))
+    assert !users(:arthur).has_role_on?('final_editor', 'editor', nodes(:economie_section_node))
+    assert  users(:editor).has_role_on?('final_editor', 'editor', nodes(:devcms_news_node))
+    assert  users(:final_editor).has_role_on?('final_editor', 'editor', nodes(:economie_section_node))
+    assert !users(:final_editor).has_role_on?(['final_editor', 'editor', 'admin'], nodes(:devcms_news_node))
   end
 
   def test_should_have_role_with_multiple_roles_on_root_node
-    assert users(:arthur).has_role_on?("final_editor", "admin")
-    assert !users(:final_editor).has_role_on?(["final_editor", "editor"])
+    assert users(:arthur).has_role_on?('final_editor', 'admin')
+    assert !users(:final_editor).has_role_on?(['final_editor', 'editor'])
   end
 
   def test_should_have_roles
-    assert users(:arthur).has_role?("admin", "editor", "final-editor")
-    assert !users(:arthur).has_role?("editor", "final-editor")
-    assert !users(:normal_user).has_role?(["admin", "editor", "final-editor"])
+    assert  users(:arthur).has_role?('admin', 'editor', 'final-editor')
+    assert !users(:arthur).has_role?('editor', 'final-editor')
+    assert !users(:normal_user).has_role?(['admin', 'editor', 'final-editor'])
   end
 
   def test_should_have_any_role
     assert users(:arthur).has_any_role?
   end
-  
+
   def test_should_not_have_any_role
     assert !users(:normal_user).has_any_role?
   end
-  
+
   def test_should_return_role_on_node
-    assert_equal users(:arthur).role_on(nodes(:help_page_node)).name, "admin"
-    assert_equal users(:editor).role_on(nodes(:devcms_news_node)).name, "editor"
+    assert_equal users(:arthur).role_on(nodes(:help_page_node)).name,   'admin'
+    assert_equal users(:editor).role_on(nodes(:devcms_news_node)).name, 'editor'
     assert_nil   users(:editor).role_on(nodes(:contact_page_node))
- end
+  end
 
   def test_should_give_role_on_node
-    success = users(:editor).give_role_on("editor", nodes(:contact_page_node))
+    success = users(:editor).give_role_on('editor', nodes(:contact_page_node))
     assert success
-    assert_equal "editor", users(:editor).reload.role_on(nodes(:contact_page_node)).name
+    assert_equal 'editor', users(:editor).reload.role_on(nodes(:contact_page_node)).name
   end
 
   def test_should_remove_role_from_node
@@ -201,7 +201,7 @@ class UserTest < ActiveSupport::TestCase
       users(:arthur).remove_role_from(Node.root)
     end
   end
-  
+
   def test_should_demote_and_promote
     assert_equal 'PrivilegedUser', users(:arthur).type
     users(:arthur).demote!
@@ -215,7 +215,7 @@ class UserTest < ActiveSupport::TestCase
     users(:arthur).demote!
     assert !User.find(users(:arthur).id).has_any_role?
   end
-  
+
   def test_should_keep_non_privileged_roles_after_demote
     assert users(:editor).give_role_on('read_access', Node.root)
     assert_difference("User.find(users(:editor).id).role_assignments.count", -6) do
@@ -223,18 +223,18 @@ class UserTest < ActiveSupport::TestCase
       assert !User.find(users(:editor).id).role_assignments.any? { |ra| ra.is_privileged? }
     end
   end
-  
+
   def test_should_have_roles_after_demote
     users(:arthur).demote!
-    assert !User.find(users(:arthur).id).has_role?("admin", "editor", "final-editor")
+    assert !User.find(users(:arthur).id).has_role?('admin', 'editor', 'final-editor')
   end
-  
+
   def test_should_return_role_on_node_after_demote
    users(:arthur).demote!
    assert_nil User.find(users(:arthur).id).role_on(nodes(:help_page_node))
    assert_nil User.find(users(:arthur).id).role_on(nodes(:devcms_news_node))
   end
-  
+
   def test_should_strip_sensitive_information_from_xml
     xml = users(:arthur).to_xml
     User::SECRETS.each { |secret| assert !xml.include?(secret.dasherize) }
@@ -247,14 +247,14 @@ class UserTest < ActiveSupport::TestCase
 
   def test_should_strip_sensitive_information_from_json
     json = users(:arthur).to_json
-    User::SECRETS.each do |secret| 
+    User::SECRETS.each do |secret|
       assert !json.include?(secret), "#{json.pretty_inspect} included #{secret}. It shouldn't"
     end
   end
 
   def test_should_keep_sensitive_information_in_secrets_json
     json = users(:arthur).to_json_with_secrets
-    User::SECRETS.each { |secret| assert json.include?(secret),  "#{json.pretty_inspect} didn't included #{secret}. It should" }
+    User::SECRETS.each { |secret| assert json.include?(secret), "#{json.pretty_inspect} didn't included #{secret}. It should" }
   end
 
   def test_has_subscription_for?
@@ -278,7 +278,7 @@ class UserTest < ActiveSupport::TestCase
     u.verify!
     assert u.verified?
   end
-  
+
   def test_should_verify_users_email_address
     u = users(:unverified_user)
     u.update_attribute(:verification_code, '12345')
@@ -296,11 +296,11 @@ class UserTest < ActiveSupport::TestCase
   def test_should_not_update_attrs_on_mass_assign
     u = users(:unverified_user)
     u.update_attribute(:verification_code, '12345')
-    
-    assert_raises ActiveModel::MassAssignmentSecurity::Error do    
+
+    assert_raises ActiveModel::MassAssignmentSecurity::Error do
       u.update_attributes(:verified => true, :verification_code => 'XXX')
     end
-    
+
     assert !u.verified?
     assert_not_equal 'XXX', u.verification_code
   end
@@ -369,13 +369,13 @@ class UserTest < ActiveSupport::TestCase
       henk.destroy
     end
   end
-  
+
   def test_destruction_of_user_should_destroy_associated_forum_posts
     assert_difference 'ForumPost.count', -1 * users(:normal_user).forum_posts.count do
       users(:normal_user).destroy
     end
   end
-  
+
   def test_destruction_of_user_should_not_destroy_associated_comments
     jan = users(:jan)
 
@@ -446,12 +446,12 @@ class UserTest < ActiveSupport::TestCase
   end
 
   def test_should_send_email_notice_if_email_is_already_in_use
-    email_address = "test123@example.com"
-    create_user(:login => "user_a", :email_address => email_address)
+    email_address = 'test123@example.com'
+    create_user(:login => 'user_a', :email_address => email_address)
 
     ActionMailer::Base.deliveries.clear
 
-    create_user(:login => "user_b", :email_address => email_address)
+    create_user(:login => 'user_b', :email_address => email_address)
 
     assert_equal 1, ActionMailer::Base.deliveries.size
 
@@ -459,7 +459,7 @@ class UserTest < ActiveSupport::TestCase
     assert email.to.include?(email_address)
     assert email.parts.first.body.include?('nieuw wachtwoord aanvragen')
   end
-  
+
 protected
 
   def create_user(options = {})

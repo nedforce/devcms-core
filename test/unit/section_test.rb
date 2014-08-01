@@ -64,21 +64,21 @@ class SectionTest < ActiveSupport::TestCase
     assert !@root_section.has_frontpage?
     assert_equal nil, @root_section.frontpage_node
   end
-  # 
+
   # def test_should_accept_descendant_as_frontpage_node
   #   @root_section.set_frontpage!(@news_archive_node)
   #   assert @root_section.valid?
   #   assert !@root_section.errors[:frontpage_node].any?
   #   assert_equal @news_archive_node, @root_section.frontpage_node
   # end
-  # 
+
   # def test_should_not_accept_ancestor_as_frontpage_node
   #   section = create_section
   #   section.set_frontpage!(@root_node)
   #   assert !section.valid?
   #   assert section.errors[:base].any?
   # end
-  # 
+
   # def test_should_not_accept_sibling_as_frontpage_node
   #   section = create_section
   #   sibling = create_section
@@ -122,6 +122,6 @@ protected
   end
 
   def create_page(parent, options = {})
-    Page.create({ :parent => parent.node, :title => "Page title", :preamble => "Ambule", :body => "Page body", :expires_on => 1.day.from_now.to_date }.merge(options)).reload
+    Page.create({ :parent => parent.node, :title => 'Page title', :preamble => 'Ambule', :body => 'Page body', :expires_on => 1.day.from_now.to_date }.merge(options)).reload
   end
 end

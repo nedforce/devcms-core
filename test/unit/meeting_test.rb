@@ -4,15 +4,16 @@ class MeetingTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
   def setup
-    @meetings_calendar = calendars(:meetings_calendar)
+    @meetings_calendar             = calendars(:meetings_calendar)
     @meetings_calendar_meeting_one = events(:meetings_calendar_meeting_one)
-    @meeting_category = meeting_categories(:gemeenteraad_meetings)
-    @meeting_category_two = meeting_categories(:adviescommissie_meetings)
+    @meeting_category              = meeting_categories(:gemeenteraad_meetings)
+    @meeting_category_two          = meeting_categories(:adviescommissie_meetings)
   end
 
   def test_should_create_meeting
     assert_difference 'Meeting.count' do
-      create_meeting
+      meeting = create_meeting
+      assert !meeting.new_record?, "#{meeting.errors.full_messages.to_sentence}"
     end
   end
 
@@ -65,7 +66,7 @@ class MeetingTest < ActiveSupport::TestCase
     @meetings_calendar_meeting_one.meeting_category_name = 'foo'
 
     assert_difference('MeetingCategory.count', 1) do
-      @meetings_calendar_meeting_one.save
+      assert @meetings_calendar_meeting_one.save
     end
 
     assert_equal MeetingCategory.find_by_name('foo'), @meetings_calendar_meeting_one.meeting_category
