@@ -28,14 +28,14 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
   end
 
   def test_should_set_deleted_at_on_paranoid_delete
-    now = Time.now
+    now = Time.zone.now
     Time.stubs(:now => now)
     assert @economie_section_node.paranoid_delete!
     assert_equal now, @economie_section_node.reload.deleted_at
   end
 
   def test_should_set_deleted_at_on_paranoid_delete
-    now = Time.now
+    now = Time.zone.now
     Time.stubs(:now => now)
     assert @economie_section_node.paranoid_delete!
     assert_equal now, @economie_section_node.reload.deleted_at

@@ -209,7 +209,7 @@ class Admin::SectionsControllerTest < ActionController::TestCase
 protected
 
   def create_section(attributes = {}, options = {})
-    publication_start_date = attributes.delete(:publication_start_date) || Time.now
+    publication_start_date = attributes.delete(:publication_start_date) || Time.zone.now
     post :create, { :parent_node_id => nodes(:root_section_node).id, :section => { :title => 'new title', :description => 'Lorem ipsum', :publication_start_date_day => publication_start_date.strftime("%d-%m-%Y"), :publication_start_date_time => publication_start_date.strftime("%H:%M") }.merge(attributes) }.merge(options)
   end
 end

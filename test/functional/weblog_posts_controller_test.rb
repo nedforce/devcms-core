@@ -256,6 +256,6 @@ class WeblogPostsControllerTest < ActionController::TestCase
  protected
 
   def create_weblog_post(attributes = {}, options = {})
-    post :create, { :weblog_archive_id => weblog_archives(:devcms_weblog_archive).id, :weblog_id => weblogs(:henk_weblog).id, :weblog_post => { :title => 'Some title.', :body => 'Some body', :publication_start_date => Time.now }.merge(attributes) }.merge(options)
+    post :create, { :weblog_archive_id => weblog_archives(:devcms_weblog_archive).id, :weblog_id => weblogs(:henk_weblog).id, :weblog_post => { :title => 'Some title.', :body => 'Some body', :publication_start_date => Time.zone.now }.merge(attributes) }.merge(options)
   end
 end

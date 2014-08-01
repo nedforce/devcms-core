@@ -11,7 +11,7 @@ class NewsItemsControllerTest < ActionController::TestCase
   end
 
   def should_not_show_unpublished_news_items
-    news_items(:devcms_news_item).update_attribute(:publication_end_date, DateTime.now - 1.day)
+    news_items(:devcms_news_item).update_attribute(:publication_end_date, 1.day.ago)
     get :show, :id => news_items(:devcms_news_item).id
     assert flash.key?(:warning)
     assert_response :redirect

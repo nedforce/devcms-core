@@ -23,7 +23,7 @@ class NodeTest < ActiveSupport::TestCase
 
   def test_node_should_be_updateable
     node = create_page.node
-    date = Time.now
+    date = Time.zone.now
 
     assert node.update_attributes(:publication_start_date => date)
     assert_equal date.to_i, node.publication_start_date.to_i
@@ -31,7 +31,7 @@ class NodeTest < ActiveSupport::TestCase
 
   def test_root_node_should_be_updateable
     node = @root_node
-    date = Time.now
+    date = Time.zone.now
 
     assert node.update_attributes(:publication_start_date => date)
     assert_equal date, node.publication_start_date
@@ -121,14 +121,14 @@ class NodeTest < ActiveSupport::TestCase
     section       = Section.create(:parent => @root_node,    :title => 'section to destroy')
     child_section = Section.create(:parent => section.node , :title => 'inner section')
 
-    Page.create(:parent => child_section.node , :title => 'tmp page 1', :preamble => 'help',     :body => 'help', :expires_on => 1.day.from_now.to_date)
+    Page.create(:parent => child_section.node , :title => 'tmp page 1', :preamble => 'help',     :body => 'help',     :expires_on => 1.day.from_now.to_date)
     Page.create(:parent => child_section.node , :title => 'tmp page 2', :preamble => 'feedback', :body => 'feedback', :expires_on => 1.day.from_now.to_date)
 
-    # assert Node.valid?, "Invalid tree structure after adding test nodes."
+    # assert Node.valid?, 'Invalid tree structure after adding test nodes.'
 
-    assert_difference 'Node.count', -4, "Not all nodes were destroyed" do
-      assert_difference 'Section.count', -2, "Not all sections were destroyed" do
-        assert_difference 'Page.count', -2, "Not all pages were destroyed" do
+    assert_difference 'Node.count', -4, 'Not all nodes were destroyed' do
+      assert_difference 'Section.count', -2, 'Not all sections were destroyed' do
+        assert_difference 'Page.count', -2, 'Not all pages were destroyed' do
           section.destroy
         end
       end
@@ -255,20 +255,20 @@ class NodeTest < ActiveSupport::TestCase
   end
 
   def test_determine_content_date_should_use_publication_start_date_for_news_items_and_newsletter_editions
-    today                  = Time.now
+    today                  = Time.zone.now.to_date
     publication_start_date = 2.days.from_now
 
     [ create_news_item(:publication_start_date => publication_start_date, :publication_end_date => publication_start_date + 7.days),
       create_newsletter_edition(:publication_start_date => publication_start_date)].each do |item|
-      assert_equal publication_start_date.to_date, item.node.determine_content_date(today.to_date)
+      assert_equal publication_start_date.to_date, item.node.determine_content_date(today)
       new_publication_start_date = 4.days.from_now
       item.__send__(:update_attributes, :publication_start_date => new_publication_start_date)
-      assert_equal new_publication_start_date.to_date, item.reload.node.reload.determine_content_date(today.to_date)
+      assert_equal new_publication_start_date.to_date, item.reload.node.reload.determine_content_date(today)
     end
   end
 
   def test_determine_content_date_should_use_end_time_for_finished_calendar_items_and_meetings
-    today      = Time.now
+    today      = Time.zone.now.to_date
     start_time = Time.local(2010, 1, 1, 20)
     end_time   = Time.local(2010, 1, 1, 21)
 
@@ -276,25 +276,25 @@ class NodeTest < ActiveSupport::TestCase
       create_calendar_item(:start_time => start_time, :end_time => end_time),
       create_meeting(:start_time => start_time, :end_time => end_time)
     ].each do |item|
-      assert_equal end_time.to_date, item.node.determine_content_date(today.to_date)
+      assert_equal end_time.to_date, item.node.determine_content_date(today)
       new_end_time = Time.local(2010, 1, 1, 22)
 
       assert item.update_attributes!(:end_time => new_end_time)
-      assert_equal new_end_time.to_date, item.node.determine_content_date(today.to_date)
+      assert_equal new_end_time.to_date, item.node.determine_content_date(today)
     end
   end
 
   def test_determine_content_date_should_use_start_time_for_future_calendar_items_and_meetings
-    today      = Time.now
+    today      = Time.zone.now.to_date
     start_time = 2.days.from_now
     end_time   = 3.days.from_now
 
     [ create_calendar_item(:start_time => start_time, :end_time => end_time),
       create_meeting(:start_time => start_time, :end_time => end_time)].each do |item|
-      assert_equal start_time.to_date, item.node.determine_content_date(today.to_date)
+      assert_equal start_time.to_date, item.node.determine_content_date(today)
       new_start_time = 4.days.from_now
       item.update_attribute(:start_time, new_start_time)
-      assert_equal new_start_time.to_date, item.reload.node.reload.determine_content_date(today.to_date)
+      assert_equal new_start_time.to_date, item.reload.node.reload.determine_content_date(today)
     end
   end
 
@@ -312,7 +312,7 @@ class NodeTest < ActiveSupport::TestCase
     size = nodes(:devcms_news_node).last_changes(:all).size
     n1 = create_news_item(:publication_start_date => 2.days.ago, :publication_end_date => 1.day.from_now, :title => 'Beschikbaar')
     create_news_item(:publication_start_date => 2.days.from_now, :publication_end_date => 3.day.from_now, :title => 'Nog niet beschikbaar')
-    create_news_item(:publication_start_date => 2.days.ago, :publication_end_date => 1.day.ago, :title => 'Niet meer beschikbaar')
+    create_news_item(:publication_start_date => 2.days.ago,      :publication_end_date => 1.day.ago,      :title => 'Niet meer beschikbaar')
     changes = nodes(:devcms_news_node).last_changes(:all)
 
     assert_equal size + 1, changes.size
@@ -359,7 +359,7 @@ class NodeTest < ActiveSupport::TestCase
 
   def test_find_accessible_should_only_find_published_nodes
     # Published nodes
-    [ [ 1.day.ago, nil ], [ 1.day.ago, 1.day.from_now ] ].map do | start_date, end_date |
+    [ [ 1.day.ago, nil ], [ 1.day.ago, 1.day.from_now ] ].map do |start_date, end_date|
       page = create_page
       page.update_attributes(:publication_start_date => start_date, :publication_end_date => end_date)
       assert !page.new_record?
@@ -367,7 +367,7 @@ class NodeTest < ActiveSupport::TestCase
     end
 
     # Unpublished nodes
-    [ [ 2.days.ago, 1.day.ago ], [ 1.day.from_now, nil ], [ 1.day.from_now, 2.days.from_now ] ].map do | start_date, end_date |
+    [ [ 2.days.ago, 1.day.ago ], [ 1.day.from_now, nil ], [ 1.day.from_now, 2.days.from_now ] ].map do |start_date, end_date|
       page = create_page
       page.update_attributes(:publication_start_date => start_date, :publication_end_date => end_date)
       assert !page.new_record?
@@ -470,11 +470,11 @@ protected
   end
 
   def create_calendar_item(options = {})
-    CalendarItem.create({ :parent => nodes(:meetings_calendar_node), :repeating => false, :title => 'New event', :start_time => Time.now, :end_time => 1.hour.from_now }.merge(options))
+    CalendarItem.create({ :parent => nodes(:meetings_calendar_node), :repeating => false, :title => 'New event', :start_time => Time.zone.now, :end_time => 1.hour.from_now }.merge(options))
   end
 
   def create_meeting(options = {})
-    Meeting.create({ :parent => nodes(:meetings_calendar_node), :repeating => false, :meeting_category => meeting_categories(:gemeenteraad_meetings), :title => 'New meeting', :start_time => Time.now, :end_time => 1.hour.from_now }.merge(options))
+    Meeting.create({ :parent => nodes(:meetings_calendar_node), :repeating => false, :meeting_category => meeting_categories(:gemeenteraad_meetings), :title => 'New meeting', :start_time => Time.zone.now, :end_time => 1.hour.from_now }.merge(options))
   end
 
   def create_page(options = {})

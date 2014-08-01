@@ -22,7 +22,7 @@ class WeblogTest < ActiveSupport::TestCase
     end
 
     assert_no_difference 'Weblog.count' do
-      weblog = create_weblog(:title => "  ")
+      weblog = create_weblog(:title => '  ')
       assert weblog.errors[:title].any?
     end
   end
@@ -43,14 +43,14 @@ class WeblogTest < ActiveSupport::TestCase
 
   def test_should_update_weblog
     assert_no_difference 'Weblog.count' do
-      @henk_weblog.title       = 'New title'
+      @henk_weblog.title = 'New title'
       @henk_weblog.description = 'New description'
       assert @henk_weblog.save
     end
   end
 
   def test_should_destroy_weblog
-    assert_difference "Weblog.count", -1 do
+    assert_difference 'Weblog.count', -1 do
       @henk_weblog.destroy
     end
   end
@@ -122,7 +122,7 @@ class WeblogTest < ActiveSupport::TestCase
     w = create_weblog
 
     assert_nothing_raised do
-      w.weblog_posts.create!(:parent => @henk_weblog.node, :body => 'foobar', :title => 'bar', :publication_start_date => Time.now)
+      w.weblog_posts.create!(:parent => @henk_weblog.node, :body => 'foobar', :title => 'bar', :publication_start_date => Time.zone.now)
     end
   end
 
@@ -130,7 +130,7 @@ class WeblogTest < ActiveSupport::TestCase
     w = create_weblog
 
     3.times do |i|
-      w.weblog_posts.create!(:parent => @henk_weblog.node, :body => 'foobar', :title => 'bar', :publication_start_date => Time.now - i.hours)
+      w.weblog_posts.create!(:parent => @henk_weblog.node, :body => 'foobar', :title => 'bar', :publication_start_date => i.hours.ago)
     end
 
     [ -1, 0, 2, 4 ].each do |limit|
@@ -140,9 +140,9 @@ class WeblogTest < ActiveSupport::TestCase
         assert found_weblog_posts.empty?
       else
         assert found_weblog_posts.size <= limit
-        
+
         i = 0;
-    
+
         while i < (found_weblog_posts.size - 1)
           assert found_weblog_posts[i].publication_start_date >= found_weblog_posts[i + 1].publication_start_date
           i = i + 1

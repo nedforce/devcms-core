@@ -132,6 +132,6 @@ protected
   end
 
   def create_newsletter_edition(newsletter_archive, options = {})
-    NewsletterEdition.create({ :parent => newsletter_archive.node, :title => 'Het maandelijkse nieuws!', :body => 'O o o wat is het weer een fijne maand geweest.', :publication_start_date => Time.now + 1.minute }.merge(options))
+    NewsletterEdition.create({ :parent => newsletter_archive.node, :title => 'Het maandelijkse nieuws!', :body => 'O o o wat is het weer een fijne maand geweest.', :publication_start_date => 1.minute.from_now }.merge(options))
   end
 end

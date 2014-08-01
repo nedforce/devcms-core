@@ -29,7 +29,7 @@ class CalendarItemTest < ActiveSupport::TestCase
     end
 
     assert_no_difference 'CalendarItem.count' do
-      calendar_item = create_calendar_item(:title => "  ")
+      calendar_item = create_calendar_item(:title => '  ')
       assert calendar_item.errors[:title].any?
     end
   end
@@ -72,7 +72,7 @@ class CalendarItemTest < ActiveSupport::TestCase
   end
 
   def test_should_destroy_calendar_item
-    assert_difference "CalendarItem.count", -1 do
+    assert_difference 'CalendarItem.count', -1 do
       @events_calendar_item_one.destroy
     end
   end
@@ -84,24 +84,24 @@ class CalendarItemTest < ActiveSupport::TestCase
   def test_should_not_return_calendar_item_children_for_menu
     assert @events_calendar.node.children.accessible.shown_in_menu.empty?
   end
-  
+
   def test_should_set_or_update_dynamic_attributes
     event = @events_calendar_item_one
-    event.field_civil_worker = "John Doe"
+    event.field_civil_worker = 'John Doe'
     assert event.save
-    
+
     assert event.has_dynamic_attribute?('field_civil_worker')
-    assert_equal "John Doe", event.reload.field_civil_worker
-    
+    assert_equal 'John Doe', event.reload.field_civil_worker
+
     assert event.update_attributes(:field_civil_worker => 'Jane Doe')
-    assert_equal "Jane Doe", event.field_civil_worker
+    assert_equal 'Jane Doe', event.field_civil_worker
   end
-  
+
   def test_should_create_dynamic_attribute_on_update
     event = create_calendar_item
-    assert event.update_attributes(:field_civil_worker => 'Jane Doe')        
+    assert event.update_attributes(:field_civil_worker => 'Jane Doe')
   end
-  
+
   def test_should_set_start_and_end_time_based_on_date
     event = create_calendar_item(:date => Date.civil(2011, 1, 1), :start_time => Time.parse('16:00'), :end_time => Time.parse('18:00'))
     assert_equal Time.local(2011, 1, 1, 16), event.start_time

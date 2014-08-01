@@ -244,7 +244,7 @@ class Admin::PollQuestionsControllerTest < ActionController::TestCase
 protected
 
   def create_poll_question(attributes = {}, options = {})
-    publication_start_date = attributes.delete(:publication_start_date) || Time.now
+    publication_start_date = attributes.delete(:publication_start_date) || Time.zone.now
 
     unless attributes.has_key?(:new_poll_option_attributes)
       attributes[:new_poll_option_attributes] = [

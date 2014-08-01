@@ -28,13 +28,13 @@ class ActsAsContentNodeTestTransactional < ActiveSupport::TestCase
 
   def test_create_with_parent_should_fail_for_invalid_parent
     assert_no_difference 'Page.count' do
-      page = Page.create(:parent => nodes(:henk_weblog_post_one_node), :title => "Page title", :preamble => "Ambule", :body => "Page body", :expires_on => 1.day.from_now.to_date)
+      page = Page.create(:parent => nodes(:henk_weblog_post_one_node), :title => 'Page title', :preamble => 'Ambule', :body => 'Page body', :expires_on => 1.day.from_now.to_date)
       assert page.errors[:'node.base'].any?
     end
 
     assert_no_difference 'Page.count' do
       assert_raise ActiveRecord::RecordNotSaved do
-        page = Page.create!(:parent => nodes(:henk_weblog_post_one_node), :title => "Page title", :preamble => "Ambule", :body => "Page body", :expires_on => 1.day.from_now.to_date)
+        page = Page.create!(:parent => nodes(:henk_weblog_post_one_node), :title => 'Page title', :preamble => 'Ambule', :body => 'Page body', :expires_on => 1.day.from_now.to_date)
       end
     end
   end
@@ -42,7 +42,7 @@ class ActsAsContentNodeTestTransactional < ActiveSupport::TestCase
   protected
 
     def build_page(options = {})
-      Page.new({ :parent => nodes(:root_section_node), :title => "Page title", :preamble => "Ambule", :body => "Page body" }.merge(options))
+      Page.new({ :parent => nodes(:root_section_node), :title => 'Page title', :preamble => 'Ambule', :body => 'Page body' }.merge(options))
     end
 
     def create_page(options = {})
@@ -50,7 +50,6 @@ class ActsAsContentNodeTestTransactional < ActiveSupport::TestCase
       page.save
       page
     end
-  
 end
 
 class ActsAsContentNodeTest < ActiveSupport::TestCase
@@ -109,17 +108,16 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
     end
   end
 
-  
   def test_find_accessible_should_only_find_published_content_nodes
     # Published content nodes
-    [ [ 1.day.ago, 1.day.from_now ] ].map do | start_date, end_date |
+    [ [ 1.day.ago, 1.day.from_now ] ].map do |start_date, end_date|
       page = create_page
       page.update_attributes(:publication_start_date => start_date, :publication_end_date => end_date)
       assert_equal page, Page.accessible.find(page.id)
     end
 
     # Unpublished content nodes
-    [ [ 2.days.ago, 1.day.ago ], [ 1.day.from_now, nil ], [ 1.day.from_now, 2.days.from_now ] ].map do | start_date, end_date |
+    [ [ 2.days.ago, 1.day.ago ], [ 1.day.from_now, nil ], [ 1.day.from_now, 2.days.from_now ] ].map do |start_date, end_date|
       page = create_page
       node = page.node
       node.update_attribute(:publication_start_date, start_date)
@@ -148,7 +146,7 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
     assert_nil page.publication_start_date
     assert_nil page.publication_end_date
 
-    start_date = Time.now
+    start_date = Time.zone.now
     end_date = 1.day.from_now
 
     page.publication_start_date = start_date
@@ -169,7 +167,7 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
     page = build_page
 
     start_date = 1.day.from_now
-    end_date = Time.now
+    end_date = Time.zone.now
 
     page.publication_start_date = start_date
     page.publication_end_date = end_date
@@ -184,7 +182,7 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
 
     assert_nil page.publication_start_date
 
-    now = Time.now
+    now = Time.zone.now
     Time.stubs(:now => now)
 
     assert page.save
@@ -196,7 +194,7 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
   end
 
   def test_publication_start_date_should_be_required_if_publication_end_date_is_present
-    page = build_page(:publication_end_date => Time.now)
+    page = build_page(:publication_end_date => Time.zone.now)
     assert !page.save
     assert page.errors[:'node.base'].any?
   end
@@ -275,16 +273,17 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
     assert !page.valid?
     assert page.errors[:'node.base'].any?
   end
-  
+
   def test_should_accept_empty_title_alternatives
     assert_difference 'Page.count' do
-      assert_nothing_raised { create_page(:title_alternative_list => "") }
+      assert_nothing_raised { create_page(:title_alternative_list => '') }
     end
   end
+
 protected
 
   def build_page(options = {})
-    Page.new({ :parent => nodes(:root_section_node), :title => "Page title", :preamble => "Ambule", :body => "Page body" }.merge(options))
+    Page.new({ :parent => nodes(:root_section_node), :title => 'Page title', :preamble => 'Ambule', :body => 'Page body' }.merge(options))
   end
 
   def create_page(options = {})
@@ -292,6 +291,4 @@ protected
     page.save
     page
   end
-
 end
-

@@ -4,10 +4,10 @@ class NewsArchiveTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
   def setup
-    @devcms_news = news_archives(:devcms_news)
-    @devcms_news_item_voor_deze_maand = news_items(:devcms_news_item)
+    @devcms_news                        = news_archives(:devcms_news)
+    @devcms_news_item_voor_deze_maand   = news_items(:devcms_news_item)
     @devcms_news_item_voor_vorige_maand = news_items(:devcms_news_item_voor_vorige_maand)
-    @devcms_news_item_voor_vorig_jaar = news_items(:devcms_news_item_voor_vorig_jaar)
+    @devcms_news_item_voor_vorig_jaar   = news_items(:devcms_news_item_voor_vorig_jaar)
   end
 
   def test_should_create_news_archive
@@ -23,7 +23,7 @@ class NewsArchiveTest < ActiveSupport::TestCase
     end
 
     assert_no_difference 'NewsArchive.count' do
-      news_archive = create_news_archive(:title => "  ")
+      news_archive = create_news_archive(:title => '  ')
       assert news_archive.errors[:title].any?
     end
   end
@@ -46,7 +46,7 @@ class NewsArchiveTest < ActiveSupport::TestCase
   end
 
   def test_should_destroy_news_archive
-    assert_difference "NewsArchive.count", -1 do
+    assert_difference 'NewsArchive.count', -1 do
       @devcms_news.destroy
     end
   end
@@ -94,18 +94,18 @@ class NewsArchiveTest < ActiveSupport::TestCase
 
   def test_should_not_destroy_items_for_invalid_month
     @devcms_news_item_voor_vorig_jaar.node.update_attribute :publication_start_date, 1.year.ago.to_s(:db)
-    assert_no_difference("NewsItem.count") do
+    assert_no_difference('NewsItem.count') do
       assert_raise ArgumentError do
-        @devcms_news.destroy_items_for_year_or_month(2010, "kaas")
+        @devcms_news.destroy_items_for_year_or_month(2010, 'kaas')
       end
     end
   end
 
   def test_should_destroy_all_items_for_year
-    @devcms_news_item_voor_vorig_jaar.node.update_attribute :publication_start_date, 1.year.ago.to_s(:db)
+    @devcms_news_item_voor_vorig_jaar.node.update_attribute   :publication_start_date, 1.year.ago.to_s(:db)
     @devcms_news_item_voor_vorige_maand.node.update_attribute :publication_start_date, Date.today.to_s(:db)
-    @devcms_news_item_voor_deze_maand.node.update_attribute :publication_start_date, Date.today.to_s(:db)
-    assert_difference("NewsItem.count", -2) do
+    @devcms_news_item_voor_deze_maand.node.update_attribute   :publication_start_date, Date.today.to_s(:db)
+    assert_difference('NewsItem.count', -2) do
       @devcms_news.destroy_items_for_year_or_month(Time.now.year)
     end
     assert_raise ActiveRecord::RecordNotFound do
@@ -116,8 +116,8 @@ class NewsArchiveTest < ActiveSupport::TestCase
 
   def test_should_destroy_all_items_for_month
     @devcms_news_item_voor_vorige_maand.node.update_attribute :publication_start_date, 1.month.ago.to_s(:db)
-    @devcms_news_item_voor_deze_maand.node.update_attribute :publication_start_date, Date.today.to_s(:db)
-    assert_difference("NewsItem.count", -1) do
+    @devcms_news_item_voor_deze_maand.node.update_attribute   :publication_start_date, Date.today.to_s(:db)
+    assert_difference('NewsItem.count', -1) do
       @devcms_news.destroy_items_for_year_or_month(Time.now.year, Time.now.month)
     end
     assert_raise ActiveRecord::RecordNotFound do

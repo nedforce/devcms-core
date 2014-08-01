@@ -106,10 +106,10 @@ protected
 
   def create_repeating_meeting(options = {})
     create_meeting({
-      :repeating => true,
-      :repeat_interval_multiplier => 1,
+      :repeating                   => true,
+      :repeat_interval_multiplier  => 1,
       :repeat_interval_granularity => Meeting::REPEAT_INTERVAL_GRANULARITIES[:weeks],
-      :repeat_end => 1.month.from_now.to_date
+      :repeat_end                  => 1.month.from_now.to_date
     }.merge(options))
   end
 
@@ -124,5 +124,4 @@ protected
 
     amount
   end
-
 end
