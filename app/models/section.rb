@@ -45,8 +45,7 @@ class Section < ActiveRecord::Base
   belongs_to :frontpage_node, :class_name => 'Node'
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of     :title
-  validates_length_of       :title, :in => 2..255
+  validates :title, :presence => true, :length => { :in => 2..255, :allow_blank => true }
   validates_numericality_of :frontpage_node_id, :allow_nil => true,                                            :on => :update
   validates_presence_of     :frontpage_node, :unless => Proc.new { |section| section.frontpage_node_id.nil? }, :on => :update
 
@@ -116,8 +115,8 @@ protected
 
   # Ensures the +frontpage_node+ is no +Section+ with a frontpage node.
   def frontpage_node_is_no_section_with_frontpage_node
-    if self.has_frontpage?
-      errors.add(:base, :frontpage_node_cannot_be_a_section_with_a_frontpage) if self.frontpage_node.content_class == Section && self.frontpage_node.content.frontpage_node.present?
+    if self.has_frontpage? && self.frontpage_node.content_class == Section && self.frontpage_node.content.frontpage_node.present?
+      errors.add(:base, :frontpage_node_cannot_be_a_section_with_a_frontpage)
     end
   end
 end

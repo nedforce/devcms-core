@@ -36,8 +36,8 @@ class Event < ActiveRecord::Base
   attr_accessor :date
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of :title, :calendar
-  validates_length_of   :title, :in => 2..255, :allow_blank => true
+  validates :title,    :presence => true, :length => { :in => 2..255, :allow_blank => true }
+  validates :calendar, :presence => true
 
   before_validation :set_start_and_end_time, :if => :start_time
 
@@ -61,7 +61,7 @@ class Event < ActiveRecord::Base
   end
 
   def self.send_registration_notifications
-    all(:conditions => ["start_time <= ? AND subscription_enabled = ?", Time.now + 1.day, true]).each do |event|
+    all(:conditions => ['start_time <= ? AND subscription_enabled = ?', Time.now + 1.day, true]).each do |event|
       event.update_attribute :subscription_enabled, false
       EventMailer.event_registrations(event).deliver if event.event_registrations.any?
     end

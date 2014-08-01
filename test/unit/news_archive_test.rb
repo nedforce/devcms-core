@@ -93,7 +93,7 @@ class NewsArchiveTest < ActiveSupport::TestCase
   end
 
   def test_should_not_destroy_items_for_invalid_month
-    @devcms_news_item_voor_vorig_jaar.node.update_attribute :publication_start_date, 1.year.ago.to_s(:db)
+    @devcms_news_item_voor_vorig_jaar.node.update_attribute :publication_start_date, 1.year.ago
     assert_no_difference('NewsItem.count') do
       assert_raise ArgumentError do
         @devcms_news.destroy_items_for_year_or_month(2010, 'kaas')
@@ -102,11 +102,11 @@ class NewsArchiveTest < ActiveSupport::TestCase
   end
 
   def test_should_destroy_all_items_for_year
-    @devcms_news_item_voor_vorig_jaar.node.update_attribute   :publication_start_date, 1.year.ago.to_s(:db)
-    @devcms_news_item_voor_vorige_maand.node.update_attribute :publication_start_date, Date.today.to_s(:db)
-    @devcms_news_item_voor_deze_maand.node.update_attribute   :publication_start_date, Date.today.to_s(:db)
+    @devcms_news_item_voor_vorig_jaar.node.update_attribute   :publication_start_date, 1.year.ago
+    @devcms_news_item_voor_vorige_maand.node.update_attribute :publication_start_date, Time.zone.now
+    @devcms_news_item_voor_deze_maand.node.update_attribute   :publication_start_date, Time.zone.now
     assert_difference('NewsItem.count', -2) do
-      @devcms_news.destroy_items_for_year_or_month(Time.now.year)
+      @devcms_news.destroy_items_for_year_or_month(Time.zone.now.year)
     end
     assert_raise ActiveRecord::RecordNotFound do
       @devcms_news_item_voor_vorige_maand.reload
@@ -115,10 +115,10 @@ class NewsArchiveTest < ActiveSupport::TestCase
   end
 
   def test_should_destroy_all_items_for_month
-    @devcms_news_item_voor_vorige_maand.node.update_attribute :publication_start_date, 1.month.ago.to_s(:db)
-    @devcms_news_item_voor_deze_maand.node.update_attribute   :publication_start_date, Date.today.to_s(:db)
+    @devcms_news_item_voor_vorige_maand.node.update_attribute :publication_start_date, 1.month.ago
+    @devcms_news_item_voor_deze_maand.node.update_attribute   :publication_start_date, Time.zone.now
     assert_difference('NewsItem.count', -1) do
-      @devcms_news.destroy_items_for_year_or_month(Time.now.year, Time.now.month)
+      @devcms_news.destroy_items_for_year_or_month(Time.zone.now.year, Time.zone.now.month)
     end
     assert_raise ActiveRecord::RecordNotFound do
       @devcms_news_item_voor_deze_maand.reload
@@ -141,6 +141,6 @@ protected
   end
 
   def create_news_item(news_archive, options = {})
-    NewsItem.create({ :parent => news_archive.node, :title => 'Slecht weer!', :body => 'Het zonnetje schijnt niet en de mensen zijn ontevreden.', :publication_start_date => Time.now }.merge(options))
+    NewsItem.create({ :parent => news_archive.node, :title => 'Slecht weer!', :body => 'Het zonnetje schijnt niet en de mensen zijn ontevreden.', :publication_start_date => Time.zone.now }.merge(options))
   end
 end

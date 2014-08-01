@@ -45,5 +45,4 @@ class Response < ActiveRecord::Base
       end
     end
   end
-
 end

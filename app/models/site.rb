@@ -30,7 +30,7 @@ class Site < Section
 
   VALID_DOMAIN_REGEXP = /\A((?:[A-Z0-9\-]+\.)+(?:[A-Z]{2,4}|museum|travel|local)|localhost)\z/i
 
-  validates_presence_of   :original_domain, :unless => Proc.new { |s| s.parent.blank? }
+  validates_presence_of   :original_domain,                      :unless => Proc.new { |s| s.parent.blank? }
   validates_format_of     :domain, :with => VALID_DOMAIN_REGEXP, :unless => Proc.new { |s| s.original_domain.nil? }
   validates_uniqueness_of :domain, :case_sensitive => false,     :unless => Proc.new { |s| s.original_domain.nil? }
 
@@ -43,7 +43,7 @@ class Site < Section
     parts = domain.split('.')
     parts.shift if parts.first == 'www'
     domain = parts.join('.')
-    Site.first(:include => :node, :conditions => [ 'lower(sections.domain) = ? OR lower(sections.domain) = ?', domain.downcase, 'www.' + domain.downcase ]) || Node.root.content
+    Site.first(:include => :node, :conditions => [ 'LOWER(sections.domain) = LOWER(?) OR LOWER(sections.domain) = LOWER(?)', domain, 'www.' + domain ]) || Node.root.content
   end
 
   def original_domain

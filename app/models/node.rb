@@ -183,7 +183,7 @@ class Node < ActiveRecord::Base
     NodeSweeper.instance.after_update(self)
   end
 
-  scope :sorted_by_position, :order => 'nodes.position'
+  scope :sorted_by_position, lambda { order('nodes.position') }
 
   scope :exclude_subtrees_of, (lambda do |nodes_to_exclude|
     Node.exclude_subtrees_conditions_for(nodes_to_exclude)

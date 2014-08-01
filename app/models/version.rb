@@ -16,7 +16,7 @@ class Version < ActiveRecord::Base #:nodoc:
 
   default_scope :order => 'versions.created_at DESC'
 
-  scope :unapproved, :conditions => { :status => UNAPPROVED_STATUSES }
+  scope :unapproved, lambda { where(:status => UNAPPROVED_STATUSES) }
 
   def drafted?
     self.status == STATUSES[:drafted]

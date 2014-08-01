@@ -14,9 +14,8 @@ module NodeExtensions::ContentTypeConfiguration
       DevcmsCore::Engine.content_type_configuration(class_name)
     end
   end
-  
-  def content_type_configuration 
+
+  def content_type_configuration
     Node.content_type_configuration(self.sub_content_type)
   end
-
 end

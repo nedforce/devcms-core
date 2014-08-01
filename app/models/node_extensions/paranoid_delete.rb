@@ -8,10 +8,10 @@ module NodeExtensions::ParanoidDelete
   end
 
   module ClassMethods
-    def before_paranoid_delete(*args, &block);  set_callback(:before_paranoid_delete, :before, *args, &block)   end
-    def after_paranoid_delete(*args, &block);   set_callback(:after_paranoid_delete, :after, *args, &block)     end
-    def before_paranoid_restore(*args, &block); set_callback(:before_paranoid_restore, :before, *args, &block)  end
-    def after_paranoid_restore(*args, &block);  set_callback(:after_paranoid_restore, :after, *args, &block)    end
+    def before_paranoid_delete(*args,  &block); set_callback(:before_paranoid_delete,  :before, *args, &block) end
+    def after_paranoid_delete(*args,   &block); set_callback(:after_paranoid_delete,   :after,  *args, &block) end
+    def before_paranoid_restore(*args, &block); set_callback(:before_paranoid_restore, :before, *args, &block) end
+    def after_paranoid_restore(*args,  &block); set_callback(:after_paranoid_restore,  :after,  *args, &block) end
 
     # Use this method to retrieve all paranoid deleted node records
     def deleted
@@ -149,5 +149,4 @@ module NodeExtensions::ParanoidDelete
 
     true
   end
-
 end

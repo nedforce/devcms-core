@@ -37,7 +37,7 @@ class Admin::WeblogsController < Admin::AdminController
           render :json => @weblog_post_nodes.map { |node| node.to_tree_node_for(current_user) }.to_json
         else
           common_hash = { :treeLoaderName => Node.content_type_configuration('Weblog')[:tree_loader_name] }
-          now         = Time.now
+          now         = Time.zone.now
 
           if @year
             @months = @weblog_node.content.find_months_with_items_for_year(@year).map do |m|

@@ -21,14 +21,14 @@
 #
 class ContactForm < ActiveRecord::Base
   # Constants for different sendmethods. Used in the send_method column in the table
-  SEND_METHOD_MAIL = 0;
-  SEND_METHOD_DATABASE = 1;
+  SEND_METHOD_MAIL     = 0
+  SEND_METHOD_DATABASE = 1
 
   acts_as_content_node
 
   # A +ContactForm+ has many +ContactFormField+ objects.
   has_many :contact_form_fields, :dependent => :destroy
-  has_many :responses, :dependent => :destroy
+  has_many :responses,           :dependent => :destroy
 
   # Ensure the +ContactFormFields+ are valid, build on creation of the +ContactForm+,
   # and updated and deleted when necessary.
@@ -38,8 +38,8 @@ class ContactForm < ActiveRecord::Base
   after_save        :destroy_deleted_contact_form_fields, :save_updated_contact_form_fields
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of     :title, :email_address
-  validates_length_of       :title, :in => 2..255, :allow_blank => true
+  validates_presence_of :title, :email_address
+  validates_length_of   :title, :in => 2..255, :allow_blank => true
 
   validates :email_address, :email => { :allow_blank => true }
 

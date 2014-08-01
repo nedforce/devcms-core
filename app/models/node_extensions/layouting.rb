@@ -164,7 +164,7 @@ module NodeExtensions::Layouting
       ancestries << last_path.push(parent_id).join('/')
       last_path
     end
-    container_ancestry = Image.includes(:node).where("is_for_header = ? and nodes.ancestry IN (?)", true, ancestries).group('nodes.ancestry').count.keys.last
+    container_ancestry = Image.includes(:node).where('is_for_header = ? and nodes.ancestry IN (?)', true, ancestries).group('nodes.ancestry').count.keys.last
     if container_ancestry.present? && container_ancestry != Node.root.id.to_s
       container_ancestry
     else
@@ -173,7 +173,7 @@ module NodeExtensions::Layouting
   end
 
   def header_container
-    Node.find(header_container_ancestry.split("/").last)
+    Node.find(header_container_ancestry.split('/').last)
   end
 
   # Returns a random header image for this node.

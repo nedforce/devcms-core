@@ -3,9 +3,9 @@
 # A +ContactFormField+ belongs to a +ContactForm+.
 #
 # *Specification*
-# 
+#
 # Attributes
-# 
+#
 # * +label+ - The label of the contact form field.
 # * +field_type+ - The type of the contact form field (e.g. input field, textarea).
 # * +position+ - The position of the contact form field relative to the other fields.
@@ -30,17 +30,12 @@ class ContactFormField < ActiveRecord::Base
   has_many :response_fields, :dependent => :destroy
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of     :label, :position
-  # We set :allow_blank => true on the validations below,
-  # to make sure validates_presence_of is the only message displayed if the validation fails.
-  validates_length_of       :label, :in => 1..255, :allow_blank => true
-  validates_numericality_of :position,             :allow_blank => true
-
-  validates_inclusion_of    :field_type, :in => ContactFormField::FIELD_TYPES
-  validates_uniqueness_of   :position, :scope => :contact_form_id, :message => I18n.t('activerecord.errors.models.contact_form_field.attributes.position.must_be_unique')
+  validates :label,      :presence => true, :length => { :in => 1..255, :allow_blank => true }
+  validates :position,   :presence => true, :numericality => { :allow_blank => true }, :uniqueness => { :scope => :contact_form_id, :message => I18n.t('activerecord.errors.models.contact_form_field.attributes.position.must_be_unique') }
+  validates :field_type, :inclusion => { :in => ContactFormField::FIELD_TYPES }
 
   scope :obligatory, where(:obligatory => true)
-  scope :has_field_type, lambda { |field_type| { :conditions => { :field_type => field_type }} }
+  scope :has_field_type, lambda { |field_type| { :conditions => { :field_type => field_type } } }
 
   def self.human_field_type_for(field_type)
     I18n.t(field_type, :scope => 'contact_form_fields')

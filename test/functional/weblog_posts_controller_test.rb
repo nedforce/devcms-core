@@ -186,7 +186,7 @@ class WeblogPostsControllerTest < ActionController::TestCase
     image = fixture_file_upload('files/test.jpg')
     assert_difference('WeblogPost.count', 1) do
       assert_difference('Image.count', 2) do
-        create_weblog_post({},{:images => { :image_0 => { :title => 'An Image', :file => image },:image_1 => { :title => 'Another Image', :file => image }}})
+        create_weblog_post({}, { :images => { :image_0 => { :title => 'An Image', :file => image }, :image_1 => { :title => 'Another Image', :file => image } } })
         assert_response :redirect
         assert !assigns(:weblog_post).new_record?, assigns(:weblog_post).errors.full_messages.join('; ')
       end

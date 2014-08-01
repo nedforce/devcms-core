@@ -18,7 +18,6 @@ namespace :db do
       end
     end
 
-
     desc 'Create initial users:
             one with admin permissions on the root node (login: \'webmaster\', password: \'admin\')
             one with editor permissions on the business section node (login: \'redacteur\', password: \'editor\')
@@ -42,7 +41,7 @@ namespace :db do
     desc 'Create users for all indexers'
     task(:indexer_users => :environment) do
       if Node.root
-        u = User.create!(:login => 'luminis', :email_address => "luminis@example.com", :password => 'asdY23jhnASD8sd', :password_confirmation => 'asdY23jhnASD8sd')
+        u = User.create!(:login => 'luminis', :email_address => 'luminis@example.com', :password => 'asdY23jhnASD8sd', :password_confirmation => 'asdY23jhnASD8sd')
         u.update_attribute(:verified, true)
         u.give_role_on('indexer', Node.root)
       else
@@ -53,7 +52,7 @@ namespace :db do
     desc 'Create approximately 1000 User instances with random data'
     task(:users => :environment) do
       require 'faker'
-      
+
       ActiveRecord::Base.transaction do
         1000.times do
           login = Faker::Name.name
@@ -79,9 +78,9 @@ namespace :db do
     desc 'Create a node structure with semi-random content'
     task(:nodes => :environment) do
       require 'faker'
-      
+
       ActiveRecord::Base.transaction do
-        root_section = Site.create!(:title => 'Website', :description => Faker::Lorem.sentence, :expiration_email_subject => "Content onder uw beheer is verouderd", :expiration_email_body => "<p>De onderstaande pagina is al enige tijd niet meer bijgewerkt en is inmiddels verlopen.</p><p>Gelieve de inhoud van deze pagina's te controleren en bij te werken.</p><p>Neem voor meer informatie contact op met de webredactie.</p>")
+        root_section = Site.create!(:title => 'Website', :description => Faker::Lorem.sentence, :expiration_email_subject => 'Content onder uw beheer is verouderd', :expiration_email_body => "<p>De onderstaande pagina is al enige tijd niet meer bijgewerkt en is inmiddels verlopen.</p><p>Gelieve de inhoud van deze pagina's te controleren en bij te werken.</p><p>Neem voor meer informatie contact op met de webredactie.</p>")
         root_section.node.update_attributes!(:layout => 'default', :layout_variant => 'four_columns', :layout_configuration => { 'template_color' => 'default' })
 
         news_archive = NewsArchive.new(:parent =>root_section.node, :title => 'Home', :description => Faker::Lorem.sentence)
@@ -140,8 +139,8 @@ namespace :db do
 
     desc 'First performs a database reset, then creates 1000 User instances and node structure.'
     task :all do
-      if Rails.env.production? && (!ENV.has_key?("RESET_PRODUCTION") || ENV["RESET_PRODUCTION"] != "true")
-        raise "Set RESET_PRODUCTION=true if you really want to do this for the production database."
+      if Rails.env.production? && (!ENV.has_key?('RESET_PRODUCTION') || ENV['RESET_PRODUCTION'] != 'true')
+        raise 'Set RESET_PRODUCTION=true if you really want to do this for the production database.'
       end
 
       #puts 'Resetting database...'
@@ -156,4 +155,3 @@ namespace :db do
     end
   end
 end
-

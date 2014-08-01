@@ -57,7 +57,7 @@ module NodeExtensions::TreeDelegation
   end
 
   def parent_id_was
-    ancestry_was ? ancestry_was.split("/").last : nil
+    ancestry_was ? ancestry_was.split('/').last : nil
   end
 
   def parent_id_changed?

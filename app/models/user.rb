@@ -60,7 +60,7 @@ class User < ActiveRecord::Base
     'f' => :female
   }
 
-  scope :exclusive, where(['users.type is null or users.type = ?', 'User'])
+  scope :exclusive, where(['users.type IS NULL OR users.type = ?', 'User'])
 
   # Virtual attribute to hold the unencrypted password
   attr_accessor :password
@@ -404,7 +404,7 @@ protected
 
   # Prevents information leakage, validates the email and returns false to prevent a save
   def validate_uniqueness_of_email
-    user = User.first(:conditions => ['upper(email_address) = upper(?)', email_address])
+    user = User.first(:conditions => ['UPPER(email_address) = UPPER(?)', email_address])
     UserMailer.email_used_to_create_account(user).deliver if user
     return !user
   end
@@ -430,13 +430,13 @@ protected
     other    = ''
 
     password.each_char do |c|
-      if !lower && c.match('[a-z]') != nil
+      if !lower && !c.match('[a-z]').nil?
         lower = true
         alphabet += 26
-      elsif !upper && c.match('[A-Z]') != nil
+      elsif !upper && !c.match('[A-Z]').nil?
         upper = true
         alphabet += 26
-      elsif !numbers && c.match('[0-9]') != nil
+      elsif !numbers && !c.match('[0-9]').nil?
         numbers = true
         alphabet += 10
       elsif !symbols1 && '!@#$%^&*()'.include?(c)
@@ -449,6 +449,7 @@ protected
         alphabet += 1
       end
     end
+
     return alphabet
   end
 

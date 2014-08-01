@@ -4,7 +4,7 @@ class SiteTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
   def setup
-    @root_section = sections(:root_section)
+    @root_section     = sections(:root_section)
     @sub_site_section = sections(:sub_site_section)
   end
 
@@ -28,7 +28,7 @@ class SiteTest < ActiveSupport::TestCase
       assert site.errors[:base].any?
     end
   end
-  
+
   def test_should_have_case_insensitive_unique_urls
     assert_difference 'Site.count', 1 do
       site = create_site
@@ -37,7 +37,7 @@ class SiteTest < ActiveSupport::TestCase
       assert site.errors[:domain].any?
     end
   end
-  
+
   def test_should_set_default_layout
     site = create_site
     assert_equal Node.root.layout, site.node.layout
@@ -50,5 +50,4 @@ protected
   def create_site(options = {})
     Site.create({ :parent => @root_section.node, :title => 'site', :domain => 'www.nedforce.nl' }.merge(options))
   end
-
 end

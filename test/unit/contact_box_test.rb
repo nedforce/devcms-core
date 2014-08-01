@@ -2,11 +2,11 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 
 class ContactBoxTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
-  
+
   def setup
     @root_node = nodes(:root_section_node)
   end
-  
+
   def test_should_create_contact_box
     assert_difference('ContactBox.count') do
       create_contact_box
@@ -51,7 +51,7 @@ class ContactBoxTest < ActiveSupport::TestCase
       end
     end
   end
-   
+
   def test_should_update_page
     contact_box = create_contact_box
 
@@ -60,11 +60,11 @@ class ContactBoxTest < ActiveSupport::TestCase
       assert contact_box.save
     end
   end
-  
+
   def test_should_destroy_page
     contact_box = create_contact_box
-    
-    assert_difference("ContactBox.count", -1) do
+
+    assert_difference('ContactBox.count', -1) do
       contact_box.destroy
     end
   end
@@ -76,7 +76,7 @@ class ContactBoxTest < ActiveSupport::TestCase
       :parent              => @root_node,
       :title               => 'Contactinformatie',
       :contact_information => 'Contact info',
-      :default_text        => 'Interessante default text'
+      :default_text        => 'Interesting default text'
     }.merge(options))
   end
 end

@@ -35,9 +35,9 @@ class PollQuestion < ActiveRecord::Base
 
   # A +PollQuestion+ has many +PollOption+ objects.
   has_many :poll_options, :dependent => :destroy, :order => 'created_at'
-  
+
   has_many :user_votes, :class_name => 'UserPollQuestionVote', :dependent => :destroy
-  
+
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of  :poll, :question
   validates_length_of    :question, :in => 2..255,          :allow_blank => true
@@ -49,7 +49,7 @@ class PollQuestion < ActiveRecord::Base
 
   # Ensure there is always only one active +PollQuestion+.
   before_save :ensure_unique_active_question
-  
+
   # Ensure the updated +PollOption+ objects are saved.
   after_update :save_poll_options
 
@@ -89,7 +89,7 @@ class PollQuestion < ActiveRecord::Base
   # TODO: Documentation
   def tree_text(node)
     txt = content_title
-    txt += " (Actief)" if self.active?
+    txt += ' (Actief)' if self.active?
     txt
   end
 
@@ -102,11 +102,11 @@ class PollQuestion < ActiveRecord::Base
   def title
     content_title
   end
-  
+
   def title_changed?
     self.question_changed?
   end
-  
+
   def has_vote_from?(user)
     user.present? && user_votes.exists?(:user_id => user.id)
   end
@@ -126,7 +126,7 @@ class PollQuestion < ActiveRecord::Base
       poll_options.find(option).vote!
     end
   end
-  
+
   def last_updated_at
     [ self.updated_at, self.poll_options.maximum(:updated_at) ].compact.max
   end
@@ -154,5 +154,4 @@ protected
     self.poll_options.destroy_all
     self.user_votes.destroy_all
   end
-  
 end

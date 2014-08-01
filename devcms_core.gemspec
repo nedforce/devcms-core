@@ -6,8 +6,8 @@ Gem::Specification.new do |s|
   s.authors     = ['Nedforce Informatica Specialisten B.V.']
   s.email       = ['info@nedforce.nl']
   s.homepage    = 'http://www.nedforce.nl'
-  s.summary     = 'CMS engine for rails 3.2'
-  s.description = 'CMS engine for rails 3.2'
+  s.summary     = 'CMS engine for Rails 3.2'
+  s.description = 'CMS engine for Rails 3.2'
   s.version     = '0.0.1'
 
   s.files         = `git ls-files`.split("\n")
@@ -53,7 +53,7 @@ Gem::Specification.new do |s|
 
   # Javascript
   s.add_dependency 'coffee-rails', '~> 3.0'
-  s.add_dependency 'coffee-script-source', '~> 1.5.0'  
+  s.add_dependency 'coffee-script-source', '~> 1.5.0'
   s.add_dependency 'uglifier', '~> 1.0'
 
   # Styling
@@ -65,5 +65,4 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'mocha'
   s.add_development_dependency 'fakeweb'
   s.add_development_dependency 'rsolr', '~> 0.12.1'
-
 end
