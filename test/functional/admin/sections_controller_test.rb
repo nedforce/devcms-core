@@ -62,7 +62,6 @@ class Admin::SectionsControllerTest < ActionController::TestCase
       assert_equal 'foobar', assigns(:section).title
       assert_template 'create_preview'
     end
-
   end
 
   def test_should_not_get_invalid_preview_for_create
@@ -104,12 +103,12 @@ class Admin::SectionsControllerTest < ActionController::TestCase
     assert assigns(:section)
     assert_equal 'foo', assigns(:section).title
   end
-  
+
   def test_should_update_section
     login_as :sjoerd
-    
+
     put :update, :id => sections(:economie_section).id, :section => { :title => 'updated title', :description => 'updated_body' }
-    
+
     assert_response :success
     assert_equal 'updated title', assigns(:section).title
   end
@@ -151,7 +150,7 @@ class Admin::SectionsControllerTest < ActionController::TestCase
 
     get :edit, :id => sections(:editor_section).id
     assert_response :success
-    assert @response.body !=~ /frontpage_node_id/
+    assert @response.body !~ /frontpage_node_id/
     assert_nil assigns(:section).frontpage_node_id
 
     put :update, :id => sections(:editor_section).id, :section => { :frontpage_node_id => nodes(:editor_section_page_node).id }

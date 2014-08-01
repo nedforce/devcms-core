@@ -119,7 +119,7 @@ class Admin::ImagesControllerTest < ActionController::TestCase
 
     get :new, :parent_node_id => nodes(:editor_section_node).id
     assert_response :success
-    assert @response.body !=~ /image_url/
+    assert @response.body !~ /image_url/
 
     create_image(:image => { :url => 'http://example.com'}, :parent_node_id => nodes(:editor_section_node).id)
     assert_response :success
