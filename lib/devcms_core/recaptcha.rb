@@ -62,10 +62,10 @@ module DevcmsCore
         # Default options
         key   = options[:public_key] ||= Settler[:recaptcha_public_key]
         raise RecaptchaError, I18n.t('recaptcha.no_public_key_specified') unless key
-        error = options[:error]      ||= (defined? flash ? flash[:recaptcha_error] : "")
+        error = options[:error]      ||= (defined? flash ? flash[:recaptcha_error] : '')
         uri   = options[:ssl] || request.ssl? ? RECAPTCHA_API_SECURE_SERVER : RECAPTCHA_API_SERVER
         lang  = options[:lang]       ||= I18n.locale
-        html  = ""
+        html  = ''
         if options[:display]
           html << %{<script type="text/javascript">\n}
           html << %{  var RecaptchaOptions = #{options[:display].to_json.html_safe};\n}
@@ -84,7 +84,7 @@ module DevcmsCore
           html << %{</script>\n}
         else
           html << %{<script type="text/javascript" src="#{uri}/challenge?k=#{key}}
-          html << %{#{error ? "&amp;error=#{CGI::escape(error)}" : ""}"></script>\n}
+          html << %{#{error ? "&amp;error=#{CGI::escape(error)}" : ''}"></script>\n}
           unless options[:noscript] == false
             html << %{<noscript>\n <div> }
             html << %{<object type="text/html" data="http://api.recaptcha.net/noscript?k=#{key}" }

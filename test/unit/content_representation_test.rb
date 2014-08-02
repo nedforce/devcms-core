@@ -3,9 +3,9 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 class ContentRepresentationTest < ActiveSupport::TestCase
 
   def setup
-    @about_page_node = nodes(:about_page_node)
-    @root_section_node = nodes(:root_section_node)
-    @external_link_node = nodes(:external_link_node)
+    @about_page_node       = nodes(:about_page_node)
+    @root_section_node     = nodes(:root_section_node)
+    @external_link_node    = nodes(:external_link_node)
     @economie_section_node = nodes(:economie_section_node)
     @first_root_content_representation = Node.root.content_representations.create(:target => 'primary_column', :content => Node.root.children.last(:conditions => { :content_type => 'Section' }))
     @devcms_news_item_node = nodes(:devcms_news_item_node)
@@ -69,7 +69,7 @@ class ContentRepresentationTest < ActiveSupport::TestCase
   end
 
   def test_should_destroy_content_representation
-    assert_difference "ContentRepresentation.count", -1 do
+    assert_difference 'ContentRepresentation.count', -1 do
       @first_root_content_representation.destroy
     end
   end
@@ -80,4 +80,3 @@ protected
     ContentRepresentation.create({ :parent => @root_section_node, :content => @economie_section_node, :target => 'primary_column' }.merge(options))
   end
 end
-

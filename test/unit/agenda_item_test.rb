@@ -4,11 +4,11 @@ class AgendaItemTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
   def setup
-    @calendar_item = events(:events_calendar_item_one)
-    @meeting = events(:meetings_calendar_meeting_one)
-    @agenda_item_category = agenda_item_categories(:hamerstukken)
+    @calendar_item            = events(:events_calendar_item_one)
+    @meeting                  = events(:meetings_calendar_meeting_one)
+    @agenda_item_category     = agenda_item_categories(:hamerstukken)
     @agenda_item_category_two = agenda_item_categories(:stukken_ter_kennisname)
-    @agenda_item = agenda_items(:agenda_item_one)
+    @agenda_item              = agenda_items(:agenda_item_one)
   end
 
   def test_should_create_agenda_item
@@ -68,7 +68,7 @@ class AgendaItemTest < ActiveSupport::TestCase
 
   def test_agenda_item_category_name_should_return_nil_if_no_agenda_item_category_is_associated
     agenda_item = create_agenda_item(:agenda_item_category => nil)
-    assert_equal nil, agenda_item.agenda_item_category_name
+    assert_nil agenda_item.agenda_item_category_name
   end
 
   def test_agenda_item_category_name_should_return_name_of_associated_agenda_item_category_if_an_agenda_item_category_is_associated

@@ -20,7 +20,7 @@ class ForumPostTest < ActiveSupport::TestCase
       assert !@bewoners_forum_post_one.destroy
     end
     assert_equal 5, @bewoners_forum_thread_one.forum_posts.size
-    assert_not_nil  @bewoners_forum_thread_one.start_post
+    assert_not_nil @bewoners_forum_thread_one.start_post
     assert_equal @bewoners_forum_post_one, @bewoners_forum_thread_one.start_post
   end
 
@@ -50,7 +50,7 @@ class ForumPostTest < ActiveSupport::TestCase
     end
 
     assert_no_difference 'ForumPost.count' do
-      forum_post = create_forum_post(:body => "  ")
+      forum_post = create_forum_post(:body => '  ')
       assert forum_post.errors[:body].any?
     end
   end
@@ -79,7 +79,7 @@ class ForumPostTest < ActiveSupport::TestCase
   end
 
   def test_should_destroy_forum_post
-    assert_difference "ForumPost.count", -1 do
+    assert_difference 'ForumPost.count', -1 do
       forum_posts(:bewoners_forum_post_seven).destroy
     end
   end
@@ -116,7 +116,7 @@ class ForumPostTest < ActiveSupport::TestCase
     assert_equal 1, ActionMailer::Base.deliveries.size
     email = ActionMailer::Base.deliveries.first
     body = email.parts.first.body
-    
+
     assert email.to.include?(@bewoners_forum_thread_one.user.email_address)
     assert email.subject.include?('Nieuwe reactie op forum')
 
@@ -156,6 +156,6 @@ class ForumPostTest < ActiveSupport::TestCase
 protected
 
   def create_forum_post(options = {})
-    ForumPost.create({ :forum_thread => @bewoners_forum_thread_one, :user => @jan, :body => "Enjoy!" }.merge(options))
+    ForumPost.create({ :forum_thread => @bewoners_forum_thread_one, :user => @jan, :body => 'Enjoy!' }.merge(options))
   end
 end

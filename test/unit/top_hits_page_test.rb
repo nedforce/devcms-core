@@ -4,7 +4,7 @@ class TopHitsPageTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
   def setup
-    @root_node = nodes(:root_section_node)
+    @root_node    = nodes(:root_section_node)
     @top_ten_page = top_hits_pages(:top_ten_page)
   end
 
@@ -21,7 +21,7 @@ class TopHitsPageTest < ActiveSupport::TestCase
     end
 
     assert_no_difference 'TopHitsPage.count' do
-      top_hits_page = create_top_hits_page(:title => "  ")
+      top_hits_page = create_top_hits_page(:title => '  ')
       assert top_hits_page.errors[:title].any?
     end
   end
@@ -44,7 +44,7 @@ class TopHitsPageTest < ActiveSupport::TestCase
   end
 
   def test_should_destroy_top_hits_page
-    assert_difference "TopHitsPage.count", -1 do
+    assert_difference 'TopHitsPage.count', -1 do
       @top_ten_page.destroy
     end
   end
@@ -53,7 +53,7 @@ class TopHitsPageTest < ActiveSupport::TestCase
     top_hits_page = create_top_hits_page(:parent => nodes(:sub_site_section_node))
     page_node = create_page(:parent => nodes(:root_section_node)).node
     page_node.update_attribute(:hits, 3000)
-    
+
     found_top_hits = top_hits_page.find_top_hits
 
     assert !found_top_hits.include?(page_node)

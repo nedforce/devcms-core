@@ -2,10 +2,10 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 
 class NewsItemTest < ActiveSupport::TestCase
   def setup
-    @devcms_news = news_archives(:devcms_news)
+    @devcms_news      = news_archives(:devcms_news)
     @devcms_news_item = news_items(:devcms_news_item)
   end
-  
+
   def test_should_create_news_item
     assert_difference 'NewsItem.count' do
       ni = create_news_item
@@ -18,9 +18,9 @@ class NewsItemTest < ActiveSupport::TestCase
       news_item = create_news_item(:title => nil)
       assert news_item.errors[:title].any?
     end
-    
+
     assert_no_difference 'NewsItem.count' do
-      news_item = create_news_item(:title => "   ")
+      news_item = create_news_item(:title => '   ')
       assert news_item.errors[:title].any?
     end
   end
@@ -47,7 +47,7 @@ class NewsItemTest < ActiveSupport::TestCase
       end
     end
   end
-  
+
   def test_should_update_news_item
     assert_no_difference 'NewsItem.count' do
       @devcms_news_item.title = 'New title'
@@ -55,21 +55,21 @@ class NewsItemTest < ActiveSupport::TestCase
       assert @devcms_news_item.save(:user => users(:arthur))
     end
   end
-  
+
   def test_should_destroy_news_item
-    assert_difference "NewsItem.count", -1 do
+    assert_difference 'NewsItem.count', -1 do
       @devcms_news_item.destroy
     end
   end
 
   def test_human_name_does_not_return_nil
-    assert_not_nil NewsItem.human_name 
+    assert_not_nil NewsItem.human_name
   end
 
   def test_should_not_return_news_item_children_for_menu
     assert @devcms_news.node.children.accessible.shown_in_menu.empty?
   end
-  
+
   def test_url_alias_for_news_item_with_publication_start_date
     start_date = 2.days.ago
     ni = create_news_item(:publication_start_date => start_date)
@@ -81,7 +81,7 @@ class NewsItemTest < ActiveSupport::TestCase
     created_at = ni.created_at
     assert_equal "#{created_at.year}/#{created_at.month}/#{created_at.day}/slecht-weer", ni.node.url_alias
   end
-  
+
   def test_tree_text_for_news_item_with_publication_start_date
     start_date = 2.days.ago
     ni = create_news_item(:publication_start_date => start_date)

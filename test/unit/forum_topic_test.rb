@@ -49,7 +49,7 @@ class ForumTopicTest < ActiveSupport::TestCase
   end
 
   def test_should_destroy_forum_topic
-    assert_difference "ForumTopic.count", -1 do
+    assert_difference 'ForumTopic.count', -1 do
       @bewoners_forum_topic_wonen.destroy
     end
   end
@@ -76,7 +76,7 @@ class ForumTopicTest < ActiveSupport::TestCase
 
     assert @bewoners_forum_topic_wonen.forum_threads.map(&:id).set_equals?(found_forum_threads.map(&:id))
 
-    i = 0;
+    i = 0
 
     while i < (found_forum_threads.size - 1)
       assert found_forum_threads[i].last_update_date >= found_forum_threads[i + 1].last_update_date

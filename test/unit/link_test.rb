@@ -5,7 +5,7 @@ class LinkTest < ActiveSupport::TestCase
     assert_no_difference 'Link.count' do
       link = build_link
       link.type = nil
-      link.valid?
+      assert !link.valid?
       assert link.errors[:type].any?
     end
   end
@@ -14,7 +14,7 @@ class LinkTest < ActiveSupport::TestCase
     assert_no_difference 'Link.count' do
       link = build_link
       link.type = 'FooBarBazQuux'
-      link.valid?
+      assert !link.valid?
       assert link.errors[:type].any?
     end
   end
@@ -22,6 +22,6 @@ class LinkTest < ActiveSupport::TestCase
 protected
 
   def build_link(options = {})
-    Link.new({ :parent => nodes(:root_section_node), :title => 'Dit is een link.', :description => 'Geen fratsen!' }.merge(options))
+    Link.new({ :parent => nodes(:root_section_node), :title => 'This is a link', :description => 'Geen fratsen!' }.merge(options))
   end
 end

@@ -2,34 +2,35 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 
 class AbbreviationTest < ActiveSupport::TestCase
 
-  def test_should_create_abbreviation
+  test 'should create abbreviation' do
     assert_difference 'Abbreviation.count' do
-      create_abbreviation
+      abbr = create_abbreviation
+      assert !abbr.new_record?, "#{abbr.errors.full_messages.to_sentence}"
     end
   end
 
-  def test_should_require_abbr
+  test 'should require abbr' do
     assert_no_difference 'Abbreviation.count' do
       abbr = create_abbreviation(:abbr => nil)
       assert abbr.errors[:abbr].any?
     end
   end
 
-  def test_should_require_definition
+  test 'should require definition' do
     assert_no_difference 'Abbreviation.count' do
       abbr = create_abbreviation(:definition => nil)
       assert abbr.errors[:definition].any?
     end
   end
 
-  def test_should_require_node
+  test 'should require node' do
     assert_no_difference 'Abbreviation.count' do
       abbr = create_abbreviation(:node => nil)
       assert abbr.errors[:node].any?
     end
   end
 
-  def test_should_do_fuzzy_search
+  test 'should do fuzzy search' do
     %w(wmo WMO Wmo w.m.o W.M.O W.M.O.).each do |abbr|
       results = Abbreviation.search(abbr)
       assert_equal 1, results.length

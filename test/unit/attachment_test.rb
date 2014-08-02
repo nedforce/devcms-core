@@ -29,7 +29,7 @@ class AttachmentTest < ActiveSupport::TestCase
   end
 
   def test_should_get_nil_extension_and_basename
-    assert_equal nil, attachments(:no_extension_attachment).extension
+    assert_nil attachments(:no_extension_attachment).extension
     assert_equal 'Sloeproeien', attachments(:no_extension_attachment).basename
   end
 

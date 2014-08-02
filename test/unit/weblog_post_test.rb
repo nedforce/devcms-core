@@ -2,12 +2,12 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 
 class WeblogPostTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
-  
+
   def setup
-    @henk_weblog = weblogs(:henk_weblog)
+    @henk_weblog          = weblogs(:henk_weblog)
     @henk_weblog_post_one = weblog_posts(:henk_weblog_post_one)
   end
-  
+
   def test_should_create_weblog_post
     assert_difference 'WeblogPost.count' do
       wp = create_weblog_post
@@ -19,9 +19,9 @@ class WeblogPostTest < ActiveSupport::TestCase
       weblog_post = create_weblog_post(:title => nil)
       assert weblog_post.errors[:title].any?
     end
-    
+
     assert_no_difference 'WeblogPost.count' do
-      weblog_post = create_weblog_post(:title => "  ")
+      weblog_post = create_weblog_post(:title => '  ')
       assert weblog_post.errors[:title].any?
     end
   end
@@ -32,7 +32,7 @@ class WeblogPostTest < ActiveSupport::TestCase
       assert weblog_post.errors[:body].any?
     end
   end
-  
+
   def test_should_require_parent
     assert_no_difference 'WeblogPost.count' do
       weblog_post = create_weblog_post(:parent => nil)
@@ -48,7 +48,7 @@ class WeblogPostTest < ActiveSupport::TestCase
       end
     end
   end
-  
+
   def test_should_update_weblog_post
     assert_no_difference 'WeblogPost.count' do
       @henk_weblog_post_one.title = 'New title'
@@ -56,17 +56,17 @@ class WeblogPostTest < ActiveSupport::TestCase
       assert @henk_weblog_post_one.save
     end
   end
-  
+
   def test_should_destroy_weblog_post
-    assert_difference "WeblogPost.count", -1 do
+    assert_difference 'WeblogPost.count', -1 do
       @henk_weblog_post_one.destroy
     end
   end
-  
+
   def test_human_name_does_not_return_nil
     assert_not_nil WeblogPost.human_name 
   end
-  
+
   def test_should_not_return_weblog_post_children_for_menu
     assert @henk_weblog.node.children.shown_in_menu.empty?
   end
@@ -94,10 +94,10 @@ class WeblogPostTest < ActiveSupport::TestCase
     created_at = wp.created_at
     assert_equal "#{created_at.day}/#{created_at.month} #{wp.title}", wp.node.tree_text
   end
-  
+
 protected
-  
+
   def create_weblog_post(options = {})
-    WeblogPost.create({ :parent => @henk_weblog.node, :title => 'Some interesting title.', :body => 'Some interesting body.' }.merge(options))
+    WeblogPost.create({ :parent => @henk_weblog.node, :title => 'Some interesting title', :body => 'Some interesting body.' }.merge(options))
   end
 end

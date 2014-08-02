@@ -39,7 +39,7 @@ class MeetingTest < ActiveSupport::TestCase
 
   def test_meeting_category_name_should_return_nil_if_no_meeting_category_is_associated
     meeting = create_meeting(:meeting_category => nil)
-    assert_equal nil, meeting.meeting_category_name
+    assert_nil meeting.meeting_category_name
   end
 
   def test_meeting_category_name_should_return_name_of_associated_meeting_category_if_a_meeting_category_is_associated

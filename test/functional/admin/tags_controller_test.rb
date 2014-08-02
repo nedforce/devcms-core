@@ -12,16 +12,16 @@ class Admin::TagsControllerTest < ActionController::TestCase
     get :index
     assert_response :success
   end
-  
+
   def test_should_update_setting
     login_as :sjoerd
     put :update, :id => ActsAsTaggableOn::Tag.last.id, :tags => { :name => 'new tag' }
-    assert_response :success    
+    assert_response :success
   end
 
   def test_should_destroy_tag
     login_as :sjoerd
-    assert_difference "ActsAsTaggableOn::Tag.count", -1 do
+    assert_difference 'ActsAsTaggableOn::Tag.count', -1 do
       delete :destroy, :id => ActsAsTaggableOn::Tag.last.id, :format => 'json'
     end
     assert_response :success
@@ -33,5 +33,4 @@ class Admin::TagsControllerTest < ActionController::TestCase
       delete :destroy, :id => ActsAsTaggableOn::Tag.last.id, :format => 'json'
     end
   end
-
 end

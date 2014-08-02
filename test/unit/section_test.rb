@@ -62,7 +62,7 @@ class SectionTest < ActiveSupport::TestCase
     assert @root_section.valid?
     assert !@root_section.errors[:frontpage_node].any?
     assert !@root_section.has_frontpage?
-    assert_equal nil, @root_section.frontpage_node
+    assert_nil @root_section.frontpage_node
   end
 
   # def test_should_accept_descendant_as_frontpage_node

@@ -2,13 +2,13 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 
 class NewsletterEditionTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
-  
+
   def setup
-    @root_node = nodes(:root_section_node)
+    @root_node                 = nodes(:root_section_node)
     @devcms_newsletter_archive = newsletter_archives(:devcms_newsletter_archive)
     @devcms_newsletter_edition = newsletter_editions(:devcms_newsletter_edition)
   end
-  
+
   def test_should_create_newsletter_edition
     assert_difference 'NewsletterEdition.count' do
       ne = create_newsletter_edition
@@ -21,9 +21,9 @@ class NewsletterEditionTest < ActiveSupport::TestCase
       newsletter_edition = create_newsletter_edition(:title => nil)
       assert newsletter_edition.errors[:title].any?
     end
-    
+
     assert_no_difference 'NewsletterEdition.count' do
-      newsletter_edition = create_newsletter_edition(:title => "  ")
+      newsletter_edition = create_newsletter_edition(:title => '  ')
       assert newsletter_edition.errors[:title].any?
     end
   end
@@ -34,7 +34,7 @@ class NewsletterEditionTest < ActiveSupport::TestCase
       assert newsletter_edition.errors[:body].any?
     end
   end
-  
+
   def test_should_require_parent
     assert_no_difference 'NewsletterEdition.count' do
       newsletter_edition = create_newsletter_edition(:parent => nil)
@@ -50,7 +50,7 @@ class NewsletterEditionTest < ActiveSupport::TestCase
       end
     end
   end
-  
+
   def test_should_update_newsletter_edition
     assert_no_difference 'NewsletterEdition.count' do
       @devcms_newsletter_edition.title = 'New title'
@@ -58,22 +58,22 @@ class NewsletterEditionTest < ActiveSupport::TestCase
       assert @devcms_newsletter_edition.save(:user => users(:arthur))
     end
   end
-  
+
   def test_should_destroy_newsletter_edition
-    assert_difference "NewsletterEdition.count", -1 do
+    assert_difference 'NewsletterEdition.count', -1 do
       @devcms_newsletter_edition.destroy
     end
   end
-  
+
   def test_human_name_does_not_return_nil
     assert_not_nil NewsletterEdition.human_name 
   end
-  
+
   def test_should_add_pages_and_news_item_nodes
     @devcms_newsletter_edition.associate_items([ nodes(:help_page_node).id, nodes(:devcms_news_item_node).id, nodes(:devcms_news_item_voor_vorige_maand_node).id])
     assert_equal 3, @devcms_newsletter_edition.items_count
   end
-  
+
   def test_should_not_allow_duplicate_items
     newsletter_edition = create_newsletter_edition
     node_id = nodes(:about_page_node).id
@@ -104,7 +104,7 @@ class NewsletterEditionTest < ActiveSupport::TestCase
     created_at = ne.created_at
     assert_equal "#{created_at.day}/#{created_at.month} #{ne.title}", ne.node.tree_text
   end
-  
+
   def test_should_default_to_first_sibbling_image
     image = Image.last.node
     image.move_to_child_of(nodes(:newsletter_archive_node))

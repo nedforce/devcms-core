@@ -80,7 +80,7 @@ class UserTest < ActiveSupport::TestCase
 
   def test_should_not_reset_password_if_entropy_is_too_low
     users(:gerjan).update_attributes(:password => 'new password', :password_confirmation => 'new password')
-    assert_equal nil, User.authenticate('gerjan', 'new password')
+    assert_nil User.authenticate('gerjan', 'new password')
   end
 
   def test_should_reset_password
@@ -218,7 +218,7 @@ class UserTest < ActiveSupport::TestCase
 
   def test_should_keep_non_privileged_roles_after_demote
     assert users(:editor).give_role_on('read_access', Node.root)
-    assert_difference("User.find(users(:editor).id).role_assignments.count", -6) do
+    assert_difference('User.find(users(:editor).id).role_assignments.count', -6) do
       users(:editor).demote!
       assert !User.find(users(:editor).id).role_assignments.any? { |ra| ra.is_privileged? }
     end
@@ -431,11 +431,11 @@ class UserTest < ActiveSupport::TestCase
   # An email notice is send if an email is already in use. This of course
   # should not be send when it is not in use.
   def test_should_not_send_email_notice_if_email_is_not_in_use
-    email_address = "abc@example.com"
+    email_address = 'abc@example.com'
 
     ActionMailer::Base.deliveries.clear
 
-    create_user(:login => "user_b", :email_address => email_address)
+    create_user(:login => 'user_b', :email_address => email_address)
 
     assert_equal 1, ActionMailer::Base.deliveries.size
 

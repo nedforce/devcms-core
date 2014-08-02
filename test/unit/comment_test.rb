@@ -63,7 +63,7 @@ class CommentTest < ActiveSupport::TestCase
 
   def test_should_destroy_comment
     create_comment
-    assert_difference "Comment.count", -1 do
+    assert_difference 'Comment.count', -1 do
       @news_item_node.destroy
     end
   end
@@ -76,18 +76,18 @@ class CommentTest < ActiveSupport::TestCase
   def test_should_return_editable_comments
     assert_equal Comment.all, Comment.editable_comments_for(users(:arthur))
 
-    editable_comment = create_comment(:user => users(:final_editor))
+    editable_comment  = create_comment(:user => users(:final_editor))
     editable_comment2 = create_comment(:user => users(:final_editor), :commentable => nodes(:economie_section_node))
     non_editable_comment = create_comment
 
     editable_comments = Comment.editable_comments_for(users(:final_editor))
-    assert editable_comments.include?(editable_comment)
-    assert editable_comments.include?(editable_comment2)
+    assert  editable_comments.include?(editable_comment)
+    assert  editable_comments.include?(editable_comment2)
     assert !editable_comments.include?(non_editable_comment)
 
     editable_comment = create_comment(:user => users(:editor))
     editable_comments = Comment.editable_comments_for(users(:editor))
-    assert editable_comments.include?(editable_comment)
+    assert  editable_comments.include?(editable_comment)
     assert !editable_comments.include?(non_editable_comment)
   end
 
@@ -96,6 +96,4 @@ protected
   def create_comment(options = {})
     Comment.create({ :user => @user, :commentable => @news_item_node, :comment => "I don't like it!" }.merge(options))
   end
-
 end
-

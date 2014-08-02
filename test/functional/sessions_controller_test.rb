@@ -2,20 +2,20 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 
 class SessionsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
-  
+
   def test_should_login_and_redirect
     post :create, :login => users(:gerjan).login, :password => 'gerjan'
     assert session[:user_id]
     assert_response :redirect
   end
-  
+
   def test_new_should_redirect_if_already_logged_in
     login_as :sjoerd
     get :new
     assert_response :redirect
     assert flash.key?(:notice)
   end
-  
+
   def test_create_should_redirect_if_already_logged_in
     login_as :sjoerd
     post :create, :login => users(:gerjan).login, :password => 'gerjan'
@@ -34,8 +34,8 @@ class SessionsControllerTest < ActionController::TestCase
     assert_nil session[:user_id]
     assert_response :unprocessable_entity
   end
-  
-   def test_should_fail_login_if_not_verified
+
+  def test_should_fail_login_if_not_verified
     post :create, :login => users(:unverified_user).login, :password => 'pass'
     assert_nil session[:user_id]
     assert assigns(:user), "No @user"
@@ -56,13 +56,13 @@ class SessionsControllerTest < ActionController::TestCase
     assert_response :success
     assert_template 'confirm_destroy'
   end
-    
+
   def test_should_not_logout_if_not_logged_in
     delete :destroy
     assert_response :redirect
     assert flash.key?(:warning)
   end
-  
+
   def test_should_remember_me
     post :create, :login => users(:gerjan).login, :password => 'gerjan', :remember_me => '1'
     assert_not_nil @response.cookies['auth_token']
@@ -72,11 +72,11 @@ class SessionsControllerTest < ActionController::TestCase
     post :create, :login => users(:gerjan).login, :password => 'gerjan', :remember_me => '0'
     assert_nil @response.cookies['auth_token']
   end
-  
+
   def test_should_delete_token_on_logout
     login_as :gerjan
     delete :destroy
-    assert_equal nil, @response.cookies['auth_token']
+    assert_nil @response.cookies['auth_token']
   end
 
   def test_should_login_with_cookie
@@ -103,11 +103,12 @@ class SessionsControllerTest < ActionController::TestCase
   end
 
   protected
-    def auth_token(token)
-      CGI::Cookie.new('name' => 'auth_token', 'value' => token)
-    end
-    
-    def cookie_for(user)
-      auth_token users(user).remember_token
-    end
+
+  def auth_token(token)
+    CGI::Cookie.new('name' => 'auth_token', 'value' => token)
+  end
+
+  def cookie_for(user)
+    auth_token users(user).remember_token
+  end
 end

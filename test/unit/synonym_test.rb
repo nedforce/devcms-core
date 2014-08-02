@@ -71,7 +71,7 @@ class SynonymTest < ActiveSupport::TestCase
 
   protected
 
-    def create_synonym(options = {})
-      Synonym.create({ :original => "foo", :name => "bar", :weight => "0.25", :node => nodes(:root_section_node) }.merge(options))
-    end
+  def create_synonym(options = {})
+    Synonym.create({ :original => 'foo', :name => 'bar', :weight => '0.25', :node => nodes(:root_section_node) }.merge(options))
+  end
 end

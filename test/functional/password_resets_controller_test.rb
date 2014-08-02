@@ -10,7 +10,7 @@ class PasswordResetsControllerTest < ActionController::TestCase
   def test_should_send_password_token_by_login
     old_hash = users(:sjoerd).password_reset_token
     assert_difference 'ActionMailer::Base.deliveries.size', 1 do
-      create_password_reset users(:sjoerd)
+      create_password_reset_by_login users(:sjoerd)
       assert_response :redirect
       assert_equal users(:sjoerd), assigns(:user)
       assert_not_equal old_hash, assigns(:user).reload.password_reset_token
@@ -18,10 +18,10 @@ class PasswordResetsControllerTest < ActionController::TestCase
     end
   end
 
-  def test_should_send_password_token_by_email
-    old_hash = users(:sjoerd).password_reset_token, :email
+  def test_should_send_password_token_by_email_address
+    old_hash = users(:sjoerd).password_reset_token
     assert_difference 'ActionMailer::Base.deliveries.size', 1 do
-      create_password_reset users(:sjoerd)
+      create_password_reset_by_email_address users(:sjoerd)
       assert_response :redirect
       assert_equal users(:sjoerd), assigns(:user)
       assert_not_equal old_hash, assigns(:user).reload.password_reset_token
@@ -33,35 +33,35 @@ class PasswordResetsControllerTest < ActionController::TestCase
     assert_no_difference 'ActionMailer::Base.deliveries.size' do
       post :create, :login_email => 'Ch|_|ckn0rr15'
       assert_response :redirect
-      assert_equal assigns(:user), nil
+      assert_nil assigns(:user)
       assert flash.key?(:notice)
     end
   end
 
   def test_should_get_edit_password_reset
-    create_password_reset users(:sjoerd)
+    create_password_reset_by_login users(:sjoerd)
     get :edit, :id => assigns(:user).password_reset_token
     assert_response :success
     assert_equal assigns(:user), users(:sjoerd)
   end
 
   def test_should_set_new_password
-    create_password_reset users(:sjoerd)
+    create_password_reset_by_login users(:sjoerd)
     put :update, :id => assigns(:user).password_reset_token, :user => { :password => 'Ch|_|ckn0rr15', :password_confirmation => 'Ch|_|ckn0rr15' }
     assert_response :redirect
-    assert_equal assigns(:user).password_reset_token, nil
+    assert_nil assigns(:user).password_reset_token
     assert flash.key?(:notice)
   end
 
   def test_should_confirm_new_password
-    create_password_reset users(:sjoerd)
+    create_password_reset_by_login users(:sjoerd)
     put :update, :id => assigns(:user).password_reset_token, :user => { :password => 'Ch|_|ckn0rr15', :password_confirmation => 'Ch|_|ckn0rr16' }
     assert_response :success
     assert assigns(:user).errors[:password].any?
   end
 
   def test_should_not_accept_expired_password_reset
-    create_password_reset users(:sjoerd)
+    create_password_reset_by_login users(:sjoerd)
     old_hash = assigns(:user).password_reset_token
     assigns(:user).update_attribute :password_reset_expiration, 1.day.ago
     put :update, :id => assigns(:user).password_reset_token, :user => { :password => 'Ch|_|ckn0rr15', :password_confirmation => 'Ch|_|ckn0rr15' }
@@ -72,11 +72,11 @@ class PasswordResetsControllerTest < ActionController::TestCase
 
   protected
 
-  def create_password_reset(user, by_attr = :login)
-    if by_attr == :email
-      post :create, :login_email => user.email
-    else
-      post :create, :login_email => user.login
-    end
+  def create_password_reset_by_login(user)
+    post :create, :login_email => user.login
+  end
+
+  def create_password_reset_by_email_address(user)
+    post :create, :login_email => user.email_address
   end
 end

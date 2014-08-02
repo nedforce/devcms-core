@@ -28,7 +28,7 @@ class WeblogArchiveTest < ActiveSupport::TestCase
       end
     end
   end
-  
+
   def test_should_update_weblog_archive
     assert_no_difference 'WeblogArchive.count' do
       @devcms_weblog_archive.title = 'New title'
@@ -36,39 +36,39 @@ class WeblogArchiveTest < ActiveSupport::TestCase
       assert @devcms_weblog_archive.save
     end
   end
-  
+
   def test_should_destroy_weblog_archive
-    assert_difference "WeblogArchive.count", -1 do
+    assert_difference 'WeblogArchive.count', -1 do
       @devcms_weblog_archive.destroy
     end
   end
 
   def test_find_weblogs_for_offset
     offsets = @devcms_weblog_archive.find_offsets
-    
+
     offsets.each do |offset|
       assert !@devcms_weblog_archive.find_weblogs_for_offset(offset).empty?
     end
   end
-  
+
   def test_find_first_and_last_weblog_for_offset
     offsets = @devcms_weblog_archive.find_offsets
-    
+
     offsets.each do |offset|
       first, second = @devcms_weblog_archive.find_first_and_last_weblog_for_offset(offset)
       assert_not_nil first
       assert_not_nil second
     end
   end
-  
+
   def test_find_offsets
-    default_offset = WeblogArchive::DEFAULT_OFFSET
-    offsets = @devcms_weblog_archive.find_offsets
+    default_offset    = WeblogArchive::DEFAULT_OFFSET
+    offsets           = @devcms_weblog_archive.find_offsets
     number_of_weblogs = @devcms_weblog_archive.weblogs.size
-    
+
     assert offsets.first == 0
     assert offsets.last <= number_of_weblogs && number_of_weblogs <= (offsets.last + default_offset)
-    
+
     offsets.each do |offset|
       assert_equal 0, offset % default_offset
     end

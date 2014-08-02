@@ -35,17 +35,17 @@ class ExternalLinkTest < ActiveSupport::TestCase
   def test_should_set_description_and_title_to_nil_if_blank
     l1 = create_external_link(:title => '', :description => '')
     assert !l1.new_record?
-    assert_equal nil, l1.title
-    assert_equal nil, l1.description
+    assert_nil l1.title
+    assert_nil l1.description
     l2 = create_external_link(:title => nil, :description => nil)
     assert !l2.new_record?
     l2.update_attributes(:user => users(:arthur), :title => '', :description => '')
-    assert_equal nil, l2.title
-    assert_equal nil, l2.description
+    assert_nil l2.title
+    assert_nil l2.description
   end
 
   def test_should_require_valid_url
-    [' ', 'blaat', 'http://www. blaat.nl', 'http://www.bla_at.nl', 'http://a.b.c'].each do |url|
+    [' ', 'foo', 'http://www. foo.com', 'http://www.foo_bar.com', 'http://f.o.o'].each do |url|
       assert_no_difference 'ExternalLink.count' do
         external_link = create_external_link(:url => url)
         assert external_link.errors[:url].any?
@@ -81,20 +81,20 @@ class ExternalLinkTest < ActiveSupport::TestCase
   end
 
   def test_should_destroy_external_link
-    assert_difference "ExternalLink.count", -1 do
+    assert_difference 'ExternalLink.count', -1 do
       @external_link.destroy
     end
   end
 
   def test_should_create_numerical_external_link
-    assert_difference "ExternalLink.count" do
-      create_external_link(:url => "http://123.123.123.123/TakeSurvey.aspx?SurveyID=92KL9l2")
+    assert_difference 'ExternalLink.count' do
+      create_external_link(:url => 'http://123.123.123.123/TakeSurvey.aspx?SurveyID=92KL9l2')
     end
   end
 
 protected
 
   def create_external_link(options = {})
-    ExternalLink.create({ :parent => nodes(:root_section_node), :title => 'Dit is een external link.', :description => 'Geen fratsen!', :url => 'http://www.google.com' }.merge(options))
+    ExternalLink.create({ :parent => nodes(:root_section_node), :title => 'This is an external link', :description => 'Geen fratsen!', :url => 'http://www.google.com' }.merge(options))
   end
 end
