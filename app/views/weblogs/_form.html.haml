@@ -1,12 +1,12 @@
 .clearfix.formFieldCt
-  %label.small{ :for => "weblog_title" }
+  %label.small{ :for => 'weblog_title' }
     = t 'shared.title'
   = f.text_field :title, :class => 'textfield'
 
 - include_js '/libraries/tiny_mce/tiny_mce.js'
 
 .clearfix.formFieldCt
-  %label.small{ :for => "weblog_description_ct" }
+  %label.small{ :for => 'weblog_description_ct' }
     = t 'shared.description'
 
   = html_editor_tag 'weblog[description]', @weblog.description, :id => 'weblog_description', :front_end => true

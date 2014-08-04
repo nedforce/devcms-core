@@ -1,13 +1,13 @@
 # This administrative controller is used to manage the website users. It is
 # set up to communicate with ExtJS components using XML.
 class Admin::UsersController < Admin::AdminController
-  before_filter :find_user, :except => [ :index, :create, :invite, :privileged, :last_sign_ins ]
-  before_filter :set_paging,  :only => [ :index, :create, :privileged ]
-  before_filter :set_sorting, :only => [ :index, :create, :privileged ]
+  before_filter :find_user, :except => [:index, :create, :privileged, :invite, :last_sign_ins]
+  before_filter :set_paging,  :only => [:index, :create, :privileged]
+  before_filter :set_sorting, :only => [:index, :create, :privileged]
 
   skip_before_filter :set_actions
   skip_before_filter :find_node
-  
+
   require_role ['admin', 'final_editor']
 
   # * GET /admin/users
@@ -17,7 +17,6 @@ class Admin::UsersController < Admin::AdminController
     @active_page ||= :users
     @roles ||= current_user.role_assignments.map { |role_assignment| role_assignment.name }
     user_scope = (@active_page == :privileged_users) ? PrivilegedUser.scoped : User.exclusive
-      
 
     respond_to do |format|
       format.html do
@@ -48,7 +47,7 @@ class Admin::UsersController < Admin::AdminController
       end
     end
   end
-  
+
   # * GET /admin/users/privileged.json
   def privileged
     @active_page = :privileged_users
@@ -133,8 +132,7 @@ class Admin::UsersController < Admin::AdminController
   def interests
     respond_to do |format|
       format.json do
-        interests = Interest.all(:order => 'title')
-        interests = interests.map do |i|
+        interests = Interest.order('title').all.map do |i|
           {
             :id      => i.id,
             :title   => i.title,
@@ -181,7 +179,7 @@ class Admin::UsersController < Admin::AdminController
       end
     end
   end
-  
+
   def revoke
     respond_to do |format|
       format.json do
@@ -255,28 +253,28 @@ class Admin::UsersController < Admin::AdminController
         filter      = filters[key]
         filterType  = filter[:data][:type]
         filterValue = filter[:data][:value]
-        filterField = "users." + filter[:field]
+        filterField = 'users.' + filter[:field]
         case filterType
           when 'string'
-            [ filterField + " LIKE ?", filterValue + '%']
+            [ filterField + ' LIKE ?', filterValue + '%']
           when 'list'
             sex = (filterValue == I18n.t('users.male')) ? 'm' : 'f'
-            [ filterField + " = ?", sex]
+            [ filterField + ' = ?', sex]
           when 'date'
             comparison = filter[:data][:comparison]
             date = DateTime.strptime(filterValue, "%m/%d/%Y")
             if comparison == 'gt'
-              [ filterField + " > ?", date ]
+              [ filterField + ' > ?', date ]
             elsif comparison == 'lt'
-              [ filterField + " < ?", date ]
+              [ filterField + ' < ?', date ]
             elsif comparison == 'eq'
-              [ filterField + " BETWEEN ? AND ? ", date, date + 1.days]
+              [ filterField + ' BETWEEN ? AND ? ', date, date + 1.days]
             end
           else
-            [ filterField + " = ?", filterValue ]
+            [ filterField + ' = ?', filterValue ]
         end
       end
 
-      [conditions.map { |condition| condition.first }.join(' AND ')] + conditions.map { |condition| condition.last(condition.size-1) }.flatten
+      [conditions.map { |condition| condition.first }.join(' AND ')] + conditions.map { |condition| condition.last(condition.size - 1) }.flatten
     end
 end

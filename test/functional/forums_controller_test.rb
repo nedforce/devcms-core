@@ -9,5 +9,4 @@ class ForumsControllerTest < ActionController::TestCase
     assert assigns(:forum)
     assert_equal nodes(:bewoners_forum_node), assigns(:node)
   end
-  
 end

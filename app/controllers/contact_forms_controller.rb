@@ -71,7 +71,7 @@ class ContactFormsController < ApplicationController
 
   # Find the +ContactFormField+ objects related to the +ContactForm+.
   def find_contact_form_fields
-    @contact_form_fields = @contact_form.contact_form_fields.all(:order => :position)
+    @contact_form_fields = @contact_form.contact_form_fields.order(:position).all
   end
 
   # Check the fields entered by the user to only use fields that are actually

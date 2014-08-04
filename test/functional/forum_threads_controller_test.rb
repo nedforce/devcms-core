@@ -232,11 +232,10 @@ class ForumThreadsControllerTest < ActionController::TestCase
     get :show, :forum_topic_id => forum_topics(:bewoners_forum_topic_wonen).id, :id => forum_threads(:bewoners_forum_thread_one).id
     assert_response :not_found
   end
-  
+
   protected
 
-    def create_forum_thread(topic_attributes = {}, post_attributes = {}, options = {})
-      post :create, { :forum_topic_id => forum_topics(:bewoners_forum_topic_wonen).id, :forum_thread => { :title => 'Some title.' }.merge(topic_attributes), :start_post => { :body => 'blaatje' }.merge(post_attributes)}.merge(options)
-    end
-  
+  def create_forum_thread(topic_attributes = {}, post_attributes = {}, options = {})
+    post :create, { :forum_topic_id => forum_topics(:bewoners_forum_topic_wonen).id, :forum_thread => { :title => 'Some title.' }.merge(topic_attributes), :start_post => { :body => 'blaatje' }.merge(post_attributes)}.merge(options)
+  end
 end

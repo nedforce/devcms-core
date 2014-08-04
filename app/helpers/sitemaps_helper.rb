@@ -2,7 +2,7 @@ module SitemapsHelper
   # Returns the HTML for the sitemap (an unsorted list with clickable node titles)
   # up to a specified number of sublist levels.
   def create_sitemap(levels = 6)
-    items = current_site.children.accessible.public.shown_in_menu.include_content.all(:order => :position).map { |n| n.content }
+    items = current_site.children.accessible.public.shown_in_menu.include_content.order(:position).all.map { |n| n.content }
 
     unless items.empty?
       content_tag(:ul, items.map { |item| create_subitem(item, levels) }.join("\n").html_safe, :id => 'sitemap', :class => 'clearfix')
@@ -22,7 +22,7 @@ module SitemapsHelper
   def create_subitem(item, levels)
     @current_level ||= 0
 
-    subitems = item.node.children.accessible.public.shown_in_menu.include_content.all(:order => :position).map { |n| n.content }
+    subitems = item.node.children.accessible.public.shown_in_menu.include_content.order(:position).all.map { |n| n.content }
 
     if item.node.leaf? || subitems.empty? || @current_level == levels
       @current_level = 0 if @current_level == levels

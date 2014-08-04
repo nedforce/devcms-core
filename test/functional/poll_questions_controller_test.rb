@@ -114,6 +114,4 @@ class PollQuestionsControllerTest < ActionController::TestCase
       assert flash.key?(:warning) # not okay
     end
   end
-
 end
-

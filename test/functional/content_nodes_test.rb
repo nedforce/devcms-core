@@ -40,4 +40,3 @@ class ContentNodesTest < ActionController::TestCase
     assert assigns(:image_content_nodes).empty?
   end
 end
-

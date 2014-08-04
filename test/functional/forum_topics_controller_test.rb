@@ -9,5 +9,4 @@ class ForumTopicsControllerTest < ActionController::TestCase
     assert assigns(:forum_topic)
     assert_equal nodes(:bewoners_forum_topic_wonen_node), assigns(:node)
   end
-  
 end

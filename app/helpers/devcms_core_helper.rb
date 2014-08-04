@@ -62,7 +62,7 @@ module DevcmsCoreHelper
     crumb_nodes.shift unless options[:include_root]
     # Remove frontpage node to prevent semingly double crumbs
     frontpage_candidate = crumb_nodes[-2]
-    crumb_nodes.pop if frontpage_candidate && frontpage_candidate.content_type == "Section" && frontpage_candidate.content.frontpage_node == crumb_nodes.last
+    crumb_nodes.pop if frontpage_candidate && frontpage_candidate.content_type == 'Section' && frontpage_candidate.content.frontpage_node == crumb_nodes.last
 
     # move in a suffix, if any
     # Warning: some 'ad-hoc' solutions for supporting subcatergories in opus PDCs. Do _not_ port to treehouse
@@ -171,7 +171,7 @@ module DevcmsCoreHelper
   def print_button
     content_tag(:div, :class => 'print') do
       image_tag('icons/print.png', :class => 'icon', :alt => '', :title => t('application.print_title')) +
-      link_to(t('application.print'), "?layout=print", :title => t('application.print_title'), :rel => 'nofollow')
+      link_to(t('application.print'), '?layout=print', :title => t('application.print_title'), :rel => 'nofollow')
     end
   end
 
@@ -184,12 +184,12 @@ module DevcmsCoreHelper
       image_tag    = image_tag(image_url, :alt => header_title, :title => header_title)
     elsif (big_header)
       header_title = random_image.title
-      image_url    = content_node_path(random_image, :action => :big_header,  :format => :jpg)
-      image_tag    = image_tag content_node_path(random_image, :action => :big_header,  :format => :jpg), :alt => random_image.alt, :title => header_title
+      image_url    = content_node_path(random_image, :action => :big_header, :format => :jpg)
+      image_tag    = image_tag content_node_path(random_image, :action => :big_header, :format => :jpg), :alt => random_image.alt, :title => header_title
     else
       header_title = random_image.title
-      image_url    = content_node_path(random_image, :action => :header,  :format => :jpg)
-      image_tag    = image_tag content_node_path(random_image, :action => :header,  :format => :jpg), :alt => random_image.alt, :title => header_title
+      image_url    = content_node_path(random_image, :action => :header, :format => :jpg)
+      image_tag    = image_tag content_node_path(random_image, :action => :header, :format => :jpg), :alt => random_image.alt, :title => header_title
     end
 
     return { :title => header_title, :image_tag => image_tag, :url => image_url }
@@ -220,7 +220,7 @@ module DevcmsCoreHelper
           }
         else
           {
-            :url   => big_header ? content_node_path(header_image, :action => :big_header,  :format => :jpg) : content_node_path(header_image, :action => :header,  :format => :jpg),
+            :url   => big_header ? content_node_path(header_image, :action => :big_header, :format => :jpg) : content_node_path(header_image, :action => :header, :format => :jpg),
             :id    => "ss-image-#{header_image.id}",
             :alt   => header_image.alt.to_s,
             :title => header_image.title
@@ -270,7 +270,7 @@ module DevcmsCoreHelper
 
   def string_cache(name = {}, options = nil, &block)
     if controller.perform_caching
-     if fragment = controller.read_fragment(name, options)
+      if fragment = controller.read_fragment(name, options)
         fragment.html_safe
       else
         controller.write_fragment(name, yield.to_s, options).html_safe

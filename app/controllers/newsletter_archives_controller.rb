@@ -10,7 +10,7 @@ class NewsletterArchivesController < ApplicationController
 
   # Enable unsubscrubing using regular hyperlinks and <tt>:method => :delete</tt>.
   # See ApplicationController for more details.
-  before_filter :confirm_destroy, :only => :unsubscribe, :unless => lambda{ request.delete? }
+  before_filter :confirm_destroy, :only => :unsubscribe, :unless => lambda { request.delete? }
 
   # * GET /newsletter_archives/:id
   # * GET /newsletter_archives/:id.xml

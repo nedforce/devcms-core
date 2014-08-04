@@ -2,10 +2,10 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 
 class PagesControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
-  
+
   def test_should_show_page
     get :show, :id => pages(:help_page).id
-    
+
     assert_response :success
     assert assigns(:page)
     assert_equal nodes(:help_page_node), assigns(:node)
@@ -17,19 +17,18 @@ class PagesControllerTest < ActionController::TestCase
     get :show, :id => page
     assert_equal old_hits + 1, page.node.reload.hits
   end
-  
+
   def test_should_have_lang_attributes_if_locale_set
     page = pages(:english_page)
     get :show, :id => page.id
-    
+
     assert_response :success
     assert assigns(:page)
     assert_tag :h1, :attributes => { :lang => page.node.locale }
   end
-  
+
   def test_should_render_404_if_hidden_for_user
     get :show, :id => pages(:hidden_page).id
     assert_response :not_found
   end
-  
 end

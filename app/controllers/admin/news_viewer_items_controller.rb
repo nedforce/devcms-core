@@ -10,7 +10,7 @@ class Admin::NewsViewerItemsController < Admin::AdminController
   require_role ['admin', 'final_editor']
 
   def index
-    @items = @news_viewer.news_viewer_items.all(:include => :news_item, :order => :position)
+    @items = @news_viewer.news_viewer_items.order(:position).all(:include => :news_item)
 
     respond_to do |format|
       format.json { render :json => @items.to_json(:include => { :news_item => { :only => 'title' } }) }

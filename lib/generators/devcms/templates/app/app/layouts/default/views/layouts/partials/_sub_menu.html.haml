@@ -5,12 +5,12 @@
 
   - if show_private_items_in_sub_menu
     - if current_user_has_any_role?(top_ancestor)
-      - top_sub_menu_items = top_ancestor.children.accessible.shown_in_menu.all(:order => :position)
+      - top_sub_menu_items = top_ancestor.children.accessible.shown_in_menu.order(:position).all
     - else
-      - top_sub_menu_items = top_ancestor.children.accessible.shown_in_menu.all(:order => :position).select do |top_sub_menu_item|
+      - top_sub_menu_items = top_ancestor.children.accessible.shown_in_menu.order(:position).all.select do |top_sub_menu_item|
         - top_sub_menu_item.public? || current_user_has_any_role?(top_sub_menu_item)
   - else
-    - top_sub_menu_items = top_ancestor.children.accessible.public.shown_in_menu.all(:order => :position)
+    - top_sub_menu_items = top_ancestor.children.accessible.public.shown_in_menu.order(:position).all
 
   - if top_sub_menu_items.any?
     = skippable 'submenu' do

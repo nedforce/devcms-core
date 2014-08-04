@@ -1,6 +1,6 @@
 - unless news_items.empty?
   - first_item   = news_items.shift
-  
+ 
   - header_image = first_item.node.children.accessible.with_content_type('Image').first
 
   - if header_image

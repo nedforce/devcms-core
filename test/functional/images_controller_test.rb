@@ -21,7 +21,7 @@ class ImagesControllerTest < ActionController::TestCase
     get :full, :id => images(:test_image).id, :format => 'jpg'
     assert_response :success
     assert_equal 'image/jpeg', @response.headers['Content-Type']
-    assert_equal 'public', @response.headers['Cache-Control']
+    assert_equal 'public',     @response.headers['Cache-Control']
   end
 
   def test_should_redirect
@@ -42,7 +42,7 @@ class ImagesControllerTest < ActionController::TestCase
     get :thumbnail, :id => images(:test_image).id, :format => 'jpg'
     assert_response :success
     assert_equal 'image/jpeg', @response.headers['Content-Type']
-    assert_equal 'public', @response.headers['Cache-Control']
+    assert_equal 'public',     @response.headers['Cache-Control']
   end
 
   def test_should_show_sidebox_image
@@ -51,7 +51,6 @@ class ImagesControllerTest < ActionController::TestCase
     get :thumbnail, :id => images(:test_image).id, :format => 'jpg'
     assert_response :success
     assert_equal 'image/jpeg', @response.headers['Content-Type']
-    assert_equal 'public', @response.headers['Cache-Control']
+    assert_equal 'public',     @response.headers['Cache-Control']
   end
-
 end

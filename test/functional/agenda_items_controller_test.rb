@@ -10,5 +10,4 @@ class AgendaItemsControllerTest < ActionController::TestCase
     assert assigns(:agenda_item)
     assert_equal nodes(:agenda_item_one_node), assigns(:node)
   end
-
 end

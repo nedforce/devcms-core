@@ -5,11 +5,11 @@
 
 .pagination
   .left
-    = link_to_if @valid_range.cover?(prev_year),  "&lt;&lt;".html_safe, content_node_path(@node, { :action => "#{prev_year.year}/#{prev_year.month}"   }),  { :title => 'vorig jaar' }
-    = link_to_if @valid_range.cover?(prev_month), "&lt;".html_safe,     content_node_path(@node, { :action => "#{prev_month.year}/#{prev_month.month}" }),  { :title => 'vorige maand' }
+    = link_to_if @valid_range.cover?(prev_year),  "&lt;&lt;".html_safe, content_node_path(@node, { :action => "#{prev_year.year}/#{prev_year.month}"   }), { :title => 'vorig jaar' }
+    = link_to_if @valid_range.cover?(prev_month),     "&lt;".html_safe, content_node_path(@node, { :action => "#{prev_month.year}/#{prev_month.month}" }), { :title => 'vorige maand' }
   .right
-    = link_to_if @valid_range.cover?(next_month), "&gt;".html_safe,     content_node_path(@node, { :action => "#{next_month.year}/#{next_month.month}" }),  { :title => 'volgende maand' }
-    = link_to_if @valid_range.cover?(next_year),  "&gt;&gt;".html_safe, content_node_path(@node, { :action => "#{next_year.year}/#{next_year.month}"   }),  { :title => 'volgend jaar' }
+    = link_to_if @valid_range.cover?(next_month),     "&gt;".html_safe, content_node_path(@node, { :action => "#{next_month.year}/#{next_month.month}" }), { :title => 'volgende maand' }
+    = link_to_if @valid_range.cover?(next_year),  "&gt;&gt;".html_safe, content_node_path(@node, { :action => "#{next_year.year}/#{next_year.month}"   }), { :title => 'volgend jaar' }
   .pageNumbers
     = form_tag(content_node_path(@node, :action => :archive), :method => :get) do
       = select_month @date

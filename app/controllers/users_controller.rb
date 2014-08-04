@@ -207,7 +207,7 @@ protected
   end
 
   def get_interests
-    @interests = Interest.all(:order => 'title')
+    @interests = Interest.order('title').all
   end
 
   def set_page_title

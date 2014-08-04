@@ -2,7 +2,7 @@
   - node = search_result.node
   - if node.content_type == 'Product' && node.content.external_url.present?
     - url = node.content.external_url
-    - search_result.title << " (Landelijk)"
+    - search_result.title << ' (Landelijk)'
   - else
     - url = content_node_url(node, :host => node.containing_site.content.domain)
 - else

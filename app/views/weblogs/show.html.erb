@@ -1,117 +1,113 @@
 <div class="regularPage weblog">
   <%= readspeaker(@weblog.node.id) do |rid| %>
-    <h1><span class="prefix"><%=t 'weblogs.weblog' -%></span><%=h @weblog.title -%></h1>
+    <h1><span class="prefix"><%= t 'weblogs.weblog' -%></span><%= h @weblog.title -%></h1>
 
     <div class="metadata clearfix">
       <p class="weblogDetails"><%= "#{t 'weblogs.created_on'} #{l @weblog.created_at, :format => :long} #{t 'weblogs.by'} <span class='userLogin'>#{truncate(@weblog.user.screen_name, :length => 12)}</span>, #{@weblog.weblog_posts.count} #{t((@weblog.weblog_posts.count == 1) ? 'weblogs.weblog_post' : 'weblogs.weblog_posts')}".html_safe -%></p>
-      <p class="lastUpdateDate"><%=t 'shared.last_updated' -%>: <%=l @weblog.last_updated_at, :format => :long -%></p>
+      <p class="lastUpdateDate"><%= t 'shared.last_updated' -%>: <%= l @weblog.last_updated_at, :format => :long -%></p>
     </div>
 
-    <% if @weblog.description %>
-      <div class="htmlField weblogDescription"><%=w @weblog.description -%></div>
+    <% if @weblog.description.present? %>
+      <div class="htmlField weblogDescription"><%= w @weblog.description -%></div>
     <% end %>
-   <div class="buttons clearfix">
-    <% if logged_in? && (@weblog.is_owned_by_user?(current_user) || current_user.has_role?('admin')) %>
-      <%= delete_button t('weblogs.delete_weblog') do %>
-        <%= link_to t('weblogs.delete_weblog'), weblog_archive_weblog_path(@weblog.weblog_archive, @weblog), :method => :delete, :confirm => 'Weet u het zeker?' %>
+
+    <div class="buttons clearfix">
+      <% if logged_in? && (@weblog.is_owned_by_user?(current_user) || current_user.has_role?('admin')) %>
+        <%= delete_button t('weblogs.delete_weblog') do %>
+          <%= link_to t('weblogs.delete_weblog'), weblog_archive_weblog_path(@weblog.weblog_archive, @weblog), :method => :delete, :confirm => 'Weet u het zeker?' %>
+        <% end %>
+        <%= edit_button t('weblogs.edit_weblog') do %>
+          <%= link_to t('weblogs.edit_weblog'), edit_weblog_archive_weblog_path(@weblog.weblog_archive, @weblog) -%>
+        <% end %>
       <% end %>
-      <%= edit_button t('weblogs.edit_weblog') do %>
-        <%= link_to t('weblogs.edit_weblog'), edit_weblog_archive_weblog_path(@weblog.weblog_archive, @weblog) -%>
-      <% end %>
-    <% end %>
-    <%= readspeaker_button(:rid => rid, :title => h(@weblog.title)) %>
-   </div>
+      <%= readspeaker_button(:rid => rid, :title => h(@weblog.title)) %>
+    </div>
   <% end %>
+
   <div class="weblogPostsOverview clearfix">
     <div class="clearfix">
       <h2><%= t('weblogs.weblog_posts').titleize -%></h2>
       <% if logged_in? && @weblog.is_owned_by_user?(current_user) %>
-      <%= right_new_button t('weblogs.new_weblog_post') do %>
-        <%= link_to t('weblogs.new_weblog_post'), new_weblog_archive_weblog_weblog_post_path(@weblog.weblog_archive, @weblog) -%>
-      <% end %>
+        <%= right_new_button t('weblogs.new_weblog_post') do %>
+          <%= link_to t('weblogs.new_weblog_post'), new_weblog_archive_weblog_weblog_post_path(@weblog.weblog_archive, @weblog) -%>
+        <% end %>
       <% end %>
     </div>
     <% if @latest_weblog_posts.empty? %>
-      <%=t 'weblogs.no_weblog_posts_found' -%>
+      <%= t 'weblogs.no_weblog_posts_found' -%>
     <% else %>
-    <div class="clearfix weblogPosts">
-    <% @latest_weblog_posts.each do |weblog_post| %>
-      <%= readspeaker(weblog_post.node.id) do |readspeaker_id|%>
-      <div class="weblogPost <%= cycle('oddWeblogPost', 'evenWeblogPost', :name => 'latestWeblogPosts') -%> clearfix">
-        <h3><%= link_to_content_node( h(weblog_post.title), weblog_post) -%></h3>
+      <div class="clearfix weblogPosts">
+        <% @latest_weblog_posts.each do |weblog_post| %>
+          <%= readspeaker(weblog_post.node.id) do |readspeaker_id|%>
+            <div class="weblogPost <%= cycle('oddWeblogPost', 'evenWeblogPost', :name => 'latestWeblogPosts') -%> clearfix">
+              <h3><%= link_to_content_node( h(weblog_post.title), weblog_post) -%></h3>
 
-        <%= render :partial => '/shared/metadata', :locals => { :publication_date => weblog_post.publication_start_date, :last_update_date => weblog_post.updated_at } %>
+              <%= render :partial => '/shared/metadata', :locals => { :publication_date => weblog_post.publication_start_date, :last_update_date => weblog_post.updated_at } %>
 
-        <% if weblog_post.preamble %>
-        <div class="preamble"><%=w weblog_post.preamble -%></div>
-        <% end %>
+              <% if weblog_post.preamble %>
+                <div class="preamble"><%=w weblog_post.preamble -%></div>
+              <% end %>
 
-        <div class="htmlField weblogPostBody">
-        <% if (image_node = weblog_post.node.children.first) %>
-          <%= 
-            link_to_node(
-              image_tag(content_node_path(image_node, :action => :thumbnail), :alt => image_node.content.alt.to_s),
-              image_node,
-              { :action => :full },
-              { 
-                :data => { :lightbox => 'lightbox' },
-                :class => 'right'
-              }
-            )
-          -%>
-        <% end %>
-          <%=w weblog_post.body -%>
-        </div>
+              <div class="htmlField weblogPostBody">
+                <% if (image_node = weblog_post.node.children.first) %>
+                  <%= link_to_node(
+                    image_tag(content_node_path(image_node, :action => :thumbnail), :alt => image_node.content.alt.to_s),
+                    image_node,
+                    { :action => :full },
+                    { :data => { :lightbox => 'lightbox' }, :class => 'right' }
+                  ) -%>
+                <% end %>
+                <%= w weblog_post.body -%>
+              </div>
 
-        <div class="clearfix buttons">
-
-          <%= readspeaker_button(:rid => readspeaker_id, :title => weblog_post.title) %>
-          <%= news_item_button t('weblogs.show_post') do %>
-            <%= link_to_content_node t('weblogs.show_post'), weblog_post, {}, :title => weblog_post.title -%>
+              <div class="clearfix buttons">
+                <%= readspeaker_button(:rid => readspeaker_id, :title => weblog_post.title) %>
+                <%= news_item_button t('weblogs.show_post') do %>
+                  <%= link_to_content_node t('weblogs.show_post'), weblog_post, {}, :title => weblog_post.title -%>
+                <% end %>
+                <% if logged_in? && (@weblog.is_owned_by_user?(current_user) || current_user.has_role?('admin')) %>
+                  <%= edit_button t('weblogs.edit_post') do %>
+                    <%= link_to t('weblogs.edit_post'), edit_weblog_archive_weblog_weblog_post_path(@weblog.weblog_archive, @weblog, weblog_post) -%>
+                  <% end %>
+                  <%= delete_button t('weblogs.delete_post') do %>
+                    <%= link_to t('weblogs.delete_post'), weblog_archive_weblog_weblog_post_path(@weblog.weblog_archive, @weblog, weblog_post), :method => :delete -%>
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
           <% end %>
-          <% if logged_in? && (@weblog.is_owned_by_user?(current_user) || current_user.has_role?('admin')) %>
-            <%= edit_button t('weblogs.edit_post') do %>
-              <%= link_to t('weblogs.edit_post'), edit_weblog_archive_weblog_weblog_post_path(@weblog.weblog_archive, @weblog, weblog_post) -%>
-            <% end %>
-            <%= delete_button t('weblogs.delete_post') do %>
-              <%= link_to t('weblogs.delete_post'), weblog_archive_weblog_weblog_post_path(@weblog.weblog_archive, @weblog, weblog_post), :method => :delete -%>
-            <% end %>
-          <% end %>
-        </div>
+        <% end %>
       </div>
-      <% end %>
-    <% end %>
-    </div>
     <% end %>
 
     <% unless @weblog_posts_for_table.empty? -%>
-    <div id="olderWeblogPosts">
-      <h2><%=t 'weblogs.older_weblog_posts' -%></h2>
-      
-      <table cellpadding="0" cellspacing="0" id="items">
-        <caption><%=t 'weblogs.messages_caption' -%></caption>
-        <thead>
-          <tr>
-            <th scope="col" class="gray"><%=t 'weblogs.message_title' -%></th>
-            <th scope="col" class="right_sized gray"><%=t 'weblogs.date' -%></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @weblog_posts_for_table.each do |weblog_post| %>
-            <tr class="<%= cycle('alt', '', :name => 'olderWeblogPosts') -%>">
-            <td><%= link_to_content_node h(weblog_post.title), weblog_post -%></td>
-            <td class="right date"><%= l(weblog_post.publication_start_date, :format => :long) -%></td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
-   <% end %>
+      <div id="olderWeblogPosts">
+        <h2><%= t 'weblogs.older_weblog_posts' -%></h2>
 
-   <% if logged_in? && @weblog.is_owned_by_user?(current_user) && !@weblog_posts.empty? %>
-     <%= right_new_button t('weblogs.new_weblog_post') do %>
-       <%= link_to t('weblogs.new_weblog_post'), new_weblog_archive_weblog_weblog_post_path(@weblog.weblog_archive, @weblog) -%>
-     <% end %>
-   <% end %>
+        <table cellpadding="0" cellspacing="0" id="items">
+          <caption><%= t 'weblogs.messages_caption' -%></caption>
+          <thead>
+            <tr>
+              <th scope="col" class="gray"><%= t 'weblogs.message_title' -%></th>
+              <th scope="col" class="right_sized gray"><%= t 'weblogs.date' -%></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @weblog_posts_for_table.each do |weblog_post| %>
+              <tr class="<%= cycle('alt', '', :name => 'olderWeblogPosts') -%>">
+                <td><%= link_to_content_node h(weblog_post.title), weblog_post -%></td>
+                <td class="right date"><%= l weblog_post.publication_start_date, :format => :long -%></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
+
+    <% if logged_in? && @weblog.is_owned_by_user?(current_user) && !@weblog_posts.empty? %>
+      <%= right_new_button t('weblogs.new_weblog_post') do %>
+        <%= link_to t('weblogs.new_weblog_post'), new_weblog_archive_weblog_weblog_post_path(@weblog.weblog_archive, @weblog) -%>
+      <% end %>
+    <% end %>
   </div>
 </div>

@@ -14,7 +14,6 @@ class Admin::NewsletterEditionsControllerTest < ActionController::TestCase
 
   end
 
-
   def test_should_get_new
     login_as :sjoerd
 

@@ -10,7 +10,7 @@
   .weblogForm
     %h2= t 'weblogs.create_weblog'
 
-    = form_for [ @weblog_archive, @weblog ] do |f|
+    = form_for [@weblog_archive, @weblog] do |f|
       = error_messages_for :weblog
       = render :partial => 'form', :locals => { :f => f }
       %p.clearfix
