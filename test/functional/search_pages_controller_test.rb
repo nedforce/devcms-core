@@ -7,4 +7,3 @@ class SearchPagesControllerTest < ActionController::TestCase
     assert_redirected_to search_url(:q => 'test', :search_scope => "node_#{search_pages(:standard_search_page).node.parent.id}")
   end
 end
-

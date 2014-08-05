@@ -23,14 +23,14 @@ class Admin::AdminFormBuilder < ActionView::Helpers::FormBuilder
 
   def html_editor(attr, options = {})
     id, name = id_and_name(attr)
-    html     = @template.html_editor_tag(name, @object.send(attr), {:id => id}.merge(options))
+    html     = @template.html_editor_tag(name, @object.send(attr), { :id => id }.merge(options))
     html     = @template.content_tag(:div, html, :class => 'fieldWithErrors') if @object.errors[attr].any?
     @template.wrap_with_label(html, { :text => (options[:label] || attr.to_s.humanize), :for => id }, { :id => "#{id}_wrapper" }.merge(options.delete(:wrapper)||{}))
   end
 
   def select_field(attr, values, options = {}, html_options = {})
     id, name = id_and_name(attr)
-    html     = @template.select(@object_name, attr, values, {:id => id}.merge(options), html_options)
+    html     = @template.select(@object_name, attr, values, { :id => id }.merge(options), html_options)
     html     = @template.content_tag(:div, html, :class => 'fieldWithErrors') if @object.errors[attr].any?
     @template.wrap_with_label(html, { :text => (options[:label] || attr.to_s.humanize), :for => id }, { :id => "#{id}_wrapper" }.merge(options.delete(:wrapper)||{}))
   end

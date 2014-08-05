@@ -17,14 +17,14 @@
 # * Requires the uniqueness of +item+ for the associated carrousel.
 #
 class CarrouselItem < ActiveRecord::Base
-  has_one :active_carrousel, :class_name => 'Carrousel', :foreign_key => :current_carrousel_item_id, :dependent => :nullify
+  has_one :active_carrousel, class_name: 'Carrousel', foreign_key: :current_carrousel_item_id, dependent: :nullify
 
   belongs_to :carrousel
-  belongs_to :item, :polymorphic => true
+  belongs_to :item, polymorphic: true
 
   # See the preconditions overview for an explanation of these validations.
   validates_associated    :carrousel
-  validates_presence_of   :item
+  validates :item, presence: true
   validates_uniqueness_of :item_id, :scope => [:item_type, :carrousel_id]
 
   # Default sort by position.

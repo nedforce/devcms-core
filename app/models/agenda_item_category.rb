@@ -15,16 +15,14 @@
 #
 class AgendaItemCategory < ActiveRecord::Base
   # The agenda items that belong to this category.
-  has_many :agenda_items, :dependent => :nullify
+  has_many :agenda_items, dependent: :nullify
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of   :name
-  validates_length_of     :name, :in => 2..255
-  validates_uniqueness_of :name
+  validates :name, presence: true, uniqueness: true, length: { in: 2..255 }
 
   # Finds the agenda item category with the given name, or initializes a new one with
   # that name (but does *not* save it).
   def self.find_or_new_by_name(name)
-    AgendaItemCategory.find_by_name(name) || AgendaItemCategory.new(:name => name)
+    AgendaItemCategory.find_by_name(name) || AgendaItemCategory.new(name: name)
   end
 end

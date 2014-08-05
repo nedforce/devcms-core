@@ -36,15 +36,15 @@ class Event < ActiveRecord::Base
   attr_accessor :date
 
   # See the preconditions overview for an explanation of these validations.
-  validates :title,    :presence => true, :length => { :in => 2..255, :allow_blank => true }
-  validates :calendar, :presence => true
+  validates :title,    presence: true, length: { in: 2..255, allow_blank: true }
+  validates :calendar, presence: true
 
-  before_validation :set_start_and_end_time, :if => :start_time
+  before_validation :set_start_and_end_time, if: :start_time
 
   has_parent :calendar
 
-  has_many :event_registrations, :dependent => :destroy
-  has_many :users, :through => :event_registrations
+  has_many :event_registrations, dependent: :destroy
+  has_many :users,               through: :event_registrations
 
   scope :with_ancestry, lambda { |ancestry| includes(:node).where('nodes.ancestry' => ancestry).order('start_time DESC') } do
     include DevcmsCore::CalendarItemsAssociationExtensions

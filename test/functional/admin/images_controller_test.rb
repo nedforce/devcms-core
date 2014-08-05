@@ -121,7 +121,7 @@ class Admin::ImagesControllerTest < ActionController::TestCase
     assert_response :success
     assert @response.body !~ /image_url/
 
-    create_image(:image => { :url => 'http://example.com'}, :parent_node_id => nodes(:editor_section_node).id)
+    create_image(:image => { :url => 'http://example.com' }, :parent_node_id => nodes(:editor_section_node).id)
     assert_response :success
     assert_nil assigns(:image).url
   end
@@ -132,7 +132,7 @@ class Admin::ImagesControllerTest < ActionController::TestCase
     get :new, :parent_node_id => nodes(:economie_section_node).id
     assert @response.body =~ /image_url/
 
-    create_image(:image => { :url => 'http://example.com'})
+    create_image(:image => { :url => 'http://example.com' })
     assert_response :success
     assert_equal 'http://example.com', assigns(:image).url
   end
@@ -143,7 +143,7 @@ class Admin::ImagesControllerTest < ActionController::TestCase
     get :new, :parent_node_id => nodes(:economie_section_node).id
     assert @response.body =~ /image_url/
 
-    create_image(:image => { :url => 'http://example.com'}, :parent_node_id => nodes(:economie_section_node).id)
+    create_image(:image => { :url => 'http://example.com' }, :parent_node_id => nodes(:economie_section_node).id)
     assert_response :success
     assert_equal 'http://example.com', assigns(:image).url
   end
@@ -154,7 +154,7 @@ class Admin::ImagesControllerTest < ActionController::TestCase
     get :new, :parent_node_id => nodes(:editor_section_node).id
     assert_response :success
 
-    create_image(:image => { :is_for_header => '1'}, :parent_node_id => nodes(:editor_section_node).id)
+    create_image(:image => { :is_for_header => '1' }, :parent_node_id => nodes(:editor_section_node).id)
     assert_response :success
     assert !assigns(:image).is_for_header?
   end
@@ -165,7 +165,7 @@ class Admin::ImagesControllerTest < ActionController::TestCase
     get :new, :parent_node_id => nodes(:editor_section_node).id
     assert_response :success
 
-    create_image(:image => { :is_for_header => '1'}, :parent_node_id => nodes(:editor_section_node).id)
+    create_image(:image => { :is_for_header => '1' }, :parent_node_id => nodes(:editor_section_node).id)
     assert_response :success
     assert assigns(:image).is_for_header?
   end
@@ -173,6 +173,6 @@ class Admin::ImagesControllerTest < ActionController::TestCase
   protected
 
   def create_image(attributes = {}, options = {})
-    post :create, {:parent_node_id => nodes(:about_page_node).id, :image => { :title => 'An Image', :file => fixture_file_upload("files/test.jpg") }}.merge(attributes).merge(options)
+    post :create, { :parent_node_id => nodes(:about_page_node).id, :image => { :title => 'An Image', :file => fixture_file_upload('files/test.jpg') } }.merge(attributes).merge(options)
   end
 end

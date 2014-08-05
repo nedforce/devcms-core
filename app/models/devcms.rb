@@ -12,12 +12,12 @@ class Devcms
 
     def search_configuration
       {
-        :enabled_search_engines => Settler[:search_enabled_engines],
-        :default_search_engine  => Settler[:search_default_engine],
-        :default_page_size      => Settler[:search_default_page_size].to_i,
-        :ferret => {
-          :synonym_weight => Settler[:search_ferret_synonym_weight].to_f,
-          :proximity      => Settler[:search_ferret_proximity].to_f
+        enabled_search_engines: Settler[:search_enabled_engines],
+        default_search_engine:  Settler[:search_default_engine],
+        default_page_size:      Settler[:search_default_page_size].to_i,
+        ferret: {
+          synonym_weight: Settler[:search_ferret_synonym_weight].to_f,
+          proximity:      Settler[:search_ferret_proximity].to_f
         }
       }
     end

@@ -22,9 +22,9 @@ class UsersControllerTest < ActionController::TestCase
 
     assert_response :success
     assert_equal users(:sjoerd), assigns(:user)
-    assert_select "#email_address"
-    assert_select "[href=?]", "http://#{@request.host}/users/#{users(:sjoerd).login}/edit"
-    assert_select ".reg_form_additional_info_header"
+    assert_select '#email_address'
+    assert_select '[href=?]', "http://#{@request.host}/users/#{users(:sjoerd).login}/edit"
+    assert_select '.reg_form_additional_info_header'
   end
   
   def test_should_get_show_logged_in_as_owner
@@ -33,9 +33,9 @@ class UsersControllerTest < ActionController::TestCase
 
     assert_response :success
     assert_equal users(:sjoerd), assigns(:user)
-    assert_select "#email_address"
-    assert_select "[href=?]", "http://#{@request.host}/users/#{users(:sjoerd).login}/edit"
-    assert_select ".reg_form_additional_info_header"    
+    assert_select '#email_address'
+    assert_select '[href=?]', "http://#{@request.host}/users/#{users(:sjoerd).login}/edit"
+    assert_select '.reg_form_additional_info_header'
   end
 
   def test_should_not_get_new_for_invalid_invitation_code_or_invitation_email

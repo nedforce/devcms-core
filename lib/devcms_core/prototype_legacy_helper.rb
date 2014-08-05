@@ -351,7 +351,7 @@ module PrototypeHelper
   #
   # Example:
   #
-  #   # Sends params: {:title => 'Title of the book'} when the book_title input
+  #   # Sends params: { :title => 'Title of the book' } when the book_title input
   #   # field is changed.
   #   observe_field 'book_title',
   #     :url => 'http://example.com/books/edit/1',

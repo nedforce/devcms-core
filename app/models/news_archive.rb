@@ -19,25 +19,24 @@ class NewsArchive < ActiveRecord::Base
 
   # Adds content node functionality to news archives.
   acts_as_content_node({
-    :allowed_child_content_types => %w( NewsItem ),
-    :allowed_roles_for_update  => %w( admin final_editor ),
-    :allowed_roles_for_create  => %w( admin final_editor ),
-    :allowed_roles_for_destroy => %w( admin final_editor ),
-    :available_content_representations => ['content_box'],
-    :has_own_feed => true,
-    :children_can_be_sorted => false,
-    :tree_loader_name => 'news_archives'
+    allowed_child_content_types:       %w( NewsItem ),
+    allowed_roles_for_update:          %w( admin final_editor ),
+    allowed_roles_for_create:          %w( admin final_editor ),
+    allowed_roles_for_destroy:         %w( admin final_editor ),
+    available_content_representations: ['content_box'],
+    has_own_feed:                      true,
+    children_can_be_sorted:            false,
+    tree_loader_name:                  'news_archives'
   })
 
   # Extend this class with methods to find items based on their publication date.
-  acts_as_archive :items_name => :news_items
+  acts_as_archive items_name: :news_items
 
   # A +NewsArchive+ can have many +NewsItem+ children.
-  has_children :news_items, :order => 'nodes.publication_start_date DESC'
+  has_children :news_items, order: 'nodes.publication_start_date DESC'
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of :title
-  validates_length_of   :title, :in => 2..255, :allow_blank => true
+  validates :title, presence: true, length: { in: 2..255, allow_blank: true }
 
   # Returns the description as the tokens for indexing.
   def content_tokens

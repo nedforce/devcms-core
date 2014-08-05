@@ -27,8 +27,8 @@ class ContactForm < ActiveRecord::Base
   acts_as_content_node
 
   # A +ContactForm+ has many +ContactFormField+ objects.
-  has_many :contact_form_fields, :dependent => :destroy
-  has_many :responses,           :dependent => :destroy
+  has_many :contact_form_fields, dependent: :destroy
+  has_many :responses,           dependent: :destroy
 
   # Ensure the +ContactFormFields+ are valid, build on creation of the +ContactForm+,
   # and updated and deleted when necessary.
@@ -38,10 +38,8 @@ class ContactForm < ActiveRecord::Base
   after_save        :destroy_deleted_contact_form_fields, :save_updated_contact_form_fields
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of :title, :email_address
-  validates_length_of   :title, :in => 2..255, :allow_blank => true
-
-  validates :email_address, :email => { :allow_blank => true }
+  validates :title,         presence: true, length: { in: 2..255, allow_blank: true }
+  validates :email_address, presence: true, email: { allow_blank: true }
 
   # Virtual attribute to keep track of submitted +ContactFormField+ objects.
   attr_accessor :contact_form_fields_before_save
@@ -82,7 +80,7 @@ class ContactForm < ActiveRecord::Base
             inst.attributes = options
           end
         else
-          inst = ContactFormField.new( options.merge({ :contact_form => self }.merge(options)))
+          inst = ContactFormField.new( options.merge({ contact_form: self }.merge(options)))
           self.contact_form_fields << inst
         end
       end
@@ -93,7 +91,7 @@ class ContactForm < ActiveRecord::Base
   # Destroy the +ContactFormField+ objects listed for destruction.
   def destroy_deleted_contact_form_fields
     self.deleted_contact_form_fields.each do |ids|
-      ContactFormField.delete_all(:id => ids) unless ids.empty?
+      ContactFormField.delete_all(id: ids) unless ids.empty?
     end
   end
 

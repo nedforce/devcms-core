@@ -33,15 +33,15 @@ class Image < ActiveRecord::Base
   NEWSLETTER_BANNER_SIZE  = { :height => 118, :width => 540 }
 
   MIME_TYPES = {
-    :png => 'image/png',
-    :jpg => 'image/jpeg',
-    :gif => 'image/gif',
+    png: 'image/png',
+    jpg: 'image/jpeg',
+    gif: 'image/gif',
   }
 
   DEFAULT_IMAGE_TYPE = :jpg
 
   # An +Image+ can be a carrousel item
-  has_many :carrousel_items, :as => :item, :dependent => :destroy
+  has_many :carrousel_items, as: :item, dependent: :destroy
 
   # Carrierwave uploader
   mount_uploader :file, ImageUploader
@@ -59,19 +59,18 @@ class Image < ActiveRecord::Base
   needs_editor_approval
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of     :title
-  validates_presence_of     :file
+  validates :title, presence: true, length: { in: 2..255, allow_blank: true }
+  validates :file,  presence: true
 
   validates_inclusion_of    :show_in_listing, :in => [ false, true ], :allow_nil => false
 
-  validates_length_of       :title, :in => 2..255, :allow_blank => true
   validates_length_of       :alt,   :in => 0..255
   validates_format_of       :url, :with => /(^$)|(^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(([0-9]{1,5})?\/.*)?$)/ix, :allow_blank => true
 
   validates_numericality_of :offset, :only_integer => true, :allow_blank => true, :greater_than_or_equal => 0
 
   # Join instead of include to ensure the default scopes select is still applied.
-  scope :accessible,  lambda { { :joins => :node, :conditions => Node.accessibility_and_visibility_conditions } }
+  scope :accessible, lambda { { joins: :node, conditions: Node.accessibility_and_visibility_conditions } }
 
   # Ensure +url+ is correct.
   before_validation :prepend_http_to_url

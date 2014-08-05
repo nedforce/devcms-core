@@ -24,9 +24,9 @@
 class NewsItem < ActiveRecord::Base
   # Adds content node functionality to news items.
   acts_as_content_node({
-    :allowed_child_content_types => %w( Attachment AttachmentTheme Image ),
-    :show_in_menu => false,
-    :copyable => false
+    allowed_child_content_types: %w( Attachment AttachmentTheme Image ),
+    show_in_menu:                false,
+    copyable:                    false
   })
 
   # This content type needs approval when created or altered by an editor.
@@ -36,18 +36,19 @@ class NewsItem < ActiveRecord::Base
   has_parent :news_archive
 
   # A +NewsItem+ has many +NewsletterEditionItem+ objects and many +NewsletterEdition+ through +NewsletterEditionItem+.
-  has_many :newsletter_edition_items, :as => :item, :dependent => :destroy
-  has_many :newsletter_editions, :through => :newsletter_edition_items
+  has_many :newsletter_edition_items, as: :item, dependent: :destroy
+  has_many :newsletter_editions,      through: :newsletter_edition_items
 
   # A +NewsItem+ can be a carrousel item
-  has_many :carrousel_items, :as => :item, :dependent => :destroy
+  has_many :carrousel_items, as: :item, dependent: :destroy
 
   # A +NewsItem+ has many +NewsViewerItem+ objects, destroy if this object is destroyed.
-  has_many :news_viewer_items, :dependent => :destroy
+  has_many :news_viewer_items, dependent: :destroy
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of :title, :body, :news_archive
-  validates_length_of   :title, :in => 2..255, :allow_blank => true
+  validates :title,        presence: true, length: { in: 2..255, allow_blank: true }
+  validates :body,         presence: true
+  validates :news_archive, presence: true
 
   scope :newest, lambda { includes(:node).where(['nodes.publication_start_date >= ?', (Settler['news_viewer_time_period'] ? Settler['news_viewer_time_period'].to_i : 2).weeks.ago]) } 
 
@@ -60,7 +61,7 @@ class NewsItem < ActiveRecord::Base
 
   # Returns the preamble and body as the tokens for indexing.
   def content_tokens
-    [ preamble, body ].join(' ')
+    [preamble, body].join(' ')
   end
 
   # Returns a URL alias for a given +node+.

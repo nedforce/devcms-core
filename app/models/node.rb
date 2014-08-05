@@ -114,24 +114,26 @@ class Node < ActiveRecord::Base
 
   attr_protected :hits, :content_type, :sub_content_type
 
-  has_many :combined_calendar_nodes, :dependent => :destroy
-  has_many :combined_calendars, :through => :combined_calendar_nodes
+  has_many :combined_calendar_nodes, dependent: :destroy
+  has_many :combined_calendars,      through: :combined_calendar_nodes
 
-  belongs_to :content, :polymorphic => true
-  belongs_to :responsible_user, :class_name => 'User'
+  belongs_to :content,          polymorphic: true
+  belongs_to :responsible_user, class_name: 'User'
 
-  has_many :links,            :dependent => :destroy, :class_name => 'InternalLink', :foreign_key => :linked_node_id
-  has_many :copies,           :dependent => :destroy, :class_name => 'ContentCopy',  :foreign_key => :copied_node_id
-  has_many :role_assignments, :dependent => :destroy
+  has_many :links,            dependent: :destroy, class_name: 'InternalLink', foreign_key: :linked_node_id
+  has_many :copies,           dependent: :destroy, class_name: 'ContentCopy',  foreign_key: :copied_node_id
+  has_many :role_assignments, dependent: :destroy
 
-  has_many :abbreviations, :dependent => :destroy
-  has_many :synonyms,      :dependent => :destroy
+  has_many :abbreviations, dependent: :destroy
+  has_many :synonyms,      dependent: :destroy
 
-  belongs_to :created_by, :class_name => 'User'
-  belongs_to :updated_by, :class_name => 'User'
+  belongs_to :created_by, class_name: 'User'
+  belongs_to :updated_by, class_name: 'User'
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of   :content, :sub_content_type, :publication_start_date
+  validates :content,                presence: true
+  validates :sub_content_type,       presence: true
+  validates :publication_start_date, presence: true
 
   validates_presence_of   :deleted_at, :if => lambda { |node| node.parent.try(:deleted_at) }
 
@@ -260,7 +262,7 @@ class Node < ActiveRecord::Base
   #                         node will call node.destroy (i.e. this method) again to destroy us.
   #                         Therefore the destroy_content_node option is introduced, which will be
   #                         set to false when node.destroy is called from the content node.
-  def destroy(options = {:destroy_content_node => true})
+  def destroy(options = { :destroy_content_node => true })
     if options[:destroy_content_node] && content
       begin
         destroyed_content = content.destroy # Content will on its turn call node.destroy again.

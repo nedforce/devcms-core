@@ -27,17 +27,17 @@ class ContactFormField < ActiveRecord::Base
   # A +ContactFormField+ belongs to a +ContactForm+.
   belongs_to :contact_form
 
-  has_many :response_fields, :dependent => :destroy
+  has_many :response_fields, dependent: :destroy
 
   # See the preconditions overview for an explanation of these validations.
-  validates :label,      :presence => true, :length => { :in => 1..255, :allow_blank => true }
-  validates :position,   :presence => true, :numericality => { :allow_blank => true }, :uniqueness => { :scope => :contact_form_id, :message => I18n.t('activerecord.errors.models.contact_form_field.attributes.position.must_be_unique') }
-  validates :field_type, :inclusion => { :in => ContactFormField::FIELD_TYPES }
+  validates :label,      presence: true, length: { in: 1..255, allow_blank: true }
+  validates :position,   presence: true, numericality: { allow_blank: true }, uniqueness: { scope: :contact_form_id, message: I18n.t('activerecord.errors.models.contact_form_field.attributes.position.must_be_unique') }
+  validates :field_type, inclusion: { in: ContactFormField::FIELD_TYPES }
 
-  scope :obligatory, where(:obligatory => true)
-  scope :has_field_type, lambda { |field_type| { :conditions => { :field_type => field_type } } }
+  scope :obligatory, where(obligatory: true)
+  scope :has_field_type, lambda { |field_type| { conditions: { field_type: field_type } } }
 
   def self.human_field_type_for(field_type)
-    I18n.t(field_type, :scope => 'contact_form_fields')
+    I18n.t(field_type, scope: 'contact_form_fields')
   end
 end

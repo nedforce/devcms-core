@@ -42,7 +42,7 @@ class Section < ActiveRecord::Base
   needs_editor_approval
 
   # The node that is the frontpage of this Section. Can be blank.
-  belongs_to :frontpage_node, :class_name => 'Node'
+  belongs_to :frontpage_node, class_name: 'Node'
 
   # See the preconditions overview for an explanation of these validations.
   validates :title, :presence => true, :length => { :in => 2..255, :allow_blank => true }
@@ -52,13 +52,13 @@ class Section < ActiveRecord::Base
   before_validation :set_frontpage_node_to_nil_if_frontpage_node_is_own_node, :on => :update
 
   # Ensures +frontpage_node+ should be nil when the +Section+ is created.
-  validate :frontpage_node_is_nil, :on => :create
+  validate :frontpage_node_is_nil, on: :create
 
   # Ensures the +frontpage_node+ should be a descendant.
-  # validate :frontpage_node_is_a_descendant, :on => :update
+  # validate :frontpage_node_is_a_descendant, on: :update
 
   # Ensures the +frontpage_node+ is no +Section+ with a frontpage node.
-  validate :frontpage_node_is_no_section_with_frontpage_node, :on => :update
+  validate :frontpage_node_is_no_section_with_frontpage_node, on: :update
 
   # Returns the last update date
   def last_updated_at

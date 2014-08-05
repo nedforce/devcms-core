@@ -22,19 +22,19 @@
 class InternalLink < Link
   # Adds content node functionality to links.
   acts_as_content_node({
-    :available_content_representations => ['content_box'],
-    :show_content_box_header => false,
-    :controller_name => 'internal_links'
+    available_content_representations: ['content_box'],
+    show_content_box_header:           false,
+    controller_name:                   'internal_links'
   })
 
   needs_editor_approval
 
   # The node that this internal link links to.
-  belongs_to :linked_node, :class_name => 'Node'
+  belongs_to :linked_node, class_name: 'Node'
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of     :linked_node
-  validates_numericality_of :linked_node_id, :allow_nil => true
+  validates :linked_node, presence: true
+  validates_numericality_of :linked_node_id, allow_nil: true
   validate :linked_node_is_not_associated_with_a_link_content_node
   validate :linked_node_is_contained_in_same_site
 

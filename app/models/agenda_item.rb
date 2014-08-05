@@ -48,13 +48,14 @@ class AgendaItem < ActiveRecord::Base
   needs_editor_approval
 
   # An AgendaItem belongs to a Meeting.
-  has_parent :calendar_item, :class_name => 'Event'
+  has_parent :calendar_item, class_name: 'Event'
 
   # An AgendaItem optionally belongs to an AgendaItemCategory.
   belongs_to :agenda_item_category
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of     :calendar_item, :description
+  validates :calendar_item, presence: true
+  validates :description,   presence: true
   validates_associated      :agenda_item_category,    :if => :has_agenda_item_category?
   validates_numericality_of :agenda_item_category_id,                             :allow_nil => true
   validates_numericality_of :speaking_rights,                                     :allow_nil => true

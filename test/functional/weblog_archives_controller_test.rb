@@ -9,5 +9,4 @@ class WeblogArchivesControllerTest < ActionController::TestCase
     assert assigns(:weblog_archive)
     assert_equal nodes(:devcms_weblog_archive_node), assigns(:node)
   end
-  
 end

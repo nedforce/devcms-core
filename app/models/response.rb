@@ -17,7 +17,7 @@ require 'csv'
 #
 class Response < ActiveRecord::Base
   belongs_to :contact_form
-  has_many :response_fields, :dependent => :destroy
+  has_many :response_fields, dependent: :destroy
 
   validates_presence_of :contact_form_id, :ip, :time
 

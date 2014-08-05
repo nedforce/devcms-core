@@ -16,9 +16,9 @@
 class ExternalLink < Link
   # Adds content node functionality to links.
   acts_as_content_node({
-    :available_content_representations => ['content_box'],
-    :show_content_box_header => false,
-    :controller_name => 'external_links'
+    available_content_representations: ['content_box'],
+    show_content_box_header:           false,
+    controller_name:                   'external_links'
   })
 
   needs_editor_approval
@@ -28,8 +28,8 @@ class ExternalLink < Link
   end
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of :url
-  validates_format_of   :url, :with => /(^$)|(^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.([a-z]{2,5}|[0-9]{1,5})(\/.*)?$)/ix
+  validates :url, presence: true
+  validates_format_of :url, with: /(^$)|(^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.([a-z]{2,5}|[0-9]{1,5})(\/.*)?$)/ix
 
   # Overrides the +content_title+ method of the +acts_as_content_node+ mixin.
   def content_title

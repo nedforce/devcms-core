@@ -75,8 +75,8 @@ class Admin::PollQuestionsControllerTest < ActionController::TestCase
     assert_no_difference('PollQuestion.count', 'question was saved') do
       assert_no_difference('PollOption.count', 'options were saved') do
         create_poll_question(:new_poll_option_attributes => [
-            {:text => nil }, # +PollOption+ requires +text+
-            {:text => 'Antwoord A' }
+            { :text => nil }, # +PollOption+ requires +text+
+            { :text => 'Antwoord A' }
         ])
 
         assert_response :success
@@ -254,6 +254,6 @@ protected
       ]
     end
 
-    post :create, {:parent_node_id => nodes(:healthcare_poll_node).id, :poll => polls(:healthcare_poll), :poll_question => { :question => 'Question?', :publication_start_date_day => publication_start_date.strftime("%d-%m-%Y"), :publication_start_date_time => publication_start_date.strftime("%H:%M") }.merge(attributes) }.merge(options)
+    post :create, { :parent_node_id => nodes(:healthcare_poll_node).id, :poll => polls(:healthcare_poll), :poll_question => { :question => 'Question?', :publication_start_date_day => publication_start_date.strftime("%d-%m-%Y"), :publication_start_date_time => publication_start_date.strftime("%H:%M") }.merge(attributes) }.merge(options)
   end
 end

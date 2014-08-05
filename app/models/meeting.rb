@@ -21,10 +21,10 @@
 #
 class Meeting < CalendarItem
   acts_as_content_node({
-    :allowed_child_content_types => %w( Attachment AttachmentTheme AgendaItem ),
-    :show_in_menu                => false,
-    :copyable                    => false,
-    :controller_name             => 'meetings'
+    allowed_child_content_types: %w( Attachment AttachmentTheme AgendaItem ),
+    show_in_menu:                false,
+    copyable:                    false,
+    controller_name:             'meetings'
   })
 
   needs_editor_approval
@@ -33,12 +33,12 @@ class Meeting < CalendarItem
   belongs_to :meeting_category
 
   # A Meeting can have many agenda items.
-  has_children :agenda_items, :order => 'nodes.position'
+  has_children :agenda_items, order: 'nodes.position'
 
   # See the preconditions overview for an explanation of these validations.
   validates_associated      :meeting_category
   validates_presence_of     :meeting_category
-  validates_numericality_of :meeting_category_id, :allow_nil => true
+  validates_numericality_of :meeting_category_id, allow_nil: true
 
   # Returns the +name+ of the associated MeetingCategory, or +nil+ if no MeetingCategory is associated.
   def meeting_category_name
@@ -59,6 +59,6 @@ class Meeting < CalendarItem
 protected
 
   def cloning_hash
-    super.merge({ :meeting_category => self.meeting_category })
+    super.merge({ meeting_category: self.meeting_category })
   end
 end

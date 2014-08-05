@@ -22,20 +22,20 @@
 #
 class Comment < ActiveRecord::Base
   # A Comment belongs polymorphically to a node.
-  belongs_to :commentable, :polymorphic => true
-  belongs_to :node, :foreign_key => 'commentable_id'
+  belongs_to :commentable, polymorphic: true
+  belongs_to :node,        foreign_key: 'commentable_id'
 
   # Comments belong to a user.
   belongs_to :user
-  validates_presence_of :user # Remove this validation to allow unauthenticated comments.
+  validates :user, presence: true # Remove this validation to allow unauthenticated comments.
 
   # Set the +user_name+ to the login of the +user+.
-  before_validation :set_user_name, :on => :create
+  before_validation :set_user_name, on: :create
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of :commentable, :comment, :user_name
-  validates_length_of   :comment,   :in => 1..500,   :allow_blank => true
-  validates_length_of   :user_name, :maximum => 255, :allow_blank => true
+  validates :commentable, presence: true
+  validates :comment,     presence: true, length: { in: 1..500,   allow_blank: true }
+  validates :user_name,   presence: true, length: { maximum: 255, allow_blank: true }
 
   def self.parent_type
     Node

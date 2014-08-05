@@ -28,7 +28,7 @@ class ForumThread < ActiveRecord::Base
   belongs_to :user
 
   # A +ForumThread+ can have many +ForumPost+ children.
-  has_many :forum_posts, :order => 'created_at ASC', :dependent => :destroy do
+  has_many :forum_posts, order: 'created_at ASC', dependent: :destroy do
     # The date at which the last post ForumPost in the ForumThread was added (as identified by +created_at+).
     def last_posting_date
       self.maximum(:created_at)
@@ -36,8 +36,9 @@ class ForumThread < ActiveRecord::Base
   end
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of     :title, :forum_topic, :user
-  validates_length_of       :title, :in => 2..255, :allow_blank => true
+  validates :title,       presence: true, length: { in: 2..255, allow_blank: true }
+  validates :forum_topic, presence: true
+  validates :user,        presence: true
   validates_numericality_of :forum_topic_id, :user_id
 
   def self.parent_type
@@ -73,7 +74,7 @@ class ForumThread < ActiveRecord::Base
 
   # Returns the start post of this +ForumThread+, i.e. the first +ForumPost+ of this ForumThread.
   def start_post
-    self.forum_posts.first(:order => 'created_at ASC')
+    self.forum_posts.first(order: 'created_at ASC')
   end
 
   # Returns the replies to this +ForumThread+, i.e. all +ForumPost+ children of this ForumThread, except the first one.

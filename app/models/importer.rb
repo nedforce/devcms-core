@@ -61,8 +61,8 @@ protected
 
   def self.default_attribute_information
     {
-      :required => true,
-      :default  => nil
+      required: true,
+      default: nil
     }
   end
 
@@ -106,14 +106,14 @@ protected
     @row_contents = @spreadsheet.row(@current_row)
 
     meta_attributes = self.parse_meta_attributes
-    mapping = self.class.importable_content_types[meta_attributes[:type]]
+    mapping         = self.class.importable_content_types[meta_attributes[:type]]
 
     raise ImporterException.new("onbekend type '#{meta_attributes[:type]}' in rij #{@current_row}") unless mapping
 
-    klass = mapping.delete(:type).constantize
+    klass  = mapping.delete(:type).constantize
     parent = self.find_or_create_target_section(meta_attributes[:target_section]).node
 
-    node_attributes = self.parse_node_attributes
+    node_attributes    = self.parse_node_attributes
     content_attributes = self.parse_content_attributes(mapping)
 
     self.create_content!(klass, parent, content_attributes, node_attributes)
@@ -132,7 +132,7 @@ protected
       target_section = if section_node
          section_node.content
       else
-        Section.create!(:title => title, :parent => target_section.node)
+        Section.create!(title: title, parent: target_section.node)
       end
     end
 
@@ -179,7 +179,7 @@ protected
   end
 
   def create_content!(klass, parent, content_attributes, node_attributes)
-    instance = klass.new(content_attributes.merge(:parent => parent))
+    instance = klass.new(content_attributes.merge(parent: parent))
     instance.node.attributes = node_attributes
 
     instance.save if @save_new_content
@@ -196,6 +196,6 @@ protected
   end
 
   def parse_attribute_information(attribute_information)
-    self.class.default_attribute_information.merge(attribute_information.is_a?(String) ? { :mapping => attribute_information } : attribute_information)
+    self.class.default_attribute_information.merge(attribute_information.is_a?(String) ? { mapping: attribute_information } : attribute_information)
   end
 end

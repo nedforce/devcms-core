@@ -25,11 +25,11 @@ require 'open-uri'
 class Feed < ActiveRecord::Base
   # Adds content node functionality to Feed.
   acts_as_content_node({
-    :available_content_representations => ['content_box']
+    available_content_representations: ['content_box']
   })
 
   # See the preconditions overview for an explanation of these validations.
-  validates :url, :presence => true
+  validates :url, presence: true
   validate :valid_feed?
 
   def parsed_feed
@@ -41,7 +41,7 @@ class Feed < ActiveRecord::Base
 
     # May be nil, in which case to_yaml would cache a NilClass, so test if parse_feed returned anything meaningful.
     # Then remove all lines containing only space characters because they can confuse YAML::load.
-    update_attributes(:cached_parsed_feed => local_parsed_feed.to_yaml.gsub(/\n\s+\n/, '\n')) if local_parsed_feed
+    update_attributes(cached_parsed_feed: local_parsed_feed.to_yaml.gsub(/\n\s+\n/, '\n')) if local_parsed_feed
     local_parsed_feed
   end
 

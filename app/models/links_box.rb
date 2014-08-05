@@ -2,24 +2,22 @@
 
 class LinksBox < ActiveRecord::Base
   acts_as_content_node({
-    :allowed_child_content_types => %w(
-      LinkTheme Image InternalLink ExternalLink
-    ),
-    :allowed_roles_for_create  => %w( admin ),
-    :allowed_roles_for_update  => %w( admin ),
-    :allowed_roles_for_destroy => %w( admin ),
-    :available_content_representations => ['content_box'],
-    :has_own_content_box => false,
-    :controller_name => 'links_boxes',
-    :show_in_menu => false,
-    :copyable => false
+    allowed_child_content_types:       %w( LinkTheme Image InternalLink ExternalLink ),
+    allowed_roles_for_create:          %w( admin ),
+    allowed_roles_for_update:          %w( admin ),
+    allowed_roles_for_destroy:         %w( admin ),
+    available_content_representations: ['content_box'],
+    has_own_content_box:               false,
+    controller_name:                   'links_boxes',
+    show_in_menu:                      false,
+    copyable:                          false
   })
 
   # This content type needs approval when created or altered by an editor.
   needs_editor_approval
 
   # See the preconditions overview for an explanation of these validations.
-  validates :title, :presence => true, :length => { :in => 2..255, :allow_blank => true }
+  validates :title, presence: true, length: { in: 2..255, allow_blank: true }
 
   # Returns the last update date
   def last_updated_at

@@ -18,9 +18,9 @@ class EventRegistration < ActiveRecord::Base
   belongs_to :event
   belongs_to :user
 
-  validates_presence_of :event
-  validates_presence_of :user
-  validates_numericality_of :people_count, :greater_than => 0, :only_integer => true
+  validates :event,        presence: true
+  validates :user,         presence: true
+  validates :people_count, numericality: { greater_than: 0, only_integer: true }
 
   validate :user_has_full_name
 

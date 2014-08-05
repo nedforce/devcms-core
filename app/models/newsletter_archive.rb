@@ -18,41 +18,40 @@
 class NewsletterArchive < ActiveRecord::Base
   # Adds content node functionality to news archives.
   acts_as_content_node({
-    :allowed_child_content_types => %w( NewsletterEdition Image ),
-    :allowed_roles_for_update  => %w( admin final_editor ),
-    :allowed_roles_for_create  => %w( admin final_editor ),
-    :allowed_roles_for_destroy => %w( admin final_editor ),
-    :available_content_representations => ['content_box'],
-    :children_can_be_sorted => false,
-    :tree_loader_name => 'newsletter_archives'
+    allowed_child_content_types:       %w( NewsletterEdition Image ),
+    allowed_roles_for_update:          %w( admin final_editor ),
+    allowed_roles_for_create:          %w( admin final_editor ),
+    allowed_roles_for_destroy:         %w( admin final_editor ),
+    available_content_representations: ['content_box'],
+    children_can_be_sorted:            false,
+    tree_loader_name:                  'newsletter_archives'
   })
 
   # Extend this class with methods to find items based on their publication date.
-  acts_as_archive :items_name => :newsletter_editions
+  acts_as_archive items_name: :newsletter_editions
 
   # A +NewsletterArchive+ can have many +NewsletterEdition+ children.
-  has_children :newsletter_editions, :order => 'nodes.publication_start_date DESC'
+  has_children :newsletter_editions, order: 'nodes.publication_start_date DESC'
 
   # A +NewsletterArchive+ has and belongs to many +User+ objects (i.e. subscribed users).
   has_and_belongs_to_many :users
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of     :title
-  validates_length_of       :title, :in => 2..255, :allow_blank => true
+  validates :title, presence: true, length: { in: 2..255, allow_blank: true }
 
-  validates :from_email_address, :email => { :allow_blank => true }
-  
+  validates :from_email_address, email: { allow_blank: true }
+
   # Returns the last update date
   def last_updated_at
-    nle = self.newsletter_editions.accessible.first(:include => :node, :conditions => [ 'newsletter_editions.published <> ?', 'unpublished' ], :order => 'nodes.publication_start_date DESC')
+    nle = self.newsletter_editions.accessible.first(include: :node, conditions: ['newsletter_editions.published <> ?', 'unpublished'], order: 'nodes.publication_start_date DESC')
     last_nle_update = nle ? nle.node.publication_start_date : nil
-    
+
     [ last_nle_update, self.updated_at].compact.max
   end
 
   # Returns true if this +NewsletterArchive+ has a subscription for the +User+ specified by +user+, else false.
   def has_subscription_for?(user)
-    self.users.exists?(:id => user.id)
+    self.users.exists?(id: user.id)
   end
 
   # Returns the description as the token for indexing.

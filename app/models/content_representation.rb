@@ -33,13 +33,14 @@ class ContentRepresentation < ActiveRecord::Base
   attr_accessor :title
 
   # The node whose side box contains the content box element.
-  belongs_to :parent, :class_name => 'Node'
+  belongs_to :parent, class_name: 'Node'
 
   # The node contained within the content box element.
-  belongs_to :content, :class_name => 'Node'
+  belongs_to :content, class_name: 'Node'
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of     :parent, :target
+  validates :parent, presence: true
+  validates :target, presence: true
   validates_presence_of     :content,                             :unless => :custom_type
   validates_uniqueness_of   :content_id, :scope => :parent_id,    :unless => :custom_type
   validates_numericality_of :parent_id

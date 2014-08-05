@@ -23,16 +23,16 @@
 class ContentCopy < ActiveRecord::Base
   # Adds content node functionality to content copies.
   acts_as_content_node({
-    :allowed_roles_for_update => [],
-    :show_in_menu => false,
-    :copyable => false
+    allowed_roles_for_update: [],
+    show_in_menu:             false,
+    copyable:                 false
   })
 
   # This content type needs approval when created or altered by an editor
   needs_editor_approval
 
   # The node whose content this content copy copies.
-  belongs_to :copied_node, :class_name => 'Node', :foreign_key => 'copied_node_id'
+  belongs_to :copied_node, class_name: 'Node', foreign_key: 'copied_node_id'
 
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of     :copied_node

@@ -39,16 +39,15 @@ class Carrousel < ActiveRecord::Base
     :available_content_representations => ['content_box']
   })
 
-  belongs_to :current_carrousel_item, :class_name => 'CarrouselItem', :dependent => :destroy
+  belongs_to :current_carrousel_item, class_name: 'CarrouselItem', dependent: :destroy
 
   # A +Carrousel+ has many +CarrouselItem+ objects and many items through +CarrouselItem+.
-  has_many :carrousel_items, :autosave => true
+  has_many :carrousel_items, autosave: true
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of     :title
-  validates_length_of       :title, :in => 2..255, :allow_blank => true
-  validates_numericality_of :display_time,         :allow_blank => true, :integer_only => true, :greater_than_or_equal_to => 0
-  validates_numericality_of :animation,            :integer_only => true, :greater_than_or_equal_to => 0
+  validates :title,        presence: true, length: { in: 2..255, allow_blank: true }
+  validates :display_time, numericality: { greater_than_or_equal_to: 0, only_integer: true, allow_blank: true }
+  validates :animation,    numericality: { greater_than_or_equal_to: 0, only_integer: true }
 
   after_paranoid_delete :remove_associated_content
 
@@ -89,7 +88,7 @@ class Carrousel < ActiveRecord::Base
     # Add the items
     if items
       items.each_with_index do |item, index|
-        carrousel_items.build(:item => Node.find(item).content, :position => index, :excerpt => (excerpts.empty? ? nil : excerpts[item]))
+        carrousel_items.build(item: Node.find(item).content, position: index, excerpt: (excerpts.empty? ? nil : excerpts[item]))
       end
     end
     true

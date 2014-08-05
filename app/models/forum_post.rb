@@ -34,7 +34,7 @@ class ForumPost < ActiveRecord::Base
   after_create :notify_thread_owner
 
   # See the preconditions overview for an explanation of these validations.
-  before_validation     :set_user_name, :on => :create
+  before_validation     :set_user_name, on: :create
   validates_presence_of :body, :forum_thread, :user_name, :user
   validates_length_of   :body, :in => 1..5000
 

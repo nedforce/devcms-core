@@ -24,18 +24,17 @@
 class ForumTopic < ActiveRecord::Base
   # Adds content node functionality to forum topics.
   acts_as_content_node({
-    :allowed_roles_for_create  => %w( admin ),
-    :allowed_roles_for_destroy => %w( admin ),
-    :copyable => false
+    allowed_roles_for_create:  %w( admin ),
+    allowed_roles_for_destroy: %w( admin ),
+    copyable:                  false
   })
 
   # A +ForumTopic+ can have many +ForumThread+ children.
-  has_many :forum_threads, :dependent => :destroy
+  has_many :forum_threads, dependent: :destroy
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of   :title, :description
-  validates_uniqueness_of :title
-  validates_length_of     :title, :in => 2..255
+  validates :title,       presence: true, uniqueness: true, length: { in: 2..255 }
+  validates :description, presence: true
 
   # Returns the child ForumThread objects, ordered by their +last_update_date+ values.
   def forum_threads_by_last_update_date
@@ -52,7 +51,7 @@ class ForumTopic < ActiveRecord::Base
     if self.forum_threads.empty?
       self.created_at
     else
-      self.forum_threads.maximum('forum_posts.created_at', :joins => :forum_posts)
+      self.forum_threads.maximum('forum_posts.created_at', joins: :forum_posts)
     end
   end
 

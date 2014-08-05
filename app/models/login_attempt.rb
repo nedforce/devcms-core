@@ -1,11 +1,11 @@
 class LoginAttempt < ActiveRecord::Base
 
-  validates :ip, :presence => true
+  validates :ip, presence: true
 
   scope :by_created_at, lambda { order('created_at DESC') }
-  scope :for_ip,        lambda { |ip| where(:ip => ip) }
-  scope :since,         lambda { |time| where(:created_at => time..Time.now) }
-  scope :failed,        lambda { where(:success => [false, nil]) }
+  scope :for_ip,        lambda { |ip| where(ip: ip) }
+  scope :since,         lambda { |time| where(created_at: time..Time.now) }
+  scope :failed,        lambda { where(success: [false, nil]) }
 
   # Checks if the given +ip+ is blocked.
   # If so, returns the date of unblock. If not, returns +nil+.

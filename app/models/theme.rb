@@ -14,15 +14,15 @@
 class Theme < ActiveRecord::Base
   # Adds content node functionality to research themes.
   acts_as_content_node({
-    :allowed_child_content_types => %w(),
-    :allowed_roles_for_create  => %w(),
-    :allowed_roles_for_update  => %w(),
-    :allowed_roles_for_destroy => %w(),
-    :copyable => false
+    allowed_child_content_types: %w(),
+    allowed_roles_for_create:    %w(),
+    allowed_roles_for_update:    %w(),
+    allowed_roles_for_destroy:   %w(),
+    copyable:                    false
   })
 
   # See the preconditions overview for an explanation of these validations.
-  validates :title, :presence => true, :length => { :in => 2..255, :allow_blank => true }
+  validates :title, presence: true, length: { in: 2..255, allow_blank: true }
 
   def content_depth
     if node.parent.content.respond_to? :content_depth

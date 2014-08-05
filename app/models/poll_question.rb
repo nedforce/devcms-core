@@ -26,22 +26,22 @@
 class PollQuestion < ActiveRecord::Base
   # Adds content node functionality to poll questions.
   acts_as_content_node({
-    :show_in_menu => false,
-    :copyable => false
+    show_in_menu: false,
+    copyable:     false
   })
 
   # A +PollQuestion+ belongs to a +Poll+.
   has_parent :poll
 
   # A +PollQuestion+ has many +PollOption+ objects.
-  has_many :poll_options, :dependent => :destroy, :order => 'created_at'
+  has_many :poll_options, dependent: :destroy, order: 'created_at'
 
-  has_many :user_votes, :class_name => 'UserPollQuestionVote', :dependent => :destroy
+  has_many :user_votes, class_name: 'UserPollQuestionVote', dependent: :destroy
 
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of  :poll, :question
-  validates_length_of    :question, :in => 2..255,          :allow_blank => true
-  validates_inclusion_of :active,   :in => [ true, false ], :allow_nil   => true
+  validates_length_of    :question, in: 2..255,        allow_blank: true
+  validates_inclusion_of :active,   in: [true, false], allow_nil: true
 
   # Ensures that all the associated +PollOption+ objects are validated when this
   # +PollQuestion+ is validated.
@@ -108,7 +108,7 @@ class PollQuestion < ActiveRecord::Base
   end
 
   def has_vote_from?(user)
-    user.present? && user_votes.exists?(:user_id => user.id)
+    user.present? && user_votes.exists?(user_id: user.id)
   end
 
   # Record a vote on an option
@@ -118,7 +118,7 @@ class PollQuestion < ActiveRecord::Base
     if poll.requires_login?
       if user.present? && !has_vote_from?(user)
         PollQuestion.transaction do
-          registration = user_votes.create(:user => user)
+          registration = user_votes.create(user: user)
           poll_options.find(option).vote! if registration
         end
       end
@@ -128,7 +128,7 @@ class PollQuestion < ActiveRecord::Base
   end
 
   def last_updated_at
-    [ self.updated_at, self.poll_options.maximum(:updated_at) ].compact.max
+    [self.updated_at, self.poll_options.maximum(:updated_at)].compact.max
   end
 
 protected
@@ -146,7 +146,7 @@ protected
   # Ensures the updated +PollOption+ objects are saved.
   def save_poll_options
     self.poll_options.each do |poll_option|
-      poll_option.save(:validate => false)
+      poll_option.save(validate: false)
     end
   end
 

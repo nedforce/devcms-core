@@ -23,24 +23,24 @@ class WeblogArchive < ActiveRecord::Base
 
   # Adds content node functionality to weblog archives.
   acts_as_content_node({
-    :allowed_child_content_types => %w( Weblog ),
-    :allowed_roles_for_create  => %w( admin ),
-    :allowed_roles_for_destroy => %w( admin ),
-    :available_content_representations => ['content_box'],
-    :children_can_be_sorted => false,
-    :tree_loader_name => 'weblog_archives'
+    allowed_child_content_types:       %w( Weblog ),
+    allowed_roles_for_create:          %w( admin ),
+    allowed_roles_for_destroy:         %w( admin ),
+    available_content_representations: ['content_box'],
+    children_can_be_sorted:            false,
+    tree_loader_name:                  'weblog_archives'
   })
 
   # A +WeblogArchive+ can have many +Weblog+ children.
-  has_children :weblogs, :order => 'weblogs.title'
+  has_children :weblogs, order: 'weblogs.title'
 
   # See the preconditions overview for an explanation of these validations.
-  validates :title, :presence => true, :length => { :in => 2..255, :allow_blank => true }
+  validates :title, presence: true, length: { in: 2..255, allow_blank: true }
 
   # Finds the first +DEFAULT_OFFSET+ weblogs belonging to this +WeblogArchive+,
   # starting at the given +offset+.
   def find_weblogs_for_offset(offset)
-    self.weblogs.all(:offset => offset, :limit => DEFAULT_OFFSET)
+    self.weblogs.all(offset: offset, limit: DEFAULT_OFFSET)
   end
 
   # Returns a hash with the offsets that can be used in subsequent calls to
@@ -68,8 +68,8 @@ class WeblogArchive < ActiveRecord::Base
   # For example, with +DEFAULT_OFFSET+ equal to 20, +offset+ equal to 40 and the
   # total number of weblogs being 57, the 41st and 57th weblogs will be returned.
   def find_first_and_last_weblog_for_offset(offset)
-    first  = self.weblogs.first(:offset => offset, :limit => DEFAULT_OFFSET)
-    second = self.weblogs.first(:offset => offset, :limit => DEFAULT_OFFSET, :order => 'weblogs.title DESC')
+    first  = self.weblogs.first(offset: offset, limit: DEFAULT_OFFSET)
+    second = self.weblogs.first(offset: offset, limit: DEFAULT_OFFSET, order: 'weblogs.title DESC')
 
     [first, second]
   end
@@ -87,7 +87,7 @@ class WeblogArchive < ActiveRecord::Base
 
   # Returns true if this +WeblogArchive+ has a +Weblog+ associated with the given +User+, else false.
   def has_weblog_for_user?(user)
-    self.weblogs.exists?(:user_id => user)
+    self.weblogs.exists?(user_id: user)
   end
 
   # Finds the +limit+ last updated +Weblog+ children.

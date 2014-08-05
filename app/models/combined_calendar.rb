@@ -22,12 +22,11 @@ class CombinedCalendar < ActiveRecord::Base
     :has_own_feed => true
   })
 
-  has_many :combined_calendar_nodes, :dependent => :destroy
-  has_many :sites, :through => :combined_calendar_nodes, :source => :node
+  has_many :combined_calendar_nodes, dependent: :destroy
+  has_many :sites,                   through: :combined_calendar_nodes, source: :node
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of :title
-  validates_length_of   :title, :in => 2..255, :allow_blank => true
+  validates :title, presence: true, length: { in: 2..255, allow_blank: true }
 
   def calendar_items
     return @calendar_items_scope if @calendar_items_scope

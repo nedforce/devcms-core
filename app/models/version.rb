@@ -1,22 +1,22 @@
 class Version < ActiveRecord::Base #:nodoc:
   STATUSES = {
-    :drafted    => 'drafted',
-    :unapproved => 'unapproved',
-    :rejected   => 'rejected'
+    drafted:    'drafted',
+    unapproved: 'unapproved',
+    rejected:   'rejected'
   }
 
   UNAPPROVED_STATUSES = ['unapproved', 'rejected']
 
-  belongs_to :versionable, :polymorphic => true
-  belongs_to :editor, :class_name => 'User'
+  belongs_to :versionable, polymorphic: true
+  belongs_to :editor,      class_name: 'User'
 
-  validates :status, :presence => true, :inclusion => { :in => STATUSES.values }
+  validates :status, presence: true, inclusion: { in: STATUSES.values }
 
   before_create :set_number
 
-  default_scope :order => 'versions.created_at DESC'
+  default_scope order: 'versions.created_at DESC'
 
-  scope :unapproved, lambda { where(:status => UNAPPROVED_STATUSES) }
+  scope :unapproved, lambda { where(status: UNAPPROVED_STATUSES) }
 
   def drafted?
     self.status == STATUSES[:drafted]
@@ -39,13 +39,13 @@ class Version < ActiveRecord::Base #:nodoc:
   end
 
   def reject!
-    self.update_attributes(:status => STATUSES[:rejected])
+    self.update_attributes(status: STATUSES[:rejected])
   end
 
   # Return an instance of the versioned ActiveRecord model with the attribute
   # values of this version.
   def model
-    Version.create_version(self.versionable, YAML::load(self.yaml).merge(:draft => self.drafted?))
+    Version.create_version(self.versionable, YAML::load(self.yaml).merge(draft: self.drafted?))
   end
 
   def self.create_version(original, attributes_to_overwrite = {})

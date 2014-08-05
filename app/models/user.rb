@@ -66,18 +66,18 @@ class User < ActiveRecord::Base
   attr_accessor :password
 
   # A +User+ can have multiple nodes which he has edited
-  has_many :nodes, :foreign_key => :editor_by
+  has_many :nodes, foreign_key: :editor_by
 
   # A +User+ can have multiple comments
-  has_many :comments, :dependent => :nullify
+  has_many :comments, dependent: :nullify
 
   # A +User+ can have multiple weblogs, which he owns.
-  has_many :weblogs, :dependent => :destroy
+  has_many :weblogs, dependent: :destroy
 
   # A +User+ has many +RoleAssignment+ objects (i.e., roles).
-  has_many :role_assignments, :dependent => :destroy, :conditions => { :name => %w(read_access indexer)}
+  has_many :role_assignments, dependent: :destroy, conditions: { name: %w(read_access indexer)}
 
-  has_many :user_poll_question_votes, :dependent => :destroy
+  has_many :user_poll_question_votes, dependent: :destroy
 
   # A +User+ has and belongs to many +NewsletterArchive+ objects (i.e., subscriptions to newsletters).
   has_and_belongs_to_many :newsletter_archives
@@ -87,43 +87,40 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :interests
 
   # A +User+ can have started many forum threads.
-  has_many :forum_threads,   :dependent => :destroy
+  has_many :forum_threads,   dependent: :destroy
 
   # A +User+ can have created many forum posts.
-  has_many :forum_posts,     :dependent => :destroy
+  has_many :forum_posts,     dependent: :destroy
 
-  has_many :versions,        :foreign_key => :editor_id, :dependent => :destroy
+  has_many :versions,        foreign_key: :editor_id, dependent: :destroy
 
-  has_many :event_registrations, :dependent => :destroy
+  has_many :event_registrations, dependent: :destroy
 
-  has_many :created_nodes, :foreign_key => :created_by_id, :class_name => 'Node', :dependent => :nullify
-  has_many :updated_nodes, :foreign_key => :updated_by_id, :class_name => 'Node', :dependent => :nullify
+  has_many :created_nodes, foreign_key: :created_by_id, class_name: 'Node', dependent: :nullify
+  has_many :updated_nodes, foreign_key: :updated_by_id, class_name: 'Node', dependent: :nullify
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of     :password,                :if => :password_required?
-  validates_presence_of     :password_confirmation,   :if => :password_required?
-  validates_length_of       :password, :in => 2..255, :if => :password_required?, :allow_blank => true
-  validates_confirmation_of :password,                :if => :password_required?
+  validates_presence_of     :password,              if: :password_required?
+  validates_presence_of     :password_confirmation, if: :password_required?
+  validates_length_of       :password, in: 2..255,  if: :password_required?, allow_blank: true
+  validates_confirmation_of :password,              if: :password_required?
 
-  validates_presence_of     :login
-  validates_uniqueness_of   :login, :case_sensitive => false
-  validates_length_of       :login, :in => 2..255,                :on => :create, :allow_blank => true
-  validates_format_of       :login, :with => /\A[a-z0-9_\-]+\z/i, :on => :create, :unless => Proc.new { |user| user.login.blank? }
+  validates :login, presence: true, uniqueness: { case_sensitive: false }
+  validates_length_of :login, in: 2..255,                on: :create, allow_blank: true
+  validates_format_of :login, with: /\A[a-z0-9_\-]+\z/i, on: :create, unless: Proc.new { |user| user.login.blank? }
 
-  validates_presence_of     :email_address
-
-  validates :email_address, :email => { :allow_blank => true }
+  validates :email_address, presence: true, email: { allow_blank: true }
 
   # To make sure editing still checks uniqueness
-  validates_uniqueness_of   :email_address, :case_sensitive => false, :if => :persisted?
+  validates_uniqueness_of   :email_address, case_sensitive: false, if: :persisted?
 
-  validates :verification_code, :presence => true
+  validates :verification_code, presence: true
 
-  validates_inclusion_of    :sex,   :in => User::SEXES.keys, :allow_blank => true
+  validates :sex, inclusion: { in: User::SEXES.keys, allow_blank: true }
 
   validate :should_not_allow_reserved_login
 
-  validate :privileged_users_password_should_be_strong, :unless => Proc.new { Rails.env.development? }
+  validate :privileged_users_password_should_be_strong, unless: Proc.new { Rails.env.development? }
 
   # Make sure the user's password (stored in the virtual attribute +password+)
   # is stored as a hash after the user is created/updatedRoleAssignment.
@@ -133,7 +130,7 @@ class User < ActiveRecord::Base
   before_create :validate_uniqueness_of_email
 
   # Make sure a verification code is set when a user first registers.
-  before_validation :set_verification_code, :on => :create
+  before_validation :set_verification_code, on: :create
   
   after_create :send_verification_email_or_verify
 
@@ -154,17 +151,17 @@ class User < ActiveRecord::Base
 
   # This overridden to_xml method returns an XML representation without information-sensitive fields.
   def to_xml(options = {})
-    to_xml_with_secrets(options.merge({ :except => SECRETS }))
+    to_xml_with_secrets(options.merge({ except: SECRETS }))
   end
 
   # This overridden to_json method returns a JSON representation without information-sensitive fields.
   def to_json(options = {})
-    to_json_with_secrets(options.merge({ :except => SECRETS }))
+    to_json_with_secrets(options.merge({ except: SECRETS }))
   end
 
   # Authenticates a user by their login and unencrypted password. Returns the user if successfully authenticated, elsen nil.
   def self.authenticate(login, password)
-    user = first(:conditions => ['LOWER(login) = LOWER(?)', login.downcase]) if login
+    user = first(conditions: ['LOWER(login) = LOWER(?)', login.downcase]) if login
     if user && user.authenticated?(password)
       user.update_attribute :failed_logins, 0
       user
@@ -215,7 +212,7 @@ class User < ActiveRecord::Base
     self.remember_token_expires_at = time
     self.remember_token            = encrypt("#{email_address}--#{remember_token_expires_at}")
     self.remember_token_ip         = ip
-    save(:validate => false)
+    save(validate: false)
   end
 
   # Forgets the user, if the user is currently being remembered.
@@ -239,7 +236,7 @@ class User < ActiveRecord::Base
   def has_role_on?(*args)
     node  = args.last.is_a?(Node)   ? args.pop   : Node.root
     roles = args.first.is_a?(Array) ? args.first : args
-    self.role_assignments.exists?(:node_id => node.path_ids, :name => roles)
+    self.role_assignments.exists?(node_id: node.path_ids, name: roles)
   end
 
   # Checks whether a user has one of the given roles.
@@ -247,7 +244,7 @@ class User < ActiveRecord::Base
   #  +roles+ one or more Strings containing role names.
   def has_role?(*args)
     roles = args.first.is_a?(Array) ? args.first : args
-    self.role_assignments.exists?(:name => roles)
+    self.role_assignments.exists?(name: roles)
   end
 
   # Checks whether a user has whatever role on whatever node.
@@ -269,13 +266,13 @@ class User < ActiveRecord::Base
 
   # Returns the role the user has on a Node.
   def role_on(node)
-    self.role_assignments.first(:conditions => { :node_id => node.path_ids })
+    self.role_assignments.first(conditions: { node_id: node.path_ids })
   end
 
   # Gives the user a role for a specific Node.
   # Returns true on success, false if the role is invalid.
   def give_role_on(role_name, node)
-    ra = self.role_assignments.create(:node => node, :name => role_name)
+    ra = self.role_assignments.create(node: node, name: role_name)
     return ra.persisted?
   end
 
@@ -334,7 +331,7 @@ class User < ActiveRecord::Base
   # Returns true if the +invitation_code+ is valid for the supplied +email_address+, false otherwise.
   def self.verify_invitation_code(email_address, invitation_code)
     return false if email_address.blank? || invitation_code.blank?
-    
+
     self.generate_invitation_code(email_address) == invitation_code
   end
 

@@ -29,13 +29,13 @@ class TopHitsPage < ActiveRecord::Base
 
   # Adds content node functionality to top hits pages.
   acts_as_content_node({
-    :allowed_roles_for_create  => %w( admin ),
-    :allowed_roles_for_destroy => %w( admin ),
-    :available_content_representations => %w( content_box )
+    allowed_roles_for_create:          %w( admin ),
+    allowed_roles_for_destroy:         %w( admin ),
+    available_content_representations: %w( content_box )
   })
 
   # See the preconditions overview for an explanation of these validations.
-  validates :title, :presence => true, :length => { :in => 2..255, :allow_blank => true }
+  validates :title, presence: true, length: { in: 2..255, allow_blank: true }
 
   # Returns the description as the token for indexing.
   def content_tokens
@@ -50,8 +50,8 @@ class TopHitsPage < ActiveRecord::Base
   def find_top_hits(options = {})
     return @top_hits if @top_hits
 
-    include_content = options.has_key?(:include_content) ? options.delete(:include_content) : false
-    nodes_to_exclude = options.delete(:nodes_to_exclude) || []
+    include_content          = options.has_key?(:include_content) ? options.delete(:include_content) : false
+    nodes_to_exclude         = options.delete(:nodes_to_exclude) || []
     content_types_to_exclude = options.delete(:content_types_to_exclude) || TopHitsPage.content_types_to_exclude
 
     # This method can be called when the record hasn't been saved yet, i.e., for the admin preview
@@ -64,7 +64,7 @@ class TopHitsPage < ActiveRecord::Base
     nodes_to_exclude += containing_site.descendants.sections.private
 
     limit = options.delete(:limit) || DEFAULT_AMOUNT_TO_SHOW
-    order = options.delete(:order) || "hits desc"
+    order = options.delete(:order) || 'hits DESC'
 
     top_hits_scope = containing_site.descendants.accessible.exclude_subtrees_of(nodes_to_exclude.uniq).exclude_content_types(content_types_to_exclude)
     top_hits_scope = top_hits_scope.limit(limit).reorder(order)

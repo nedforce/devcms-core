@@ -17,11 +17,9 @@ class Abbreviation < ActiveRecord::Base
   belongs_to :node
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of :node
-  validates_presence_of :abbr
-  validates_length_of   :abbr,       :maximum => 255
-  validates_presence_of :definition
-  validates_length_of   :definition, :maximum => 255
+  validates :node,       presence: true
+  validates :abbr,       presence: true, length: { maximum: 255 }
+  validates :definition, presence: true, length: { maximum: 255 }
 
   # Find a record by normalized (alphanumeric, lowercase) abbr.
   def self.search(abbr)

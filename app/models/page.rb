@@ -22,26 +22,26 @@
 class Page < ActiveRecord::Base
   # Adds content node functionality to pages.
   acts_as_content_node({
-    :allowed_child_content_types => %w( Attachment AttachmentTheme Image ),
-    :available_content_representations => ['content_box'],
-    :has_own_content_box => true,
-    :expirable => true,
-    :expiration_required => true
+    allowed_child_content_types:       %w( Attachment AttachmentTheme Image ),
+    available_content_representations: ['content_box'],
+    has_own_content_box:               true,
+    expirable:                         true,
+    expiration_required:               true
   })
 
   # This content type needs approval when created or altered by an editor.
   needs_editor_approval
 
   # A +Page+ has many +NewsletterEditionItem+ objects and many +NewsletterEdition+ through +NewsletterEditionItem+.
-  has_many :newsletter_edition_items, :as => :item, :dependent => :destroy
-  has_many :newsletter_editions, :through => :newsletter_edition_items
+  has_many :newsletter_edition_items, as: :item, dependent: :destroy
+  has_many :newsletter_editions,      through: :newsletter_edition_items
 
   # A +Page+ can be a carrousel item
-  has_many :carrousel_items, :as => :item, :dependent => :destroy
+  has_many :carrousel_items, as: :item, dependent: :destroy
 
   # See the preconditions overview for an explanation of these validations.
-  validates :title, :presence => true, :length => { :in => 2..255, :allow_blank => true }
-  validates :body,  :presence => true
+  validates :title, presence: true, length: { in: 2..255, allow_blank: true }
+  validates :body,  presence: true
 
   after_paranoid_delete :remove_associated_content
 

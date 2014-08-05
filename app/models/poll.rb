@@ -23,21 +23,21 @@
 class Poll < ActiveRecord::Base
   # Adds content node functionality to polls.
   acts_as_content_node({
-    :allowed_child_content_types => %w( PollQuestion ),
-    :allowed_roles_for_create  => %w( admin final_editor ),
-    :allowed_roles_for_destroy => %w( admin final_editor ),
-    :available_content_representations => ['content_box'],
-    :children_can_be_sorted => false
+    allowed_child_content_types:       %w( PollQuestion ),
+    allowed_roles_for_create:          %w( admin final_editor ),
+    allowed_roles_for_destroy:         %w( admin final_editor ),
+    available_content_representations: ['content_box'],
+    children_can_be_sorted:            false
   })
 
   has_children :poll_questions
 
   # See the preconditions overview for an explanation of these validations.
-  validates :title, :presence => true, :length => { :in => 2..255, :allow_blank => true }
+  validates :title, presence: true, length: { in: 2..255, allow_blank: true }
 
   # Returns the active +PollQuestion+ of this +Poll+ if one exists, returns +nil+ otherwise.
   def active_question
-    self.poll_questions.accessible.first(:conditions => { :active => true })
+    self.poll_questions.accessible.first(conditions: { active: true })
   end
 
   # Returns the image file name to be used for icons on the front end website.

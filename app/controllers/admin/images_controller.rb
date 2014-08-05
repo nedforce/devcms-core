@@ -168,7 +168,7 @@ class Admin::ImagesController < Admin::AdminController
     end
 
     def find_sibling_images
-      @sibling_images = Image.accessible.all(:conditions => ["nodes.ancestry = :parent_child_ancestry", {:parent_child_ancestry => @parent_node.child_ancestry }])
+      @sibling_images = Image.accessible.all(:conditions => ["nodes.ancestry = :parent_child_ancestry", { :parent_child_ancestry => @parent_node.child_ancestry }])
     end
 
     def render_jpg_image_data(image_data)

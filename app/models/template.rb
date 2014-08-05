@@ -24,8 +24,8 @@ class Template < ActiveRecord::Base
   has_many :nodes
 
   # See the preconditions overview for an explanation of these validations.
-  validates :title,    :presence => true, :uniqueness => true, :length => { :in => 2..255 }
-  validates :filename, :presence => true, :uniqueness => true, :length => { :in => 2..255 }
+  validates :title,    presence: true, uniqueness: true, length: { in: 2..255 }
+  validates :filename, presence: true, uniqueness: true, length: { in: 2..255 }
 
   # Prevents destruction if there are still nodes referencing this template.
   before_destroy :restrict_when_referenced

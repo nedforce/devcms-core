@@ -15,7 +15,7 @@ class CommentTest < ActiveSupport::TestCase
   end
 
   def test_should_validate_length
-    username = "FooBarBazQuuxMosHenkDef"*100
+    username = 'FooBarBazQuuxMosHenkDef' * 100
     assert_no_difference 'Comment.count' do
       create_comment(:user_name => username, :user => nil)
     end

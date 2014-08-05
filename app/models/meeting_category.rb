@@ -15,10 +15,10 @@
 #
 class MeetingCategory < ActiveRecord::Base
   # The meetings that belong to this category.
-  has_many :calendar_items, :dependent => :destroy
+  has_many :calendar_items, dependent: :destroy
 
   # See the preconditions overview for an explanation of these validations.
-  validates :name, :presence => true, :uniqueness => true, :length => { :in => 2..255 }
+  validates :name, presence: true, uniqueness: true, length: { in: 2..255 }
 
   # Finds the meeting category with the given name, or initializes a new one with
   # that name (but does *not* save it).

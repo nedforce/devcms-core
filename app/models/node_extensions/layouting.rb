@@ -4,11 +4,11 @@ module NodeExtensions::Layouting
   included do
     # Scopes, validations & associations
 
-    has_many :sections, :foreign_key => :frontpage_node_id
+    has_many :sections, foreign_key: :frontpage_node_id
     validate :should_not_hide_global_frontpage
 
-    has_many :content_representations, :dependent => :destroy, :foreign_key => :parent_id, :order => :position
-    has_many :representations,         :dependent => :destroy, :class_name => 'ContentRepresentation', :foreign_key => :content_id
+    has_many :content_representations, dependent: :destroy, foreign_key: :parent_id,  order: :position
+    has_many :representations,         dependent: :destroy, foreign_key: :content_id, class_name: 'ContentRepresentation'
 
     serialize :layout_configuration, Hash
 
@@ -68,7 +68,7 @@ module NodeExtensions::Layouting
   # Remove all layout elements and settings for this node
   def reset_layout
     content_representations.clear
-    update_attributes(:layout => nil, :layout_configuration => nil, :layout_variant => nil)
+    update_attributes(layout: nil, layout_configuration: nil, layout_variant: nil)
   end
 
   # Update and save the layout condiguration given as node attributes
@@ -91,11 +91,11 @@ module NodeExtensions::Layouting
           content_ids = content_ids.select { |cid| cid.present? && !cid.empty? }
           # Destroy removed representations
           if content_ids.empty?
-            content_representations.where("content_representations.target = ?", target).destroy_all
+            content_representations.where('content_representations.target = ?', target).destroy_all
           else
             custom_types = content_ids.select { |ci| ci.to_i.to_s != ci }
             content_ids  = content_ids.select { |ci| ci.to_i.to_s == ci }
-            content_representations.where("target = :target AND ((content_id IS NOT NULL AND ((:content_ids) IS NULL OR content_id NOT IN (:content_ids))) OR (custom_type IS NOT NULL AND ((:custom_types) IS NULL OR custom_type NOT IN (:custom_types))))", {:target => target, :content_ids => content_ids, :custom_types => custom_types}).destroy_all
+            content_representations.where("target = :target AND ((content_id IS NOT NULL AND ((:content_ids) IS NULL OR content_id NOT IN (:content_ids))) OR (custom_type IS NOT NULL AND ((:custom_types) IS NULL OR custom_type NOT IN (:custom_types))))", { target: target, content_ids: content_ids, custom_types: custom_types }).destroy_all
           end
         end
       end
@@ -110,18 +110,18 @@ module NodeExtensions::Layouting
             content_ids.each_with_index do |content_id, i|
               # Check wether this is a custom rep. or a normal content representation and handle accordingly
               if content_id.to_i.to_s != content_id
-                representation = content_representations.where("content_representations.target = ? AND content_representations.custom_type = ?", target, content_id).first
+                representation = content_representations.where('content_representations.target = ? AND content_representations.custom_type = ?', target, content_id).first
                 if representation.present?
-                  representation.update_attributes!(:position => i+1)
+                  representation.update_attributes!(position: i + 1)
                 else
-                  content_representations.create!(:custom_type => content_id, :target => target, :position => i+1)
+                  content_representations.create!(custom_type: content_id, target: target, position: i + 1)
                 end
               else
-                representation = content_representations.where("content_representations.target = ? AND content_representations.content_id = ?", target, content_id).first
+                representation = content_representations.where('content_representations.target = ? AND content_representations.content_id = ?', target, content_id).first
                 if representation.present?
-                  representation.update_attributes!(:position => i+1)
+                  representation.update_attributes!(position: i + 1)
                 else
-                  content_representations.create!(:content => Node.find(content_id), :target => target, :position => i+1)
+                  content_representations.create!(content: Node.find(content_id), target: target, position: i + 1)
                 end
               end
             end

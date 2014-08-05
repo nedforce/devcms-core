@@ -65,7 +65,8 @@ class CalendarItem < Event
   before_validation :assign_repeat_identifier_if_repeating, :on => :create
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of  :start_time, :end_time
+  validates :start_time, presence: true
+  validates :end_time,   presence: true
   validates_inclusion_of :repeating,                   :in => [ true, false ], :allow_blank => true,                    :on => :create
   validates_inclusion_of :repeat_interval_granularity, :in => REPEAT_INTERVAL_GRANULARITIES_VALUES, :if => :repeating?, :on => :create
   validates_inclusion_of :repeat_interval_multiplier,  :in => REPEAT_INTERVAL_MULTIPLIER_RANGE,     :if => :repeating?, :on => :create
@@ -95,9 +96,9 @@ class CalendarItem < Event
   
   # Translate interval granularities
   def self.repeat_interval_granularities
-    @repeat_interval_granularities ||= CalendarItem::REPEAT_INTERVAL_GRANULARITIES.to_a.map do | k, v |
+    @repeat_interval_granularities ||= CalendarItem::REPEAT_INTERVAL_GRANULARITIES.to_a.map do |k, v|
       [ I18n.t(k, :scope => :calendars), v ]
-    end.sort { | a, b | a.last <=> b.last }
+    end.sort { |a, b| a.last <=> b.last }
   end
 
   # Destroy calendar item and all of its repetitions
@@ -110,12 +111,10 @@ class CalendarItem < Event
           repetition.destroy
         end
       end
+    elsif paranoid_delete
+      calendar_item.node.paranoid_delete!
     else
-      if paranoid_delete
-        calendar_item.node.paranoid_delete!
-      else
-        calendar_item.destroy
-      end
+      calendar_item.destroy
     end
   end
 
@@ -145,7 +144,7 @@ class CalendarItem < Event
   end
 
   def registration_for_user(user)
-    event_registrations.first(:conditions => { :user_id => user.id })
+    event_registrations.first(conditions: { user_id: user.id })
   end
 
 protected
@@ -203,7 +202,7 @@ protected
       next_start_time += span
       next_end_time   += span
     end
-    
+
     true
   end
 

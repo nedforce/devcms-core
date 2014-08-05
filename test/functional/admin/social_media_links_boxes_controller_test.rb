@@ -141,7 +141,7 @@ class Admin::SocialMediaLinksBoxesControllerTest < ActionController::TestCase
   protected
 
   def create_social_media_links_box(attributes = {}, options = {})
-    post :create, {:parent_node_id => nodes(:root_section_node).id,
+    post :create, { :parent_node_id => nodes(:root_section_node).id,
          :social_media_links_box => { :title => 'new title',
          :twitter_url  => 'http://www.twitter.com',  :facebook_url => 'http://www.facebook.com',
          :linkedin_url => 'http://www.linkedin.com', :youtube_url  => 'http://www.youtube.com',

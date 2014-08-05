@@ -29,8 +29,8 @@ class HtmlPage < ActiveRecord::Base
   })
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of :title, :body
-  validates_length_of   :title, :in => 2..255, :allow_blank => true
+  validates :title, presence: true, length: { in: 2..255, allow_blank: true }
+  validates :body,  presence: true
 
   # Returns the preamble and body as the tokens for indexing.
   def content_tokens

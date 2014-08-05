@@ -39,11 +39,9 @@ class ContactBox < ActiveRecord::Base
    })
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of :title, :contact_information, :default_text
-
-  validates_length_of :title, :in => 3..255
-
-  validates_length_of :contact_information, :default_text, :minimum => 3
+  validates :title,               presence: true, length: { in: 3..255 }
+  validates :contact_information, presence: true, length: { minimum: 3 }
+  validates :default_text,        presence: true, length: { minimum: 3 }
 
   validates_length_of :monday_text,
                       :tuesday_text,

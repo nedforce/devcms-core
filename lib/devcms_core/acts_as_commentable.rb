@@ -4,7 +4,7 @@ module DevcmsCore
 
     module ClassMethods
       def acts_as_commentable
-        has_many :comments, :as => :commentable, :dependent => :destroy, :order => 'created_at ASC'
+        has_many :comments, as: :commentable, dependent: :destroy, order: 'created_at ASC'
       end
 
       # Helper method to lookup for comments for a given object.

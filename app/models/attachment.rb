@@ -50,16 +50,17 @@ class Attachment < ActiveRecord::Base
   # Store metadata
   before_validation :set_metadata
 
-  validates_presence_of     :content_type, :size
-  validates_numericality_of :size, :height, :width, :allow_nil => true
+  validates :content_type, presence: true
+  validates :size,         presence: true, numericality: { allow_nil: true }
+  validates :height,                       numericality: { allow_nil: true }
+  validates :width,                        numericality: { allow_nil: true }
 
   # The binary data of the attachment is stored in a separate +db_file+ model.
   belongs_to :db_file
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of :title
-  validates_length_of   :title,    :in => 2..255, :allow_blank => true
-  validates_format_of   :filename, :with => /[a-z0-9\-_]+/i
+  validates :title, presence: true, length: { in: 2..255, allow_blank: true }
+  validates_format_of :filename, :with => /[a-z0-9\-_]+/i
 
   # Returns the file extension of this attachment or nil if it has none.
   def extension
@@ -105,8 +106,8 @@ protected
   def set_metadata
     if file?
       self.content_type ||= file.file.content_type || Mime::Type.lookup_by_extension(file.file.extension)
-      self.size ||= file.file.size
-      self.filename ||= file.file.original_filename
+      self.size         ||= file.file.size
+      self.filename     ||= file.file.original_filename
     end
   end
 end

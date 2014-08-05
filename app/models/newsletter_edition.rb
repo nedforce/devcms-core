@@ -25,8 +25,8 @@
 class NewsletterEdition < ActiveRecord::Base
   # Adds content node functionality to newsletter editions.
   acts_as_content_node({
-    :show_in_menu => false,
-    :copyable => false
+    show_in_menu: false,
+    copyable:     false
   })
 
   # This content type needs approval when created or altered by an editor.
@@ -36,21 +36,22 @@ class NewsletterEdition < ActiveRecord::Base
   has_parent :newsletter_archive
 
   # A +NewsletterEdition+ has many +NewsletterEditionItem+ objects and many items through +NewsletterEditionItem+.
-  has_many :newsletter_edition_items,  :dependent => :destroy
-  has_many :newsletter_edition_queues, :dependent => :destroy
+  has_many :newsletter_edition_items,  dependent: :destroy
+  has_many :newsletter_edition_queues, dependent: :destroy
 
   # A +NewsletterEdition+ has one +Node+ object.
-  belongs_to :header_image_node, :class_name => "Node"
+  belongs_to :header_image_node, class_name: 'Node'
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of :title, :body, :newsletter_archive
-  validates_length_of   :title, :in => 2..255, :allow_blank => true
+  validates :title,              presence: true, length: { in: 2..255, allow_blank: true }
+  validates :body,               presence: true
+  validates :newsletter_archive, presence: true
 
   after_paranoid_delete :remove_associated_content
 
   # Retrieves the items belonging to this newsletter edition in correct order.
   def items
-    self.newsletter_edition_items.all(:order => 'position ASC').map { |ed_item| ed_item.item }
+    self.newsletter_edition_items.order('position ASC').all.map { |ed_item| ed_item.item }
   end
 
   # Returns the number of items belonging to this newsletter edition.
@@ -69,7 +70,7 @@ class NewsletterEdition < ActiveRecord::Base
     # Add the new items.
     if items
       items.each_index do |index|
-        self.newsletter_edition_items.create(:item => Node.find(items.at(index)).content, :position => index)
+        self.newsletter_edition_items.create(item: Node.find(items.at(index)).content, position: index)
       end
     end
   end

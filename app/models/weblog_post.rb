@@ -25,22 +25,22 @@
 class WeblogPost < ActiveRecord::Base
   # Adds content node functionality to weblog posts.
   acts_as_content_node({
-    :allowed_child_content_types => %w( Image ),
-    :allowed_roles_for_create  => [],
-    :allowed_roles_for_update  => %w( admin final_editor ),
-    :allowed_roles_for_destroy => %w( admin final_editor ),
-    :show_in_menu => false,
-    :copyable => false,
-    :nested_resource => true
+    allowed_child_content_types: %w( Image ),
+    allowed_roles_for_create:    [],
+    allowed_roles_for_update:    %w( admin final_editor ),
+    allowed_roles_for_destroy:   %w( admin final_editor ),
+    show_in_menu:                false,
+    copyable:                    false,
+    nested_resource:             true
   })
 
   # A +WeblogPost+ belongs to a +Weblog+.
   has_parent :weblog
 
   # See the preconditions overview for an explanation of these validations.
-  validates :title,  :presence => true, :length => { :in => 2..255, :allow_blank => true }
-  validates :body,   :presence => true
-  validates :weblog, :presence => true
+  validates :title,  presence: true, length: { in: 2..255, allow_blank: true }
+  validates :body,   presence: true
+  validates :weblog, presence: true
 
   # Alternative text for tree nodes.
   def tree_text(node)

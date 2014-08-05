@@ -21,7 +21,7 @@
 # * Will destroy +attachment+ when this file is destroyed.
 #
 class DbFile < ActiveRecord::Base
-  has_one :attachment, :dependent => :destroy
+  has_one :attachment, dependent: :destroy
 
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of :loid

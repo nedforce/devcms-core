@@ -1,6 +1,6 @@
 = bread_crumbs_for(@forum_thread.forum_topic.node, :include_root => false, :minimum_crumbs => 2)
 .regularPage.forumThread
-  %h1{:class => ('closed' if @forum_thread.closed? )}
+  %h1{ :class => ('closed' if @forum_thread.closed?) }
   %span.prefix= t 'forums.forum_thread'
   = h @forum_thread.title
   %p.forumThreadDetails= "#{t 'forums.created_on'} #{l @forum_thread.created_at, :format => :long} #{t 'forums.by'} #{content_tag(:span, truncate(h(@forum_thread.user.screen_name), :length => 12), :class => 'userLogin')}, #{@forum_thread.number_of_replies} #{t((@forum_thread.number_of_replies == 1) ? 'forums.forum_post' : 'forums.forum_posts')}".html_safe
@@ -30,7 +30,7 @@
     - else
       .forumPosts
         - @replies.each do |reply|
-          %div{:class => "#{cycle('oddForumPost', 'evenForumPost')} clearfix", :id => "reply#{reply.id.to_s}"}
+          %div{ :class => "#{cycle('oddForumPost', 'evenForumPost')} clearfix", :id => "reply#{reply.id.to_s}" }
             %p.forumPostDetails
               %span.userLogin= truncate(h(reply.user_name), :length => 12)
               = "#{I18n.t('forums.at_time')} #{l(reply.created_at, :format => :long)}"
