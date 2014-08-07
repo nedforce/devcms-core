@@ -33,6 +33,7 @@ class Response < ActiveRecord::Base
       all.each do |response|
         row_fields = []
         response.response_fields.includes(:contact_form_field).order('contact_form_fields.position ASC').each do |field|
+          # TODO: create a method in the +ResponseField+ model for this. Something like +to_csv+.
           if field.value.blank?
             row_fields << ''
           elsif field.file?
