@@ -19,11 +19,12 @@
 #
 class NewsletterEditionItem < ActiveRecord::Base
   belongs_to :newsletter_edition
-  belongs_to :item, :polymorphic => true
+  belongs_to :item, polymorphic: true
 
   # See the preconditions overview for an explanation of these validations.
+  validates :newsletter_edition, presence: true
+  validates :item,               presence: true
+  validates :position,           numericality: { allow_blank: true }
   validates_numericality_of :newsletter_edition_id, :item_id
-  validates_presence_of     :item, :newsletter_edition
   validates_uniqueness_of   :item_id,  :scope => [ :item_type, :newsletter_edition_id ]
-  validates_numericality_of :position, :allow_blank => true
 end

@@ -25,17 +25,17 @@
 class Section < ActiveRecord::Base
   # Adds content node functionality to sections.
   acts_as_content_node({
-    :allowed_child_content_types => %w(
-      AlphabeticIndex Attachment AttachmentTheme Calendar Carrousel CombinedCalendar ContactBox ContactForm Feed Forum
-      HtmlPage Image LinksBox InternalLink ExternalLink NewsArchive NewsletterArchive NewsViewer
-      Page Poll SearchPage Section SocialMediaLinksBox TopHitsPage WeblogArchive
+    allowed_child_content_types: %w(
+      AlphabeticIndex Attachment AttachmentTheme Calendar Carrousel CombinedCalendar ContactBox ContactForm
+      Feed Forum HtmlPage Image LinksBox InternalLink ExternalLink NewsArchive NewsletterArchive
+      NewsViewer Page Poll SearchPage Section SocialMediaLinksBox TopHitsPage WeblogArchive
     ),
-    :allowed_roles_for_create  => %w( admin final_editor ),
-    :allowed_roles_for_destroy => %w( admin final_editor ),
-    :available_content_representations => ['content_box'],
-    :has_own_content_box => true,
-    :expiration_container => true,
-    :has_import => true
+    allowed_roles_for_create:          %w( admin final_editor ),
+    allowed_roles_for_destroy:         %w( admin final_editor ),
+    available_content_representations: ['content_box'],
+    has_own_content_box:               true,
+    expiration_container:              true,
+    has_import:                        true
   })
 
   # This content type needs approval when created or altered by an editor.
@@ -45,11 +45,11 @@ class Section < ActiveRecord::Base
   belongs_to :frontpage_node, class_name: 'Node'
 
   # See the preconditions overview for an explanation of these validations.
-  validates :title, :presence => true, :length => { :in => 2..255, :allow_blank => true }
-  validates_numericality_of :frontpage_node_id, :allow_nil => true,                                            :on => :update
-  validates_presence_of     :frontpage_node, :unless => Proc.new { |section| section.frontpage_node_id.nil? }, :on => :update
+  validates :title, presence: true, length: { in: 2..255, allow_blank: true }
+  validates_numericality_of :frontpage_node_id, allow_nil: true,                                            on: :update
+  validates_presence_of     :frontpage_node, unless: Proc.new { |section| section.frontpage_node_id.nil? }, on: :update
 
-  before_validation :set_frontpage_node_to_nil_if_frontpage_node_is_own_node, :on => :update
+  before_validation :set_frontpage_node_to_nil_if_frontpage_node_is_own_node, on: :update
 
   # Ensures +frontpage_node+ should be nil when the +Section+ is created.
   validate :frontpage_node_is_nil, on: :create

@@ -14,11 +14,11 @@
 class SearchPage < ActiveRecord::Base
   # Adds content node functionality to search_pages.
   acts_as_content_node({
-    :available_content_representations => ['content_box']
+    available_content_representations: ['content_box']
   })
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of :title
+  validates :title, presence: true
 
   # Returns the sidebox title for +SearchPage+.
   def self.sidebox_title

@@ -54,12 +54,11 @@ class AgendaItem < ActiveRecord::Base
   belongs_to :agenda_item_category
 
   # See the preconditions overview for an explanation of these validations.
-  validates :calendar_item, presence: true
-  validates :description,   presence: true
+  validates :calendar_item,           presence: true
+  validates :description,             presence: true
+  validates :speaking_rights,         numericality: { allow_nil: true }, inclusion: { in: SPEAKING_RIGHT_OPTIONS.keys, allow_nil: true }
+  validates :agenda_item_category_id, numericality: { allow_nil: true }
   validates_associated      :agenda_item_category,    :if => :has_agenda_item_category?
-  validates_numericality_of :agenda_item_category_id,                             :allow_nil => true
-  validates_numericality_of :speaking_rights,                                     :allow_nil => true
-  validates_inclusion_of    :speaking_rights, :in => SPEAKING_RIGHT_OPTIONS.keys, :allow_nil => true
   validate                  :ensure_associated_calendar_item_is_a_meeting
 
   # Returns the +name+ of the associated AgendaItemCategory, or +nil+ if no AgendaItemCategory is associated.

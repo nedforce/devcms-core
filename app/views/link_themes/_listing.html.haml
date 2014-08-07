@@ -2,6 +2,6 @@
   %ul.section_items
     - items.each do |node|
       %li
-        = image_tag "icons/#{node.content.try :icon_filename}", :class => 'icon', :alt => '', :title => node.content.title
+        = image_tag "icons/#{node.content.try :icon_filename}", class: 'icon', alt: '', title: node.content.title
         = link_to_node node.content.title, node
         %p= node.content.description

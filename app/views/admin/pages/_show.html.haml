@@ -4,10 +4,10 @@
   .metadata.clearfix
     - if record.publication_start_date.present?
       %p.publicationDate
-        == #{t 'shared.published'}: #{l record.publication_start_date, :format => :long}
+        == #{t 'shared.published'}: #{l record.publication_start_date, format: :long}
     - unless record.new_record?
       %p.lastUpdateDate
-        == #{t 'shared.last_updated'}: #{l record.updated_at, :format => :long}
+        == #{t 'shared.last_updated'}: #{l record.updated_at, format: :long}
 
   .content
     - if record.preamble

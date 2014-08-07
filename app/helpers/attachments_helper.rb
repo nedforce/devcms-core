@@ -1,22 +1,27 @@
 module AttachmentsHelper
   # Returns the proper attachment icon based on the given +attachment+ extension.
   def attachment_icon(attachment, options = {})
-    case attachment.extension
+    image_tag("icons/mime_types/#{icon_name(attachment.extension)}.png", { alt: '' }.merge(options))
+  end
+
+  protected
+
+  def icon_name(extension)
+    case extension
     when 'jpg', 'jpeg', 'gif', 'png', 'bmp', 'tif', 'tiff'
-      file_name = 'image.png'
+      'image'
     when 'doc', 'docx', 'odt'
-      file_name = 'word.png'
+      'word'
     when 'xls', 'xlsx', 'csv', 'ods'
-      file_name = 'excel.png'
+      'excel'
     when 'ppt', 'pptx', 'pps', 'ppsx', 'odp'
-      file_name = 'powerpoint.png'
+      'powerpoint'
     when 'tar', 'zip', 'rar', 'gz'
-      file_name = 'compressed.png'
+      'compressed'
     when 'pdf', 'ps'
-      file_name = 'pdf.png'
+      'pdf'
     else
-      file_name = 'default.png'
+      'default'
     end
-    image_tag("icons/mime_types/#{file_name}", { :alt => '' }.merge(options))
   end
 end

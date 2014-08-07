@@ -8,21 +8,22 @@ class RoleAssignment < ActiveRecord::Base
   ALL_ROLES = PRIVILEGED_ROLES + READONLY_ROLES
 
   ROLES = {
-    :admin        => I18n.t('roles.admin'),
-    :editor       => I18n.t('roles.editor'),
-    :final_editor => I18n.t('roles.final_editor'),
-    :read_access  => I18n.t('roles.private'),
-    :indexer      => I18n.t('roles.indexer')
+    admin:        I18n.t('roles.admin'),
+    editor:       I18n.t('roles.editor'),
+    final_editor: I18n.t('roles.final_editor'),
+    read_access:  I18n.t('roles.private'),
+    indexer:      I18n.t('roles.indexer')
   }
 
   ALLOWED_TYPES = %w(
     Calendar Feed NewsArchive NewsletterArchive Page PermitArchive Poll ProductCatalogue ResearchArchive Section Site Weblog WeblogArchive
   )
 
-  validates_presence_of     :user, :node, :name
+  validates :user, presence: true
+  validates :node, presence: true
+  validates :name, presence: true, inclusion: { in: RoleAssignment::ROLES.keys.map(&:to_s) }
   validates_numericality_of :user_id, :node_id
   validates_uniqueness_of   :node_id, :scope => :user_id
-  validates_inclusion_of    :name,    :in => RoleAssignment::ROLES.keys.map(&:to_s)
   validate :secure_user_for_write_access, :if => :is_privileged?
   validate :content_class
   validate :root_if_admin

@@ -24,5 +24,5 @@ class DbFile < ActiveRecord::Base
   has_one :attachment, dependent: :destroy
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of :loid
+  validates :loid, presence: true
 end

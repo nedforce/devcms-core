@@ -2,9 +2,9 @@ module NodeExtensions::TreeDelegation
   extend ActiveSupport::Concern   
 
   included do
-    has_ancestry :cache_depth => true
-    # sortable :scope => :ancestry
-    acts_as_list :scope => :ancestry
+    has_ancestry cache_depth: true
+    # sortable scope: :ancestry
+    acts_as_list scope: :ancestry
 
     validate :parent_should_be_valid, :unless => lambda { |n| Node.count.zero? || (Node.root && Node.root == n) }
     validate :parent_should_allow_type
@@ -190,7 +190,7 @@ module NodeExtensions::TreeDelegation
         when :left
           insert_at!(target.position)
         when :right
-          insert_at!(target.position + 1 )
+          insert_at!(target.position + 1)
         end
       else
         raise ActiveRecord::ActiveRecordError, "Move failed: #{self.errors.full_messages.pretty_inspect}"
@@ -207,7 +207,7 @@ module NodeExtensions::TreeDelegation
         ordered_ids = ids.flatten.uniq
         ordered_ids.each do |child_id|
           position = ordered_ids.index(child_id) + 1
-          self.class.update_all({ :position => position }, { :id => child_id })
+          self.class.update_all({ position: position }, { id: child_id })
         end
       end
     end

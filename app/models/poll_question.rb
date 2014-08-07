@@ -39,9 +39,9 @@ class PollQuestion < ActiveRecord::Base
   has_many :user_votes, class_name: 'UserPollQuestionVote', dependent: :destroy
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of  :poll, :question
-  validates_length_of    :question, in: 2..255,        allow_blank: true
-  validates_inclusion_of :active,   in: [true, false], allow_nil: true
+  validates :poll,     presence: true
+  validates :question, presence: true, length: { in: 2..255, allow_blank: true }
+  validates :active,   inclusion: { in: [true, false], allow_nil: true }
 
   # Ensures that all the associated +PollOption+ objects are validated when this
   # +PollQuestion+ is validated.

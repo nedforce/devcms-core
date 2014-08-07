@@ -35,7 +35,7 @@ class ContentCopy < ActiveRecord::Base
   belongs_to :copied_node, class_name: 'Node', foreign_key: 'copied_node_id'
 
   # See the preconditions overview for an explanation of these validations.
-  validates_presence_of     :copied_node
+  validates :copied_node, presence: true
   validates_numericality_of :copied_node_id
   validate :ensure_copied_node_is_not_associated_with_a_content_copy_content_node
   validate :ensure_copied_node_is_associated_with_a_copyable_content_node

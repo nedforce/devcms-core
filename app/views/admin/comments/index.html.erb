@@ -1,7 +1,7 @@
 <script type="text/javascript">
 //<![CDATA[
 
-Ext.onReady(function(){
+Ext.onReady(function () {
     perPage = 25
 
     Ext.QuickTips.init();
@@ -53,8 +53,8 @@ Ext.onReady(function(){
           [ 'user_name', 'subject', 'comment', 'updated_at' ]
         ),
 
-        baseParams: {comment_type: '<%= params[:comment_type] -%>'},
-        autoLoad: {params: {start: 0, limit: perPage }}
+        baseParams: { comment_type: '<%= params[:comment_type] -%>' },
+        autoLoad: { params: { start: 0, limit: perPage } }
     });
 
     store.setDefaultSort('updated_at', 'DESC');
@@ -120,17 +120,17 @@ Ext.onReady(function(){
         if (button == 'yes')
         {
             var selectedRows = grid.selModel.getSelections();
-            selectedRows.each(function(item) {
+            selectedRows.each(function (item) {
 
                 Ext.Ajax.request({
                     url: 'comments/' + item.id + '.json',
                     method: 'POST',
                     headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' },
                     params: "_method=delete&comment_type=" + store.baseParams.comment_type,
-                    callback: function(options, success, response){
-                      if(!success){
+                    callback: function (options, success, response) {
+                      if (!success) {
                           Ext.ux.alertResponseError(response)
-                      }else{
+                      } else {
                           store.reload();
                       }
                     }
@@ -147,10 +147,10 @@ Ext.onReady(function(){
             params: "_method=put&comment_type=" + store.baseParams.comment_type +
                     "&comment[" + editEvent.field + "]=" + editEvent.value,
 
-            failure: function(response,options) {
+            failure: function (response,options) {
                 Ext.MessageBox.alert('<%= I18n.t("comments.error") %>','<%= I18n.t("comments.could_not_save") %>');
             },
-            success: function(response,options) {
+            success: function (response,options) {
                 store.commitChanges();
             }
         });

@@ -1,4 +1,4 @@
 - if @link.is_a?(InternalLink)
-  = render :partial => 'admin/internal_links/form', :locals => { :form => form, :record => record }
+  = render partial: 'admin/internal_links/form', locals: { form: form, record: record }
 - else
-  = render :partial => 'admin/external_links/form', :locals => { :form => form, :record => record }
+  = render partial: 'admin/external_links/form', locals: { form: form, record: record }

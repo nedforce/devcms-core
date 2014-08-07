@@ -52,7 +52,7 @@ class ContentRepresentation < ActiveRecord::Base
   validate :content_should_be_allowed_as_content_representation,  :unless => :custom_type
   validate :custom_type_should_exist_for_parent,                  :if     => :custom_type
 
-  before_validation :nillify_custom_type, :if => lambda { |cr| cr.custom_type.blank? }
+  before_validation :nillify_custom_type, if: lambda { |cr| cr.custom_type.blank? }
 
   # Returns the name of the contentbox content partial based on node and layout
   # Can be overwitten for special cases.
@@ -70,8 +70,8 @@ protected
   end
 
   def content_should_not_be_private
-    if self.content && self.content.private?
-      errors.add(:content, :should_not_be_private) if self.content.top_level_private_ancestor != self.parent.top_level_private_ancestor
+    if self.content && self.content.private? && self.content.top_level_private_ancestor != self.parent.top_level_private_ancestor
+      errors.add(:content, :should_not_be_private)
     end
   end
 

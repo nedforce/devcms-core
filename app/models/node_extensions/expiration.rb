@@ -5,23 +5,23 @@ module NodeExtensions::Expiration
   included do
     scope :expired, lambda { |*args|
       date = args.first.is_a?(Date) ? args.first : Date.today
-      { :conditions => ['nodes.expires_on IS NOT NULL AND nodes.expires_on <= ? AND nodes.content_type IN (?)', date, Node.expirable_content_types] }
+      { conditions: ['nodes.expires_on IS NOT NULL AND nodes.expires_on <= ? AND nodes.content_type IN (?)', date, Node.expirable_content_types] }
     }
 
-    before_validation :set_default_expires_on, :if => :expiration_required?
+    before_validation :set_default_expires_on, if: :expiration_required?
 
-    validate :expires_on_valid?, :ensure_valid_responsible_user_role, :if => lambda { |node| node.expires_on_changed? || (node.content && node.content.changed?) }
+    validate :expires_on_valid?, :ensure_valid_responsible_user_role, if: lambda { |node| node.expires_on_changed? || (node.content && node.content.changed?) }
 
     if SETTLER_LOADED
-      validates_presence_of :expires_on, :if => :expiration_required?
+      validates_presence_of :expires_on, if: :expiration_required?
     end
 
-    validates_inclusion_of :expiration_notification_method, :in => ['inherit', 'responsible_user', 'email'], :allow_blank => true
+    validates :expiration_notification_method, inclusion: { in: ['inherit', 'responsible_user', 'email'], allow_blank: true }
 
-    before_save :empty_expires_on!, :unless => :expirable?
+    before_save :empty_expires_on!, unless: :expirable?
 
     attr_accessor :cascade_expires_on
-    after_save :cascade_expires_on!, :if => :cascade_expires_on?
+    after_save :cascade_expires_on!, if: :cascade_expires_on?
   end
 
   module ClassMethods
@@ -36,7 +36,7 @@ module NodeExtensions::Expiration
     elsif self.expiration_notification_method == 'responsible_user' && self.responsible_user.present?
       self.responsible_user
     else
-      self.ancestors.first(:conditions => { :expiration_notification_method => ['email', 'responsible_user'] }, :order => 'ancestry DESC').inherited_expiration_email_recipient
+      self.ancestors.first(conditions: { expiration_notification_method: ['email', 'responsible_user'] }, order: 'ancestry DESC').inherited_expiration_email_recipient
     end
   end
 
