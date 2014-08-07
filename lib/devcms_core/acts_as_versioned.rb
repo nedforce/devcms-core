@@ -19,12 +19,12 @@ module DevcmsCore
     end
 
     def with_versioning(options = {})
-      self.acts_as_versioned_should_create_version = options[:should_create_version] || false
+      self.acts_as_versioned_should_create_version    = options[:should_create_version]    || false
       self.acts_as_versioned_extra_version_attributes = options[:extra_version_attributes] || {}
 
       yield self
     ensure
-      self.acts_as_versioned_should_create_version = false
+      self.acts_as_versioned_should_create_version    = false
       self.acts_as_versioned_extra_version_attributes = {}
     end
 
@@ -73,6 +73,7 @@ module DevcmsCore
     end
 
     def acts_as_versioned_after_save_callback
+      # TODO: refactor double unless
       unless acts_as_versioned_should_create_version?
         versions.clear unless versions.count.zero?
       end
