@@ -166,6 +166,8 @@ class User < ActiveRecord::Base
       user.update_attribute :failed_logins, 0
       user
     elsif user
+      # TODO: move this to a separate +block+ method, so we can actually reuse it;
+      #       also make the number of failed logins a +Settler+ setting.
       if user.is_privileged? && user.failed_logins == 9 # 10th failed attempt on a privileged user...
         user.blocked = true
         user.failed_logins = 10
@@ -251,7 +253,7 @@ class User < ActiveRecord::Base
   def has_any_role?
     self.role_assignments.exists?
   end
-  
+
   # Checks whether this user has a +RoleAssignment+ for the given node or one of its ancestors.
   # Faster than the other 'has_*_role* methods because of memoizing.
   # If no node is supplied, checks whether a user has whatever role on whatever node.
