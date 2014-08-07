@@ -161,7 +161,7 @@ class User < ActiveRecord::Base
 
   # Authenticates a user by their login and unencrypted password. Returns the user if successfully authenticated, elsen nil.
   def self.authenticate(login, password)
-    user = first(conditions: ['LOWER(login) = LOWER(?)', login.downcase]) if login
+    user = first(conditions: ['LOWER(login) = LOWER(?)', login]) if login
     if user && user.authenticated?(password)
       user.update_attribute :failed_logins, 0
       user
