@@ -59,7 +59,7 @@ class ForumThreadsController < ApplicationController
     @start_post.valid?
 
     @forum_thread_valid = @forum_thread.errors.size == 2 && @forum_thread.errors[:forum_topic].any? && @forum_thread.errors[:forum_topic_id].any?
-    @start_post_valid   = @start_post.errors.size   == 2 && @start_post.errors[:forum_thread].any? && @start_post.errors[:forum_thread_id].any?
+    @start_post_valid   = @start_post.errors.size   == 2 && @start_post.errors[:forum_thread].any?  && @start_post.errors[:forum_thread_id].any?
 
     if @forum_thread_valid && @start_post_valid
       ActiveRecord::Base.transaction do
@@ -124,13 +124,13 @@ class ForumThreadsController < ApplicationController
   def open
     respond_to do |format|
       if @forum_thread.open
-        flash[:notice] = I18n.t('forums.open_successfull')
+        flash[:notice] = I18n.t('forums.open_successful')
         format.html { redirect_to [ @forum_topic, @forum_thread ] }
         format.xml  { head :ok }
       else
-        flash[:warning] = I18n.t('forums.open_unsuccessfull')
+        flash[:warning] = I18n.t('forums.open_unsuccessful')
         format.html { redirect_to [ @forum_topic, @forum_thread ] }
-        format.xml  { render :xml => { :error => I18n.t('forums.open_unsuccessfull') } }
+        format.xml  { render :xml => { :error => I18n.t('forums.open_unsuccessful') } }
       end
     end
   end
@@ -138,15 +138,15 @@ class ForumThreadsController < ApplicationController
   # * PUT /forum_topics/1/forum_threads/:id/close
   # * PUT /forum_topics/1/forum_threads/:id/close.xml
   def close
-    respond_to do |format|      
+    respond_to do |format|
       if @forum_thread.close
-        flash[:notice] = I18n.t('forums.close_successfull')
+        flash[:notice] = I18n.t('forums.close_successful')
         format.html { redirect_to [ @forum_topic, @forum_thread ] }
         format.xml  { head :ok }
       else
-        flash[:warning] = I18n.t('forums.close_unsuccessfull')
+        flash[:warning] = I18n.t('forums.close_unsuccessful')
         format.html { redirect_to [ @forum_topic, @forum_thread ] }
-        format.xml  { render :xml => { :error => I18n.t('forums.close_unsuccessfull') } }
+        format.xml  { render :xml => { :error => I18n.t('forums.close_unsuccessful') } }
       end
     end
   end

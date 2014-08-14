@@ -453,8 +453,8 @@ nl:
     add_to: Forum toevoegen aan
     body: Tekst
     by: door
-    close_successfull: Discussie gesloten.
-    close_unsuccessfull: Kon discussie niet sluiten!
+    close_successful: Discussie gesloten.
+    close_unsuccessful: Kon discussie niet sluiten!
     closed_lock: Icoon van een gesloten slot
     create_forum_post: Reageren
     create_forum_thread: Discussie starten
@@ -488,8 +488,8 @@ nl:
     number_of_threads: Aantal discussies
     at_time: op
     open_lock: Icoon van een open slot
-    open_successfull: Discussie heropend.
-    open_unsuccessfull: Kon discussie niet heropenen!
+    open_successful: Discussie heropend.
+    open_unsuccessful: Kon discussie niet heropenen!
     recent_threads: Recent actieve discussies.
     saved_forum: Forum opgeslagen!
     saved_topic: Onderwerp opgeslagen!
@@ -694,9 +694,9 @@ nl:
     saved_edition: Nieuwseditie opgeslagen!
     select_one: Selecteer eerst een gebruiker
     subscribe: Abonneren
-    subscribe_successfull: U bent succesvol geabonneerd op deze nieuwsbrief
+    subscribe_successful: U bent succesvol geabonneerd op deze nieuwsbrief
     subscribe_to_this_newsletter: Abonneren op deze nieuwsbrief
-    subscribe_unsuccessfull: U bent reeds geabonneerd op deze nieuwsbrief
+    subscribe_unsuccessful: U bent reeds geabonneerd op deze nieuwsbrief
     subscriptions: Abonnees van nieuwsbrief
     text: Tekst
     time: Tijd
@@ -704,9 +704,9 @@ nl:
     type: Soort
     unsubscribe: Afmelden
     unsubscribe_from_this_newsletter: Afmelden van deze nieuwsbrief
-    unsubscribe_successfull: U bent succesvol afgemeld van de nieuwsbrief
+    unsubscribe_successful: U bent succesvol afgemeld van de nieuwsbrief
     unsubscribe_tooltip: Klik hier om de geselecteerde gebruiker af te melden
-    unsubscribe_unsuccessfull: U bent niet geabonneerd op de nieuwsbrief
+    unsubscribe_unsuccessful: U bent niet geabonneerd op de nieuwsbrief
     unsubscribe_user: Geselecteerde gebruiker afmelden
     unsubscribing: Bezig met afmelden gebruiker
     unsubscription_failed: Afmelden van gebruiker mislukt
@@ -729,14 +729,14 @@ nl:
     count_message: "Item {0} tot {1} van {2}"
     create_failed: Toevoegen nieuwsitem mislukt
     delete_failed: Verwijderen nieuwsitem mislukt
-    empty_message: Geen items om weer te geven    
+    empty_message: Geen items om weer te geven
     error: Fout
     of_page: "van {0}"
     page: Pagina
   news_viewer_archives:
     create_failed: Toevoegen nieuwsarchief mislukt
     delete_failed: Verwijderen nieuwsarchief mislukt
-    error: Fout    
+    error: Fout
   nodes:
     alias_count_msg: "Aliassen {0} tot {1} van {2} worden weergegeven"
     alias_delete_tooltip: Klik hier om de URL alias van de geselecteerde node te verwijderen

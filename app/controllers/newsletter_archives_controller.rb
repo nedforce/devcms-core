@@ -3,10 +3,10 @@
 
 class NewsletterArchivesController < ApplicationController
   # All actions needs a +NewsletterArchive+ object to work with.
-  before_filter :find_newsletter_archive, :only => [ :show, :subscribe, :unsubscribe ]
+  before_filter :find_newsletter_archive, :only => [:show, :subscribe, :unsubscribe]
 
   # Require user to be logged in for the +subscribe+ and +unsubscribe+ actions.
-  before_filter :login_required, :only => [ :subscribe, :unsubscribe ]
+  before_filter :login_required, :only => [:subscribe, :unsubscribe]
 
   # Enable unsubscrubing using regular hyperlinks and <tt>:method => :delete</tt>.
   # See ApplicationController for more details.
@@ -41,7 +41,7 @@ class NewsletterArchivesController < ApplicationController
           if request.xhr?
             render :partial => '/newsletter_archives/content_box_content', :locals => { :node => @node }
           else
-            flash[:notice] = I18n.t('newsletters.subscribe_successfull')
+            flash[:notice] = I18n.t('newsletters.subscribe_successful')
             redirect_to @newsletter_archive
           end
         end
@@ -51,7 +51,7 @@ class NewsletterArchivesController < ApplicationController
           if request.xhr?
             render :partial => '/newsletter_archives/content_box_content', :locals => { :node => @node }
           else
-            flash[:warning] = I18n.t('newsletters.subscribe_unsuccessfull')
+            flash[:warning] = I18n.t('newsletters.subscribe_unsuccessful')
             redirect_to @newsletter_archive
           end
         end
@@ -70,7 +70,7 @@ class NewsletterArchivesController < ApplicationController
           if request.xhr?
             render :partial => '/newsletter_archives/content_box_content', :locals => { :node => @node }
           else
-            flash[:notice] = I18n.t('newsletters.unsubscribe_successfull')
+            flash[:notice] = I18n.t('newsletters.unsubscribe_successful')
             redirect_back_or_default(@newsletter_archive)
           end
         end
@@ -80,7 +80,7 @@ class NewsletterArchivesController < ApplicationController
           if request.xhr?
             render :partial => '/newsletter_archives/content_box_content', :locals => { :node => @node }
           else
-            flash[:warning] = I18n.t('newsletters.unsubscribe_unsuccessfull')
+            flash[:warning] = I18n.t('newsletters.unsubscribe_unsuccessful')
             redirect_back_or_default(@newsletter_archive)
           end
         end
