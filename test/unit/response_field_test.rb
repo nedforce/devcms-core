@@ -4,7 +4,7 @@ class ResponseFieldTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
   def setup
-    @response = responses(:one)
+    @response           = responses(:one)
     @contact_form_field = contact_form_fields(:name)
   end
 
@@ -17,7 +17,7 @@ class ResponseFieldTest < ActiveSupport::TestCase
 
   test 'should allow file uploads' do
     assert_difference('ResponseField.count') do
-      response = create_response_field(:file => fixture_file_upload('files/ParkZandweerdMatrixplannen.doc', 'application/msword'))
+      response = create_response_field(file: fixture_file_upload('files/ParkZandweerdMatrixplannen.doc', 'application/msword'))
       assert !response.new_record?
       assert response.file?
     end
@@ -27,9 +27,9 @@ class ResponseFieldTest < ActiveSupport::TestCase
 
   def create_response_field(options = {})
     ResponseField.create({
-      :response => @response,
-      :contact_form_field => @contact_form_field,
-      :value => 'Bas'
+      response:           @response,
+      contact_form_field: @contact_form_field,
+      value:              'Bas'
     }.merge(options))
   end
 end

@@ -18,9 +18,9 @@ class ResponseTest < ActiveSupport::TestCase
 
   def create_response(options = {})
     Response.create({
-      :contact_form => @help_form,
-      :ip => '127.0.0.1',
-      :time => Time.zone.now
+      contact_form: @help_form,
+      ip:           '127.0.0.1',
+      time:         Time.zone.now
     }.merge(options))
   end
 end

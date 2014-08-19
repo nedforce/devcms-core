@@ -12,7 +12,7 @@ class SearchPageTest < ActiveSupport::TestCase
 
   def test_should_require_title
     assert_no_difference 'SearchPage.count' do
-      sp = create_search_page(:title => nil)
+      sp = create_search_page(title: nil)
       assert sp.errors[:title].any?
     end
   end
@@ -20,6 +20,6 @@ class SearchPageTest < ActiveSupport::TestCase
   protected
 
   def create_search_page(options = {})
-    SearchPage.create({ :parent => nodes(:root_section_node), :title => 'Search test page' }.merge(options))
+    SearchPage.create({ parent: nodes(:root_section_node), title: 'Search test page' }.merge(options))
   end
 end
