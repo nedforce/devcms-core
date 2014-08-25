@@ -51,7 +51,7 @@ PATH
 
 GEM
   remote: https://rubygems.org/
-  remote: http://gems.github.com/
+  remote: https://gems.github.com/
   specs:
     actionmailer (3.2.19)
       actionpack (= 3.2.19)
