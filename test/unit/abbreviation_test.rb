@@ -11,21 +11,21 @@ class AbbreviationTest < ActiveSupport::TestCase
 
   test 'should require abbr' do
     assert_no_difference 'Abbreviation.count' do
-      abbr = create_abbreviation(:abbr => nil)
+      abbr = create_abbreviation(abbr: nil)
       assert abbr.errors[:abbr].any?
     end
   end
 
   test 'should require definition' do
     assert_no_difference 'Abbreviation.count' do
-      abbr = create_abbreviation(:definition => nil)
+      abbr = create_abbreviation(definition: nil)
       assert abbr.errors[:definition].any?
     end
   end
 
   test 'should require node' do
     assert_no_difference 'Abbreviation.count' do
-      abbr = create_abbreviation(:node => nil)
+      abbr = create_abbreviation(node: nil)
       assert abbr.errors[:node].any?
     end
   end
@@ -41,6 +41,6 @@ class AbbreviationTest < ActiveSupport::TestCase
   protected
 
   def create_abbreviation(options = {})
-    Abbreviation.create({ :abbr => 'snafu', :definition => 'Situation Normal All Fucked Up', :node => nodes(:root_section_node) }.merge(options))
+    Abbreviation.create({ abbr: 'snafu', definition: 'Situation Normal All Fucked Up', node: nodes(:root_section_node) }.merge(options))
   end
 end

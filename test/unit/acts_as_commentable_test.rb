@@ -26,18 +26,18 @@ class ActsAsCommentableTest < ActiveSupport::TestCase
     assert_equal 1, @event.comments.size
     assert_equal @event, comment.commentable
 
-    assert_equal 3, Comment.all(:conditions => { :user_id => @arthur.id }).size
+    assert_equal 3, Comment.all(conditions: { user_id: @arthur.id }).size
   end
 
   test 'should require user or user name' do
-    comment = new_comment(:user => nil, :user_name => nil)
+    comment = new_comment(user: nil, user_name: nil)
     @news_item.add_comment comment
 
     assert comment.errors[:user_name].any?
   end
 
   test 'should require non-empty comment' do
-    comment = new_comment(:comment => '')
+    comment = new_comment(comment: '')
     @news_item.add_comment comment
 
     assert comment.errors[:comment].any?
@@ -46,6 +46,6 @@ class ActsAsCommentableTest < ActiveSupport::TestCase
   protected
 
   def new_comment(options = {})
-    Comment.new({ :user => @arthur, :comment => "I don't like it!" }.merge(options))
+    Comment.new({ user: @arthur, comment: "I don't like it!" }.merge(options))
   end
 end
