@@ -203,24 +203,20 @@ class Admin::NodesController < Admin::AdminController
   end
 
   # Diffs the current and previous version of a content node.
-  # * GET /admin/nodes/1/previous_diffed
+  # * GET /admin/nodes/:id/previous_diffed
   def previous_diffed
-    content = @node.content
+    content           = @node.content
     @content          = content.current_version
     @previous_content = content.previous_version || @content
     @controller_path  = content.controller_name
   end
 
   # Handles a normal edit in a side panel
-  # GET /admin/nodes/1/edit
+  # GET /admin/nodes/:id/edit
   def edit url_options = {}
-    if @node.content_class == InternalLink || @node.content_class == ExternalLink
-      @current_url = edit_admin_link_url(@node.content, url_options)
-    else
-      @current_url = polymorphic_url [ :admin, @node.content ], url_options.merge(action: :edit)
-    end
+    @current_url = polymorphic_url [ :admin, @node.content ], url_options.merge(action: :edit)
 
-    render :action => :edit, :layout => false
+    render action: :edit, layout: false
   end
 
   # Used for approving content of a given node
