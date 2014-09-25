@@ -16,19 +16,20 @@ module DevcmsCore
       end
 
       conditions = [
-                     '((date(start_time) BETWEEN ? AND ? ) OR (date(end_time) BETWEEN ? AND ?) OR (date(start_time) < ? AND date(end_time) > ?))', 
-                     start_of_month, end_of_month, start_of_month, end_of_month, start_of_month, end_of_month 
+                     '((date(start_time) BETWEEN ? AND ? ) OR (date(end_time) BETWEEN ? AND ?) OR (date(start_time) < ? AND date(end_time) > ?))',
+                     start_of_month, end_of_month, start_of_month, end_of_month, start_of_month, end_of_month
                    ]
 
       self.accessible.where(conditions).reorder('start_time')
     end
 
     def all_for_year(year) #:nodoc:
-      start_of_year = DateTime.civil(year)
-      end_of_year   = DateTime.civil(year, 12, 31)
+      year_time = Date.civil(year).to_time
+      start_of_year = year_time.beginning_of_year
+      end_of_year   = year_time.end_of_year
 
       conditions = [
-                     '((date(start_time) BETWEEN :start_of_year AND :end_of_year ) OR (date(end_time) BETWEEN :start_of_year AND :end_of_year) OR (date(start_time) < :start_of_year AND date(end_time) > :end_of_year))', 
+                     '((date(start_time) BETWEEN :start_of_year AND :end_of_year ) OR (date(end_time) BETWEEN :start_of_year AND :end_of_year) OR (date(start_time) < :start_of_year AND date(end_time) > :end_of_year))',
                      { :start_of_year => start_of_year, :end_of_year => end_of_year }
                    ]
 

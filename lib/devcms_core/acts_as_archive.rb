@@ -10,7 +10,7 @@ module DevcmsCore
     # Finds all items for the month determined by the given +year+, +month+ combination.
     # Extra parameters can be specified with +args+, these will be passed along to the internal +find+ call.
     def find_all_items_for_month(year, month, args = {})
-      start_of_month = DateTime.civil(year, month, 1)
+      start_of_month = Date.civil(year, month).to_time
       start_of_next_month = start_of_month + 1.month
       date_field_database_name = self.acts_as_archive_configuration[:date_field_database_name]
       options = { :conditions => [ date_field_database_name + ' >= ? AND ' + date_field_database_name + ' < ?', start_of_month, start_of_next_month ], :order => "#{date_field_database_name} DESC" }
@@ -64,7 +64,7 @@ module DevcmsCore
     # Returns an array with all months of the given +year+ for which this archive has items.
     def find_months_with_items_for_year(year)
       @months = []
-      start_of_year = DateTime.civil(year, 1, 1)
+      start_of_year = Date.civil(year).to_time
       start_of_next_year = start_of_year + 1.year
 
       date_field_model_name    = self.acts_as_archive_configuration[:date_field_model_name]
@@ -123,7 +123,7 @@ module DevcmsCore
     end
 
     def commercial_date(year, week, day = 1)
-      DateTime.commercial(year,week,day,0,0,0,::Time.zone.now.formatted_offset)
+      Date.commercial(year,week,day).to_time
     end
 
     # Destroys all items for the given month in the given year
