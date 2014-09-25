@@ -123,7 +123,7 @@ module DevcmsCore
     end
 
     def commercial_date(year, week, day = 1)
-      DateTime.commercial(year,week,day,0,0,0,::Time.zone.formatted_offset)
+      DateTime.commercial(year,week,day,0,0,0,::Time.zone.now.formatted_offset)
     end
 
     # Destroys all items for the given month in the given year
