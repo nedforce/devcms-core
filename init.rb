@@ -1,5 +1,3 @@
-p "Initializing DevCMS Core.."
-
 plugin_root = File.dirname(__FILE__)
 
 # Add additional load paths for your own custom dirs
