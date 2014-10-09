@@ -1,6 +1,6 @@
 require File.expand_path('../../test_helper.rb', __FILE__)
 
-# This test might not work when running all tests using 'rake test' due to the fact that 
+# This test might not work when running all tests using 'rake test' due to the fact that
 # the exceptions middleware is not properly initialized in that case.
 class RewriteTest < ActionController::IntegrationTest
   fixtures :nodes, :pages, :news_archives, :news_items, :images
@@ -47,6 +47,20 @@ class RewriteTest < ActionController::IntegrationTest
     get '/' + @node.custom_url_alias
     assert_equal @node, assigns(:node)
     assert response.body.include?(@node.content.title)
+  end
+
+  def test_should_remove_matched_custom_url_part
+    @node = Page.all.sample.node
+    assert @node.update_attributes(:custom_url_suffix => '/foobar'), @node.errors.full_messages.to_sentence
+    assert_equal 'foobar', @node.reload.custom_url_alias
+    get '/' + @node.custom_url_alias
+    assert_equal "/pages/#{@node.content_id}", request.path
+  end
+
+  def test_should_remove_matched_url_part
+    @node =  Node.with_content_type('Page').where('nodes.url_alias is not null').first
+    get '/' + @node.url_alias
+    assert_equal "/pages/#{@node.content_id}", request.path
   end
 
   def test_should_not_rewrite_with_remaining_slugs
