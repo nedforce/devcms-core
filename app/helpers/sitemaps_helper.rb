@@ -31,7 +31,7 @@ module SitemapsHelper
       content_tag(:li, content, :class => 'link')
     else
       @current_level += 1
-      ul      = content_tag(:ul, subitems.map{ |subitem| create_subitem(subitem, levels) }.join("\n"))
+      ul      = content_tag(:ul, subitems.map { |subitem| create_subitem(subitem, levels) }.join("\n"))
       content = link_to(h(item.content_title), content_node_path(item.node), :title => h(item.content_title))
       content_tag(:li, content + ul, :class => 'subitem')
     end

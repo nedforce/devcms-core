@@ -26,7 +26,7 @@ class Admin::UsersController < Admin::AdminController
       @user_count = @users.size
     else
       @users      = User.all(:include => [ :newsletter_archives, :interests ], :conditions => filter_conditions, :order => "login #{@sort_direction}")
-      @users      = @users.sort_by { |user| user.newsletter_archives.sort_by { |archive| archive.title.upcase }.map{ |archive| archive.title }.join(', ') }
+      @users      = @users.sort_by { |user| user.newsletter_archives.sort_by { |archive| archive.title.upcase }.map { |archive| archive.title }.join(', ') }
       @users      = @users.reverse if @sort_direction == 'DESC'
       @user_count = @users.size
       @users      = @users.values_at((@page_limit * (@current_page - 1))..(@page_limit * @current_page - 1)).compact
@@ -167,7 +167,7 @@ class Admin::UsersController < Admin::AdminController
       index
     end
   end
-  
+
   def switch_user_type
     respond_to do |format|
       format.json do

@@ -68,7 +68,7 @@ class ContactForm < ActiveRecord::Base
     @deleted_contact_form_fields = []
 
     unless @contact_form_fields_before_save.blank? || !@contact_form_fields_before_save.is_a?(Array)
-      @contact_form_fields_before_save.delete_if { |options| options.values.all? { |value| value.blank? }}
+      @contact_form_fields_before_save.delete_if { |options| options.values.all? { |value| value.blank? } }
       @contact_form_fields_before_save.each do |options|
         inst = nil
         delete_contact_form_field = options.delete(:delete)

@@ -96,7 +96,7 @@ module ApplicationHelper
 
   # Prints error messages for an AR object in a minimal, side box fitting layout element.
   def side_box_error_messages_for(obj)
-    list_items = obj.errors.full_messages.map{ |msg| content_tag(:li, msg) }.join("\n")
+    list_items = obj.errors.full_messages.map { |msg| content_tag(:li, msg) }.join("\n")
     content_tag(:ul, list_items, :class => 'errors')
   end
 

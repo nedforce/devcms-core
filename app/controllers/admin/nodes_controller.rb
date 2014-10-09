@@ -49,7 +49,7 @@ class Admin::NodesController < Admin::AdminController
       format.json do
         active_node = params.has_key?(:active_node_id) ? Node.find(params[:active_node_id]) : nil
         @nodes = @root_node.children.all(:include => [:content, :role_assignments])
-        render :json => @nodes.map{ |node| node.to_tree_node_for(current_user, { :expand_if_ancestor_of => active_node }) }.to_json
+        render :json => @nodes.map { |node| node.to_tree_node_for(current_user, { :expand_if_ancestor_of => active_node }) }.to_json
       end
     end
   end
@@ -80,7 +80,7 @@ class Admin::NodesController < Admin::AdminController
         format.json { render :json => { :success => 'true' } }
       else
         format.xml  { render :xml => @node.errors.to_xml, :status => :unprocessable_entity }
-        format.json { render :json => { :errors => @node.errors.map{ |e| e.join(' ') }}.to_json, :status => :unprocessable_entity }
+        format.json { render :json => { :errors => @node.errors.map { |e| e.join(' ') }}.to_json, :status => :unprocessable_entity }
       end
     end
   end
@@ -271,7 +271,7 @@ class Admin::NodesController < Admin::AdminController
         format.json { render :json => { :success => 'true' } }
       else
         format.xml  { render :xml => @node.errors.to_xml, :status => :unprocessable_entity }
-        format.json { render :json => { :errors => @node.errors.map{ |e| e.join(' ') } }.to_json, :status => :unprocessable_entity }
+        format.json { render :json => { :errors => @node.errors.map { |e| e.join(' ') } }.to_json, :status => :unprocessable_entity }
       end
     end
   end
@@ -283,7 +283,7 @@ class Admin::NodesController < Admin::AdminController
         format.json { render :json => { :success => 'true' } }
       else
         format.xml  { render :xml => @node.errors.to_xml, :status => :unprocessable_entity }
-        format.json { render :json => { :errors => @node.errors.map{ |e| e.join(' ') } }.to_json, :status => :unprocessable_entity }
+        format.json { render :json => { :errors => @node.errors.map { |e| e.join(' ') } }.to_json, :status => :unprocessable_entity }
       end
     end
   end

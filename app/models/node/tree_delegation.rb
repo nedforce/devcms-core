@@ -178,7 +178,7 @@ module Node::TreeDelegation
     end
 
     def path_child_ancestries
-      path_ids.enum_for(:each_with_index).collect{ |item, index| path_ids[0..(path_ids.length - index - 1)] }.map{ |result| result.join('/') }
+      path_ids.enum_for(:each_with_index).collect{ |item, index| path_ids[0..(path_ids.length - index - 1)] }.map { |result| result.join('/') }
     end
 
     def path_children_by_depth
@@ -216,7 +216,7 @@ module Node::TreeDelegation
       node_ids = nodes.map { |n| n.id }
       node_child_ancestries = nodes.map { |n| n.child_ancestry }
 
-      sql += "nodes.id NOT IN (:node_ids) AND nodes.ancestry NOT IN (:node_child_ancestries)"
+      sql += 'nodes.id NOT IN (:node_ids) AND nodes.ancestry NOT IN (:node_child_ancestries)'
       values.update(:node_ids => node_ids, :node_child_ancestries => node_child_ancestries)
 
       node_child_ancestries.each_with_index do |child_ancestry, index|
@@ -226,7 +226,7 @@ module Node::TreeDelegation
         values.update(symbol => "#{child_ancestry}/%")
       end
 
-      sql += " OR nodes.ancestry IS NULL"
+      sql += ' OR nodes.ancestry IS NULL'
 
       { :conditions => [ sql, values ] }
     end

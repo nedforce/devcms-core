@@ -181,15 +181,15 @@ class WeblogPostsControllerTest < ActionController::TestCase
     image = fixture_file_upload("files/test.jpg")
     assert_difference('WeblogPost.count', 1) do
       assert_difference('Image.count', 2) do
-        create_weblog_post({},{:images => { :image_0 => { :title => 'An Image', :data => image },:image_1 => { :title => 'Another Image', :data => image }}})
+        create_weblog_post({}, { :images => { :image_0 => { :title => 'An Image', :data => image },:image_1 => { :title => 'Another Image', :data => image } } })
         assert_response :redirect
         assert !assigns(:weblog_post).new_record?, :message => assigns(:weblog_post).errors.full_messages.join('; ')
       end
     end
     images = assigns(:weblog_post).node.children
     assert_equal 2, images.size
-    assert images.all? { |i| i.parent_id.equal?(assigns(:weblog_post).node.id)}
-    assert images.all? { |i| !i.root?}
+    assert images.all? { |i| i.parent_id.equal?(assigns(:weblog_post).node.id) }
+    assert images.all? { |i| !i.root? }
   end
 
   def test_should_not_create_with_more_than_four_images
@@ -201,7 +201,7 @@ class WeblogPostsControllerTest < ActionController::TestCase
                     :image_1 => { :data => image },
                     :image_2 => { :data => image },
                     :image_4 => { :data => image },
-                    :image_3 => { :data => image}}})
+                    :image_3 => { :data => image } } })
 
         assert_response :redirect
         assert_equal 4, assigns(:weblog_post).node.children.size
@@ -251,8 +251,6 @@ class WeblogPostsControllerTest < ActionController::TestCase
  protected
 
   def create_weblog_post(attributes = {}, options = {})
-    post :create, { :weblog_archive_id => weblog_archives(:devcms_weblog_archive).id, :weblog_id => weblogs(:henk_weblog).id, :weblog_post => { :title => 'Some title.', :body => 'Some body', :publication_start_date => Time.now }.merge(attributes)}.merge(options)
+    post :create, { :weblog_archive_id => weblog_archives(:devcms_weblog_archive).id, :weblog_id => weblogs(:henk_weblog).id, :weblog_post => { :title => 'Some title.', :body => 'Some body', :publication_start_date => Time.now }.merge(attributes) }.merge(options)
   end
-
 end
-

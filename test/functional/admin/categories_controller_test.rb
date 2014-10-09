@@ -20,7 +20,7 @@ class Admin::CategoriesControllerTest < ActionController::TestCase
     get :root_categories, :format => 'json'
     assert_response :success
     assert assigns(:root_categories)
-    assigns(:root_categories).map{ |c| assert_nil c.parent }
+    assigns(:root_categories).map { |c| assert_nil c.parent }
   end
 
   def test_should_get_categories

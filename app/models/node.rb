@@ -564,7 +564,7 @@ class Node < ActiveRecord::Base
 
   def self.find_related_nodes(node, options = {})
     conditions = {
-      :conditions => [ 'node_categories.category_id in (?) AND nodes.id <> ?', node.category_ids, node.id ],
+      :conditions => ['node_categories.category_id in (?) AND nodes.id <> ?', node.category_ids, node.id],
       :include    => :node_categories,
       :limit      => options[:limit] || 5
     }
@@ -637,12 +637,12 @@ protected
 
     self.transaction do
       # Destroy all content copies that are associated with any of the nodes in the subtree and are not a descendant
-      ContentCopy.find_each(:include => :node, :conditions => [ 'copied_node_id IN (:nodes_to_be_paranoid_deleted_ids) AND NOT nodes.id IN (:nodes_to_be_paranoid_deleted_ids)', { :nodes_to_be_paranoid_deleted_ids => nodes_to_be_paranoid_deleted_ids } ]) do |content_copy|
+      ContentCopy.find_each(:include => :node, :conditions => ['copied_node_id IN (:nodes_to_be_paranoid_deleted_ids) AND NOT nodes.id IN (:nodes_to_be_paranoid_deleted_ids)', { :nodes_to_be_paranoid_deleted_ids => nodes_to_be_paranoid_deleted_ids }]) do |content_copy|
         content_copy.destroy
       end
 
       # Destroy all internal links that are associated with any of the nodes in the subtree and are not a descendant
-      InternalLink.find_each(:include => :node, :conditions => [ 'linked_node_id IN (:nodes_to_be_paranoid_deleted_ids) AND NOT nodes.id IN (:nodes_to_be_paranoid_deleted_ids)', { :nodes_to_be_paranoid_deleted_ids => nodes_to_be_paranoid_deleted_ids } ]) do |internal_link|
+      InternalLink.find_each(:include => :node, :conditions => ['linked_node_id IN (:nodes_to_be_paranoid_deleted_ids) AND NOT nodes.id IN (:nodes_to_be_paranoid_deleted_ids)', { :nodes_to_be_paranoid_deleted_ids => nodes_to_be_paranoid_deleted_ids }]) do |internal_link|
         internal_link.destroy
       end
 
@@ -650,7 +650,7 @@ protected
       Section.update_all({ :frontpage_node_id => nil }, { :frontpage_node_id => nodes_to_be_paranoid_deleted_ids })
 
       # Delete any node categories, role assignments, synonyms or abbreviations that are associated with any of the nodes in the subtree
-      [ NodeCategory, RoleAssignment, Synonym, Abbreviation ].each do |klass|
+      [NodeCategory, RoleAssignment, Synonym, Abbreviation].each do |klass|
         klass.delete_all(:node_id => nodes_to_be_paranoid_deleted_ids)
       end
 
@@ -658,7 +658,7 @@ protected
       Comment.delete_all(:commentable_id => nodes_to_be_paranoid_deleted_ids)
 
       # Delete content representations where appropriate 
-      ContentRepresentation.delete_all [ 'parent_id IN (:nodes_to_be_paranoid_deleted_ids) OR content_id IN (:nodes_to_be_paranoid_deleted_ids)', { :nodes_to_be_paranoid_deleted_ids => nodes_to_be_paranoid_deleted_ids } ]
+      ContentRepresentation.delete_all ['parent_id IN (:nodes_to_be_paranoid_deleted_ids) OR content_id IN (:nodes_to_be_paranoid_deleted_ids)', { :nodes_to_be_paranoid_deleted_ids => nodes_to_be_paranoid_deleted_ids }]
     end
   end
 
