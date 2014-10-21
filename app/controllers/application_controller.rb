@@ -227,8 +227,8 @@ protected
 
   def set_meta_description
     @meta_description = @node.content.try(:meta_description) rescue nil ||
-                        @node.content.try(:preamble).try(:truncate, 160, :separator => ' ') ||
-                        @node.content.try(:description).try(:truncate, 160, :separator => ' ')
+                        @node.content.try(:preamble).try(:truncate, 160, :separator => ' ') rescue nil ||
+                        @node.content.try(:description).try(:truncate, 160, :separator => ' ') rescue nil
   end
 
   # setup internal layout configuration
