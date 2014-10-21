@@ -3,6 +3,7 @@
 class PagesController < ApplicationController
   before_filter :find_page,                   :only => :show
   before_filter :find_images_and_attachments, :only => :show
+  before_filter :set_meta_description,        :only => :show
 
   # * GET /pages/:id
   # * GET /pages/:id.xml

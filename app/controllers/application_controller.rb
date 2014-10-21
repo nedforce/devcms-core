@@ -7,21 +7,21 @@ class ApplicationController < ActionController::Base
   include ::SslRequirement
 
   protect_from_forgery
-  skip_before_filter [:verify_authenticity_token, :check_authorization], :only => [:handle_500, :handle_404] 
+  skip_before_filter [:verify_authenticity_token, :check_authorization], :only => [:handle_500, :handle_404]
 
   # Catch all exceptions (except 404 errors, which are handled below) to render
   # a custom 500 page. Also makes sure a notification mail is sent.
   # 404 exceptions are handled below.
   rescue_from Exception, :with => :handle_500 if Rails.env.production?
-   
+
   # Catches all 404 errors to render a 404 page.
   # Note that this rescue_from statement has precedence over the one above.
   # ActionNotFound and RecordNotFound exceptions are given a special treatment, so you don't have to worry about
   # catching them in the +find_[resource]+ methods throughout all controllers.
   rescue_from ActionController::RoutingError, ActionController::UnknownController, ::AbstractController::ActionNotFound, ActiveRecord::RecordNotFound, :with => :handle_404 unless Rails.env.development?
-  
+
   before_filter :redirect_to_full_domain
-  
+
   # Try retrieve the +Node+ object for the current request.
   # This needs to be done before any authorization attempts, a +Node+ might be needed.
   before_filter :find_node
@@ -32,7 +32,7 @@ class ApplicationController < ActionController::Base
 
   # Attempt to login the user from a cookie, if it's set.
   before_filter :login_from_cookie
-  
+
   # Performs the actual authorization procedure
   before_filter :check_authorization
 
@@ -41,10 +41,10 @@ class ApplicationController < ActionController::Base
 
   # Find the children for the current node
   before_filter :find_accessible_children_for_menus
-  
+
   # Set the search options for the search field.
   before_filter :set_search_scopes
-  
+
   before_filter :set_page_title
 
   # Limit the session time
@@ -58,7 +58,7 @@ class ApplicationController < ActionController::Base
 
   # Set the layout
   layout :set_layout
-  
+
   # Include all helpers, all the time.
   helper VideoHelper, SitemapsHelper, SearchHelper, PollQuestionsHelper, OwmsMetadataHelper, HtmlEditorHelper, ContactBoxesHelper, CalendarsHelper, AttachmentsHelper, ApplicationHelper, LayoutHelper, IconHelper
 
@@ -81,12 +81,12 @@ class ApplicationController < ActionController::Base
     synonyms = synonyms.map { |key, set| set.uniq.join(', ') }
     send_data synonyms.join("\n"), :filename => 'synonyms.txt', :type => 'text/plain', :disposition => 'attachment'
   end
-  
+
   # Renders a custom 404 page.
   def handle_404(exception = env["action_dispatch.exception"])
     @page_title = t('errors.page_not_found')
     respond_to do |f|
-      f.html do 
+      f.html do
         if request.xhr?
           render :json => { :error => I18n.t('application.page_not_found') }.to_json, :status => 404
         else
@@ -120,7 +120,7 @@ class ApplicationController < ActionController::Base
 
     if Rails.env.test?
       puts "\n#{exception.message}"
-      puts exception.backtrace.join("\n") 
+      puts exception.backtrace.join("\n")
     end
 
     send_exception_notification(exception)
@@ -176,7 +176,7 @@ protected
     else
       if controller_model
         parent_resource_type = controller_model.parent_type rescue nil
-        
+
         # Nested controller access
         if parent_resource_type
           name = parent_resource_type.name
@@ -223,6 +223,12 @@ protected
     else
       return 'default'
     end
+  end
+
+  def set_meta_description
+    @meta_description = @node.content.try(:meta_description) rescue nil ||
+                        @node.content.try(:preamble).try(:truncate, 160, :separator => ' ') ||
+                        @node.content.try(:description).try(:truncate, 160, :separator => ' ')
   end
 
   # setup internal layout configuration
@@ -372,7 +378,7 @@ protected
 
   def parse_date(field)
     model = controller_name.classify.tableize.singularize.to_sym
-    
+
     if params[model]
       date = params[model].delete("#{field}_day")
       time = params[model].delete("#{field}_time")

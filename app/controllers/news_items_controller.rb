@@ -3,8 +3,9 @@
 
 class NewsItemsController < ApplicationController
   # The +show+ action needs a NewsItem object to work with.
-  before_filter :find_news_item, :only => :show
+  before_filter :find_news_item,              :only => :show
   before_filter :find_images_and_attachments, :only => :show
+  before_filter :set_meta_description,        :only => :show
 
   # * GET /news_items/1
   # * GET /news_items/1.xml

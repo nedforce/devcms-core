@@ -3,7 +3,8 @@
 
 class EventsController < ApplicationController
   # The +show+ action needs a +CalendarItem+ object to work with.
-  before_filter :find_calender_item, :only => :show
+  before_filter :find_calender_item,    :only => :show
+  before_filter :set_meta_description,  :only => :show
 
   # * GET /calender_items/:id
   # * GET /calender_items/:id.xml
