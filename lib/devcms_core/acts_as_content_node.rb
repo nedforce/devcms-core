@@ -59,7 +59,7 @@ module DevcmsCore
       delegate_accessor :commentable,
                         :content_box_title, :content_box_icon, :content_box_colour, :content_box_number_of_items,
                         :categories, :category_attributes, :category_ids,
-                        :parent,
+                        :parent, :external_id,
                         :publication_start_date, :publication_end_date,
                         :responsible_user, :responsible_user_id, :expires_on,
                         :expiration_notification_method, :expiration_email_recipient, :cascade_expires_on,
@@ -247,6 +247,10 @@ module DevcmsCore
 
     def to_link_name
       @link_name ||= Node.clean_for_url title
+    end
+
+    def has_related_content?
+      node.content_type_configuration[:has_own_content_box]
     end
 
     private

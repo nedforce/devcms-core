@@ -95,6 +95,10 @@ class Section < ActiveRecord::Base
     I18n.t('owms.overview_page')
   end
 
+  def has_related_content?
+    node.tags.empty?
+  end
+
 protected
 
   def set_frontpage_node_to_nil_if_frontpage_node_is_own_node

@@ -153,6 +153,8 @@ class Node < ActiveRecord::Base
             :ensure_content_box_number_of_items_should_be_greater_than_two,
             :ensure_maximum_tags
 
+  delegate  :has_related_content?, to: :content
+
   # A private copy of the original destroy method that is used for overloading.
   alias_method :original_destroy, :destroy
 
@@ -237,13 +239,6 @@ class Node < ActiveRecord::Base
     include Singleton
     include ActionView::Helpers::SanitizeHelper
     extend  ActionView::Helpers::SanitizeHelper::ClassMethods
-  end
-
-  # Returns true if this node has no children
-  def leaf?
-    # don't expand for PDC nodes from an external source
-    return true if content_class.name == 'ProductCatalogue' && content.opus_plus_importer
-    super
   end
 
   # Destroys this node and its associated content node.
