@@ -24,7 +24,7 @@ module Search::Modules::Ferret::FerretNodeExtension
                    :is_hidden_to_index              => {},
                    :url_alias                       => { :store => :yes }
                  },
-                 :if       => Proc.new { |node| node.publishable? && node.content_class.indexable? },
+                 :if       => Proc.new { |node| node.deleted_at.blank? && node.publishable? && node.content_class.indexable? },
                  :analyzer => DevcmsCore::DutchStemmingAnalyzer.new,
                  :remote   => true,
                  :boost    => :dynamic_boost,
