@@ -216,7 +216,7 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
         /* adds the load mask if it does not exist, can be moved to TreePanel.js */
         if(tree.loadMask == undefined) { tree.loadMask = new Ext.LoadMask(tree.body, {msg: I18n.t('loading','generic')}); }
         tree.loadMask.show();
-        
+
         /* disable node */
         tree.disable();
         /* renumber if necessary */
@@ -258,14 +258,14 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
 
     onDelete: function () {
         tree = this.getOwnerTree();
-      
+
         /* adds the load mask if it does not exist, can be moved to TreePanel.js */
         if(tree.loadMask == undefined) { tree.loadMask = new Ext.LoadMask(tree.body, {msg: I18n.t('loading','generic')}); }
         tree.loadMask.show();
-        
+
         /* disable node */
         tree.disable();
-        
+
         Ext.Ajax.request({
             url: '/admin/nodes/' + this.id,
             method: 'POST', // overridden with delete by the _method parameter
@@ -293,14 +293,14 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
 
     onRepeatingCalendarItemDelete: function () {
         tree = this.getOwnerTree();
-      
+
         /* adds the load mask if it does not exist, can be moved to TreePanel.js */
         if(tree.loadMask == undefined) { tree.loadMask = new Ext.LoadMask(tree.body, {msg: I18n.t('loading','generic')}); }
         tree.loadMask.show();
-        
+
         /* disable node */
         tree.disable();
-        
+
         Ext.Ajax.request({
             url: '/admin/calendar_items/' + this.attributes.contentNodeId,
             method: 'POST', // overridden with delete by the _method parameter
@@ -552,6 +552,7 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
             prompt: true,
             width: 600,
             cls: 'url_alias_textbox',
+            value: this.customURLSuffix,
             buttons: Ext.MessageBox.OKCANCEL,
             fn: function (btn, text) {
                 if (btn == 'ok') {
@@ -562,7 +563,7 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
                         scope: this,
                         success: function () {
                             this.urlAlias = text;
-                            //Ext.Msg.alert('Succes', 'Webadres instellen gelukt!');
+                            Ext.Msg.alert('Succes', 'Webadres ingesteld!');
                         },
                         failure: function (response, options) {
                             if (response.status === 422) { // unprocessable entity
@@ -605,7 +606,7 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
             }
         });
     },
-    
+
     onLayoutConfig: function () {
         rightPanel.load({
             url: '/admin/nodes/' + this.id + '/layout/edit',
