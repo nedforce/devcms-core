@@ -12,16 +12,16 @@ module NodeExtensions::UrlAliasing
     attr_protected :url_alias, :custom_url_alias
 
     # Validate url_alias. Sync regexp to routes.rb!
-    validates_format_of :url_alias, :with => VALID_URL_ALIAS_FORMAT, :allow_nil => true
-    validates_length_of :url_alias, :in => (2..MAXIMUM_URL_ALIAS_LENGTH), :allow_nil => true
+    validates_format_of :url_alias,         :with => VALID_URL_ALIAS_FORMAT,                  :allow_blank => true
+    validates_length_of :url_alias,         :in   => (2..MAXIMUM_URL_ALIAS_LENGTH),           :allow_blank => true
 
     # Validate custom_url_alias. Sync regexp to routes.rb!
-    validates_format_of :custom_url_alias, :with => VALID_URL_ALIAS_FORMAT, :allow_nil => true
-    validates_length_of :custom_url_alias, :in => (2..MAXIMUM_URL_ALIAS_LENGTH), :allow_nil => true
+    validates_format_of :custom_url_alias,  :with => VALID_URL_ALIAS_FORMAT,                  :allow_blank => true
+    validates_length_of :custom_url_alias,  :in   => (2..MAXIMUM_URL_ALIAS_LENGTH),           :allow_blank => true
 
     # Validate custom URL suffix.
-    validates_format_of :custom_url_suffix, :with => VALID_CUSTOM_URL_SUFFIX_FORMAT, :allow_nil => true
-    validates_length_of :custom_url_suffix, :in => (2..MAXIMUM_CURSTOM_URL_SUFFIX_LENGTH), :allow_nil => true
+    validates_format_of :custom_url_suffix, :with => VALID_CUSTOM_URL_SUFFIX_FORMAT,          :allow_blank => true
+    validates_length_of :custom_url_suffix, :in   => (2..MAXIMUM_CURSTOM_URL_SUFFIX_LENGTH),  :allow_blank => true
 
     # Do not run uniqueness validation if url_alias length exceeds MAXIMUM_URL_ALIAS_LENGTH, as this will cause
     # an ActiveRecord::StatementInvalid exception being thrown
@@ -50,7 +50,7 @@ module NodeExtensions::UrlAliasing
     # Returns if the specified URL alias has been reserved.
     def url_alias_reserved?(alias_to_check)
       if alias_to_check.blank?
-        false 
+        false
       elsif Rails.application.config.reserved_slugs.include?(alias_to_check)
         true
       else
@@ -64,7 +64,7 @@ module NodeExtensions::UrlAliasing
     end
 
     # Helper method for constructing a content url path for a node, used for rewrites
-    def path_for_node(node, action = '', format = '', query = '') 
+    def path_for_node(node, action = '', format = '', query = '')
       case
       when node.content_type == 'ContentCopy'
         Node.path_for_node(node.content.copied_node, action, format, query)
