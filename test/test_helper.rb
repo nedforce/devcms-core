@@ -4,10 +4,14 @@ require File.expand_path('../dummy/config/environment.rb', __FILE__)
 require 'rails/test_help'
 require 'mocha/setup'
 require 'html_test'
-require 'debugger'
+if RUBY_VERSION =~ /^2\.\d{1}\.\d{1}$/
+  require 'byebug'
+else
+  require 'debugger'
+  Debugger.settings[:autoeval] = true
+end
 
 Rails.backtrace_cleaner.remove_silencers!
-Debugger.settings[:autoeval] = true
 
 include ActionDispatch::TestProcess # Required to make fixture_file_upload work
 
@@ -66,7 +70,7 @@ class ActiveSupport::TestCase
   # Add more helper methods to be used by all tests here...
   include DevcmsCore::AuthenticatedTestHelper
   include DevcmsCore::RoleRequirementTestHelper
-  include DevcmsCore::RoutingHelpers  
+  include DevcmsCore::RoutingHelpers
 
   # Validates all controller and integration test requests if set to true:
   ApplicationController.validate_all = false

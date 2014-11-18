@@ -4,10 +4,11 @@ source 'http://gems.github.com'
 gem 'rails',        '~> 3.2.19'
 gem 'sass-rails',   '~> 3.2.3'
 gem 'coffee-rails', '~> 3.2.1'
-gem 'uglifier',     '~> 1.0'
+gem 'uglifier'
 
 group :development do
-  gem 'debugger'
+  gem 'byebug',   platform: 'mri_21'
+  gem 'debugger', platform: 'mri_19'
 end
 
 gem 'data_checker', :git => 'git@git.nedforce.nl:data_checker.git', :branch => 'master'

@@ -18,8 +18,6 @@ require 'sortifiable'
 require 'roo'
 require 'kaminari'
 require 'sanitize'
-require 'geokit'
-require 'geokit-rails'
 require 'redhillonrails_core'
 require 'foreign_key_migrations'
 require 'carrierwave'
@@ -44,7 +42,7 @@ module DevcmsCore
   autoload :ActsAsContentNode
   autoload :ActsAsArchive
   autoload :ActsAsVersioned
-  autoload :NeedsEditorApproval 
+  autoload :NeedsEditorApproval
   autoload :ActsAsArchiveController
   autoload :AttachmentTestHelper
   autoload :AuthenticatedSystem
