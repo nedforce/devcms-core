@@ -3,7 +3,7 @@ extension_of DevcmsCore
 class Devcms
   class << self
     # Override the content type configuration if needed
-    # Example:  
+    # Example:
     # { 'Calendar' => { :allowed_child_content_types => %w( CalendarItem CombinedMeeting Meeting ) },
     #    'PermitArchive' => { :has_import => true } }
 
@@ -20,9 +20,9 @@ class Devcms
 
     # def search_configuration
     #   {
-    #     :enabled_search_engines => Settler[:search_enabled_engines], 
-    #     :default_search_engine => Settler[:search_default_engine],
-    #     :default_page_size => Settler[:search_default_page_size].to_i,        
+    #     :enabled_search_engines => ['ferret'], 
+    #     :default_search_engine => 'ferret',
+    #     :default_page_size => Settler[:search_default_page_size].to_i,
     #     :ferret => {
     #       :synonym_weight => Settler[:search_ferret_synonym_weight].to_f,
     #       :proximity => Settler[:search_ferret_proximity].to_f

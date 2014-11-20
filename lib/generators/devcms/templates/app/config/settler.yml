@@ -107,15 +107,6 @@ settings: &settings
     alt: Recaptcha private key
     value: 'private-key'
     editable: true
-  search_enabled_engines:
-    alt: Enabled search engines
-    value: ['ferret']
-  search_default_engine:
-    alt: Default search engine
-    value: 'ferret'
-    editable: true
-    validations:
-      inclusion: [ 'ferret' ]
   search_default_page_size:
     alt: Default page size for search results
     value: 5

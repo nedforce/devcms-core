@@ -1,4 +1,4 @@
-settings: &settings     
+settings: &settings
   display_videos_as_images:
     alt: YouTube video screenshot weergeven i.p.v. video object
     value: true
@@ -9,7 +9,7 @@ settings: &settings
     value: '404'
     editable: true
     validations:
-      presence: true       
+      presence: true
   error_page_500:
     alt: URL van de 500 (interne fout) pagina
     value: '500'
@@ -44,19 +44,19 @@ settings: &settings
     editable: true
   host: &host
     alt: De hostnaam van de website
-    value: 'localhost:3000'    
+    value: 'localhost:3000'
     validations:
-      presence: true       
+      presence: true
   mail_from_address: &mail_from
     alt: De standaard afzender voor automatisch gegenereerde e-mails
     value: 'Gemeente Dummy <no-reply@localhost>'
     editable: true
     validations:
-      presence: true       
+      presence: true
   mail_approvals_from_address: &mail_from_approval
     alt: De standaard afzender van goedkeurings-e-mails
     value: 'redactie@localhost'
-    editable: true    
+    editable: true
     validations:
       presence: true
   make_appointment_url:
@@ -89,14 +89,14 @@ settings: &settings
   newsletter_archive_logo:
     alt: Afbeelding van het logo dat terug zal komen in nieuwsbrieven
     value: 'gemeente_deventer_logo.png'
-    editable: true    
+    editable: true
   newsletter_archive_header_default:
     alt: Afbeelding van de header die terug zal komen in nieuwsbrieven
     value: 'balk_standaard.png'
-    editable: true    
+    editable: true
   newsletter_archive_header_prefix:
     alt: 'Prefix van headerafbeeldingen in /images/newsletter/'
-    value: 'balk' 
+    value: 'balk'
     editable: true
   products_with_skype_box:
     alt: external IDs (GUIDs) van de producten die het Skype-contactblok moeten tonen
@@ -112,15 +112,6 @@ settings: &settings
     alt: Recaptcha private key
     value: 'private-key'
     editable: false
-  search_enabled_engines:
-    alt: Beschikbare zoekmachines
-    value: ['ferret']
-  search_default_engine: &search
-    alt: Standaard zoekmachine
-    value: 'ferret'
-    editable: true
-    validations:
-      inclusion: [ 'ferret' ]
   search_default_page_size:
     alt: Standaard aantal zoekresultaten per pagina
     value: 5
@@ -130,12 +121,12 @@ settings: &settings
     alt: 'Ferret instelling: gewicht van synoniemen'
     value: 0.25
     editable: true
-    typecast: float    
+    typecast: float
   search_ferret_proximity:
     alt: 'Ferret instelling: proximity waarde voor fuzzy zoeken'
     value: 0.8
-    editable: true   
-    typecast: float      
+    editable: true
+    typecast: float
   search_luminis_crawler_ips:
     alt: 'Luminis crawler IPs die toegang zullen hebben tot verborgen nodes'
     value: ['62.129.149.150', '62.129.149.151']
@@ -172,7 +163,7 @@ settings: &settings
     alt: De gewenste sterkte van een wachtwoord
     value: 156
     editable: true
-    typecast: integer   
+    typecast: integer
   proclaimer_page_url:
     alt: URL van de pagina met de proclaimer voor de website
     value: /proclaimer
@@ -188,21 +179,21 @@ settings: &settings
   ssl_enabled:
     alt: SSL ondersteuning beschikbaar?
     value: true
-    editable: true     
-    typecast: boolean       
+    editable: true
+    typecast: boolean
   user_verify:
     alt: E-mail adressen van nieuwe gebruikers verifieren?
     value: true
-    editable: true 
-    typecast: boolean        
+    editable: true
+    typecast: boolean
   user_invite_only: &invite_only
     alt: Alleen nieuwe gebruikers toestaan via uitnodigingen?
     value: true
     editable: true
-    typecast: boolean    
+    typecast: boolean
   user_allow_export:
     alt: Gebruikers export ondersteuning?
-    value: true  
+    value: true
   user_allow_invite:
     alt: Gebruikers uitnodigingen ondersteuning?
     value: true
@@ -224,7 +215,7 @@ settings: &settings
     alt: Kommagescheiden IP-adressen die vrijgesteld zijn van loginbeveiliging
     value: 195.35.241.197
   signup_page_text:
-    alt: The text above the signup form on the signup page      
+    alt: The text above the signup form on the signup page
   after_logout_path:
     alt: Path where a user is redirected to after logout
     value: ''
@@ -232,11 +223,10 @@ settings: &settings
   after_signup_path:
     alt: Path where a user is redirected to after signup
     value: ''
-    editable: true    
-    
+    editable: true
+
 development:
   <<: *settings
 
 test:
   <<: *settings
-

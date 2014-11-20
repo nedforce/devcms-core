@@ -12,8 +12,8 @@ class Devcms
 
     def search_configuration
       {
-        enabled_search_engines: Settler[:search_enabled_engines],
-        default_search_engine:  Settler[:search_default_engine],
+        enabled_search_engines: ['ferret'],
+        default_search_engine:  'ferret',
         default_page_size:      Settler[:search_default_page_size].to_i,
         ferret: {
           synonym_weight: Settler[:search_ferret_synonym_weight].to_f,

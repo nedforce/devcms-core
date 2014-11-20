@@ -8,11 +8,11 @@ class Admin::SettingsControllerTest < ActionController::TestCase
     get :index
     assert_response :success
   end
-  
+
   def test_should_update_setting
     login_as :sjoerd
-    put :update, :id => Settler.search_default_engine.id, :setting => { :value => 'ferret' }
-    assert_response :success    
+    put :update, :id => Settler.after_signup_path.id, :setting => { :value => 'some/path' }
+    assert_response :success
   end
 
 end

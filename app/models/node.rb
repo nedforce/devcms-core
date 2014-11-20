@@ -105,7 +105,7 @@ class Node < ActiveRecord::Base
 
   alias_method_chain :move_to, :update_url_aliases
 
-  if SETTLER_LOADED && Devcms.search_configuration[:enabled_search_engines].try(:include?, 'ferret')
+  if Devcms.search_configuration[:enabled_search_engines].try(:include?, 'ferret')
     self.extend Search::Modules::Ferret::FerretNodeExtension
     acts_as_searchable
   end
