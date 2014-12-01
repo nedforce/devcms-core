@@ -33,7 +33,7 @@ module ApplicationHelper
   # +options+ A hash with breadcrumb and link options:
   # :include_root: Include the root node in the path
   # :minimum_crumbs: The number of crumbs that should be in the path
-  # :separator: The seperator between two crumbs
+  # :separator: The separator between two crumbs
   # :popup_window: Link option: when clicked on a crumb, it will open in a new window (using javascript)
   # :skip_link_self: Link option: Don't create a link for +node+. Useful when a node is invisible or unapproved
   # :suffix: A tree that follows the node, e.g. a category of a product catalogue
