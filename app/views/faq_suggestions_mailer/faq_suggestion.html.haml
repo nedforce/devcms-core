@@ -1,0 +1,14 @@
+%div{ :style => 'font-family: Arial, Helvetica, sans-serif; font-size: 12px;' }
+  %p
+    %strong== #{@subject}:
+
+  %dl
+    %dt= t 'faqs.title'
+    %dd= @question
+    %dt= t 'faqs.explanation'
+    %dd= @explanation
+
+  Met vriendelijke groet,
+  %br
+  %br
+  Het #{@host} team

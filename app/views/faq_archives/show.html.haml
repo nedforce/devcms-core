@@ -1,0 +1,16 @@
+.faqArchive.regularPage
+  = readspeaker do
+    = readspeaker_button class: 'topRightReadspeaker'
+
+  %h1= h @faq_archive.title
+
+  - if @faq_archive.description.present?
+    .htmlField
+      = w @faq_archive.description
+
+  - @faq_archive.sub_themes.each do |theme|
+    = render partial: '/faq_themes/listing', locals: { items: theme.children, theme: theme }
+
+
+  .buttons.clearfix
+    = print_button

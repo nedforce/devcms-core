@@ -1,7 +1,7 @@
-= form.date_field  :publication_start_date_day,  :label => "#{t 'news.begin_date'}", :value => @news_item.publication_start_date, :allow_empty => true
-= form.time_field  :publication_start_date_time, :label => "#{t 'news.begin_time'}", :value => @news_item.publication_start_date, :allow_empty => true
-= form.date_field  :publication_end_date_day,    :label => "#{t 'news.end_date'}",   :value => @news_item.publication_end_date,   :allow_empty => true
-= form.time_field  :publication_end_date_time,   :label => "#{t 'news.end_time'}",   :value => @news_item.publication_end_date,   :allow_empty => true
+= form.date_field  :publication_start_date_day,  :label => "#{t 'shared.begin_date'}", :value => @news_item.publication_start_date, :allow_empty => true
+= form.time_field  :publication_start_date_time, :label => "#{t 'shared.begin_time'}", :value => @news_item.publication_start_date, :allow_empty => true
+= form.date_field  :publication_end_date_day,    :label => "#{t 'shared.end_date'}",   :value => @news_item.publication_end_date,   :allow_empty => true
+= form.time_field  :publication_end_date_time,   :label => "#{t 'shared.end_time'}",   :value => @news_item.publication_end_date,   :allow_empty => true
 = form.text_area   :preamble,                    :label => t('news.preamble'),       :rows => 5
 = form.html_editor :body,                        :label => t('news.text')
 = form.check_box   :commentable,                 :label => t('shared.commentable')

@@ -249,6 +249,15 @@ class NodeURLAliasTest < ActiveSupport::TestCase
     assert cn.node.errors[:url_alias].any?
   end
 
+  def test_should_clear_custom_alias_with_suffix
+    cn = create_page(:title => 'foobarbaz').node
+    cn.update_attributes :custom_url_suffix => 'suffix'
+    assert_equal 'suffix', cn.custom_url_alias
+    cn.update_attributes :custom_url_suffix => ""
+    cn.reload
+    assert_equal nil, cn.custom_url_alias
+  end
+
 protected
 
   def create_page(options = {})

@@ -1,0 +1,9 @@
+.faq_theme_listing
+  = skippable 'faq_categories_list' do
+    %ul.faq_categories
+      - items.each do |node|
+        - node.content.tap do |category|
+          %li
+            %h3.background_base.faq_category= link_to category.title, "##{category.to_link_name}", name: category.to_link_name
+            = render partial: '/faq_categories/listing', locals: { items: category.content_children }
+  %h4= link_to_node t('faqs.make_suggestion', theme: theme), theme, { action: t('faqs.suggestion') }, { class: 'font_base'}

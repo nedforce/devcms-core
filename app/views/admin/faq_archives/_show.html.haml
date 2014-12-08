@@ -1,0 +1,31 @@
+.regularPage.FaqArchive
+  %h2= h @faq_archive.title
+
+  - unless @faq_archive.new_record?
+    .metadata
+      %p.lastUpdateDate
+        == #{t 'shared.last_updated'}: #{l @faq_archive.last_updated_at, :format => :long}
+
+  - if @faq_archive.description.present?
+    .htmlField.FaqArchiveDescription
+      = w @faq_archive.description
+
+  %h3= t 'faq_archives.statistics'
+  %table{border: '1', cellpadding: '2' }
+    - @faq_archive.sub_themes.each do |faq_theme|
+      %thead
+        %th.theme{colspan: 2}
+          %strong== #{FaqTheme.human_name}: #{faq_theme.title}
+      - faq_theme.children.each do |faq_category|
+        %thead
+          %th.category{colspan: 2}
+            %strong== #{FaqCategory.human_name}: #{ faq_category.title}
+        %thead
+          %th
+            %em= t 'faqs.title'
+          %th
+            %em= t 'faqs.hits'
+        - faq_category.children.each do |faq|
+          %tr
+            %td.question= faq.title
+            %td.hits=     faq.hits

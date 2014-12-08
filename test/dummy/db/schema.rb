@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140724145050) do
+ActiveRecord::Schema.define(:version => 20141127141643) do
 
   create_table "abbreviations", :force => true do |t|
     t.string   "abbr",       :null => false
@@ -145,6 +145,16 @@ ActiveRecord::Schema.define(:version => 20140724145050) do
 
   add_index "combined_calendars", ["deleted_at"], :name => "index_combined_calendars_on_deleted_at"
 
+  create_table "combined_meetings_meetings", :force => true do |t|
+    t.integer  "combined_meeting_id", :null => false
+    t.integer  "meeting_id",          :null => false
+    t.integer  "position",            :null => false
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+  end
+
+  add_index "combined_meetings_meetings", ["combined_meeting_id", "meeting_id"], :name => "index_on_combined_meeting_id_and_meeting_id", :unique => true
+
   create_table "comments", :force => true do |t|
     t.string   "title",            :limit => 50, :default => ""
     t.integer  "commentable_id",                 :default => 0,  :null => false
@@ -274,6 +284,23 @@ ActiveRecord::Schema.define(:version => 20140724145050) do
   add_index "events", ["meeting_category_id"], :name => "index_calendar_items_on_meeting_category_id"
   add_index "events", ["start_time"], :name => "index_calendar_items_on_start_time"
   add_index "events", ["updated_at"], :name => "index_calendar_items_on_updated_at"
+
+  create_table "faq_archives", :force => true do |t|
+    t.string   "title",       :null => false
+    t.text     "description"
+    t.datetime "deleted_at"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  create_table "faqs", :force => true do |t|
+    t.text     "question"
+    t.text     "answer"
+    t.integer  "hits"
+    t.datetime "deleted_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "feeds", :force => true do |t|
     t.string   "url",                :null => false
@@ -602,6 +629,15 @@ ActiveRecord::Schema.define(:version => 20140724145050) do
   add_index "newsletter_editions", ["published"], :name => "index_newsletter_editions_on_published"
   add_index "newsletter_editions", ["updated_at"], :name => "index_newsletter_editions_on_updated_at"
 
+  create_table "node_categories", :force => true do |t|
+    t.integer  "node_id",     :null => false
+    t.integer  "category_id", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "node_categories", ["node_id", "category_id"], :name => "index_node_categories_on_node_id_and_category_id", :unique => true
+
   create_table "nodes", :force => true do |t|
     t.string   "content_type",                                          :null => false
     t.integer  "content_id",                                            :null => false
@@ -858,6 +894,13 @@ ActiveRecord::Schema.define(:version => 20140724145050) do
 
   add_index "product_categories", ["ancestry"], :name => "index_product_categories_on_ancestry"
   add_index "product_categories", ["external_id"], :name => "index_product_categories_on_external_id", :unique => true
+
+  create_table "product_categories_faqs", :force => true do |t|
+    t.integer  "faq_id"
+    t.integer  "product_category_id"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+  end
 
   create_table "product_categories_products", :force => true do |t|
     t.integer  "product_id"

@@ -1,6 +1,8 @@
 nl:
   shared:
     at: om
+    begin_date: Publicatie begindatum
+    begin_time: Publicatie begintijd
     cascade_expires_on: Vervaldatum onderliggende content
     commentable: Reacties toestaan?
     confirm_deletion: Bevestig verwijdering
@@ -10,6 +12,8 @@ nl:
     edit: Bewerken
     editor_comment: Commentaar van betreffende redacteur
     email: E-mailadres
+    end_date: Publicatie einddatum
+    end_time: Publicatie eindtijd
     filename: Bestandsnaam
     failed: Opslaan mislukt!
     last_updated: Laatst gewijzigd
@@ -435,6 +439,48 @@ nl:
     page_was_not_found: De door u opgegeven pagina kon helaas niet worden gevonden.
     search_page_in: U kunt de gewenste pagina opzoeken in de
     use_search_field: U kunt hiervoor ook het zoekveld gebruiken.
+  faqs:
+    add_to: Vraag & antwoord toevoegen aan
+    edit: Vraag & antwoord bewerken
+    failed: Kon vraag & antwoord niet opslaan.
+    saved: Vraag & antwoord opgeslagen!
+    title: Vraag
+    answer: Antwoord
+    hits: Clicks
+    suggestion: suggestie
+    suggestion_for: Suggestie voor vraag & antwoord thema '%{theme}'
+    explanation: Toelichting
+    make_suggestion: Staat uw vraag er niet bij? Klik hier om een vraag voor te stellen!
+  faq_archives:
+    add_to: Vraag & antwoord module toevoegen aan
+    edit: Vraag & antwoord module bewerken
+    failed: Kon vraag & antwoord module niet opslaan.
+    saved: Vraag & antwoord module opgeslagen!
+    sub_themes: Vraag & antwoord themas en categoriën
+    statistics: Statistieken
+  faq_categories:
+    add_to: Vraag & antwoord categorie toevoegen aan
+    edit: Vraag & antwoord categorie bewerken
+    failed: Kon vraag & antwoord categorie niet opslaan.
+    saved: Vraag & antwoord categorie opgeslagen!
+  faq_themes:
+    add_to: Vraag & antwoord thema toevoegen aan
+    edit: Vraag & antwoord thema bewerken
+    failed: Kon vraag & antwoord thema niet opslaan.
+    saved: Vraag & antwoord thema opgeslagen!
+    sub_themes: Vraag & antwoord categoriën
+  faq_top_five:
+    add_to: Vraag & antwoord Top 5 toevoegen aan
+    edit: Vraag & antwoord Top 5 bewerken
+    failed: Kon vraag & antwoord Top 5 niet opslaan.
+    saved: Vraag & antwoord Top 5 opgeslagen!
+  faq_suggestions:
+    question: Vraag
+    delivery_succeeded: Uw vraag is verzonden!
+    delivery_failed: Uw vraag kon niet verzonden worden, probeer het later nog een keer.
+    explanation: Toelichting
+    send: Vraag versturen
+    header: Stel hier uw vraag over %{theme}
   feeds:
     add_to: RSS feed toevoegen aan
     edit: Bewerken van RSS feed
@@ -622,13 +668,9 @@ nl:
   news:
     add_images: Afbeelding(en) toevoegen aan dit nieuwsbericht
     archive_failed: Kon nieuwsarchief niet opslaan.
-    begin_date: Publicatie begindatum
-    begin_time: Publicatie begintijd
     comment: reactie
     comments: reacties
     date: Publicatiedatum
-    end_date: Publicatie einddatum
-    end_time: Publicatie eindtijd
     full_article: Volledig artikel
     full_overview: Compleet overzicht
     item_failed: Kon nieuwsbericht niet opslaan.
@@ -823,8 +865,6 @@ nl:
   pages:
     add_images: Afbeelding(en) toevoegen aan deze pagina
     add_to: Pagina toevoegen aan
-    begin_date: Publicatie begindatum
-    begin_time: Publicatie begintijd
     body: Tekst
     edit: Bewerken van pagina
     editor_comment: Commentaar voor eindredacteur
@@ -962,8 +1002,6 @@ nl:
     add_images: Afbeelding(en) toevoegen aan deze sectie
     add_to: Sectie toevoegen aan
     add_to_site: Site toevoegen aan
-    begin_date: Publicatie begindatum
-    begin_time: Publicatie begintijd
     domain: Domein
     drag_and_drop: Sleep een item uit de sitemap in het veld hieronder om een startpagina voor deze sectie in te stellen.
     edit: Bewerken van sectie

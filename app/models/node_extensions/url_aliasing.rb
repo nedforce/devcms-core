@@ -46,6 +46,20 @@ module NodeExtensions::UrlAliasing
   end
 
   module ClassMethods
+
+    # Cleans a URL by stripping any whitespace characters, transliterating any
+    # special characters, replacing illegal characters by hyphens and converting
+    # the entire URL to downcase.
+    def clean_for_url(url)
+      result = Node::Helper.instance.strip_tags(url.strip).encode('utf-8', :ignore => true, :translit => true).downcase.gsub(/[^\/a-z0-9]/,'-').gsub(/-{2,}/,'-').gsub(/\/$/, "")
+
+      # remove any leading and trailing hyphens, also when directly after a slash
+      result = $1 while result =~ /\A-(.*)/
+      result = $1 while result =~ /(.*)-\z/
+      result.gsub!(/\/-/, '/')
+      return result
+    end
+
     # Class methods
     # Returns if the specified URL alias has been reserved.
     def url_alias_reserved?(alias_to_check)
@@ -133,7 +147,7 @@ module NodeExtensions::UrlAliasing
       generated_url_alias << "#{parent_url_alias}/"
     end
 
-    generated_url_alias << clean_for_url(self.content.path_for_url_alias(self))
+    generated_url_alias << Node.clean_for_url(self.content.path_for_url_alias(self))
 
     generated_url_alias
   end
@@ -147,7 +161,7 @@ module NodeExtensions::UrlAliasing
       generated_custom_url_alias << "#{parent_url_alias}/"
     end
 
-    generated_custom_url_alias << clean_for_url(self.custom_url_suffix.starts_with?('/') ? self.custom_url_suffix[1..-1] : self.custom_url_suffix)
+    generated_custom_url_alias << Node.clean_for_url(self.custom_url_suffix.starts_with?('/') ? self.custom_url_suffix[1..-1] : self.custom_url_suffix)
 
     generated_custom_url_alias
   end
@@ -187,19 +201,6 @@ module NodeExtensions::UrlAliasing
     end
 
     temp_url_alias
-  end
-
-  # Cleans a URL by stripping any whitespace characters, transliterating any
-  # special characters, replacing illegal characters by hyphens and converting
-  # the entire URL to downcase.
-  def clean_for_url(url)
-    result = Node::Helper.instance.strip_tags(url.strip).encode('utf-8', :ignore => true, :translit => true).downcase.gsub(/[^\/a-z0-9]/,'-').gsub(/-{2,}/,'-').gsub(/\/$/, "")
-
-    # remove any leading and trailing hyphens, also when directly after a slash
-    result = $1 while result =~ /\A-(.*)/
-    result = $1 while result =~ /(.*)-\z/
-    result.gsub!(/\/-/, '/')
-    return result
   end
 
   # Prevents saving this node when the URL alias contains reserved words.

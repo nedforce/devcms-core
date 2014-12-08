@@ -21,6 +21,11 @@ nl:
       course: Cursus
       event_registration: Evenementinschrijving
       external_link: Externe link
+      faq: Vraag & antwoord
+      faq_archive: Vraag & antwoord module
+      faq_category: Vraag & antwoord categorie
+      faq_theme: Vraag & antwoord thema
+      faq_top_five: Vraag & antwoord Top 5
       feed: RSS feed
       forum: Forum
       forum_post: Reactie
@@ -133,6 +138,9 @@ nl:
         people_count: Aantal personen
       external_link:
         url: URL
+      faq:
+        title: Vraag
+        answer: Antwoord
       feed:
         url: URL
       forum:
@@ -170,7 +178,7 @@ nl:
       news_item:
         body: Tekst
         title: Titel
-        publication_date: Publicatiedatum        
+        publication_date: Publicatiedatum
       newsletter_archive:
         title: Titel
       newsletter_edition:
@@ -210,7 +218,7 @@ nl:
       setting:
         key: Instelling
         alt: Omschrijving
-        value: Waarde      
+        value: Waarde
       share:
         from_email_address: Uw e-mailadres
         from_name: Uw naam
@@ -238,7 +246,7 @@ nl:
         title: Titel
     errors:
       messages:
-        email: "lijkt geen geldig emailadres"      
+        email: "lijkt geen geldig emailadres"
       models:
         agenda_item:
           attributes:

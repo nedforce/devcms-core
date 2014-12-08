@@ -9,7 +9,7 @@
     == #{t 'calendars.start_time'}: #{l event.start_time, :format => "%d %B %Y #{t 'shared.at'} %H:%M"}
 
   .end_time
-    == #{t 'calendars.end_time'}: #{l event.end_time, :format => "%d %B %Y #{t 'shared.at'} %H:%M"}
+    == #{t 'shared.end_time'}: #{l event.end_time, :format => "%d %B %Y #{t 'shared.at'} %H:%M"}
 
   .location_description
     == #{t 'calendars.location_description'}: #{event.location_description.present? ? h(event.location_description) : t('calendars.unknown')}

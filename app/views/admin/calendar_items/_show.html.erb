@@ -17,7 +17,7 @@
     
       <div class="start_time"><%=t 'calendars.start_time' -%>: <%= record.start_time.strftime("%d %B %Y #{t 'shared.at'} %H:%M") -%></div>
 
-      <div class="end_time"><%=  t 'calendars.end_time'   -%>: <%= record.end_time.strftime("%d %B %Y #{t 'shared.at'} %H:%M") -%></div>
+      <div class="end_time"><%=  t 'shared.end_time'   -%>: <%= record.end_time.strftime("%d %B %Y #{t 'shared.at'} %H:%M") -%></div>
 
       <div class="location_description"><%=  t 'calendars.location_description' -%>: <%= record.location_description ? h(record.location_description) : t('calendars.unknown') -%></div>
 

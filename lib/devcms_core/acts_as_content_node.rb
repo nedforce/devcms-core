@@ -245,6 +245,10 @@ module DevcmsCore
       title
     end
 
+    def to_link_name
+      @link_name ||= Node.clean_for_url title
+    end
+
     private
 
     def update_url_alias_if_title_changed

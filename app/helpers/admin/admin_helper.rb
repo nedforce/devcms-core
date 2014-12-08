@@ -36,7 +36,7 @@ module Admin::AdminHelper
       :page => :settings,
       :url  => { :controller => 'admin/settings', :action => :index },
       :text => I18n.t('admin.settings_button')
-    }    
+    }
     trash = {
       :page => :trash,
       :url  => { :controller => 'admin/trash', :action => :index },
@@ -63,7 +63,7 @@ module Admin::AdminHelper
 
     if current_user.has_role?('admin', 'final_editor')
       menu_items << privileged_users
-      menu_items << users 
+      menu_items << users
       menu_items << trash
       menu_items << comments
       menu_items << url_aliases
@@ -116,7 +116,7 @@ module Admin::AdminHelper
     render :partial => 'admin/shared/meta_fields', :locals => { :content => content }
   end
 
-  def display_time_select_for(carrousel)    
+  def display_time_select_for(carrousel)
     [
       label_tag(     'carrousel[display_time][]', Carrousel.human_attribute_name(:display_time)) + ': ',
       text_field_tag('carrousel[display_time][]', carrousel.human_display_time[0], :size => 2),
@@ -124,7 +124,7 @@ module Admin::AdminHelper
     ].join("\n").html_safe
   end
 
-  def transition_time_select_for(carrousel)    
+  def transition_time_select_for(carrousel)
     [
       label_tag(     'carrousel[transition_time]', Carrousel.human_attribute_name(:transition_time)) + ': ',
       text_field_tag('carrousel[transition_time]', carrousel.transition_time, :size => 4) + 'ms'
@@ -152,7 +152,7 @@ module Admin::AdminHelper
   end
 
   def default_fields_before_form(form)
-    form.text_field(:title, :label => t('shared.title')) +
+    form.text_field(:title, :label => t(:title, scope: form.object.controller_name, default: t('shared.title'))) +
     form.text_field(:title_alternative_list, :label => t('shared.title_alternatives')) +
     form.text_field(:tag_list, :label => t('shared.tags')) +
     javascript_tag("setupTagComboBoxes(#{ActiveModel::Naming.param_key(form.object).to_json}, #{Node.available_tags.to_json});") if form.object.attributes.keys.include?('title')

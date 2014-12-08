@@ -2,8 +2,8 @@
   = form.text_field :domain,         :label => t('sections.domain')
   = form.text_field :analytics_code, :label => t('sites.analytics_code'), :style => 'height: 42px;'
   = form.text_field :piwik_site_id , :label => t('sites.piwik_site_id')
-= form.date_field :publication_start_date_day,  :label => "#{t 'sections.begin_date'}", :value => record.publication_start_date, :allow_empty => true
-= form.time_field :publication_start_date_time, :label => "#{t 'sections.begin_time'}", :value => record.publication_start_date, :allow_empty => true
+= form.date_field :publication_start_date_day,  :label => "#{t 'shared.begin_date'}", :value => record.publication_start_date, :allow_empty => true
+= form.time_field :publication_start_date_time, :label => "#{t 'shared.begin_time'}", :value => record.publication_start_date, :allow_empty => true
 
 = form.html_editor :description, :label => t('shared.description'), :height => 100
 

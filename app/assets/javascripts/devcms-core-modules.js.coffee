@@ -6,3 +6,4 @@
 #= require modules/readspeaker
 #= require modules/slideshow
 #= require modules/search
+#= require modules/faq

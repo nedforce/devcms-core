@@ -6,7 +6,7 @@
 
     - if @theme.content_children.exists?
       .themeOverview
-        = render :partial => "/#{@theme.controller_name}/listing", :locals => { :items => @theme.content_children }
+        = render :partial => "/#{@theme.controller_name}/listing", :locals => { :items => @theme.content_children, :theme => @theme }
 
     - if @theme.sub_themes.exists?
       %h2= t "#{@theme.controller_name}.sub_themes"

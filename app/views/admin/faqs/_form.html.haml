@@ -1,0 +1,4 @@
+= form.date_field :publication_start_date_day,  label: "#{t 'shared.begin_date'}", value: @faq.publication_start_date, allow_empty: true
+= form.time_field :publication_start_date_time, label: "#{t 'shared.begin_time'}", value: @faq.publication_start_date, allow_empty: true
+
+= form.html_editor :answer,   label: t('faqs.answer')
