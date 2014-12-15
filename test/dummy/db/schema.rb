@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141127141643) do
+ActiveRecord::Schema.define(:version => 20141215093321) do
 
   create_table "abbreviations", :force => true do |t|
     t.string   "abbr",       :null => false
@@ -683,6 +683,7 @@ ActiveRecord::Schema.define(:version => 20141127141643) do
     t.string   "short_title"
     t.string   "locale"
     t.datetime "last_checked_at"
+    t.string   "content_box_url"
   end
 
   add_index "nodes", ["ancestry"], :name => "index_nodes_on_ancestry"

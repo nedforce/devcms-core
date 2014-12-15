@@ -146,7 +146,7 @@ class Node < ActiveRecord::Base
   validates_inclusion_of :content_box_colour, :in => Devcms.content_box_colours, :allow_blank => true
   validates_inclusion_of :content_box_icon,   :in => Devcms.content_box_icons,   :allow_blank => true, :if => Proc.new { Rails.application.config.use_devcms_icons }
 
-  validates_length_of    :content_box_title, :in => 2..255, :allow_blank => true
+  validates :content_box_title, :content_box_url, length: 2..255, allow_blank: true
 
   validate  :ensure_publication_start_date_is_present_when_publication_end_date_is_present,
             :ensure_publication_end_date_after_publication_start_date,
