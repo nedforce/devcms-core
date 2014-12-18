@@ -1,6 +1,6 @@
 module DevcmsCore
   module NeedsEditorApproval
-    extend ActiveSupport::Concern  
+    extend ActiveSupport::Concern
 
     included do
       attr_accessor :editor_comment
@@ -11,7 +11,7 @@ module DevcmsCore
         true
       end
 
-      def create(attributes = {}, &block)
+      def create(attributes = nil, options = {}, &block)
         if attributes.is_a?(Array)
           super(attributes, &block)
         else
@@ -21,7 +21,7 @@ module DevcmsCore
           if user && parent && user.has_role_on?('editor', parent)
             attributes[:responsible_user] = user
           end
-        
+
           approval_required = attributes.delete(:approval_required)
           object = new(attributes)
           yield(object) if block_given?
@@ -30,7 +30,7 @@ module DevcmsCore
         end
       end
 
-      def create!(attributes = nil, &block)
+      def create!(attributes = nil, options = {}, &block)
         record = self.create(attributes, &block)
 
         if record.new_record?

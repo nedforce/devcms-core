@@ -38,7 +38,7 @@ module LayoutHelper
   def render_related_content
     return if controller_name == 'shares'
 
-    if @node && @node.content_type_configuration[:has_own_content_box] && !((@node.content_class == Page || @node.content_class <= Section) && @node.tags.empty?)
+    if @node && @node.has_related_content?
       custom_partial = @node.own_or_inherited_layout.custom_representations['related_content']['content_partial'] || 'related_content'
       render :partial => '/layouts/partials/content_box',
              :locals  => {

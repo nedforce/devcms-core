@@ -5,7 +5,7 @@ module OwmsMetadataHelper
     metadata << tag(:link, rel: 'schema.DCTERMS', href: 'http://purl.org/dc/terms')
     metadata << tag(:link, rel: 'schema.OVERHEID', href: 'http://standaarden.overheid.nl/owms/terms')
 
-    metadata << indexing_metadata_for(node)    
+    metadata << indexing_metadata_for(node)
     metadata << owms_core_metadata_for(node)
     metadata << owms_permit_metadata_for(node) if node.content_type == 'Permit'
 
@@ -110,9 +110,9 @@ module OwmsMetadataHelper
 
   # Metadata that should be added to a SOLR search index
   def indexing_metadata_for(node)
-    tags = []    
-    tags << meta_tag('DCTERMS.alternative', node.content.product_synonyms.map(&:synonym).join(',')) if node.content_type == "Product"
-    tags  
+    tags = []
+    tags << meta_tag('DCTERMS.alternative', node.content.keyword_list) if node.content_type == "Product"
+    tags
   end
 
   def meta_tag(name, content, scheme = nil)
@@ -120,14 +120,6 @@ module OwmsMetadataHelper
   end
 
   def node_url(node)
-    if node.content_type == 'ProductCatalogue' && params[:controller] == 'products' && params[:action] == 'index'
-      options = {}
-      [:letter, :selection, :selection_id].each do |param|
-        options[param] = params[param] if params[param].present?
-      end
-      product_catalogue_products_url(node.content, options)
-    else
-      aliased_or_delegated_url(node)
-    end
+    aliased_or_delegated_url(node)
   end
 end

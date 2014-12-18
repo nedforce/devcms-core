@@ -55,6 +55,10 @@ class Page < ActiveRecord::Base
     I18n.t('owms.web_page')
   end
 
+  def has_related_content?
+    node.tags.empty?
+  end
+
 protected
 
   def remove_associated_content
