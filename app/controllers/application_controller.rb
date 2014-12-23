@@ -29,6 +29,7 @@ class ApplicationController < ActionController::Base
 
   # Set view paths
   before_filter :set_view_paths
+  before_filter :set_high_contrast_mode
 
   # Attempt to login the user from a cookie, if it's set.
   before_filter :login_from_cookie
@@ -223,6 +224,13 @@ protected
     else
       return 'default'
     end
+  end
+
+  def set_high_contrast_mode
+    if params['contrast'].present?
+      session['high_contrast_mode'] = params['contrast'] == 'high'
+    end
+    @high_contrast_mode = session['high_contrast_mode']
   end
 
   def set_meta_description
