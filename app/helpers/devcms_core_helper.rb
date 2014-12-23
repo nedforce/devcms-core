@@ -288,6 +288,12 @@ module DevcmsCoreHelper
     link_to(t('shared.skip_to_top'),    "\#top_of_#{id}", :id => "bottom_of_#{id}", :class => 'text-alternative')
   end
 
+  def switch_contrast_mode_link
+    target_mode = @high_contrast_mode ? :low : :high
+    link_to image_tag('icons/contrast-high-icon.png', :class => 'icon', :alt => 'Contrast icoon', :title => t(target_mode, scope: [:shared, :contrast])),
+      { :contrast => target_mode }
+  end
+
   protected
 
     # Returns the HTML for any children belonging to this node.

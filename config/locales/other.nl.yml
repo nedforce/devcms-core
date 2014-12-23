@@ -1,5 +1,8 @@
 nl:
   shared:
+    contrast:
+      high: Hoog constrast
+      low:  Normaal contrast
     at: om
     begin_date: Publicatie begindatum
     begin_time: Publicatie begintijd
