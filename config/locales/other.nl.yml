@@ -1,7 +1,7 @@
 nl:
   shared:
     contrast:
-      high: Hoog constrast
+      high: Hoog contrast
       low:  Normaal contrast
     at: om
     begin_date: Publicatie begindatum
@@ -372,8 +372,6 @@ nl:
     export_csv_tooltip: Klik hier om de inzendingen als CSV op te slaan
     export_xls: Exporteren als Excel
     export_xls_tooltip: Klik hier om de inzendingen als een Excel-bestand op te slaan
-
-
     import_csv: CSV Importeren
     message: Bericht
     new_contact_field: Nieuw invoerveld

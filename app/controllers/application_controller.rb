@@ -228,9 +228,9 @@ protected
 
   def set_high_contrast_mode
     if params['contrast'].present?
-      session['high_contrast_mode'] = params['contrast'] == 'high'
+      cookies['high_contrast_mode'] = params['contrast'] == 'high'
     end
-    @high_contrast_mode = session['high_contrast_mode']
+    @high_contrast_mode = cookies['high_contrast_mode']
   end
 
   def set_meta_description

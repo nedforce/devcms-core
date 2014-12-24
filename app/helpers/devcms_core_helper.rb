@@ -288,10 +288,13 @@ module DevcmsCoreHelper
     link_to(t('shared.skip_to_top'),    "\#top_of_#{id}", :id => "bottom_of_#{id}", :class => 'text-alternative')
   end
 
-  def switch_contrast_mode_link
+  def switch_contrast_mode_link(show_text = false )
     target_mode = @high_contrast_mode ? :low : :high
-    link_to image_tag('icons/contrast-high-icon.png', :class => 'icon', :alt => 'Contrast icoon', :title => t(target_mode, scope: [:shared, :contrast])),
-      { :contrast => target_mode }
+    link_text = image_tag('icons/contrast-high-icon.png', :class => 'icon', :alt => 'Contrast icoon', :title => t(target_mode, scope: [:shared, :contrast]))
+    if show_text
+      link_text += "#{t(target_mode, scope: [:shared, :contrast])}"
+    end
+    link_to link_text, { :contrast => target_mode }
   end
 
   protected
