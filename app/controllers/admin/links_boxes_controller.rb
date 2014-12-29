@@ -68,7 +68,7 @@ class Admin::LinksBoxesController < Admin::AdminController
         format.xml  { render :xml => @links_box, :status => :created, :location => @links_box }
       else
         format.html { render :template => 'admin/shared/new', :locals => { :record => @links_box }, :status => :unprocessable_entity }
-        format.xml  { render :xml => @links_box.errors, :status => :unprocessable_entitity }
+        format.xml  { render :xml => @links_box.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -91,7 +91,7 @@ class Admin::LinksBoxesController < Admin::AdminController
         format.xml  { head :ok }
       else
         format.html { render :template => 'admin/shared/edit', :locals => { :record => @links_box }, :status => :unprocessable_entity }
-        format.xml  { render :xml => @links_box.errors, :status => :unprocessable_entitity }
+        format.xml  { render :xml => @links_box.errors, :status => :unprocessable_entity }
       end
     end
   end

@@ -62,7 +62,7 @@ class Admin::SitesController < Admin::AdminController
         format.xml  { render :xml => @site, :status => :created, :location => @site }
       else
         format.html { render :template => 'admin/shared/new', :locals => { :record => @site }, :status => :unprocessable_entity }
-        format.xml  { render :xml => @site.errors, :status => :unprocessable_entitity }
+        format.xml  { render :xml => @site.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -87,7 +87,7 @@ class Admin::SitesController < Admin::AdminController
         format.xml  { head :ok }
       else
         format.html { render :template => 'admin/shared/edit', :locals => { :record => @site }, :status => :unprocessable_entity }
-        format.xml  { render :xml => @site.errors, :status => :unprocessable_entitity }
+        format.xml  { render :xml => @site.errors, :status => :unprocessable_entity }
       end
     end
   end
