@@ -114,7 +114,6 @@ module DevcmsCoreHelper
     content_tag(:ul, list_items, :class => 'errors')
   end
 
-
   # Returns the HTML for the footer menu links.
   def create_footer_menu_links
     current_site.children.accessible.public.shown_in_menu.all(:order => 'nodes.position ASC').map do |node|

@@ -421,7 +421,7 @@ protected
   def set_extra_search_scopes
     @search_scopes << SEARCH_SCOPE_SEPARATOR
 
-    @search_scopes += @accessible_children_for_menu.map { |c| [ c.title, "node_#{c.id}" ]}
+    @search_scopes += @accessible_children_for_menu.map { |c| [ c.title, "node_#{c.id}" ] }
   end
 
   def find_accessible_children_for_menus

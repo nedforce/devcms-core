@@ -68,7 +68,7 @@ class Admin::NodesController < Admin::AdminController
       if params[:node][:template_id] == 'inherit'
         params[:node][:template] = nil
       elsif @node.find_available_templates_for(current_user).map(&:id).include?(params[:node][:template_id].to_i)
-        params[:node][:template] = @node.find_available_templates_for(current_user).find{ |t| t.id == params[:node][:template_id].to_i }
+        params[:node][:template] = @node.find_available_templates_for(current_user).find { |t| t.id == params[:node][:template_id].to_i }
       else
         raise ActiveRecord::RecordNotFound
       end
@@ -109,7 +109,7 @@ class Admin::NodesController < Admin::AdminController
       @node.content_type == 'ContentCopy' ? @node.destroy : @node.paranoid_delete!
 
       format.xml  { head :ok }
-      format.json { render :json => { :notice => I18n.t('nodes.succesfully_destroyed')}.to_json, :status => :ok }
+      format.json { render :json => { :notice => I18n.t('nodes.succesfully_destroyed') }.to_json, :status => :ok }
     end
   end
 
@@ -121,20 +121,19 @@ class Admin::NodesController < Admin::AdminController
       parent_node.content.destroy_items_for_year_or_month(params[:year], params[:month], true)
 
       format.xml  { head :ok }
-      format.json { render :json => { :notice => I18n.t('nodes.succesfully_destroyed')}.to_json, :status => :ok }
+      format.json { render :json => { :notice => I18n.t('nodes.succesfully_destroyed') }.to_json, :status => :ok }
     end
   end
 
 
   def export_newsletter
     if @node.content.is_a?(NewsletterArchive)
-      #redirect_to @node.content, :action => 'show', :id => @node.content.id
       respond_to do |format|
-        format.json { render :json => { :id => @node.content.id,:notice => I18n.t('nodes.newsletter_subscribers_export')}.to_json, :status => :ok }
+        format.json { render :json => { :id => @node.content.id,:notice => I18n.t('nodes.newsletter_subscribers_export') }.to_json, :status => :ok }
       end
     else
       respond_to do |format|
-        format.json { render :json => { :error => I18n.t('nodes.newsletter_not_found')}.to_json, :status => :precondition_failed }
+        format.json { render :json => { :error => I18n.t('nodes.newsletter_not_found') }.to_json, :status => :precondition_failed }
       end
     end
   end
@@ -145,13 +144,13 @@ class Admin::NodesController < Admin::AdminController
   def make_global_frontpage
     respond_to do |format|
       if !@node.visible?
-        format.json { render :json => { :error => I18n.t('nodes.frontpage_cant_be_hidden')}.to_json, :status => :precondition_failed }
+        format.json { render :json => { :error => I18n.t('nodes.frontpage_cant_be_hidden') }.to_json, :status => :precondition_failed }
         format.xml  { head :precondition_failed }
       elsif Node.root.content.set_frontpage!(@node)
-        format.json { render :json => { :notice => I18n.t('nodes.frontpage_set')}.to_json, :status => :ok }
+        format.json { render :json => { :notice => I18n.t('nodes.frontpage_set') }.to_json, :status => :ok }
         format.xml  { head :ok }
       else
-        format.json { render :json => { :error => I18n.t('nodes.frontpage_cant_be_set')}.to_json, :status => :precondition_failed }
+        format.json { render :json => { :error => I18n.t('nodes.frontpage_cant_be_set') }.to_json, :status => :precondition_failed }
         format.xml  { head :precondition_failed }
       end
     end

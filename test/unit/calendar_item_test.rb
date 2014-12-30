@@ -64,9 +64,9 @@ class CalendarItemTest < ActiveSupport::TestCase
 
   def test_should_update_calendar_item
     assert_no_difference 'CalendarItem.count' do
-      @events_calendar_item_one.title = 'New title'
+      @events_calendar_item_one.title      = 'New title'
       @events_calendar_item_one.start_time = DateTime.now
-      @events_calendar_item_one.end_time = DateTime.now + 1.hour
+      @events_calendar_item_one.end_time   = DateTime.now + 1.hour
       assert @events_calendar_item_one.save(:user => users(:arthur))
     end
   end
