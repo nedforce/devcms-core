@@ -22,10 +22,10 @@ var newsletterEditionForm = new Ext.dvtr.ContentNodeFormPanel({
 newsletterEditionForm.addButton({
     text: '<%= I18n.t("shared.preview") -%>',
     formBind: true,
-    handler: function(){
-		resetTinyMCE();
+    handler: function () {
+        resetTinyMCE();
         var items_array = new Array();
-        if(newsItemCol.items != null) newsItemCol.items.each(function (item, index, length) { items_array.push(item.id); });
+        if (newsItemCol.items != null) newsItemCol.items.each(function (item, index, length) { items_array.push(item.id); });
 
         var customParams = Ext.apply(
             newsletterEditionForm.getForm().getValues(),{
@@ -36,7 +36,7 @@ newsletterEditionForm.addButton({
             }
         );
 
-        if(items_array.length > 0) customParams = Ext.apply(customParams, { 'items[]': items_array });
+        if (items_array.length > 0) customParams = Ext.apply(customParams, { 'items[]': items_array });
 
         rightPanel.load({
             url: '<%= admin_newsletter_edition_url(@newsletter_edition) -%>',
@@ -54,10 +54,10 @@ newsletterEditionForm.addButton({
 newsletterEditionForm.addButton({
     text: '<%= I18n.t("shared.save") -%>',
     formBind: true,
-    handler: function(){
-		resetTinyMCE();
+    handler: function () {
+        resetTinyMCE();
         var items_array = new Array();
-        if(newsItemCol.items != null) newsItemCol.items.each(function (item, index, length) { items_array.push(item.id); });
+        if (newsItemCol.items != null) newsItemCol.items.each(function (item, index, length) { items_array.push(item.id); });
 
         var customParams = Ext.apply(
             newsletterEditionForm.getForm().getValues(),{
@@ -68,14 +68,14 @@ newsletterEditionForm.addButton({
             }
         );
 
-        if(items_array.length > 0) customParams = Ext.apply(customParams, { 'items[]': items_array });
+        if (items_array.length > 0) customParams = Ext.apply(customParams, { 'items[]': items_array });
 
         rightPanel.load({
             url: '<%= admin_newsletter_edition_url(@newsletter_edition) -%>',
             method: 'POST',
             params: Ext.ux.prepareParams(defaultParams, customParams),
-            callback: function(options, success, response){
-                if(!success){
+            callback: function (options, success, response) {
+                if (!success) {
                     Ext.ux.alertResponseError(response, '<%= I18n.t("newsletters.edition_failed") -%>')
                 }
             }
@@ -92,14 +92,14 @@ if (errors.length > 0) {
 newsletterEditionForm.render('right_panel_form');
 
 // Load the content upon expanding the panel
-onBeforeExpand = function(e){
+onBeforeExpand = function (e) {
     e.showSpinner(); // Show 'loading' spinner while waiting for a server response
     e.load({
             url: e.controllerName+'/'+e.contentNodeId,
-            params: Ext.ux.prepareParams(defaultParams, {show_actions: false, format: 'html'}),
+            params: Ext.ux.prepareParams(defaultParams, { show_actions: false, format: 'html' }),
             method: 'GET',
-            callback: function(options, success, response) {
-                if(!success)
+            callback: function (options, success, response) {
+                if (!success)
                     Ext.ux.alertResponseError(response, '<%= I18n.t("newsletters.form_load_error") -%>')
                 e.hideSpinner();
                 // Assign the ID of the item to the sortlet
@@ -110,7 +110,7 @@ onBeforeExpand = function(e){
     }
 
 // Show the collapse button of every item
-if(newsItemCol.items) {
+if (newsItemCol.items) {
     newsItemCol.items.each( function(item,index,len){
         item.on('beforeexpand', onBeforeExpand);
         item.showCollapse();
@@ -119,4 +119,3 @@ if(newsItemCol.items) {
 
 //]]>
 </script>
-

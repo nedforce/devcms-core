@@ -23,10 +23,10 @@ newsletterEditionForm.addButton({
     text: '<%= I18n.t("shared.preview") -%>',
     cls: 'extSubmit',
     formBind: true,
-    handler: function(){
-		resetTinyMCE();
+    handler: function () {
+        resetTinyMCE();
         var items_array = new Array();
-        if(newsItemCol.items != null) newsItemCol.items.each(function (item, index, length) { items_array.push(item.id); });
+        if (newsItemCol.items != null) newsItemCol.items.each(function (item, index, length) { items_array.push(item.id); });
 
         var customParams = Ext.apply(
             newsletterEditionForm.getForm().getValues(),{
@@ -36,13 +36,13 @@ newsletterEditionForm.addButton({
             }
         );
 
-        if(items_array.length > 0) customParams = Ext.apply(customParams, { 'items[]': items_array });
+        if (items_array.length > 0) customParams = Ext.apply(customParams, { 'items[]': items_array });
 
         rightPanel.load({
             url: '<%= admin_newsletter_editions_url -%>',
             method: 'POST',
             params: Ext.ux.prepareParams(defaultParams, customParams),
-            callback: function(options, success, response) {
+            callback: function (options, success, response) {
                 if (!success) {
                     Ext.ux.alertResponseError(response, '<%= I18n.t("newsletters.edition_failed") -%>');
                 }
@@ -55,10 +55,10 @@ newsletterEditionForm.addButton({
     text: '<%= I18n.t("shared.save") -%>',
     cls: 'extSubmit',
     formBind: true,
-    handler: function(){
-		resetTinyMCE();
+    handler: function () {
+        resetTinyMCE();
         var items_array = new Array();
-        if(newsItemCol.items != null) newsItemCol.items.each(function (item, index, length) { items_array.push(item.id); });
+        if (newsItemCol.items != null) newsItemCol.items.each(function (item, index, length) { items_array.push(item.id); });
 
         var customParams = Ext.apply(
             newsletterEditionForm.getForm().getValues(),{
@@ -68,13 +68,13 @@ newsletterEditionForm.addButton({
             }
         );
 
-        if(items_array.length > 0) customParams = Ext.apply(customParams, { 'items[]': items_array });
+        if (items_array.length > 0) customParams = Ext.apply(customParams, { 'items[]': items_array });
 
         rightPanel.load({
             url: '<%= admin_newsletter_editions_url -%>',
             method: 'POST',
             params: Ext.ux.prepareParams(defaultParams, customParams),
-            callback: function(options, success, response) {
+            callback: function (options, success, response) {
                 if (!success) {
                     Ext.ux.alertResponseError(response, '<%= I18n.t("newsletters.edition_failed") -%>');
                 }
