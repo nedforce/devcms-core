@@ -10,7 +10,7 @@ class Admin::SocialMediaLinksBoxesControllerTest < ActionController::TestCase
   def test_should_get_show
     login_as :sjoerd
 
-    get :show, :id => @social_media_links_box
+    get :show, id: @social_media_links_box
     assert_response :success
     assert assigns(:social_media_links_box)
   end
@@ -18,7 +18,7 @@ class Admin::SocialMediaLinksBoxesControllerTest < ActionController::TestCase
   def test_should_get_new
     login_as :sjoerd
 
-    get :new, :parent_node_id => nodes(:root_section_node).id
+    get :new, parent_node_id: nodes(:root_section_node).id
     assert_response :success
     assert assigns(:social_media_links_box)
   end
@@ -26,7 +26,7 @@ class Admin::SocialMediaLinksBoxesControllerTest < ActionController::TestCase
   def test_should_get_new_with_params
     login_as :sjoerd
 
-    get :new, :parent_node_id => nodes(:root_section_node).id, :social_media_links_box => { :title => 'foo' }
+    get :new, parent_node_id: nodes(:root_section_node).id, social_media_links_box: { title: 'foo' }
     assert_response :success
     assert assigns(:social_media_links_box)
     assert_equal 'foo', assigns(:social_media_links_box).title
@@ -36,44 +36,41 @@ class Admin::SocialMediaLinksBoxesControllerTest < ActionController::TestCase
     login_as :sjoerd
 
     assert_difference('SocialMediaLinksBox.count') do
-      smlb = create_social_media_links_box
+      create_social_media_links_box
       assert_response :success
       assert !assigns(:social_media_links_box).new_record?, assigns(:social_media_links_box).errors.full_messages.join('; ')
     end
-    
   end
 
   def test_should_get_valid_preview_for_create
     login_as :sjoerd
 
     assert_no_difference('SocialMediaLinksBox.count') do
-      create_social_media_links_box({ :title => 'foobar' }, { :commit_type => 'preview' })
+      create_social_media_links_box({ title: 'foobar' }, { commit_type: 'preview' })
       assert_response :success
       assert assigns(:social_media_links_box).new_record?
       assert_equal 'foobar', assigns(:social_media_links_box).title
       assert_template 'create_preview'
     end
-
   end
 
   def test_should_not_get_invalid_preview_for_create
     login_as :sjoerd
 
     assert_no_difference('SocialMediaLinksBox.count') do
-      create_social_media_links_box({ :title => nil }, { :commit_type => 'preview' })
+      create_social_media_links_box({ title: nil }, { commit_type: 'preview' })
       assert_response :unprocessable_entity
       assert assigns(:social_media_links_box).new_record?
       assert assigns(:social_media_links_box).errors[:title].any?
       assert_template 'new'
     end
-
   end
 
   def test_should_not_create_social_media_links_box
     login_as :sjoerd
 
     assert_no_difference('SocialMediaLinksBox.count') do
-      create_social_media_links_box({ :title => nil })
+      create_social_media_links_box({ title: nil })
     end
     assert_response :unprocessable_entity
     assert assigns(:social_media_links_box).new_record?
@@ -91,7 +88,7 @@ class Admin::SocialMediaLinksBoxesControllerTest < ActionController::TestCase
   def test_should_get_edit_with_params
     login_as :sjoerd
 
-    get :edit, :id => @social_media_links_box.id, :social_media_links_box => { :title => 'foo' }
+    get :edit, id: @social_media_links_box.id, social_media_links_box: { title: 'foo' }
     assert_response :success
     assert assigns(:social_media_links_box)
     assert_equal 'foo', assigns(:social_media_links_box).title

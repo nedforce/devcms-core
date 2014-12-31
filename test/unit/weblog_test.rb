@@ -17,26 +17,26 @@ class WeblogTest < ActiveSupport::TestCase
 
   def test_should_require_title
     assert_no_difference 'Weblog.count' do
-      weblog = create_weblog(:title => nil)
+      weblog = create_weblog(title: nil)
       assert weblog.errors[:title].any?
     end
 
     assert_no_difference 'Weblog.count' do
-      weblog = create_weblog(:title => '  ')
+      weblog = create_weblog(title: '  ')
       assert weblog.errors[:title].any?
     end
   end
 
   def test_should_require_parent
     assert_no_difference 'Weblog.count' do
-      weblog = create_weblog(:parent => nil)
+      weblog = create_weblog(parent: nil)
       assert weblog.errors[:weblog_archive].any?
     end
   end
 
   def test_should_require_user
     assert_no_difference 'Weblog.count' do
-      weblog = create_weblog(:user => nil)
+      weblog = create_weblog(user: nil)
       assert weblog.errors[:user].any?
     end
   end
@@ -56,7 +56,7 @@ class WeblogTest < ActiveSupport::TestCase
   end
 
   def test_human_name_does_not_return_nil
-    assert_not_nil Weblog.human_name 
+    assert_not_nil Weblog.human_name
   end
 
   def test_should_not_return_weblog_children_for_menu
@@ -78,21 +78,21 @@ class WeblogTest < ActiveSupport::TestCase
   end
 
   def test_find_years_with_weblog_posts
-    years = @henk_weblog.weblog_posts.map { |weblog_post|
-      weblog_post.publication_start_date.year
-    }.uniq
+    years = @henk_weblog.weblog_posts.map { |weblog_post| weblog_post.publication_start_date.year }.uniq
 
     assert @henk_weblog.find_years_with_items.set_equals?(years)
   end
 
   def test_find_months_with_weblog_posts_for_year
     year_month_pairs = @henk_weblog.weblog_posts.map { |weblog_post|
-      [ weblog_post.publication_start_date.year, weblog_post.publication_start_date.month ]
+      [weblog_post.publication_start_date.year, weblog_post.publication_start_date.month]
     }.uniq
 
     year_month_pairs.each do |year_month_pair|
       year = year_month_pair.first
-      assert year_month_pairs.select { |year_month_pair| year_month_pair.first == year }.map(&:last).flatten.uniq.set_equals?(@henk_weblog.find_months_with_items_for_year(year))
+      assert year_month_pairs.select { |year_month_pair|
+        year_month_pair.first == year
+      }.map(&:last).flatten.uniq.set_equals?(@henk_weblog.find_months_with_items_for_year(year))
     end
   end
 
@@ -100,7 +100,7 @@ class WeblogTest < ActiveSupport::TestCase
     weblog_posts = @henk_weblog.weblog_posts
 
     year_month_pairs = weblog_posts.map { |weblog_post|
-      [ weblog_post.publication_start_date.year, weblog_post.publication_start_date.month ]
+      [weblog_post.publication_start_date.year, weblog_post.publication_start_date.month]
     }.uniq
 
     year_month_pairs.each do |year_month_pair|
@@ -122,7 +122,7 @@ class WeblogTest < ActiveSupport::TestCase
     w = create_weblog
 
     assert_nothing_raised do
-      w.weblog_posts.create!(:parent => @henk_weblog.node, :body => 'foobar', :title => 'bar', :publication_start_date => Time.zone.now)
+      w.weblog_posts.create!(parent: @henk_weblog.node, body: 'foobar', title: 'bar', publication_start_date: Time.zone.now)
     end
   end
 
@@ -130,10 +130,10 @@ class WeblogTest < ActiveSupport::TestCase
     w = create_weblog
 
     3.times do |i|
-      w.weblog_posts.create!(:parent => @henk_weblog.node, :body => 'foobar', :title => 'bar', :publication_start_date => i.hours.ago)
+      w.weblog_posts.create!(parent: @henk_weblog.node, body: 'foobar', title: 'bar', publication_start_date: i.hours.ago)
     end
 
-    [ -1, 0, 2, 4 ].each do |limit|
+    [-1, 0, 2, 4].each do |limit|
       found_weblog_posts = w.find_last_published_weblog_posts(limit)
 
       if limit <= 0
@@ -154,10 +154,10 @@ class WeblogTest < ActiveSupport::TestCase
 protected
 
   def create_weblog(options = {})
-    Weblog.create({ :parent => @devcms_weblog_archive.node, :user => users(:gerjan), :title => 'Uitermate interessante weblog', :description => 'Beschrijving komt hier.' }.merge(options))
+    Weblog.create({ parent: @devcms_weblog_archive.node, user: users(:gerjan), title: 'Uitermate interessante weblog', description: 'Beschrijving komt hier.' }.merge(options))
   end
 
   def create_weblog_post(weblog, options = {})
-    WeblogPost.create({ :parent => weblog.node, :title => 'Some interesting title.', :body => 'Some interesting body.' }.merge(options))
+    WeblogPost.create({ parent: weblog.node, title: 'Some interesting title.', body: 'Some interesting body.' }.merge(options))
   end
 end

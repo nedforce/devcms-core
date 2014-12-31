@@ -55,9 +55,9 @@ class CalendarTest < ActiveSupport::TestCase
   end
 
   def test_find_months_with_calendar_items_for_year
-    year_month_pairs = @events_calendar.calendar_items.map do |calendar_item|
+    year_month_pairs = @events_calendar.calendar_items.map { |calendar_item|
       [ calendar_item.start_time.year, calendar_item.start_time.month ]
-    end.uniq
+    }.uniq
 
     year_month_pairs.each do |year_month_pair|
       year = year_month_pair.first
@@ -68,9 +68,9 @@ class CalendarTest < ActiveSupport::TestCase
   def test_find_all_calendar_items_for_month
     calendar_items = @events_calendar.calendar_items
 
-    year_month_pairs = calendar_items.map do |calendar_item|
+    year_month_pairs = calendar_items.map { |calendar_item|
       [ calendar_item.start_time.year, calendar_item.start_time.month ]
-    end.uniq
+    }.uniq
 
     year_month_pairs.each do |year_month_pair|
       year  = year_month_pair.first

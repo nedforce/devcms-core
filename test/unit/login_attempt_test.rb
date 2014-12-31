@@ -37,18 +37,18 @@ class LoginAttemptTest< ActiveSupport::TestCase
   end
 
   test 'should return if last failed login attempt was less than ten seconds ago' do
-    login_attempt = create_login_attempt(success: false)
+    create_login_attempt(success: false)
     assert LoginAttempt.last_attempt_was_not_ten_seconds_ago('123.45.67.80')
   end
 
   test 'should return if last successful login attempt was less than ten seconds ago' do
-    login_attempt = create_login_attempt(success: true)
+    create_login_attempt(success: true)
     assert !LoginAttempt.last_attempt_was_not_ten_seconds_ago('123.45.67.80')
 
-    login_attempt2 = create_login_attempt(success: false)
+    create_login_attempt(success: false)
     assert LoginAttempt.last_attempt_was_not_ten_seconds_ago('123.45.67.80')
 
-    login_attempt3 = create_login_attempt(success: true)
+    create_login_attempt(success: true)
     assert LoginAttempt.last_attempt_was_not_ten_seconds_ago('123.45.67.80')
   end
 
@@ -60,7 +60,7 @@ class LoginAttemptTest< ActiveSupport::TestCase
   end
 
   test 'should return if ip is not blocked' do
-    login_attempt = create_login_attempt(success: false)
+    create_login_attempt(success: false)
     assert !LoginAttempt.is_ip_blocked?('123.45.67.80')
 
     9.times do

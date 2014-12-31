@@ -19,7 +19,7 @@ class MeetingTest < ActiveSupport::TestCase
 
   def test_should_require_meeting_category
     assert_no_difference 'Meeting.count' do
-      meeting = create_meeting(:meeting_category => nil)
+      meeting = create_meeting(meeting_category: nil)
       assert meeting.errors[:meeting_category].any?
     end
   end
@@ -27,7 +27,7 @@ class MeetingTest < ActiveSupport::TestCase
   def test_should_update_meeting
     assert_no_difference 'Meeting.count' do
       @meetings_calendar_meeting_one.title = 'New title'
-      assert @meetings_calendar_meeting_one.save(:user => users(:arthur))
+      assert @meetings_calendar_meeting_one.save(user: users(:arthur))
     end
   end
 
@@ -38,7 +38,7 @@ class MeetingTest < ActiveSupport::TestCase
   end
 
   def test_meeting_category_name_should_return_nil_if_no_meeting_category_is_associated
-    meeting = create_meeting(:meeting_category => nil)
+    meeting = create_meeting(meeting_category: nil)
     assert_nil meeting.meeting_category_name
   end
 
@@ -104,6 +104,6 @@ class MeetingTest < ActiveSupport::TestCase
 protected
 
   def create_meeting(options = {})
-    Meeting.create({ :parent => nodes(:meetings_calendar_node), :repeating => false, :meeting_category => @meeting_category, :title => 'New meeting', :start_time => DateTime.now.to_s(:db), :end_time => (DateTime.now + 1.hour).to_s(:db) }.merge(options))
+    Meeting.create({ parent: nodes(:meetings_calendar_node), repeating: false, meeting_category: @meeting_category, title: 'New meeting', start_time: DateTime.now.to_s(:db), end_time: (DateTime.now + 1.hour).to_s(:db) }.merge(options))
   end
 end

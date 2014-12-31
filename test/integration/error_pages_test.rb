@@ -5,7 +5,7 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 class ErrorPagesTest < ActionController::IntegrationTest
   fixtures :nodes, :pages
 
-  def test_should_render_custom_404
+  test 'should render custom 404' do
     Settler.error_page_404.update_attribute(:value, nodes(:help_page_node).url_alias)
 
     get 'this/page/does/not/exist'
@@ -13,7 +13,7 @@ class ErrorPagesTest < ActionController::IntegrationTest
     assert assigns(:page).node.url_alias, nodes(:help_page_node).url_alias
   end
 
-  def test_should_render_default_template_if_no_custom_page_is_set
+  test 'should render default template if no custom page is set' do
     Settler.error_page_404.update_attribute(:value, nil)
 
     get 'this/page/does/not/exist'
@@ -21,7 +21,7 @@ class ErrorPagesTest < ActionController::IntegrationTest
     assert_template 'errors/404'
   end
 
-  def test_should_render_default_template_if_custom_page_is_not_found
+  test 'should render default template if custom page is not found' do
     Settler.error_page_404.update_attribute(:value, 'this/custom/error/page/does/not/exist')
 
     get 'this/page/does/not/exist'

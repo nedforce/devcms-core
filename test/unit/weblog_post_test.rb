@@ -10,32 +10,32 @@ class WeblogPostTest < ActiveSupport::TestCase
 
   def test_should_create_weblog_post
     assert_difference 'WeblogPost.count' do
-      wp = create_weblog_post
+      create_weblog_post
     end
   end
 
   def test_should_require_title
     assert_no_difference 'WeblogPost.count' do
-      weblog_post = create_weblog_post(:title => nil)
+      weblog_post = create_weblog_post(title: nil)
       assert weblog_post.errors[:title].any?
     end
 
     assert_no_difference 'WeblogPost.count' do
-      weblog_post = create_weblog_post(:title => '  ')
+      weblog_post = create_weblog_post(title: '  ')
       assert weblog_post.errors[:title].any?
     end
   end
 
   def test_should_require_body
     assert_no_difference 'WeblogPost.count' do
-      weblog_post = create_weblog_post(:body => nil)
+      weblog_post = create_weblog_post(body: nil)
       assert weblog_post.errors[:body].any?
     end
   end
 
   def test_should_require_parent
     assert_no_difference 'WeblogPost.count' do
-      weblog_post = create_weblog_post(:parent => nil)
+      weblog_post = create_weblog_post(parent: nil)
       assert weblog_post.errors[:weblog].any?
     end
   end
@@ -43,7 +43,7 @@ class WeblogPostTest < ActiveSupport::TestCase
   def test_should_not_require_unique_title
     assert_difference 'WeblogPost.count', 2 do
       2.times do
-        weblog_post = create_weblog_post(:title => 'Non-unique title')
+        weblog_post = create_weblog_post(title: 'Non-unique title')
         assert !weblog_post.errors[:title].any?
       end
     end
@@ -98,6 +98,6 @@ class WeblogPostTest < ActiveSupport::TestCase
 protected
 
   def create_weblog_post(options = {})
-    WeblogPost.create({ :parent => @henk_weblog.node, :title => 'Some interesting title', :body => 'Some interesting body.' }.merge(options))
+    WeblogPost.create({ parent: @henk_weblog.node, title: 'Some interesting title', body: 'Some interesting body.' }.merge(options))
   end
 end

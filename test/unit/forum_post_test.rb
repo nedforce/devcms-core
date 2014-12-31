@@ -98,17 +98,17 @@ class ForumPostTest < ActiveSupport::TestCase
     end
   end
 
-  def test_is_start_post
+  test 'is start post' do
     forum_threads = ForumThread.all
 
     forum_threads.each do |thread|
       assert thread.start_post.is_start_post?
-      new_post = thread.forum_posts.create(:body => 'foo', :user => @jan)
+      new_post = thread.forum_posts.create(body: 'foo', user: @jan)
       assert !new_post.is_start_post?
     end
   end
 
-  def test_should_notify_thread_owner
+  test 'should notify thread owner' do
     ActionMailer::Base.deliveries.clear
 
     create_forum_post
@@ -124,29 +124,29 @@ class ForumPostTest < ActiveSupport::TestCase
     assert body.include?(@jan.full_name)
   end
 
-  def test_should_not_return_start_posts
+  test 'should not return start posts' do
     assert !ForumPost.all.select { |fp| fp.is_start_post? }.empty?
     assert ForumPost.replies.select { |fp| fp.is_start_post? }.empty?
   end
 
-  def test_should_get_and_set_body
+  test 'should get and set body' do
     post = create_forum_post
     post.comment = 'Test'
     assert_equal 'Test', post.comment
     assert_equal 'Test', post.body
   end
 
-  def test_should_return_editable_comments
+  test 'should return editable comments' do
     assert_equal ForumPost.replies, ForumPost.editable_comments_for(users(:arthur))
 
-    editable_forum_post     = create_forum_post(:user => users(:final_editor))
-    non_editable_forum_post = create_forum_post(:forum_thread => forum_threads(:bewoners_forum_thread_three))
+    editable_forum_post     = create_forum_post(user: users(:final_editor))
+    non_editable_forum_post = create_forum_post(forum_thread: forum_threads(:bewoners_forum_thread_three))
 
     editable_forum_posts = ForumPost.editable_comments_for(users(:final_editor))
     assert  editable_forum_posts.include?(editable_forum_post)
     assert !editable_forum_posts.include?(non_editable_forum_post)
 
-    editable_forum_post  = create_forum_post(:user => users(:editor))
+    editable_forum_post  = create_forum_post(user: users(:editor))
     editable_forum_posts = ForumPost.editable_comments_for(users(:editor))
 
     assert  editable_forum_posts.include?(editable_forum_post)
@@ -156,6 +156,6 @@ class ForumPostTest < ActiveSupport::TestCase
 protected
 
   def create_forum_post(options = {})
-    ForumPost.create({ :forum_thread => @bewoners_forum_thread_one, :user => @jan, :body => 'Enjoy!' }.merge(options))
+    ForumPost.create({ forum_thread: @bewoners_forum_thread_one, user: @jan, body: 'Enjoy!' }.merge(options))
   end
 end

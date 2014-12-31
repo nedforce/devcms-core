@@ -15,7 +15,7 @@ class WeblogArchiveTest < ActiveSupport::TestCase
 
   def test_should_require_title
     assert_no_difference 'WeblogArchive.count' do
-      weblog_archive = create_weblog_archive(:title => nil)
+      weblog_archive = create_weblog_archive(title: nil)
       assert weblog_archive.errors[:title].any?
     end
   end
@@ -23,7 +23,7 @@ class WeblogArchiveTest < ActiveSupport::TestCase
   def test_should_not_require_unique_title
     assert_difference 'WeblogArchive.count', 2 do
       2.times do
-        weblog_archive = create_weblog_archive(:title => 'Non-unique title')
+        weblog_archive = create_weblog_archive(title: 'Non-unique title')
         assert !weblog_archive.errors[:title].any?
       end
     end
@@ -97,6 +97,6 @@ class WeblogArchiveTest < ActiveSupport::TestCase
 protected
 
   def create_weblog_archive(options = {})
-    WeblogArchive.create({ :parent => nodes(:root_section_node), :title => 'DevCMS weblogs, the best there are!', :description => 'Enjoy!' }.merge(options))
+    WeblogArchive.create({ parent: nodes(:root_section_node), title: 'DevCMS weblogs, the best there are!', description: 'Enjoy!' }.merge(options))
   end
 end
