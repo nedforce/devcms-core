@@ -9,9 +9,9 @@
       %p.lastUpdateDate
         == #{t 'shared.last_updated'}: #{l @calendar.last_updated_at, :format => :long}
 
-    .headerWrapper
-      / Wraps Header and description !
-      - if @calendar.description
+    - if @calendar.description.present?
+      .headerWrapper
+        / Wraps Header and description !
         .description
           = w @calendar.description
 
