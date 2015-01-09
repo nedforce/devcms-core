@@ -9,14 +9,14 @@ class SectionsControllerTest < ActionController::TestCase
     @root_section_node.content.set_frontpage!(@root_section_node)
   end
 
-  def test_should_show_section
-    get :show, :id => sections(:root_section).id
+  test 'should show section' do
+    get :show, id: sections(:root_section).id
     assert_response :success
   end
 
-  def test_should_show_site_piwik_script
+  test 'should show site piwik script' do
     assert sections(:root_section).update_column :piwik_site_id, 'PIWIKCODE'
-    get :show, :id => sections(:root_section).id
+    get :show, id: sections(:root_section).id
     assert response.body.include?('PIWIKCODE')
   end
 end

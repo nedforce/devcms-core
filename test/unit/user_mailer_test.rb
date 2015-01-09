@@ -77,4 +77,3 @@ class UserMailerTest < ActionMailer::TestCase
     assert body.include?(post.body)
   end
 end
-

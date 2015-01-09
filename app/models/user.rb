@@ -75,7 +75,7 @@ class User < ActiveRecord::Base
   has_many :weblogs, dependent: :destroy
 
   # A +User+ has many +RoleAssignment+ objects (i.e., roles).
-  has_many :role_assignments, dependent: :destroy, conditions: { name: %w(read_access indexer)}
+  has_many :role_assignments, dependent: :destroy, conditions: { name: %w(read_access indexer) }
 
   has_many :user_poll_question_votes, dependent: :destroy
 

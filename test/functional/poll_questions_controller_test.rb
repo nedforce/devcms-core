@@ -35,7 +35,7 @@ class PollQuestionsControllerTest < ActionController::TestCase
   def test_should_vote
     q = poll_questions(:hc_question_1)
     po = q.poll_options.first
-    
+
     assert_difference 'q.number_of_votes', 1 do
       assert_difference 'po.reload.number_of_votes', 1 do
         put :vote, :id => q.id, :poll_option_id => po.id
@@ -59,7 +59,7 @@ class PollQuestionsControllerTest < ActionController::TestCase
 
   def test_should_vote_with_user_for_secured_poll
     login_as :arthur
-    
+
     q = poll_questions(:hc_question_1)
     po = q.poll_options.first
     q.poll.update_attribute :requires_login, true
@@ -74,9 +74,9 @@ class PollQuestionsControllerTest < ActionController::TestCase
       end
     end
   end
-  
+
   def test_should_require_user_for_secured_poll
-    
+
     q = poll_questions(:hc_question_1)
     po = q.poll_options.first
     q.poll.update_attribute :requires_login, true
@@ -104,14 +104,14 @@ class PollQuestionsControllerTest < ActionController::TestCase
   def test_should_not_allow_second_vote
     q = poll_questions(:hc_question_1)
 
-    # create cookie
+    # Create cookie
     @request.cookies["voted_for_#{q.id}"] = '1'
 
     # Second vote
     assert_no_difference 'q.number_of_votes' do
       put :vote, :id => q.id, :poll_option_id => q.poll_options.last.id
       assert_redirected_to results_poll_question_url(q)
-      assert flash.key?(:warning) # not okay
+      assert flash.key?(:warning) # Not okay
     end
   end
 end

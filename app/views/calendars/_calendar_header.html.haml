@@ -1,28 +1,28 @@
 / Header contains H1, description and calendarElement !
 .header.clearfix
   = readspeaker do
-    = readspeaker_button(:class => 'topRightReadspeaker', :title => h(@calendar.title))
+    = readspeaker_button(class: 'topRightReadspeaker', title: h(@calendar.title))
 
     %h1= h @calendar.title
 
     .metadata
       %p.lastUpdateDate
-        == #{t 'shared.last_updated'}: #{l @calendar.last_updated_at, :format => :long}
+        #{t 'shared.last_updated'}: #{l @calendar.last_updated_at, format: :long}
 
-    .headerWrapper
-      / Wraps Header and description !
-      - if @calendar.description
+    - if @calendar.description.present?
+      .headerWrapper
+        / Wraps Header and description !
         .description
           = w @calendar.description
 
   .calendarWrapper
     / Wraps calendarContainer and monthInfo !
     .calendarContainer
-      = render :partial => '/calendars/calendar', :locals => { :calendar => @calendar, :date => date, :mainpage => true }
+      = render partial: '/calendars/calendar', locals: { calendar: @calendar, date: date, mainpage: true }
 
     .monthInfo.clearfix
       - if @calendar.calendar_items.exists_before_date?(date)
-        = link_to_content_node(image_tag('arrow_blue_reverse.png', :alt => t('calendars.previous_month'), :class => 'left'),  @calendar, :date => (date << 1).start_of_month.to_s)
+        = link_to_content_node(image_tag('arrow_blue_reverse.png', alt: t('calendars.previous_month'), class: 'left'),  @calendar, date: (date << 1).start_of_month.to_s)
       - if @calendar.calendar_items.exists_after_date?(date)
-        = link_to_content_node(image_tag('arrow_blue.png',         :alt => t('calendars.next_month'),     :class => 'right'), @calendar, :date => (date >> 1).start_of_month.to_s)
+        = link_to_content_node(image_tag('arrow_blue.png',         alt: t('calendars.next_month'),     class: 'right'), @calendar, date: (date >> 1).start_of_month.to_s)
       %span.monthName= "#{t('date.month_names')[date.month]} #{date.year}"

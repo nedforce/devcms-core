@@ -49,9 +49,7 @@ class CalendarTest < ActiveSupport::TestCase
   end
 
   def test_find_years_with_calendar_items
-    years = @events_calendar.calendar_items.map { |calendar_item|
-      calendar_item.start_time.year
-    }.uniq
+    years = @events_calendar.calendar_items.map { |calendar_item| calendar_item.start_time.year }.uniq
 
     assert @events_calendar.find_years_with_items.set_equals?(years)
   end

@@ -28,7 +28,7 @@ class Admin::FaqArchivesController < Admin::AdminController
     @faq_archive = FaqArchive.new(params[:faq_archive])
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :record => @faq_archive }}
+      format.html { render :template => 'admin/shared/new', :locals => { :record => @faq_archive } }
     end
   end
   
@@ -37,7 +37,7 @@ class Admin::FaqArchivesController < Admin::AdminController
     @faq_archive.attributes = params[:faq_archive]
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :record => @faq_archive }}
+      format.html { render :template => 'admin/shared/edit', :locals => { :record => @faq_archive } }
     end
   end
 
@@ -81,6 +81,7 @@ class Admin::FaqArchivesController < Admin::AdminController
       end
     end
   end
+
   protected
 
   # Finds the +FaqArchive+ object corresponding to the passed in +id+ parameter.

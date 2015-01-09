@@ -41,10 +41,10 @@ ndf = new Ext.dvtr.NodeDropField({
 
 newsletterEditionForm.add(ndf);
 
-initEditor = function(e) {
-	setTimeout(function() {
-		<%= init_tinymce_js(@newsletter_edition.body, "newsletter_edition_body") %>
-	}, 100)
+initEditor = function (e) {
+  setTimeout(function () {
+    <%= init_tinymce_js(@newsletter_edition.body, "newsletter_edition_body") %>
+  }, 100)
 }
 
 newsletterEditionForm.add({
@@ -53,6 +53,3 @@ newsletterEditionForm.add({
   html: '<%= escape_javascript wrap_with_label(tinymce_html("newsletter_edition[body]", "newsletter_edition_body"),  { :text => I18n.t("newsletters.text")}) %>',
   listeners: { render: initEditor }
 });
-
-
-

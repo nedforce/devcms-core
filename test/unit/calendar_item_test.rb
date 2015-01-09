@@ -64,9 +64,9 @@ class CalendarItemTest < ActiveSupport::TestCase
 
   def test_should_update_calendar_item
     assert_no_difference 'CalendarItem.count' do
-      @events_calendar_item_one.title = 'New title'
+      @events_calendar_item_one.title      = 'New title'
       @events_calendar_item_one.start_time = DateTime.now
-      @events_calendar_item_one.end_time = DateTime.now + 1.hour
+      @events_calendar_item_one.end_time   = DateTime.now + 1.hour
       assert @events_calendar_item_one.save(:user => users(:arthur))
     end
   end
@@ -117,7 +117,7 @@ class CalendarItemTest < ActiveSupport::TestCase
 protected
 
   def create_calendar_item(options = {})
-    now = Time.now
+    now = Time.zone.now
     CalendarItem.create({ :parent => @events_calendar.node, :repeating => false, :title => 'New event', :start_time => now, :end_time => now + 1.hour }.merge(options))
   end
 end

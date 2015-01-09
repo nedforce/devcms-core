@@ -109,29 +109,29 @@ class Admin::UsersControllerTest < ActionController::TestCase
     assert_equal users(:sjoerd).email_address, assigns(:users).first.email_address
   end
 
-  def test_should_page_and_sort_for_extjs
+  test 'should page and sort for extjs' do
     login_as :sjoerd
-    get :privileged, :sort => 'email_address', :dir => 'DESC', :start => '2', :limit => '2', :format => 'xml'
+    get :privileged, sort: 'email_address', dir: 'DESC', start: '2', limit: '2', format: 'xml'
     assert_response :success
     assert_equal 2, assigns(:users).size
     assert_not_equal users(:gerjan).email_address, assigns(:users).first.email_address
   end
 
-  def test_should_filter_for_extjs
+  test 'should filter for extjs' do
     login_as :sjoerd
-    get :privileged, :filter => { 0 => { :data => { :type => 'string', :value => 'a' }, :field => 'login' } }, :format => 'xml'
+    get :privileged, filter: { 0 => { data: { type: 'string', value: 'a' }, field: 'login' } }, format: 'xml'
 
     assert_response :success
     assert_equal 1, assigns(:users).size
     assert_equal users(:arthur).login, assigns(:users).first.login
   end
 
-  def test_should_invite
+  test 'should invite' do
     login_as :sjoerd
 
     ActionMailer::Base.deliveries.clear
 
-    post :invite, :email_address => 'test@test.nl'
+    post :invite, email_address: 'test@test.nl'
 
     assert_equal 1, ActionMailer::Base.deliveries.size
 
@@ -139,6 +139,4 @@ class Admin::UsersControllerTest < ActionController::TestCase
 
     assert email.to.include?('test@test.nl')
   end
-
 end
-

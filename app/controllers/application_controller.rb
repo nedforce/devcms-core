@@ -217,12 +217,10 @@ protected
   # Return layout to render
   # Return the default print template if param 'layout' equals 'print'.
   def set_layout
-    if params[:layout] == 'print'
-      return 'print'
-    elsif params[:layout] == 'plain'
-      return 'plain'
+    if %w( print plain ).include? params[:layout]
+      params[:layout]
     else
-      return 'default'
+      'default'
     end
   end
 
@@ -421,7 +419,7 @@ protected
   def set_extra_search_scopes
     @search_scopes << SEARCH_SCOPE_SEPARATOR
 
-    @search_scopes += @accessible_children_for_menu.map { |c| [ c.title, "node_#{c.id}" ]}
+    @search_scopes += @accessible_children_for_menu.map { |c| [ c.title, "node_#{c.id}" ] }
   end
 
   def find_accessible_children_for_menus
