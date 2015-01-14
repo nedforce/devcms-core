@@ -25,14 +25,14 @@ module NodeExtensions::Layouting
   end
 
   # [Rails3] Serialized attributes may return an internal object. Should be fixed in 3.2.4.
-  def layout_configuration
-    value = super
-    if value && value.respond_to?(:unserialized_value)
-      return value.unserialized_value
-    else
-      return value
-    end
-  end
+  # def layout_configuration
+  #   value = super
+  #   if value && value.respond_to?(:unserialized_value)
+  #     return value.unserialized_value
+  #   else
+  #     return value
+  #   end
+  # end
 
   # The inherited layout.
   def own_or_inherited_layout

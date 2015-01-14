@@ -43,6 +43,10 @@ module OwmsMetadataHelper
     tags << meta_tag('DCTERMS.available',  "#{period} scheme=W3C-DTF;",                                                               'DCTERMS.Period')
     tags << meta_tag('DCTERMS.spatial',    Settler[:site_name],                                                                       'OVERHEID.Gemeente')
     tags << meta_tag('DCTERMS.temporal',   content.respond_to?(:owms_temporal) ? content.owms_temporal : '',                          'ODCTERMS.Period')
+    # add specific location if available
+    if node.respond_to?(:location_code) && node.location_code.present?
+      tags << meta_tag('DCTERMS.spatial',    node.location_code, 'OVERHEID.PostcodeHuisnummer')
+    end
     tags
   end
 
