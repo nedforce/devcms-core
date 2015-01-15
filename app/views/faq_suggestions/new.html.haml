@@ -8,5 +8,9 @@
     %label.faq{ :for => 'explanation' }
       = t 'faq_suggestions.explanation'
     = text_area_tag 'explanation', params[:explanation], :class => 'textfield', :id => nil
+  .formFieldCt.clearfix
+    %label.faq{ :for => 'email' }
+      = t 'shared.email'
+    = text_field_tag 'email', params[:email], :class => 'textfield', :id => nil
   .formButtonCt
     = submit_tag t('faq_suggestions.send'), :class => 'submit left'

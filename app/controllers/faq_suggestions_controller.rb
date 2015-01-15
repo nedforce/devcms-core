@@ -9,6 +9,7 @@ class FaqSuggestionsController < ApplicationController
           theme:        @theme,
           question:     params[:question],
           explanation:  params[:explanation],
+          email:  params[:email]
         )).deliver
       flash[:notice] = t('faq_suggestions.delivery_succeeded')
       redirect_to content_node_url(@theme)

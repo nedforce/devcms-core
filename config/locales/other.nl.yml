@@ -451,7 +451,7 @@ nl:
     suggestion: suggestie
     suggestion_for: Suggestie voor vraag & antwoord thema '%{theme}'
     explanation: Toelichting
-    make_suggestion: Staat uw vraag er niet bij? Klik hier om een vraag voor te stellen!
+    make_suggestion: Staat de informatie die u zoekt er niet bij? Geef ons door wat u wilt weten.
   faq_archives:
     add_to: Vraag & antwoord module toevoegen aan
     edit: Vraag & antwoord module bewerken
