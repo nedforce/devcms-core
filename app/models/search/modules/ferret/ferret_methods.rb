@@ -11,7 +11,7 @@ module Search::Modules::Ferret::FerretMethods
     end
 
     def update_index
-      self.ferret_update
+      self.ferret_update rescue true
     end
 
     def disable_reindex_until_saved
@@ -19,7 +19,7 @@ module Search::Modules::Ferret::FerretMethods
     end
 
     def add_to_index
-      self.ferret_create
+      self.ferret_create rescue true
     end
   end
 end
