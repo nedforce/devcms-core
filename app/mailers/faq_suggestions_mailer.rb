@@ -1,6 +1,6 @@
 class FaqSuggestionsMailer < ActionMailer::Base
   def faq_suggestion(faq_suggestion)
-    @recipients            = "webredactie@deventer.nlwebredactie@deventer.nl"
+    @recipients            = Settler[:faq_mail_recipient]
     @from                  = faq_suggestion.email || Settler[:mail_from_address]
     @sent_on               = Time.now
     @subject               = t('faqs.suggestion_for', theme: faq_suggestion.theme.title)
