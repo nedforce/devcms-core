@@ -4,7 +4,7 @@ class Devcms
       {}
     end
 
-    # Returns a hash representing this node's config properties for an Ext.dvtr.AsyncTreeNode javascript object.
+    # Returns a hash representing this node's config properties for an Ext.dvtr.AsyncTreeNode JavaScript object.
     # The hash returned will be reverse merged with node.to_tree_node_for(user)
     def tree_node_for(node, user, options = {})
       {}
