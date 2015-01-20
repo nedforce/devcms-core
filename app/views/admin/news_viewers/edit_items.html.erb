@@ -14,34 +14,34 @@
 
 <script type="text/javascript">
 //<![CDATA
-Ext.onReady(function(){ 
+Ext.onReady(function () {
 
- Ext.QuickTips.init();
+  Ext.QuickTips.init();
 
- // Tabpanel
- var tabs = new Ext.TabPanel({
-     renderTo: 'news-viewer-tabs',
-     defaults: {autoHeight: true},
-     border: false,        
-     frame: false,    
-     activeTab: 0,
-     items:[
-         {contentEl:'news_archive_tab', title:'<%= t('news_viewers.news_archives_and_items') -%>', id: 'select_tab'},
-         {contentEl:'news_order_tab', title:'<%= t('news_viewers.news_order') -%>', id:'order_tab'}
-     ]
- });
+  // Tabpanel
+  var tabs = new Ext.TabPanel({
+    renderTo: 'news-viewer-tabs',
+    defaults: { autoHeight: true },
+    border: false,
+    frame: false,
+    activeTab: 0,
+    items:[
+      { contentEl: 'news_archive_tab', title: '<%= t('news_viewers.news_archives_and_items') -%>', id: 'select_tab' },
+      { contentEl: 'news_order_tab',   title: '<%= t('news_viewers.news_order') -%>',              id: 'order_tab'  }
+    ]
+  });
 
-	tabs.on('tabchange', function(tabPanel, newTab){
-		if(newTab.id == 'select_tab') archivePanel.doLayout();
-		if(newTab.id == 'order_tab') newsItemOrderPanel.doLayout();
-	});
-	
- // Archives panel
- <%= render 'news_archive_panel' %>
+  tabs.on('tabchange', function (tabPanel, newTab) {
+    if (newTab.id == 'select_tab') archivePanel.doLayout();
+    if (newTab.id == 'order_tab') newsItemOrderPanel.doLayout();
+  });
 
- // Item order panel
- <%= render 'news_ordering_panel' %>
+  // Archives panel
+  <%= render 'news_archive_panel' %>
+
+  // Item order panel
+  <%= render 'news_ordering_panel' %>
 });
-	
+
 //]]>
 </script>

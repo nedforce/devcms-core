@@ -13,12 +13,12 @@
         }, [ 'login', 'id' ])
       });
       
-      MyCombo = function(config) {
-      	MyCombo.superclass.constructor.call(this, config);
+      MyCombo = function (config) {
+        MyCombo.superclass.constructor.call(this, config);
       };
       Ext.extend(MyCombo, Ext.form.ComboBox, {
-      	listAlignOffsets: [0, 0],
-      	// private
+        listAlignOffsets: [0, 0],
+        // private
           restrictHeight : function(){
               this.innerList.dom.style.height = '';
               var inner = this.innerList.dom;

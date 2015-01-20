@@ -2,133 +2,133 @@
 //<![CDATA[
 
 Ext.onReady(function(){
-    perPage = 25
+  perPage = 25
 
-    Ext.QuickTips.init();
+  Ext.QuickTips.init();
 
-    // shorthand alias
-    var fm = Ext.form;
+  // shorthand alias
+  var fm = Ext.form;
 
-    // the column model has information about grid columns
-    // dataIndex maps the column to the specific data field in
-    // the data store (created below)
-    var cm = new Ext.grid.ColumnModel({
-      columns: 
-        [{
-             id: 'id',
-             header: "<%= I18n.t('settings.key') %>",
-             dataIndex: 'key',
-             width: 250
-          },{
-             header: "<%= I18n.t('settings.alt') %>",
-             dataIndex: 'alt',
-             width: 400
-          },{
-             header: "<%= I18n.t('settings.value') %>",
-             dataIndex: 'value',
-             width: 500,
-             editable: true,
-             renderer: setting_value_renderer
-          }
-      ],
-      editors: {
-      	'default': new Ext.grid.GridEditor(new Ext.form.TextField({})),        
-      	'password': new Ext.grid.GridEditor(new Ext.form.TextField({ inputType: 'password' })),
-        'integer': new Ext.grid.GridEditor(new Ext.form.NumberField({ style: 'text-align: left' })),
-        'float': new Ext.grid.GridEditor(new Ext.form.NumberField({ style: 'text-align: left' })),
-		    'datetime': new Ext.grid.GridEditor(new Ext.form.DateField({ format: "d-m-Y" }))      	
-      },      
-      getCellEditor: function(colIndex, rowIndex) {
-    		var field = this.getDataIndex(colIndex);
-    		if (field == 'value') {
-    			var rec = store.getAt(rowIndex);
-    			return this.editors[rec.get('type')] || this.editors['default'];
-    		}
-    		return Ext.grid.ColumnModel.prototype.getCellEditor.call(this, colIndex, rowIndex);      
-    	}
-    });
-
-    // by default columns are sortable
-    cm.defaultSortable = true;
-
-    // create the Data Store
-    var store = new Ext.data.Store({
-        proxy: new Ext.data.HttpProxy({
-          url: '/admin/settings.json',
-          method: 'GET'
-        }),
-
-        remoteSort: true,
-
-        reader: new Ext.data.JsonReader({
-          root: 'settings',
-          id: 'id',
-          totalProperty: 'total_count'
-        },
-          [ 'key', 'alt', 'value', 'type' ]
-        ),
-
-        autoLoad: {params: {start: 0, limit: perPage}}
-    });
-
-    // create the grid
-    grid = new Ext.grid.EditorGridPanel({
-        store: store,
-        cm: cm,
-        stripeRows: true,
-        autoExpandColumn: 0,
-        clicksToEdit: 2,
-        margins: '0 5 5 5',
-        selModel: new Ext.grid.RowSelectionModel({singleSelect:false}),
-        loadMask: true,
-
-        bbar: new Ext.PagingToolbar({
-            store: store,
-            pageSize: perPage,
-            displayInfo: true,
-            displayMsg: '<%= I18n.t("settings.count_msg") %>',
-            emptyMsg: '<%= I18n.t("settings.empty_msg") %>',
-            afterPageText: '<%= I18n.t("settings.of_page") %>',
-            beforePageText: '<%= I18n.t("settings.page") %>'
-        }),
-        tbar: [],
-        listeners:{
-            'afteredit': handleEdit
-        }
-    });
-    
-    function setting_value_renderer(value, metaData, record, rowIndex, colIndex,store) {
-      if(record.data.type == 'password') {
-        pass = '';
-        for(i=0;i < value.length; i++) pass += '*'
-        
-        return pass;
+  // the column model has information about grid columns
+  // dataIndex maps the column to the specific data field in
+  // the data store (created below)
+  var cm = new Ext.grid.ColumnModel({
+    columns:
+      [{
+        id: 'id',
+        header: "<%= I18n.t('settings.key') %>",
+        dataIndex: 'key',
+        width: 250
+      }, {
+        header: "<%= I18n.t('settings.alt') %>",
+        dataIndex: 'alt',
+        width: 400
+      }, {
+        header: "<%= I18n.t('settings.value') %>",
+        dataIndex: 'value',
+        width: 500,
+        editable: true,
+        renderer: setting_value_renderer
+      }],
+    editors: {
+      'default':  new Ext.grid.GridEditor(new Ext.form.TextField({})),
+      'password': new Ext.grid.GridEditor(new Ext.form.TextField({ inputType: 'password' })),
+      'integer':  new Ext.grid.GridEditor(new Ext.form.NumberField({ style: 'text-align: left' })),
+      'float':    new Ext.grid.GridEditor(new Ext.form.NumberField({ style: 'text-align: left' })),
+      'datetime': new Ext.grid.GridEditor(new Ext.form.DateField({ format: "d-m-Y" }))
+    },
+    getCellEditor: function (colIndex, rowIndex) {
+      var field = this.getDataIndex(colIndex);
+      if (field == 'value') {
+        var rec = store.getAt(rowIndex);
+        return this.editors[rec.get('type')] || this.editors['default'];
       }
-      else if(record.data.type == 'datetime') {
-        return new Date(value).format("d-m-Y");
+      return Ext.grid.ColumnModel.prototype.getCellEditor.call(this, colIndex, rowIndex);      
+    }
+  });
+
+  // by default columns are sortable
+  cm.defaultSortable = true;
+
+  // create the Data Store
+  var store = new Ext.data.Store({
+    proxy: new Ext.data.HttpProxy({
+      url: '/admin/settings.json',
+      method: 'GET'
+    }),
+
+    remoteSort: true,
+
+    reader: new Ext.data.JsonReader({
+      root: 'settings',
+      id: 'id',
+      totalProperty: 'total_count'
+    },
+    ['key', 'alt', 'value', 'type']
+    ),
+
+    autoLoad: { params: { start: 0, limit: perPage } }
+  });
+
+  // create the grid
+  grid = new Ext.grid.EditorGridPanel({
+    store: store,
+    cm: cm,
+    stripeRows: true,
+    autoExpandColumn: 0,
+    clicksToEdit: 2,
+    margins: '0 5 5 5',
+    selModel: new Ext.grid.RowSelectionModel({ singleSelect: false }),
+    loadMask: true,
+
+    bbar: new Ext.PagingToolbar({
+      store: store,
+      pageSize: perPage,
+      displayInfo: true,
+      displayMsg: '<%= I18n.t("settings.count_msg") %>',
+      emptyMsg: '<%= I18n.t("settings.empty_msg") %>',
+      afterPageText: '<%= I18n.t("settings.of_page") %>',
+      beforePageText: '<%= I18n.t("settings.page") %>'
+    }),
+    tbar: [],
+    listeners: {
+      'afteredit': handleEdit
+    }
+  });
+
+  function setting_value_renderer(value, metaData, record, rowIndex, colIndex, store) {
+    if (record.data.type == 'password') {
+      pass = '';
+      for (i = 0; i < value.length; i++) {
+        pass += '*'
       }
-      else return value;
+      return pass;
+    } else if (record.data.type == 'datetime') {
+      return new Date(value).format("d-m-Y");
+    } else {
+      return value;
     }
+  }
 
-    function handleEdit(editEvent) {
-        Ext.Ajax.request({
-            waitMsg: '<%= I18n.t("settings.saving") %>',
-            url: 'settings/' + editEvent.record.id + '.json',
-            method: 'POST',
+  function handleEdit (editEvent) {
+    Ext.Ajax.request({
+      waitMsg: '<%= I18n.t("settings.saving") %>',
+      url: 'settings/' + editEvent.record.id + '.json',
+      method: 'POST',
 
-            params: "_method=put&authenticity_token=<%= form_authenticity_token -%>" +
-                    "&setting[" + editEvent.field + "]=" + editEvent.value,
+      params: "_method=put&authenticity_token=<%= form_authenticity_token -%>" +
+              "&setting[" + editEvent.field + "]=" + editEvent.value,
 
-            failure: function(response,options) {
-                Ext.MessageBox.alert('<%= I18n.t("settings.error") %>',response.responseText);
-            },
-            success: function(response,options) {
-                store.commitChanges();
-            }
-        });
-    }
+      failure: function (response, options) {
+        Ext.MessageBox.alert('<%= I18n.t("settings.error") %>',response.responseText);
+      },
+      success: function (response, options) {
+        store.commitChanges();
+      }
+    });
+  }
 
-    initViewport(grid);
+  initViewport(grid);
 });
 
 //]]>

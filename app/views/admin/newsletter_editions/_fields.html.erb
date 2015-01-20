@@ -46,17 +46,16 @@ newsletterEditionForm.add({
 });
 */
 
-initEditor = function(e) {
-	setTimeout(function() {
-		<%= init_tinymce_js(@newsletter_edition.body, "newsletter_edition_body") %>
-	}, 100)
+initEditor = function (e) {
+  setTimeout(function () {
+    <%= init_tinymce_js(@newsletter_edition.body, "newsletter_edition_body") %>
+  }, 100)
 }
 
 newsletterEditionForm.add({
   xtype: 'panel',
   border: false,
-  html: '<%= wrap_with_label(tinymce_html("newsletter_edition[body]", "newsletter_edition_body"),  { :text => I18n.t("newsletters.text")}) %>',
+  html: '<%= wrap_with_label(tinymce_html("newsletter_edition[body]", "newsletter_edition_body"), { :text => I18n.t("newsletters.text")}) %>',
   listeners: { render: initEditor }
 });
 <%#= category_settings_for @newsletter_edition -%>
-

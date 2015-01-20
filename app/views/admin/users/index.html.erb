@@ -7,30 +7,30 @@
 <script type="text/javascript">
 //<![CDATA[
 
-Ext.onReady(function(){
-    perPage = 25
+Ext.onReady(function () {
+  perPage = 25
 
-    Ext.ux.menu.RangeMenu.prototype.icons = {
-          gt: '../../images/ext/ux/greater_then.png',
-          lt: '../../images/ext/ux/less_then.png',
-          eq: '../../images/ext/ux/equals.png'
-	};
-    Ext.ux.grid.filter.StringFilter.prototype.icon = '../../images/ext/ux/find.png';
+  Ext.ux.menu.RangeMenu.prototype.icons = {
+    gt: '../../images/ext/ux/greater_then.png',
+    lt: '../../images/ext/ux/less_then.png',
+    eq: '../../images/ext/ux/equals.png'
+  };
+  Ext.ux.grid.filter.StringFilter.prototype.icon = '../../images/ext/ux/find.png';
 
-    Ext.QuickTips.init();
+  Ext.QuickTips.init();
 
-    // shorthand alias
-    var fm = Ext.form;
+  // shorthand alias
+  var fm = Ext.form;
 
-    // the column model has information about grid columns
-    // dataIndex maps the column to the specific data field in
-    // the data store (created below)
-    var cm = new Ext.grid.ColumnModel([{
-           id: 'id',
-           header: "<%= I18n.t('users.login') %>",
-           dataIndex: 'login',
-           width: 150
-        },
+  // the column model has information about grid columns
+  // dataIndex maps the column to the specific data field in
+  // the data store (created below)
+  var cm = new Ext.grid.ColumnModel([{
+    id: 'id',
+    header: "<%= I18n.t('users.login') %>",
+    dataIndex: 'login',
+    width: 150
+  },
         <% if @privileged %>
         {
           header: "<%= I18n.t('users.status') %>",
@@ -120,8 +120,8 @@ Ext.onReady(function(){
                   {type: 'string',  dataIndex: 'email_address'},
                   {type: 'date',  dataIndex: 'created_at'},
                   {type: 'list',dataIndex: 'sex', options: ['<%=I18n.t("users.male")-%>', '<%=I18n.t("users.female")-%>'], phpMode: false},
-		              {type: 'boolean', dataIndex: 'visible'}
-		 ]});
+                  {type: 'boolean', dataIndex: 'visible'}
+    ]});
 
     // create the grid
     grid = new Ext.grid.EditorGridPanel({
@@ -519,7 +519,7 @@ Ext.onReady(function(){
         });
       });
     };
-    
+
     function handleRevoke(e) {
       Ext.MessageBox.confirm('<%= I18n.t("users.message") %>', '<%= I18n.t("users.confirm_revoke") %>', function(button) {
         if(button == 'yes') {
@@ -541,10 +541,9 @@ Ext.onReady(function(){
         }
       });
     }
-        
-    initViewport(grid); // render admin layout using the viewport.
+
+  initViewport(grid); // render admin layout using the viewport.
 });
 
 //]]>
 </script>
-
