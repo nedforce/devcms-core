@@ -289,7 +289,7 @@ module DevcmsCoreHelper
 
   def switch_contrast_mode_link(show_text = false )
     target_mode = @high_contrast_mode ? :low : :high
-    link_text = image_tag('icons/contrast-high-icon.png', :class => 'icon', :alt => 'Contrast icoon', :title => t(target_mode, scope: [:shared, :contrast]))
+    link_text = image_tag('icons/contrast-high-icon.png', class: 'icon', alt: '', title: t(target_mode, scope: [:shared, :contrast]))
     if show_text
       link_text += "#{t(target_mode, scope: [:shared, :contrast])}"
     end
