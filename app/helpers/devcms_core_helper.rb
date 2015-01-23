@@ -293,7 +293,7 @@ module DevcmsCoreHelper
     if show_text
       link_text += "#{t(target_mode, scope: [:shared, :contrast])}"
     end
-    link_to link_text, { :contrast => target_mode }
+    link_to link_text, { contrast: target_mode }, rel: 'nofollow'
   end
 
   protected
