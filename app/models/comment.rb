@@ -34,8 +34,8 @@ class Comment < ActiveRecord::Base
 
   # See the preconditions overview for an explanation of these validations.
   validates :commentable, presence: true
-  validates :comment,     presence: true, length: { in: 1..500,   allow_blank: true }
-  validates :user_name,   presence: true, length: { maximum: 255, allow_blank: true }
+  validates :comment,     presence: true, length: { maximum: 500 }
+  validates :user_name,   presence: true, length: { maximum: 255 }
 
   def self.parent_type
     Node
