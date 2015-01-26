@@ -109,6 +109,7 @@ nl:
         title: Titel
       contact_form_field:
         default_value: Standaardwaarde
+        email_address: E-mailadres
         field_type: Veldtype
         label: Label
         obligatory: Verplicht
