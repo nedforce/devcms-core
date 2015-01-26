@@ -1,0 +1,86 @@
+nl:
+  activerecord:
+    models:
+      forum: Forum
+      forum_post: Reactie
+      forum_thread: Discussie
+      forum_topic: Onderwerp
+    attributes:
+      forum:
+        description: Beschrijving
+        title: Titel
+      forum_post:
+        body: Tekst
+        user_name: Naam
+      forum_thread:
+        title: Titel
+      forum_topic:
+        description: Beschrijving
+        title: Titel
+    errors:
+      models:
+        forum_post:
+          attributes:
+            base:
+              cannot_be_added_to_closed_thread: U kunt niet reageren op een gesloten discussie.
+              cannot_destroy_first_post: Dit is een openingsbericht van een forum discussie en kan dus niet verwijderd worden.
+
+  comments:
+    show_forum_posts: Forum reacties
+    show_forum_posts_tt: Klik hier om alle reacties op forum discussies te bekijken
+  forum_topics:
+    add_to: Onderwerp toevoegen aan
+    edit: Bewerken van onderwerp
+  forums:
+    add_to: Forum toevoegen aan
+    body: Tekst
+    by: door
+    close_successful: Discussie gesloten.
+    close_unsuccessful: Kon discussie niet sluiten!
+    closed_lock: Icoon van een gesloten slot
+    create_forum_post: Reageren
+    create_forum_thread: Discussie starten
+    created: Toegevoegd
+    created_by: Gestart door
+    created_on: Aangemaakt op
+    delete: Verwijder deze reactie
+    delete_post: Verwijder reactie
+    delete_thread: Verwijder discussie
+    edit: Wijzig deze reactie
+    edit_forum: Bewerken van forum
+    edit_post: Wijzig reactie
+    edit_thread: Wijzig discussie
+    forum_failed: Kon forum niet opslaan.
+    forum_post: reactie
+    forum_posts: reacties
+    forum_thread: Forum discussie
+    forum_threads: Discussies
+    forum_topic: Forum onderwerp
+    forum_topics: Onderwerpen
+    full_overview: Naar het forum
+    last_reply: Laatste reactie
+    lock_thread: Sluit discussie
+    name: Naam
+    new_post: Voeg reactie toe
+    new_thread: Start een nieuwe discussie
+    no_posts_found: Geen reacties gevonden.
+    no_threads_found: Geen discussies gevonden.
+    no_topics: Geen onderwerpen gevonden.
+    number_of_posts: Aantal reacties
+    number_of_threads: Aantal discussies
+    at_time: op
+    open_lock: Icoon van een open slot
+    open_successful: Discussie heropend.
+    open_unsuccessful: Kon discussie niet heropenen!
+    recent_threads: Recent actieve discussies.
+    saved_forum: Forum opgeslagen!
+    saved_topic: Onderwerp opgeslagen!
+    signup_required: Log in of registreer je om nieuwe discussies aan te kunnen maken!
+    signup_required_to_post: Log in of registreer je om te kunnen reageren!
+    start_post_body: Tekst
+    submit: Versturen
+    thread_locked: Deze discussie is gesloten.
+    topic_failed: Kon onderwerp niet opslaan.
+    unlock_thread: Heropen discussie
+    update_forum_post: Reactie wijzigen
+    update_forum_thread: Discussie wijzigen

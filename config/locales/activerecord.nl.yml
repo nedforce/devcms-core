@@ -27,10 +27,6 @@ nl:
       faq_theme: Vraag & antwoord thema
       faq_top_five: Vraag & antwoord Top 5
       feed: RSS feed
-      forum: Forum
-      forum_post: Reactie
-      forum_thread: Discussie
-      forum_topic: Onderwerp
       html_page: HTML pagina
       image: Afbeelding
       internal_link: Interne link
@@ -54,9 +50,6 @@ nl:
       theme: Thema
       top_hits_page: Top 10 pagina
       user: Gebruiker
-      weblog: Weblog
-      weblog_archive: Weblogarchief
-      weblog_post: Weblogbericht
     attributes:
       address:
         name: Naam
@@ -143,17 +136,6 @@ nl:
         answer: Antwoord
       feed:
         url: URL
-      forum:
-        description: Beschrijving
-        title: Titel
-      forum_post:
-        body: Tekst
-        user_name: Naam
-      forum_thread:
-        title: Titel
-      forum_topic:
-        description: Beschrijving
-        title: Titel
       html_page:
         body: Tekst
         title: Titel
@@ -239,11 +221,6 @@ nl:
         login: Inlognaam
         password: Wachtwoord
         password_confirmation: Wachtwoordbevestiging
-      weblog:
-        title: Titel
-      weblog_post:
-        body: Tekst
-        title: Titel
     errors:
       messages:
         email: "lijkt geen geldig emailadres"
@@ -282,11 +259,6 @@ nl:
           attributes:
             url:
               invalid_feed: geeft een ongeldige RSS-feed.
-        forum_post:
-          attributes:
-            base:
-              cannot_be_added_to_closed_thread: U kunt niet reageren op een gesloten discussie.
-              cannot_destroy_first_post: Dit is een openingsbericht van een forum discussie en kan dus niet verwijderd worden.
         internal_link:
           attributes:
             base:

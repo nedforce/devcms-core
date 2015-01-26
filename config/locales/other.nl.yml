@@ -25,7 +25,6 @@ nl:
     more_permits: meer bekendmakingen
     more_products: meer producten
     more_threads: meer discussies
-    more_weblogs: meer weblogs
     n: Nee
     tags: Tags
     preview: Preview
@@ -317,10 +316,6 @@ nl:
     really_delete?: "Weet u zeker dat u deze reactie wilt verwijderen?"
     save: 'Opslaan'
     select_one: Kies tenminste 1 reactie
-    show_forum_posts: Forum reacties
-    show_forum_posts_tt: Klik hier om alle reacties op forum discussies te bekijken
-    show_weblog_comments: Weblog reacties
-    show_weblog_comments_tt: Klik hier om alle reacties op weblogs te bekijken
     subject: Onderwerp
     updated_at: Laatst gewijzigd
     user: Gebruiker
@@ -495,62 +490,6 @@ nl:
     saved: RSS feed opgeslagen!
     title: Titel van het feed bericht
     url: URL
-  forum_topics:
-    add_to: Onderwerp toevoegen aan
-    edit: Bewerken van onderwerp
-  forums:
-    add_to: Forum toevoegen aan
-    body: Tekst
-    by: door
-    close_successful: Discussie gesloten.
-    close_unsuccessful: Kon discussie niet sluiten!
-    closed_lock: Icoon van een gesloten slot
-    create_forum_post: Reageren
-    create_forum_thread: Discussie starten
-    created: Toegevoegd
-    created_by: Gestart door
-    created_on: Aangemaakt op
-    delete: Verwijder deze reactie
-    delete_post: Verwijder reactie
-    delete_thread: Verwijder discussie
-    edit: Wijzig deze reactie
-    edit_forum: Bewerken van forum
-    edit_post: Wijzig reactie
-    edit_thread: Wijzig discussie
-    forum_failed: Kon forum niet opslaan.
-    forum_post: reactie
-    forum_posts: reacties
-    forum_thread: Forum discussie
-    forum_threads: Discussies
-    forum_topic: Forum onderwerp
-    forum_topics: Onderwerpen
-    full_overview: Naar het forum
-    last_reply: Laatste reactie
-    lock_thread: Sluit discussie
-    name: Naam
-    new_post: Voeg reactie toe
-    new_thread: Start een nieuwe discussie
-    no_posts_found: Geen reacties gevonden.
-    no_threads_found: Geen discussies gevonden.
-    no_topics: Geen onderwerpen gevonden.
-    number_of_posts: Aantal reacties
-    number_of_threads: Aantal discussies
-    at_time: op
-    open_lock: Icoon van een open slot
-    open_successful: Discussie heropend.
-    open_unsuccessful: Kon discussie niet heropenen!
-    recent_threads: Recent actieve discussies.
-    saved_forum: Forum opgeslagen!
-    saved_topic: Onderwerp opgeslagen!
-    signup_required: Log in of registreer je om nieuwe discussies aan te kunnen maken!
-    signup_required_to_post: Log in of registreer je om te kunnen reageren!
-    start_post_body: Tekst
-    submit: Versturen
-    thread_locked: Deze discussie is gesloten.
-    topic_failed: Kon onderwerp niet opslaan.
-    unlock_thread: Heropen discussie
-    update_forum_post: Reactie wijzigen
-    update_forum_thread: Discussie wijzigen
   html_pages:
     add_images: Afbeelding(en) toevoegen aan deze HTML pagina
     add_to: HTML pagina toevoegen aan
@@ -1160,8 +1099,8 @@ nl:
     back: Terug
     cancel: Annuleren
     cant_destroy_yourself: U kan uzelf niet verwijderen.
-    confirm_deletion: "Weet u zeker dat u deze gebruiker(s) wilt verwijderen? Ook de discussies, reacties en weblogs van deze gebruiker(s) zullen verwijderd worden."
-    confirm_user_deletion: "Weet u zeker dat u uw profiel wilt verwijderen? Ook de uw discussies, reacties en weblogs zullen verwijderd worden. Bevestig het verwijderen met uw wachtwoord."
+    confirm_deletion: "Weet u zeker dat u deze gebruiker(s) wilt verwijderen? Ook de discussies en reacties van deze gebruiker(s) zullen verwijderd worden."
+    confirm_user_deletion: "Weet u zeker dat u uw profiel wilt verwijderen? Ook uw discussies en reacties zullen verwijderd worden. Bevestig het verwijderen met uw wachtwoord."
     confirm_demote: "Weet u zeker dat u deze gebruiker wil degraderen? Al zijn rechten worden bevroren en zijn dan niet meer bruikbaar tot (her)promotie."
     confirm_promote: "Weet u zeker dat u deze gebruiker wil promoveren?"
     confirm_revoke: "Weet u zeker dat u deze gebruiker wil ontgrendelen?"
@@ -1259,10 +1198,6 @@ nl:
     verification_failed_text: Het is niet gelukt om uw e-mailadres te verifiëren. Controleer of u het ontvangen webadres in zijn geheel heeft gekopieerd. Vraag anders een nieuwe verificatie-e-mail aan.
     invalid_invitation_code_or_invitation_email: Uitnodigingslink ongeldig!
     verified?: "Geverifieerd?"
-    view_weblog: Bekijken
-    weblog: Weblog
-    weblogs_caption: Overzicht van weblogs
-    weblog_title: Titel van het weblog
     welcome: Welkom als gebruiker van deze website. Voordat u kunt inloggen dient u uw e-mailadres te verifiëren. U kunt dit doen door de instructies te volgen in de e-mail die zojuist naar u is verstuurd.
     wrong_password: Verkeerd wachtwoord ingevoerd.
     last_sign_in_at: Laatste login
@@ -1274,66 +1209,3 @@ nl:
   video:
     enter_video_id: Vul het YouTube video ID in
     insert_video: Video invoegen
-  weblog_archives:
-    edit: Bewerken van weblogarchief
-  weblog_posts:
-    add_to: Weblogarchief toevoegen aan
-    edit: Bewerken van bericht
-  weblogs:
-    add_images: Afbeelding(en) toevoegen aan dit bericht
-    add_post_to: Bericht toevoegen aan
-    add_to: Weblog toevoegen aan
-    archive_failed: Kon weblogarchief niet opslaan.
-    are_you_sure?: "Weet u zeker dat u het bericht wilt verwijderen?"
-    body: Tekst
-    by: door
-    commentable: Reacties toestaan?
-    create_weblog: Een eigen weblog aanmaken
-    create_weblog_post: Bericht schrijven
-    created_on: Aangemaakt op
-    date: Datum
-    delete_post: Bericht verwijderen
-    delete_weblog: Weblog verwijderen
-    edit: Bewerken van weblog
-    edit_post: Bericht wijzigen
-    edit_weblog: Weblog wijzigen
-    full_overview: Naar de weblogs
-    images: Afbeeldingen
-    last_post: Laatste bericht
-    mail: Mail deze post
-    message_title: Titel van het bericht
-    messages_caption: Berichten tabel
-    new_weblog: Nieuwe weblog aanmaken
-    new_weblog_post: Nieuw bericht schrijven
-    no_posts_found: Geen berichten gevonden.
-    no_weblog_posts_found: Geen berichten gevonden.
-    no_weblogs_found: Geen weblogs gevonden.
-    not_all_images_saved: Niet alle afbeeldingen konden opgeslagen worden.
-    number_of_posts: Aantal berichten
-    older_weblog_posts: Oudere berichten
-    owned_by: Eigenaar
-    post_failed: Kon bericht niet opslaan.
-    preamble: Samenvatting
-    published: Gepubliceerd
-    really_delete?: "Weet u zeker dat u uw weblog wilt verwijderen?"
-    really_delete_post?: "Weet u zeker dat u dit bericht wilt verwijderen?"
-    recent_posts: Meest recente berichten.
-    recent_weblogs: Recent bijgewerkte weblogs.
-    saved_archive: Weblogarchief opgeslagen!
-    saved_post: Bericht opgeslagen!
-    saved_weblog: Weblog opgeslagen!
-    show_post: Volledig bericht
-    signup_required: Log in of registreer je om nieuwe weblogs aan te kunnen maken!
-    successfully_destroyed: Uw weblog is succesvol verwijderd.
-    text: Tekst
-    time: Tijd
-    update_weblog: Uw weblog wijzigen
-    update_weblog_post: Bericht wijzigen
-    weblog: Weblog
-    weblog_already_present: U kunt maximaal één weblog aanmaken in deze sectie.
-    weblog_archive: Weblog archief
-    weblog_failed: Kon weblog niet opslaan.
-    weblog_post: bericht
-    weblog_post_title: Weblogbericht
-    weblog_posts: berichten
-    weblogs: weblogs

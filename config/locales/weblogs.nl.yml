@@ -1,0 +1,86 @@
+nl:
+  activerecord:
+    models:
+      weblog: Weblog
+      weblog_archive: Weblogarchief
+      weblog_post: Weblogbericht
+    attributes:
+      weblog:
+        title: Titel
+      weblog_post:
+        body: Tekst
+        title: Titel
+
+  shared:
+    more_weblogs: meer weblogs
+  comments:
+    show_weblog_comments: Weblog reacties
+    show_weblog_comments_tt: Klik hier om alle reacties op weblogs te bekijken
+  users:
+    view_weblog: Bekijken
+    weblog: Weblog
+    weblogs_caption: Overzicht van weblogs
+    weblog_title: Titel van het weblog
+  weblog_archives:
+    edit: Bewerken van weblogarchief
+  weblog_posts:
+    add_to: Weblogarchief toevoegen aan
+    edit: Bewerken van bericht
+  weblogs:
+    add_images: Afbeelding(en) toevoegen aan dit bericht
+    add_post_to: Bericht toevoegen aan
+    add_to: Weblog toevoegen aan
+    archive_failed: Kon weblogarchief niet opslaan.
+    are_you_sure?: "Weet u zeker dat u het bericht wilt verwijderen?"
+    body: Tekst
+    by: door
+    commentable: Reacties toestaan?
+    create_weblog: Een eigen weblog aanmaken
+    create_weblog_post: Bericht schrijven
+    created_on: Aangemaakt op
+    date: Datum
+    delete_post: Bericht verwijderen
+    delete_weblog: Weblog verwijderen
+    edit: Bewerken van weblog
+    edit_post: Bericht wijzigen
+    edit_weblog: Weblog wijzigen
+    full_overview: Naar de weblogs
+    images: Afbeeldingen
+    last_post: Laatste bericht
+    mail: Mail deze post
+    message_title: Titel van het bericht
+    messages_caption: Berichten tabel
+    new_weblog: Nieuwe weblog aanmaken
+    new_weblog_post: Nieuw bericht schrijven
+    no_posts_found: Geen berichten gevonden.
+    no_weblog_posts_found: Geen berichten gevonden.
+    no_weblogs_found: Geen weblogs gevonden.
+    not_all_images_saved: Niet alle afbeeldingen konden opgeslagen worden.
+    number_of_posts: Aantal berichten
+    older_weblog_posts: Oudere berichten
+    owned_by: Eigenaar
+    post_failed: Kon bericht niet opslaan.
+    preamble: Samenvatting
+    published: Gepubliceerd
+    really_delete?: "Weet u zeker dat u uw weblog wilt verwijderen?"
+    really_delete_post?: "Weet u zeker dat u dit bericht wilt verwijderen?"
+    recent_posts: Meest recente berichten.
+    recent_weblogs: Recent bijgewerkte weblogs.
+    saved_archive: Weblogarchief opgeslagen!
+    saved_post: Bericht opgeslagen!
+    saved_weblog: Weblog opgeslagen!
+    show_post: Volledig bericht
+    signup_required: Log in of registreer je om nieuwe weblogs aan te kunnen maken!
+    successfully_destroyed: Uw weblog is succesvol verwijderd.
+    text: Tekst
+    time: Tijd
+    update_weblog: Uw weblog wijzigen
+    update_weblog_post: Bericht wijzigen
+    weblog: Weblog
+    weblog_already_present: U kunt maximaal één weblog aanmaken in deze sectie.
+    weblog_archive: Weblog archief
+    weblog_failed: Kon weblog niet opslaan.
+    weblog_post: bericht
+    weblog_post_title: Weblogbericht
+    weblog_posts: berichten
+    weblogs: weblogs
