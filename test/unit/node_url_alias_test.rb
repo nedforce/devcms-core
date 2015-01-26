@@ -123,14 +123,14 @@ class NodeURLAliasTest < ActiveSupport::TestCase
     assert_equal 'test', ni.node.custom_url_alias
   end
 
-  def test_should_set_custom_url_alias_to_unique_custom_url_suffix_if_custom_url_suffix_starts_with_forward_slash
-    page = create_page :title => 'foobarbaz'
-    page.node.update_attributes(:custom_url_suffix => '/test')
+  test 'should set custom_url_alias to unique custom_url_suffix if custom_url_suffix starts with forward slash' do
+    page = create_page title: 'foobarbaz'
+    page.node.update_attributes(custom_url_suffix: '/test')
     assert_equal 'test', page.node.custom_url_alias
 
-    na = NewsArchive.create(:parent => @root_node, :title => 'weblogs', :description => 'weblogs')
-    ni = na.news_items.create(:parent => na.node, :user => @arthur, :title => 'foobar', :body => 'foobar')
-    ni.node.update_attributes(:custom_url_suffix => '/test')
+    na = NewsArchive.create(parent: @root_node, title: 'Test news', description: 'Test news')
+    ni = na.news_items.create(parent: na.node, user: @arthur, title: 'foobar', body: 'foobar')
+    ni.node.update_attributes(custom_url_suffix: '/test')
     assert_equal 'test-1', ni.node.custom_url_alias
   end
 

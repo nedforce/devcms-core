@@ -38,11 +38,11 @@ class Admin::ContentCopiesControllerTest < ActionController::TestCase
     end
   end
 
-  def test_should_not_create_content_copy_for_non_copyable_copied_node
+  test 'should not create content_copy for non-copyable content_node' do
     login_as :arthur
 
     assert_no_difference('ContentCopy.count') do
-      create_content_copy(:copied_node_id => nodes(:henk_weblog_post_one_node).id)
+      create_content_copy(copied_node_id: nodes(:devcms_news_item_node).id)
 
       assert_response :precondition_failed
     end

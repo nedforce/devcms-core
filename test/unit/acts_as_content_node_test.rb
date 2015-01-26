@@ -5,19 +5,19 @@ class ActsAsContentNodeTestTransactional < ActiveSupport::TestCase
 
   def setup
     @about_page = pages(:about_page)
-    @arthur = users(:arthur)
-    @reader = users(:reader)
+    @arthur     = users(:arthur)
+    @reader     = users(:reader)
   end
 
   def test_save_with_parent_should_fail_for_invalid_parent
-    page = build_page(:parent => nodes(:henk_weblog_post_one_node))
+    page = build_page(parent: nodes(:devcms_news_item_node))
 
     assert_no_difference 'Page.count' do
       assert !page.save
       assert page.errors[:'node.base'].any?
     end
 
-    page = build_page(:parent => nodes(:henk_weblog_post_one_node))
+    page = build_page(parent: nodes(:devcms_news_item_node))
 
     assert_no_difference 'Page.count' do
       assert_raise ActiveRecord::RecordNotSaved do
@@ -28,13 +28,13 @@ class ActsAsContentNodeTestTransactional < ActiveSupport::TestCase
 
   def test_create_with_parent_should_fail_for_invalid_parent
     assert_no_difference 'Page.count' do
-      page = Page.create(:parent => nodes(:henk_weblog_post_one_node), :title => 'Page title', :preamble => 'Ambule', :body => 'Page body', :expires_on => 1.day.from_now.to_date)
+      page = Page.create(parent: nodes(:devcms_news_item_node), title: 'Page title', preamble: 'Ambule', body: 'Page body', expires_on: 1.day.from_now.to_date)
       assert page.errors[:'node.base'].any?
     end
 
     assert_no_difference 'Page.count' do
       assert_raise ActiveRecord::RecordNotSaved do
-        page = Page.create!(:parent => nodes(:henk_weblog_post_one_node), :title => 'Page title', :preamble => 'Ambule', :body => 'Page body', :expires_on => 1.day.from_now.to_date)
+        page = Page.create!(parent: nodes(:devcms_news_item_node), title: 'Page title', preamble: 'Ambule', body: 'Page body', expires_on: 1.day.from_now.to_date)
       end
     end
   end
