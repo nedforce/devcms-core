@@ -22,7 +22,7 @@
 # * Requires +position+ to be unique for a certain +ContactForm+ object.
 #
 class ContactFormField < ActiveRecord::Base
-  FIELD_TYPES = ['textfield', 'textarea', 'dropdown', 'multiselect', 'date', 'file']
+  FIELD_TYPES = ['textfield', 'email_address', 'textarea', 'dropdown', 'multiselect', 'date', 'file']
 
   # A +ContactFormField+ belongs to a +ContactForm+.
   belongs_to :contact_form
