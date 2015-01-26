@@ -3,8 +3,8 @@
 # directly, instead one will be automatically created when the associated
 # content node is saved.
 #
-# For example, pages and weblogs are two different types of content, yet both
-# should be referrable as an URL and linkable in a menu. Because both types
+# For example, pages and news archives are two different types of content, yet
+# both should be referrable as an URL and linkable in a menu. Because both types
 # of content are encapsulated through a node, they may now be managed without
 # regard of their content type details.
 #
