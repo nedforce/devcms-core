@@ -30,7 +30,7 @@ class ContactFormField < ActiveRecord::Base
   has_many :response_fields, dependent: :destroy
 
   # See the preconditions overview for an explanation of these validations.
-  validates :label,      presence: true, length: { in: 1..255, allow_blank: true }
+  validates :label,      presence: true, length: { maximum: 255 }
   validates :position,   presence: true, numericality: { allow_blank: true }, uniqueness: { scope: :contact_form_id, message: I18n.t('activerecord.errors.models.contact_form_field.attributes.position.must_be_unique') }
   validates :field_type, inclusion: { in: ContactFormField::FIELD_TYPES }
 
