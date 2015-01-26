@@ -2,7 +2,7 @@
 %td= label_tag contact_form_field.label
 
 %td
-  - if contact_form_field.field_type == 'textfield'
+  - if ['textfield', 'email_address'].include?(contact_form_field.field_type)
     = text_field_tag contact_form_field.id, contact_form_field.default_value, :readonly => true, :class => 'contact_field'
   - elsif contact_form_field.field_type == 'textarea'
     = text_area_tag contact_form_field.id, contact_form_field.default_value, :readonly => true, :rows => 7, :class => 'contact_field'
