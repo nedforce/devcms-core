@@ -400,12 +400,13 @@ nl:
     default_value: Standaardwaarde
     destroy_contact_form_field: Verwijderen
     dropdown: Dropdown
-    multiselect: Multiselect
     edit: Bewerken van invoerveld
     edit_contact_form_field: Bewerken
+    email_address: E-mailadres
     field_type: Veldtype
     file: Bestand
     label: Label
+    multiselect: Multiselect
     new_contact_field: Nieuw invoerveld
     obligatory: Verplicht?
     obligatory_fields: "* Deze velden zijn verplicht voor de gebruiker."
