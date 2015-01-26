@@ -7,6 +7,9 @@
 - if @obligatory_error
   %p
     %b= t 'contact_forms.should_enter_obligatory_fields'
+- if @email_address_error
+  %p
+    %b= t 'contact_forms.should_enter_valid_email_address'
 
 = form_tag "/contact_forms/#{@contact_form.id}/send_message", :method => :post, :multipart => @contact_form_fields.any? { |field| field.field_type == 'file' } do
   %table.contact_form_field
