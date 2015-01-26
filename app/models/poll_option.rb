@@ -26,7 +26,7 @@ class PollOption < ActiveRecord::Base
   # See the preconditions overview for an explanation of these validations.
   # Don't +validate :poll_question, presence: true+ because PollQuestion calls
   # validates_associated, so that won't work.
-  validates :text, presence: true, length: { in: 1..255 }, uniqueness: { scope: :poll_question_id }
+  validates :text, presence: true, length: { maximum: 255 }, uniqueness: { scope: :poll_question_id }
 
   def vote!
     PollOption.increment_counter :number_of_votes, self.id if self.poll_question.active?
