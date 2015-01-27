@@ -108,10 +108,10 @@ class AgendaItemTest < ActiveSupport::TestCase
     end
   end
 
-  def test_agenda_item_category_name_should_not_create_new_agenda_item_category_for_invalid_name
+  test 'agenda item category name should not create new agenda item category for invalid name' do
     assert_no_difference('AgendaItemCategory.count') do
       old_agenda_item_category = @agenda_item.agenda_item_category
-      @agenda_item.agenda_item_category_name = 'a'
+      @agenda_item.agenda_item_category_name = ' '
       @agenda_item.save
       assert_equal old_agenda_item_category, @agenda_item.reload.agenda_item_category
     end

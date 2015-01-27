@@ -33,7 +33,7 @@ class Calendar < ActiveRecord::Base
   has_children :calendar_items, class_name: 'Event', order: 'start_time DESC', extend: DevcmsCore::CalendarItemsAssociationExtensions
 
   # See the preconditions overview for an explanation of these validations.
-  validates :title, presence: true, length: { in: 2..255, allow_blank: true }
+  validates :title, presence: true, length: { maximum: 255 }
 
   # Returns the description as the token for indexing.
   def content_tokens

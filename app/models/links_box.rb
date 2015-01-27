@@ -17,7 +17,7 @@ class LinksBox < ActiveRecord::Base
   needs_editor_approval
 
   # See the preconditions overview for an explanation of these validations.
-  validates :title, presence: true, length: { in: 2..255, allow_blank: true }
+  validates :title, presence: true, length: { maximum: 255 }
 
   # Returns the last update date
   def last_updated_at

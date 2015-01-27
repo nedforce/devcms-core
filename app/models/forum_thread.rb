@@ -36,7 +36,7 @@ class ForumThread < ActiveRecord::Base
   end
 
   # See the preconditions overview for an explanation of these validations.
-  validates :title,       presence: true, length: { in: 2..255, allow_blank: true }
+  validates :title,       presence: true, length: { maximum: 255 }
   validates :forum_topic, presence: true
   validates :user,        presence: true
   validates_numericality_of :forum_topic_id, :user_id

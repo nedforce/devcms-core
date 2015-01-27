@@ -32,7 +32,7 @@ class SocialMediaLinksBox < ActiveRecord::Base
   VALID_URL_REGEXP = /(^$)|(^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.([a-z]{2,5}|[0-9]{1,5})(\/.*)?$)/ix
 
   # See the preconditions overview for an explanation of these validations.
-  validates :title, presence: true, length: { in: 2..255 }
+  validates :title, presence: true, length: { maximum: 255 }
 
   validates_format_of :twitter_url, :facebook_url, :linkedin_url, :with => VALID_URL_REGEXP, :allow_blank => true
   validates_format_of :youtube_url, :flickr_url,                  :with => VALID_URL_REGEXP, :allow_blank => true

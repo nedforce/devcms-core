@@ -59,11 +59,11 @@ class Image < ActiveRecord::Base
   needs_editor_approval
 
   # See the preconditions overview for an explanation of these validations.
-  validates :title,           presence: true, length: { in: 2..255, allow_blank: true }
+  validates :title,           presence: true, length: { maximum: 255 }
   validates :file,            presence: true
+  validates :alt,                             length: { maximum: 255 }
   validates :show_in_listing, inclusion: { in: [false, true], allow_nil: true }
 
-  validates_length_of       :alt,   :in => 0..255
   validates_format_of       :url, :with => /(^$)|(^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(([0-9]{1,5})?\/.*)?$)/ix, :allow_blank => true
 
   validates :offset, numericality: { greater_than_or_equal: 0, only_integer: true, allow_blank: true }

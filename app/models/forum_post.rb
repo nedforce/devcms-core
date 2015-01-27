@@ -35,8 +35,9 @@ class ForumPost < ActiveRecord::Base
 
   # See the preconditions overview for an explanation of these validations.
   before_validation     :set_user_name, on: :create
-  validates_presence_of :body, :forum_thread, :user_name, :user
-  validates_length_of   :body, :in => 1..5000
+  validates_presence_of :forum_thread, :user_name, :user
+
+  validates :body, presence: true, length: { maximum: 5000 }
 
   validates_numericality_of :user_id, :forum_thread_id, :allow_nil => false
   validate :ensure_thread_not_closed, :on => :create

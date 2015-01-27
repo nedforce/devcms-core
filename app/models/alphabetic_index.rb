@@ -22,7 +22,7 @@ class AlphabeticIndex < ActiveRecord::Base
   })
 
   # See the preconditions overview for an explanation of these validations.
-  validates :title,        presence: true, length: { in: 2..255, allow_blank: true }
+  validates :title,        presence: true, length: { maximum: 255 }
   validates :content_type, presence: true, inclusion: { in: DevcmsCore::Engine.config.allowed_content_types_for_alphabetic_index }
 
   # Returns an alphabetic list of all the descendant Items of type ContentType of the parent.

@@ -36,7 +36,7 @@ class NewsArchive < ActiveRecord::Base
   has_children :news_items, order: 'nodes.publication_start_date DESC'
 
   # See the preconditions overview for an explanation of these validations.
-  validates :title, presence: true, length: { in: 2..255, allow_blank: true }
+  validates :title, presence: true, length: { maximum: 255 }
 
   # Returns the description as the tokens for indexing.
   def content_tokens

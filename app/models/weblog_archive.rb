@@ -35,7 +35,7 @@ class WeblogArchive < ActiveRecord::Base
   has_children :weblogs, order: 'weblogs.title'
 
   # See the preconditions overview for an explanation of these validations.
-  validates :title, presence: true, length: { in: 2..255, allow_blank: true }
+  validates :title, presence: true, length: { maximum: 255 }
 
   # Finds the first +DEFAULT_OFFSET+ weblogs belonging to this +WeblogArchive+,
   # starting at the given +offset+.

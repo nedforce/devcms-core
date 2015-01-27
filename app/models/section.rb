@@ -45,7 +45,7 @@ class Section < ActiveRecord::Base
   belongs_to :frontpage_node, class_name: 'Node'
 
   # See the preconditions overview for an explanation of these validations.
-  validates :title, presence: true, length: { in: 2..255, allow_blank: true }
+  validates :title, presence: true, length: { maximum: 255 }
   validates_numericality_of :frontpage_node_id, allow_nil: true,                                            on: :update
   validates_presence_of     :frontpage_node, unless: Proc.new { |section| section.frontpage_node_id.nil? }, on: :update
 

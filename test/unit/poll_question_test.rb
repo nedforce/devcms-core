@@ -19,32 +19,22 @@ class PollQuestionTest < ActiveSupport::TestCase
     end
   end
 
-  def test_should_require_question
+  test 'should require valid question' do
     assert_no_difference 'PollQuestion.count' do
-      pq = create_poll_question :question => nil
-      assert !pq.valid?
-      assert pq.errors[:question].any?
-    end
+      pq1 = create_poll_question question: nil
+      assert !pq1.valid?
+      assert pq1.errors[:question].any?
 
-    assert_no_difference 'PollQuestion.count' do
-      pq = create_poll_question :question => '  '
-      assert !pq.valid?
-      assert pq.errors[:question].any?
+      pq2 = create_poll_question question: '  '
+      assert !pq2.valid?
+      assert pq2.errors[:question].any?
     end
   end
 
-  def test_should_require_valid_question_of_at_least_2_chars
-    assert_no_difference 'PollQuestion.count' do
-      pq = create_poll_question :question => '?'
-      assert !pq.valid?
-      assert pq.errors[:question].any?
-    end
-  end
-
-  def test_should_not_invalidate_valid_poll_options_when_poll_question_is_invalid_on_create
+  test 'should not invalidate valid poll options when poll question is invalid on create' do
     assert_no_difference 'PollQuestion.count' do
       assert_no_difference 'PollOption.count' do
-        pq = create_poll_question :question => '?', :new_poll_option_attributes => [ { :text => 'Option 1' }, { :text => 'Option 2' } ]
+        pq = create_poll_question question: ' ', new_poll_option_attributes: [{ text: 'Option 1' }, { text: 'Option 2' }]
         assert !pq.valid?
         assert pq.errors[:question].any?
 
@@ -55,8 +45,8 @@ class PollQuestionTest < ActiveSupport::TestCase
     end
   end
 
-  def test_active_should_default_to_false
-    pq = create_poll_question(:active => nil)
+  test 'active should default to false' do
+    pq = create_poll_question(active: nil)
     assert !pq.new_record?
     assert !pq.reload.active?
   end

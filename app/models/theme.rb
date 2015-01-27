@@ -22,7 +22,7 @@ class Theme < ActiveRecord::Base
   })
 
   # See the preconditions overview for an explanation of these validations.
-  validates :title, presence: true, length: { in: 2..255, allow_blank: true }
+  validates :title, presence: true, length: { maximum: 255 }
 
   def content_depth
     if node.parent.content.respond_to? :content_depth

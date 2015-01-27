@@ -45,7 +45,7 @@ class Carrousel < ActiveRecord::Base
   has_many :carrousel_items, autosave: true
 
   # See the preconditions overview for an explanation of these validations.
-  validates :title,        presence: true, length: { in: 2..255, allow_blank: true }
+  validates :title,        presence: true, length: { maximum: 255 }
   validates :display_time, numericality: { greater_than_or_equal_to: 0, only_integer: true, allow_blank: true }
   validates :animation,    numericality: { greater_than_or_equal_to: 0, only_integer: true }
 

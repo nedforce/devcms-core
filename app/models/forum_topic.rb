@@ -33,7 +33,7 @@ class ForumTopic < ActiveRecord::Base
   has_many :forum_threads, dependent: :destroy
 
   # See the preconditions overview for an explanation of these validations.
-  validates :title,       presence: true, uniqueness: true, length: { in: 2..255 }
+  validates :title,       presence: true, length: { maximum: 255 }, uniqueness: true
   validates :description, presence: true
 
   # Returns the child ForumThread objects, ordered by their +last_update_date+ values.

@@ -40,7 +40,7 @@ class PollQuestion < ActiveRecord::Base
 
   # See the preconditions overview for an explanation of these validations.
   validates :poll,     presence: true
-  validates :question, presence: true, length: { in: 2..255, allow_blank: true }
+  validates :question, presence: true, length: { maximum: 255 }
   validates :active,   inclusion: { in: [true, false], allow_nil: true }
 
   # Ensures that all the associated +PollOption+ objects are validated when this

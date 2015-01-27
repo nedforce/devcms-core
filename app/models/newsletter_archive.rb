@@ -37,7 +37,7 @@ class NewsletterArchive < ActiveRecord::Base
   has_and_belongs_to_many :users
 
   # See the preconditions overview for an explanation of these validations.
-  validates :title, presence: true, length: { in: 2..255, allow_blank: true }
+  validates :title, presence: true, length: { maximum: 255 }
 
   validates :from_email_address, email: { allow_blank: true }
 

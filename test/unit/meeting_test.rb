@@ -81,10 +81,10 @@ class MeetingTest < ActiveSupport::TestCase
     end
   end
 
-  def test_meeting_category_name_should_not_create_new_meeting_category_for_invalid_name
+  test 'meeting category name should not create new meeting category for invalid name' do
     assert_no_difference('MeetingCategory.count') do
       old_meeting_category = @meetings_calendar_meeting_one.meeting_category
-      @meetings_calendar_meeting_one.meeting_category_name = 'a'
+      @meetings_calendar_meeting_one.meeting_category_name = ' '
       @meetings_calendar_meeting_one.save
       assert_equal old_meeting_category, @meetings_calendar_meeting_one.reload.meeting_category
     end

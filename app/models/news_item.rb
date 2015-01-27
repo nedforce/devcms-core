@@ -46,7 +46,7 @@ class NewsItem < ActiveRecord::Base
   has_many :news_viewer_items, dependent: :destroy
 
   # See the preconditions overview for an explanation of these validations.
-  validates :title,        presence: true, length: { in: 2..255, allow_blank: true }
+  validates :title,        presence: true, length: { maximum: 255 }
   validates :body,         presence: true
   validates :news_archive, presence: true
 

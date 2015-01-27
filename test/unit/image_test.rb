@@ -10,22 +10,15 @@ class ImageTest < ActiveSupport::TestCase
     end
   end
 
-  def test_should_not_create_image_without_title
+  test 'should require valid title' do
     assert_no_difference 'Image.count' do
-      image = create_image(:title => nil)
-      assert image.new_record? && image.errors[:title].any?
-    end
+      image1 = create_image(title: nil)
+      assert image1.new_record?
+      assert image1.errors[:title].any?
 
-    assert_no_difference 'Image.count' do
-      image = create_image(:title => '  ')
-      assert image.new_record? && image.errors[:title].any?
-    end
-  end
-
-  def test_should_not_create_image_with_invalid_title
-    assert_no_difference 'Image.count' do
-      image = create_image(:title => 'F')
-      assert image.new_record? && image.errors[:title].any?
+      image2 = create_image(title: '  ')
+      assert image2.new_record?
+      image2.errors[:title].any?
     end
   end
 

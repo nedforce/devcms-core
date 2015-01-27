@@ -38,7 +38,7 @@ class ContactForm < ActiveRecord::Base
   after_save        :destroy_deleted_contact_form_fields, :save_updated_contact_form_fields
 
   # See the preconditions overview for an explanation of these validations.
-  validates :title,         presence: true, length: { in: 2..255, allow_blank: true }
+  validates :title,         presence: true, length: { maximum: 255 }
   validates :email_address, presence: true, email: { allow_blank: true }
 
   # Virtual attribute to keep track of submitted +ContactFormField+ objects.

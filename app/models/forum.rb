@@ -32,7 +32,7 @@ class Forum < ActiveRecord::Base
   has_children :forum_topics, order: 'forum_topics.title'
 
   # See the preconditions overview for an explanation of these validations.
-  validates :title, presence: true, uniqueness: true, length: { in: 2..255 }
+  validates :title, presence: true, length: { maximum: 255 }, uniqueness: true
 
   # Finds the +limit+ last updated +ForumThread+ grandchildren.
   def find_last_updated_forum_threads(limit = 5, args = {})

@@ -18,7 +18,7 @@ class AgendaItemCategory < ActiveRecord::Base
   has_many :agenda_items, dependent: :nullify
 
   # See the preconditions overview for an explanation of these validations.
-  validates :name, presence: true, uniqueness: true, length: { in: 2..255 }
+  validates :name, presence: true, length: { maximum: 255 }, uniqueness: true
 
   # Finds the agenda item category with the given name, or initializes a new one with
   # that name (but does *not* save it).
