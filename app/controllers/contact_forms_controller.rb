@@ -122,7 +122,7 @@ class ContactFormsController < ApplicationController
   def valid_email_address_fields?(array)
     if array.present?
       @contact_form.email_address_field_ids.each do |field_id|
-        if array["#{field_id}"].present? && array["#{field_id}"] !~ ValidatesEmailFormatOf::Regex
+        if array["#{field_id}"].present? && array["#{field_id}"] !~ EmailValidator::REGEX
           return false
         end
       end
