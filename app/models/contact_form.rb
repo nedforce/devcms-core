@@ -58,6 +58,10 @@ class ContactForm < ActiveRecord::Base
     contact_form_fields.obligatory.map { |field| field.id }
   end
 
+  def email_address_field_ids
+    contact_form_fields.has_field_type('email_address').map { |field| field.id }
+  end
+
   protected
 
   # Builds the +ContactFormField+ objects, before they are validated.
@@ -80,11 +84,10 @@ class ContactForm < ActiveRecord::Base
             inst.attributes = options
           end
         else
-          inst = ContactFormField.new( options.merge({ contact_form: self }.merge(options)))
+          inst = ContactFormField.new(options.merge({ contact_form: self }.merge(options)))
           self.contact_form_fields << inst
         end
       end
-      #@contact_form_fields_before_save = nil
     end
   end
 
