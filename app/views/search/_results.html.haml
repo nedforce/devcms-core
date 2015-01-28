@@ -1,4 +1,4 @@
-- query_string = raw " #{t 'search.for'} " + content_tag(:span, "'#{h @query}'", :class => 'query') + " #{t 'search.in'} " + ((@top_node.nil? || @top_node.is_root?) ? Settler[:host] : "(#{h @top_node.content.title})")
+- query_string = raw " #{t 'search.for'} " + content_tag(:span, "'#{h @query}'", class: 'query') + " #{t 'search.in'} " + ((@top_node.nil? || @top_node.is_root?) ? Settler[:host] : "(#{h @top_node.content.title})")
 - if @content_types_to_include
   - query_string += " #{t 'search.of_type'} '#{@search_scope.first}'"
 
@@ -8,13 +8,13 @@
 - else
   - if @results.size > 1
     .number_of_results
-      = raw(show_search_results_index(t('search.results')) + " #{t 'search.of'} " + content_tag(:strong, @results.size.to_s) + query_string)
+      = raw(show_search_results_index(t('search.results')) + " #{t 'search.of'} " + content_tag(:strong, @results.total_results.to_s) + query_string)
 
   - else
     %p.number_of_results= raw(t('search.results_1') + query_string)
 
   .search_results
     - @results.each do |result|
-      = render :partial => 'search_result', :object => result
+      = render partial: 'search_result', object: result
     .pageNumber
       = paginate(@results)
