@@ -298,11 +298,6 @@ module DevcmsCoreHelper
 
   protected
 
-    # Returns the HTML for any children belonging to this node.
-    def render_images_and_attachments
-      (render_images || '') + (render_attachments || '')
-    end
-
     def render_images
       render(:partial => 'shared/images_bar', :locals => { :images => @image_content_nodes, :rel => @node.id }) unless @image_content_nodes.blank?
     end
