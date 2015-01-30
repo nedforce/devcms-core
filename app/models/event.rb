@@ -52,7 +52,7 @@ class Event < ActiveRecord::Base
 
   # Returns a URL alias for a given +node+.
   def path_for_url_alias(node)
-    "#{self.start_time.year}/#{self.start_time.month}/#{self.start_time.day}/#{self.title}"
+    "#{start_time.year}/#{start_time.month}/#{start_time.day}/#{title}"
   end
 
   # Returns the OWMS type.
@@ -61,26 +61,26 @@ class Event < ActiveRecord::Base
   end
 
   def self.send_registration_notifications
-    all(:conditions => ['start_time <= ? AND subscription_enabled = ?', Time.now + 1.day, true]).each do |event|
+    all(conditions: ['start_time <= ? AND subscription_enabled = ?', Time.now + 1.day, true]).each do |event|
       event.update_attribute :subscription_enabled, false
       EventMailer.event_registrations(event).deliver if event.event_registrations.any?
     end
   end
 
-protected
+  protected
 
   def target_date
     date.present? ? date : start_time
   end
 
   def set_start_and_end_time
-    self.end_time = if self.end_time.nil? || self.end_time == self.start_time
-                      self.start_time.change(year: target_date.year, month: target_date.month, day: target_date.day) + 30.minutes
-                    elsif self.end_time < self.start_time
-                      self.end_time.change(  year: target_date.year, month: target_date.month, day: target_date.day) + 1.day
+    self.end_time = if end_time.nil? || end_time == start_time
+                      start_time.change(year: target_date.year, month: target_date.month, day: target_date.day) + 30.minutes
+                    elsif end_time < start_time
+                      end_time.change(  year: target_date.year, month: target_date.month, day: target_date.day) + 1.day
                     else
-                      self.end_time.change(  year: target_date.year, month: target_date.month, day: target_date.day)
+                      end_time.change(  year: target_date.year, month: target_date.month, day: target_date.day)
                     end
-    self.start_time = self.start_time.change(year: target_date.year, month: target_date.month, day: target_date.day)
+    self.start_time = start_time.change(year: target_date.year, month: target_date.month, day: target_date.day)
   end
 end

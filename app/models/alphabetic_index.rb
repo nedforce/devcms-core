@@ -15,21 +15,22 @@
 class AlphabeticIndex < ActiveRecord::Base
   # Adds content node functionality to alphabetic indexes.
   acts_as_content_node({
-    :allowed_roles_for_update  => %w( admin ),
-    :allowed_roles_for_create  => %w( admin ),
-    :allowed_roles_for_destroy => %w( admin ),
-    :copyable => false
+    allowed_roles_for_update:  %w( admin ),
+    allowed_roles_for_create:  %w( admin ),
+    allowed_roles_for_destroy: %w( admin ),
+    copyable:                  false
   })
 
   # See the preconditions overview for an explanation of these validations.
   validates :title,        presence: true, length: { maximum: 255 }
   validates :content_type, presence: true, inclusion: { in: DevcmsCore::Engine.config.allowed_content_types_for_alphabetic_index }
 
-  # Returns an alphabetic list of all the descendant Items of type ContentType of the parent.
+  # Returns an alphabetic list of all the descendant Items
+  # of type ContentType of the parent.
   def items(letter = 'A', options = {})
     if letter.present?
-      if self.content_type.present?
-        klass = self.content_type.constantize
+      if content_type.present?
+        klass = content_type.constantize
       else
         klass = Page
       end

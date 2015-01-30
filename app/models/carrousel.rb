@@ -18,7 +18,7 @@
 #  * A Carrousel only accepts +CarrouselItem+ child nodes.
 #
 class Carrousel < ActiveRecord::Base
-  ALLOWED_TIME_UNITS = ['seconds', 'minutes', 'hours', 'days', 'months']
+  ALLOWED_TIME_UNITS = %w(seconds minutes hours days months)
 
   ANIMATION_NONE          = 0
   ANIMATION_FADE_IN       = 1
@@ -30,18 +30,19 @@ class Carrousel < ActiveRecord::Base
 
   # Adds content node functionality to news archives.
   acts_as_content_node({
-    :show_in_menu                      => false,
-    :show_content_box_header           => false,
-    :copyable                          => false,
-    :allowed_roles_for_update          => %w( admin ),
-    :allowed_roles_for_create          => %w( admin ),
-    :allowed_roles_for_destroy         => %w( admin ),
-    :available_content_representations => ['content_box']
+    show_in_menu:                      false,
+    show_content_box_header:           false,
+    copyable:                          false,
+    allowed_roles_for_update:          %w( admin ),
+    allowed_roles_for_create:          %w( admin ),
+    allowed_roles_for_destroy:         %w( admin ),
+    available_content_representations: ['content_box']
   })
 
   belongs_to :current_carrousel_item, class_name: 'CarrouselItem', dependent: :destroy
 
-  # A +Carrousel+ has many +CarrouselItem+ objects and many items through +CarrouselItem+.
+  # A +Carrousel+ has many +CarrouselItem+ objects
+  # and many items through +CarrouselItem+.
   has_many :carrousel_items, autosave: true
 
   # See the preconditions overview for an explanation of these validations.
@@ -52,7 +53,7 @@ class Carrousel < ActiveRecord::Base
   after_paranoid_delete :remove_associated_content
 
   def last_updated_at
-    [self.carrousel_items.maximum(:updated_at), self.updated_at].compact.max
+    [carrousel_items.maximum(:updated_at), updated_at].compact.max
   end
 
   def animation
@@ -66,7 +67,7 @@ class Carrousel < ActiveRecord::Base
 
   # Retrieves the items belonging to this carrousel in correct order.
   def items
-    carrousel_items.all.map { |ci| ci.item }
+    carrousel_items.all.map(&:item)
   end
 
   # Number of items in this carrousel.
@@ -76,12 +77,13 @@ class Carrousel < ActiveRecord::Base
 
   # Retrieves the approved items.
   def approved_items
-    items.map { |item| item.content }
+    items.map(&:content)
   end
 
-  # Adds items to a +Carrousel+, which must be a +Page+, an +Image+ or a +NewsItem+. Old associations are removed first.
-  # Parameters: An array containing node IDs. The order of the items in the array determines the positions of the items 
-  # in the carrousel
+  # Adds items to a +Carrousel+, which must be a +Page+, an +Image+ or a
+  # +NewsItem+. Old associations are removed first.
+  # Parameters: An array containing node IDs. The order of the items in the
+  # array determines the positions of the items in the carrousel
   def associate_items(items, excerpts = {})
     carrousel_items.destroy_all
 
@@ -96,8 +98,7 @@ class Carrousel < ActiveRecord::Base
 
   # Set and returns an item to be shown.
   def current_item
-    @current_item ||= self.find_current_carrousel_item
-    return @current_item
+    @current_item ||= find_current_carrousel_item
   end
 
   # Custom title for the content box
@@ -107,7 +108,7 @@ class Carrousel < ActiveRecord::Base
 
   # Alternative text for tree nodes.
   def tree_text(node)
-    self.title
+    title
   end
 
   # Don't index carrousels
@@ -117,7 +118,7 @@ class Carrousel < ActiveRecord::Base
 
   def transition_time_in_seconds
     if transition_time.present? && transition_time > 0
-      transition_time.to_f/1000.0
+      transition_time.to_f / 1000.0
     else
       case animation
       when Carrousel::ANIMATION_SPRING
@@ -137,7 +138,7 @@ class Carrousel < ActiveRecord::Base
 
   # Set display time
   def display_time=(time)
-    if time.is_a?(Array) and time.size == 2
+    if time.is_a?(Array) && time.size == 2
       value = time[0].to_i
       unit = time[1]
       time = ALLOWED_TIME_UNITS.include?(unit) ? value.send(unit) : 0
@@ -150,37 +151,39 @@ class Carrousel < ActiveRecord::Base
     case
     when display_time < 60
       [display_time,                 'seconds']
-    when display_time < 60*60
+    when display_time < 60 * 60
       [display_time/60,              'minutes']
-    when display_time < (60*60*24)
+    when display_time < (60 * 60 * 24)
       [display_time/(60*60),         'hours']
-    when display_time < (30*(60*60*24))
+    when display_time < (30 * (60 * 60 * 24))
       [display_time/(60*60*24),      'days']
     else
       [display_time/(30*(60*60*24)), 'months']
     end
   end
 
-protected
+  protected
 
   def remove_associated_content
-    self.carrousel_items.destroy_all
+    carrousel_items.destroy_all
   end
 
-private
+  private
 
-  # Cycle the current carrousel item  if it is time to do so and fetch it
+  # Cycle the current carrousel item if it is time to do so and fetch it
   def fetch_or_cycle_current_carrousel_item
     unless self.carrousel_items.empty?
       if self.current_carrousel_item.nil?
-        Node.without_search_reindex do # No update of the search index is necessary.
+        Node.without_search_reindex do
+          # No update of the search index is necessary.
           connection.update("UPDATE carrousels SET last_cycled = '#{Time.now.to_formatted_s(:db)}', current_carrousel_item_id = #{self.carrousel_items.first.id} WHERE id = #{self.id}")
         end
-        self.current_carrousel_item = self.carrousel_items.first
+        self.current_carrousel_item = carrousel_items.first
       elsif (last_cycled + display_time.seconds) <= Time.now
         current_item_index = carrousel_items.index(current_carrousel_item)
-        self.current_carrousel_item = carrousel_items.at( (current_item_index+1)%carrousel_items.size )
-        Node.without_search_reindex do # No update of the search index is necessary.
+        self.current_carrousel_item = carrousel_items.at((current_item_index + 1) % carrousel_items.size)
+        Node.without_search_reindex do
+          # No update of the search index is necessary.
           connection.update("UPDATE carrousels SET last_cycled = '#{Time.now.to_formatted_s(:db)}', current_carrousel_item_id = #{self.current_carrousel_item.id} WHERE id = #{self.id}")
         end
       end

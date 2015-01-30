@@ -28,7 +28,7 @@ class Link < ActiveRecord::Base
   # Check the length of the +title+ and +description+ attributes, if they exist.
   validates :title,       length: { in: 2..255, allow_nil: true }
   validates :description, length: { in: 2..255, allow_nil: true }
-  validates :type,        inclusion: { in: ['InternalLink', 'ExternalLink'], allow_blank: false }
+  validates :type,        inclusion: { in: %w(InternalLink ExternalLink), allow_blank: false }
 
   # Returns the description as the token for indexing.
   def content_tokens
@@ -39,7 +39,7 @@ class Link < ActiveRecord::Base
 
   # Ensures that +title+ and +description+ are set to nil if they are blank.
   def set_title_and_description_to_nil_if_blank
-    self.title       = nil if self.title.blank?
-    self.description = nil if self.description.blank?
+    self.title       = nil if title.blank?
+    self.description = nil if description.blank?
   end
 end

@@ -18,7 +18,8 @@
 #  * A WeblogArchive only accepts +Weblog+ children.
 #
 class WeblogArchive < ActiveRecord::Base
-  # Determines how many +Weblog+ nodes are shown for each offset node in the admin controller.
+  # Determines how many +Weblog+ nodes are shown for each offset node
+  # in the admin controller.
   DEFAULT_OFFSET = 20
 
   # Adds content node functionality to weblog archives.
@@ -40,43 +41,46 @@ class WeblogArchive < ActiveRecord::Base
   # Finds the first +DEFAULT_OFFSET+ weblogs belonging to this +WeblogArchive+,
   # starting at the given +offset+.
   def find_weblogs_for_offset(offset)
-    self.weblogs.all(offset: offset, limit: DEFAULT_OFFSET)
+    weblogs.all(offset: offset, limit: DEFAULT_OFFSET)
   end
 
   # Returns a hash with the offsets that can be used in subsequent calls to
   # +find_weblogs_for_offset+.
   #
-  # Each offset returned is a multiple of +DEFAULT_OFFSET+, and never exceeds the total
-  # number of weblogs for this +WeblogArchive+.
+  # Each offset returned is a multiple of +DEFAULT_OFFSET+, and never exceeds
+  # the total number of weblogs for this +WeblogArchive+.
   #
-  # For example, with +DEFAULT_OFFSET+ equal to 20 and the total number of weblogs
-  # being 67, the following result will be returned:
+  # For example, with +DEFAULT_OFFSET+ equal to 20 and the total number of
+  # weblogs being 67, the following result will be returned:
   #
-  # [ 0, 20, 40, 60 ]
+  # [0, 20, 40, 60]
   def find_offsets
     offsets = []
 
-    0.upto(self.weblogs.count / DEFAULT_OFFSET) do |i|
+    0.upto(weblogs.count / DEFAULT_OFFSET) do |i|
       offsets << i * 20
     end
 
     offsets
   end
 
-  # Finds the first and last +Weblog+ for the range determined by the given +offset+.
+  # Finds the first and last +Weblog+ for the range determined by the given
+  # +offset+.
   #
   # For example, with +DEFAULT_OFFSET+ equal to 20, +offset+ equal to 40 and the
-  # total number of weblogs being 57, the 41st and 57th weblogs will be returned.
+  # total number of weblogs being 57, the 41st and 57th weblogs will be
+  # returned.
   def find_first_and_last_weblog_for_offset(offset)
-    first  = self.weblogs.first(offset: offset, limit: DEFAULT_OFFSET)
-    second = self.weblogs.first(offset: offset, limit: DEFAULT_OFFSET, order: 'weblogs.title DESC')
+    first  = weblogs.first(offset: offset, limit: DEFAULT_OFFSET)
+    second = weblogs.first(offset: offset, limit: DEFAULT_OFFSET, order: 'weblogs.title DESC')
 
     [first, second]
   end
 
   # Parses the given +offset+.
-  # Returns 0 if the given +offset+ is smaller than zero, else rounds it down to the
-  # nearest multiple of +DEFAULT_OFFSET+ (possibly 0 if +offset+ < +DEFAULT_OFFSET+)
+  # Returns 0 if the given +offset+ is smaller than zero, else rounds it down to
+  # the nearest multiple of +DEFAULT_OFFSET+
+  # (possibly 0 if +offset+ < +DEFAULT_OFFSET+)
   def self.parse_offset(offset)
     if offset < DEFAULT_OFFSET
       0
@@ -85,16 +89,17 @@ class WeblogArchive < ActiveRecord::Base
     end
   end
 
-  # Returns true if this +WeblogArchive+ has a +Weblog+ associated with the given +User+, else false.
+  # Returns true if this +WeblogArchive+ has a +Weblog+
+  # associated with the given +User+, else false.
   def has_weblog_for_user?(user)
-    self.weblogs.exists?(user_id: user)
+    weblogs.exists?(user_id: user)
   end
 
   # Finds the +limit+ last updated +Weblog+ children.
   def find_last_updated_weblogs(limit = 5)
     return [] if limit <= 0
 
-    self.weblogs.accessible.all.sort { |a, b| b.last_updated_at <=> a.last_updated_at }[0.. (limit - 1)]
+    weblogs.accessible.all.sort { |a, b| b.last_updated_at <=> a.last_updated_at }[0..(limit - 1)]
   end
 
   # Returns the description as the token for indexing.

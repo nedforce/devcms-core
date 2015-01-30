@@ -5,9 +5,9 @@ class FaqCategory < Theme
     allowed_roles_for_update:    %w( admin final_editor editor ),
     allowed_roles_for_destroy:   %w( admin final_editor editor ),
     controller_name:             'faq_categories'
-    })
+  })
 
-    def icon_filename
-      'poll_question.png'
-    end
+  def icon_filename
+    'poll_question.png'
+  end
 end

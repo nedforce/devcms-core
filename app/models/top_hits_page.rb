@@ -1,5 +1,6 @@
-# A top hits page is a content node that keeps track of the content nodes that received the most hits. It has specified
-# +acts_as_content_node+ from Acts::ContentNode::ClassMethods.
+# A top hits page is a content node that keeps track of the content nodes that
+# received the most hits. It has specified +acts_as_content_node+ from
+# Acts::ContentNode::ClassMethods.
 #
 # *Specification*
 #
@@ -21,7 +22,8 @@ class TopHitsPage < ActiveRecord::Base
 
   # Default content types to exclude from the top hits.
   DEFAULT_CONTENT_TYPES_TO_EXCLUDE = %w(
-    Calendar CombinedCalendar NewsArchive NewsletterArchive Section Forum ForumTopic WeblogArchive Image HeaderImage ContactBox Attachment TopHitsPage
+    Calendar CombinedCalendar NewsArchive NewsletterArchive Section Forum
+    ForumTopic WeblogArchive Image HeaderImage ContactBox Attachment TopHitsPage
   )
 
   # Default number of top hits to show
@@ -46,16 +48,18 @@ class TopHitsPage < ActiveRecord::Base
     DEFAULT_CONTENT_TYPES_TO_EXCLUDE
   end
 
-  # Finds the content nodes within the current site that have been shown the most and are publicly accessible.
+  # Finds the content nodes within the current site that have been shown the
+  # most and are publicly accessible.
   def find_top_hits(options = {})
     return @top_hits if @top_hits
 
-    include_content          = options.has_key?(:include_content) ? options.delete(:include_content) : false
+    include_content          = options.key?(:include_content) ? options.delete(:include_content) : false
     nodes_to_exclude         = options.delete(:nodes_to_exclude) || []
     content_types_to_exclude = options.delete(:content_types_to_exclude) || TopHitsPage.content_types_to_exclude
 
-    # This method can be called when the record hasn't been saved yet, i.e., for the admin preview
-    containing_site = (self.node.nil? || self.node.new_record? ? self.parent : self.node).containing_site
+    # This method can be called when the record hasn't been saved yet,
+    # i.e. for the admin preview.
+    containing_site = (node.nil? || node.new_record? ? parent : node).containing_site
 
     # Exclude other sites
     nodes_to_exclude += containing_site.descendants.with_content_type('Site')

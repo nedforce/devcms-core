@@ -403,7 +403,7 @@ protected
 
   # Prevents information leakage, validates the email and returns false to prevent a save
   def validate_uniqueness_of_email
-    user = User.first(:conditions => ['UPPER(email_address) = UPPER(?)', email_address])
+    user = User.first(conditions: ['UPPER(email_address) = UPPER(?)', email_address])
     UserMailer.email_used_to_create_account(user).deliver if user
     return !user
   end
@@ -449,7 +449,7 @@ protected
       end
     end
 
-    return alphabet
+    alphabet
   end
 
   # Returns an invitation code for a user, based on the user's +email_address+.

@@ -24,6 +24,6 @@ class Abbreviation < ActiveRecord::Base
   # Find a record by normalized (alphanumeric, lowercase) abbr.
   def self.search(abbr)
     abbr = abbr.downcase.gsub(/[^a-z0-9]/, '')
-    self.all(:conditions => ["REPLACE(LOWER(abbr), '.', '' ) = ?", abbr])
+    self.all(conditions: ["REPLACE(LOWER(abbr), '.', '' ) = ?", abbr])
   end
 end

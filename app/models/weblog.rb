@@ -20,7 +20,8 @@
 # * Requires the presence of +weblog_archive+.
 # * Requires the presence of +user+.
 #
-# * Requires the uniqueness of +title+ and +user+, within a given +WeblogArchive+.
+# * Requires the uniqueness of +title+ and +user+, within a given
+#   +WeblogArchive+.
 #
 # Child/parent type constraints
 #
@@ -43,7 +44,8 @@ class Weblog < ActiveRecord::Base
     nested_resource:                   true
   })
 
-  # Extend this class with methods to find items based on their publication date.
+  # Extend this class with methods to find items based on their
+  # publication date.
   acts_as_archive items_name: :weblog_posts
 
   # A +Weblog+ belongs to a +WeblogArchive+.
@@ -69,7 +71,7 @@ class Weblog < ActiveRecord::Base
   def find_last_published_weblog_posts(limit = 5)
     return [] if limit <= 0
 
-    self.weblog_posts.accessible.all(limit: limit)
+    weblog_posts.accessible.all(limit: limit)
   end
 
   # Returns the description as the token for indexing.

@@ -1,5 +1,5 @@
-# An AgendaItemCategory is used to group common agenda items. Thus, it can contain
-# many agenda items, each represented with the AgendaItem content type.
+# An AgendaItemCategory is used to group common agenda items. Thus, it can
+# contain many agenda items, each represented with the AgendaItem content type.
 #
 # *Specification*
 #
@@ -20,8 +20,8 @@ class AgendaItemCategory < ActiveRecord::Base
   # See the preconditions overview for an explanation of these validations.
   validates :name, presence: true, length: { maximum: 255 }, uniqueness: true
 
-  # Finds the agenda item category with the given name, or initializes a new one with
-  # that name (but does *not* save it).
+  # Finds the agenda item category with the given name, or initializes a new one
+  # with that name (but does *not* save it).
   def self.find_or_new_by_name(name)
     AgendaItemCategory.find_by_name(name) || AgendaItemCategory.new(name: name)
   end

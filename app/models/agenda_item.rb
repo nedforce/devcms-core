@@ -1,7 +1,7 @@
 # This model is used to represent an agenda item of a particular meeting,
-# which in turn is represented by the Meeting model. A Meeting optionally belongs
-# to an associated AgendaItemCategory. It has specified +acts_as_content_node+
-# from Acts::ContentNode::ClassMethods.
+# which in turn is represented by the Meeting model. A Meeting optionally
+# belongs to an associated AgendaItemCategory. It has specified
+# +acts_as_content_node+ from Acts::ContentNode::ClassMethods.
 #
 # *Specification*
 #
@@ -15,7 +15,8 @@
 # * +chairman+ - The chairman of this agenda item.
 # * +notary+ - The notary of this agenda item.
 # * +staff_member+ - The staff member of this agenda item.
-# * +speaking_rights+ - The speaking rights for this agenda item (valid options are the keys of +SPEAKING_RIGHT_OPTIONS+, or +nil+).
+# * +speaking_rights+ - The speaking rights for this agenda item
+#                       (valid options are the keys of +SPEAKING_RIGHT_OPTIONS+, or +nil+).
 #
 # Preconditions
 #
@@ -30,7 +31,6 @@
 # * An AgendaItem can only be inserted into Meeting nodes.
 #
 class AgendaItem < ActiveRecord::Base
-
   # The various options for +speakings_rights+.
   SPEAKING_RIGHT_OPTIONS = {
     0 => 'no',
@@ -39,9 +39,9 @@ class AgendaItem < ActiveRecord::Base
 
   # Adds content node functionality to agenda items.
   acts_as_content_node({
-    :allowed_child_content_types => %w( Attachment AttachmentTheme ),
-    :show_in_menu                => false,
-    :copyable                    => false
+    allowed_child_content_types: %w( Attachment AttachmentTheme ),
+    show_in_menu:                false,
+    copyable:                    false
   })
 
   # This content type needs approval when created or altered by an editor.
@@ -58,12 +58,15 @@ class AgendaItem < ActiveRecord::Base
   validates :description,             presence: true
   validates :speaking_rights,         numericality: { allow_nil: true }, inclusion: { in: SPEAKING_RIGHT_OPTIONS.keys, allow_nil: true }
   validates :agenda_item_category_id, numericality: { allow_nil: true }
-  validates_associated      :agenda_item_category,    :if => :has_agenda_item_category?
-  validate                  :ensure_associated_calendar_item_is_a_meeting
 
-  # Returns the +name+ of the associated AgendaItemCategory, or +nil+ if no AgendaItemCategory is associated.
+  validates_associated :agenda_item_category, if: :has_agenda_item_category?
+
+  validate :ensure_associated_calendar_item_is_a_meeting
+
+  # Returns the +name+ of the associated AgendaItemCategory
+  # or +nil+ if no AgendaItemCategory is associated.
   def agenda_item_category_name
-    self.agenda_item_category.name if self.agenda_item_category
+    agenda_item_category.name if agenda_item_category
   end
 
   # Sets the associated AgendaItemCategory using the given +name+.
@@ -74,22 +77,22 @@ class AgendaItem < ActiveRecord::Base
 
   # Aliases +description+ as +title+.
   def title
-    self.description
+    description
   end
 
   def title_changed?
-    self.description_changed?
+    description_changed?
   end
 
-protected
+  protected
 
   # Returns +true+ if an AgendaItemCategory is associated (i.e., a foreign key is present), else +false+.
   def has_agenda_item_category?
-    !self.agenda_item_category.nil?
+    !agenda_item_category.nil?
   end
 
   # Ensures the associated CalendarItem is a Meeting.
   def ensure_associated_calendar_item_is_a_meeting
-    errors.add(:calendar_item, :calendar_item_must_be_a_meeting) if self.calendar_item && !self.calendar_item.is_a?(Meeting)
+    errors.add(:calendar_item, :calendar_item_must_be_a_meeting) if calendar_item && !calendar_item.is_a?(Meeting)
   end
 end

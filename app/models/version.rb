@@ -5,7 +5,7 @@ class Version < ActiveRecord::Base #:nodoc:
     rejected:   'rejected'
   }
 
-  UNAPPROVED_STATUSES = ['unapproved', 'rejected']
+  UNAPPROVED_STATUSES = %w(unapproved rejected)
 
   belongs_to :versionable, polymorphic: true
   belongs_to :editor,      class_name: 'User'
@@ -19,33 +19,33 @@ class Version < ActiveRecord::Base #:nodoc:
   scope :unapproved, lambda { where(status: UNAPPROVED_STATUSES) }
 
   def drafted?
-    self.status == STATUSES[:drafted]
+    status == STATUSES[:drafted]
   end
 
   def unapproved?
-    self.status == STATUSES[:unapproved]
+    status == STATUSES[:unapproved]
   end
 
   def rejected?
-    self.status == STATUSES[:rejected]
+    status == STATUSES[:rejected]
   end
 
   def approve!(user = nil)
     if user
-      self.model.save :user => user
+      self.model.save user: user
     else
       self.model.save
     end
   end
 
   def reject!
-    self.update_attributes(status: STATUSES[:rejected])
+    update_attributes(status: STATUSES[:rejected])
   end
 
   # Return an instance of the versioned ActiveRecord model with the attribute
   # values of this version.
   def model
-    Version.create_version(self.versionable, YAML::load(self.yaml).merge(draft: self.drafted?))
+    Version.create_version(versionable, YAML::load(self.yaml).merge(draft: drafted?))
   end
 
   def self.create_version(original, attributes_to_overwrite = {})
@@ -62,13 +62,13 @@ class Version < ActiveRecord::Base #:nodoc:
     record
   end
 
-protected
+  protected
 
   def set_number
-    if self.versionable.versions.count.zero?
+    if versionable.versions.count.zero?
       self.number = 1
     else
-      self.number = self.versionable.versions.maximum(:number) + 1
+      self.number = versionable.versions.maximum(:number) + 1
     end
   end
 end

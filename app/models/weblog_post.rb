@@ -1,5 +1,5 @@
-# This model is used to represent a weblog post. A weblog post is contained within
-# a webleg, which in turn is represented by the +Weblog+ model.
+# This model is used to represent a weblog post. A weblog post is contained
+# within a weblog, which in turn is represented by the +Weblog+ model.
 # It has specified +acts_as_content_node+ from Acts::ContentNode::ClassMethods.
 #
 # *Specification*
@@ -44,7 +44,7 @@ class WeblogPost < ActiveRecord::Base
 
   # Alternative text for tree nodes.
   def tree_text(node)
-    "#{node.publication_start_date.day}/#{node.publication_start_date.month} #{self.title}"
+    "#{node.publication_start_date.day}/#{node.publication_start_date.month} #{title}"
   end
 
   # Returns the preamble and body as the tokens for indexing.
@@ -54,6 +54,6 @@ class WeblogPost < ActiveRecord::Base
 
   # Returns a URL alias for a given +node+.
   def path_for_url_alias(node)
-    "#{node.publication_start_date.year}/#{node.publication_start_date.month}/#{node.publication_start_date.day}/#{self.title}"
+    "#{node.publication_start_date.year}/#{node.publication_start_date.month}/#{node.publication_start_date.day}/#{title}"
   end
 end

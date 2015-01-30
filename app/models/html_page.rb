@@ -32,12 +32,12 @@ class HtmlPage < ActiveRecord::Base
   validates :title, presence: true, length: { maximum: 255 }
   validates :body,  presence: true
 
-  # Returns the preamble and body as the tokens for indexing.
+  # Returns the body as the tokens for indexing.
   def content_tokens
-    [ body ].join(' ')
+    body
   end
 
-  # Returns the image file name to be used for icons on the front end website.
+  # Returns the image file name to be used for icons on the front-end website.
   def icon_filename
     'page.png'
   end

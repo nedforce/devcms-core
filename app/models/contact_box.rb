@@ -1,5 +1,6 @@
-# A contact box is a content node that displays contact information when placed in a sidebar. It has specified
-# +acts_as_content_node+ from Acts::ContentNode::ClassMethods.
+# A contact box is a content node that displays contact information when placed
+# in a sidebar. It has specified +acts_as_content_node+ from
+# Acts::ContentNode::ClassMethods.
 #
 # *Specification*
 #
@@ -30,13 +31,13 @@
 class ContactBox < ActiveRecord::Base
   # Adds content node functionality to contact boxes.
   acts_as_content_node({
-     :allowed_child_content_types => %w( Image ),
-     :show_in_menu => false,
-     :allowed_roles_for_create  => %w( admin ),
-     :allowed_roles_for_destroy => %w( admin ),
-     :available_content_representations => ['content_box'],
-     :show_content_box_header => false
-   })
+    allowed_child_content_types:       %w( Image ),
+    show_in_menu:                      false,
+    allowed_roles_for_create:          %w( admin ),
+    allowed_roles_for_destroy:         %w( admin ),
+    available_content_representations: ['content_box'],
+    show_content_box_header:           false
+  })
 
   # See the preconditions overview for an explanation of these validations.
   validates :title,               presence: true, length: { in: 3..255 }
@@ -50,6 +51,6 @@ class ContactBox < ActiveRecord::Base
                       :friday_text,
                       :saturday_text,
                       :sunday_text,
-                      :minimum     => 3,
-                      :allow_blank => true
+                      minimum:     3,
+                      allow_blank: true
 end

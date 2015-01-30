@@ -1,5 +1,6 @@
 # An Attachment is a content node that can describe and contain any kind
-# of file. It has specified +acts_as_content_node+ from Acts::ContentNode::ClassMethods.
+# of file. It has specified +acts_as_content_node+ from
+# Acts::ContentNode::ClassMethods.
 #
 # If you want to attach an image and render it inline, then use the the Image
 # content node instead of this one. If you want to attach an image and make it
@@ -33,10 +34,10 @@
 #
 class Attachment < ActiveRecord::Base
   acts_as_content_node({
-    :show_in_menu            => false,
-    :show_content_box_header => false
+    show_in_menu:            false,
+    show_content_box_header: false
   }, {
-    :exclude => [:id, :created_at, :updated_at, :size, :height, :width, :db_file_id, :parent_id, :filename, :thumbnail, :content_type]
+    exclude: [:id, :created_at, :updated_at, :size, :height, :width, :db_file_id, :parent_id, :filename, :thumbnail, :content_type]
   })
 
   # This content type needs approval when created or altered by an editor.
@@ -60,7 +61,7 @@ class Attachment < ActiveRecord::Base
 
   # See the preconditions overview for an explanation of these validations.
   validates :title, presence: true, length: { maximum: 255 }
-  validates_format_of :filename, :with => /[a-z0-9\-_]+/i
+  validates_format_of :filename, with: /[a-z0-9\-_]+/i
 
   # Returns the file extension of this attachment or nil if it has none.
   def extension
@@ -89,10 +90,10 @@ class Attachment < ActiveRecord::Base
   end
 
   def path_for_url_alias(node)
-    self.basename.gsub(/[^a-z0-9\-_]/i, '-')
+    basename.gsub(/[^a-z0-9\-_]/i, '-')
   end
 
-protected
+  protected
 
   # Clean up the +filename+ for storage.
   def clean_filename
