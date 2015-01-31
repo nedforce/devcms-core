@@ -1,23 +1,22 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +Carrousel+ objects.
 class Admin::CarrouselsController < Admin::AdminController
-
   # The +show+, +new+, +edit+, +update+ and +create+ actions need a parent +Node+ object.
-  before_filter :find_parent_node,             :only => [ :new, :create ]
+  before_filter :find_parent_node,             only: [:new, :create]
 
   # The +show+, +edit+ and +update+ actions need a +Carrousel+ object to act upon.
-  before_filter :find_carrousel,               :only => [ :show, :edit, :update ]
+  before_filter :find_carrousel,               only: [:show, :edit, :update]
 
   # Parse the publication start date for the +create+ and +update+ actions.
-  before_filter :parse_publication_start_date, :only => [ :create, :update ]
+  before_filter :parse_publication_start_date, only: [:create, :update]
 
-  before_filter :set_commit_type,              :only => [ :create, :update ]
+  before_filter :set_commit_type,              only: [:create, :update]
 
-  before_filter :get_item_ids,                 :only => [ :create, :update ]
+  before_filter :get_item_ids,                 only: [:create, :update]
 
   layout false
 
-  require_role ['admin'], :except => [ :show ]
+  require_role ['admin'], except: [:show]
 
   # * GET /admin/carrousels/:id
   # * GET /admin/carrousels/:id.xml
@@ -25,8 +24,8 @@ class Admin::CarrouselsController < Admin::AdminController
     @animation = Carrousel::ANIMATION_NAMES[@carrousel.animation]
 
     respond_to do |format|
-      format.html { render :partial => 'show', :locals => { :record => @carrousel }, :layout => 'admin/admin_show' }
-      format.xml  { render :xml => @carrousel }
+      format.html { render partial: 'show', locals: { record: @carrousel }, layout: 'admin/admin_show' }
+      format.xml  { render xml: @carrousel }
     end
   end
 
@@ -63,15 +62,15 @@ class Admin::CarrouselsController < Admin::AdminController
 
     respond_to do |format|
       if @commit_type == 'preview' && @carrousel.valid?
-        format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @carrousel }, :layout => 'admin/admin_preview' }
-        format.xml  { render :xml => @carrousel, :status => :created, :location => @carrousel }
-      elsif @commit_type == 'save' && @carrousel.save(:user => current_user)
+        format.html { render template: 'admin/shared/create_preview', locals: { record: @carrousel }, layout: 'admin/admin_preview' }
+        format.xml  { render xml: @carrousel, status: :created, location: @carrousel }
+      elsif @commit_type == 'save' && @carrousel.save(user: current_user)
         format.html { render 'admin/shared/create' }
-        format.xml  { render :xml => @carrousel, :status => :created, :location => @carrousel }
+        format.xml  { render xml: @carrousel, status: :created, location: @carrousel }
       else
         @item_sortlets = item_sortlet_hash_for_ids(@item_ids, @carrousel_items)
-        format.html { render :action => :new }
-        format.xml  { render :xml => @carrousel.errors.to_xml, :status => :unprocessable_entity }
+        format.html { render action: :new }
+        format.xml  { render xml: @carrousel.errors.to_xml, status: :unprocessable_entity }
       end
     end
   end
@@ -84,18 +83,18 @@ class Admin::CarrouselsController < Admin::AdminController
 
     respond_to do |format|
       if @commit_type == 'preview' && @carrousel.valid?
-        format.html { render :template => 'admin/shared/update_preview', :locals => { :record => @carrousel }, :layout => 'admin/admin_preview' }
-        format.xml  { render :xml => @carrousel, :status => :created, :location => @carrousel }
-      elsif @commit_type == 'save' && @carrousel.save(:user => current_user)
+        format.html { render template: 'admin/shared/update_preview', locals: { record: @carrousel }, layout: 'admin/admin_preview' }
+        format.xml  { render xml: @carrousel, status: :created, location: @carrousel }
+      elsif @commit_type == 'save' && @carrousel.save(user: current_user)
         format.html do
           @refresh = true
-          render :template => 'admin/shared/update'
+          render template: 'admin/shared/update'
         end
         format.xml  { head :ok }
       else
         @item_sortlets = item_sortlet_hash_for_ids(@item_ids)
-        format.html { render :action => :edit, :status => :unprocessable_entity }
-        format.xml  { render :xml => @carrousel.errors, :status => :unprocessable_entity }
+        format.html { render action: :edit, status: :unprocessable_entity }
+        format.xml  { render xml: @carrousel.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -104,7 +103,7 @@ class Admin::CarrouselsController < Admin::AdminController
 
   # Finds the +Carrousel+ object corresponding to the passed in +id+ parameter.
   def find_carrousel
-    @carrousel = Carrousel.find(params[:id], :include => :node).current_version
+    @carrousel = Carrousel.find(params[:id], include: :node).current_version
   end
 
   def get_item_ids
@@ -130,18 +129,23 @@ class Admin::CarrouselsController < Admin::AdminController
   end
 
   def item_sortlet_hash(element, excerpt = '')
-    image = element.node.content_type == 'Image' ? element.node : element.node.children.with_content_type('Image').first
+    if element.node.content_type == 'Image'
+      image = element.node
+    else
+      image = element.node.children.with_content_type('Image').first
+    end
+
     html = ''
     html << "<img src=\"/#{image.url_alias}/thumbnail.jpg\"/>" if image.present?
     html << "<textarea rows=\"10\" cols=\"50\" id=\"carrousel_items[#{element.node.id}]\" name=\"carrousel_items[#{element.node.id}]\">#{excerpt}</textarea>"
     {
-      :title          => element.title,
-      :id             => element.node.id,
-      :nodeId         => element.node.id,
-      :controllerName => element.class.name.tableize,
-      :contentNodeId  => element.id,
-      :xtype          => 'sortlet',
-      :html           => html
+      title:          element.title,
+      id:             element.node.id,
+      nodeId:         element.node.id,
+      controllerName: element.class.name.tableize,
+      contentNodeId:  element.id,
+      xtype:          'sortlet',
+      html:           html
     }
   end
 end

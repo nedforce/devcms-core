@@ -1,29 +1,34 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +WeblogArchive+ objects.
 class Admin::WeblogArchivesController < Admin::AdminController
-  before_filter :default_format_json,  :only => :index  
+  before_filter :default_format_json, only: :index
 
-  # The +create+ action needs the parent +Node+ object to link the new +WeblogArchive+ content node to.
-  prepend_before_filter :find_parent_node, :only => [ :new, :create ]
+  # The +create+ action needs the parent +Node+ object to link the new
+  # +WeblogArchive+ content node to.
+  prepend_before_filter :find_parent_node, only: [:new, :create]
 
-  # The +show+, +edit+ and +update+ actions need a +WeblogArchive+ object to act upon.
-  before_filter :find_weblog_archive,      :only => [ :show, :edit, :update ]
+  # The +show+, +edit+ and +update+ actions need a +WeblogArchive+ object
+  # to act upon.
+  before_filter :find_weblog_archive,      only: [:show, :edit, :update]
 
-  before_filter :find_weblogs,             :only => :show
+  before_filter :find_weblogs,             only: :show
 
-  before_filter :set_commit_type,          :only => [ :create, :update ]
+  before_filter :set_commit_type,          only: [:create, :update]
 
   layout false
 
-  require_role [ 'admin' ], :except => [ :index, :show ]
+  require_role ['admin'], except: [:index, :show]
 
   # * GET /admin/weblog_archives.json?node=1&active_node_id=2
   #
   # *parameters*
   #
   # +node+           - Id of the node of which the children are requested
-  # +super_node+     - Id of the node of which the children are requested, when also an offset is specified.
-  # +active_node_id+ - (Optional) Id of the active node. If the active node is contained by this weblog archive, the containing offset-node will auto-expand.
+  # +super_node+     - Id of the node of which the children are requested, when
+  #                    also an offset is specified.
+  # +active_node_id+ - (Optional) Id of the active node. If the active node is
+  #                    contained by this weblog archive, the containing
+  #                    offset-node will auto-expand.
   def index
     respond_to do |format|
       node_id              = params[:super_node] || params[:node]
@@ -35,12 +40,13 @@ class Admin::WeblogArchivesController < Admin::AdminController
       format.json do
         if @offset
           @weblog_nodes = @weblog_archive_node.content.find_weblogs_for_offset(@offset).map(&:node)
-          render :json => @weblog_nodes.map { |node| node.to_tree_node_for(current_user, :expand_if_ancestor_of => active_node) }.to_json
+          render json: @weblog_nodes.map { |node| node.to_tree_node_for(current_user, expand_if_ancestor_of: active_node) }.to_json
         else
           @archive_includes_active_node = active_node ? @weblog_archive_node.descendants.include?(active_node) : false
 
           @offset_nodes = @weblog_archive_node.content.find_offsets.map do |offset|
-            # Not too keen on these extra queries here, is there another way to accomplish this?
+            # Not too keen on these extra queries here.
+            # Is there another way to accomplish this?
             first_weblog, last_weblog = @weblog_archive_node.content.find_first_and_last_weblog_for_offset(offset)
 
             active_content = active_node.content if active_node
@@ -54,17 +60,17 @@ class Admin::WeblogArchivesController < Admin::AdminController
             end
 
             {
-              :treeLoaderName => Node.content_type_configuration('WeblogArchive')[:tree_loader_name],
-              :text           => "#{first_weblog.title[0..1].titleize} - #{last_weblog.title[0..1].titleize}",
-              :expanded       => range_includes_active_node,
-              :extraParams    => {
-                :super_node => node_id,
-                :offset     => offset
+              treeLoaderName: Node.content_type_configuration('WeblogArchive')[:tree_loader_name],
+              text:           "#{first_weblog.title[0..1].titleize} - #{last_weblog.title[0..1].titleize}",
+              expanded:       range_includes_active_node,
+              extraParams:    {
+                super_node: node_id,
+                offset:     offset
               }
             }
           end
 
-          render :json => @offset_nodes.to_json
+          render json: @offset_nodes.to_json
         end
       end
     end
@@ -73,11 +79,12 @@ class Admin::WeblogArchivesController < Admin::AdminController
   # * GET /admin/weblog_archives/:id
   # * GET /admin/weblog_archives/:id.xml
   def show
-    @actions = nil if !current_user.has_role?('admin') # no-one else should have an edit button
+    # Only admins should have an edit button.
+    @actions = nil if !current_user.has_role?('admin')
 
     respond_to do |format|
-      format.html { render :partial => 'show', :layout => 'admin/admin_show' }
-      format.xml  { render :xml => @weblog_archive }
+      format.html { render partial: 'show', layout: 'admin/admin_show' }
+      format.xml  { render xml: @weblog_archive }
     end
   end
 
@@ -86,7 +93,7 @@ class Admin::WeblogArchivesController < Admin::AdminController
     @weblog_archive = WeblogArchive.new(params[:weblog_archive])
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :record => @weblog_archive } }
+      format.html { render template: 'admin/shared/new', locals: { record: @weblog_archive } }
     end
   end
 
@@ -95,7 +102,7 @@ class Admin::WeblogArchivesController < Admin::AdminController
     @weblog_archive.attributes = params[:weblog_archive]
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :record => @weblog_archive } }
+      format.html { render template: 'admin/shared/edit', locals: { record: @weblog_archive } }
     end
   end
 
@@ -107,14 +114,14 @@ class Admin::WeblogArchivesController < Admin::AdminController
 
     respond_to do |format|
       if @commit_type == 'preview' && @weblog_archive.valid?
-        format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @weblog_archive }, :layout => 'admin/admin_preview' }
-        format.xml  { render :xml => @weblog_archive, :status => :created, :location => @weblog_archive }
-      elsif @commit_type == 'save' && @weblog_archive.save(:user => current_user)
+        format.html { render template: 'admin/shared/create_preview', locals: { record: @weblog_archive }, layout: 'admin/admin_preview' }
+        format.xml  { render xml: @weblog_archive, status: :created, location: @weblog_archive }
+      elsif @commit_type == 'save' && @weblog_archive.save(user: current_user)
         format.html { render 'admin/shared/create' }
-        format.xml  { render :xml => @weblog_archive, :status => :created, :location => @weblog_archive }
+        format.xml  { render xml: @weblog_archive, status: :created, location: @weblog_archive }
       else
-        format.html { render :template => 'admin/shared/new', :locals => { :record => @weblog_archive }, :status => :unprocessable_entity }
-        format.xml  { render :xml => @weblog_archive.errors, :status => :unprocessable_entity }
+        format.html { render template: 'admin/shared/new', locals: { record: @weblog_archive }, status: :unprocessable_entity }
+        format.xml  { render xml: @weblog_archive.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -128,24 +135,24 @@ class Admin::WeblogArchivesController < Admin::AdminController
       if @commit_type == 'preview' && @weblog_archive.valid?
         format.html do
           find_weblogs
-          render :template => 'admin/shared/update_preview', :locals => { :record => @weblog_archive }, :layout => 'admin/admin_preview'
+          render template: 'admin/shared/update_preview', locals: { record: @weblog_archive }, layout: 'admin/admin_preview'
         end
-        format.xml  { render :xml => @weblog_archive, :status => :created, :location => @weblog_archive }
-      elsif @commit_type == 'save' && @weblog_archive.save(:user => current_user)
+        format.xml  { render xml: @weblog_archive, status: :created, location: @weblog_archive }
+      elsif @commit_type == 'save' && @weblog_archive.save(user: current_user)
         format.html { render 'admin/shared/update' }
         format.xml  { head :ok }
       else
-        format.html { render :template => 'admin/shared/edit', :locals => { :record => @weblog_archive }, :status => :unprocessable_entity }
-        format.xml  { render :xml => @weblog_archive.errors, :status => :unprocessable_entity }
+        format.html { render template: 'admin/shared/edit', locals: { record: @weblog_archive }, status: :unprocessable_entity }
+        format.xml  { render xml: @weblog_archive.errors, status: :unprocessable_entity }
       end
     end
   end
 
-protected
+  protected
 
   # Finds the +WeblogArchive+ object corresponding to the passed in +id+ parameter.
   def find_weblog_archive
-    @weblog_archive = WeblogArchive.find(params[:id], :include => :node).current_version
+    @weblog_archive = WeblogArchive.find(params[:id], include: :node).current_version
   end
 
   def find_weblogs
