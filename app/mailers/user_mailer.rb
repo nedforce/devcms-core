@@ -7,7 +7,7 @@ class UserMailer < ActionMailer::Base
     @subject = "Welkom bij #{Settler[:host]}. Verifieer uw e-mailadres!"
     @user    = user
 
-    mail(:from => @from, :to => @recipients, :subject => @subject)
+    mail(from: @from, to: @recipients, subject: @subject)
   end
 
   def email_used_to_create_account(user, options = {})
@@ -15,7 +15,7 @@ class UserMailer < ActionMailer::Base
     @subject = "Uw e-mail is gebruikt om een account te maken bij #{Settler[:host]}"
     @user    = user
 
-    mail(:from => @from, :to => @recipients, :subject => @subject)
+    mail(from: @from, to: @recipients, subject: @subject)
   end
 
   def invitation_email(email_address, invitation_code, options = {})
@@ -26,7 +26,7 @@ class UserMailer < ActionMailer::Base
     @invitation_email = email_address
     @invitation_code  = invitation_code
 
-    mail(:from => @from, :to => @recipients, :subject => @subject)
+    mail(from: @from, to: @recipients, subject: @subject)
   end
 
   def password_reset(user, options = {})
@@ -34,7 +34,7 @@ class UserMailer < ActionMailer::Base
     @subject = "Uw #{Settler[:host]} wachtwoord opnieuw instellen"
     @user    = user
 
-    mail(:from => @from, :to => @recipients, :subject => @subject)
+    mail(from: @from, to: @recipients, subject: @subject)
   end
 
   def account_does_not_exist(email_address, options = {})
@@ -44,25 +44,25 @@ class UserMailer < ActionMailer::Base
     @host             = options[:host] || Settler[:host]
     @invitation_email = email_address
 
-    mail(:from => @from, :to => @recipients, :subject => @subject)
+    mail(from: @from, to: @recipients, subject: @subject)
   end
 
   def rejection_notification(user, node, editor, reason, options = {})
     set_defaults(editor, options)
-    headers("Reply-To" => "#{user.full_name} <#{user.email_address}>")
+    headers('Reply-To' => "#{user.full_name} <#{user.email_address}>")
 
-    @subject  = "Wijziging aan #{Settler[:host]}/#{node.url_alias} afgewezen."
-    @user     = user
-    @node     = node
-    @editor   = editor
-    @reason   = reason
+    @subject = "Wijziging aan #{Settler[:host]}/#{node.url_alias} afgewezen."
+    @user    = user
+    @node    = node
+    @editor  = editor
+    @reason  = reason
 
-    mail(:from => @from, :to => @recipients, :subject => @subject)
+    mail(from: @from, to: @recipients, subject: @subject)
   end
 
   def approval_notification(user, node, editor, comment, options = {})
     set_defaults(editor, options)
-    headers("Reply-To" => "#{user.full_name} <#{user.email_address}>")
+    headers('Reply-To' => "#{user.full_name} <#{user.email_address}>")
 
     @subject = "Wijziging aan #{Settler[:host]}/#{node.url_alias} goedgekeurd."
     @user    = user
@@ -70,19 +70,19 @@ class UserMailer < ActionMailer::Base
     @editor  = editor
     @comment = comment
 
-    mail(:from => @from, :to => @recipients, :subject => @subject)
+    mail(from: @from, to: @recipients, subject: @subject)
   end
 
   def new_forum_post_notification(thread_owner, post)
     set_defaults(thread_owner, {})
 
-    @subject  = "Nieuwe reactie op forum '#{post.forum_thread.title}'"
-    @user     = thread_owner
-    @post     = post
-    @topic    = post.forum_thread.forum_topic
-    @thread   = post.forum_thread
+    @subject = "Nieuwe reactie op forum '#{post.forum_thread.title}'"
+    @user    = thread_owner
+    @post    = post
+    @topic   = post.forum_thread.forum_topic
+    @thread  = post.forum_thread
 
-    mail(:from => @from, :to => @recipients, :subject => @subject) do |format|
+    mail(from: @from, to: @recipients, subject: @subject) do |format|
       format.text
       format.html
     end

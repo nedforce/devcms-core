@@ -27,7 +27,7 @@ class ImageUploader < CarrierWave::Uploader::Base
   # Process files as they are uploaded.
   #     process :scale => [200, 300]
 
-  process :resize_to_limit => [1024, 1024]
+  process resize_to_limit: [1024, 1024]
 
   #
   #     def scale(width, height)
@@ -39,8 +39,8 @@ class ImageUploader < CarrierWave::Uploader::Base
   #       process :scale => [50, 50]
   #     end
   version :full do
-    process :resize_to_limit => [800, 500]
-    process :quality => 90
+    process resize_to_limit: [800, 500]
+    process quality: 90
     convert 'jpg'
   end
 

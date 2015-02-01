@@ -1,13 +1,13 @@
 module Search::Modules::Ferret::FerretMethods
   module ClassMethods
     def without_reindex(&block)
-      self.disable_ferret &block
+      self.disable_ferret(&block)
     end
   end
 
   module InstanceMethods
     def without_reindex(&block)
-      self.disable_ferret &block
+      self.disable_ferret(&block)
     end
 
     def update_index
