@@ -1,6 +1,6 @@
 namespace :devcms do
   desc 'Encrypts password settings for passwords that have not been encrypted yet'
-  task(:encrypt_password_settings => :environment) do
+  task(encrypt_password_settings: :environment) do
     settings = Setting.all.select { |setting| setting.type == 'password' }
     updated_settings = settings.select do |setting|
       begin

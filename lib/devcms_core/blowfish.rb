@@ -1,9 +1,10 @@
 module DevcmsCore
-  # Encrypts and decrypts text using openSSL
+  # Encrypts and decrypts text using OpenSSL.
   class Blowfish
     require 'openssl'
 
-    # Encrypts some text using a given key. The encrypted text is returned as base64 encoded text
+    # Encrypts some text using a given key.
+    # The encrypted text is returned as base64 encoded text.
     def self.encrypt(key, plaintext)
       cipher = new_cipher
       cipher.encrypt
@@ -12,8 +13,9 @@ module DevcmsCore
       ActiveSupport::Base64.encode64(ciphertext << cipher.final).gsub(/\n/, '')
     end
 
-    # Decrypts base64 encoded encypted text and returns the result
-    # A 'OpenSSL::CipherError: bad decrypt' error is thrown when decryption failed using the given key.
+    # Decrypts base64 encoded encypted text and returns the result.
+    # An 'OpenSSL::CipherError: bad decrypt' error is thrown when
+    # decryption failed using the given key.
     def self.decrypt(key, encrypted_text)
       encrypted_text = ActiveSupport::Base64.decode64(encrypted_text)
       cipher = new_cipher
@@ -23,10 +25,10 @@ module DevcmsCore
       plaintext << cipher.final
     end
 
-  private
+    private
 
     def self.new_cipher
-      OpenSSL::Cipher::Cipher.new "bf"
+      OpenSSL::Cipher::Cipher.new 'bf'
     end
   end
 end

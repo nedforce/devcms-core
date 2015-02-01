@@ -3,7 +3,7 @@ module DevcmsCore
     RECAPTCHA_API_SERVER        = 'http://www.google.com/recaptcha/api'
     RECAPTCHA_API_SECURE_SERVER = 'https://www.google.com/recaptcha/api'
 
-    SKIP_VERIFY_ENV = ['test', 'cucumber']
+    SKIP_VERIFY_ENV = %w(test cucumber)
 
     class RecaptchaError < StandardError
     end
@@ -27,10 +27,10 @@ module DevcmsCore
           recaptcha = nil
           Timeout::timeout(options[:timeout] || 3) do
             recaptcha = Net::HTTP.post_form URI.parse("#{RECAPTCHA_API_SERVER}/verify"), {
-              "privatekey" => private_key,
-              "remoteip"   => request.remote_ip,
-              "challenge"  => params[:recaptcha_challenge_field],
-              "response"   => params[:recaptcha_response_field]
+              'privatekey' => private_key,
+              'remoteip'   => request.remote_ip,
+              'challenge'  => params[:recaptcha_challenge_field],
+              'response'   => params[:recaptcha_response_field]
             }
           end
           answer, error = recaptcha.body.split.map { |s| s.chomp }

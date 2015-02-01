@@ -1,9 +1,9 @@
 namespace :rails3 do
   desc 'Converts DbFile attachments to Carrierwave attachments'
-  task :convert_dbfile_attachments, [:overwrite] => :environment do |t, args|    
+  task :convert_dbfile_attachments, [:overwrite] => :environment do |t, args|
     unless Attachment.new.respond_to?(:file?)
       p "The Attachment model needs a 'file' string column and a mounted Carrierwave uploader"
-      exit(1) 
+      exit(1)
     end
 
     Attachment.unscoped do
@@ -20,15 +20,15 @@ namespace :rails3 do
               end
 
               store_dir = File.join(Rails.root, attachment.file.store_dir)
-              file_name = attachment.filename        
+              file_name = attachment.filename
 
               FileUtils.mkdir_p store_dir
               new_file_path = File.join(store_dir, file_name)
 
               Attachment.transaction do
-                attachment.connection.raw_connection.lo_export(attachment.db_file.loid, new_file_path)                  
+                attachment.connection.raw_connection.lo_export(attachment.db_file.loid, new_file_path)
                 attachment.send(:write_attribute, :file, file_name)
-                attachment.save!(Rails.version.to_i < 3 ? false : { :validate => false })
+                attachment.save!(Rails.version.to_i < 3 ? false : { validate: false })
               end
 
               p "Attachment ##{attachment.id} updated!"
@@ -47,16 +47,16 @@ namespace :rails3 do
   task :convert_images, [:overwrite] => :environment do |t, args|
     unless Image.new.respond_to?(:file?)
       p "The Image model needs a 'file' string column and a mounted Carrierwave uploader"
-      exit(1) 
+      exit(1)
     end
 
     Image.unscoped do
       Node.unscoped do
-        Image.find_in_batches(:select => '*') do |images|
+        Image.find_in_batches(select: '*') do |images|
           images.each do |image|
+            p "Converting image ##{image.id}..."
 
             begin
-              p "Converting image ##{image.id}..."
 
               if image.file? && !args[:overwrite]
                 p "Image ##{image.id} already has an associated file, skipping (execute rake rails3:convert_images[true] to overwrite)"
@@ -69,9 +69,9 @@ namespace :rails3 do
               FileUtils.mkdir_p store_dir
               new_file_path = File.join(store_dir, file_name)
 
-              File.open(new_file_path, 'wb'){ |f| f << image.data }
+              File.open(new_file_path, 'wb') { |f| f << image.data }
               image.send(:write_attribute, :file, file_name)
-              image.save!(Rails.version.to_i < 3 ? false : { :validate => false })
+              image.save!(Rails.version.to_i < 3 ? false : { validate: false })
               image.file.recreate_versions!
 
               p "Image ##{image.id} updated!"

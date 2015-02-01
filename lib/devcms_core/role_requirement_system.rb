@@ -8,24 +8,26 @@ module DevcmsCore
       klass.send :class_inheritable_array, :role_requirements
       klass.send :include, RoleSecurityInstanceMethods
       klass.send :extend, RoleSecurityClassMethods
-      klass.send :helper_method, :url_options_authenticate? 
+      klass.send :helper_method, :url_options_authenticate?
 
       klass.send :role_requirements=, []
     end
 
     module RoleSecurityClassMethods
-
       def reset_role_requirements!
         self.role_requirements.clear
       end
 
-      # Add this to the top of your controller to require a role in order to access it.
-      # Checks whether user has a matching role on the current +Node+, which is expected to be in @node. To check for any node, specify :any_node => true
+      # Add this to the top of your controller to require a role in order to
+      # access it. Checks whether user has a matching role on the current
+      # +Node+, which is expected to be in @node. To check for any node,
+      # specify any_node: true
+      #
       # Example Usage:
       #
-      #    require_role "contractor"
-      #    require_role "admin", :only => :destroy # don't allow contractors to destroy
-      #    require_role "admin", :only => :update, :unless => "current_user.authorized_for_listing?(params[:id]) "
+      #    require_role 'contractor'
+      #    require_role 'admin', only: :destroy # don't allow contractors to destroy
+      #    require_role 'admin', only: :update, unless: current_user.authorized_for_listing?(params[:id])
       #
       # Valid options
       #
@@ -62,10 +64,11 @@ module DevcmsCore
         end
 
         self.role_requirements ||= []
-        self.role_requirements << { :roles => roles, :options => options }
+        self.role_requirements << { roles: roles, options: options }
       end
 
-      # This is the core of RoleRequirement.  Here is where it discerns if a user can access a controller or not./
+      # This is the core of RoleRequirement.  Here is where it discerns if a
+      # user can access a controller or not.
       def user_authorized_for?(user, node, params = {}, binding = self.binding)
         return true unless Array === self.role_requirements
 
@@ -74,7 +77,7 @@ module DevcmsCore
           options = role_requirement[:options]
           # do the options match the params?
 
-          # check the action
+          # Check the action
           if options.has_key?(:only)
             next unless options[:only].include?((params[:action] || 'index').to_sym)
           end
@@ -84,12 +87,14 @@ module DevcmsCore
           end
 
           if options.has_key?(:if)
-            # execute the proc.  if the procedure returns false, we don't need to authenticate these roles
+            # Execute the proc.  If the procedure returns false,
+            # we don't need to authenticate these roles
             next unless (String === options[:if] ? eval(options[:if], binding) : options[:if].call([params,node]))
           end
 
           if options.has_key?(:unless)
-            # execute the proc.  if the procedure returns true, we don't need to authenticate these roles
+            # Execute the proc.  If the procedure returns true,
+            # we don't need to authenticate these roles.
             next if (String === options[:unless] ? eval(options[:unless], binding) : options[:unless].call([params,node]))
           end
 
@@ -109,13 +114,15 @@ module DevcmsCore
           return false unless passed
         end
 
-        return true
+        true
       end
     end
 
     module RoleSecurityInstanceMethods
       def self.included(klass)
-        raise 'Because role_requirement extends acts_as_authenticated, You must include AuthenticatedSystem first before including RoleRequirementSystem!' unless klass.included_modules.include?(AuthenticatedSystem)
+        unless klass.included_modules.include?(AuthenticatedSystem)
+          raise 'Because role_requirement extends acts_as_authenticated, You must include AuthenticatedSystem first before including RoleRequirementSystem!'
+        end
       end
 
       def access_denied
@@ -131,22 +138,24 @@ module DevcmsCore
         node = @parent_node || @node || @nodes || Node.root
 
         unless self.class.user_authorized_for?(current_user, node, params, binding)
-         if node && (node.is_a?(Array) ? node.any? { |n| !n.visible? } : !node.visible?)
-           raise ActionController::RoutingError, I18n.t('role_requirement_system.node_not_found')
-         else
-           return access_denied
-         end
+          if node && (node.is_a?(Array) ? node.any? { |n| !n.visible? } : !node.visible?)
+            raise ActionController::RoutingError, I18n.t('role_requirement_system.node_not_found')
+          else
+            return access_denied
+          end
         end
 
         true
       end
 
-    protected
+      protected
 
-      # receives a :controller, :action, and :params.  Finds the given controller and runs user_authorized_for? on it.
-      # This can be called in your views, and is for advanced users only.  If you are using :if / :unless eval expressions, 
-      #   then this may or may not work (eval strings use the current binding to execute, not the binding of the target 
-      #   controller)
+      # receives a :controller, :action, and :params.  Finds the given
+      # controller and runs user_authorized_for? on it.  This can be called in
+      # your views, and is for advanced users only.  If you are using
+      # :if / :unless eval expressions, then this may or may not work (eval
+      # strings use the current binding to execute, not the binding of the
+      # target controller)
       def url_options_authenticate?(params = {})
         params = params.symbolize_keys
         if params[:controller]

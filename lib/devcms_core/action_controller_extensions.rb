@@ -15,10 +15,10 @@ module DevcmsCore
       def acts_as_archive_controller(model_name, options = {})
         include DevcmsCore::ActsAsArchiveController
 
-        prepend_before_filter :find_parent_node, :only => [ :new, :create ]
-        before_filter :find_record,              :only => [ :show, :edit, :update ]
-        before_filter :set_commit_type,          :only => [ :create, :update ]
-        before_filter :parse_date_parameters,    :only => [ :index ]
+        prepend_before_filter :find_parent_node, only: [:new, :create]
+        before_filter :find_record,              only: [:show, :edit, :update]
+        before_filter :set_commit_type,          only: [:create, :update]
+        before_filter :parse_date_parameters,    only: [:index]
         layout false
 
         self.singular_name      = model_name.to_s

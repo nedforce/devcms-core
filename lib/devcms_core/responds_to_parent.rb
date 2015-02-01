@@ -11,7 +11,7 @@ module DevcmsCore
 
       response.headers['Content-Type'] = 'text/html; charset=UTF-8'
 
-      render :text => "<html><body><script type='text/javascript' charset='utf-8'>
+      render text: "<html><body><script type='text/javascript' charset='utf-8'>
         var loc = document.location;
         with(window.parent) { setTimeout(function() { window.eval('#{self.class.helpers.escape_javascript script}'); window.loc && loc.replace('about:blank'); }, 1) }
       </script></body></html>".html_safe

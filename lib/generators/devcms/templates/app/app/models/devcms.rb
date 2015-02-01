@@ -20,7 +20,7 @@ class Devcms
 
     # def search_configuration
     #   {
-    #     :enabled_search_engines => ['ferret'], 
+    #     :enabled_search_engines => ['ferret'],
     #     :default_search_engine => 'ferret',
     #     :default_page_size => Settler[:search_default_page_size].to_i,
     #     :ferret => {

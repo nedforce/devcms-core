@@ -1,8 +1,10 @@
 module DevcmsCore
-  # This module contains various helperst to facilitate linking to (content) nodes.
+  # This module contains various helpers to facilitate linking to
+  # (content) nodes.
 
   module RoutingHelpers
-    # Creates a link to the specified node or content, using the URL alias if one is specified.
+    # Creates a link to the specified node or content,
+    # using the URL alias if one is specified.
     def link_to_node(name, node_or_content, options = {}, html_options = {})
       link_to(name, aliased_or_delegated_path(node_or_content, options), html_options)
     end
@@ -26,10 +28,10 @@ module DevcmsCore
       if type != :path
         host = options.delete(:host) || containing_node.content.domain
         if defined?(request) && request.present?
-          address = "#{request.protocol}#{host || request.host}:#{request.port}#{address}" 
+          address = "#{request.protocol}#{host || request.host}:#{request.port}#{address}"
         else
           url_options = Rails.application.config.action_mailer.default_url_options || {}
-          url_options.merge!(:host => host) if host
+          url_options.merge!(host: host) if host
           address = URI.join(root_url(url_options), address).to_s
         end
       end
@@ -44,18 +46,18 @@ module DevcmsCore
 
     # Return aliased or delegated path to node
     def aliased_or_delegated_path(node_or_content, options = {})
-      aliased_or_delegated_address(node_or_content, options.merge(:type => :path))
+      aliased_or_delegated_address(node_or_content, options.merge(type: :path))
     end
     alias_method :content_node_path, :aliased_or_delegated_path
 
     # Return aliased or delegated url to node
     def aliased_or_delegated_url(node_or_content, options = {})
-      aliased_or_delegated_address(node_or_content, options.merge(:type => :url))
+      aliased_or_delegated_address(node_or_content, options.merge(type: :url))
     end
     alias_method :content_node_url, :aliased_or_delegated_url
 
     # Return absolute link to the root site
-    def root_site_url relative_link
+    def root_site_url(relative_link)
       root_site = Node.root.content
       URI.join("#{request.protocol}#{root_site.domain}:#{request.port}", relative_link).to_s
     end
