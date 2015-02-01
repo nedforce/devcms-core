@@ -35,17 +35,18 @@ class Poll < ActiveRecord::Base
   # See the preconditions overview for an explanation of these validations.
   validates :title, presence: true, length: { maximum: 255 }
 
-  # Returns the active +PollQuestion+ of this +Poll+ if one exists, returns +nil+ otherwise.
+  # Returns the active +PollQuestion+ of this +Poll+ if one exists,
+  # returns +nil+ otherwise.
   def active_question
-    self.poll_questions.accessible.first(conditions: { active: true })
+    poll_questions.accessible.first(conditions: { active: true })
   end
 
-  # Returns the image file name to be used for icons on the front end website.
+  # Returns the image file name to be used for icons on the front-end website.
   def icon_filename
     'poll_question.png'
   end
 
   def last_updated_at
-    [self.updated_at, self.active_question.try(:updated_at)].compact.max
+    [updated_at, active_question.try(:updated_at)].compact.max
   end
 end

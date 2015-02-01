@@ -17,7 +17,8 @@
 #
 # * Requires the presence of +question+.
 # * Requires +question+ to be a string of at least 2 and max 255 characters.
-# * Requires +active+ to have a boolean value if present. Defaults to +false+ if not present.
+# * Requires +active+ to have a boolean value if present.
+#   Defaults to +false+ if not present.
 #
 # Child/parent type constraints
 #
@@ -55,22 +56,24 @@ class PollQuestion < ActiveRecord::Base
 
   after_paranoid_delete :remove_associated_content
 
-  # Virtual attribute to allow the creation of new +PollOption+ objects from an attribute hash.
+  # Virtual attribute to allow the creation of new +PollOption+ objects from an
+  # attribute hash.
   def new_poll_option_attributes=(option_attributes)
     option_attributes.each do |attributes|
-      self.poll_options.build(attributes)
+      poll_options.build(attributes)
     end unless option_attributes.nil?
   end
 
-  # Virtual attribute to allow the change and destruction of associated +PollOption+ objects.
+  # Virtual attribute to allow the change and destruction of associated
+  # +PollOption+ objects.
   def existing_poll_option_attributes=(option_attributes)
-    self.poll_options.reject(&:new_record?).each do |poll_option|
+    poll_options.reject(&:new_record?).each do |poll_option|
       attributes = option_attributes[poll_option.id.to_s]
 
       if attributes # Attributes are present so we need to update.
         poll_option.attributes = attributes
       else # No attributes are present so we need to delete.
-        self.poll_options.delete(poll_option)
+        poll_options.delete(poll_option)
       end
     end unless option_attributes.nil?
   end
@@ -83,11 +86,11 @@ class PollQuestion < ActiveRecord::Base
 
   # Returns the total number of votes for all of this question's options.
   def number_of_votes
-    self.poll_options.sum(:number_of_votes)
+    poll_options.sum(:number_of_votes)
   end
 
   # TODO: Documentation
-  def tree_text(node)
+  def tree_text(_node)
     txt = content_title
     txt += ' (Actief)' if self.active?
     txt
@@ -111,9 +114,9 @@ class PollQuestion < ActiveRecord::Base
     user.present? && user_votes.exists?(user_id: user.id)
   end
 
-  # Record a vote on an option
-  # For polls that require a logged in user, user has to be given or the vote is ignored
-  # Checks for existing votes aswell
+  # Record a vote on an option. For polls that require a logged in user,
+  # user has to be given or the vote is ignored.
+  # Checks for existing votes as well.
   def vote(option, user = nil)
     if poll.requires_login?
       if user.present? && !has_vote_from?(user)
@@ -128,30 +131,30 @@ class PollQuestion < ActiveRecord::Base
   end
 
   def last_updated_at
-    [self.updated_at, self.poll_options.maximum(:updated_at)].compact.max
+    [updated_at, poll_options.maximum(:updated_at)].compact.max
   end
 
-protected
+  protected
 
   # Before save callback.
   #
-  # Sets all questions for this question's poll to be inactive if this question will
-  # be activated on save to ensure only one active question per poll.
+  # Sets all questions for this question's poll to be inactive if this question
+  # will be activated on save to ensure only one active question per poll.
   def ensure_unique_active_question
     if self.active_changed? && self.active
-      self.poll.poll_questions.each { |pq| pq.update_attribute(:active, false) }
+      poll.poll_questions.each { |pq| pq.update_attribute(:active, false) }
     end
   end
 
   # Ensures the updated +PollOption+ objects are saved.
   def save_poll_options
-    self.poll_options.each do |poll_option|
+    poll_options.each do |poll_option|
       poll_option.save(validate: false)
     end
   end
 
   def remove_associated_content
-    self.poll_options.destroy_all
-    self.user_votes.destroy_all
+    poll_options.destroy_all
+    user_votes.destroy_all
   end
 end

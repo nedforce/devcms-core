@@ -1,4 +1,5 @@
-# This model is used to represent a contact form field, which are used in a contact form.
+# This model is used to represent a contact form field, which are used in a
+# contact form.
 #
 # A +ContactFormField+ belongs to a +ContactForm+.
 #
@@ -7,9 +8,12 @@
 # Attributes
 #
 # * +label+ - The label of the contact form field.
-# * +field_type+ - The type of the contact form field (e.g. input field, textarea).
-# * +position+ - The position of the contact form field relative to the other fields.
-# * +obligatory+ - Whether the contact form field is obligatory (true) or optional (false) to fill out.
+# * +field_type+    - The type of the contact form field
+#                     (e.g. input field, textarea).
+# * +position+      - The position of the contact form field relative to the
+#                     other fields.
+# * +obligatory+    - Whether the contact form field is obligatory (true)
+#                     or optional (false) to fill out.
 # * +default_value+ - The default value of the contact form field.
 #
 # Preconditions
@@ -22,7 +26,7 @@
 # * Requires +position+ to be unique for a certain +ContactForm+ object.
 #
 class ContactFormField < ActiveRecord::Base
-  FIELD_TYPES = ['textfield', 'email_address', 'textarea', 'dropdown', 'multiselect', 'date', 'file']
+  FIELD_TYPES = %w(textfield email_address textarea dropdown multiselect date file)
 
   # A +ContactFormField+ belongs to a +ContactForm+.
   belongs_to :contact_form
