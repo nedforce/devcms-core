@@ -1,4 +1,4 @@
-<% @newsletter.users.each do |user| %><%= CSV.generate_line [
+<% @newsletter.users.uniq.each do |user| %><%= CSV.generate_line [
 user.email_address,
 user.first_name, 
 user.surname,
