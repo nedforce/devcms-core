@@ -1,5 +1,6 @@
 require File.expand_path('../../test_helper.rb', __FILE__)
 
+# Unit tests for the +WeblogArchive+ model.
 class WeblogArchiveTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
@@ -90,13 +91,18 @@ class WeblogArchiveTest < ActiveSupport::TestCase
   def test_has_weblog_for_user?
     @weblog = @devcms_weblog_archive.weblogs.first
     assert @devcms_weblog_archive.has_weblog_for_user?(@weblog.user)
+
     @weblog.destroy
     assert !@devcms_weblog_archive.reload.has_weblog_for_user?(@weblog.user)
   end
 
-protected
+  protected
 
   def create_weblog_archive(options = {})
-    WeblogArchive.create({ parent: nodes(:root_section_node), title: 'DevCMS weblogs, the best there are!', description: 'Enjoy!' }.merge(options))
+    WeblogArchive.create({
+      parent: nodes(:root_section_node),
+      title: 'DevCMS weblogs, the best there are!',
+      description: 'Enjoy!'
+    }.merge(options))
   end
 end

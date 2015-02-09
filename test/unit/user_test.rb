@@ -163,46 +163,46 @@ class UserTest < ActiveSupport::TestCase
     assert !users(:final_editor).has_role_on?(['final_editor', 'editor'])
   end
 
-  def test_should_have_roles
+  test 'should have roles' do
     assert  users(:arthur).has_role?('admin', 'editor', 'final-editor')
     assert !users(:arthur).has_role?('editor', 'final-editor')
     assert !users(:normal_user).has_role?(['admin', 'editor', 'final-editor'])
   end
 
-  def test_should_have_any_role
+  test 'should have any role' do
     assert users(:arthur).has_any_role?
   end
 
-  def test_should_not_have_any_role
+  test 'should not have any role' do
     assert !users(:normal_user).has_any_role?
   end
 
-  def test_should_return_role_on_node
-    assert_equal users(:arthur).role_on(nodes(:help_page_node)).name,   'admin'
+  test 'should return role on node' do
+    assert_equal users(:arthur).role_on(nodes(:help_page_node)).name, 'admin'
     assert_equal users(:editor).role_on(nodes(:devcms_news_node)).name, 'editor'
-    assert_nil   users(:editor).role_on(nodes(:contact_page_node))
+    assert_nil users(:editor).role_on(nodes(:contact_page_node))
   end
 
-  def test_should_give_role_on_node
+  test 'should give role on node' do
     success = users(:editor).give_role_on('editor', nodes(:contact_page_node))
     assert success
     assert_equal 'editor', users(:editor).reload.role_on(nodes(:contact_page_node)).name
   end
 
-  def test_should_remove_role_from_node
+  test 'should remove role from node' do
     users(:arthur).give_role_on('admin', Node.root)
     users(:arthur).remove_role_from(Node.root)
     assert !users(:arthur).has_role?('admin')
   end
 
-  def test_should_not_fail_on_remove_of_unexisting_role
+  test 'should not fail on remove of unexisting role' do
     users(:arthur).role_assignments.delete_all
     assert_nothing_raised do
       users(:arthur).remove_role_from(Node.root)
     end
   end
 
-  def test_should_demote_and_promote
+  test 'should demote and promote' do
     assert_equal 'PrivilegedUser', users(:arthur).type
     users(:arthur).demote!
     assert_equal 'User', users(:arthur).type
@@ -211,53 +211,53 @@ class UserTest < ActiveSupport::TestCase
     assert_equal 'PrivilegedUser', users(:klaas).type
   end
 
-  def test_should_lose_privileged_roles_after_demote
+  test 'should lose privileged roles after demote' do
     users(:arthur).demote!
     assert !User.find(users(:arthur).id).has_any_role?
   end
 
-  def test_should_keep_non_privileged_roles_after_demote
+  test 'should keep non-privileged roles after demote' do
     assert users(:editor).give_role_on('read_access', Node.root)
     assert_difference('User.find(users(:editor).id).role_assignments.count', -6) do
       users(:editor).demote!
-      assert !User.find(users(:editor).id).role_assignments.any? { |ra| ra.is_privileged? }
+      assert !User.find(users(:editor).id).role_assignments.any?(&:is_privileged?)
     end
   end
 
-  def test_should_have_roles_after_demote
+  test 'should have roles after demote' do
     users(:arthur).demote!
     assert !User.find(users(:arthur).id).has_role?('admin', 'editor', 'final-editor')
   end
 
-  def test_should_return_role_on_node_after_demote
-   users(:arthur).demote!
-   assert_nil User.find(users(:arthur).id).role_on(nodes(:help_page_node))
-   assert_nil User.find(users(:arthur).id).role_on(nodes(:devcms_news_node))
+  test 'should return role on node after demote' do
+    users(:arthur).demote!
+    assert_nil User.find(users(:arthur).id).role_on(nodes(:help_page_node))
+    assert_nil User.find(users(:arthur).id).role_on(nodes(:devcms_news_node))
   end
 
-  def test_should_strip_sensitive_information_from_xml
+  test 'should strip sensitive information from xml' do
     xml = users(:arthur).to_xml
     User::SECRETS.each { |secret| assert !xml.include?(secret.dasherize) }
   end
 
-  def test_should_keep_sensitive_information_in_secrets_xml
+  test 'should keep sensitive information in secrets xml' do
     xml = users(:arthur).to_xml_with_secrets
     User::SECRETS.each { |secret| assert xml.include?(secret.dasherize) }
   end
 
-  def test_should_strip_sensitive_information_from_json
+  test 'should strip sensitive information from json' do
     json = users(:arthur).to_json
     User::SECRETS.each do |secret|
       assert !json.include?(secret), "#{json.pretty_inspect} included #{secret}. It shouldn't"
     end
   end
 
-  def test_should_keep_sensitive_information_in_secrets_json
+  test 'should keep sensitive information in secrets json' do
     json = users(:arthur).to_json_with_secrets
     User::SECRETS.each { |secret| assert json.include?(secret), "#{json.pretty_inspect} didn't included #{secret}. It should" }
   end
 
-  def test_has_subscription_for?
+  test 'has subscription for?' do
     newsletter_archives = NewsletterArchive.all
 
     User.all.each do |user|
@@ -273,39 +273,39 @@ class UserTest < ActiveSupport::TestCase
 
   # Verification tests
 
-  def test_verify_should_update_user_without_code
+  test 'verify should update user without code' do
     u = users(:unverified_user)
     u.verify!
     assert u.verified?
   end
 
-  def test_should_verify_users_email_address
+  test 'should verify users verification code' do
     u = users(:unverified_user)
     u.update_attribute(:verification_code, '12345')
     assert u.verify_with('12345')
     assert u.verified?
   end
 
-  def test_should_not_verify_user_email_address
+  test 'should not verify users verification code' do
     u = users(:unverified_user)
     u.update_attribute(:verification_code, '12345')
     assert !u.verify_with('54321') # Invalid code
     assert !u.verified?
   end
 
-  def test_should_not_update_attrs_on_mass_assign
+  test 'should not update attrs on mass assign' do
     u = users(:unverified_user)
     u.update_attribute(:verification_code, '12345')
 
     assert_raises ActiveModel::MassAssignmentSecurity::Error do
-      u.update_attributes(:verified => true, :verification_code => 'XXX')
+      u.update_attributes(verified: true, verification_code: 'XXX')
     end
 
     assert !u.verified?
     assert_not_equal 'XXX', u.verification_code
   end
 
-  def test_should_generate_valid_verification_code
+  test 'should generate valid verification code' do
     1000.times do # Generate 1000 codes to prevent coincidencial valid format.
       code = User.generate_verification_code_for(users(:sjoerd))
       assert code.is_a?(String)
@@ -313,48 +313,48 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-  def test_should_require_verification_code
+  test 'should require verification code' do
     u = users(:sjoerd)
     u.verification_code = nil
     assert !u.valid?
     assert u.errors[:verification_code].any?
   end
 
-  def test_should_auto_set_attrs_on_create
+  test 'should auto set attrs on create' do
     u = create_user
     assert !u.verified?
-    assert !u.verification_code.blank?
+    assert u.verification_code.present?
   end
 
-  def test_should_reset_verification_code
+  test 'should reset verification code' do
     u = users(:sjoerd)
     prev_code = u.verification_code
     u.reset_verification_code
     assert_not_equal u.reload.verification_code, prev_code
   end
 
-  def test_should_generate_password_reset_token
+  test 'should generate password reset token' do
     u = users(:sjoerd)
     prev_token = u.password_reset_token
     u.create_password_reset_token
     assert_not_equal prev_token, u.reload.password_reset_token
   end
 
-  def test_should_get_full_name
-    assert_equal "Sjoerd Andringa", users(:sjoerd).full_name
+  test 'should get full name' do
+    assert_equal 'Sjoerd Andringa', users(:sjoerd).full_name
   end
 
-  def test_should_not_allow_reserved_logins
+  test 'should not allow reserved logins' do
     Devcms.stubs(:reserved_logins_regex).returns(/(burger?meester|wethouder|gemeente|voorlichting)/i)
-    [ 'Burgemeester', 'Wethouder', 'Gemeente', 'Voorlichting'].each do |login|
-      [ login, login.downcase, login.upcase ].each do |l|
-        u = create_user(:login => l)
+    %w(Burgemeester Wethouder Gemeente Voorlichting).each do |login|
+      [login, login.downcase, login.upcase].each do |l|
+        u = create_user(login: l)
         assert u.errors[:login].any?
       end
     end
   end
 
-  def test_destruction_of_user_should_destroy_associated_weblogs
+  test 'destruction of user should destroy associated weblogs' do
     henk = users(:henk)
 
     assert_difference 'Weblog.count', -1 * henk.weblogs.size do
@@ -362,7 +362,7 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-  def test_destruction_of_user_should_destroy_associated_forum_threads
+  test 'destruction of user should destroy associated forum threads' do
     henk = users(:henk)
 
     assert_difference 'ForumThread.count', -1 * henk.forum_threads.size do
@@ -370,13 +370,13 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-  def test_destruction_of_user_should_destroy_associated_forum_posts
+  test 'destruction of user should destroy associated forum posts' do
     assert_difference 'ForumPost.count', -1 * users(:normal_user).forum_posts.count do
       users(:normal_user).destroy
     end
   end
 
-  def test_destruction_of_user_should_not_destroy_associated_comments
+  test 'destruction of user should not destroy associated comments' do
     jan = users(:jan)
 
     assert jan.comments.count > 0
@@ -385,18 +385,18 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-  def test_screen_name_should_return_full_name_if_present_else_login
-    u = create_user(:login => 'corneel')
+  test 'screen name should return full name if present else login' do
+    u = create_user(login: 'corneel')
     assert_equal 'corneel', u.screen_name
-    u = create_user(:login => 'corneel', :first_name => 'Cornelis', :surname => 'van Kaperen')
+    u = create_user(login: 'corneel', first_name: 'Cornelis', surname: 'van Kaperen')
     assert_equal 'Cornelis van Kaperen', u.screen_name
   end
 
-  def test_to_param_should_return_login
-    assert_equal 'corneel', create_user(:login => 'corneel').to_param
+  test 'to_param should return login' do
+    assert_equal 'corneel', create_user(login: 'corneel').to_param
   end
 
-  def test_should_send_invitation_email
+  test 'should send invitation email' do
     ActionMailer::Base.deliveries.clear
     email_address = 'test@test.nl'
     User.send_invitation_email!(email_address)
@@ -408,7 +408,7 @@ class UserTest < ActiveSupport::TestCase
     assert email.to.include?(email_address)
   end
 
-  def test_should_not_verify_invitation_code_for_missing_email_address_or_code
+  test 'should not verify invitation code for missing email address or code' do
     assert !User.verify_invitation_code(nil, nil)
     assert !User.verify_invitation_code(nil, ' ')
     assert !User.verify_invitation_code(' ', nil)
@@ -419,23 +419,23 @@ class UserTest < ActiveSupport::TestCase
     assert !User.verify_invitation_code(' ', 'test')
   end
 
-  def test_should_not_verify_invitation_code_for_incorrect_code
+  test 'should not verify invitation code for incorrect code' do
     assert !User.verify_invitation_code('test@test.nl', 'bla')
   end
 
-  def test_should_verify_invitation_code_for_correct_code
+  test 'should verify invitation code for correct code' do
     email_address = 'test@test.nl'
     assert User.verify_invitation_code(email_address, User.send(:generate_invitation_code, email_address))
   end
 
   # An email notice is send if an email is already in use. This of course
   # should not be send when it is not in use.
-  def test_should_not_send_email_notice_if_email_is_not_in_use
+  test 'should not send email notice if email address is not in use' do
     email_address = 'abc@example.com'
 
     ActionMailer::Base.deliveries.clear
 
-    create_user(:login => 'user_b', :email_address => email_address)
+    create_user(login: 'user_b', email_address: email_address)
 
     assert_equal 1, ActionMailer::Base.deliveries.size
 
@@ -445,13 +445,13 @@ class UserTest < ActiveSupport::TestCase
     assert !email.body.include?(I18n.t('layouts.forgot_password'))
   end
 
-  def test_should_send_email_notice_if_email_is_already_in_use
+  test 'should send email notice if email address is already in use' do
     email_address = 'test123@example.com'
-    create_user(:login => 'user_a', :email_address => email_address)
+    create_user(login: 'user_a', email_address: email_address)
 
     ActionMailer::Base.deliveries.clear
 
-    create_user(:login => 'user_b', :email_address => email_address)
+    create_user(login: 'user_b', email_address: email_address)
 
     assert_equal 1, ActionMailer::Base.deliveries.size
 
@@ -460,9 +460,14 @@ class UserTest < ActiveSupport::TestCase
     assert email.parts.first.body.include?('nieuw wachtwoord aanvragen')
   end
 
-protected
+  protected
 
   def create_user(options = {})
-    User.create({ :login => 'paashaas', :email_address => 'paas@haas.nl', :password => 'pasen', :password_confirmation => 'pasen' }.merge(options))
+    User.create({
+      login: 'paashaas',
+      email_address: 'paas@haas.nl',
+      password: 'pasen',
+      password_confirmation: 'pasen'
+    }.merge(options))
   end
 end

@@ -83,7 +83,7 @@ class TopHitsPageTest < ActiveSupport::TestCase
     end
   end
 
-protected
+  protected
 
   def create_top_hits_page(options = {})
     TopHitsPage.create({ :parent => @root_node, :title => 'Top hits page' }.merge(options))

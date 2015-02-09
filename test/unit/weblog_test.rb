@@ -1,5 +1,6 @@
 require File.expand_path('../../test_helper.rb', __FILE__)
 
+# Unit tests for the +Weblog+ model.
 class WeblogTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
@@ -77,13 +78,13 @@ class WeblogTest < ActiveSupport::TestCase
     end
   end
 
-  def test_find_years_with_weblog_posts
+  test 'should find years with weblog posts' do
     years = @henk_weblog.weblog_posts.map { |weblog_post| weblog_post.publication_start_date.year }.uniq
 
     assert @henk_weblog.find_years_with_items.set_equals?(years)
   end
 
-  def test_find_months_with_weblog_posts_for_year
+  test 'should find months with weblog posts for year' do
     year_month_pairs = @henk_weblog.weblog_posts.map { |weblog_post|
       [weblog_post.publication_start_date.year, weblog_post.publication_start_date.month]
     }.uniq
@@ -96,7 +97,7 @@ class WeblogTest < ActiveSupport::TestCase
     end
   end
 
-  def test_find_all_weblog_posts_for_month
+  test 'should find all weblog posts for month' do
     weblog_posts = @henk_weblog.weblog_posts
 
     year_month_pairs = weblog_posts.map { |weblog_post|
@@ -118,7 +119,7 @@ class WeblogTest < ActiveSupport::TestCase
     end
   end
 
-  def test_should_create_new_weblog_post_through_association
+  test 'should create new weblog post through association' do
     w = create_weblog
 
     assert_nothing_raised do
@@ -126,7 +127,7 @@ class WeblogTest < ActiveSupport::TestCase
     end
   end
 
-  def test_find_last_published_weblog_posts
+  test 'should find last published weblog posts' do
     w = create_weblog
 
     3.times do |i|
@@ -141,23 +142,32 @@ class WeblogTest < ActiveSupport::TestCase
       else
         assert found_weblog_posts.size <= limit
 
-        i = 0;
+        i = 0
 
         while i < (found_weblog_posts.size - 1)
           assert found_weblog_posts[i].publication_start_date >= found_weblog_posts[i + 1].publication_start_date
-          i = i + 1
+          i += 1
         end
       end
     end
   end
 
-protected
+  protected
 
   def create_weblog(options = {})
-    Weblog.create({ parent: @devcms_weblog_archive.node, user: users(:gerjan), title: 'Uitermate interessante weblog', description: 'Beschrijving komt hier.' }.merge(options))
+    Weblog.create({
+      parent: @devcms_weblog_archive.node,
+      user: users(:gerjan),
+      title: 'Uitermate interessante weblog',
+      description: 'Beschrijving komt hier.'
+    }.merge(options))
   end
 
   def create_weblog_post(weblog, options = {})
-    WeblogPost.create({ parent: weblog.node, title: 'Some interesting title.', body: 'Some interesting body.' }.merge(options))
+    WeblogPost.create({
+      parent: weblog.node,
+      title: 'Some interesting title.',
+      body: 'Some interesting body.'
+    }.merge(options))
   end
 end

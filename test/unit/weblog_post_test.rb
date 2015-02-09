@@ -1,5 +1,6 @@
 require File.expand_path('../../test_helper.rb', __FILE__)
 
+# Unit tests for the +WeblogPost+ model.
 class WeblogPostTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
@@ -64,7 +65,7 @@ class WeblogPostTest < ActiveSupport::TestCase
   end
 
   def test_human_name_does_not_return_nil
-    assert_not_nil WeblogPost.human_name 
+    assert_not_nil WeblogPost.human_name
   end
 
   def test_should_not_return_weblog_post_children_for_menu
@@ -73,7 +74,7 @@ class WeblogPostTest < ActiveSupport::TestCase
 
   def test_url_alias_for_news_item_with_publication_start_date
     start_date = 2.days.ago
-    wp = create_weblog_post(:publication_start_date => start_date)
+    wp = create_weblog_post(publication_start_date: start_date)
     assert_equal "#{start_date.year}/#{start_date.month}/#{start_date.day}/some-interesting-title", wp.reload.node.reload.url_alias
   end
 
@@ -85,7 +86,7 @@ class WeblogPostTest < ActiveSupport::TestCase
 
   def test_tree_text_for_news_item_with_publication_start_date
     start_date = 2.days.ago
-    wp = create_weblog_post(:publication_start_date => start_date)
+    wp = create_weblog_post(publication_start_date: start_date)
     assert_equal "#{start_date.day}/#{start_date.month} #{wp.title}", wp.node.tree_text
   end
 
@@ -95,9 +96,13 @@ class WeblogPostTest < ActiveSupport::TestCase
     assert_equal "#{created_at.day}/#{created_at.month} #{wp.title}", wp.node.tree_text
   end
 
-protected
+  protected
 
   def create_weblog_post(options = {})
-    WeblogPost.create({ parent: @henk_weblog.node, title: 'Some interesting title', body: 'Some interesting body.' }.merge(options))
+    WeblogPost.create({
+      parent: @henk_weblog.node,
+      title: 'Some interesting title',
+      body: 'Some interesting body.'
+    }.merge(options))
   end
 end
