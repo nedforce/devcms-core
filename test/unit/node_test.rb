@@ -199,10 +199,10 @@ class NodeTest < ActiveSupport::TestCase
     assert_equal ['aaa', 'BBB', 'ccc'], node.children.map { |n| n.content.content_title }
   end
 
-  def test_should_sort_children_descending_by_created_at
+  test 'should sort children descending by created at' do
     node = nodes(:node_for_sorting)
-    node.sort_children :sort_by => :created_at, :order => 'desc'
-    assert_equal [Date.today.day, 5.days.ago.day, 10.days.ago.day], node.children.map { |n| n.content.created_at.day }
+    node.sort_children sort_by: :created_at, order: 'desc'
+    assert_equal [Time.zone.now.day, 5.days.ago.day, 10.days.ago.day], node.children.map { |n| n.content.created_at.day }
   end
 
   def test_global_frontpage
