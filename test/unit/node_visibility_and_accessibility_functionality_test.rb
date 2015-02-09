@@ -113,37 +113,45 @@ class NodeVisibilityAndAccessibilityFunctionalityTest < ActiveSupport::TestCase
     assert !node.private?
   end
 
-  def test_set_accessibility_should_make_section_node_public
+  test 'set accessibility should make section node public' do
     assert @editor_section_node.set_accessibility!(false)
     assert @editor_section_node.set_accessibility!(true)
     assert !@editor_section_node.private?
   end
 
-  def test_should_not_make_global_frontpage_private
-     @root_section.set_frontpage!(@economie_section_node)
-     assert !@economie_section_node.set_accessibility!(false)
-     assert !@root_section_node.set_accessibility!(false)
-     @root_section.set_frontpage!(@root_section_node)
-     assert @economie_section_node.set_accessibility!(false)
-     assert !@root_section_node.set_accessibility!(false)
-   end
+  test 'should not make global frontpage private' do
+    @root_section.set_frontpage!(@economie_section_node)
+    assert !@economie_section_node.set_accessibility!(false)
+    assert !@root_section_node.set_accessibility!(false)
 
-  def test_should_not_hide_global_frontpage
+    @root_section.set_frontpage!(@root_section_node)
+    assert @economie_section_node.set_accessibility!(false)
+    assert !@root_section_node.set_accessibility!(false)
+  end
+
+  test 'should not hide global frontpage' do
     @root_section.set_frontpage!(@economie_section_node)
     assert !@economie_section_node.set_visibility!(false)
     assert !@root_section_node.set_visibility!(false)
+
     @root_section.set_frontpage!(@root_section_node)
     assert @economie_section_node.set_visibility!(false)
     assert !@root_section_node.set_visibility!(false)
   end
 
-protected
+  protected
 
   def create_node(options = {}, parent_node = nodes(:root_section_node))
-    create_page({ :parent => parent_node }.merge(options)).node
+    create_page({ parent: parent_node }.merge(options)).node
   end
 
   def create_page(options = {})
-    Page.create!({ :user => @admin, :parent => @root_section_node, :title => 'foo', :body => 'bar', :publication_start_date => 1.day.ago }.merge(options))
+    Page.create!({
+      user: @admin,
+      parent: @root_section_node,
+      title: 'foo',
+      body: 'bar',
+      publication_start_date: 1.day.ago
+    }.merge(options))
   end
 end

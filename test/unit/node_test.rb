@@ -308,11 +308,11 @@ class NodeTest < ActiveSupport::TestCase
     assert_equal @external_link_node.content.class, @external_link_node.content_class
   end
 
-  def test_changes_should_not_include_unpublished_new_items
+  test 'changes should not include unpublished new items' do
     size = nodes(:devcms_news_node).last_changes(:all).size
-    n1 = create_news_item(:publication_start_date => 2.days.ago, :publication_end_date => 1.day.from_now, :title => 'Beschikbaar')
-    create_news_item(:publication_start_date => 2.days.from_now, :publication_end_date => 3.day.from_now, :title => 'Nog niet beschikbaar')
-    create_news_item(:publication_start_date => 2.days.ago,      :publication_end_date => 1.day.ago,      :title => 'Niet meer beschikbaar')
+    create_news_item(publication_start_date: 2.days.ago,      publication_end_date: 1.day.from_now, title: 'Beschikbaar')
+    create_news_item(publication_start_date: 2.days.from_now, publication_end_date: 3.day.from_now, title: 'Nog niet beschikbaar')
+    create_news_item(publication_start_date: 2.days.ago,      publication_end_date: 1.day.ago,      title: 'Niet meer beschikbaar')
     changes = nodes(:devcms_news_node).last_changes(:all)
 
     assert_equal size + 1, changes.size
@@ -335,9 +335,10 @@ class NodeTest < ActiveSupport::TestCase
     assert_equal 15, @root_node.last_changes(:all, :limit => 15).size
   end
 
-  def test_changes_should_return_self
-    ni = create_news_item(:publication_start_date => 2.days.ago, :publication_end_date => 1.day.from_now, :title => 'Beschikbaar')
+  test 'changes should return self' do
+    create_news_item(publication_start_date: 2.days.ago, publication_end_date: 1.day.from_now, title: 'Beschikbaar')
     changes = nodes(:devcms_news_node).last_changes(:self)
+
     assert changes.include?(nodes(:devcms_news_node))
   end
 

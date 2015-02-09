@@ -16,7 +16,7 @@ class UsersControllerTest < ActionController::TestCase
     assert_response :not_found
   end
 
-  def test_should_get_show_logged_in_as_owner
+  test 'should get show logged in as owner' do
     login_as :sjoerd
     get :show, :id => users(:sjoerd).login
 
@@ -26,8 +26,8 @@ class UsersControllerTest < ActionController::TestCase
     assert_select '[href=?]', "http://#{@request.host}/users/#{users(:sjoerd).login}/edit"
     assert_select '.reg_form_additional_info_header'
   end
-  
-  def test_should_get_show_logged_in_as_owner
+
+  test 'should get profile logged in as owner' do
     login_as :sjoerd
     get :profile
 

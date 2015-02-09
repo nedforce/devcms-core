@@ -38,9 +38,9 @@ class Search::FerretSearch
       res.node    = node
       res.score   = hit[:score]
       search_results << res
-   end
+    end
 
-   search_results.paginate(options[:current], options[:page_size], count)
+    search_results.paginate(options[:current], options[:page_size], count)
   end
 
   # Takes an existing search string and expands it with related words from the thesaurus.

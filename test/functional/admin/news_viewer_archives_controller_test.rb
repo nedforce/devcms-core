@@ -10,7 +10,7 @@ class Admin::NewsViewerArchivesControllerTest < ActionController::TestCase
 
   def test_should_xml_create_news_viewer_archive
     login_as :sjoerd
-    arthur = users(:arthur)
+
     post :create, :news_viewer_id => @news_viewer.id, :news_archive_id => news_archives(:devcms_news).id, :format => 'xml'
     assert_response :success
     assert assigns(:news_viewer_archive)
@@ -22,7 +22,7 @@ class Admin::NewsViewerArchivesControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-protected
+  protected
 
   def create_news_viewer(options = {})
     NewsViewer.create({ :parent => nodes(:economie_section_node), :publication_start_date => 1.day.ago, :title => 'General NewsViewer', :description => 'Gecombineerd nieuws' }.merge(options))    

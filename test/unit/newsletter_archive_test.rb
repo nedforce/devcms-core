@@ -115,17 +115,19 @@ class NewsletterArchiveTest < ActiveSupport::TestCase
     end
   end
 
-  def test_last_updated_at_should_return_updated_at_when_no_accessible_newsletter_editions_are_found
+  test 'last updated at should return updated at when no accessible newsletter editions are found' do
     nla = create_newsletter_archive
     assert_equal nla.updated_at, nla.last_updated_at
-    nle1 = create_newsletter_edition nla, :published => 'published'
+
+    nle1 = create_newsletter_edition nla, published: 'published'
     nle1.node.update_attribute(:hidden, true)
     assert_equal nla.updated_at, nla.last_updated_at
-    nle2 = create_newsletter_edition nla, :publication_start_date => 1.day.from_now, :published => 'unpublished'
+
+    create_newsletter_edition nla, publication_start_date: 1.day.from_now, published: 'unpublished'
     assert_equal nla.updated_at, nla.last_updated_at
   end
 
-protected
+  protected
 
   def create_newsletter_archive(options = {})
     NewsletterArchive.create({ :parent => nodes(:root_section_node), :title => 'Good news, everyone!', :description => "I'm sending you all on a highly controversial mission." }.merge(options))

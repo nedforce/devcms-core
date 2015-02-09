@@ -482,7 +482,7 @@ class Node < ActiveRecord::Base
 
   def without_search_reindex(&block)
     if self.respond_to?(:without_reindex)
-      self.without_reindex &block
+      self.without_reindex(&block)
     else
       yield
     end
@@ -490,7 +490,7 @@ class Node < ActiveRecord::Base
 
   def self.without_search_reindex(&block)
     if self.respond_to?(:without_reindex)
-      Node.without_reindex &block
+      Node.without_reindex(&block)
     else
       yield
     end
@@ -611,10 +611,10 @@ class Node < ActiveRecord::Base
   end
 
   def self.available_tags
-    ActsAsTaggableOn::Tag.select('DISTINCT(name)').joins(:taggings).where(:taggings => { :context => :tags }).map &:name
+    ActsAsTaggableOn::Tag.select('DISTINCT(name)').joins(:taggings).where(taggings: { context: :tags }).map(&:name)
   end
 
-protected
+  protected
 
   # Swap can only swap with siblings, so no validity check is needed.
   def swap(target, transact = true)

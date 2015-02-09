@@ -92,10 +92,10 @@ class ForumThreadsControllerTest < ActionController::TestCase
     assert_response :redirect
   end
 
-  def test_should_not_get_edit_for_non_user
-    get :edit, :forum_topic_id => forum_topics(:bewoners_forum_topic_wonen).id, :id => forum_threads(:bewoners_forum_thread_one).id
+  test 'should not get edit for non-user' do
+    get :edit, forum_topic_id: forum_topics(:bewoners_forum_topic_wonen).id, id: forum_threads(:bewoners_forum_thread_one).id
     assert_response :redirect
-   end
+  end
 
   def test_should_update_forum_thread_for_owner
     login_as :henk

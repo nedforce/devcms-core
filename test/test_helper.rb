@@ -95,7 +95,7 @@ class ActiveSupport::TestCase
 
     block.call
 
-    constants.each do |constant, val|
+    constants.each do |constant, _val|
       Object.send(:remove_const, constant)
     end
   end

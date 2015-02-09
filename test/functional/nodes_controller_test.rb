@@ -8,51 +8,51 @@ class NodesControllerTest < ActionController::TestCase
     @root_section_node.content.set_frontpage!(@root_section_node)
   end
 
-  def test_should_get_changes_for_self_and_children
-     get :changes, :format => 'atom', :id => sections(:root_section).node.id
-     assert_response :success
-     assert assigns(:nodes).size > 1
+  test 'should get atom changes for self and children' do
+    get :changes, format: 'atom', id: sections(:root_section).node.id
+    assert_response :success
+    assert assigns(:nodes).size > 1
   end
 
-  def test_should_get_changes_for_self_if_changed_feed_toggle_is_true
-     assert sections(:economie_section).node.update_attribute(:has_changed_feed, true)
-
-     get :changes, :format => 'atom', :id => sections(:economie_section).node.id
-     assert_response :success
+  test 'should get rss changes for self and children' do
+    get :changes, format: 'rss', id: sections(:root_section).node.id
+    assert_response :success
+    assert assigns(:nodes).size > 1
   end
 
-  def test_should_get_changes_for_self_if_changed_feed_toggle_is_true
-     pages(:help_page).node.update_attribute(:has_changed_feed, true)
-     get :changes, :format => 'rss', :id => pages(:help_page).node.id
-     assert assigns(:nodes).size == 1
+  test 'should get atom changes for self if changed feed toggle is true' do
+    assert sections(:economie_section).node.update_attribute(:has_changed_feed, true)
+
+    get :changes, format: 'atom', id: sections(:economie_section).node.id
+    assert_response :success
   end
 
-  def test_should_not_get_changes_for_self_if_changed_feed_toggle_is_false
-     get :changes, :format => 'rss', :id => pages(:help_page).node.id
-     assert_response :not_found
+  test 'should get rss changes for self if changed feed toggle is true' do
+    assert sections(:economie_section).node.update_attribute(:has_changed_feed, true)
+
+    get :changes, format: 'rss', id: sections(:economie_section).node.id
+    assert_response :success
   end
 
-  def test_should_get_changes_for_self_and_children
-     get :changes, :format => 'rss', :id => sections(:root_section).node.id
-     assert_response :success
-     assert assigns(:nodes).size > 1
+  test 'should get atom changes for page if changed feed toggle is true' do
+    pages(:help_page).node.update_attribute(:has_changed_feed, true)
+    get :changes, format: 'atom', id: pages(:help_page).node.id
+    assert assigns(:nodes).size == 1
   end
 
-  def test_should_get_changes_for_self_if_changed_feed_toggle_is_true
-     assert sections(:economie_section).node.update_attribute(:has_changed_feed, true)
-
-     get :changes, :format => 'rss', :id => sections(:economie_section).node.id
-     assert_response :success
+  test 'should get rss changes for page if changed feed toggle is true' do
+    pages(:help_page).node.update_attribute(:has_changed_feed, true)
+    get :changes, format: 'rss', id: pages(:help_page).node.id
+    assert assigns(:nodes).size == 1
   end
 
-  def test_should_get_changes_for_self_if_changed_feed_toggle_is_true
-     pages(:help_page).node.update_attribute(:has_changed_feed, true)
-     get :changes, :format => 'rss', :id => pages(:help_page).node.id
-     assert assigns(:nodes).size == 1
+  test 'should not get atom changes for self if changes feed toggle is false' do
+    get :changes, format: 'atom', id: pages(:help_page).node.id
+    assert_response :not_found
   end
 
-  def test_should_not_get_changes_for_self_if_changed_feed_toggle_is_false
-     get :changes, :format => 'rss', :id => pages(:help_page).node.id
-     assert_response :not_found
+  test 'should not get rss changes for self if changes feed toggle is false' do
+    get :changes, format: 'rss', id: pages(:help_page).node.id
+    assert_response :not_found
   end
 end

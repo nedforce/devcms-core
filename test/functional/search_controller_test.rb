@@ -38,7 +38,7 @@ class SearchControllerTest < ActionController::TestCase
 
   def test_should_not_scope_within_top_node_for_root_node
     root_node = nodes(:root_section_node)
-    descendant_section_node = nodes(:bis_section_node)
+    nodes(:bis_section_node) # descendant_section_node
 
     Search::FerretSearch.expects(:paginating_ferret_search).with do |args|
       (args[:q] =~ /ancestry_to_index:XX#{root_node.child_ancestry.gsub(/\//, 'X')}X*/).nil?
@@ -59,7 +59,7 @@ class SearchControllerTest < ActionController::TestCase
 
 protected
 
-  def create_page(attributes = {}, options = {})
+  def create_page(_attributes = {}, options = {})
     parent_node = options.delete(:parent_node) || nodes(:root_section_node)
     Page.create({ :parent => parent_node, :title => 'Page title', :preamble => 'Ambule', :body => 'Page body' }.merge(options))
   end

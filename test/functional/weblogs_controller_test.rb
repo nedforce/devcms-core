@@ -112,10 +112,10 @@ class WeblogsControllerTest < ActionController::TestCase
     assert_response :redirect
   end
 
-  def test_should_not_get_edit_for_non_user
-    get :edit, :weblog_archive_id => weblog_archives(:devcms_weblog_archive).id, :id => weblogs(:henk_weblog).id
+  test 'should not get edit for non-user' do
+    get :edit, weblog_archive_id: weblog_archives(:devcms_weblog_archive).id, id: weblogs(:henk_weblog).id
     assert_response :redirect
-   end
+  end
 
   def test_should_update_weblog_for_owner
     login_as :henk

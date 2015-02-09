@@ -26,7 +26,7 @@ class ActsAsContentNodeTestTransactional < ActiveSupport::TestCase
     end
   end
 
-  def test_create_with_parent_should_fail_for_invalid_parent
+  test 'create with parent should fail for invalid parent' do
     assert_no_difference 'Page.count' do
       page = Page.create(parent: nodes(:devcms_news_item_node), title: 'Page title', preamble: 'Ambule', body: 'Page body', expires_on: 1.day.from_now.to_date)
       assert page.errors[:'node.base'].any?
@@ -34,22 +34,22 @@ class ActsAsContentNodeTestTransactional < ActiveSupport::TestCase
 
     assert_no_difference 'Page.count' do
       assert_raise ActiveRecord::RecordNotSaved do
-        page = Page.create!(parent: nodes(:devcms_news_item_node), title: 'Page title', preamble: 'Ambule', body: 'Page body', expires_on: 1.day.from_now.to_date)
+        Page.create!(parent: nodes(:devcms_news_item_node), title: 'Page title', preamble: 'Ambule', body: 'Page body', expires_on: 1.day.from_now.to_date)
       end
     end
   end
 
   protected
 
-    def build_page(options = {})
-      Page.new({ :parent => nodes(:root_section_node), :title => 'Page title', :preamble => 'Ambule', :body => 'Page body' }.merge(options))
-    end
+  def build_page(options = {})
+    Page.new({ parent: nodes(:root_section_node), title: 'Page title', preamble: 'Ambule', body: 'Page body' }.merge(options))
+  end
 
-    def create_page(options = {})
-      page = build_page(options)
-      page.save
-      page
-    end
+  def create_page(options = {})
+    page = build_page(options)
+    page.save
+    page
+  end
 end
 
 class ActsAsContentNodeTest < ActiveSupport::TestCase

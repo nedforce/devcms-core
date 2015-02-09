@@ -44,7 +44,7 @@ class Admin::NewsViewerItemsControllerTest < ActionController::TestCase
 
   def test_should_xml_create_news_viewer_item
     login_as :sjoerd
-    arthur = users(:arthur)
+
     post :create, :news_viewer_id => @news_viewer.id, :news_item_id => create_news_item(:publication_start_date => 4.days.ago).id, :format => 'xml'
     assert_response :success
     assert assigns(:news_viewer_item)

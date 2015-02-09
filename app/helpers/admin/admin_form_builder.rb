@@ -2,7 +2,7 @@ class Admin::AdminFormBuilder < ActionView::Helpers::FormBuilder
   (field_helpers - ['hidden_field']).each do |fh|
     define_method(fh) do |attr, *args|
       options           = args.last.is_a?(Hash) ? args.pop : {}
-      options[:class] ||= "admin_form_#{fh.to_s}"
+      options[:class] ||= "admin_form_#{fh}"
       args              = (args << options)
       id, name          = id_and_name(attr)
       for_check_box     = options.delete(:for_check_box)

@@ -59,11 +59,11 @@ class Admin::RoleAssignmentsControllerTest < ActionController::TestCase
     assert assigns(:role_assignment).errors[:name].any?
   end
 
-    def test_should_require_user
+  test 'should require user' do
     login_as :sjoerd
 
     assert_no_difference('RoleAssignment.count') do
-      create_role_assignment({ :user_login => nil })
+      create_role_assignment(user_login: nil)
     end
     assert_response :success
     assert assigns(:role_assignment).new_record?

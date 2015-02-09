@@ -155,23 +155,23 @@ module DevcmsCore
     end
 
     def render_years(record_node, node_id, common_hash, active_node, archive_includes_active_node)
-        now = Time.now
+      now = Time.now
 
-        @years = (self.class.weeks == true ? record_node.content.find_commercial_years_with_items : record_node.content.find_years_with_items).map do |y|
-          year_includes_active_node = archive_includes_active_node ? (active_node.content.send(self.class.date_attribute).year == y) : false
-          {
-            :text        => y,
-            :expanded    => year_includes_active_node || (!archive_includes_active_node && (y == now.year)),
-            :extraParams => {
-              :super_node => node_id,
-              :year       => y
-            }
-          }.reverse_merge(common_hash)
-        end
-
-        @nodes = record_node.children.with_content_type(%w(Image Attachment)).all(:include => [:content, :role_assignments]).map { |node| node.to_tree_node_for(current_user, { :expand_if_ancestor_of => active_node }) }
-
-        render :json => (@nodes + @years).to_json
+      @years = (self.class.weeks == true ? record_node.content.find_commercial_years_with_items : record_node.content.find_years_with_items).map do |y|
+        year_includes_active_node = archive_includes_active_node ? (active_node.content.send(self.class.date_attribute).year == y) : false
+        {
+          text:        y,
+          expanded:    year_includes_active_node || (!archive_includes_active_node && (y == now.year)),
+          extraParams: {
+            super_node: node_id,
+            year:       y
+          }
+        }.reverse_merge(common_hash)
       end
+
+      @nodes = record_node.children.with_content_type(%w(Image Attachment)).all(include: [:content, :role_assignments]).map { |node| node.to_tree_node_for(current_user, { expand_if_ancestor_of: active_node }) }
+
+      render json: (@nodes + @years).to_json
+    end
   end
 end

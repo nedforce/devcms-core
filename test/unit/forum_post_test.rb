@@ -24,9 +24,9 @@ class ForumPostTest < ActiveSupport::TestCase
     assert_equal @bewoners_forum_post_one, @bewoners_forum_thread_one.start_post
   end
 
-   def test_should_require_user
+  test 'should require user' do
     assert_no_difference 'ForumPost.count' do
-      forum_post = create_forum_post(:user => nil)
+      forum_post = create_forum_post(user: nil)
       assert forum_post.errors[:user].any?
     end
   end

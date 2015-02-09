@@ -23,11 +23,11 @@ class Searcher
     # Initialize the +Searcher+. An engine can be specified; if none is specified, the
     # default search engine set in the configuration is used.
     def initialize(engine = Devcms.search_configuration[:default_search_engine])
-      raise "Search engine unknown: #{engine.to_s}"  unless ENGINES.include?(engine)
-      raise "Search engine disabled: #{engine.to_s}" unless Devcms.search_configuration[:enabled_search_engines].include?(engine)
+      raise "Search engine unknown: #{engine}"  unless ENGINES.include?(engine)
+      raise "Search engine disabled: #{engine}" unless Devcms.search_configuration[:enabled_search_engines].include?(engine)
 
       @engine = case engine
-        when 'ferret'  then Search::FerretSearch
+        when 'ferret' then Search::FerretSearch
       end
     end
 
