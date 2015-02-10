@@ -1,7 +1,7 @@
 require File.expand_path('../../test_helper.rb', __FILE__)
 
-# This test might not work when running all tests using 'rake test' due to the fact that
-# the exceptions middleware is not properly initialized in that case.
+# This test might not work when running all tests using 'rake test' due to the
+# fact that the exceptions middleware is not properly initialized in that case.
 class ErrorPagesTest < ActionController::IntegrationTest
   fixtures :nodes, :pages
 

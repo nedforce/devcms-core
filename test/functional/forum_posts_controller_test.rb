@@ -5,7 +5,7 @@ class ForumPostsControllerTest < ActionController::TestCase
 
   def test_should_redirect_for_show
     get :show, :forum_topic_id => forum_topics(:bewoners_forum_topic_wonen).id, :forum_thread_id => forum_threads(:bewoners_forum_thread_one).id, :id => forum_posts(:bewoners_forum_post_five).id
-    assert_response :redirect    
+    assert_response :redirect
   end
 
   def test_should_not_show_for_start_post

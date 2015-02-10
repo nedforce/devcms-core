@@ -43,7 +43,7 @@ class MeetingTest < ActiveSupport::TestCase
   end
 
   def test_meeting_category_name_should_return_name_of_associated_meeting_category_if_a_meeting_category_is_associated
-    meeting = create_meeting()
+    meeting = create_meeting
     assert_equal meeting.meeting_category.name, meeting.meeting_category_name
   end
 
@@ -101,9 +101,16 @@ class MeetingTest < ActiveSupport::TestCase
     assert items.include?(agenda_items(:agenda_item_two))
   end
 
-protected
+  protected
 
   def create_meeting(options = {})
-    Meeting.create({ parent: nodes(:meetings_calendar_node), repeating: false, meeting_category: @meeting_category, title: 'New meeting', start_time: DateTime.now.to_s(:db), end_time: (DateTime.now + 1.hour).to_s(:db) }.merge(options))
+    Meeting.create({
+      parent: nodes(:meetings_calendar_node),
+      repeating: false,
+      meeting_category: @meeting_category,
+      title: 'New meeting',
+      start_time: DateTime.now.to_s(:db),
+      end_time: (DateTime.now + 1.hour).to_s(:db)
+    }.merge(options))
   end
 end

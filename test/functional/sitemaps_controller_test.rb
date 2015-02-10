@@ -104,9 +104,13 @@ class SitemapsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-protected
+  protected
 
   def create_news_item(options = {})
-    NewsItem.create({ parent: nodes(:devcms_news_node), title: 'Slecht weer!', body: 'Het zonnetje schijnt niet en de mensen zijn ontevreden.' }.merge(options))
+    NewsItem.create({
+      parent: nodes(:devcms_news_node),
+      title: 'Slecht weer!',
+      body: 'Het zonnetje schijnt niet en de mensen zijn ontevreden.'
+    }.merge(options))
   end
 end

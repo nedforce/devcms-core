@@ -76,12 +76,12 @@ class CombinedCalendarTest < ActiveSupport::TestCase
 
     assert !@combined_calendar.calendar_items.include?(subsite_calendar_item)
 
-    @combined_calendar.sites << subsite    
+    @combined_calendar.sites << subsite
     @combined_calendar.instance_variable_set :@calendar_items_scope, nil
     assert @combined_calendar.calendar_items.include?(subsite_calendar_item)
   end
 
-protected
+  protected
 
   def create_combined_calendar(options = {})
     CombinedCalendar.create({ :parent => nodes(:root_section_node), :title => 'New combined calendar', :description => 'This is a new combined calendar.' }.merge(options))
