@@ -70,8 +70,8 @@
       });
     - if content.expirable? || content.expiration_container?
       = form.radio_button :expiration_notification_method, "inherit",          :label => t('shared.inherit')
-      = form.radio_button :expiration_notification_method, "email",            :label => t('shared.set_email'), :wrapper => {:style => 'height: 32px;'}
-      = form.radio_button :expiration_notification_method, "responsible_user", :label => t('shared.current_responsible_user'), :wrapper => {:style => 'height: 52px;'}
+      = form.radio_button :expiration_notification_method, "email",            :label => t('shared.set_email'), :wrapper => { :style => 'height: 32px;' }
+      = form.radio_button :expiration_notification_method, "responsible_user", :label => t('shared.current_responsible_user'), :wrapper => { :style => 'height: 52px;' }
       = form.text_field   :expiration_email_recipient,           :label => t('shared.email')
       - if content.expiration_container?
         = form.date_field :cascade_expires_on, :allow_empty => true, :label => t('shared.cascade_expires_on')

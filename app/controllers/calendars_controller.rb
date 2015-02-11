@@ -2,8 +2,8 @@
 # the application relating to +Calendar+ objects.
 class CalendarsController < ApplicationController
 
-  # The +show+ action needs a +Calendar+ object to work with.  
-  before_filter :find_calendar, :only => [ :show , :tomorrow ]
+  # The +show+ action needs a +Calendar+ object to work with.
+  before_filter :find_calendar, :only => [:show , :tomorrow]
 
   # * GET /calendars.atom
   def index

@@ -3,10 +3,10 @@
 class NewsletterArchivesController < ApplicationController
 
   # All actions need a +NewsletterArchive+ object to work with.
-  before_filter :find_newsletter_archive, :only => [ :show, :subscribe, :unsubscribe ]
+  before_filter :find_newsletter_archive, :only => [:show, :subscribe, :unsubscribe]
 
   # Require user to be logged in for the +subscribe+ and +unsubscribe+ actions.
-  before_filter :login_required, :only => [ :subscribe, :unsubscribe ]
+  before_filter :login_required, :only => [:subscribe, :unsubscribe]
 
   # Enable unsubscribing using regular hyperlinks and <tt>:method => :delete</tt>.
   # See ApplicationController for more details.
@@ -16,7 +16,7 @@ class NewsletterArchivesController < ApplicationController
   # * GET /newsletter_archives/:id
   # * GET /newsletter_archives/:id.xml
   def show
-    @newsletter_editions = @newsletter_archive.newsletter_editions.accessible.all(:conditions => [ 'published <> ?', 'unpublished' ], :page => {:size => 25, :current => params[:page]})
+    @newsletter_editions = @newsletter_archive.newsletter_editions.accessible.all(:conditions => ['published <> ?', 'unpublished'], :page => { :size => 25, :current => params[:page] })
 
     first_page = !params[:page] || params[:page]==1
     @latest_newsletter_editions    = []
@@ -49,7 +49,7 @@ class NewsletterArchivesController < ApplicationController
           end
         end
       else
-        format.html do 
+        format.html do
           flash[:warning] = I18n.t('newsletters.subscribe_unsuccessfull')
           redirect_to @newsletter_archive
         end
@@ -80,7 +80,7 @@ class NewsletterArchivesController < ApplicationController
           end
         end
       else
-        format.html do 
+        format.html do
           flash[:warning] = I18n.t('newsletters.unsubscribe_unsuccessfull')
           redirect_back_or_default(@newsletter_archive)
         end
@@ -100,5 +100,4 @@ class NewsletterArchivesController < ApplicationController
   def find_newsletter_archive
     @newsletter_archive = @node.content
   end
-
 end

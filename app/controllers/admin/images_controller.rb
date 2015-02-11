@@ -145,27 +145,27 @@ class Admin::ImagesController < Admin::AdminController
 
   protected
 
-    def find_image
-      @image = Image.select_all_columns.find(params[:id])
-    end
+  def find_image
+    @image = Image.select_all_columns.find(params[:id])
+  end
 
-    def find_sibling_images
-      @sibling_images = Image.accessible.select_all_columns.all(:conditions => ["nodes.ancestry = :parent_child_ancestry", {:parent_child_ancestry => @parent_node.child_ancestry }])
-    end
+  def find_sibling_images
+    @sibling_images = Image.accessible.select_all_columns.all(:conditions => ['nodes.ancestry = :parent_child_ancestry', { :parent_child_ancestry => @parent_node.child_ancestry }])
+  end
 
-    def render_image
-      respond_to do |format|
-        format.jpg { render_flex_image(@image) }
-      end
+  def render_image
+    respond_to do |format|
+      format.jpg { render_flex_image(@image) }
     end
+  end
 
-    def can_set_image_url?
-      current_user_is_admin?(@image.node) || current_user_is_final_editor?(@image.node)
-    end
+  def can_set_image_url?
+    current_user_is_admin?(@image.node) || current_user_is_final_editor?(@image.node)
+  end
 
-    def clean_is_for_header
-      if params[:image] && !current_user.has_role?('admin')
-        params[:image].delete(:is_for_header)
-      end
+  def clean_is_for_header
+    if params[:image] && !current_user.has_role?('admin')
+      params[:image].delete(:is_for_header)
     end
+  end
 end

@@ -269,7 +269,7 @@ class Node < ActiveRecord::Base
   #                         node will call node.destroy (i.e. this method) again to destroy us.
   #                         Therefore the destroy_content_node option is introduced, which will be
   #                         set to false when node.destroy is called from the content node.
-  def destroy(options = {:destroy_content_node => true})
+  def destroy(options = { :destroy_content_node => true })
     if options[:destroy_content_node] && content
       begin
         destroyed_content = content.destroy # Content will on its turn call node.destroy again.

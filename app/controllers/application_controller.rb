@@ -6,39 +6,39 @@ class ApplicationController < ActionController::Base
   include ExceptionNotifiable
   include RoleRequirementSystem
   include SslRequirement
-  
-  self.mod_porter_secret = "h6UGA7Hn9N4D8Jsu2SbX"
-  
+
+  self.mod_porter_secret = 'h6UGA7Hn9N4D8Jsu2SbX'
+
   protect_from_forgery
-  
+
   # Ensures the values for the +password+ and +password_confirmation+
   # attributes of users are not logged, for security reasons.
   filter_parameter_logging :password
-  
+
   # Catch all exceptions (except 404 errors, which are handled below) to render
   # a custom 500 page. Also makes sure a notification mail is sent.
   # 404 exceptions are handled below.
   rescue_from Exception, :with => :handle_500 unless Rails.env.development?
-   
+
   # Catches all 404 errors to render a 404 page.
   # Note that this rescue_from statement has precedence over the one above.
   # UnknownAction and RecordNotFound exceptions are given a special treatment, so you don't have to worry about
   # catching them in the +find_[resource]+ methods throughout all controllers.
   rescue_from ActionController::RoutingError, ActionController::UnknownController, ActionController::UnknownAction, ActiveRecord::RecordNotFound, :with => :handle_404 unless Rails.env.development?
-  
+
   before_filter :redirect_to_full_domain
-  
+
   # Try retrieve the +Node+ object for the current request.
   # This needs to be done before any authorization attempts, a +Node+ might be needed.
   before_filter :find_node
-  
+
   before_filter :find_context_node
 
   # Attempt to login the user from a cookie, if it's set.
   before_filter :login_from_cookie
 
   before_filter :login_as_admin_on_local_request_to_changes, :only => :all_changes
-  
+
   # Performs the actual authorization procedure
   before_filter :check_authorization
 
@@ -47,12 +47,12 @@ class ApplicationController < ActionController::Base
 
   # Find the children for the current node
   before_filter :find_accessible_children_for_menus
-  
+
   # Set the search options for the search field.
   before_filter :set_search_scopes
-  
+
   before_filter :set_page_title
-  
+
   before_filter :confirm_destroy, :only => :destroy
 
   # Limit the session time
@@ -66,12 +66,12 @@ class ApplicationController < ActionController::Base
 
   # Set the layout based on its position in the tree.
   layout :set_layout
-  
+
   # Include all helpers, all the time.
   helper VideoHelper, SitemapsHelper, SearchHelper, PollQuestionsHelper, OwmsMetadataHelper, HtmlEditorHelper, ContactBoxesHelper, CalendarsHelper, AttachmentsHelper, ApplicationHelper, TextHelper, LayoutHelper
 
   helper_method :secure_url, :current_site, :current_user_has_any_role?, :current_user_is_admin?, :current_user_is_editor?, :current_user_is_final_editor?
-  
+
   # Renders confirm_destroy.html.erb if destroy is requested using GET.
   # Hyperlinks with <tt>:method => :delete</tt> will perform a GET request if
   # the browser is not JS enabled.
@@ -79,15 +79,15 @@ class ApplicationController < ActionController::Base
   # NOTE: Make sure confirm_destroy.html.erb exists for all controllers where you need to
   # make DELETE requests using normal hyperlinks. It will usually display a form
   # asking for confirmation of deletion, and post to the resource path using DELETE.
-  # Also remember to add <tt>:member => {:destroy => :any}</tt> to the resource mapping
+  # Also remember to add <tt>:member => { :destroy => :any }</tt> to the resource mapping
   # in routes.rb.
-  verify :method => [ :get, :delete ], :only => :destroy
+  verify :method => [:get, :delete], :only => :destroy
 
   # Limits the session time to a certain amount
   def extend_and_limit_session_time
-      if Settler[:user_session_time_limit_enabled]
-        request.session_options[:expire_after] = current_user && current_user.is_privileged? ? Settler[:user_session_privileged_timeout].minutes : Settler[:user_session_timeout].minutes
-      end
+    if Settler[:user_session_time_limit_enabled]
+      request.session_options[:expire_after] = current_user && current_user.is_privileged? ? Settler[:user_session_privileged_timeout].minutes : Settler[:user_session_timeout].minutes
+    end
   end
 
   # Called when we need to include hidden nodes on local requests
@@ -105,7 +105,7 @@ class ApplicationController < ActionController::Base
       else
         raise ActionController::UnknownAction
       end
-      
+
       respond_to do |format|
         format.atom { render :template => '/shared/changes', :layout => false }
       end
@@ -121,7 +121,7 @@ class ApplicationController < ActionController::Base
       synonyms[syn.original] ||= [syn.original]
       synonyms[syn.original] << syn.name
     end
-    synonyms = synonyms.map { |key, set| set.uniq.join(", ") }
+    synonyms = synonyms.map { |key, set| set.uniq.join(', ') }
     send_data synonyms.join("\n"), :filename => 'synonyms.txt', :type => 'text/plain', :disposition => 'attachment'
   end
 
@@ -159,7 +159,7 @@ protected
     end
 
     send_exception_notification(exception)
-    error = {:error => "#{exception} (#{exception.class})", :backtrace => exception.backtrace.join('\n')}
+    error = { :error => "#{exception} (#{exception.class})", :backtrace => exception.backtrace.join('\n') }
     @page_title = t('errors.internal_server_error')
 
     respond_to do |f|
@@ -171,7 +171,7 @@ protected
             @page = @node.content
             render :template => 'pages/show', :status => :internal_server_error
           else
-            render :template => "errors/500", :status => :internal_server_error
+            render :template => 'errors/500', :status => :internal_server_error
           end
         end
       end
@@ -287,12 +287,12 @@ protected
   # Find the Attachment and Image children belonging to the current Node instance.
   def find_images_and_attachments
     @image_content_nodes, @attachment_nodes = [], []
-    
+
     @node.children.accessible.with_content_type(%w(Image Attachment ContentCopy)).include_content.all.each do |node|
-      node = node.content.copied_node if node.content_type == "ContentCopy"
-      if node.content_type == "Image" && !node.content.is_for_header? && node.content.show_in_listing
+      node = node.content.copied_node if node.content_type == 'ContentCopy'
+      if node.content_type == 'Image' && !node.content.is_for_header? && node.content.show_in_listing
         @image_content_nodes << node.content
-      elsif node.content_type == "Attachment"
+      elsif node.content_type == 'Attachment'
         @attachment_nodes << node
       end
     end

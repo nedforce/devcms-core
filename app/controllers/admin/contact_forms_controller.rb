@@ -81,11 +81,11 @@ class Admin::ContactFormsController < Admin::AdminController
   end
 
   protected
-  
+
   def get_used_fields_only(contact_fields)
     used_fields = []
     @contact_form_fields.each do |field|
-      if !contact_fields[field.id].blank?
+      if contact_fields[field.id].present?
         used_fields << [ field.id, field.label, contact_fields[field.id] ]
       end
     end

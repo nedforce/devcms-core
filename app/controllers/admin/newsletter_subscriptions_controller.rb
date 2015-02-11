@@ -29,7 +29,7 @@ class Admin::NewsletterSubscriptionsController < Admin::AdminController
     @active_page = :sitemap
 
     @newsletter_archive = NewsletterArchive.find(params[:id])
-    @users              = @newsletter_archive.users.all(:order => "#{@sort_field} #{@sort_direction}", :page => {:size => @page_limit, :current => @current_page})
+    @users              = @newsletter_archive.users.all(:order => "#{@sort_field} #{@sort_direction}", :page => { :size => @page_limit, :current => @current_page })
     @user_count         = @newsletter_archive.users.count
 
     respond_to do |format|
@@ -50,26 +50,26 @@ class Admin::NewsletterSubscriptionsController < Admin::AdminController
       else 
         format.xml { render :status => :not_found }
       end
-    end 
+    end
   end
-  
+
   protected
 
-    # Finds sorting parameters.
-    def set_sorting
-      if extjs_sorting?
-        @sort_direction = (params[:dir] == 'ASC' ? 'ASC' : 'DESC')
+  # Finds sorting parameters.
+  def set_sorting
+    if extjs_sorting?
+      @sort_direction = (params[:dir] == 'ASC' ? 'ASC' : 'DESC')
 
-        # Find out which (related) table and which column to sort on.
-        first, *last = params[:sort].split('_')
-        last = last.join('_') if last.is_a?(Array) # join again for columns like email_address
-        @sort_field = (last.size > 0 ? "#{first.pluralize}.#{last}" : first)
-        # Do not quote_column_name, because PostgreSQL will fail
-        # and we already added quotes in the line above.
-        #@sort_field = ActiveRecord::Base.connection.quote_column_name(@sort_field)
-      else
-        @sort_field = 'users.login'
-      end
-      @sort_field = "UPPER(#{@sort_field})" unless @sort_field =~ /id/
+      # Find out which (related) table and which column to sort on.
+      first, *last = params[:sort].split('_')
+      last = last.join('_') if last.is_a?(Array) # join again for columns like email_address
+      @sort_field = (last.size > 0 ? "#{first.pluralize}.#{last}" : first)
+      # Do not quote_column_name, because PostgreSQL will fail
+      # and we already added quotes in the line above.
+      #@sort_field = ActiveRecord::Base.connection.quote_column_name(@sort_field)
+    else
+      @sort_field = 'users.login'
     end
+    @sort_field = "UPPER(#{@sort_field})" unless @sort_field =~ /id/
+  end
 end

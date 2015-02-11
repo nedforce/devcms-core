@@ -2,8 +2,8 @@
 # the application relating to +CombinedCalendar+ objects.
 class CombinedCalendarsController < ApplicationController
 
-  # The +show+ action needs a +CombinedCalendar+ object to work with.  
-  before_filter :find_combined_calendar, :only => [ :show, :tomorrow ]
+  # The +show+ action needs a +CombinedCalendar+ object to work with.
+  before_filter :find_combined_calendar, :only => [:show, :tomorrow]
 
   # * GET /combined_calendars/:id
   # * GET /combined_calendars/:id.atom

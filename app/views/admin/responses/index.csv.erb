@@ -1,15 +1,15 @@
 <%= FasterCSV.generate do |csv|
   header_fields = []
-  ContactFormField.all(:order => "position asc", :conditions => {:contact_form_id => @contact_form.id}).each do |field|
+  ContactFormField.all(:order => "position asc", :conditions => { :contact_form_id => @contact_form.id }).each do |field|
     header_fields << field.label
   end
   csv << header_fields
   @contact_form.responses.each do |resp|
     row_fields = []
     response_fields = ContactFormField.all(
-      :select => 'value, response_id, contact_form_id, label', 
-      :order => "position asc", 
-      :conditions => {:contact_form_id => @contact_form.id}, 
+      :select => 'value, response_id, contact_form_id, label',
+      :order => "position asc",
+      :conditions => { :contact_form_id => @contact_form.id },
       :joins => ("LEFT JOIN response_fields ON (response_fields.contact_form_field_id = contact_form_fields.id 
         AND response_fields.response_id = #{resp.id.to_s})")
     ).each do |field|

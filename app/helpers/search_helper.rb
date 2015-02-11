@@ -35,9 +35,9 @@ module SearchHelper
     }
     default_options[:programme] = category.parent ? category.parent_id : category.id
     if category.parent
-      link_to(category.parent.name, search_path(default_options)) + 
+      link_to(category.parent.name, search_path(default_options)) +
       ' | ' +
-      link_to(category.name, search_path({:project => category.id}.merge(default_options)))
+      link_to(category.name, search_path({ :project => category.id }.merge(default_options)))
     else
       link_to category.name, search_path(default_options)
     end
@@ -45,20 +45,20 @@ module SearchHelper
 
   def print_content_type(content_type)
     case(content_type)
-      when 'Product'
-        t('search.products')
-      when 'Permit'
-        t('search.permits')
-      when 'NewsItem'
-        t('search.news_items')
-      when 'CalendarItem'
-        t('search.calendar_items')
-      when 'Legislation'
-        t('search.legislations')
-      when 'Attachment'
-        t('search.attachments')
-      else
-        t('search.common_pages')
+    when 'Product'
+      t('search.products')
+    when 'Permit'
+      t('search.permits')
+    when 'NewsItem'
+      t('search.news_items')
+    when 'CalendarItem'
+      t('search.calendar_items')
+    when 'Legislation'
+      t('search.legislations')
+    when 'Attachment'
+      t('search.attachments')
+    else
+      t('search.common_pages')
     end
   end
 end

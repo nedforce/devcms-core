@@ -1,4 +1,4 @@
-= render :partial => 'show', :locals => {:record => record}
+= render :partial => 'show', :locals => { :record => record }
 
 .forms
   - remote_form_for record, :method => :get, :url => url_for(:controller => record.controller_name, :action => :edit, :format => 'html'), :update => 'right_panel_body' do |form|
@@ -7,7 +7,7 @@
     = category_hidden_fields form
     = content_box_hidden_fields form
     = approval_hidden_fields form
-    
+
     = form.submit t('shared.edit')
 
   - remote_form_for record, :url => url_for(:controller => record.controller_name, :action => :update, :format => 'html'), :update => 'right_panel_body' do |form|
@@ -16,9 +16,8 @@
     = category_hidden_fields form
     = content_box_hidden_fields form
     = approval_hidden_fields form
-    
-    - if current_user_is_admin?(record.node) || current_user_is_final_editor?(record.node)
-      = render :partial => 'admin/shared/responsible_user_hidden_fields', :locals => {:form => form}
-    
-    = form.submit t('shared.save')
 
+    - if current_user_is_admin?(record.node) || current_user_is_final_editor?(record.node)
+      = render :partial => 'admin/shared/responsible_user_hidden_fields', :locals => { :form => form }
+
+    = form.submit t('shared.save')

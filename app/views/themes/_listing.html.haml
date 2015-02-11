@@ -1,7 +1,7 @@
 .themeListing.clearfix
   - if container.is_a?(Theme)
-    = render :partial => '/themes/theme', :collection => container.sub_themes.compact,  :locals => {:depth => depth, :max_depth => max_depth}
+    = render :partial => '/themes/theme', :collection => container.sub_themes.compact, :locals => { :depth => depth, :max_depth => max_depth }
   - else
     - container.sub_themes.in_groups(2).each_with_index do |group, i|
-      .column{:id => "column_#{i}"}
-        = render :partial => '/themes/theme', :collection => group.compact,  :locals => {:depth => depth, :max_depth => max_depth}
+      .column{ :id => "column_#{i}" }
+        = render :partial => '/themes/theme', :collection => group.compact, :locals => { :depth => depth, :max_depth => max_depth }

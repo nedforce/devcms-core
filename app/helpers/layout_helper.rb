@@ -4,14 +4,14 @@ module LayoutHelper
     node            = (@node || current_site)
 
     return unless node.own_or_inherited_layout_variant[target].present?  
-    
+
     partial         = '/layouts/partials/' + node.own_or_inherited_layout_variant[target]['representation']
     inheritable     = node.own_or_inherited_layout_variant[target]['inheritable'].nil? || node.own_or_inherited_layout_variant[target]['inheritable']
     representations = node.find_content_representations(target, inheritable)
 
     representations.each do |element|
       next unless element.content_partial.present?
-      
+
       if element.custom_type.present?
         render_helper = node.own_or_inherited_layout.custom_representations[element.custom_type]["helper"]
         partials += send(render_helper || "render_#{element.custom_type}") || ""
@@ -33,10 +33,10 @@ module LayoutHelper
       render :partial => '/layouts/partials/private_menu'
     end
   end
-  
+
   def render_related_content
     return if controller_name == 'shares'
-    
+
     if @node && @node.content_type_configuration[:has_own_content_box] && !((@node.content_class == Page || @node.content_class <= Section) && @node.categories.empty?)
       custom_partial = @node.own_or_inherited_layout.custom_representations["related_content"]["content_partial"] || 'related_content'
       render :partial => '/layouts/partials/content_box',
@@ -51,7 +51,7 @@ module LayoutHelper
   end
 
   def toggable_section_link(dom_id, link_or_link_title, options = {})
-    link_options = {:id => "toggle_section_#{dom_id}", :class => 'toggable_section_link' }
+    link_options = { :id => "toggle_section_#{dom_id}", :class => 'toggable_section_link' }
 
     if link_or_link_title.is_a?(Link)
       html = link_to_content_node(truncate(h(link_or_link_title.content_title), :length => 60), link_or_link_title, {}, link_options)

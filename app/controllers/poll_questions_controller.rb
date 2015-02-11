@@ -1,11 +1,10 @@
-# This +RESTful+ controller is used to orchestrate and control the flow of 
+# This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +PollQuestion+ objects.
 class PollQuestionsController < ApplicationController
-  
   include PollQuestionsHelper
-  
+
   before_filter :find_poll_question
-  
+
   # Shows the question and a voting form if the requested question is active
   # shows the question's results otherwise.
   #
@@ -30,7 +29,7 @@ class PollQuestionsController < ApplicationController
       format.html # results.html.erb
       format.js do # XHR request
         render :update do |page|
-          page.replace_html "poll_content_box_content_#{@poll_question.poll.id}", :partial => 'results_side_box', :locals => {:question => @poll_question}
+          page.replace_html "poll_content_box_content_#{@poll_question.poll.id}", :partial => 'results_side_box', :locals => { :question => @poll_question }
         end
       end
       format.xml do
@@ -57,7 +56,7 @@ class PollQuestionsController < ApplicationController
   # PUT /poll_questions/:id/vote.js
   #
   # *parameters*
-  # 
+  #
   # +poll_option_id+ - The id of this question's option to cast a vote for. (Required)
   def vote
     already_voted = already_voted_for?(@poll_question)
@@ -79,7 +78,7 @@ class PollQuestionsController < ApplicationController
         else # redirect to results page
           flash[:notice]  = I18n.t('polls.you_voted')
         end
-        redirect_to results_poll_question_url(@poll_question)        
+        redirect_to results_poll_question_url(@poll_question)
       end
       format.js do
         render :update do |page|

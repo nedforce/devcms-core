@@ -6,19 +6,19 @@
 
   - admin_remote_form_for record, :url => url_for(:controller => record.controller_name, :format => 'html', :parent_node_id => @parent_node.id), :update => 'right_panel_body' do |form|
     = error_messages_for record.class.name.downcase
-  
+
     = javascript_tag("document.getElementById('right_panel_body').scrollTop = 0;")
-  
+
     = default_fields_before_form form
     = render :partial => 'form', :locals => { :form => form, :record => record }
     = default_fields_after_form form
-    
+
     - if current_user_is_admin?(record.node) || current_user_is_final_editor?(record.node)
-      = render :partial => 'admin/shared/responsible_user_fields', :locals => {:form => form, :content => record}
+      = render :partial => 'admin/shared/responsible_user_fields', :locals => { :form => form, :content => record }
 
     = category_settings_for record
     = content_box_settings_for record
-  
+
     = approval_fields form
-  
+
     = commit_fields form, record.class.is_a?(Event)

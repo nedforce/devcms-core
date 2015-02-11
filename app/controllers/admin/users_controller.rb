@@ -97,11 +97,11 @@ class Admin::UsersController < Admin::AdminController
         error = I18n.t('users.cant_destroy_yourself')
         @user.errors.add_to_base(error)
 
-        format.html {
+        format.html do
           flash[:error] = error
           redirect_to admin_users_path
-        }
-        format.json { render :json => {:errors => @user.errors.full_messages}.to_json, :status => :unprocessable_entity }
+        end
+        format.json { render :json => { :errors => @user.errors.full_messages}.to_json, :status => :unprocessable_entity }
       else
         @user.destroy
         format.html { redirect_to admin_users_path }
@@ -123,7 +123,7 @@ class Admin::UsersController < Admin::AdminController
             :checked => @user.newsletter_archives.include?(na)
           }
         end
-        render :json => {:newsletter_archives => newsletter_archives, :success => true, :total_count => newsletter_archives.size}.to_json, :status => :ok
+        render :json => { :newsletter_archives => newsletter_archives, :success => true, :total_count => newsletter_archives.size }.to_json, :status => :ok
       end
     end
   end
@@ -141,7 +141,7 @@ class Admin::UsersController < Admin::AdminController
                 :checked => @user.interests.include?(i)
               }
         end
-        render :json => {:interests => interests, :success => true, :total_count => interests.size}.to_json, :status => :ok
+        render :json => { :interests => interests, :success => true, :total_count => interests.size }.to_json, :status => :ok
       end
     end
   end
@@ -196,68 +196,68 @@ class Admin::UsersController < Admin::AdminController
 
   protected
 
-    def find_user
-      @user = User.find(params[:id])
+  def find_user
+    @user = User.find(params[:id])
+  end
+
+  # Finds sorting parameters.
+  def set_sorting
+    if extjs_sorting?
+      @sort_direction = (params[:dir] == 'ASC' ? 'ASC' : 'DESC')
+
+      # We can't sort the newsletter subscriptions in SQL...
+      if params[:sort].include?('newsletter_archives')
+        @sort_by_newsletter_archives = true
+      else
+        # ...but we can sort all non-polymorphic relationships
+        @sort_field = ActiveRecord::Base.connection.quote_column_name(params[:sort])
+      end
+    else
+      @sort_field = 'login'
     end
+    @sort_field = "UPPER(#{@sort_field})" unless @sort_field =~ /(id|created_at)/
+  end
 
-    # Finds sorting parameters.
-    def set_sorting
-      if extjs_sorting?
-        @sort_direction = (params[:dir] == 'ASC' ? 'ASC' : 'DESC')
+  # Checks whether some filters are defined in Ext.
+  # If not, don't return any new conditions, otherwise,
+  # generate the conditions defined by the filters
+  def filter_conditions
+    if params[:filter]
+      generate_filter_conditions
+    else
+      []
+    end
+  end
 
-        # We can't sort the newsletter subscriptions in SQL...
-        if params[:sort].include?('newsletter_archives')
-          @sort_by_newsletter_archives = true
+  # Generates SQL conditions based on the filter parameter
+  def generate_filter_conditions
+    filters = params[:filter]
+    conditions = filters.keys.map do |key|
+      filter      = filters[key]
+      filterType  = filter[:data][:type]
+      filterValue = filter[:data][:value]
+      filterField = "users." + filter[:field]
+      case filterType
+        when 'string'
+          [ filterField + " LIKE ?", filterValue + '%']
+        when 'list'
+          sex = (filterValue == I18n.t('users.male')) ? 'm' : 'f'
+          [ filterField + " = ?", sex]
+        when 'date'
+          comparison = filter[:data][:comparison]
+          date = DateTime.strptime(filterValue, "%m/%d/%Y")
+          if comparison == 'gt'
+            [ filterField + " > ?", date ]
+          elsif comparison == 'lt'
+            [ filterField + " < ?", date ]
+          elsif comparison == 'eq'
+            [ filterField + " BETWEEN ? AND ? ", date, date + 1.days]
+          end
         else
-          # ...but we can sort all non-polymorphic relationships
-          @sort_field = ActiveRecord::Base.connection.quote_column_name(params[:sort])
-        end
-      else
-        @sort_field = 'login'
-      end
-      @sort_field = "UPPER(#{@sort_field})" unless @sort_field =~ /(id|created_at)/
-    end
-
-    # Checks whether some filters are defined in Ext.
-    # If not, don't return any new conditions, otherwise,
-    # generate the conditions defined by the filters
-    def filter_conditions
-      if params[:filter]
-        generate_filter_conditions
-      else
-        []
+          [ filterField + " = ?", filterValue ]
       end
     end
 
-    # Generates SQL conditions based on the filter parameter
-    def generate_filter_conditions
-      filters = params[:filter]
-      conditions = filters.keys.map do |key|
-        filter      = filters[key]
-        filterType  = filter[:data][:type]
-        filterValue = filter[:data][:value]
-        filterField = "users." + filter[:field]
-        case filterType
-          when 'string'
-            [ filterField + " LIKE ?", filterValue + '%']
-          when 'list'
-            sex = (filterValue == I18n.t('users.male')) ? 'm' : 'f'
-            [ filterField + " = ?", sex]
-          when 'date'
-            comparison = filter[:data][:comparison]
-            date = DateTime.strptime(filterValue, "%m/%d/%Y")
-            if comparison == 'gt'
-              [ filterField + " > ?", date ]
-            elsif comparison == 'lt'
-              [ filterField + " < ?", date ]
-            elsif comparison == 'eq'
-              [ filterField + " BETWEEN ? AND ? ", date, date + 1.days]
-            end
-          else
-            [ filterField + " = ?", filterValue ]
-        end
-      end
-
-      [conditions.map { |condition| condition.first }.join(" AND ")] + conditions.map { |condition| condition.last(condition.size-1) }.flatten
-    end
+    [conditions.map { |condition| condition.first }.join(' AND ')] + conditions.map { |condition| condition.last(condition.size-1) }.flatten
+  end
 end

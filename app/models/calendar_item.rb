@@ -141,14 +141,14 @@ class CalendarItem < Event
 
   # Returns the body and location_description as the tokens for indexing.
   def content_tokens
-    [ body, location_description ].compact.join(' ')
+    [body, location_description].compact.join(' ')
   end
 
   def registration_for_user(user)
-    event_registrations.first(:conditions => {:user_id => user.id})
+    event_registrations.first(:conditions => { :user_id => user.id })
   end
 
-protected
+  protected
 
   # Validate that calendar items ends later than it starts.
   def end_time_should_be_after_start_time
