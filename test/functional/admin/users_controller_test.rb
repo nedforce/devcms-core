@@ -87,24 +87,27 @@ class Admin::UsersControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  def test_should_page_for_extjs
+  test 'should page for extjs' do
     login_as :sjoerd
-    get :privileged, :start => '2', :limit => '2', :format => 'xml'
+    get :privileged, start: '2', limit: '2', format: 'xml'
+
     assert_response :success
     assert_equal 2, assigns(:users).size
-    assert_tag :tag => 'users'
+    assert_tag tag: 'users'
   end
 
-  def test_should_sort_for_extjs
+  test 'should sort for extjs' do
     login_as :sjoerd
-    get :privileged, :sort => 'email_address', :dir => 'DESC', :format => 'xml'
+    get :privileged, sort: 'email_address', dir: 'DESC', format: 'xml'
+
     assert_response :success
     assert_equal users(:gerjan).email_address, assigns(:users).first.email_address
   end
 
-  def test_should_sort_newsletter_archives_for_extjs
+  test 'should sort newsletter archives for extjs' do
     login_as :sjoerd
-    get :privileged, :sort => 'newsletter_archives', :dir => 'DESC', :format => 'xml'
+    get :privileged, sort: 'newsletter_archives', dir: 'DESC', format: 'xml'
+
     assert_response :success
     assert_equal users(:sjoerd).email_address, assigns(:users).first.email_address
   end
@@ -112,6 +115,7 @@ class Admin::UsersControllerTest < ActionController::TestCase
   test 'should page and sort for extjs' do
     login_as :sjoerd
     get :privileged, sort: 'email_address', dir: 'DESC', start: '2', limit: '2', format: 'xml'
+
     assert_response :success
     assert_equal 2, assigns(:users).size
     assert_not_equal users(:gerjan).email_address, assigns(:users).first.email_address
