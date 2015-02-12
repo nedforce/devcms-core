@@ -57,12 +57,12 @@ module RoleRequirementSystem
       for key in [:only, :except]
         if options.has_key?(key)
           options[key] = [options[key]] unless Array === options[key]
-          options[key] = options[key].compact.collect{ |v| v.to_sym }
+          options[key] = options[key].compact.collect { |v| v.to_sym }
         end
       end
 
       self.role_requirements ||= []
-      self.role_requirements << {:roles => roles, :options => options }
+      self.role_requirements << { :roles => roles, :options => options }
     end
 
     # This is the core of RoleRequirement.  Here is where it discerns if a user can access a controller or not./

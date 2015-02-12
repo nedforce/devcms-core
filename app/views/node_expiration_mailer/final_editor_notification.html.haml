@@ -13,7 +13,7 @@
       - @nodes.each do |node|
         %tr
           %td= link_to node.content.title, aliased_or_delegated_url(node, :host => @host)
-          %td= node.ancestors.all(:include => :content).collect{ |n| n.content.content_title }.join(" > ").to_s
+          %td= node.ancestors.all(:include => :content).collect { |n| n.content.content_title }.join(" > ").to_s
           %td= node.updated_at
           %td= node.expires_on
           %td #{node.responsible_user.full_name} (#{node.responsible_user.login})

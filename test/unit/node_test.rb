@@ -321,7 +321,7 @@ class NodeTest < ActiveSupport::TestCase
 
    def test_changes_should_not_include_feeds
      assert_not_nil Node.all(:conditions => { :content_type => 'Feed'}), "Should have at least one feed to test for exclusion"
-     assert @root_node.last_changes(:all).select{ |n| n.content_class == Feed }.empty?
+     assert @root_node.last_changes(:all).select { |n| n.content_class == Feed }.empty?
    end
 
    def test_changes_should_only_include_accessible_children

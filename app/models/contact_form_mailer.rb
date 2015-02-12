@@ -11,10 +11,10 @@ class ContactFormMailer < ActionMailer::Base
     end
 
     part "text/plain" do |p|
-      p.body = render_message('message.text.plain', :title => contact_form.title, :entered_fields => entered_fields)    
+      p.body = render_message('message.text.plain', :title => contact_form.title, :entered_fields => entered_fields)
     end
 
-    entered_fields.select{ |field| field[:value].is_a?(Tempfile) }.each do |field|
+    entered_fields.select { |field| field[:value].is_a?(Tempfile) }.each do |field|
       attachment :content_type => field[:value].content_type.chomp, :body => field[:value].read, :filename => field[:value].original_filename
     end
   end

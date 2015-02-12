@@ -46,7 +46,7 @@ class Comment < ActiveRecord::Base
     if user.has_role?('editor')
       user.comments.all({ :include => :node }.merge(options))
     else
-      Comment.all({ :include => :node }.merge(options)).select{ |comment| comment.user == user || user.has_role_on?(['admin', 'final_editor'], comment.node) }
+      Comment.all({ :include => :node }.merge(options)).select { |comment| comment.user == user || user.has_role_on?(['admin', 'final_editor'], comment.node) }
     end
   end
 
@@ -54,8 +54,8 @@ class Comment < ActiveRecord::Base
   # commentable class name and commentable id.
   def self.find_comments_for_commentable(commentable_str, commentable_id)
     find(:all,
-      :conditions => ["commentable_type = ? and commentable_id = ?", commentable_str, commentable_id],
-      :order      => "created_at DESC"
+      :conditions => ['commentable_type = ? and commentable_id = ?', commentable_str, commentable_id],
+      :order      => 'created_at DESC'
     )
   end
 

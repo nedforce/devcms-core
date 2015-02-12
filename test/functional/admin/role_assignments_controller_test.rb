@@ -81,7 +81,7 @@ class Admin::RoleAssignmentsControllerTest < ActionController::TestCase
     login_as :sjoerd
     get :index, :sort => 'node_title', :dir => 'DESC', :format => 'json'
     assert_response :success
-    assert_equal RoleAssignment.all(:include => :node).collect{ |ra| ra.node.content.content_title }.sort.last, assigns(:role_assignments).first.node.content.content_title
+    assert_equal RoleAssignment.all(:include => :node).collect { |ra| ra.node.content.content_title }.sort.last, assigns(:role_assignments).first.node.content.content_title
   end
 
   def test_should_sort_users_for_extjs

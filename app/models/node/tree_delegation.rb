@@ -178,7 +178,7 @@ module Node::TreeDelegation
     end
 
     def path_child_ancestries
-      path_ids.enum_for(:each_with_index).collect{ |item, index| path_ids[0..(path_ids.length - index - 1)] }.map { |result| result.join('/') }
+      path_ids.enum_for(:each_with_index).collect { |item, index| path_ids[0..(path_ids.length - index - 1)] }.map { |result| result.join('/') }
     end
 
     def path_children_by_depth
@@ -195,7 +195,7 @@ module Node::TreeDelegation
         subtree
       end
 
-      [ tree, rest ]
+      [tree, rest]
     end
 
   end

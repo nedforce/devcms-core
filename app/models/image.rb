@@ -34,44 +34,44 @@ class Image < FlexImage::Model
 
   # An +Image+ can be a carrousel item
   has_many :carrousel_items, :as => :item, :dependent => :destroy  
-  
+
   # This is needed to be able to load images from a YAML-ized version of the ActiveRecord,
   # otherwise FlexImage won't recognize it.
   self.require_image_data = false
-  
+
   # Adds content node functionality to images.
   acts_as_content_node({
     :available_content_representations => ['content_box'],
     :show_in_menu => false,
     :show_content_box_header => false
   }, {
-    :exclude => [ :id, :created_at, :updated_at, :data ]
+    :exclude => [:id, :created_at, :updated_at, :data]
   })
 
   # This content type needs approval when created or altered by an editor.
   needs_editor_approval
-  
+
   # Set image size to max 1024x1024 on creation.
   pre_process_image :size => '1024x1024', :quality => 95
 
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of     :title, :data
-  
-  validates_inclusion_of    :show_in_listing, :in => [ false, true ], :allow_nil => false
-  
+
+  validates_inclusion_of    :show_in_listing, :in => [false, true], :allow_nil => false
+
   validates_length_of       :title, :in => 2..255, :allow_blank => true
   validates_length_of       :alt,   :in => 0..255
   validates_format_of       :url, :with => /(^$)|(^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(([0-9]{1,5})?\/.*)?$)/ix, :allow_blank => true
-  
+
   validates_numericality_of :offset, :only_integer => true, :allow_blank => true, :greater_than_or_equal => 0 
 
   default_scope :conditions => "#{self.table_name}.deleted_at IS NULL", :select => (self.column_names - DEFAULT_COLUMNS_TO_EXCLUDE_FROM_SELECT).map { |column| "#{self.table_name}.#{column}" }.join(', ')
-  
+
   # Join instead of include to ensure the default scopes select is still applied.
   named_scope :accessible,  lambda { { :joins => :node, :conditions => Node.accessibility_and_visibility_conditions } }
-  
+
   named_scope :select_all_columns, :select => self.column_names.map { |column| "#{self.table_name}.#{column}" }.join(', ')
-  
+
   # Ensure +url+ is correct.
   before_validation :prepend_http_to_url
 
@@ -102,7 +102,7 @@ class Image < FlexImage::Model
   def calculate_other_dimension_with(options)
     options.symbolize_keys!
     raise ArgumentError, 'either :width or :height need to be specified' unless options[:width] || options[:height]
-    
+
     h = send(:rmagick_image).rows
     w = send(:rmagick_image).columns
 
@@ -113,15 +113,14 @@ class Image < FlexImage::Model
     end
   end
 
-protected
+  protected
 
   # Prepends 'http://' to +url+ if it is not present.
   def prepend_http_to_url 
-    self.url = "http://#{url}" unless url.blank? || url.starts_with?("http://") || url.starts_with?("https://")
+    self.url = "http://#{url}" unless url.blank? || url.starts_with?('http://') || url.starts_with?('https://')
   end
-  
+
   def remove_associated_content
     self.carrousel_items.destroy_all
   end
-
 end

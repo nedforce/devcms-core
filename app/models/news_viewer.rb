@@ -16,7 +16,7 @@
 #
 class NewsViewer < ActiveRecord::Base
   # Adds content node functionality to news viewers.
-  acts_as_content_node({ 
+  acts_as_content_node({
     :allowed_roles_for_update  => %w( admin final_editor ),
     :allowed_roles_for_create  => %w( admin final_editor ),
     :allowed_roles_for_destroy => %w( admin final_editor ),
@@ -27,7 +27,7 @@ class NewsViewer < ActiveRecord::Base
 
   # A +NewsViewer+ can have many +NewsViewerItem+ and +NewsViewerArchive+ children.
   has_many :news_viewer_items,    :dependent => :destroy
-  has_many :news_viewer_archives, :dependent => :destroy  
+  has_many :news_viewer_archives, :dependent => :destroy
   has_many :news_items,           :through => :news_viewer_items
   has_many :news_archives,        :through => :news_viewer_archives
 
@@ -39,7 +39,7 @@ class NewsViewer < ActiveRecord::Base
 
   # TODO: Documentation
   def self.tree_icon_class
-    NewsArchive.tree_icon_class    
+    NewsArchive.tree_icon_class
   end
 
   # Returns the image file name to be used for icons on the front end website.
@@ -60,9 +60,9 @@ class NewsViewer < ActiveRecord::Base
   # Returns the date when the +NewsViewer+ was last updated.
   def last_updated_at
     newest_item = self.news_items.newest.accessible.first(:order => 'nodes.updated_at DESC')
-    
+
     if newest_item.present?
-      [ newest_item.updated_at, newest_item.node.children.with_content_type("Images").try(:first).try(:updated_at), self.updated_at ].compact.max
+      [newest_item.updated_at, newest_item.node.children.with_content_type('Images').try(:first).try(:updated_at), self.updated_at].compact.max
     else
       self.updated_at
     end
@@ -78,10 +78,10 @@ class NewsViewer < ActiveRecord::Base
     # Destroy old items
     news_items.delete(news_items.all(:include => :node, :conditions => ['nodes.publication_start_date < ?', (Settler['news_viewer_time_period'] ? Settler['news_viewer_time_period'].to_i : 2).weeks.ago]))
     # Add any news items from the archives
-    news_archives.each{ |news_archive| news_archive.news_items.newest.each{ |item| self.news_items << item rescue nil }}
+    news_archives.each { |news_archive| news_archive.news_items.newest.each { |item| self.news_items << item rescue nil } }
   end
 
-protected
+  protected
 
   def remove_associated_content
     self.news_viewer_items.destroy_all

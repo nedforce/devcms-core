@@ -108,14 +108,14 @@ module Admin::AdminHelper
     [
       label_tag(     'carrousel[display_time][]', Carrousel.human_attribute_name(:display_time)) + ': ',
       text_field_tag('carrousel[display_time][]', carrousel.display_time[0], :size => 2),
-      select_tag(    'carrousel[display_time][]', options_for_select(Carrousel::ALLOWED_TIME_UNITS.collect{ |unit| [t(unit, :scope => 'carrousels.units'), unit] }, carrousel.display_time[1]))
+      select_tag(    'carrousel[display_time][]', options_for_select(Carrousel::ALLOWED_TIME_UNITS.collect { |unit| [t(unit, :scope => 'carrousels.units'), unit] }, carrousel.display_time[1]))
     ].join("\n")
   end
 
   def animation_select_for(carrousel)
     [
       label_tag(     'carrousel[animation]', Carrousel.human_attribute_name(:animation)) + ': ',
-      select_tag(    'carrousel[animation]', options_for_select(Carrousel::ALLOWED_ANIMATION_TYPES.collect{ |type| [Carrousel::ANIMATION_NAMES[type],type] }, carrousel.animation))
+      select_tag(    'carrousel[animation]', options_for_select(Carrousel::ALLOWED_ANIMATION_TYPES.collect { |type| [Carrousel::ANIMATION_NAMES[type],type] }, carrousel.animation))
     ].join("\n")
   end
 
