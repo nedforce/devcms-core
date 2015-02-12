@@ -1,13 +1,13 @@
 class Admin::AbbreviationsController < Admin::AdminController
-  before_filter :default_format_json,  :only => [ :create, :update, :destroy ]  
-    
-  before_filter :set_paging,  :only => [ :index, :create ]
-  before_filter :set_sorting, :only => [ :index, :create ]
+  before_filter :default_format_json, only: [:create, :update, :destroy]
+
+  before_filter :set_paging,  only: [:index, :create]
+  before_filter :set_sorting, only: [:index, :create]
 
   skip_before_filter :set_actions
-  before_filter :find_node,   :only => [ :index, :new, :create, :update, :destroy ]
+  before_filter :find_node, only: [:index, :new, :create, :update, :destroy]
 
-  require_role 'admin', :except => :new
+  require_role 'admin', except: :new
 
   layout false
 
@@ -21,12 +21,12 @@ class Admin::AbbreviationsController < Admin::AdminController
       format.html # index.html.erb
       format.json do
         abbreviations = @abbreviations.map do |s|
-          { :abbr       => s.abbr,
-            :definition => s.definition,
-            :id         => s.id
+          { abbr:       s.abbr,
+            definition: s.definition,
+            id:         s.id
           }
         end
-        render :json => { :abbreviations => abbreviations, :total_count => @abbreviations_count }.to_json, :status => :ok
+        render json: { abbreviations: abbreviations, total_count: @abbreviations_count }.to_json, status: :ok
       end
     end
   end
@@ -36,7 +36,8 @@ class Admin::AbbreviationsController < Admin::AdminController
   def new
     @abbr          = params[:abbr]
     @abbreviations = @node.abbreviations.search(params[:abbr])
-    render :layout => false
+
+    render layout: false
   end
 
   # * POST /admin/abbreviations
@@ -45,9 +46,9 @@ class Admin::AbbreviationsController < Admin::AdminController
 
     respond_to do |format|
       if @abbreviation.save
-        format.json { render :json => { :success => 'true' } }
+        format.json { render json: { success: 'true' } }
       else
-        format.json { render :json => @abbreviation.errors.full_messages.join(' '), :status => :unprocessable_entity }
+        format.json { render json: @abbreviation.errors.full_messages.join(' '), status: :unprocessable_entity }
       end
     end
   end
@@ -60,7 +61,7 @@ class Admin::AbbreviationsController < Admin::AdminController
       if @abbreviation.update_attributes(params[:abbreviation])
         format.json { head :ok }
       else
-        format.json { render :json => @abbreviation.errors, :status => :unprocessable_entity }
+        format.json { render json: @abbreviation.errors, status: :unprocessable_entity }
       end
     end
   end

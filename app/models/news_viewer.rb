@@ -16,16 +16,17 @@
 #
 class NewsViewer < ActiveRecord::Base
   # Adds content node functionality to news viewers.
-  acts_as_content_node({
+  acts_as_content_node(
     allowed_roles_for_update:          %w( admin final_editor ),
     allowed_roles_for_create:          %w( admin final_editor ),
     allowed_roles_for_destroy:         %w( admin final_editor ),
     available_content_representations: ['content_box'],
     has_edit_items:                    true,
     has_own_feed:                      true
-  })
+  )
 
-  # A +NewsViewer+ can have many +NewsViewerItem+ and +NewsViewerArchive+ children.
+  # A +NewsViewer+ can have many +NewsViewerItem+ and +NewsViewerArchive+
+  # children.
   has_many :news_viewer_items,    dependent: :destroy
   has_many :news_viewer_archives, dependent: :destroy
   has_many :news_items,           through: :news_viewer_items, include: :node
@@ -51,15 +52,17 @@ class NewsViewer < ActiveRecord::Base
     description
   end
 
-  # Gets accessible news items for the frontend. This method does not return unapproved content.
+  # Gets accessible news items for the frontend. This method does not return
+  # unapproved content.
   def accessible_news_items(options = {})
-    self.news_items.newest.accessible.scoped({ order: 'news_viewer_items.position, nodes.publication_start_date DESC' }.merge(options))
+    news_items.newest.accessible.scoped({ order: 'news_viewer_items.position, nodes.publication_start_date DESC' }.merge(options))
   end
 
   # Returns the date when the +NewsViewer+ was last updated.
   def last_updated_at
     image_node = news_items.newest.accessible.first(order: 'news_viewer_items.position, nodes.publication_start_date DESC').node.children.with_content_type('Image').first rescue nil
-    [ news_items.newest.accessible.maximum(:updated_at),
+    [
+      news_items.newest.accessible.maximum(:updated_at),
       node.updated_at,
       image_node.try(:content).try(:last_updated_at)
     ].compact.max
@@ -67,7 +70,7 @@ class NewsViewer < ActiveRecord::Base
 
   # Maintenance task for removing old news items and adding new ones.
   def self.update_news_items
-    NewsViewer.all.each { |nv| nv.update_news_items }
+    NewsViewer.all.each(&:update_news_items)
   end
 
   # Update the news items.
@@ -78,10 +81,10 @@ class NewsViewer < ActiveRecord::Base
     news_archives.each { |news_archive| news_archive.news_items.newest.each { |item| self.news_items << item rescue nil } }
   end
 
-protected
+  protected
 
   def remove_associated_content
-    self.news_viewer_items.destroy_all
-    self.news_viewer_archives.destroy_all
+    news_viewer_items.destroy_all
+    news_viewer_archives.destroy_all
   end
 end

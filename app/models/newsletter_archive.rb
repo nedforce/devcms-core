@@ -1,6 +1,6 @@
-# This model is used to represent a newsletter archive that can contain multiple newsletter
-# editions, which are represented using +NewsletterEdition+ objects. It has specified
-# +acts_as_content_node+ from Acts::ContentNode::ClassMethods.
+# This model is used to represent a newsletter archive that can contain multiple
+# newsletter editions, which are represented using +NewsletterEdition+ objects.
+# It has specified +acts_as_content_node+ from Acts::ContentNode::ClassMethods.
 #
 # *Specification*
 #
@@ -8,7 +8,8 @@
 #
 # * +title+ - The title of the newsletter archive.
 # * +description+ - The description of the newsletter archive.
-# * +from_email_address+ - The email address that is used for the from field for the associated newsletter editions.
+# * +from_email_address+ - The email address that is used for the from field for
+#                          the associated newsletter editions.
 #
 # Preconditions
 #
@@ -17,7 +18,7 @@
 #
 class NewsletterArchive < ActiveRecord::Base
   # Adds content node functionality to news archives.
-  acts_as_content_node({
+  acts_as_content_node(
     allowed_child_content_types:       %w( NewsletterEdition Image ),
     allowed_roles_for_update:          %w( admin final_editor ),
     allowed_roles_for_create:          %w( admin final_editor ),
@@ -25,15 +26,17 @@ class NewsletterArchive < ActiveRecord::Base
     available_content_representations: ['content_box'],
     children_can_be_sorted:            false,
     tree_loader_name:                  'newsletter_archives'
-  })
+  )
 
-  # Extend this class with methods to find items based on their publication date.
+  # Extend this class with methods to find items based on their publication
+  # date.
   acts_as_archive items_name: :newsletter_editions
 
   # A +NewsletterArchive+ can have many +NewsletterEdition+ children.
   has_children :newsletter_editions, order: 'nodes.publication_start_date DESC'
 
-  # A +NewsletterArchive+ has and belongs to many +User+ objects (i.e. subscribed users).
+  # A +NewsletterArchive+ has and belongs to many +User+ objects (i.e.
+  # subscribed users).
   has_and_belongs_to_many :users
 
   # See the preconditions overview for an explanation of these validations.
@@ -43,15 +46,16 @@ class NewsletterArchive < ActiveRecord::Base
 
   # Returns the last update date
   def last_updated_at
-    nle = self.newsletter_editions.accessible.first(include: :node, conditions: ['newsletter_editions.published <> ?', 'unpublished'], order: 'nodes.publication_start_date DESC')
+    nle = newsletter_editions.accessible.first(include: :node, conditions: ['newsletter_editions.published <> ?', 'unpublished'], order: 'nodes.publication_start_date DESC')
     last_nle_update = nle ? nle.node.publication_start_date : nil
 
-    [ last_nle_update, self.updated_at].compact.max
+    [last_nle_update, updated_at].compact.max
   end
 
-  # Returns true if this +NewsletterArchive+ has a subscription for the +User+ specified by +user+, else false.
+  # Returns true if this +NewsletterArchive+ has a subscription for the +User+
+  # specified by +user+, else false.
   def has_subscription_for?(user)
-    self.users.exists?(id: user.id)
+    users.exists?(id: user.id)
   end
 
   # Returns the description as the token for indexing.

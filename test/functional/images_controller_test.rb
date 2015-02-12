@@ -1,9 +1,10 @@
 require File.expand_path('../../test_helper.rb', __FILE__)
 
+# Functional tests for the +ImagesController+.
 class ImagesControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @full_version_stub = stub(path: File.join(File.dirname(__FILE__), '../fixtures/files/test.jpg'))
   end
 

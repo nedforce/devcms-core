@@ -1,5 +1,6 @@
 require File.expand_path('../../test_helper.rb', __FILE__)
 
+# Functional tests for the +LinksController+.
 class LinksControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 

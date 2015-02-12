@@ -1,9 +1,10 @@
 require File.expand_path('../../test_helper.rb', __FILE__)
 
+# Functional tests for the +NodesController+.
 class NodesControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @root_section_node = nodes(:root_section_node)
     @root_section_node.content.set_frontpage!(@root_section_node)
   end

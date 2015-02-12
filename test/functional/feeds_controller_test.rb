@@ -1,6 +1,7 @@
 require File.expand_path('../../test_helper.rb', __FILE__)
 require 'fakeweb'
 
+# Functional tests for the +FeedsController+.
 class FeedsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 

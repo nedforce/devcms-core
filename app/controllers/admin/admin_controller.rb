@@ -1,7 +1,6 @@
 # This administrative controller sets defaults for the other administrative
 # controllers. It is intended as an abstract class for other admin controllers
 # to inherit.
-
 class Admin::AdminController < ApplicationController
   # Override non-JS DELETE hyprlinks fallback for admin pages.
   skip_before_filter :confirm_destroy
@@ -24,32 +23,32 @@ class Admin::AdminController < ApplicationController
   # Require the user to be logged in for all actions.
   before_filter :login_required
 
-  # Require users to have at least one of the roles +admin+, +final_editor+ and +editor+.
-  require_role ['admin', 'final_editor', 'editor'], :any_node => true
+  # Require users to have at least one of the roles +admin+, +final_editor+ and
+  # +editor+.
+  require_role %w(admin final_editor editor), any_node: true
 
   # Set the action buttons for the +show+ and +previous+ actions.
-  before_filter :set_actions, :only => [:show, :previous]
+  before_filter :set_actions, only: [:show, :previous]
 
-  before_filter :set_for_approval, :only => [:edit, :update]
+  before_filter :set_for_approval, only: [:edit, :update]
 
   # Skip the filter that increments the hits for nodes
   skip_after_filter :increment_hits
 
   # Politely ask browsers to not cache anything in the admin namespace..
-  before_filter :set_cache_buster, :only => [:show, :edit, :update, :previous, :import, :build]
+  before_filter :set_cache_buster, only: [:show, :edit, :update, :previous, :import, :build]
 
   layout :layout?
 
   helper Admin::NewsletterArchiveHelper, Admin::AgendaItemsHelper, Admin::AdminHelper, Admin::AdminFormBuilderHelper, Admin::DiffHelper, Admin::CropperHelper
 
-  cache_sweeper :node_sweeper, :only => [:create, :update, :destroy, :approve, :set_visibility, :set_accessibility, :move, :bulk_update, :bulk_destroy, :sort_children]
+  cache_sweeper :node_sweeper, only: [:create, :update, :destroy, :approve, :set_visibility, :set_accessibility, :move, :bulk_update, :bulk_destroy, :sort_children]
 
-protected
+  protected
 
   def default_format_json
-    if(request.headers["HTTP_ACCEPT"].nil? &&
-       params[:format].nil?)
-      request.format = "json"
+    if request.headers['HTTP_ACCEPT'].nil? && params[:format].nil?
+      request.format = 'json'
     end
   end
 
@@ -61,7 +60,7 @@ protected
 
   def find_node
     return unless params[:id].present? && controller_model.respond_to?(:is_content_node?) && controller_model.is_content_node?
-    @node = Node.include_content.where([ 'content_type = ? AND content_id = ?', controller_model.base_class.name, params[:id] ]).first!    
+    @node = Node.include_content.where(['content_type = ? AND content_id = ?', controller_model.base_class.name, params[:id]]).first!
   end
 
   # Finds the Node object corresponding to the passed in +parent_node_id+ parameter.
@@ -70,7 +69,7 @@ protected
   end
 
   def find_children
-    @children = (@calendar_item || @meeting).node.children.accessible.exclude_content_types(%w( Image Attachment ContentCopy )).include_content.map { |n| n.content }
+    @children = (@calendar_item || @meeting).node.children.accessible.exclude_content_types(%w( Image Attachment ContentCopy )).include_content.map(&:content)
     find_images_and_attachments
   end
 
@@ -92,7 +91,7 @@ protected
           unless request.xhr?
             redirect_to current_user.has_any_role? ? admin_nodes_path : root_path
           else
-            render :text => flash[:notice], :status => :forbidden # Render HTML
+            render text: flash[:notice], status: :forbidden # Render HTML
           end
         end
         f.js do
@@ -101,7 +100,7 @@ protected
           end
         end
         f.json do
-          render :json => { :error => flash[:notice] }.to_json, :status => :forbidden
+          render json: { error: flash[:notice] }.to_json, status: :forbidden
         end
       end
     else
@@ -135,8 +134,10 @@ protected
   def parse_date_parameters
     if params[:year] && params[:month]
       date   = Date.civil(params[:year].to_i, params[:month].to_i) rescue nil
-      @year  = date.year  if date
-      @month = date.month if date
+      if date
+        @year  = date.year
+        @month = date.month
+      end
     elsif params[:year]
       date  = Date.civil(params[:year].to_i) rescue nil
       @year = date.year if date
@@ -151,7 +152,7 @@ protected
       role = current_user.role_on(@node)
 
       if role && @node.content_type_configuration[:allowed_roles_for_update].include?(role.name)
-        @actions << { :url => { :action => :edit }, :text => I18n.t('admin.edit'), :method => :get }
+        @actions << { url: { action: :edit }, text: I18n.t('admin.edit'), method: :get }
       end
     end
   end
@@ -183,21 +184,21 @@ protected
   end
 
   def item_sortlet_hash_for_ids(sortlet_item_ids)
-    if sortlet_item_ids.present?
-      sortlet_item_ids.map do |item_sortlet_id|
-        item_sortlet_hash(Node.find(item_sortlet_id))
-      end
+    return if sortlet_item_ids.blank?
+
+    sortlet_item_ids.map do |item_sortlet_id|
+      item_sortlet_hash(Node.find(item_sortlet_id))
     end
   end
 
   def item_sortlet_hash(node)
     {
-      :title          => node.content.title,
-      :id             => node.id,
-      :nodeId         => node.id,
-      :controllerName => node.content.controller_name,
-      :contentNodeId  => node.content_id,
-      :xtype          => 'sortlet'
+      title:          node.content.title,
+      id:             node.id,
+      nodeId:         node.id,
+      controllerName: node.content.controller_name,
+      contentNodeId:  node.content_id,
+      xtype:          'sortlet'
     }
   end
 end
