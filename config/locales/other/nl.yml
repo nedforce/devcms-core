@@ -98,7 +98,7 @@ nl:
     add_to_twitter: Twitter deze pagina
     content_type_not_allowed: Content type niet toegestaan.
     current_section: Huidige onderdeel
-    default_header_photo_alt: Titelafbeelding
+    default_header_photo_alt: ""
     email_page: E-mail deze pagina naar iemand
     field_error: "Het opslaan mislukte door het volgende probleem:"
     field_errors: "Het opslaan mislukte door de volgende problemen:"
