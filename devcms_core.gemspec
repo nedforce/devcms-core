@@ -48,7 +48,7 @@ Gem::Specification.new do |s|
 
   ##### Asset helpers (require through bundler in app, not necessary in production always)
 
-  # Javascript
+  # JavaScript
   s.add_dependency 'coffee-rails', '~> 3.0'
   s.add_dependency 'coffee-script-source', '~> 1.5.0'
   s.add_dependency 'uglifier'

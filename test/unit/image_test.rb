@@ -1,9 +1,10 @@
 require File.expand_path('../../test_helper.rb', __FILE__)
 
+# Unit tests for the +Image+ model.
 class ImageTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
-  def test_should_create_image
+  test 'should create image' do
     assert_difference('Image.count', 1) do
       image = create_image
       assert !image.new_record?, image.errors.full_messages.join("\n")
@@ -22,43 +23,47 @@ class ImageTest < ActiveSupport::TestCase
     end
   end
 
-  def test_should_prepend_protocol_to_url
-    image = create_image(:url => 'www.example.com')
+  test 'should prepend protocol to url' do
+    image = create_image(url: 'www.example.com')
     assert_equal 'http://www.example.com', image.url
   end
 
-  def test_should_not_prepend_protocol_to_url
-    image = create_image(:url => 'http://www.example.com')
+  test 'should not prepend protocol to url' do
+    image = create_image(url: 'http://www.example.com')
     assert_equal 'http://www.example.com', image.url
   end
 
-  def test_should_not_prepend_protocol_to_url_if_nil
-    image = create_image(:url => nil)
+  test 'should not prepend protocol to url if nil' do
+    image = create_image(url: nil)
     assert_nil image.url
   end
 
-  def test_should_not_prepend_protocol_to_url_for_https
-    image = create_image(:url => 'https://www.example.com')
+  test 'should not prepend protocol to url for https' do
+    image = create_image(url: 'https://www.example.com')
     assert_equal 'https://www.example.com', image.url
   end
 
-  def test_should_return_set_alt_text
-    image = create_image(:alt => 'BOOM!')
+  test 'should return set alt text' do
+    image = create_image(alt: 'BOOM!')
     assert_equal image.alt, 'BOOM!'
   end
 
-  def test_should_return_nil_for_nil_alt_text
-    image = create_image(:title => 'BOOM!', :alt => nil)
+  test 'should return nil for nil alt text' do
+    image = create_image(title: 'BOOM!', alt: nil)
     assert_nil image.alt
   end
 
-  def test_should_not_return_image_children_for_menu
+  test 'should not return image children for menu' do
     assert nodes(:about_page_node).children.accessible.shown_in_menu.empty?
   end
 
-protected
+  protected
 
   def create_image(options = {})
-    Image.create({ :parent => nodes(:devcms_news_item_node), :title => 'This is an image', :file => fixture_file_upload('files/test.jpg') }.merge(options))
+    Image.create({
+      parent: nodes(:devcms_news_item_node),
+      title: 'This is an image',
+      file: fixture_file_upload('files/test.jpg')
+    }.merge(options))
   end
 end

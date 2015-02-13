@@ -1,7 +1,7 @@
 require File.expand_path('../../test_helper.rb', __FILE__)
 
+# Unit tests for the +Abbreviation+ model.
 class AbbreviationTest < ActiveSupport::TestCase
-
   test 'should create abbreviation' do
     assert_difference 'Abbreviation.count' do
       abbr = create_abbreviation
@@ -41,6 +41,10 @@ class AbbreviationTest < ActiveSupport::TestCase
   protected
 
   def create_abbreviation(options = {})
-    Abbreviation.create({ abbr: 'snafu', definition: 'Situation Normal All Fucked Up', node: nodes(:root_section_node) }.merge(options))
+    Abbreviation.create({
+      abbr: 'snafu',
+      definition: 'Situation Normal All Fucked Up',
+      node: nodes(:root_section_node)
+    }.merge(options))
   end
 end

@@ -1,45 +1,48 @@
 require File.expand_path('../../test_helper.rb', __FILE__)
 
+# Unit tests for the +ExternalLink+ model.
 class ExternalLinkTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @external_link = links(:external_link)
   end
 
-  def test_should_create_external_link
+  test 'should create external link' do
     assert_difference 'ExternalLink.count', 1 do
       create_external_link
     end
   end
 
-  def test_should_create_external_link_with_https
+  test 'should create external https link' do
+    https_url = 'https://www.nedforce.com'
+
     assert_difference 'ExternalLink.count', 1 do
-      external_link = create_external_link(:url => 'https://www.google.com')
-      assert_equal external_link.url, 'https://www.google.com'
+      external_link = create_external_link(url: https_url)
+      assert_equal external_link.url, https_url
     end
   end
 
-  def test_should_require_url
+  test 'should require url' do
     assert_no_difference 'ExternalLink.count' do
-      external_link = create_external_link(:url => nil)
+      external_link = create_external_link(url: nil)
       assert external_link.errors[:url].any?
     end
   end
 
   def test_should_strip_http_for_url_alias
-    link = create_external_link(:title => '', :description => '', :url => 'http://www.example.com')
+    link = create_external_link(title: '', description: '', url: 'http://www.example.com')
     assert_equal 'www.example.com', link.path_for_url_alias(link.node)
   end
 
   def test_should_set_description_and_title_to_nil_if_blank
-    l1 = create_external_link(:title => '', :description => '')
+    l1 = create_external_link(title: '', description: '')
     assert !l1.new_record?
     assert_nil l1.title
     assert_nil l1.description
-    l2 = create_external_link(:title => nil, :description => nil)
+    l2 = create_external_link(title: nil, description: nil)
     assert !l2.new_record?
-    l2.update_attributes(:user => users(:arthur), :title => '', :description => '')
+    l2.update_attributes(user: users(:arthur), title: '', description: '')
     assert_nil l2.title
     assert_nil l2.description
   end
@@ -47,7 +50,7 @@ class ExternalLinkTest < ActiveSupport::TestCase
   def test_should_require_valid_url
     [' ', 'foo', 'http://www. foo.com', 'http://www.foo_bar.com', 'http://f.o.o'].each do |url|
       assert_no_difference 'ExternalLink.count' do
-        external_link = create_external_link(:url => url)
+        external_link = create_external_link(url: url)
         assert external_link.errors[:url].any?
       end
     end
@@ -62,39 +65,45 @@ class ExternalLinkTest < ActiveSupport::TestCase
     assert_equal @external_link.url, @external_link.content_title
   end
 
-  def test_should_not_require_unique_title
+  test 'should not require unique title' do
     assert_difference 'ExternalLink.count', 2 do
       2.times do
-        external_link = create_external_link(:title => 'Non-unique title')
+        external_link = create_external_link(title: 'Non-unique title')
         assert !external_link.errors[:title].any?
       end
     end
   end
 
-  def test_should_update_external_link
+  test 'should update external link' do
     assert_no_difference 'ExternalLink.count' do
       @external_link.title = 'New title'
       @external_link.description = 'New body'
       @external_link.url = 'http://www.disney.com'
-      assert @external_link.save(:user => users(:arthur))
+
+      assert @external_link.save(user: users(:arthur))
     end
   end
 
-  def test_should_destroy_external_link
+  test 'should destroy external link' do
     assert_difference 'ExternalLink.count', -1 do
       @external_link.destroy
     end
   end
 
-  def test_should_create_numerical_external_link
+  test 'should create numerical external link' do
     assert_difference 'ExternalLink.count' do
-      create_external_link(:url => 'http://123.123.123.123/TakeSurvey.aspx?SurveyID=92KL9l2')
+      create_external_link(url: 'http://123.123.123.123/TakeSurvey.aspx?SurveyID=92KL9l2')
     end
   end
 
-protected
+  protected
 
   def create_external_link(options = {})
-    ExternalLink.create({ :parent => nodes(:root_section_node), :title => 'This is an external link', :description => 'Geen fratsen!', :url => 'http://www.google.com' }.merge(options))
+    ExternalLink.create({
+      parent: nodes(:root_section_node),
+      title: 'This is an external link',
+      description: 'Geen fratsen!',
+      url: 'http://www.google.com'
+    }.merge(options))
   end
 end

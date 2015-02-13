@@ -20,7 +20,7 @@ RDoc::Task.new(:rdoc) do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
-APP_RAKEFILE = File.expand_path("../test/dummy/Rakefile", __FILE__)
+APP_RAKEFILE = File.expand_path('../test/dummy/Rakefile', __FILE__)
 load 'rails/tasks/engine.rake'
 
 require 'rake/testtask'
@@ -87,15 +87,14 @@ STATS_DIRECTORIES = [
   %w(Functional\ tests  test/functional),
   %w(Unit\ tests        test/unit)
 
-].map { |name, dir| [ name, "#{Rails.root}/../../#{dir}" ] }.select { |name, dir| File.directory?(dir) }
+].map { |name, dir| [name, "#{Rails.root}/../../#{dir}"] }.select { |name, dir| File.directory?(dir) }
 
-desc "Report code statistics (KLOCs, etc) from the application"
+desc 'Report code statistics (KLOCs, etc) from the application'
 task :stats do
   require 'rails/code_statistics'
   CodeStatistics.new(*STATS_DIRECTORIES).to_s
 end
 
-task :default => :test
+task default: :test
 
 gem_helper = Bundler::GemHelper.install_tasks
-

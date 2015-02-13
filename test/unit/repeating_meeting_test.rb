@@ -91,7 +91,7 @@ class RepeatingMeetingTest < ActiveSupport::TestCase
     end
   end
 
-protected
+  protected
 
   def create_meeting(options = {})
     now = Time.now

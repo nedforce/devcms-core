@@ -2,20 +2,20 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 
 class NewsViewerItemTest < ActiveSupport::TestCase
 
-  def setup
+  setup do
     @news_viewer = create_news_viewer
     @news_viewer_item = create_news_viewer_item
   end
-      
+
   def test_should_validate_uniqueness
-    item = create_news_viewer_item(:news_item => @news_viewer_item.news_item)    
+    item = create_news_viewer_item(news_item: @news_viewer_item.news_item)
     assert !item.valid?
   end
 
-private
+  private
 
   def create_news_viewer_item(options = {})
-    @news_viewer.news_viewer_items.create({ :news_item => create_news_item }.merge(options))    
+    @news_viewer.news_viewer_items.create({ news_item: create_news_item }.merge(options))
   end
 
   def create_news_viewer(options = {})

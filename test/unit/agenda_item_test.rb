@@ -3,7 +3,7 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 class AgendaItemTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @calendar_item            = events(:events_calendar_item_one)
     @meeting                  = events(:meetings_calendar_meeting_one)
     @agenda_item_category     = agenda_item_categories(:hamerstukken)
@@ -11,56 +11,54 @@ class AgendaItemTest < ActiveSupport::TestCase
     @agenda_item              = agenda_items(:agenda_item_one)
   end
 
-  def test_should_create_agenda_item
+  test 'should create agenda item' do
     assert_difference 'AgendaItem.count' do
       create_agenda_item
     end
   end
 
-  def test_should_require_parent
+  test 'should require parent' do
     assert_no_difference 'AgendaItem.count' do
-      agenda_item = create_agenda_item(:parent => nil)
+      agenda_item = create_agenda_item(parent: nil)
       assert agenda_item.errors[:calendar_item].any?
     end
   end
 
-  def test_should_not_require_body
+  test 'should not require body' do
     assert_difference 'AgendaItem.count', 1 do
-      agenda_item = create_agenda_item(:body => nil)
+      agenda_item = create_agenda_item(body: nil)
       assert !agenda_item.errors[:body].any?
     end
   end
 
-  def test_should_not_require_speaking_rights_option
+  test 'should not require speaking rights option' do
     assert_difference 'AgendaItem.count', 1 do
-      agenda_item = create_agenda_item(:speaking_rights => nil)
+      agenda_item = create_agenda_item(speaking_rights: nil)
       assert !agenda_item.errors[:speaking_rights].any?
     end
   end
 
-  def test_should_not_require_agenda_item_category
+  test 'should not require agenda item category' do
     assert_difference 'AgendaItem.count', 1 do
-      agenda_item = create_agenda_item(:agenda_item_category => nil)
+      agenda_item = create_agenda_item(agenda_item_category: nil)
       assert !agenda_item.errors[:agenda_item_category].any?
     end
   end
 
-  def test_should_require_description
+  test 'should require description' do
     assert_no_difference 'AgendaItem.count' do
-      agenda_item = create_agenda_item(:description => nil)
+      agenda_item = create_agenda_item(description: nil)
       assert agenda_item.errors[:description].any?
     end
   end
 
-  def test_should_require_valid_speaking_rights_option
+  test 'should require valid speaking rights option' do
     assert_no_difference 'AgendaItem.count' do
-      agenda_item = create_agenda_item(:speaking_rights => 'foo')
+      agenda_item = create_agenda_item(speaking_rights: 'foo')
       assert agenda_item.new_record?
       assert agenda_item.errors[:speaking_rights].any?
-    end
 
-    assert_no_difference 'AgendaItem.count' do
-      agenda_item = create_agenda_item(:speaking_rights => AgendaItem::SPEAKING_RIGHT_OPTIONS.keys.max + 1)
+      agenda_item = create_agenda_item(speaking_rights: AgendaItem::SPEAKING_RIGHT_OPTIONS.keys.max + 1)
       assert agenda_item.new_record?
       assert agenda_item.errors[:speaking_rights].any?
     end
@@ -117,30 +115,35 @@ class AgendaItemTest < ActiveSupport::TestCase
     end
   end
 
-  def test_should_update_agenda_item
+  test 'should update agenda item' do
     assert_no_difference 'AgendaItem.count' do
       @agenda_item.description = 'New title'
-      assert @agenda_item.save(:user => users(:arthur))
+      assert @agenda_item.save(user: users(:arthur))
     end
   end
 
-  def test_should_destroy_agenda_item
+  test 'should destroy agenda item' do
     assert_difference 'AgendaItem.count', -1 do
       @agenda_item.destroy
     end
   end
 
-  def test_should_not_return_agenda_item_children_for_menu
+  test 'should not return agenda item children for menu' do
     assert @meeting.node.children.accessible.shown_in_menu.empty?
   end
 
-  def test_content_title_should_return_description
+  test 'content title should return description' do
     assert_equal @agenda_item.description, @agenda_item.content_title
   end
 
-protected
+  protected
 
   def create_agenda_item(options = {})
-    AgendaItem.create({ :parent => nodes(:meetings_calendar_meeting_one_node), :agenda_item_category => @agenda_item_category, :description => 'Spannend!', :body => 'Geen grappen!' }.merge(options))
+    AgendaItem.create({
+      parent: nodes(:meetings_calendar_meeting_one_node),
+      agenda_item_category: @agenda_item_category,
+      description: 'Spannend!',
+      body: 'Geen grappen!'
+    }.merge(options))
   end
 end

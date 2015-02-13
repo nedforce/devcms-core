@@ -27,7 +27,7 @@ class AlphabeticIndexTest < ActiveSupport::TestCase
     assert_equal [pages(:yet_another_page)], alphabetic_indices(:subsection_alphabetic_index).items()
   end
 
-  def test_should_order_by_title_or_tag
+  test 'should order by title or tag' do
     # Page.create
     pages = alphabetic_indices(:root_alphabetic_index).items
     assert_equal pages.map { |p| p.title.upcase }, pages.map { |p| p.title.upcase }.sort
@@ -36,13 +36,16 @@ class AlphabeticIndexTest < ActiveSupport::TestCase
     sleep 1
 
     assert_equal page, alphabetic_indices(:root_alphabetic_index).items.last
-    page.update_attributes :title_alternative_list => 'A1ternative'
+    page.update_attributes title_alternative_list: 'A1ternative'
     assert_equal page, alphabetic_indices(:root_alphabetic_index).items.first
   end
 
   protected
 
   def create_alphabetic_index(options = {})
-    AlphabeticIndex.create({ :parent => nodes(:root_section_node), :title => 'Test index' }.merge(options))
+    AlphabeticIndex.create({
+      parent: nodes(:root_section_node),
+      title: 'Test index'
+    }.merge(options))
   end
 end

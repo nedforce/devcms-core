@@ -1,76 +1,72 @@
 require File.expand_path('../../test_helper.rb', __FILE__)
 
+# Unit tests for the +User+ model.
 class UserTest < ActiveSupport::TestCase
-
-  def test_should_create_user
+  test 'should create user' do
     assert_difference 'User.count' do
       user = create_user
       assert !user.new_record?, "#{user.errors.full_messages.to_sentence}"
     end
   end
 
-  def test_should_require_login
+  test 'should require login' do
     assert_no_difference 'User.count' do
-      u = create_user(:login => nil)
+      u = create_user(login: nil)
       assert u.errors[:login].any?
-    end
 
-    assert_no_difference 'User.count' do
-      u = create_user(:login => '   ')
+      u = create_user(login: '   ')
       assert u.errors[:login].any?
     end
   end
 
-  def test_should_require_password
+  test 'should require password' do
     assert_no_difference 'User.count' do
-      u = create_user(:password => nil)
+      u = create_user(password: nil)
       assert u.errors[:password].any?
-    end
 
-    assert_no_difference 'User.count' do
-      u = create_user(:password => '   ')
+      u = create_user(password: '   ')
       assert u.errors[:password].any?
     end
   end
 
-  def test_should_require_password_confirmation
+  test 'should require password confirmation' do
     assert_no_difference 'User.count' do
-      u = create_user(:password_confirmation => nil)
+      u = create_user(password_confirmation: nil)
       assert u.errors[:password_confirmation].any?
     end
   end
 
-  def test_should_require_email_address
+  test 'should require email address' do
     assert_no_difference 'User.count' do
-      u = create_user(:email_address => nil)
+      u = create_user(email_address: nil)
       assert u.errors[:email_address].any?
     end
   end
 
-  def test_should_require_valid_email_address
+  test 'should require valid email address' do
     assert_no_difference 'User.count' do
       ['email@test,org', 'email@domain', 'a@a@domain.com', 'bla.,@bla.com', '@bla.com', '@', 'bla@bla.,org', 'foo@localhost'].each do |address|
-        u = create_user(:email_address => address)
+        u = create_user(email_address: address)
         assert u.errors[:email_address].any?
       end
     end
   end
 
-  def test_should_require_valid_login
-    u = create_user(:login => 'A') # TOO SHORT
+  test 'should require valid login' do
+    u = create_user(login: 'A') # Too short
     assert u.errors[:login].any?
 
-    u = create_user(:login => 'A' * 256) # TOO LONG
+    u = create_user(login: 'A' * 256) # Too long
     assert u.errors[:login].any?
 
-    u = create_user(:login => 'no%crazy)stuff*allowed')
+    u = create_user(login: 'no%crazy)stuff*allowed')
     assert u.errors[:login].any?
 
-    u = create_user(:login => 'numbers_123_underscores_and-dashes-are-OK')
+    u = create_user(login: 'numbers_123_underscores_and-dashes-are-OK')
     assert !u.errors[:login].any?
   end
 
-  def test_should_not_update_login
+  test 'should not update login' do
     assert_raises ActiveRecord::ActiveRecordError do
       users(:sjoerd).update_attribute(:login, 'henk')
     end
@@ -78,39 +74,39 @@ class UserTest < ActiveSupport::TestCase
     assert_equal 'sjoerd', users(:sjoerd).reload.login
   end
 
-  def test_should_not_reset_password_if_entropy_is_too_low
-    users(:gerjan).update_attributes(:password => 'new password', :password_confirmation => 'new password')
+  test 'should not reset password if entropy is too low' do
+    users(:gerjan).update_attributes(password: 'new password', password_confirmation: 'new password')
     assert_nil User.authenticate('gerjan', 'new password')
   end
 
-  def test_should_reset_password
-    users(:gerjan).update_attributes(:password => 'new password 1234', :password_confirmation => 'new password 1234')
-    assert_equal users(:gerjan), User.authenticate('gerjan', 'new password 1234')
+  test 'should reset password' do
+    users(:gerjan).update_attributes(password: 'new password 123', password_confirmation: 'new password 123')
+    assert_equal users(:gerjan), User.authenticate('gerjan', 'new password 123')
   end
 
-  def test_should_not_rehash_password
-    users(:gerjan).update_attributes(:login => 'gerjan')
+  test 'should not rehash password' do
+    users(:gerjan).update_attributes(login: 'gerjan')
     assert_equal users(:gerjan), User.authenticate('gerjan', 'gerjan')
   end
 
-  def test_should_authenticate_user
+  test 'should authenticate user' do
     assert_equal users(:gerjan), User.authenticate('gerjan', 'gerjan')
   end
 
-  def test_should_set_remember_token
+  test 'should set remember token' do
     users(:gerjan).remember_me '127.0.0.1'
     assert_not_nil users(:gerjan).remember_token
     assert_not_nil users(:gerjan).remember_token_expires_at
   end
 
-  def test_should_unset_remember_token
+  test 'should unset remember token' do
     users(:gerjan).remember_me '127.0.0.1'
     assert_not_nil users(:gerjan).remember_token
     users(:gerjan).forget_me
     assert_nil users(:gerjan).remember_token
   end
 
-  def test_should_remember_me_for_one_week
+  test 'should remember me for one week' do
     before = 1.week.from_now.utc
     users(:gerjan).remember_me_for 1.week, '127.0.0.1'
     after = 1.week.from_now.utc
@@ -120,7 +116,7 @@ class UserTest < ActiveSupport::TestCase
     assert users(:gerjan).remember_token_expires_at.between?(before, after)
   end
 
-  def test_should_remember_me_until_one_week
+  test 'should remember me until one week' do
     time = 1.week.from_now.utc
     users(:gerjan).remember_me_until time, '127.0.0.1'
     assert_not_nil users(:gerjan).remember_token
@@ -128,7 +124,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal users(:gerjan).remember_token_expires_at, time
   end
 
-  def test_should_remember_me_default_two_weeks
+  test 'should remember me default two weeks' do
     before = 2.weeks.from_now.utc
     users(:gerjan).remember_me '127.0.0.1'
     after = 2.weeks.from_now.utc
@@ -137,36 +133,36 @@ class UserTest < ActiveSupport::TestCase
     assert users(:gerjan).remember_token_expires_at.between?(before, after)
   end
 
-  def test_should_have_role_on_root
+  test 'should have role on root' do
     assert !users(:final_editor).has_role_on?('admin')
     assert  users(:arthur).has_role_on?('admin')
     assert !users(:arthur).has_role_on?('editor')
   end
 
-  def test_should_have_role_on_nodes
+  test 'should have role on nodes' do
     assert  users(:editor).has_role_on?('editor', nodes(:devcms_news_node))
     assert !users(:editor).has_role_on?('editor', nodes(:contact_page_node))
     assert  users(:editor).has_role_on?('editor', nodes(:devcms_news_item_node))
     assert  users(:arthur).has_role_on?('admin',  nodes(:devcms_news_item_node))
   end
 
-  def test_should_have_role_with_multiple_roles_on_nodes
+  test 'should have role with multiple roles on nodes' do
     assert  users(:arthur).has_role_on?('final_editor', 'admin',  nodes(:economie_section_node))
     assert !users(:arthur).has_role_on?('final_editor', 'editor', nodes(:economie_section_node))
     assert  users(:editor).has_role_on?('final_editor', 'editor', nodes(:devcms_news_node))
     assert  users(:final_editor).has_role_on?('final_editor', 'editor', nodes(:economie_section_node))
-    assert !users(:final_editor).has_role_on?(['final_editor', 'editor', 'admin'], nodes(:devcms_news_node))
+    assert !users(:final_editor).has_role_on?(%w(final_editor editor admin), nodes(:devcms_news_node))
   end
 
-  def test_should_have_role_with_multiple_roles_on_root_node
+  test 'should have role with multiple roles on root node' do
     assert users(:arthur).has_role_on?('final_editor', 'admin')
-    assert !users(:final_editor).has_role_on?(['final_editor', 'editor'])
+    assert !users(:final_editor).has_role_on?(%w(final_editor editor))
   end
 
   test 'should have roles' do
     assert  users(:arthur).has_role?('admin', 'editor', 'final-editor')
     assert !users(:arthur).has_role?('editor', 'final-editor')
-    assert !users(:normal_user).has_role?(['admin', 'editor', 'final-editor'])
+    assert !users(:normal_user).has_role?(%w(admin editor final-editor))
   end
 
   test 'should have any role' do

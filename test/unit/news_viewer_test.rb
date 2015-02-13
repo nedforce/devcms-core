@@ -1,7 +1,8 @@
 require File.expand_path('../../test_helper.rb', __FILE__)
 
+# Unit tests for the +NewsViewer+ model.
 class NewsViewerTest < ActiveSupport::TestCase
-  def setup
+  setup do
     @news_viewer = create_news_viewer
   end
 
@@ -122,7 +123,7 @@ class NewsViewerTest < ActiveSupport::TestCase
     assert @news_viewer.news_items.include?(news_item)
   end
 
-private
+  private
 
   def create_news_viewer(options = {})
     NewsViewer.create({ :parent => nodes(:root_section_node), :publication_start_date => 1.day.ago, :title => 'General NewsViewer', :description => 'Gecombineerd nieuws' }.merge(options))

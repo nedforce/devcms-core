@@ -36,7 +36,6 @@ class Admin::LinksControllerTest < ActionController::TestCase
     get :new, :parent_node_id => nodes(:root_section_node).id, :type => 'external_link'
     assert_response :success
     assert assigns(:link)
-
   end
 
   def test_should_create_internal_link
@@ -108,7 +107,7 @@ class Admin::LinksControllerTest < ActionController::TestCase
     assert assigns(:link).errors[:linked_node].any?
   end
 
-protected
+  protected
 
   def create_internal_link(attributes = {})
     post :create, :parent_node_id => nodes(:root_section_node).id, :internal_link => { :title => 'new title', :description => 'Lorem ipsum' }.merge(attributes), :type => 'internal_link'

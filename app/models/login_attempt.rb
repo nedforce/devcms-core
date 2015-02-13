@@ -1,5 +1,4 @@
 class LoginAttempt < ActiveRecord::Base
-
   validates :ip, presence: true
 
   scope :by_created_at, lambda { order('created_at DESC') }
@@ -14,8 +13,6 @@ class LoginAttempt < ActiveRecord::Base
 
     if last_ten_attempts.map(&:success).count(false) == 10
       last_ten_attempts.first.created_at.tomorrow
-    else
-      nil
     end
   end
 

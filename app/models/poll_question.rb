@@ -26,10 +26,10 @@
 #
 class PollQuestion < ActiveRecord::Base
   # Adds content node functionality to poll questions.
-  acts_as_content_node({
+  acts_as_content_node(
     show_in_menu: false,
     copyable:     false
-  })
+  )
 
   # A +PollQuestion+ belongs to a +Poll+.
   has_parent :poll

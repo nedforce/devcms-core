@@ -3,7 +3,7 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 class NewsArchiveTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @devcms_news                        = news_archives(:devcms_news)
     @devcms_news_item_voor_deze_maand   = news_items(:devcms_news_item)
     @devcms_news_item_voor_vorige_maand = news_items(:devcms_news_item_voor_vorige_maand)
@@ -134,7 +134,7 @@ class NewsArchiveTest < ActiveSupport::TestCase
     assert_equal na.updated_at.to_i, na.last_updated_at.to_i
   end
 
-protected
+  protected
 
   def create_news_archive(options = {})
     NewsArchive.create({ :parent => nodes(:root_section_node), :title => 'Good news, everyone!', :description => "I'm sending you all on a highly controversial mission.", :publication_start_date => 2.days.ago }.merge(options))

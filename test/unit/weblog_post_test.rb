@@ -4,7 +4,7 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 class WeblogPostTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @henk_weblog          = weblogs(:henk_weblog)
     @henk_weblog_post_one = weblog_posts(:henk_weblog_post_one)
   end

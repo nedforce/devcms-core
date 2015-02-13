@@ -1,50 +1,46 @@
 require File.expand_path('../../test_helper.rb', __FILE__)
 
+# Unit tests for the +Poll+ model.
 class PollTest < ActiveSupport::TestCase
-
-  def setup
+  setup do
     @hc_poll = polls(:healthcare_poll)
   end
 
-  def test_should_create_poll
+  test 'should create poll' do
     assert_difference 'Poll.count', 1 do
-      poll = Poll.create(:parent => nodes(:root_section_node), :title => 'Economie poll')
+      poll = Poll.create(parent: nodes(:root_section_node), title: 'New poll')
       assert !poll.new_record?
     end
   end
 
-  def test_should_require_title
+  test 'should require title' do
     assert_no_difference 'Poll.count' do
-      poll = Poll.create(:parent => nodes(:root_section_node), :title => nil)
-      assert poll.new_record?
-      assert poll.errors[:title].any?
-    end
-
-    assert_no_difference 'Poll.count' do
-      poll = Poll.create(:parent => nodes(:root_section_node), :title => '  ')
-      assert poll.new_record?
-      assert poll.errors[:title].any?
+      [nil, '  '].each do |title|
+        poll = Poll.create(parent: nodes(:root_section_node), title: title)
+        assert poll.new_record?
+        assert poll.errors[:title].any?
+      end
     end
   end
 
-  def test_should_update_poll
+  test 'should update poll' do
     assert_no_difference 'Poll.count' do
       @hc_poll.title = 'New title'
       assert @hc_poll.save
     end
   end
 
-  def test_should_destroy_poll
+  test 'should destroy poll' do
     assert_difference 'Poll.count', -1 do
       @hc_poll.destroy
     end
   end
 
-  def test_should_return_active_question
+  test 'should return active question' do
     assert_equal poll_questions(:hc_question_1), @hc_poll.active_question
   end
 
-  def test_should_return_nil_without_active_question
+  test 'should return nil without active question' do
     @hc_poll.poll_questions.each { |pq| pq.update_attribute(:active, false) }
     assert_nil @hc_poll.active_question
   end

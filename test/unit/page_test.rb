@@ -1,56 +1,55 @@
 require File.expand_path('../../test_helper.rb', __FILE__)
 
+# Unit tests for the +Page+ model.
 class PageTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @root_node = nodes(:root_section_node)
     @about_page = pages(:about_page)
   end
 
-  def test_should_create_page
+  test 'should create page' do
     assert_difference 'Page.count' do
       create_page
     end
   end
 
-  def test_should_require_title
+  test 'should require title' do
     assert_no_difference 'Page.count' do
-      page = create_page(:title => nil)
+      page = create_page(title: nil)
       assert page.errors[:title].any?
-    end
 
-    assert_no_difference 'Page.count' do
-      page = create_page(:title => '  ')
+      page = create_page(title: '  ')
       assert page.errors[:title].any?
     end
   end
 
-  def test_should_require_body
+  test 'should require body' do
     assert_no_difference 'Page.count' do
-      page = create_page(:body => nil)
+      page = create_page(body: nil)
       assert page.errors[:body].any?
     end
   end
 
-  def test_should_not_require_unique_title
+  test 'should not require unique title' do
     assert_difference 'Page.count', 2 do
       2.times do
-        page = create_page(:title => 'Non-unique title')
+        page = create_page(title: 'Non-unique title')
         assert !page.errors[:title].any?
       end
     end
   end
 
-  def test_should_update_page
+  test 'should update page' do
     assert_no_difference 'Page.count' do
       @about_page.title = 'New title'
       @about_page.body = 'New body'
-      assert @about_page.save(:user => users(:arthur))
+      assert @about_page.save(user: users(:arthur))
     end
   end
 
-  def test_should_destroy_page
+  test 'should destroy page' do
     assert_difference 'Page.count', -1 do
       @about_page.destroy
     end
@@ -59,6 +58,10 @@ class PageTest < ActiveSupport::TestCase
   protected
 
   def create_page(options = {})
-    Page.create({ :parent => nodes(:root_section_node), :title => 'Page title', :body => 'Page body' }.merge(options))
+    Page.create({
+      parent: nodes(:root_section_node),
+      title: 'Page title',
+      body: 'Page body'
+    }.merge(options))
   end
 end

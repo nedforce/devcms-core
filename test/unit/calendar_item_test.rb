@@ -3,7 +3,7 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 class CalendarItemTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @events_calendar = calendars(:events_calendar)
     @events_calendar_item_one = events(:events_calendar_item_one)
     @calendar_item = @events_calendar_item_one
@@ -114,7 +114,7 @@ class CalendarItemTest < ActiveSupport::TestCase
     assert_equal Time.local(2011, 1, 2, 11), event.end_time
   end
 
-protected
+  protected
 
   def create_calendar_item(options = {})
     now = Time.zone.now

@@ -3,7 +3,7 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 class ForumThreadTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @bewoners_forum_topic_wonen = forum_topics(:bewoners_forum_topic_wonen)
     @bewoners_forum_thread_one  = forum_threads(:bewoners_forum_thread_one)
     @jan                        = users(:jan)
@@ -123,7 +123,7 @@ class ForumThreadTest < ActiveSupport::TestCase
     end
   end
 
-protected
+  protected
 
   def create_forum_thread(options = {})
     ForumThread.create({ :forum_topic => @bewoners_forum_topic_wonen, :user => @jan, :title => 'DevCMS forum threads, the best there are!' }.merge(options))

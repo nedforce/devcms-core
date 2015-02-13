@@ -3,35 +3,35 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 class MeetingTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @meetings_calendar             = calendars(:meetings_calendar)
     @meetings_calendar_meeting_one = events(:meetings_calendar_meeting_one)
     @meeting_category              = meeting_categories(:gemeenteraad_meetings)
     @meeting_category_two          = meeting_categories(:adviescommissie_meetings)
   end
 
-  def test_should_create_meeting
+  test 'should create meeting' do
     assert_difference 'Meeting.count' do
       meeting = create_meeting
       assert !meeting.new_record?, "#{meeting.errors.full_messages.to_sentence}"
     end
   end
 
-  def test_should_require_meeting_category
+  test 'should require meeting category' do
     assert_no_difference 'Meeting.count' do
       meeting = create_meeting(meeting_category: nil)
       assert meeting.errors[:meeting_category].any?
     end
   end
 
-  def test_should_update_meeting
+  test 'should update meeting' do
     assert_no_difference 'Meeting.count' do
       @meetings_calendar_meeting_one.title = 'New title'
       assert @meetings_calendar_meeting_one.save(user: users(:arthur))
     end
   end
 
-  def test_should_destroy_meeting
+  test 'should destroy meeting' do
     assert_difference 'Meeting.count', -1 do
       @meetings_calendar_meeting_one.destroy
     end

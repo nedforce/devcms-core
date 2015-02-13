@@ -4,45 +4,43 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 class WeblogTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @devcms_weblog_archive  = weblog_archives(:devcms_weblog_archive)
     @example_weblog_archive = weblog_archives(:example_weblog_archive)
     @henk_weblog            = weblogs(:henk_weblog)
   end
 
-  def test_should_create_weblog
+  test 'should create weblog' do
     assert_difference 'Weblog.count' do
       create_weblog
     end
   end
 
-  def test_should_require_title
+  test 'should require title' do
     assert_no_difference 'Weblog.count' do
       weblog = create_weblog(title: nil)
       assert weblog.errors[:title].any?
-    end
 
-    assert_no_difference 'Weblog.count' do
       weblog = create_weblog(title: '  ')
       assert weblog.errors[:title].any?
     end
   end
 
-  def test_should_require_parent
+  test 'should require parent' do
     assert_no_difference 'Weblog.count' do
       weblog = create_weblog(parent: nil)
       assert weblog.errors[:weblog_archive].any?
     end
   end
 
-  def test_should_require_user
+  test 'should require user' do
     assert_no_difference 'Weblog.count' do
       weblog = create_weblog(user: nil)
       assert weblog.errors[:user].any?
     end
   end
 
-  def test_should_update_weblog
+  test 'should update weblog' do
     assert_no_difference 'Weblog.count' do
       @henk_weblog.title = 'New title'
       @henk_weblog.description = 'New description'
@@ -50,21 +48,21 @@ class WeblogTest < ActiveSupport::TestCase
     end
   end
 
-  def test_should_destroy_weblog
+  test 'should destroy weblog' do
     assert_difference 'Weblog.count', -1 do
       @henk_weblog.destroy
     end
   end
 
-  def test_human_name_does_not_return_nil
+  test 'human name should not return nil' do
     assert_not_nil Weblog.human_name
   end
 
-  def test_should_not_return_weblog_children_for_menu
+  test 'should not return weblog children for menu' do
     assert @devcms_weblog_archive.node.children.shown_in_menu.empty?
   end
 
-  def test_is_owned_by_user?
+  test 'should return whether it is owned by a user' do
     users = User.all
 
     Weblog.all.each do |weblog|

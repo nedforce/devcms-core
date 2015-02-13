@@ -115,7 +115,7 @@ class SectionTest < ActiveSupport::TestCase
     assert_equal s.updated_at.to_i, s.last_updated_at.to_i
   end
 
-protected
+  protected
 
   def create_section(options = {})
     Section.create({ :parent => nodes(:root_section_node), :title => 'new section', :description => 'new description for section.' }.merge(options))

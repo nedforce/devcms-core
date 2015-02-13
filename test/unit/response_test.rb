@@ -1,9 +1,10 @@
 require File.expand_path('../../test_helper.rb', __FILE__)
 
+# Unit tests for the +Response+ model.
 class ResponseTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @help_form = contact_forms(:help_form)
   end
 

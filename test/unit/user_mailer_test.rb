@@ -20,7 +20,7 @@ class UserMailerTest < ActionMailer::TestCase
     user = users(:sjoerd)
     email = UserMailer.verification_email(user)
     body = email.parts.first.body
-    
+
     assert email.to.to_s =~ /#{user.email_address}/
     assert body =~ /#{user.verification_code}/
   end
@@ -29,7 +29,7 @@ class UserMailerTest < ActionMailer::TestCase
     user = users(:sjoerd)
     response = UserMailer.password_reset(user)
     body = response.parts.first.body
-        
+
     assert response.to.to_s =~ /#{user.email_address}/
     assert body =~ /e5e9fa1ba31ecd1ae84f75caaa474f3a663f05f4/
   end
@@ -39,10 +39,10 @@ class UserMailerTest < ActionMailer::TestCase
     node = nodes(:help_page_node)
     editor = users(:gerjan)
     reason = 'rejected'
-    
+
     response = UserMailer.rejection_notification(user, node, editor, reason)
     body = response.parts.first.body
-        
+
     assert response.reply_to.to_s =~ /#{user.email_address}/
     assert response.to.to_s =~ /#{editor.email_address}/
     assert body =~ /#{node.url_alias}/
@@ -54,10 +54,10 @@ class UserMailerTest < ActionMailer::TestCase
     node = nodes(:help_page_node)
     editor = users(:gerjan)
     comment = 'approved'
-    
+
     response = UserMailer.approval_notification(user, node, editor, comment)
     body = response.parts.first.body
-        
+
     assert response.reply_to.to_s =~ /#{user.email_address}/
     assert response.to.to_s =~ /#{editor.email_address}/
     assert body =~ /#{node.url_alias}/
@@ -66,14 +66,14 @@ class UserMailerTest < ActionMailer::TestCase
 
   def test_new_forum_post_notification
     thread = forum_threads(:bewoners_forum_thread_one)
-    post = ForumPost.create({ :forum_thread => thread, :user => users(:sjoerd), :body => "Enjoy!" })
+    post = ForumPost.create(forum_thread: thread, user: users(:sjoerd), body: 'Enjoy!')
 
     response = UserMailer.new_forum_post_notification(thread.user, post)
     body = response.parts.first.body
-        
+
     assert response.to.to_s =~ /#{thread.user.email_address}/
     assert body.include?(post.user.full_name)
-    assert body.include?("heeft de volgende reactie geplaatst in de discussie")
+    assert body.include?('heeft de volgende reactie geplaatst in de discussie')
     assert body.include?(post.body)
   end
 end

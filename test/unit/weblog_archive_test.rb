@@ -4,7 +4,7 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 class WeblogArchiveTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @devcms_weblog_archive = weblog_archives(:devcms_weblog_archive)
   end
 

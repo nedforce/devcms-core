@@ -1,7 +1,7 @@
 require File.expand_path('../../test_helper.rb', __FILE__)
 
+# Unit tests for the +PollQuestion+ model.
 class PollQuestionTest < ActiveSupport::TestCase
-
   def test_should_create_poll_question
     assert_difference 'PollQuestion.count', 1 do
       pq = create_poll_question
@@ -12,7 +12,7 @@ class PollQuestionTest < ActiveSupport::TestCase
   def test_should_create_poll_question_and_associated_poll_options
     assert_difference 'PollQuestion.count', 1 do
       assert_difference 'PollOption.count', 2 do
-        pq = create_poll_question :new_poll_option_attributes => [ { :text => 'Option 1' }, { :text => 'Option 2' } ]
+        pq = create_poll_question new_poll_option_attributes: [{ text: 'Option 1' }, { text: 'Option 2' }]
         assert !pq.new_record?
         assert_equal 2, pq.poll_options.count
       end
@@ -53,23 +53,23 @@ class PollQuestionTest < ActiveSupport::TestCase
 
   def test_should_not_allow_multiple_active_questions_for_single_poll_after_create
     2.times do |i|
-      create_poll_question :question => 'Vraag ' + (i + 1).to_s
+      create_poll_question question: 'Vraag ' + (i + 1).to_s
     end
-    assert_equal 1, polls(:economy_poll).poll_questions.count(:conditions => { :active => true })
+    assert_equal 1, polls(:economy_poll).poll_questions.where(active: true).count
   end
 
   def test_should_not_allow_multiple_active_questions_for_single_poll_after_update
-    poll_questions(:hc_question_1).send(:update_attributes, :active => true)
-    poll_questions(:hc_question_2).send(:update_attributes, :active => true)
-    assert_equal 1, polls(:healthcare_poll).poll_questions.count(:conditions => { :active => true })
+    poll_questions(:hc_question_1).send(:update_attributes, active: true)
+    poll_questions(:hc_question_2).send(:update_attributes, active: true)
+    assert_equal 1, polls(:healthcare_poll).poll_questions.where(active: true).count
   end
 
-  def test_should_allow_one_active_question_per_poll
-    poll_questions(:hc_question_1).send(:update_attributes, :active => true)
-    poll_questions(:eco_question_1).send(:update_attributes, :active => true)
-    poll_questions(:hc_question_2).send(:update_attributes, :active => true)
+  test 'should allow one active question per poll' do
+    poll_questions(:hc_question_1).send(:update_attributes, active: true)
+    poll_questions(:eco_question_1).send(:update_attributes, active: true)
+    poll_questions(:hc_question_2).send(:update_attributes, active: true)
 
-    assert_equal 2, PollQuestion.count(:conditions => { :active => true })
+    assert_equal 2, PollQuestion.where(active: true).count
   end
 
   def test_should_return_correct_content_title
@@ -94,7 +94,7 @@ class PollQuestionTest < ActiveSupport::TestCase
     pq = poll_questions(:hc_question_1)
 
     assert_difference('pq.poll_options.count', 2) do
-      pq.new_poll_option_attributes = [ { :text => 'Option 1' }, { :text => 'Option 2' } ]
+      pq.new_poll_option_attributes = [{ text: 'Option 1' }, { text: 'Option 2' }]
       assert pq.save
     end
   end
@@ -103,7 +103,7 @@ class PollQuestionTest < ActiveSupport::TestCase
     pq = poll_questions(:hc_question_1)
 
     assert_no_difference('pq.poll_options.count') do
-      pq.new_poll_option_attributes = [ { :text => 'Option 1' }, { :text => nil } ]
+      pq.new_poll_option_attributes = [{ text: 'Option 1' }, { text: nil }]
       assert !pq.save
     end
   end
@@ -123,7 +123,7 @@ class PollQuestionTest < ActiveSupport::TestCase
     existing_poll_option_attributes = {}
 
     poll_options.each do |poll_option|
-      existing_poll_option_attributes.update(poll_option.id.to_s => { :text => 'Updated text' })
+      existing_poll_option_attributes.update(poll_option.id.to_s => { text: 'Updated text' })
     end
 
     pq.existing_poll_option_attributes = existing_poll_option_attributes
@@ -143,7 +143,7 @@ class PollQuestionTest < ActiveSupport::TestCase
     poll_options.each do |poll_option|
       poll_option_id = poll_option.id.to_s
       old_poll_option_texts.update(poll_option_id => poll_option.text)
-      existing_poll_option_attributes.update(poll_option_id => { :text => nil })
+      existing_poll_option_attributes.update(poll_option_id => { text: nil })
     end
 
     pq.existing_poll_option_attributes = existing_poll_option_attributes
@@ -172,20 +172,20 @@ class PollQuestionTest < ActiveSupport::TestCase
     end
   end
 
-  def test_human_name_does_not_return_nil
-    assert_not_nil PollQuestion.human_name 
+  test 'human name should not return nil' do
+    assert_not_nil PollQuestion.human_name
   end
 
-  def test_should_not_return_poll_question_children_for_menu
+  test 'should not return poll question children for menu' do
     assert poll_questions(:hc_question_1).node.children.accessible.shown_in_menu.empty?
   end
 
-  def test_should_have_a_title
+  test 'should have a title' do
     assert_not_nil poll_questions(:hc_question_1).title
     assert_equal poll_questions(:hc_question_1).content_title, poll_questions(:hc_question_1).title
   end
 
-  def test_should_register_votes
+  test 'should register votes' do
     pq = poll_questions(:hc_question_1)
     poll_option = pq.poll_options.first
 
@@ -194,7 +194,7 @@ class PollQuestionTest < ActiveSupport::TestCase
     end
   end
 
-  def test_should_require_user_for_poll
+  test 'should require user for poll' do
     pq = poll_questions(:hc_question_1)
     pq.poll.update_attribute :requires_login, true
     assert pq.poll.reload.requires_login?
@@ -207,7 +207,7 @@ class PollQuestionTest < ActiveSupport::TestCase
     end
   end
 
-  def test_should_register_votes_for_user
+  test 'should register votes for user' do
     pq = poll_questions(:hc_question_1)
     pq.poll.update_attribute :requires_login, true
 
@@ -220,7 +220,7 @@ class PollQuestionTest < ActiveSupport::TestCase
     end
   end
 
-  def test_should_register_only_one_vote_per_user
+  test 'should register only one vote per user' do
     pq = poll_questions(:hc_question_1)
     pq.poll.update_attribute :requires_login, true
     poll_option = pq.poll_options.first
@@ -237,10 +237,14 @@ class PollQuestionTest < ActiveSupport::TestCase
     end
   end
 
-protected
+  protected
 
   def create_poll_question(options = {})
-    PollQuestion.create({ :parent => nodes(:economie_poll_node), :active => true, :question => 'Gaat u op vakantie?' }.merge(options))    
+    PollQuestion.create({
+      parent: nodes(:economie_poll_node),
+      active: true,
+      question: 'Gaat u op vakantie?'
+    }.merge(options))
   end
 
   def cast_loads_of_votes_for(pq)

@@ -1,10 +1,8 @@
 require File.expand_path('../../test_helper.rb', __FILE__)
 
-class LoginAttemptTest< ActiveSupport::TestCase
+# Unit tests for the +LoginAttempt+ model.
+class LoginAttemptTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
-
-  def setup
-  end
 
   test 'should create login attempt' do
     assert_difference 'LoginAttempt.count' do
@@ -77,7 +75,7 @@ class LoginAttemptTest< ActiveSupport::TestCase
     assert LoginAttempt.is_ip_blocked?('123.45.67.80')
   end
 
-  test 'should return if ip is not blocked only for login attempts from the last 24 hours' do
+  test 'should only consider failed login attempts from the last 24 hours' do
     10.times do
       create_login_attempt(success: false, created_at: 2.days.ago)
     end
@@ -87,6 +85,9 @@ class LoginAttemptTest< ActiveSupport::TestCase
   protected
 
   def create_login_attempt(options = {})
-    LoginAttempt.create({ ip: '123.45.67.80', user_login: users(:gerjan).login }.merge(options))
+    LoginAttempt.create({
+      ip: '123.45.67.80',
+      user_login: users(:gerjan).login
+    }.merge(options))
   end
 end

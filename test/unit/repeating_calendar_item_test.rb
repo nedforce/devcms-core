@@ -354,14 +354,14 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
 #       end
 #     end
 #   end
-# 
+#
 # protected
-# 
+#
 #   def create_calendar_item(options = {})
 #     now = Time.now
 #     CalendarItem.create({ :parent => @events_calendar.node, :repeating => false, :title => 'New event', :start_time => now, :end_time => now + 1.hour }.merge(options))
 #   end
-# 
+#
 #   def create_repeating_calendar_item(options = {})
 #     create_calendar_item({
 #       :repeating => true,
@@ -370,16 +370,16 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
 #       :repeat_end => 1.month.from_now.to_date
 #     }.merge(options))
 #   end
-# 
+#
 #   def count_number_of_created_calendar_items(start_date, end_date, span)
 #     amount = 0
 #     next_date = start_date
-# 
+#
 #     while (next_date <= end_date)
 #       amount += 1
 #       next_date += span
 #     end
-# 
+#
 #     amount
 #   end
 end

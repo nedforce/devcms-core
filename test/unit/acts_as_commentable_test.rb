@@ -3,7 +3,7 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 class ActsAsCommentableTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @arthur      = users(:arthur)
     @news_item   = news_items(:devcms_news_item).node
     @weblog_post = weblog_posts(:henk_weblog_post_one).node
@@ -26,7 +26,7 @@ class ActsAsCommentableTest < ActiveSupport::TestCase
     assert_equal 1, @event.comments.size
     assert_equal @event, comment.commentable
 
-    assert_equal 3, Comment.all(conditions: { user_id: @arthur.id }).size
+    assert_equal 3, Comment.where(user_id: @arthur.id).size
   end
 
   test 'should require user or user name' do

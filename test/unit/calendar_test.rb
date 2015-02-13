@@ -1,9 +1,10 @@
 require File.expand_path('../../test_helper.rb', __FILE__)
 
+# Unit tests for the +Calendar+ model.
 class CalendarTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @events_calendar = calendars(:events_calendar)
   end
 
@@ -114,7 +115,7 @@ class CalendarTest < ActiveSupport::TestCase
     assert_equal c.node.updated_at.to_i, c.last_updated_at.to_i
   end
 
-protected
+  protected
 
   def create_calendar(options = {})
     Calendar.create({ :parent => nodes(:root_section_node), :title => 'New calendar', :description => 'This is a new calendar.', :publication_start_date => 2.days.ago }.merge(options))

@@ -1,7 +1,6 @@
 require File.expand_path('../../test_helper.rb', __FILE__)
 
 class ResponsibleUsersTest < ActiveSupport::TestCase
-
   def test_should_set_responsible_user_to_current_user_for_editor
     ni = NewsItem.create(:user => users(:editor), :parent => nodes(:devcms_news_node), :title => 'Test bericht', :body => 'Test text')
     assert !ni.new_record?

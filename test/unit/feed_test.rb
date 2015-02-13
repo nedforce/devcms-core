@@ -1,78 +1,84 @@
 require File.expand_path('../../test_helper.rb', __FILE__)
 require 'fakeweb'
 
+# Unit tests for the +Feed+ model.
 class FeedTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
-    FakeWeb.register_uri(:get, 'http://office.nedforce.nl/correct.rss', :body => get_file_as_string('files/nedforce_feed.xml'))
-    FakeWeb.register_uri(:get, 'http://office.nedforce.nl/wrong.rss',   :body => 'this is a not a valid feed')
-    FakeWeb.register_uri(:get, 'http://office.nedforce.nl/empty.rss',   :body => nil)
+  setup do
+    FakeWeb.register_uri(:get, 'http://office.nedforce.nl/correct.rss', body: get_file_as_string('files/nedforce_feed.xml'))
+    FakeWeb.register_uri(:get, 'http://office.nedforce.nl/wrong.rss',   body: 'this is a not a valid feed')
+    FakeWeb.register_uri(:get, 'http://office.nedforce.nl/empty.rss',   body: nil)
 
     @feed = feeds(:nedforce_feed)
-    @feed.send(:save!) # Retrieves the XML content from the location specified by +url+
+
+    # Retrieves the XML content from the location specified by +url+.
+    @feed.send(:save!)
   end
 
-  def test_should_create_feed_and_get_xml
+  test 'should create feed and get xml' do
     assert_difference 'Feed.count' do
       feed = create_feed
       assert_not_nil feed.xml
     end
   end
 
-  def test_should_require_url
+  test 'should require url' do
     assert_no_difference 'Feed.count' do
-      feed = create_feed(:url => nil)
+      feed = create_feed(url: nil)
       assert feed.errors[:url].any?
     end
   end
 
-  def test_should_require_valid_feed
+  test 'should require valid feed' do
     assert_no_difference 'Feed.count' do
-      feed = create_feed(:url => 'http://office.nedforce.nl/wrong.rss')
+      feed = create_feed(url: 'http://office.nedforce.nl/wrong.rss')
       assert feed.errors[:url].any?
     end
   end
 
-  def test_should_only_update_with_valid_feed
-    @feed.send(:update_attributes, :url => 'http://office.nedforce.nl/empty.rss')
+  test 'should only update with valid feed' do
+    @feed.send(:update_attributes, url: 'http://office.nedforce.nl/empty.rss')
     current_feed = @feed.reload
     assert_equal feeds(:nedforce_feed).url, current_feed.url
     assert_not_nil current_feed.parsed_feed
   end
 
-  def test_should_not_update_xml_with_no_response
+  test 'should not update xml with no response' do
     @feed.url = 'http://diturlbestaatniet'
     @feed.update_feed
     assert_equal feeds(:nedforce_feed).xml, @feed.xml
   end
 
-  def test_should_not_create_with_no_response
-    feed = create_feed(:url => 'http://localhost')
+  test 'should not create with no response' do
+    feed = create_feed(url: 'http://localhost')
     assert feed.new_record?
   end
 
-  def test_should_get_parsed_feed
+  test 'should get parsed feed' do
     assert_not_nil @feed.parsed_feed
     assert_kind_of FeedNormalizer::Feed, @feed.parsed_feed
   end
 
-  def test_should_update_feed
+  test 'should update feed' do
     @feed.update_feed
     assert_not_equal @feed.updated_at, @feed.created_at
     assert @feed.parsed_feed
   end
 
-  def test_should_use_title_if_exists_and_xml_title_by_default
+  test 'should use title if exists and xml title by default' do
     feed = create_feed
     assert feed.title.present?
     feed.title = 'Test!!'
     assert_equal feed.title, 'Test!!'
   end
 
-protected
+  protected
 
   def create_feed(options = {})
-    Feed.create({ :parent => nodes(:root_section_node), :url => 'http://office.nedforce.nl/correct.rss' }.merge(options))
+    Feed.create({
+      parent: nodes(:root_section_node),
+      url: 'http://office.nedforce.nl/correct.rss'
+    }.merge(options))
   end
 end

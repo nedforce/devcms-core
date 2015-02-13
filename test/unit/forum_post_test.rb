@@ -3,19 +3,19 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 class ForumPostTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @bewoners_forum_thread_one = forum_threads(:bewoners_forum_thread_one)
     @bewoners_forum_post_one   = forum_posts(:bewoners_forum_post_one)
     @jan                       = users(:jan)
   end
 
-  def test_should_create_forum_post
+  test 'should create forum post' do
     assert_difference 'ForumPost.count' do
       create_forum_post
     end
   end
 
-  def test_should_not_destroy_start_post
+  test 'should not destroy start post' do
     assert_no_difference 'ForumPost.count' do
       assert !@bewoners_forum_post_one.destroy
     end
@@ -31,60 +31,60 @@ class ForumPostTest < ActiveSupport::TestCase
     end
   end
 
-  def test_user_takes_precedence_over_user_name
-    forum_post = create_forum_post(:user => @jan, :user_name => 'Blaat')
+  test 'user should take precedence over user name' do
+    forum_post = create_forum_post(user: @jan, user_name: 'Blaat')
     assert_equal @jan.login, forum_post.user_name
   end
 
-  def test_should_require_forum_thread
+  test 'should require forum thread' do
     assert_no_difference 'ForumPost.count' do
-      forum_post = create_forum_post(:forum_thread => nil)
+      forum_post = create_forum_post(forum_thread: nil)
       assert forum_post.errors[:forum_thread].any?
     end
   end
 
-  def test_should_require_body
+  test 'should require body' do
     assert_no_difference 'ForumPost.count' do
-      forum_post = create_forum_post(:body => nil)
+      forum_post = create_forum_post(body: nil)
       assert forum_post.errors[:body].any?
     end
 
     assert_no_difference 'ForumPost.count' do
-      forum_post = create_forum_post(:body => '  ')
+      forum_post = create_forum_post(body: '  ')
       assert forum_post.errors[:body].any?
     end
   end
 
-  def test_should_not_add_post_to_closed_thread
+  test 'should not add post to closed thread' do
     @bewoners_forum_thread_one.close
 
     assert_no_difference 'ForumPost.count' do
-      forum_post = create_forum_post()
+      forum_post = create_forum_post
       assert forum_post.errors[:base].any?
     end
 
     @bewoners_forum_thread_one.open
 
     assert_difference 'ForumPost.count', 1 do
-      forum_post = create_forum_post()
+      forum_post = create_forum_post
       assert forum_post.errors[:base].empty?
     end
   end
 
-  def test_should_update_forum_post
+  test 'should update forum post' do
     assert_no_difference 'ForumPost.count' do
       @bewoners_forum_post_one.body = 'New body'
       assert @bewoners_forum_post_one.save
     end
   end
 
-  def test_should_destroy_forum_post
+  test 'should destroy forum post' do
     assert_difference 'ForumPost.count', -1 do
       forum_posts(:bewoners_forum_post_seven).destroy
     end
   end
 
-  def test_is_owned_by_user?
+  test 'should return whether it is owned by user' do
     users = User.all
 
     ForumPost.all.each do |forum_post|
@@ -98,7 +98,7 @@ class ForumPostTest < ActiveSupport::TestCase
     end
   end
 
-  test 'is start post' do
+  test 'should return if it is a start post' do
     forum_threads = ForumThread.all
 
     forum_threads.each do |thread|
@@ -153,9 +153,13 @@ class ForumPostTest < ActiveSupport::TestCase
     assert !editable_forum_posts.include?(non_editable_forum_post)
   end
 
-protected
+  protected
 
   def create_forum_post(options = {})
-    ForumPost.create({ forum_thread: @bewoners_forum_thread_one, user: @jan, body: 'Enjoy!' }.merge(options))
+    ForumPost.create({
+      forum_thread: @bewoners_forum_thread_one,
+      user: @jan,
+      body: 'Enjoy!'
+    }.merge(options))
   end
 end
