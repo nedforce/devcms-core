@@ -228,7 +228,7 @@ protected
     if params['contrast'].present?
       cookies['high_contrast_mode'] = params.delete('contrast') == 'high'
     end
-    @high_contrast_mode = cookies['high_contrast_mode'].to_s
+    @high_contrast_mode = cookies['high_contrast_mode'].to_s == 'true'
   end
 
   def set_meta_description

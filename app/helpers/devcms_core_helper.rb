@@ -288,7 +288,7 @@ module DevcmsCoreHelper
   end
 
   def target_contrast_mode
-    @high_contrast_mode.to_s == 'true' ? :low : :high
+    @high_contrast_mode ? :low : :high
   end
 
   def switch_contrast_mode_link(show_text = false)
