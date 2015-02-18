@@ -226,7 +226,7 @@ protected
 
   def set_high_contrast_mode
     if params['contrast'].present?
-      cookies['high_contrast_mode'] = params['contrast'] == 'high'
+      cookies['high_contrast_mode'] = params.delete('contrast') == 'high'
     end
     @high_contrast_mode = cookies['high_contrast_mode']
   end
