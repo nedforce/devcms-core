@@ -14,7 +14,7 @@ I18n.locale['nl'] = {
 		private_failed: 'Sorry, privé maken mislukt.',
 		hidden_failed: 'Sorry, onzichtbaar maken mislukt.',
 		move_failed: 'Sorry, het verplaatsen is mislukt.',
-		show_in_menu_failed: 'Sorry, tonen in menu mislukt.',		
+		show_in_menu_failed: 'Sorry, tonen in menu mislukt.',
 		sort_ascending: 'Oplopend',
 		sort_descending: 'Aflopend',
 		sort_by_title: 'Op titel',
@@ -41,8 +41,7 @@ I18n.locale['nl'] = {
 	},
 	context_menu: {
 		assign_role: 'Rol toewijzen',
-    layout_settings: 'Layout & template instellingen',
-		has_own_feed: 'Heeft eigen feed',
+	 layout_settings: 'Layout & template instellingen',		has_own_feed: 'Heeft eigen feed',
 		make_copy: 'Maak kopie',
 		make_global: 'Maak globale frontpage',
 		'private': 'Privé',
@@ -51,7 +50,7 @@ I18n.locale['nl'] = {
 		sort_content: 'Inhoud sorteren',
 		url_alias: 'Webadres...',
 		export_subscribers: 'Exporteer abonnementen'
-	},	
+	},
 	errors: {
 		error_save_header: 'Sorry, opslaan mislukt:',
 		error_occurred: 'Sorry, er is een fout opgetreden.',
@@ -67,10 +66,19 @@ I18n.locale['nl'] = {
 		delete_content: 'Content verwijderen',
 		edit: 'Bewerken',
 		show: 'Bekijken',
-		loading: 'Bezig met verwerken...'						
+		loading: 'Bezig met verwerken...'
 	},
 	'NewsViewer': {
 		edit_items: 'Items bewerken'
+	},
+	'PermitArchive': {
+	  edit_items: 'Aanvullende teksten bewerken'
+	},
+	'Section': {
+		edit_items: 'Toptaken bewerken'
+	},
+	'Site': {
+		edit_items: 'Toptaken bewerken'
 	},
 	poll_options: {
 		answer_option: 'Antwoordoptie',
