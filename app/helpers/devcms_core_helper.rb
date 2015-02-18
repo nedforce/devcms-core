@@ -287,24 +287,27 @@ module DevcmsCoreHelper
     link_to(t('shared.skip_to_top'),    "\#top_of_#{id}", :id => "bottom_of_#{id}", :class => 'text-alternative')
   end
 
-  def switch_contrast_mode_link(show_text = false )
-    target_mode = @high_contrast_mode ? :low : :high
-    link_text = image_tag('icons/contrast-high-icon.png', class: 'icon', alt: '', title: t(target_mode, scope: [:shared, :contrast]))
+  def target_contrast_mode
+    @high_contrast_mode.to_s == 'true' ? :low : :high
+  end
+
+  def switch_contrast_mode_link(show_text = false)
+    link_text = image_tag('icons/contrast-high-icon.png', class: 'icon', alt: '', title: t(target_contrast_mode, scope: [:shared, :contrast]))
     if show_text
-      link_text += "#{t(target_mode, scope: [:shared, :contrast])}"
+      link_text += "#{t(target_contrast_mode, scope: [:shared, :contrast])}"
     end
-    link_to link_text, { contrast: target_mode }, rel: 'nofollow'
+    link_to link_text, params.merge(contrast: target_contrast_mode), rel: 'nofollow'
   end
 
   protected
 
-    def render_images
-      render(:partial => 'shared/images_bar', :locals => { :images => @image_content_nodes, :rel => @node.id }) unless @image_content_nodes.blank?
-    end
+  def render_images
+    render(partial: 'shared/images_bar', locals: { images: @image_content_nodes, rel: @node.id }) if @image_content_nodes.present?
+  end
 
-    def render_attachments
-      render(:partial => 'shared/attachments', :locals => { :container => @node.content, :attachments => @attachment_nodes, :rel => @node.id }) if @attachment_nodes.present? || (@node && @node.children.accessible.with_content_type(%w(AttachmentTheme)).count > 0)
-    end
+  def render_attachments
+    render(partial: 'shared/attachments', locals: { container: @node.content, attachments: @attachment_nodes, rel: @node.id }) if @attachment_nodes.present? || (@node && @node.children.accessible.with_content_type(%w(AttachmentTheme)).count > 0)
+  end
 
     # Override +error_messages_for+ to override default header message. For some reason the localization
     # plugin doesn't allow us to override it manually.
