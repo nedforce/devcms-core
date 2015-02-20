@@ -33,7 +33,7 @@ module Search::Modules::Ferret::FerretNodeExtension
     end
 
     def ancestry_to_index
-      "XX#{self.ancestry.gsub(/\//, 'X')}X"
+      "XX#{ancestry.to_s.gsub(/\//, 'X')}X"
     end
 
     def is_hidden_to_index
