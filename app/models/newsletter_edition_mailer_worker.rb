@@ -51,7 +51,7 @@ class NewsletterEditionMailerWorker
   # Build the queue for the given +newsletter_edition+.
   def build_queue_for(newsletter_edition)
     NewsletterEditionQueue.transaction do
-      subscribers = newsletter_edition.newsletter_archive.users
+      subscribers = newsletter_edition.newsletter_archive.users.uniq
       logger.info "#{newsletter_edition.id}: Queueing #{subscribers.size} subscriptions."
       subscribers.each do |subscriber|
         NewsletterEditionQueue.create(user: subscriber, newsletter_edition: newsletter_edition)
