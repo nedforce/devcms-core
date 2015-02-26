@@ -1,7 +1,7 @@
 <%= 
   raw(CSV.generate do |csv|
     @newsletters.each do |newsletter|
-      csv << [newsletter.title, newsletter.users.count]
+      csv << [newsletter.title, newsletter.users.uniq.count]
     end
   end)
 %>
