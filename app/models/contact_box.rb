@@ -53,4 +53,24 @@ class ContactBox < ActiveRecord::Base
                       :sunday_text,
                       minimum:     3,
                       allow_blank: true
+
+  def selected_more_addresses_url
+    if more_addresses_url.present?
+      more_addresses_url
+    elsif Settler[:contact_box_more_addresses_url].present?
+      Settler[:contact_box_more_addresses_url]
+    else
+      '/contact'
+    end
+  end
+
+  def selected_more_times_url
+    if more_times_url.present?
+      more_times_url
+    elsif Settler[:contact_box_more_times_url].present?
+      Settler[:contact_box_more_times_url]
+    else
+      selected_more_addresses_url
+    end
+  end
 end

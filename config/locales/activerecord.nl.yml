@@ -89,6 +89,8 @@ nl:
         default_text: Standaardinformatie
         friday_text: Informatie vr.
         monday_text: Informatie ma.
+        more_addresses_url: Meer adressen URL
+        more_times_url: Meer tijden URL
         saturday_text: Informatie za.
         show_more_addresses_link: Toon link naar meer adressen
         show_more_times_link: Toon link naar meer tijden

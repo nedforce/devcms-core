@@ -4,5 +4,7 @@
 - [:monday_text, :tuesday_text, :wednesday_text, :thursday_text, :friday_text, :saturday_text, :sunday_text].each do |field|
   = form.html_editor field, label: t(field, scope: :contact_boxes), skip_insert_video: true
 
-= form.check_box :show_more_addresses_link, label: t('contact_boxes.show_more_addresses_link')
-= form.check_box :show_more_times_link,     label: t('contact_boxes.show_more_times_link')
+= form.text_field :more_addresses_url,       label: t('contact_boxes.more_addresses_url')
+= form.check_box  :show_more_addresses_link, label: t('contact_boxes.show_more_addresses_link')
+= form.text_field :more_times_url,           label: t('contact_boxes.more_times_url')
+= form.check_box  :show_more_times_link,     label: t('contact_boxes.show_more_times_link')

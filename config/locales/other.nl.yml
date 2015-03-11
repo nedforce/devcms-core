@@ -331,7 +331,9 @@ nl:
     heading: Gemeente
     monday_text: Tekst ma.
     more_addresses: meer adressen
+    more_addresses_url: Meer adressen URL
     more_times: meer tijden
+    more_times_url: Meer tijden URL
     opening_hours: Openingstijden
     prefix: Publiekszaken bezoekadres Leeuwenbrug 85 is vandaag geopend van
     saturday_text: Tekst za.
