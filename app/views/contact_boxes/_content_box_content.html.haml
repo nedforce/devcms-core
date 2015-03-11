@@ -1,10 +1,10 @@
-- cache(:content_box_for => node.id, :last_updated_at => node.content.last_updated_at, :site => current_site.id, :day => Date.today.cwday) do
+- cache(content_box_for: node.id, last_updated_at: node.content.last_updated_at, site: current_site.id, day: Date.today.cwday) do
   - content = node.content
   - header_image = node.children.accessible.with_content_type('Image').include_content.first.try(:content)
   - if header_image.present?
-    = image_tag(content_node_path(header_image, :action => :sidebox,  :format => :jpg), :alt => header_image.alt.to_s, :class => 'banner')
+    = image_tag(content_node_path(header_image, action: :sidebox, format: :jpg), alt: header_image.alt.to_s, class: 'banner')
   - else
-    = image_tag 'contact_box_header.png', :alt => ''
+    = image_tag 'contact_box_header.png', alt: ''
 
   .contact_wrapper
     .contact_information
@@ -19,4 +19,4 @@
 
       .wrapper.clearfix
         = w text_for_today(content)
-        = link_to t('contact_boxes.more_times'), (Settler[:contact_box_more_times_url] || more_addresses_url), :class => 'read_more_link'
+        = link_to t('contact_boxes.more_times'), (Settler[:contact_box_more_times_url] || more_addresses_url), class: 'read_more_link'
