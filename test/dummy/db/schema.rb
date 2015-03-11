@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141215093321) do
+ActiveRecord::Schema.define(:version => 20150311130328) do
 
   create_table "abbreviations", :force => true do |t|
     t.string   "abbr",       :null => false
@@ -163,8 +163,8 @@ ActiveRecord::Schema.define(:version => 20141215093321) do
   add_index "comments", ["user_name"], :name => "index_comments_on_user_name"
 
   create_table "contact_boxes", :force => true do |t|
-    t.string   "title",               :null => false
-    t.text     "contact_information", :null => false
+    t.string   "title",                                      :null => false
+    t.text     "contact_information",                        :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "default_text"
@@ -176,6 +176,10 @@ ActiveRecord::Schema.define(:version => 20141215093321) do
     t.text     "saturday_text"
     t.text     "sunday_text"
     t.datetime "deleted_at"
+    t.boolean  "show_more_addresses_link", :default => true
+    t.boolean  "show_more_times_link",     :default => true
+    t.string   "more_addresses_url"
+    t.string   "more_times_url"
   end
 
   add_index "contact_boxes", ["deleted_at"], :name => "index_contact_boxes_on_deleted_at"
