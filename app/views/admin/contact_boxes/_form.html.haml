@@ -1,5 +1,8 @@
-= form.html_editor :contact_information, :label => t('contact_boxes.contact_information'), :skip_insert_video => true
-= form.html_editor :default_text,        :label => t('contact_boxes.default_text'),        :skip_insert_video => true
+= form.html_editor :contact_information, label: t('contact_boxes.contact_information'), skip_insert_video: true
+= form.html_editor :default_text,        label: t('contact_boxes.default_text'),        skip_insert_video: true
 
-- [ :monday_text, :tuesday_text, :wednesday_text, :thursday_text, :friday_text, :saturday_text, :sunday_text ].each do |field|
-  = form.html_editor field, :label => t(field, :scope => :contact_boxes), :skip_insert_video => true
+- [:monday_text, :tuesday_text, :wednesday_text, :thursday_text, :friday_text, :saturday_text, :sunday_text].each do |field|
+  = form.html_editor field, label: t(field, scope: :contact_boxes), skip_insert_video: true
+
+= form.check_box :show_more_addresses_link, label: t('contact_boxes.show_more_addresses_link')
+= form.check_box :show_more_times_link,     label: t('contact_boxes.show_more_times_link')

@@ -90,6 +90,8 @@ nl:
         friday_text: Informatie vr.
         monday_text: Informatie ma.
         saturday_text: Informatie za.
+        show_more_addresses_link: Toon link naar meer adressen
+        show_more_times_link: Toon link naar meer tijden
         sunday_text: Informatie zo.
         thursday_text: Informatie do.
         title: Titel

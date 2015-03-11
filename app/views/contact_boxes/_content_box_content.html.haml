@@ -11,12 +11,14 @@
       .wrapper.clearfix
         .text
           = w content.contact_information
-          - more_addresses_url = Settler[:contact_box_more_addresses_url] || '/contact'
-        = link_to t('contact_boxes.more_addresses'), more_addresses_url, :class => 'read_more_link'
+        - more_addresses_url = Settler[:contact_box_more_addresses_url] || '/contact'
+        - if content.show_more_addresses_link?
+          = link_to t('contact_boxes.more_addresses'), more_addresses_url, class: 'read_more_link'
 
     .opening_hours
       %h2= t 'contact_boxes.opening_hours'
 
       .wrapper.clearfix
         = w text_for_today(content)
-        = link_to t('contact_boxes.more_times'), (Settler[:contact_box_more_times_url] || more_addresses_url), class: 'read_more_link'
+        - if content.show_more_times_link?
+          = link_to t('contact_boxes.more_times'), (Settler[:contact_box_more_times_url] || more_addresses_url), class: 'read_more_link'
