@@ -51,8 +51,8 @@ class Image < FlexImage::Model
   # This content type needs approval when created or altered by an editor.
   needs_editor_approval
 
-  # Set image size to max 1024x1024 on creation.
-  pre_process_image :size => '1024x1024', :quality => 95
+  # Set image size to max 2048x2048 on creation.
+  pre_process_image :size => '2048x2048', :quality => 100
 
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of     :title, :data
