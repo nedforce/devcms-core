@@ -225,9 +225,11 @@ nl:
         title: Naam
       user:
         email_address: E-mailadres
+        first_name: Voorname
         login: Inlognaam
         password: Wachtwoord
         password_confirmation: Wachtwoordbevestiging
+        surname: Achternaam
       weblog:
         title: Titel
       weblog_post:
