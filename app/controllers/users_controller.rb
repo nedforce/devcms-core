@@ -1,26 +1,24 @@
-# This +RESTful+ controller is used to orchestrate and control the flow of 
+# This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +User+ objects.
-
 class UsersController < ApplicationController
+  skip_before_filter :find_node
 
-  skip_before_filter :find_node  
-    
-  # SSL encryption is required for these actions:
+  # SSL encryption is required for these actions.
   ssl_required :new, :create, :verification, :edit, :update, :confirm_destroy, :destroy
-  
+
   # SSL encryption is optional for the #show action.
   ssl_allowed :show
 
-  before_filter :verify_invitation_code, :only => [ :new, :create ]
-  
-  before_filter :find_user, :only => [ :send_verification_email, :verification ]
-  
-  # Only allow updates and views for the owner of a user record.
-  before_filter :login_required, :set_user, :only => [ :edit, :update, :show, :profile, :destroy, :confirm_destroy ]
-  before_filter :set_user,                  :only => [ :edit, :update, :show,           :destroy, :confirm_destroy ]
+  before_filter :verify_invitation_code, :only => [:new, :create]
 
-  before_filter :get_newsletters, :only => [ :new, :create, :show, :profile ]
-  before_filter :get_interests,   :only => [ :new, :create, :show, :profile ]
+  before_filter :find_user, :only => [:send_verification_email, :verification]
+
+  # Only allow updates and views for the owner of a user record.
+  before_filter :login_required, :set_user, :only => [:edit, :update, :show, :profile, :destroy, :confirm_destroy]
+  before_filter :set_user,                  :only => [:edit, :update, :show,           :destroy, :confirm_destroy]
+
+  before_filter :get_newsletters, :only => [:new, :create, :show, :profile]
+  before_filter :get_interests,   :only => [:new, :create, :show, :profile]
 
   # Shows the registration form.
   #
@@ -34,8 +32,8 @@ class UsersController < ApplicationController
     end
   end
 
-  # Registers a new user. Does not register a user if the "username" attribute
-  # was also set by the form to ward off any spambots.
+  # Registers a new user. Does not register a user if the +username+
+  # attribute was also set by the form, to ward off any spambots.
   #
   # * POST /users
   # * POST /users.xml
@@ -48,10 +46,10 @@ class UsersController < ApplicationController
       @user = User.new(params[:user])
 
       respond_to do |format|
-        # user.save will fail if the e-mail has already been used, but we because
-        # we do not want to leak this information. It still will show a success page.
-        # An e-mail notice will be send with the before_create statement in the user
-        # model.
+        # user.save fails if the e-mail address has already been used, but because
+        # we do not want to leak this information, it will still show a success page.
+        # An e-mail notice will be send with the before_create statement in the
+        # +User+ model.
         if @user.save || @user.valid?
           format.html do
             if Settler[:after_signup_path].present?
@@ -151,7 +149,7 @@ class UsersController < ApplicationController
   #
   # * GET /users/:login/verification?code=XXXXXX
   # * GET /users/:login/verification.xml?code=XXXXXX
-  # 
+  #
   # <b>parameters:</b>
   # * code - String. The user's verification code.
   def verification
@@ -171,7 +169,7 @@ class UsersController < ApplicationController
   end
 
   # Generates a new verification code and sends it to the user's email address.
-  # 
+  #
   # * GET /users/:id/send_verification_email
   def send_verification_email
     unless @user.verified?
@@ -187,7 +185,7 @@ class UsersController < ApplicationController
     end
   end
 
-protected
+  protected
 
   # Finds the requested user and saves it to the <tt>@user</tt> instance variable.
   def find_user
@@ -213,17 +211,17 @@ protected
 
   def set_page_title
     case action_name.to_s
-      when 'new', 'create'
-        @page_title = I18n.t('users.register')
-      when 'show', 'edit', 'profile'
-        @page_title = I18n.t('users.profile')
+    when 'new', 'create'
+      @page_title = I18n.t('users.register')
+    when 'show', 'edit', 'profile'
+      @page_title = I18n.t('users.profile')
     end
   end
 
   def verify_invitation_code
     @invitation_email = params[:invitation_email]
     @invitation_code  = params[:invitation_code]
-    
+
     unless User.verify_invitation_code(@invitation_email, @invitation_code) || (@invitation_code.blank? && @invitation_email.blank? && !Settler[:user_invite_only])
       flash[:warning] = I18n.t('users.invalid_invitation_code_or_invitation_email')
       redirect_to root_path
