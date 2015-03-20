@@ -225,7 +225,7 @@ nl:
         title: Naam
       user:
         email_address: E-mailadres
-        first_name: Voorname
+        first_name: Voornaam
         login: Inlognaam
         password: Wachtwoord
         password_confirmation: Wachtwoordbevestiging
