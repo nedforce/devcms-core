@@ -46,7 +46,7 @@ class DevCMSCore
 
   # Ensures all content types register themselves
   def self.register_content_types!
-    puts "\"Registering all content types, this might take a while..\""
+    # puts "\"Registering all content types, this might take a while..\""
 
     MODEL_FILES.each do |model_file|
       next if model_file == __FILE__
