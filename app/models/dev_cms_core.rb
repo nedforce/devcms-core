@@ -53,7 +53,7 @@ class DevCMSCore
 
       begin
         File.basename(model_file, '.*').camelize.constantize
-      rescue
+      rescue Exception
       end
     end
 
