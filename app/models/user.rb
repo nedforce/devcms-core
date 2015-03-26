@@ -165,7 +165,7 @@ class User < ActiveRecord::Base
     to_json_with_secrets(options.merge({ :except => SECRETS }))
   end
 
-  # Authenticates a user by their login and unencrypted password. Returns the user if successfully authenticated, elsen nil.
+  # Authenticates a user by their login and unencrypted password. Returns the user if successfully authenticated, else nil.
   def self.authenticate(login, password)
     user = first(:conditions => ['LOWER(login) = LOWER(?)', login.downcase]) if login
     if user && user.authenticated?(password)
