@@ -111,7 +111,7 @@ onBeforeExpand = function (e) {
 
 // Show the collapse button of every item
 if (newsItemCol.items) {
-  newsItemCol.items.each( function (item, index, len) {
+  newsItemCol.items.each(function (item, index, len) {
     item.on('beforeexpand', onBeforeExpand);
     item.showCollapse();
   });
