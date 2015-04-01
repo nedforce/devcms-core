@@ -10,7 +10,7 @@ class NewsletterSubscription < ActionMailer::Base
 
     implicit_parts_order ["text/html", "text/plain"]
     from         archive.from_email_address.blank? ? Settler[:mail_from_address] : archive.from_email_address
-    subject      "[#{archive.title}] #{edition.title}"
+    subject      edition.mail_subject
     recipients   user.email_address
     sent_on      Time.now
     body        :newsletter_edition => edition, :user => user, :host => host

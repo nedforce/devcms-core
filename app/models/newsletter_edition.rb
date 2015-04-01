@@ -91,6 +91,11 @@ class NewsletterEdition < ActiveRecord::Base
     "#{node.publication_start_date.year}/#{node.publication_start_date.month}/#{node.publication_start_date.day}/#{title}"
   end
 
+  # Returns the subject for the +NewsletterSubscription+ mails.
+  def mail_subject
+    "[#{newsletter_archive.title}] #{title}"
+  end
+
   protected
 
   def remove_associated_content
