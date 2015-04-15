@@ -1,5 +1,5 @@
-- content = node.content
-- if content.url.present?
-  = link_to(image_tag(content_node_path(content, :action => :sidebox,  :format => :jpg), :alt => content.alt.to_s), h(content.url), :title => "#{h content.description}", :class => 'clearfix')
-- else
-  = link_to_node(image_tag(content_node_path(content, :action => :sidebox,  :format => :jpg), :alt => content.alt.to_s) + content_tag('div', content.description.to_s, :class => 'hidden'), node, { :action => :full }, { :data => { :lightbox => "lightbox['sidebox']" }, :title => 'Vergroot deze afbeelding' })
+- present node.content do |content_presenter|
+  - if content_presenter.url?
+    = content_presenter.image
+  - else
+    = content_presenter.lightbox_image

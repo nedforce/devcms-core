@@ -18,7 +18,8 @@
           - url = (item.is_a?(Image) && item.url.present? && item.url) || content_node_url(item.node)
 
           - if item.image
-            = link_to image_tag(content_node_url(item.image, :action => :sidebox, :format => :jpg), :alt => item.image.alt, :title => item.image.description), url
+            - present item.image do |content_presenter|
+              = content_presenter.image(action: :sidebox)
 
           - if item.blank? || !item.item.is_a?(Image)
             = link_to (item.try(:item) || content).title, url, class: 'slider-item-title'
