@@ -48,7 +48,7 @@ module HtmlEditorHelper
           plugins: "heading,xhtmlxtras,inlinepopups",
           remove_linebreaks : true,
           remove_trailing_nbsp : true,
-          relative_urls : false,
+          relative_urls : true,
           remove_script_host : false,
           valid_elements : "strong,strong/b,em,em/i,p[lang|xml::lang],code,pre,tt,sub,sup,br,ul,ol,li,abbr[lang|xml::lang],acronym[lang|'xml:lang'],a[href|title],img[src|alt|width|height],blockquote,span[lang|xml::lang],h2,h3,abbr[title]",
           language : "#{I18n.locale}",
