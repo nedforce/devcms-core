@@ -1,2 +1,2 @@
 - @newsletter.users.uniq.each do |user|
-  = CSV.generate_line user.csv_row, col_sep: ';', row_sep: "\r\n"
+  = CSV.generate_line user.csv_row, col_sep: ';', row_sep: nil
