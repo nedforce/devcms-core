@@ -136,7 +136,7 @@ class UsersController < ApplicationController
   def destroy
     respond_to do |format|
       format.html do
-        if @user == User.authenticate(@user.login, params[:user][:password])
+        if params[:user].present? && @user == User.authenticate(@user.login, params[:user][:password])
           @user.destroy
           flash[:notice] = I18n.t('users.deleted')
           redirect_to root_path
