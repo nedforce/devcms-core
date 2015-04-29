@@ -366,11 +366,15 @@ class User < ActiveRecord::Base
     full_name.present? ? "#{full_name} (#{login})" : login
   end
 
+  def csv_row
+    [email_address, (first_name if first_name.present?), (surname if surname.present?), sex]
+  end
+
   def promote!
     update_column :type, 'PrivilegedUser'
   end
 
-protected
+  protected
 
   # Memoized reader for the role_assignments association
   def fetch_role_assignments
