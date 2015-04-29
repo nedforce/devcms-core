@@ -1,3 +1,6 @@
+$:.push File.expand_path('../lib', __FILE__)
+require 'devcms_core/version'
+
 # Provide a simple gemspec so you can easily use your
 # project in your rails apps through git.
 Gem::Specification.new do |s|
@@ -8,7 +11,7 @@ Gem::Specification.new do |s|
   s.homepage    = 'http://www.nedforce.nl'
   s.summary     = 'CMS engine for Rails 3.2'
   s.description = 'CMS engine for Rails 3.2'
-  s.version     = '0.0.1'
+  s.version     = DevcmsCore::VERSION
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
