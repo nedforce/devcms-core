@@ -9,12 +9,14 @@
 # * +title+ - The title of the news item.
 # * +preamble+ - The preamble of the news item.
 # * +body+ - The body of the news item.
+# * +meta_description+ - The meta description of the news item.
 #
 # Preconditions
 #
 # * Requires the presence of +title+.
 # * Requires the presence of +body+.
 # * Requires the presence of +news_archive+.
+# * Requires the length of +meta_description+ to be maximum 160 characters.
 #
 # Child/parent type constraints
 #
@@ -23,11 +25,11 @@
 #
 class NewsItem < ActiveRecord::Base
   # Adds content node functionality to news items.
-  acts_as_content_node({
+  acts_as_content_node(
     allowed_child_content_types: %w( Attachment AttachmentTheme Image ),
     show_in_menu:                false,
     copyable:                    false
-  })
+  )
 
   # This content type needs approval when created or altered by an editor.
   needs_editor_approval
@@ -46,9 +48,10 @@ class NewsItem < ActiveRecord::Base
   has_many :news_viewer_items, dependent: :destroy
 
   # See the preconditions overview for an explanation of these validations.
-  validates :title,        presence: true, length: { maximum: 255 }
-  validates :body,         presence: true
-  validates :news_archive, presence: true
+  validates :title,            presence: true, length: { maximum: 255 }
+  validates :body,             presence: true
+  validates :news_archive,     presence: true
+  validates :meta_description, length: { maximum: 160 }
 
   scope :newest, lambda { includes(:node).where(['nodes.publication_start_date >= ?', (Settler['news_viewer_time_period'] ? Settler['news_viewer_time_period'].to_i : 2).weeks.ago]) } 
 
@@ -74,7 +77,7 @@ class NewsItem < ActiveRecord::Base
     I18n.t('owms.news_item')
   end
 
-protected
+  protected
 
   def remove_associated_content
     self.newsletter_edition_items.destroy_all

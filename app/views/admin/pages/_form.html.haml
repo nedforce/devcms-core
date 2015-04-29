@@ -3,3 +3,6 @@
 
 = form.text_area   :preamble, label: t('pages.preamble'), rows: 5
 = form.html_editor :body,     label: t('pages.body')
+
+= field_set_tag 'Zoekmachine instellingen' do
+  = form.text_area :meta_description, label: t('shared.meta_description'), rows: 3
