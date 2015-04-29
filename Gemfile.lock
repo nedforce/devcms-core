@@ -10,7 +10,7 @@ GIT
 PATH
   remote: .
   specs:
-    devcms_core (0.0.2)
+    devcms_core (0.0.3)
       acts-as-taggable-on (~> 2.4.0)
       addressable (~> 2.1)
       airbrake
@@ -205,7 +205,7 @@ GEM
     rake (10.4.2)
     rdoc (3.12.2)
       json (~> 1.4)
-    rmagick (2.14.0)
+    rmagick (2.15.0)
     roo (1.10.3)
       nokogiri (>= 1.5.6)
       rubyzip (>= 0.9.9)
