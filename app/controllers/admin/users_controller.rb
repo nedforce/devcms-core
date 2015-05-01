@@ -22,22 +22,21 @@ class Admin::UsersController < Admin::AdminController
       # This may be resolved by transforming this controller into JSON or in
       # a version of Rails > 2.0.2.
       @sort_field = 'users.created_at' if @sort_field == 'created_at'
-      @users      = User.all(:include => [ :newsletter_archives, :interests ], :conditions => filter_conditions, :order => "#{@sort_field} #{@sort_direction}", :page => { :size => @page_limit, :current => @current_page })
+      @users      = User.all(:include => [:newsletter_archives, :interests], :conditions => filter_conditions, :order => "#{@sort_field} #{@sort_direction}", :page => { :size => @page_limit, :current => @current_page })
       @user_count = @users.size
     else
-      @users      = User.all(:include => [ :newsletter_archives, :interests ], :conditions => filter_conditions, :order => "login #{@sort_direction}")
+      @users      = User.all(:include => [:newsletter_archives, :interests], :conditions => filter_conditions, :order => "login #{@sort_direction}")
       @users      = @users.sort_by { |user| user.newsletter_archives.sort_by { |archive| archive.title.upcase }.map { |archive| archive.title }.join(', ') }
       @users      = @users.reverse if @sort_direction == 'DESC'
       @user_count = @users.size
       @users      = @users.values_at((@page_limit * (@current_page - 1))..(@page_limit * @current_page - 1)).compact
     end
-    #@user_count   = @users.size
 
     respond_to do |format|
       format.html
       format.xml { render :action => :index, :layout => false }
       format.json do
-        users = User.all(:select => 'users.login, users.id', :conditions => ["users.login LIKE ?", "#{params[:query]}%"] )
+        users = User.all(:select => 'users.login, users.id', :conditions => ['users.login LIKE ?', "#{params[:query]}%"])
         render :json => { :users => users }.to_json, :status => :ok
       end
       format.csv do
@@ -59,7 +58,7 @@ class Admin::UsersController < Admin::AdminController
       end
       format.json do
         node = Node.find(params[:node])
-        users = PrivilegedUser.all(:select => 'users.login, users.id', :include => :role_assignments, :conditions => ["users.login LIKE ? AND role_assignments.node_id IN (?) AND role_assignments.name in (?)", "#{params[:query]}%", node.path_ids, ['editor', 'final_editor']] )
+        users = PrivilegedUser.all(:select => 'users.login, users.id', :include => :role_assignments, :conditions => ["users.login LIKE ? AND role_assignments.node_id IN (?) AND role_assignments.name in (?)", "#{params[:query]}%", node.path_ids, ['editor', 'final_editor']])
         render :json => { :users => users }.to_json, :status => :ok
       end
     end
@@ -73,10 +72,10 @@ class Admin::UsersController < Admin::AdminController
 
     respond_to do |format|
       if @user.update_attributes(params[:user])
-        format.html {
+        format.html do
           flash[:notice] = I18n.t('users.user_update_succesful')
           redirect_to admin_users_path
-        }
+        end
         format.xml  { head :ok }
         format.json { render :json => { :success => 'true' } }
       else
