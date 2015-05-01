@@ -31,7 +31,7 @@ Ext.onReady(function () {
     dataIndex: 'login',
     width: 150
   },
-        <% if @privileged %>
+        <% if @active_page == :privileged_users %>
         {
           header: "<%= I18n.t('users.status') %>",
           sortable: false,
@@ -96,7 +96,11 @@ Ext.onReady(function () {
     // create the Data Store
     var store = new Ext.data.Store({
         // load using HTTP
-        url: '<%= @privileged ? admin_users_path(:format => :xml, :privileged => true) : admin_users_path(:format => :xml) %>',
+        proxy: new Ext.data.HttpProxy({
+          url: '<%= @active_page == :privileged_users ? privileged_admin_users_path(:format => :xml) : admin_users_path(:format => :xml) %>',
+          method: 'GET'
+        }),
+
         remoteSort: true,
 
         // the return will be XML, so lets set up a reader
@@ -167,7 +171,7 @@ Ext.onReady(function () {
                   handler: handleNewsletterExport,
                   iconCls: 'attachment_icon'
               }, {
-                  <% if @privileged %>
+                  <% if @active_page == :privileged_users %>
                     text: '<%= I18n.t("users.demote") %>',
                     tooltip: '<%= I18n.t("users.demote_tooltip") %>',
                     handler: handleDemote,
@@ -210,7 +214,7 @@ Ext.onReady(function () {
             animateTarget: editEvent.getEl(),
             modal: true,
             layout: 'fit',
-            height: <%= @privileged ? '435' : '375' %>,
+            height: <%= @active_page == :privileged_users ? '435' : '375' %>,
             width: 385,
             resizable: false,
             title: '<%= I18n.t("users.edit") %>',
@@ -287,7 +291,7 @@ Ext.onReady(function () {
                   cbFieldLabel: 'title',
                   cbFieldValue: 'id',
                   cbFieldChecked: 'checked'
-              }<% if @privileged %>,{
+              }<% if @active_page == :privileged_users %>,{
                 xtype: 'textfield',
                 fieldLabel: '<%= I18n.t("users.password") %>',
                 width: 250,

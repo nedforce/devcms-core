@@ -16,16 +16,19 @@ class Admin::UsersController < Admin::AdminController
   # * GET /admin/users.json
   def index
     @active_page ||= :users
+
+    user_model = @active_page == :privileged_users ? PrivilegedUser : User
+
     # Sort the polymorphic node relationship separately if necessary.
     if !@sort_by_newsletter_archives
       # Don't eager load newsletter_archives lest the XML builder will fail.
       # This may be resolved by transforming this controller into JSON or in
       # a version of Rails > 2.0.2.
       @sort_field = 'users.created_at' if @sort_field == 'created_at'
-      @users      = User.all(:include => [:newsletter_archives, :interests], :conditions => filter_conditions, :order => "#{@sort_field} #{@sort_direction}", :page => { :size => @page_limit, :current => @current_page })
+      @users      = user_model.all(:include => [:newsletter_archives, :interests], :conditions => filter_conditions, :order => "#{@sort_field} #{@sort_direction}", :page => { :size => @page_limit, :current => @current_page })
       @user_count = @users.size
     else
-      @users      = User.all(:include => [:newsletter_archives, :interests], :conditions => filter_conditions, :order => "login #{@sort_direction}")
+      @users      = user_model.all(:include => [:newsletter_archives, :interests], :conditions => filter_conditions, :order => "login #{@sort_direction}")
       @users      = @users.sort_by { |user| user.newsletter_archives.sort_by { |archive| archive.title.upcase }.map { |archive| archive.title }.join(', ') }
       @users      = @users.reverse if @sort_direction == 'DESC'
       @user_count = @users.size
@@ -36,12 +39,12 @@ class Admin::UsersController < Admin::AdminController
       format.html
       format.xml { render :action => :index, :layout => false }
       format.json do
-        users = User.all(:select => 'users.login, users.id', :conditions => ['users.login LIKE ?', "#{params[:query]}%"])
+        users = user_model.all(:select => 'users.login, users.id', :conditions => ['users.login LIKE ?', "#{params[:query]}%"])
         render :json => { :users => users }.to_json, :status => :ok
       end
       format.csv do
         require 'csv'
-        @users = User.all
+        @users = user_model.all
         render :action => :index, :layout => false
       end
     end
@@ -52,10 +55,9 @@ class Admin::UsersController < Admin::AdminController
     @active_page = :privileged_users
 
     respond_to do |format|
-      format.html do
-        @privileged = true
-        render :action => :index
-      end
+      format.html { render :action => :index }
+      format.xml  { index }
+      format.csv  { index }
       format.json do
         node = Node.find(params[:node])
         users = PrivilegedUser.all(:select => 'users.login, users.id', :include => :role_assignments, :conditions => ["users.login LIKE ? AND role_assignments.node_id IN (?) AND role_assignments.name in (?)", "#{params[:query]}%", node.path_ids, ['editor', 'final_editor']])
