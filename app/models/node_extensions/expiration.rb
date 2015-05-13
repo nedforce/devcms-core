@@ -65,11 +65,11 @@ module NodeExtensions::Expiration
   end
 
   def expiration_required?
-    !!content_type_configuration[:expiration_required] 
+    !!content_type_configuration[:expiration_required]
   end
 
   def expiration_container?
-    !!content_type_configuration[:expiration_container] 
+    !!content_type_configuration[:expiration_container]
   end
 
   def no_expiration_required?

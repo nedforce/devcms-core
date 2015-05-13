@@ -675,6 +675,12 @@ Ext.override(Ext.tree.TreeDropZone, {
         if (tn.isRoot) {
             return tn.allowChildren !== false ? "append" : false; // always append for root
         }
+
+        // Virtual nodes (used for year, month or week folders) are always appended
+        if (tn instanceof Ext.dvtr.AsyncVirtualTreeNode) {
+          return "append";
+        }
+
         var dragEl = n.ddel;
         var t = Ext.lib.Dom.getY(dragEl), b = t + dragEl.offsetHeight;
         var y = Ext.lib.Event.getPageY(e);

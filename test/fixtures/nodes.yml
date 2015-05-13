@@ -65,6 +65,17 @@ devcms_news_node:
   hidden: false
   private: false
 
+other_news_node:
+  content: other_news (NewsArchive)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 4
+  publishable: true
+  sub_content_type: NewsArchive
+  hidden: false
+  private: false
+
 devcms_news_item_node:
   content: devcms_news_item (NewsItem)
   ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_news_node) %>
@@ -149,7 +160,7 @@ healthcare_poll_node:
   sub_content_type: Poll
   hidden: false
   private: false
-  
+
 hc_question_1_node:
   content: hc_question_1 (PollQuestion)
   ancestry: <%= fixtures_to_ancestry(:root_section_node, :economie_section_node, :healthcare_poll_node) %>

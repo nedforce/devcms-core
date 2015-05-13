@@ -1,5 +1,5 @@
 module NodeExtensions::TreeDelegation
-  extend ActiveSupport::Concern   
+  extend ActiveSupport::Concern
 
   included do
     has_ancestry cache_depth: true
@@ -106,7 +106,7 @@ module NodeExtensions::TreeDelegation
     table_name = base_class.table_name
 
     base_class.scoped :conditions => [
-      "#{table_name}.#{base_class.primary_key} = :own_id OR #{table_name}.#{base_class.ancestry_column} = :child_ancestry", 
+      "#{table_name}.#{base_class.primary_key} = :own_id OR #{table_name}.#{base_class.ancestry_column} = :child_ancestry",
       {
         :own_id => self.send(base_class.primary_key),
         :child_ancestry => self.child_ancestry

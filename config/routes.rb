@@ -399,6 +399,7 @@ Rails.application.routes.draw do
         put :sort_children
         get :previous_diffed
         get :export_newsletter
+        put :move_by_date
       end
 
       resource :layout, only: [:edit, :update]

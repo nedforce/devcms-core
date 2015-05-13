@@ -186,6 +186,39 @@ class Admin::NodesController < Admin::AdminController
     end
   end
 
+  def move_by_date
+    begin
+      new_parent = Node.find( params[:parent_id] )
+      have_same_content_type = (new_parent.content.class == @node.content.class)
+      nodes_act_as_archive = [@node, new_parent].all? { |n| n.content.respond_to?(:acts_as_archive_items) }
+
+
+      if new_parent && have_same_content_type && nodes_act_as_archive
+        parse_date_parameters
+
+        content_to_move =
+          if @year
+            if @month
+              @node.content.find_all_items_for_month(@year, @month)
+            elsif params[:week]
+              @node.content.find_all_items_for_week(@year, params[:week].to_i)
+            else
+              @node.content.find_all_items_for_year(@year)
+            end
+          else
+            []
+          end
+
+        content_to_move.each { |content| content.node.move_to_child_of( new_parent ) }
+        render :text => I18n.t('nodes.succesfully_moved'), :status => :ok
+      else
+        render :text => I18n.t('nodes.different_content_nodes'), :status => :precondition_failed
+      end
+    rescue ActiveRecord::ActiveRecordError => e
+      render :text => e.message, :status => :unprocessable_entity
+    end
+  end
+
   # Used for approving content of a given node
   #
   # GET /admin/nodes/1/audit_show

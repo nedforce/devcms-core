@@ -5,7 +5,7 @@
 
 Ext.dvtr.AsyncVirtualTreeNode = function (config) {
   Ext.apply(config, {
-    allowDrag: false,
+    allowDrag: true,
     allowDrop: false,
     expandable: true
   });
@@ -15,7 +15,10 @@ Ext.dvtr.AsyncVirtualTreeNode = function (config) {
   this.super_node = config.extraParams.super_node;
   this.month = config.extraParams.month;
 
+
   Ext.dvtr.AsyncVirtualTreeNode.superclass.constructor.call(this, config);
+
+  this.on('move', this.onMove);
 
   this.constructMenu = function () {
     // Create and assign a new context menu
@@ -26,6 +29,7 @@ Ext.dvtr.AsyncVirtualTreeNode = function (config) {
 };
 
 // Extend the original TreeLoader class
+
 Ext.extend(Ext.dvtr.AsyncVirtualTreeNode, Ext.tree.AsyncTreeNode, {
   isEditable: function () {
     return false;
@@ -42,6 +46,35 @@ Ext.extend(Ext.dvtr.AsyncVirtualTreeNode, Ext.tree.AsyncTreeNode, {
     this.contextMenu.show();
   },
 
+  onMove: function (tree, node, oldParent, newParent, index) {
+    this.ui.addClass('x-tree-node-loading');
+
+    var url = '/admin/nodes/' + this.super_node + '/move_by_date';
+    urlParams = {year: this.year, _method: 'put', parent_id: newParent.id}
+    if (!Object.isUndefined(this.month)) { urlParams['month'] = this.month; }
+    if (!Object.isUndefined(this.week)) { urlParams['week'] = this.week; }
+
+    var oldArchiveNode;
+    if (this.month != undefined || this.week != undefined) {
+      oldArchiveNode = oldParent.parentNode
+    } else {
+      oldArchiveNode = oldParent
+    }
+    Ext.Ajax.request({
+      url: url,
+      method: 'POST', // overridden with delete by the _method parameter
+      params: Ext.ux.prepareParams(this.baseParams, urlParams ),
+      scope: this,
+      success: function () {
+        oldArchiveNode.reload();
+        newParent.reload();
+      },
+      failure: function (response, options) {
+        this.ui.removeClass('x-tree-node-loading');
+        Ext.ux.alertResponseError(response, I18n.t('move_failed', 'nodes'));
+      }
+    });
+  },
   onDelete: function () {
     this.ui.addClass('x-tree-node-loading');
     var url = '/admin/nodes/' + this.super_node + '/' + this.year;
@@ -66,6 +99,8 @@ Ext.extend(Ext.dvtr.AsyncVirtualTreeNode, Ext.tree.AsyncTreeNode, {
       }
     });
   }
+
+
 
   //,
   //checkChildren: function(tree, current_node, removed_node) {
