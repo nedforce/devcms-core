@@ -614,6 +614,16 @@ class Node < ActiveRecord::Base
     ActsAsTaggableOn::Tag.select('DISTINCT(name)').joins(:taggings).where(taggings: { context: :tags }).map(&:name)
   end
 
+  def footer_links
+    @footer_links ||= (own_or_inherited_layout_configuration['footer_links'] || parent_footer_links)
+  end
+
+  def parent_footer_links
+    if parent
+      parent.own_or_inherited_layout_configuration['footer_links'] ? parent.own_or_inherited_layout_configuration['footer_links'] : parent.parent_footer_links
+    end
+  end
+
   protected
 
   # Swap can only swap with siblings, so no validity check is needed.

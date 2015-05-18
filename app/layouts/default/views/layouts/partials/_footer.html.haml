@@ -2,5 +2,9 @@
   #footer.clearfix
     .meta_links
       = link_to_node I18n.t('layouts.home_link'), current_site
+      - if @node || current_site
+        - (@node.try(:footer_links) || current_site.footer_links || []).tap do |footer_links|
+          - footer_links.each do |index, link|
+            = link_to(link['text'], link['url'])
     .menu_links
       = create_footer_menu_links

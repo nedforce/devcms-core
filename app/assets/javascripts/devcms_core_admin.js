@@ -4,4 +4,3 @@
 //= require admin/prototype16
 //= require admin/auto_tags
 //= require effects
-
