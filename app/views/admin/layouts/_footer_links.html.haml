@@ -1,0 +1,29 @@
+%h3 Footer links
+
+%table#footer-links
+  %tr
+    %th Naam
+    %th URL
+  - if @node.layout_configuration['footer_links']
+    - @node.layout_configuration['footer_links'].each do |footer_index, footer_link|
+      %tr
+        %td= text_field_tag :footer_link_text, footer_link['text'], :name => "node[layout_configuration][footer_links][#{footer_index}][text]"
+        %td= text_field_tag :footer_link_url, footer_link['url'], :class => 'url', :name => "node[layout_configuration][footer_links][#{footer_index}][url]"
+
+  - footer_links_size = [(@node.layout_configuration['footer_links'] && @node.layout_configuration['footer_links'].size).to_i, 0].max
+  - (5 - footer_links_size).times do |footer_index|
+    %tr
+      %td= text_field_tag :footer_link_text, '', :name => "node[layout_configuration][footer_links][#{footer_links_size + footer_index}][text]"
+      %td= text_field_tag :footer_link_url, '', :class => 'url', :name => "node[layout_configuration][footer_links][#{footer_links_size + footer_index}][url]"
+  %tr.hidden#footer-link-template
+    %td= text_field_tag :footer_link_text, '', :name => "node[layout_configuration][footer_links][index][text]"
+    %td= text_field_tag :footer_link_url, '', :class => 'url', :name => "node[layout_configuration][footer_links][index][url]"
+
+= link_to 'Link toevoegen', '#', id: 'add-footer-link'
+
+:coffee
+  $('add-footer-link').observe 'click', (event) ->
+    event.stop()
+    linkIndex = $('footer-links').down('tbody').childElements().length - 2
+    htmlTemplate = $('footer-link-template').innerHTML.gsub('index', linkIndex)
+    $('footer-link-template').insert(before: htmlTemplate)
