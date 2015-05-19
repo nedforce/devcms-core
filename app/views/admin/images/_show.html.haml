@@ -19,3 +19,11 @@
 
     .cropper{ :id => "image_cropper_#{record.id}" }
       = render_cropper record
+
+    - if record.content_box_title.present?
+      .content_box.image_content_box
+        .content_box_wrapper{ :class => "#{record.content_box_colour || content_box_color || 'default'}" }
+          .content.hoverable
+            - present(record) do |presenter|
+              %h1 Banner
+              = presenter.image_tag

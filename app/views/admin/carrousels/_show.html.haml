@@ -9,4 +9,8 @@
 
       .regularPage
         %h3= link_to_content_node h(carrousel_item.title), carrousel_item.item, {}, :target => '_blank'
-        = render :partial => '/carrousels/carrousel_item', :object => carrousel_item
+
+        .content_box.image_content_box
+          .content_box_wrapper{ :class => "#{record.content_box_colour || content_box_color || 'default'}" }
+            .content.hoverable
+              = render :partial => '/carrousels/carrousel_item', :object => carrousel_item
