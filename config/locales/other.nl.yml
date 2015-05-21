@@ -483,8 +483,12 @@ nl:
     delivery_succeeded: Uw vraag is verzonden!
     delivery_failed: Uw vraag kon niet verzonden worden, probeer het later nog een keer.
     explanation: Toelichting
+    email: E-mail
     send: Vraag versturen
     header: Stel hier uw vraag over %{theme}
+    errors:
+      presence: "%{attribute} niet opgegeven"
+      email_invalid: "E-mailadres is ongeldig"
   feeds:
     add_to: RSS feed toevoegen aan
     edit: Bewerken van RSS feed
