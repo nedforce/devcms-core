@@ -18,7 +18,7 @@ carrouselForm.add({
   xtype: 'textfield',
   allowBlank: false,
   width: 400,
-  value: '<%= escape_javascript @carrousel.title -%>'
+  value: '<%= escape_javascript raw(@carrousel.title) -%>'
 });
 
 <%= render :partial => 'items_col' %>
@@ -35,7 +35,7 @@ carrouselForm.addButton({
     carrouselForm.getForm().getValues(),{
       commit_type: 'preview',
       format: 'html',
-      _method: 'put'      
+      _method: 'put'
     }
     );
 
@@ -65,7 +65,7 @@ carrouselForm.addButton({
     carrouselForm.getForm().getValues(),{
       commit_type: 'save',
       format: 'html',
-      _method: 'put'      
+      _method: 'put'
     }
     );
 

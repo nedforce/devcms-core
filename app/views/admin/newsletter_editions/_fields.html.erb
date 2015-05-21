@@ -5,7 +5,7 @@ newsletterEditionForm.add({
   xtype: 'textfield',
   allowBlank: false,
   width: 400,
-  value: '<%= escape_javascript @newsletter_edition.title -%>'
+  value: '<%= escape_javascript(raw(@newsletter_edition.title)) -%>'
 });
 
 newsletterEditionForm.add({

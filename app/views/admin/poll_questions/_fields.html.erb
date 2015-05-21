@@ -5,7 +5,7 @@ pollQuestionForm.add({
     xtype: 'textfield',
     allowBlank: false,
     width: 400,
-    value: '<%= escape_javascript(@poll_question.question) -%>'
+    value: '<%= escape_javascript(raw(@poll_question.question)) -%>'
 });
 
 pollQuestionForm.add({
