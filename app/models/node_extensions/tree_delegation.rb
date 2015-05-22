@@ -18,6 +18,11 @@ module NodeExtensions::TreeDelegation
     def in_list?
       !(ancestry_callbacks_disabled? || !super)
     end
+
+    def update_position(new_position) #:nodoc:
+      update_column(position_column, new_position)
+      #set_position new_position
+    end
   end
 
   module ClassMethods

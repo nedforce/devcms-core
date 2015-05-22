@@ -96,9 +96,12 @@ class NodeTest < ActiveSupport::TestCase
     puts "News archive 2 node id: #{news_archive_2.node.id} \n"
     puts "Child nodes 1: #{nodes.pluck(:id)}"
     puts "Child nodes 2: #{news_archive_2.node.children.pluck(:id)}"
+    puts "Positions news archive 1: #{ news_archive_1.node.children.reload.pluck(:position) }"
+    puts "Positions news archive 2: #{ news_archive_2.node.children.reload.pluck(:position) }"
+
 
     50.times do |i|
-      puts "Index #{i}"
+      puts "=========== Index #{i} ================"
       nodes.each do |n|
         puts "- Moving #{n.id} to #{news_archive_2.node.id} \n"
         n.move_to_child_of( news_archive_2.node )
@@ -107,6 +110,8 @@ class NodeTest < ActiveSupport::TestCase
         puts "== Positions news archive 2: #{ news_archive_2.node.children.reload.pluck(:position) }"
         puts "== The moved node now has position: #{n.reload.position}"
       end
+
+      puts "============================================================"
 
       nodes.each do |n|
         puts "- Moving #{n.id} to #{news_archive_1.node.id} \n"
