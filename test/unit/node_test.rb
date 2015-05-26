@@ -87,42 +87,6 @@ class NodeTest < ActiveSupport::TestCase
     assert_equal @about_page_node.reload.position + 1, n.position
   end
 
-  def test_batch_move_to_child
-    news_archive_1 = news_archives(:devcms_news) # has 3 children
-    news_archive_2 = news_archives(:other_news) # 0 children
-
-    nodes = news_archive_1.node.children
-    puts "News archive 1 node id: #{news_archive_1.node.id} \n"
-    puts "News archive 2 node id: #{news_archive_2.node.id} \n"
-    puts "Child nodes 1: #{nodes.pluck(:id)}"
-    puts "Child nodes 2: #{news_archive_2.node.children.pluck(:id)}"
-    puts "Positions news archive 1: #{ news_archive_1.node.children.reload.pluck(:position) }"
-    puts "Positions news archive 2: #{ news_archive_2.node.children.reload.pluck(:position) }"
-
-
-    50.times do |i|
-      puts "=========== Index #{i} ================"
-      nodes.each do |n|
-        puts "- Moving #{n.id} to #{news_archive_2.node.id} \n"
-        n.move_to_child_of( news_archive_2.node )
-
-        puts "== Positions news archive 1: #{ news_archive_1.node.children.reload.pluck(:position) }"
-        puts "== Positions news archive 2: #{ news_archive_2.node.children.reload.pluck(:position) }"
-        puts "== The moved node now has position: #{n.reload.position}"
-      end
-
-      puts "============================================================"
-
-      nodes.each do |n|
-        puts "- Moving #{n.id} to #{news_archive_1.node.id} \n"
-        n.move_to_child_of(news_archive_1.node)
-        puts "== Positions news archive 1: #{ news_archive_1.node.children.reload.pluck(:position) }"
-        puts "== Positions news archive 2: #{ news_archive_2.node.children.reload.pluck(:position) }"
-        puts "== The moved node now has position: #{n.reload.position}"
-      end
-    end
-  end
-
   def test_should_not_move_if_child_content_type_not_allowed
     n = NewsArchive.create(:parent => @root_node, :title => 'News Archive').node
 
