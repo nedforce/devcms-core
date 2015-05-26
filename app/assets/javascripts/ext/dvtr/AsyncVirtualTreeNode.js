@@ -63,7 +63,8 @@ Ext.extend(Ext.dvtr.AsyncVirtualTreeNode, Ext.tree.AsyncTreeNode, {
     Ext.Ajax.request({
       url: url,
       method: 'POST', // overridden with delete by the _method parameter
-      params: Ext.ux.prepareParams(this.baseParams, urlParams ),
+      params: Ext.ux.prepareParams(this.baseParams, Ext.apply(defaultParams, urlParams)),
+
       scope: this,
       success: function () {
         oldArchiveNode.reload();
