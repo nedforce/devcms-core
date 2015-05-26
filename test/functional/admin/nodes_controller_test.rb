@@ -149,4 +149,90 @@ class Admin::NodesControllerTest < ActionController::TestCase
     assert_template 'edit'
   end
 
+  def test_should_move_items_for_month
+    login_as :sjoerd
+    news_archive_1 = news_archives(:devcms_news)
+    news_archive_2 = news_archives(:other_news)
+
+    node_1, node_2, node_3 = news_archive_1.node.children
+    node_1.update_attributes(publication_start_date: Time.zone.parse('2015-1-1'))
+    node_2.update_attributes(publication_start_date: Time.zone.parse('2015-1-15'))
+    node_3.update_attributes(publication_start_date: Time.zone.parse('2015-2-1'))
+
+    # Move all news articles from January 2015 tp news_archive_2
+    put :move_by_date, :id => news_archive_1.node.id, parent_id: news_archive_2.node.id, year: 2015, month: 1
+    assert_response :success
+
+    news_archive_1.reload; news_archive_2.reload
+    assert_equal [node_3].to_set, news_archive_1.node.children.to_set
+    assert_equal [node_1, node_2].to_set, news_archive_2.node.children.to_set
+  end
+
+  def test_should_move_items_for_year
+    login_as :sjoerd
+    news_archive_1 = news_archives(:devcms_news)
+    news_archive_2 = news_archives(:other_news)
+
+    node_1, node_2, node_3 = news_archive_1.node.children
+    node_1.update_attributes(publication_start_date: Time.zone.parse('2014-12-31'))
+    node_2.update_attributes(publication_start_date: Time.zone.parse('2015-1-15'))
+    node_3.update_attributes(publication_start_date: Time.zone.parse('2015-2-1'))
+
+    # Move all news articles from January 2015 tp news_archive_2
+    put :move_by_date, :id => news_archive_1.node.id, parent_id: news_archive_2.node.id, year: 2015
+
+    assert_response :success
+    news_archive_1.reload; news_archive_2.reload
+    assert_equal [node_1].to_set, news_archive_1.node.children.to_set
+    assert_equal [node_2, node_3].to_set, news_archive_2.node.children.to_set
+  end
+
+  def test_should_move_items_for_week
+    login_as :sjoerd
+    news_archive_1 = news_archives(:devcms_news)
+    news_archive_2 = news_archives(:other_news)
+
+    node_1, node_2, node_3 = news_archive_1.node.children
+    # Week 21, 2015
+    node_1.update_attributes(publication_start_date: Time.zone.parse('2015-5-19'))
+    # Week 20, 2015
+    node_2.update_attributes(publication_start_date: Time.zone.parse('2015-5-12'))
+    node_3.update_attributes(publication_start_date: Time.zone.parse('2015-5-13'))
+
+    # Move all news articles from January 2015 tp news_archive_2
+    put :move_by_date, :id => news_archive_1.node.id, parent_id: news_archive_2.node.id, year: 2015, week: 20
+    assert_response :success
+
+    news_archive_1.reload; news_archive_2.reload
+    assert_equal [node_1].to_set, news_archive_1.node.children.to_set
+    assert_equal [node_2, node_3].to_set, news_archive_2.node.children.to_set
+  end
+
+  def test_should_not_move_different_content
+    login_as :sjoerd
+    news_archive_1 = news_archives(:devcms_news)
+    calendar = calendars(:events_calendar)
+
+    node_1, node_2, node_3 = news_archive_1.node.children
+    node_1.update_attributes(publication_start_date: Time.zone.parse('2015-1-1'))
+    node_2.update_attributes(publication_start_date: Time.zone.parse('2015-1-15'))
+    node_3.update_attributes(publication_start_date: Time.zone.parse('2015-2-1'))
+
+    assert_no_difference 'calendar.node.children.count' do
+      put :move_by_date, :id => news_archive_1.node.id, parent_id: calendar.node.id, year: 2015, month: 1
+    end
+    assert_response :precondition_failed
+  end
+
+  def test_should_not_move_non_archive_content
+    login_as :sjoerd
+    forum_1 = forums(:bedrijven_forum)
+    forum_2 = forums(:bewoners_forum)
+
+    assert_no_difference 'forum_2.node.children.count' do
+      put :move_by_date, :id => forum_2.node.id, parent_id: forum_1.node.id, year: 2015, month: 1
+    end
+    assert_response :precondition_failed
+  end
+
 end

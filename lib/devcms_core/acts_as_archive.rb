@@ -19,11 +19,22 @@ module DevcmsCore
       self.acts_as_archive_items.all(options)
     end
 
+    def find_all_items_for_year(year, args = {})
+      start_of_year = Time.zone.parse("#{year}-1-1").beginning_of_year
+      end_of_year = Time.zone.parse("#{year}-1-1").end_of_year
+      date_field_database_name = self.acts_as_archive_configuration[:date_field_database_name]
+
+      options = { :conditions => [ date_field_database_name + ' >= ? AND ' + date_field_database_name + ' < ?', start_of_year, end_of_year ], :order => "#{date_field_database_name} DESC" }
+      options.update(self.acts_as_archive_configuration[:sql_options]) if self.acts_as_archive_configuration[:sql_options]
+      options.update(args)
+      self.acts_as_archive_items.all(options)
+    end
+
     # Finds all items for the week determined by the given +year+, +week+ combination.
     # Extra parameters can be specified with +args+, these will be passed along to the internal +find+ call.
     def find_all_items_for_week(year, week, args = {})
       start_of_week = commercial_date(year,week,1).beginning_of_week
-      start_of_next_week = start_of_week.end_of_week + 1.day
+      start_of_next_week = start_of_week.end_of_week - 1.day
       date_field_database_name = self.acts_as_archive_configuration[:date_field_database_name]
       options = { :conditions => [ date_field_database_name + ' >= ? AND ' + date_field_database_name + ' < ?', start_of_week, start_of_next_week ], :order => "#{date_field_database_name} DESC" }
       options.update(self.acts_as_archive_configuration[:sql_options]) if self.acts_as_archive_configuration[:sql_options]

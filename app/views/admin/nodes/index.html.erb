@@ -52,7 +52,7 @@ Ext.onReady(function(){
           contextmenu: function(node, e) {
             var selectionModel = node.getOwnerTree().getSelectionModel();
             var selectedNodes = selectionModel.getSelectedNodes();
-            
+
             if (selectedNodes.size() > 1 && selectedNodes.indexOf(node) != -1) {
               new Ext.dvtr.MultipleTreeNodeContextMenu().show(node, selectedNodes);
             } else {
@@ -71,6 +71,28 @@ Ext.onReady(function(){
               targetNode = targetNode.parentNode;
             }
 
+            // Moving a virtual node, i.e. year/month/week folder
+            if (dropNode instanceof Ext.dvtr.AsyncVirtualTreeNode) {
+              // Can not drag year/month/week folder into another
+              if (targetNode instanceof Ext.dvtr.AsyncVirtualTreeNode) {
+                return false;
+              }
+              // Find the content node from ancestors
+              var sourceContentNode = dropNode.parentNode;
+              while(!(sourceContentNode instanceof Ext.dvtr.AsyncContentTreeNode)) {
+                sourceContentNode = sourceContentNode.parentNode
+              }
+              // Dropping allowed when the content types are the same
+              if (sourceContentNode.ownContentType == targetNode.ownContentType) {
+                e.cancel = false;
+                return true;
+              } else {
+                e.cancel = true;
+                return false;
+              }
+            }
+
+            // Moving 'other' nodes
             if (targetNode.allowedChildContentTypes.indexOf(dropNode.ownContentType) == -1) {
               e.cancel = true;
               return false;
@@ -110,4 +132,3 @@ Ext.onReady(function(){
 });
 //]]>
 </script>
-

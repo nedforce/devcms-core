@@ -1,3 +1,7 @@
 devcms_news:
   title: Government news
   description: Exciting news!
+
+other_news:
+  title: Other news
+  description: Boring news!
