@@ -151,7 +151,9 @@ module DevcmsCore
 
       def ip_violation(ip)
         if ip != request.remote_ip
-          Rails.logger.info "#{Time.zone.now} AUTHENTICATION IP MISMATCH: For user (#{User.find_by_id(session[:user_id]).try(:login)}). " +
+          mismatched_user = session[:user_id] ? User.find_by_id(session[:user_id]) : User.find_by_remember_token(cookies[:auth_token])
+
+          Rails.logger.info "#{Time.zone.now} AUTHENTICATION IP MISMATCH: For user (#{mismatched_user.try(:login)}). " +
             "IP should be (#{ip}), IP was (#{request.remote_ip})"
           true
         else
