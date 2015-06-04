@@ -30,6 +30,7 @@ require 'jquery-ui-sass-rails'
 require 'devcms_core/prototype_legacy_helper'
 require 'tidy_ffi'
 require 'truncate_html'
+require 'secure_headers'
 require 'airbrake'
 
 # Libs

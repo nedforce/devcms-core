@@ -5,6 +5,10 @@ class ApplicationController < ActionController::Base
   include DevcmsCore::AuthenticatedSystem
   include DevcmsCore::RoleRequirementSystem
   include ::SslRequirement
+  include ::SecureHeaders
+
+  # Set the X-Frame-Options header (part of the secure_headers gem).
+  before_filter :set_x_frame_options_header
 
   protect_from_forgery
   skip_before_filter [:verify_authenticity_token, :check_authorization], :only => [:handle_500, :handle_404]

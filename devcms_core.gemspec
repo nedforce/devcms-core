@@ -43,6 +43,7 @@ Gem::Specification.new do |s|
   s.add_dependency  'bartt-ssl_requirement', '~>1.4.0'
   s.add_dependency  'rack-rewrite', '~> 1.2.1'
   s.add_dependency  'truncate_html', '~> 0.5.5'
+  s.add_dependency  'secure_headers'
   s.add_dependency  'data_checker'
   s.add_dependency  'airbrake'
 
