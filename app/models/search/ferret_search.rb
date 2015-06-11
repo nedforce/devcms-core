@@ -3,7 +3,7 @@ class Search::FerretSearch
     search_tokens = []
     query.split.each do |token|
       # Default to fuzzy search unless an operator or wildcard were specified.
-      unless token =~ /^(AND|NOT|OR|[\?\*~"])$/i
+      unless token =~ /\A(AND|NOT|OR|[\?\*~"])\z/i
         search_tokens << create_search_string(token)
       else
         # Search operators must be in uppercase or they won't work properly.
