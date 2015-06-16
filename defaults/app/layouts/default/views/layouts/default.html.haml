@@ -1,14 +1,14 @@
 -# Set content for header first, fixes yields in partial
 - content_for :header, render(:partial => '/layouts/partials/header')
 !!! Strict
-%html{:lang => "nl", "xml:lang" => "nl", :xmlns => "http://www.w3.org/1999/xhtml"}
+%html{ :lang => 'nl', 'xml:lang' => 'nl', :xmlns => 'http://www.w3.org/1999/xhtml' }
   %head
-    %meta{ :content => "text/html;charset=utf-8", "http-equiv" => "Content-Type" }/
-    %meta{ :content => "nl_nl", :name => "language" }/
+    %meta{ :content => 'text/html;charset=utf-8', 'http-equiv' => 'Content-Type' }/
+    %meta{ :content => 'nl_nl', :name => 'language' }/
     - if DevCMS.search_configuration[:enabled_search_engines].include?('luminis') && @node
       = generate_metadata_for(@node)
     %title= h [Settler[:site_name], @page_title].compact.join(' | ')
-    %link{ :href => "http://#{Settler[:host]}/favicon.ico", :rel => "SHORTCUT ICON", :type => "image/vnd.microsoft.icon" }/
+    %link{ :href => "http://#{Settler[:host]}/favicon.ico", :rel => 'shortcut icon', :type => 'image/vnd.microsoft.icon' }/
     = stylesheet_link_merged :base
     = stylesheet_link_tag(@layout_configuration['template_color'] || 'default')
     = yield :css
@@ -19,7 +19,7 @@
     = javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};"
     = yield :javascript
     - if @rss_feed_url.present?
-      %link{ :href => @rss_feed_url, :rel => "alternate", :type => "application/atom+xml" }/
+      %link{ :href => @rss_feed_url, :rel => 'alternate', :type => 'application/atom+xml' }/
     = yield :atom_feed
     = javascript_tag("document.observe('dom:loaded', function () { lightbox = new Lightbox({}); });")
     = render :partial => '/shared/google_analytics'
