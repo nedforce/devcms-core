@@ -9,7 +9,7 @@
     - if @node
       = generate_metadata_for(@node)
     %title= h [@page_title, Settler[:site_name]].compact.join(' | ')
-    %link{ :href => "http://#{Settler[:host]}/favicon.ico", :rel => "SHORTCUT ICON", :type => "image/vnd.microsoft.icon" }/
+    %link{ href: "//#{Settler[:host]}/favicon.ico", rel: 'shortcut icon', type: 'image/vnd.microsoft.icon' }/
 
     = stylesheet_link_tag :application
     = stylesheet_link_tag(layout_configuration['template_color'] || 'default')
