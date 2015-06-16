@@ -232,10 +232,10 @@ module DevcmsCoreHelper
 
   def image_url(source)
     abs_path = compute_public_path(source, 'images')
-    unless abs_path =~ /^http/
+    unless abs_path =~ /\Ahttp/
       abs_path = "#{request.protocol}#{request.host_with_port}#{abs_path}"
     end
-   abs_path
+    abs_path
   end
 
   def social_media_buttons(page)
