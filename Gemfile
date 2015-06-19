@@ -7,8 +7,7 @@ gem 'coffee-rails', '~> 3.2.1'
 gem 'uglifier'
 
 group :development do
-  gem 'byebug',   platform: 'mri_21'
-  gem 'debugger', platform: 'mri_19'
+  gem 'byebug'
 end
 
 gem 'data_checker', :git => 'git@git.nedforce.nl:data_checker.git', :branch => 'master'

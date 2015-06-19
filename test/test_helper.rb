@@ -4,12 +4,7 @@ require File.expand_path('../dummy/config/environment.rb', __FILE__)
 require 'rails/test_help'
 require 'mocha/setup'
 require 'html_test'
-if RUBY_VERSION =~ /^2\.\d{1}\.\d{1}$/
-  require 'byebug'
-else
-  require 'debugger'
-  Debugger.settings[:autoeval] = true
-end
+require 'byebug'
 
 Rails.backtrace_cleaner.remove_silencers!
 
