@@ -4,7 +4,11 @@
 # Note that not all methods are called in the application controller.
 ::SecureHeaders::Configuration.configure do |config|
   config.hsts = {:max_age => 20.years.to_i, :include_subdomains => true}
-  config.x_frame_options = 'DENY'
+
+  # Cannot use 'DENY', because the upload functionality in the back-end
+  # uses iframes.
+  config.x_frame_options = 'SAMEORIGIN'
+
   config.x_content_type_options = "nosniff"
   config.x_xss_protection = {:value => 1, :mode => 'block'}
   config.x_download_options = 'noopen'
