@@ -8,7 +8,6 @@ module DevcmsCore
         !!current_user
       end
 
-      # Accesses the current user from the session.
       # Future calls avoid the database because nil is not equal to false.
       def current_user
         @current_user ||= User.find_by_auth_token(auth_cookies[DevcmsCore.config.auth_token_cookie]) if auth_cookies[DevcmsCore.config.auth_token_cookie]
