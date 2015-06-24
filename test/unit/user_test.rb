@@ -93,46 +93,6 @@ class UserTest < ActiveSupport::TestCase
     assert_equal users(:gerjan), User.authenticate('gerjan', 'gerjan')
   end
 
-  test 'should set remember token' do
-    users(:gerjan).remember_me '127.0.0.1'
-    assert_not_nil users(:gerjan).remember_token
-    assert_not_nil users(:gerjan).remember_token_expires_at
-  end
-
-  test 'should unset remember token' do
-    users(:gerjan).remember_me '127.0.0.1'
-    assert_not_nil users(:gerjan).remember_token
-    users(:gerjan).forget_me
-    assert_nil users(:gerjan).remember_token
-  end
-
-  test 'should remember me for one week' do
-    before = 1.week.from_now.utc
-    users(:gerjan).remember_me_for 1.week, '127.0.0.1'
-    after = 1.week.from_now.utc
-    assert_not_nil users(:gerjan).remember_token
-    assert_not_nil users(:gerjan).remember_token_expires_at
-    assert users(:gerjan).remember_token?
-    assert users(:gerjan).remember_token_expires_at.between?(before, after)
-  end
-
-  test 'should remember me until one week' do
-    time = 1.week.from_now.utc
-    users(:gerjan).remember_me_until time, '127.0.0.1'
-    assert_not_nil users(:gerjan).remember_token
-    assert_not_nil users(:gerjan).remember_token_expires_at
-    assert_equal users(:gerjan).remember_token_expires_at, time
-  end
-
-  test 'should remember me default two weeks' do
-    before = 2.weeks.from_now.utc
-    users(:gerjan).remember_me '127.0.0.1'
-    after = 2.weeks.from_now.utc
-    assert_not_nil users(:gerjan).remember_token
-    assert_not_nil users(:gerjan).remember_token_expires_at
-    assert users(:gerjan).remember_token_expires_at.between?(before, after)
-  end
-
   test 'should have role on root' do
     assert !users(:final_editor).has_role_on?('admin')
     assert  users(:arthur).has_role_on?('admin')

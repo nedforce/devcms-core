@@ -11,13 +11,7 @@ module DevcmsCore
       # Accesses the current user from the session.
       # Future calls avoid the database because nil is not equal to false.
       def current_user
-        @current_user ||= (login_from_session || login_from_basic_auth || login_from_cookie) unless @current_user == false
-      end
-
-      # Store the given user id in the session.
-      def current_user=(new_user)
-        session[:user_id] = new_user ? new_user.id : nil
-        @current_user = new_user || false
+        @current_user ||= User.find_by_auth_token(auth_cookies[DevcmsCore.config.auth_token_cookie]) if auth_cookies[DevcmsCore.config.auth_token_cookie]
       end
 
       # Check if the user is authorized
@@ -30,7 +24,7 @@ module DevcmsCore
       #
       #  # only allow nonbobs
       #  def authorized?
-      #    current_user.login != "bob"
+      #    current_user.login != 'bob'
       #  end
       def authorized?
         logged_in?
@@ -44,7 +38,7 @@ module DevcmsCore
       #
       # To require logins for specific actions, use this in your controllers:
       #
-      #   before_filter :login_required, :only => [ :edit, :update ]
+      #   before_filter :login_required, only: [:edit, :update]
       #
       # To skip this in a subclassed controller:
       #
@@ -70,14 +64,14 @@ module DevcmsCore
             redirect_to new_session_path
           end
           format.js do
-            store_location
+            #store_location
             render :update do |page|
               page.redirect_to login_path
             end
           end
-          format.any do
-            request_http_basic_authentication 'Web Password'
-          end
+          #format.any do
+          #  request_http_basic_authentication 'Web Password'
+          #end
         end
       end
 
@@ -85,7 +79,7 @@ module DevcmsCore
       #
       # We can return to this location by calling #redirect_back_or_default.
       def store_location
-        session[:return_to] = fullpath
+        session[:return_to] = fullpath if !request.xhr? && request.method == 'GET'
       end
 
       # First attempts to redirect to the location set by <tt>params[:return_to]</tt> then to 
@@ -125,33 +119,9 @@ module DevcmsCore
         base.send :helper_method, :current_user, :logged_in?
       end
 
-      # Called from #current_user.  First attempt to login by the user id stored in the session.
-      def login_from_session
-        session[:ip] = request.remote_ip if session[:ip].blank?
-        return nil if ip_violation(session[:ip])
-        self.current_user = User.find_by_id(session[:user_id]) if session[:user_id]
-      end
-
-      # Called from #current_user.  Now, attempt to login by basic authentication information.
-      def login_from_basic_auth
-        authenticate_with_http_basic do |username, password|
-          self.current_user = User.authenticate(username, password)
-        end
-      end
-
-      # Called from #current_user.  Finally, attempt to login by an expiring token in the cookie.
-      def login_from_cookie
-        user = cookies[:auth_token] && User.find_by_remember_token(cookies[:auth_token])
-        if user && user.remember_token?
-          return nil if ip_violation(user.remember_token_ip)
-          cookies[:auth_token] = { :value => user.remember_token, :expires => user.remember_token_expires_at }
-          self.current_user = user
-        end
-      end
-
       def ip_violation(ip)
         if ip != request.remote_ip
-          mismatched_user = session[:user_id] ? User.find_by_id(session[:user_id]) : User.find_by_remember_token(cookies[:auth_token])
+          mismatched_user = User.find_by_auth_token(cookies[:auth_token])
 
           Rails.logger.info "#{Time.zone.now} AUTHENTICATION IP MISMATCH: For user (#{mismatched_user.try(:login)}). " +
             "IP should be (#{ip}), IP was (#{request.remote_ip})"
@@ -159,6 +129,20 @@ module DevcmsCore
         else
           false
         end
+      end
+
+      def auth_cookies
+        DevcmsCore.config.signed_cookies ? cookies.signed : cookies
+      end
+
+      def set_auth_token user, options = {}
+        user.generate_token!(:auth_token) if user.auth_token.nil? || DevcmsCore.config.refresh_auth_token_after_sign_in
+        cookie_data = DevcmsCore.config.cookie_options.merge(value: user.auth_token)
+        cookie_data[:secure] = true if ssl_required?
+
+        cookie_jar = auth_cookies
+        cookie_jar = auth_cookies.permanent if options[:permanent]
+        cookie_jar[DevcmsCore.config.auth_token_cookie] = cookie_data
       end
   end
 end

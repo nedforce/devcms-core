@@ -37,6 +37,7 @@ class PasswordResetsController < ApplicationController
     if @user.password_reset_expiration < Time.now
       redirect_to new_password_reset_path, notice: I18n.t('users.password_reset_expired')
     elsif @user.update_attributes(params[:user])
+      @user.generate_token!(:auth_token) if DevcmsCore.config.refresh_auth_token_after_password_reset
       redirect_to login_path, notice: I18n.t('users.password_reset_succesful')
     else
       render 'edit'

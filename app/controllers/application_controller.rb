@@ -35,9 +35,6 @@ class ApplicationController < ActionController::Base
   before_filter :set_view_paths
   before_filter :set_high_contrast_mode
 
-  # Attempt to login the user from a cookie, if it's set.
-  before_filter :login_from_cookie
-
   # Performs the actual authorization procedure
   before_filter :check_authorization
 

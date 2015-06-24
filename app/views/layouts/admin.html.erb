@@ -39,8 +39,8 @@
       <%= render '/admin/header' -%>
       <div class="properties_box" id="logged_in_box">
         <div class="top_bar">
-          <%= link_to t('layouts.logout'), logout_path, :class => 'align_right' %>
-          <h1><%= t 'layouts.logged_in_as' %>: <%= current_user.login -%></h1>
+          <%= link_to t('layouts.logout'), logout_path, class: 'align_right' %>
+          <h1><%= t 'layouts.logged_in_as', login: current_user.login %></h1>
         </div>
         <table cellpadding="0" cellspacing="0">
           <tr>

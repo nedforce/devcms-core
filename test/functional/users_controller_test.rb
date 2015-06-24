@@ -1,24 +1,25 @@
 require File.expand_path('../../test_helper.rb', __FILE__)
 
+# Functional tests for the +UsersController+.
 class UsersControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
-  def test_should_not_get_show_logged_out
-    get :show, :id => users(:sjoerd).login
+  test 'should not get show logged out' do
+    get :show, id: users(:sjoerd).login
 
     assert_response :redirect
   end
 
-  def test_should_not_get_show_logged_in_as_different_user
+  test 'should not get show logged in as different user' do
     login_as :arthur
-    get :show, :id => users(:sjoerd).login
+    get :show, id: users(:sjoerd).login
 
     assert_response :not_found
   end
 
   test 'should get show logged in as owner' do
     login_as :sjoerd
-    get :show, :id => users(:sjoerd).login
+    get :show, id: users(:sjoerd).login
 
     assert_response :success
     assert_equal users(:sjoerd), assigns(:user)
@@ -38,36 +39,36 @@ class UsersControllerTest < ActionController::TestCase
     assert_select '.reg_form_additional_info_header'
   end
 
-  def test_should_not_get_new_for_invalid_invitation_code_or_invitation_email
+  test 'should not get new for invalid invitation code or invitation email' do
     get :new
     assert_response :redirect
 
-    get :new, :invitation_email => 'test@test.nl', :invitation_code => 'foo'
+    get :new, invitation_email: 'test@test.nl', invitation_code: 'foo'
     assert_response :redirect
   end
 
-  def test_should_get_new_for_valid_invitation_code_and_invitation_email
+  test 'should get new for valid invitation code and invitation email' do
     email = 'test@test.nl'
-    get :new, :invitation_email => email, :invitation_code => User.send(:generate_invitation_code, email)
+    get :new, invitation_email: email, invitation_code: User.send(:generate_invitation_code, email)
 
     assert_response :success
   end
 
-  def test_should_not_create_user_for_invalid_invitation_code_or_invitation_email
+  test 'should not create user for invalid invitation code or invitation email' do
     assert_no_difference('User.count') do
-      create_user({}, { :invitation_email => nil, :invitation_code => nil })
+      create_user({}, invitation_email: nil, invitation_code: nil)
     end
 
     assert_response :redirect
 
     assert_no_difference('User.count') do
-      create_user({}, { :invitation_email => 'test@test.nl', :invitation_code => 'foo' })
+      create_user({}, invitation_email: 'test@test.nl', invitation_code: 'foo')
     end
 
     assert_response :redirect
   end
 
-  def test_should_create_user_for_valid_invitation_code_and_invitation_email
+  test 'should create user for valid invitation code and invitation email' do
     assert_difference('User.count', 1) do
       create_user
     end
@@ -76,180 +77,183 @@ class UsersControllerTest < ActionController::TestCase
     assert_redirected_to login_path
   end
 
-  def test_should_send_verification_email_on_create
+  test 'should send verification email on create' do
     assert_difference 'ActionMailer::Base.deliveries.size', 1 do
       create_user
     end
   end
 
-  def test_should_not_send_verification_email_on_create_for_invalid_user_data
+  test 'should not send verification email on create for invalid user data' do
     assert_no_difference 'ActionMailer::Base.deliveries.size' do
-      create_user :login => nil # if user was not saved
+      create_user login: nil # if user was not saved
     end
   end
 
-  def test_should_subscribe_to_newsletter_archives_on_create
+  test 'should subscribe to newsletter archives on create' do
     assert_difference('User.count', 1) do
-      create_user(:newsletter_archive_ids => [ newsletter_archives(:devcms_newsletter_archive).id ])
+      create_user(newsletter_archive_ids: [newsletter_archives(:devcms_newsletter_archive).id])
     end
     assert newsletter_archives(:devcms_newsletter_archive).users.include?(assigns(:user))
   end
 
-  def test_should_subscribe_to_interest_on_create
+  test 'should subscribe to interest on create' do
     assert_difference('User.count', 1) do
-      create_user(:interest_ids => [ interests(:art_and_culture).id ])
+      create_user(interest_ids: [interests(:art_and_culture).id])
     end
     assert interests(:art_and_culture).users.include?(assigns(:user))
   end
 
-  def test_should_require_login_on_create
+  test 'should require login on create' do
     assert_no_difference 'User.count' do
-      create_user(:login => nil)
+      create_user(login: nil)
     end
     assert assigns(:user).errors[:login].any?
     assert_response :unprocessable_entity
   end
-  
-  def test_should_require_unique_login_on_create
+
+  test 'should require unique login on create' do
     assert_no_difference 'User.count' do
-      create_user(:login => users(:gerjan).login.upcase)
+      create_user(login: users(:gerjan).login.upcase)
     end
     assert assigns(:user).errors[:login].any?
     assert_response :unprocessable_entity
   end
-  
-  def test_should_require_non_reserved_login_on_create
+
+  test 'should require non-reserved login on create' do
     assert_no_difference 'User.count' do
-      create_user(:login => 'burgemeester')
+      create_user(login: 'burgemeester')
     end
     assert assigns(:user).errors[:login].any?
     assert_response :unprocessable_entity
   end
-  
-  def test_should_require_password_on_create
+
+  test 'should require password on create' do
     assert_no_difference 'User.count' do
-      create_user(:password => nil)
+      create_user(password: nil)
     end
     assert assigns(:user).errors[:password].any?
     assert_response :unprocessable_entity
   end
 
-  def test_should_require_password_confirmation_on_create
+  test 'should require password confirmation on create' do
     assert_no_difference 'User.count' do
-      create_user(:password_confirmation => nil)
+      create_user(password_confirmation: nil)
     end
     assert assigns(:user).errors[:password_confirmation].any?
     assert_response :unprocessable_entity
   end
 
-  def test_should_not_create_user_with_invalid_login
+  test 'should not create user with invalid login' do
     assert_no_difference('User.count') do
-      create_user(:login => 'invalid%login')
+      create_user(login: 'invalid%login')
     end
     assert_response :unprocessable_entity
   end
 
-  def test_should_clear_password_fields_on_invalid_create
+  test 'should clear password fields on invalid create' do
     assert_no_difference 'User.count' do
-      create_user(:login => nil)
+      create_user(login: nil)
     end
     assert_nil assigns(:user).password
     assert_nil assigns(:user).password_confirmation
     assert_response :unprocessable_entity
   end
 
-  def test_should_show_edit
+  test 'should show edit' do
     login_as :sjoerd
-    get :edit, :id => users(:sjoerd).login
+    get :edit, id: users(:sjoerd).login
 
     assert_response :success
     assert_template 'edit'
   end
 
-  def test_should_require_login_for_edit
-    get :edit, :id => users(:sjoerd).login
+  test 'should require login for edit' do
+    get :edit, id: users(:sjoerd).login
+
     assert_response :redirect
   end
 
-  def test_should_require_owner_on_edit
+  test 'should require owner on edit' do
     login_as :arthur
-    get :edit, :id => users(:sjoerd).login
+    get :edit, id: users(:sjoerd).login
+
     assert_response :not_found
   end
 
-  def test_should_update_user
+  test 'should update user' do
     login_as :sjoerd
-    put :update, :id => users(:sjoerd).login, :user => { :first_name => 'Sjors' }
+    put :update, id: users(:sjoerd).login, user: { first_name: 'Sjors' }
 
     assert_redirected_to user_path(users(:sjoerd))
     assert flash.key?(:notice)
     assert_equal 'Sjors', assigns(:user).first_name
   end
 
-  def test_should_not_update_user_with_invalid_attr
+  test 'should not update user with invalid attr' do
     login_as :sjoerd
-    put :update, :id => users(:sjoerd).login, :user => { :email_address => 'sjoerd@invalid' }, :old_password => 'sjoerd'
+    put :update, id: users(:sjoerd).login, user: { email_address: 'sjoerd@invalid' }, old_password: 'sjoerd'
 
     assert_response :unprocessable_entity
     assert assigns(:user).errors[:email_address].any?
   end
 
-  def test_update_should_require_login
-    put :update, :id => users(:sjoerd).login, :user => { :email_address => 'sjoerd@nedforce.nl' }
+  test 'update should require login' do
+    put :update, id: users(:sjoerd).login, user: { email_address: 'sjoerd@nedforce.nl' }
 
     assert_response :redirect
     assert flash.key?(:warning)
   end
 
-  def test_update_should_require_owner
+  test 'update should require owner' do
     login_as :arthur
-    put :update, :id => users(:sjoerd).login, :user => { :email_address => 'sjoerd@nedforce.nl' }
+    put :update, id: users(:sjoerd).login, user: { email_address: 'sjoerd@nedforce.nl' }
 
     assert_response :not_found
   end
 
-  def test_should_verify_user
+  test 'should verify user' do
     u = users(:unverified_user)
-    get :verification, :id => u.login, :code => u.verification_code
+    get :verification, id: u.login, code: u.verification_code
+
     assert assigns(:user).verified, 'User not verified!'
     assert_response :redirect
     assert flash.key?(:notice), "Flash wasn't set."
   end
 
-  def test_should_not_verify_user_on_invalid_code
+  test 'should not verify user on invalid code' do
     u = users(:unverified_user)
-    get :verification, :id => u.login, :code => 'Some invalid code'
+    get :verification, id: u.login, code: 'Some invalid code'
 
     assert !assigns(:user).verified, 'User still verified!'
     assert_response :success
     assert_template 'verification_failed'
   end
 
-  def test_should_send_verification_email
+  test 'should send verification email' do
+    prev_code = users(:unverified_user).verification_code
+
     assert_difference 'ActionMailer::Base.deliveries.size', 1 do
-      prev_code = users(:unverified_user).verification_code
-      get :send_verification_email, :id => users(:unverified_user).login
-
-      assert_not_equal prev_code, assigns(:user).reload.verification_code
-      assert_response :redirect
-      assert flash.key?(:notice), "Flash wasn't set."
+      get :send_verification_email, id: users(:unverified_user).login
     end
+    assert_not_equal prev_code, assigns(:user).reload.verification_code
+    assert_response :redirect
+    assert flash.key?(:notice), "Flash wasn't set."
   end
 
-  def test_should_not_send_email_if_user_has_already_been_verified
+  test 'should not send email if user has already been verified' do
+    prev_code = users(:sjoerd).verification_code
+
     assert_no_difference 'ActionMailer::Base.deliveries.size' do
-      prev_code = users(:sjoerd).verification_code
-      get :send_verification_email, :id => users(:sjoerd).login
-
-      assert_equal prev_code, assigns(:user).reload.verification_code
-      assert_response :redirect
-      assert flash.key?(:warning), "Flash wasn't set."
+      get :send_verification_email, id: users(:sjoerd).login
     end
+    assert_equal prev_code, assigns(:user).reload.verification_code
+    assert_response :redirect
+    assert flash.key?(:warning), "Flash wasn't set."
   end
 
-  def test_should_not_register_for_spambots
+  test 'should not register for spambots' do
     assert_no_difference 'User.count' do
-      create_user(:username => 'not-empty')
+      create_user(username: 'not-empty')
     end
   end
 
@@ -257,12 +261,18 @@ class UsersControllerTest < ActionController::TestCase
 
   def create_user(attributes = {}, options = {})
     invitation_email = options.key?(:invitation_email) ? options[:invitation_email] : 'test@test.nl'
-    invitation_code  = options.key?(:invitation_code)  ? options[:invitation_code]  : User.send(:generate_invitation_code, invitation_email)
+    invitation_code  = options.key?(:invitation_code) ? options[:invitation_code] : User.send(:generate_invitation_code, invitation_email)
 
     post :create, {
-      :invitation_email => invitation_email,
-      :invitation_code => invitation_code,
-      :user => { :first_name => 'Easter bunny', :email_address => 'e.bunny@nedforce.nl', :login => 'bunny', :password => 'bunny', :password_confirmation => 'bunny' }.merge(attributes)
+      invitation_email: invitation_email,
+      invitation_code: invitation_code,
+      user: {
+        first_name: 'Easter bunny',
+        email_address: 'e.bunny@nedforce.nl',
+        login: 'bunny',
+        password: 'bunny',
+        password_confirmation: 'bunny'
+      }.merge(attributes)
     }
   end
 end

@@ -49,6 +49,7 @@ module DevcmsCore
   autoload :AuthenticatedSystem
   autoload :AuthenticatedTestHelper
   autoload :Blowfish
+  autoload :TokenGeneration
   autoload :CalendarItemsAssociationExtensions
   autoload :ContentTypeConfiguration
   autoload :ContentNodeCheckerRunner

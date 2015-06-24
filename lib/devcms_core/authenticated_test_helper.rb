@@ -1,9 +1,9 @@
 module DevcmsCore
   module AuthenticatedTestHelper
     def login_as(user)
-      user_id = nil
-      user_id = (user.is_a?(User) ? user.id : users(user).id) if user
-      @request.session[:user_id] = user_id
+      auth_token = nil
+      auth_token = (user.is_a?(User) ? user.auth_token : users(user).auth_token) if user
+      cookies[:auth_token] = { value: auth_token }
     end
 
     def authorize_as(user)

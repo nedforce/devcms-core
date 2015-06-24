@@ -29,8 +29,6 @@
 # * +password_confirmation+ - Virtual attribute that holds the confirmation of the user's password when it's edited/set (created by the +validates_confirmation_of+ macro).
 # * +password_hash+ - The SHA-256 hash of the user's password.
 # * +password_salt+ - The salt used to calculate the password hash.
-# * +remember_token+ - The token used to check if the user wants to be remembered.
-# * +remember_token_expires_at+ - The date when the remember token expires.
 # * +verified+ - Set the true if the user is verified, false otherwise.
 # * +verficiation_code+ - Code used for verifying the user, if the user is not verified yet.
 # * +first_name+ - The first name of the user.
@@ -54,6 +52,7 @@ require 'digest'
 require 'digest/sha2'
 
 class User < ActiveRecord::Base
+  include DevcmsCore::TokenGeneration
 
   SEXES = {
     'm' => :male,
@@ -142,7 +141,7 @@ class User < ActiveRecord::Base
   attr_readonly :login
 
   # An array of field names that are considered to be information-sensitive.
-  SECRETS = %w( password_hash password_salt remember_token remember_token_expires_at verification_code password_reset_token remember_token_ip ).freeze
+  SECRETS = %w( password_hash password_salt auth_token verification_code password_reset_token ).freeze
 
   # The original ActiveRecord::Base.to_xml that also includes information-sensitive fields.
   alias_method :to_xml_with_secrets,  :to_xml
@@ -192,37 +191,6 @@ class User < ActiveRecord::Base
   # Checks whether the given password can be used to authenticate the user.
   def authenticated?(password)
     password_hash == encrypt(password)
-  end
-
-  # Returns true if the remember token is set and has not expired, false otherwise.
-  def remember_token?
-    remember_token_expires_at && Time.now.utc < remember_token_expires_at
-  end
-
-  # Allows the user to be remembered for 2 weeks.
-  def remember_me(ip)
-    remember_me_for 2.weeks, ip
-  end
-
-  # Allows the user to be remembered for the given period.
-  def remember_me_for(time, ip)
-    remember_me_until time.from_now.utc, ip
-  end
-
-  # Allows the user to be remembered until the given time.
-  def remember_me_until(time, ip)
-    self.remember_token_expires_at = time
-    self.remember_token            = encrypt("#{email_address}--#{remember_token_expires_at}")
-    self.remember_token_ip         = ip
-    save(validate: false)
-  end
-
-  # Forgets the user, if the user is currently being remembered.
-  def forget_me
-    self.remember_token_expires_at = nil
-    self.remember_token            = nil
-    self.remember_token_ip         = nil
-    save(:validate => false)
   end
 
   def is_privileged?

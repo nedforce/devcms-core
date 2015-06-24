@@ -565,7 +565,7 @@ nl:
     log_out: Log uit
     log_out_alt: Icoon van een persoon die uitlogt
     log_out_title: Log uit
-    logged_in_as: Ingelogd als
+    logged_in_as: "Ingelogd als: %{login}"
     login: Inloggen
     logo_alt: Logo van de gemeente
     logout: Uitloggen
@@ -975,12 +975,12 @@ nl:
     import: Importeren
   sessions:
     account_blocked: Dit account is vergrendeld. Neem contact op met de beheerder om dit account te ontgrendelen.
-    already_logged_in: U bent reeds ingelogd als
+    already_logged_in: "U bent reeds ingelogd als '%{login}'"
     cant_log_out: Kan niet uitloggen. U bent niet ingelogd.
     confirm_logout: Uitloggen bevestigen
     forgot_password?: "Wachtwoord vergeten?"
     log_in: Inloggen
-    logged_in_as: U bent nu ingelogd als
+    logged_in_as: "U bent nu ingelogd als '%{login}'."
     logged_out: U bent succesvol uitgelogd.
     login: Loginnaam
     logins_disabled: Er zijn vanaf uw IP-adres teveel foutieve loginpogingen geweest. U kunt weer inloggen vanaf

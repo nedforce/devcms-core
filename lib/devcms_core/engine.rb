@@ -1,4 +1,6 @@
 module DevcmsCore
+  def self.config; DevcmsCore::Engine.config end
+
   class Engine < Rails::Engine
     config.model_paths = []
     config.layout_paths = []
@@ -12,12 +14,20 @@ module DevcmsCore
     config.app_middleware.insert_before(Rack::Lock, DevcmsCore::Rewriter)
     config.app_middleware.insert_before(::DevcmsCore::Rewriter, ::ActionDispatch::Static, "#{root}/public")
 
+    # Cookies
+    DevcmsCore.config.auth_token_cookie = :auth_token
+    DevcmsCore.config.cookie_options = { httponly: true }
+    DevcmsCore.config.signed_cookies = !Rails.env.test?
+    DevcmsCore.config.refresh_auth_token_after_sign_out = true
+    DevcmsCore.config.refresh_auth_token_after_password_reset = true
+    DevcmsCore.config.refresh_auth_token_after_sign_in = false
+
     # Honeypot defaults
     config.honeypot_name       = 'OgJhm3UT'
     config.honeypot_value      = 'DA0MEHBTDZRQnTlv'
     config.honeypot_empty_name = 'eQ8oaGMk'
     config.honeypot_class      = 'ufnskjfdsniubh'
-    
+
     # Airbrake configuration
     config.airbrake_redmine_project          = 'devcms'
     config.airbrake_development_environments = %w(development test cucumber)

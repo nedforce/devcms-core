@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150311130328) do
+ActiveRecord::Schema.define(:version => 20150624115915) do
 
   create_table "abbreviations", :force => true do |t|
     t.string   "abbr",       :null => false
@@ -1199,8 +1199,6 @@ ActiveRecord::Schema.define(:version => 20150311130328) do
     t.string   "email_address",                                :null => false
     t.string   "password_hash",                                :null => false
     t.string   "password_salt",                                :null => false
-    t.string   "remember_token"
-    t.datetime "remember_token_expires_at"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "verified",                  :default => false, :null => false
@@ -1213,14 +1211,14 @@ ActiveRecord::Schema.define(:version => 20150311130328) do
     t.boolean  "blocked",                   :default => false
     t.integer  "failed_logins",             :default => 0
     t.string   "type"
-    t.string   "remember_token_ip"
+    t.string   "auth_token"
   end
 
+  add_index "users", ["auth_token"], :name => "index_users_on_auth_token"
   add_index "users", ["created_at"], :name => "index_users_on_created_at"
   add_index "users", ["email_address"], :name => "index_users_on_email_address", :unique => true
   add_index "users", ["first_name"], :name => "index_users_on_first_name"
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
-  add_index "users", ["remember_token"], :name => "index_users_on_remember_token"
   add_index "users", ["sex"], :name => "index_users_on_sex"
   add_index "users", ["surname"], :name => "index_users_on_surname"
   add_index "users", ["updated_at"], :name => "index_users_on_updated_at"

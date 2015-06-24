@@ -32,16 +32,18 @@ class SessionsController < ApplicationController
       render_login_form
     else
       @user = User.authenticate(params[:login], params[:password])
-      self.current_user = @user if @user && @user.verified? && !@user.blocked?
       LoginAttempt.create! ip: request.remote_ip, user_login: params[:login], success: !@user.nil?
 
-      if logged_in?
+      if @user && @user.verified? && !@user.blocked?
         if params[:remember_me] == '1'
-          current_user.remember_me(request.ip) unless current_user.remember_token?
-          cookies[:auth_token] = { value: current_user.remember_token, expires: current_user.remember_token_expires_at }
+          set_auth_token(@user, permanent: true)
+        else
+          set_auth_token(@user)
         end
+      end
 
-        flash[:notice] = "#{I18n.t('sessions.logged_in_as')} '#{current_user.login}'."
+      if logged_in?
+        flash[:notice] = I18n.t('sessions.logged_in_as', login: current_user.login)
         redirect_back_or_default(profile_path, false)
       elsif @user && !@user.verified?
         flash.now[:notice] = (I18n.t('sessions.not_yet_verified') + ' ' + I18n.t('sessions.no_email?') + " <a href = \"#{send_verification_email_user_path(@user)}\">#{I18n.t('sessions.request_new_code')}</a>").html_safe
@@ -59,9 +61,9 @@ class SessionsController < ApplicationController
   # * DELETE /session
   def destroy
     if logged_in?
-      self.current_user.forget_me
-      self.current_user = nil
-      cookies.delete :auth_token
+      current_user.generate_token!(:auth_token) if DevcmsCore.config.refresh_auth_token_after_sign_out
+      cookies.delete(DevcmsCore.config.auth_token_cookie, domain: DevcmsCore.config.cookie_options[:domain])
+
       if Settler[:after_logout_path].present?
         redirect_to Settler[:after_logout_path]
       else
@@ -80,7 +82,7 @@ class SessionsController < ApplicationController
   def redirect_logged_in_users
     if logged_in?
       flash.keep
-      flash[:notice] = "#{I18n.t('sessions.already_logged_in')} '#{current_user.login}'." unless flash[:notice]
+      flash[:notice] = I18n.t('sessions.already_logged_in', login: current_user.login) unless flash[:notice]
       redirect_to root_path
     end
   end
