@@ -291,11 +291,15 @@ module DevcmsCoreHelper
     @high_contrast_mode ? :low : :high
   end
 
+  def contrast_mode_text
+    t(target_contrast_mode, scope: [:shared, :contrast])
+  end
+
   def switch_contrast_mode_link(show_text = false)
-    link_text = image_tag('icons/contrast-high-icon.png', class: 'icon', alt: '', title: t(target_contrast_mode, scope: [:shared, :contrast]))
-    if show_text
-      link_text += "#{t(target_contrast_mode, scope: [:shared, :contrast])}"
-    end
+    alt = show_text ? '' : contrast_mode_text
+    link_text = image_tag('icons/contrast-high-icon.png', class: 'icon', alt: alt, title: contrast_mode_text)
+    link_text += contrast_mode_text if show_text
+
     link_to link_text, params.merge(contrast: target_contrast_mode), rel: 'nofollow'
   end
 
