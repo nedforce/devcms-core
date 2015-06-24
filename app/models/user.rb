@@ -124,6 +124,7 @@ class User < ActiveRecord::Base
   # Make sure the user's password (stored in the virtual attribute +password+)
   # is stored as a hash after the user is created/updatedRoleAssignment.
   before_save :encrypt_password
+  before_save { generate_token(:auth_token) if auth_token.nil? }
 
   # Make sure the email is unique and no error is shown
   before_create :validate_uniqueness_of_email
