@@ -159,8 +159,8 @@ class Admin::NodesControllerTest < ActionController::TestCase
     node_2.update_attributes(publication_start_date: Time.zone.parse('2015-1-15'))
     node_3.update_attributes(publication_start_date: Time.zone.parse('2015-2-1'))
 
-    # Move all news articles from January 2015 tp news_archive_2
-    put :move_by_date, :id => news_archive_1.node.id, parent_id: news_archive_2.node.id, year: 2015, month: 1
+    # Move all news articles from January 2015 to news_archive_2
+    xhr :put, :move_by_date, :id => news_archive_1.node.id, parent_id: news_archive_2.node.id, year: 2015, month: 1
     assert_response :success
 
     news_archive_1.reload; news_archive_2.reload
@@ -179,7 +179,7 @@ class Admin::NodesControllerTest < ActionController::TestCase
     node_3.update_attributes(publication_start_date: Time.zone.parse('2015-2-1'))
 
     # Move all news articles from January 2015 tp news_archive_2
-    put :move_by_date, :id => news_archive_1.node.id, parent_id: news_archive_2.node.id, year: 2015
+    xhr :put, :move_by_date, :id => news_archive_1.node.id, parent_id: news_archive_2.node.id, year: 2015
 
     assert_response :success
     news_archive_1.reload; news_archive_2.reload
@@ -200,7 +200,7 @@ class Admin::NodesControllerTest < ActionController::TestCase
     node_3.update_attributes(publication_start_date: Time.zone.parse('2015-5-13'))
 
     # Move all news articles from January 2015 tp news_archive_2
-    put :move_by_date, :id => news_archive_1.node.id, parent_id: news_archive_2.node.id, year: 2015, week: 20
+    xhr :put, :move_by_date, :id => news_archive_1.node.id, parent_id: news_archive_2.node.id, year: 2015, week: 20
     assert_response :success
 
     news_archive_1.reload; news_archive_2.reload
@@ -219,7 +219,7 @@ class Admin::NodesControllerTest < ActionController::TestCase
     node_3.update_attributes(publication_start_date: Time.zone.parse('2015-2-1'))
 
     assert_no_difference 'calendar.node.children.count' do
-      put :move_by_date, :id => news_archive_1.node.id, parent_id: calendar.node.id, year: 2015, month: 1
+      xhr :put, :move_by_date, :id => news_archive_1.node.id, parent_id: calendar.node.id, year: 2015, month: 1
     end
     assert_response :precondition_failed
   end
@@ -230,7 +230,7 @@ class Admin::NodesControllerTest < ActionController::TestCase
     forum_2 = forums(:bewoners_forum)
 
     assert_no_difference 'forum_2.node.children.count' do
-      put :move_by_date, :id => forum_2.node.id, parent_id: forum_1.node.id, year: 2015, month: 1
+      xhr :put, :move_by_date, :id => forum_2.node.id, parent_id: forum_1.node.id, year: 2015, month: 1
     end
     assert_response :precondition_failed
   end
