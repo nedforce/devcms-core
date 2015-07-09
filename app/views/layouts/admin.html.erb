@@ -24,7 +24,7 @@
 
     <!-- Include Ext Js-->
     <%= javascript_include_tag '/libraries/ext/adapter/ext/ext-base.js', (Rails.env.development? ? '/libraries/ext/ext-all-debug.js' : '/libraries/ext/ext-all.js') %>
-    <%= javascript_include_tag 'extjs.js' %>
+    <%= javascript_include_tag 'ext/dvtr/AccessResponder', 'extjs.js' %>
     <!-- Init Ext Js -->
 
     <%= javascript_include_tag 'ext/dvtr/TreeNodeContextMenu', 'ext/dvtr/VirtualTreeNodeContextMenu',

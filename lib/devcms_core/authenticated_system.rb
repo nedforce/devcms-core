@@ -58,19 +58,20 @@ module DevcmsCore
       def access_denied
         respond_to do |format|
           format.html do
-            store_location
             flash[:warning] = I18n.t('authenticated_system.not_authenticated')
-            redirect_to new_session_path
+
+            if request.xhr?
+              render text: I18n.t('authenticated_system.not_authenticated'), status: 401
+            else
+              store_location
+              redirect_to new_session_path
+            end
           end
           format.js do
-            #store_location
             render :update do |page|
               page.redirect_to login_path
             end
           end
-          #format.any do
-          #  request_http_basic_authentication 'Web Password'
-          #end
         end
       end
 
