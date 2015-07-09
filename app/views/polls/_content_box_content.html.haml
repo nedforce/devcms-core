@@ -1,7 +1,7 @@
 - content = node.content
 - active_question = content.active_question
 
-%div{ :id => "poll_content_box_#{content.id}", :class => 'poll_content_box_content' }
+.poll_content_box_content{ :id => "poll_content_box_#{content.id}" }
   - if active_question.present?
     %p.question
       = h active_question.question
