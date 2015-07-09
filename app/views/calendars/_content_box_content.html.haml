@@ -9,7 +9,7 @@
         .date
           = l event.start_time.to_date, :format => :short
         .link
-          = link_to_content_node(h(event.title), event, { :type => :url, :host => event.node.containing_site.content.domain })
+          = link_to_content_node_url(h(event.title), event)
   = read_more_link(content, t('shared.more_activities'))
 
 - else
