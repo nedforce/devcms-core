@@ -4,6 +4,10 @@
     %meta{ content: 'IE=8', 'http-equiv' => 'X-UA-Compatible' }/
     %title= t 'layouts.control_panel'
     %link{ href: "//#{h(Settler[:host])}/favicon.ico", rel: 'shortcut icon', type: 'image/vnd.microsoft.icon' }/
+
+    - if Settler[:fontastic_font_family].present?
+      %link{ href: "/uploads/#{Settler[:fontastic_font_family]}/styles.css", media: 'all', rel: 'stylesheet', type: 'text/css' }/
+
     %meta{ content: 'text/html;charset=utf-8', 'http-equiv' => 'Content-Type' }/
     %meta{ content: 'NL', name: 'language' }/
 
