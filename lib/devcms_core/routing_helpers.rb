@@ -13,6 +13,7 @@ module DevcmsCore
     def link_to_node_url(name, node_or_content, options = {}, html_options = {})
       link_to(name, aliased_or_delegated_url(node_or_content, options), html_options)
     end
+    alias_method :link_to_content_node_url, :link_to_node_url
 
     # Return aliased or delegated path to node
     def aliased_or_delegated_address(node_or_content, options = {})
