@@ -1,0 +1,45 @@
+!!! Strict
+%html{ lang: 'nl', 'xml:lang' => 'nl', xmlns: 'http://www.w3.org/1999/xhtml' }
+  %head
+    %meta{ content: 'IE=8', 'http-equiv' => 'X-UA-Compatible' }/
+    %title= t 'layouts.control_panel'
+    %link{ href: "//#{h(Settler[:host])}/favicon.ico", rel: 'shortcut icon', type: 'image/vnd.microsoft.icon' }/
+    %meta{ content: 'text/html;charset=utf-8', 'http-equiv' => 'Content-Type' }/
+    %meta{ content: 'NL', name: 'language' }/
+
+    = csrf_meta_tags
+
+    = stylesheet_link_tag '/libraries/ext/resources/css/ext-all.css'
+    = stylesheet_link_tag 'admin'
+
+    /[if gte IE 8]
+      = javascript_include_tag 'modules/ie8_text_content'
+    /[if gte IE 9]
+      = javascript_include_tag 'modules/ie9_create_contextual_fragment'
+
+    = javascript_include_tag 'devcms_core_admin', '/libraries/tiny_mce/reset_tiny_mce.js', '/libraries/tiny_mce/tiny_mce.js'
+    / Include Ext Js
+    = javascript_include_tag '/libraries/ext/adapter/ext/ext-base.js', (Rails.env.development? ? '/libraries/ext/ext-all-debug.js' : '/libraries/ext/ext-all.js')
+    = javascript_include_tag 'ext/dvtr/AccessResponder', 'extjs.js'
+    / Init Ext Js
+    = javascript_include_tag 'ext/dvtr/TreeNodeContextMenu', 'ext/dvtr/VirtualTreeNodeContextMenu', 'ext/dvtr/MultipleTreeNodeContextMenu', 'ext/dvtr/Panel', 'ext/dvtr/TreeLoader', 'ext/dvtr/AsyncContentTreeNode', 'ext/dvtr/AsyncVirtualTreeNode', 'ext/dvtr/Sorter', 'ext/dvtr/ContentNodeFormPanel', 'ext/dvtr/Sortlet', 'ext/dvtr/NodeDropField', 'ext/dvtr/RemovableTextField', 'ext/dvtr/RemovableFieldSet','/libraries/ext/ux/ext-extensions.js', '/libraries/ext/ux/grid/SmartCheckboxSelectionModel.js'
+
+  %body
+    #header.clearfix
+      = render '/admin/header'
+      #logged_in_box.properties_box
+        .top_bar
+          = link_to t('layouts.logout'), logout_path, class: 'align_right'
+          %h1= t 'layouts.logged_in_as', login: current_user.login
+        %table{ cellpadding: '0', cellspacing: '0' }
+          %tr
+            %th= t 'layouts.email'
+            %td= h current_user.email_address
+          %tr
+            %th= t 'layouts.roles'
+            %td= h current_user.role_assignments.map { |ra| "#{RoleAssignment::ROLES[ra.name.intern]} van #{ra.node.content.content_title}" }.to_sentence
+
+    #menu.top_bar.menu
+      = create_admin_menu
+
+    = yield
