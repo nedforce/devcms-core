@@ -9,11 +9,15 @@ class LoginAttempt < ActiveRecord::Base
   # Checks if the given +ip+ is blocked.
   # If so, returns the date of unblock. If not, returns +nil+.
   def self.is_ip_blocked?(ip)
-    last_ten_attempts = LoginAttempt.by_created_at.for_ip(ip).since(Time.now.yesterday).limit(10)
+    last_ten_attempts = last_ten_attempts(ip)
 
     if last_ten_attempts.map(&:success).count(false) == 10
       last_ten_attempts.first.created_at.tomorrow
     end
+  end
+
+  def self.last_ten_attempts(ip)
+    LoginAttempt.by_created_at.for_ip(ip).since(Time.now.yesterday).limit(10)
   end
 
   def self.last_attempt_was_not_ten_seconds_ago(ip)
