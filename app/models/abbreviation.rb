@@ -21,9 +21,13 @@ class Abbreviation < ActiveRecord::Base
   validates :abbr,       presence: true, length: { maximum: 255 }
   validates :definition, presence: true, length: { maximum: 255 }
 
-  # Find a record by normalized (alphanumeric, lowercase) abbr.
+  # Normalize (alphanumeric, lowercase) an abbr.
+  def self.normalize(abbr)
+    abbr.downcase.gsub(/[^a-z0-9]/, '')
+  end
+
+  # Find a record by normalized abbr.
   def self.search(abbr)
-    abbr = abbr.downcase.gsub(/[^a-z0-9]/, '')
-    self.all(conditions: ["REPLACE(LOWER(abbr), '.', '' ) = ?", abbr])
+    where(["REPLACE(LOWER(abbr), '.', '') = ?", normalize(abbr)]).all
   end
 end

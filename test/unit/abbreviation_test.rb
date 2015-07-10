@@ -30,6 +30,12 @@ class AbbreviationTest < ActiveSupport::TestCase
     end
   end
 
+  test 'should normalize abbr' do
+    %w(wmo WMO Wmo w.m.o W.M.O W.M.O.).each do |abbr|
+      assert_equal 'wmo', Abbreviation.normalize(abbr)
+    end
+  end
+
   test 'should do fuzzy search' do
     %w(wmo WMO Wmo w.m.o W.M.O W.M.O.).each do |abbr|
       results = Abbreviation.search(abbr)
