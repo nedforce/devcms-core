@@ -1,7 +1,7 @@
-# The abbreviation model represents abbreviations that may occur in content. Whenever
-# an abbreviation tag is inserted in the editor, the definition is taken from the
-# corresponding abbreviation model. The use of abbreviation tags is important for
-# accessibility reasons.
+# The abbreviation model represents abbreviations that may occur in content.
+# Whenever an abbreviation tag is inserted in the editor, the definition is
+# taken from the corresponding abbreviation model. The use of abbreviation tags
+# is important for accessibility reasons.
 #
 # *Specification*
 #

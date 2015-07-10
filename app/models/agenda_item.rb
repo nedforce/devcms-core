@@ -38,11 +38,11 @@ class AgendaItem < ActiveRecord::Base
   }
 
   # Adds content node functionality to agenda items.
-  acts_as_content_node({
+  acts_as_content_node(
     allowed_child_content_types: %w( Attachment AttachmentTheme ),
     show_in_menu:                false,
     copyable:                    false
-  })
+  )
 
   # This content type needs approval when created or altered by an editor.
   needs_editor_approval
@@ -70,7 +70,8 @@ class AgendaItem < ActiveRecord::Base
   end
 
   # Sets the associated AgendaItemCategory using the given +name+.
-  # If there is no AgendaItemCategory with the given +name+, a new one is created.
+  # If there is no AgendaItemCategory with the given +name+,
+  # a new one is created.
   def agenda_item_category_name=(name)
     self.agenda_item_category = AgendaItemCategory.find_or_new_by_name(name.to_s) if name.present?
   end
@@ -86,7 +87,8 @@ class AgendaItem < ActiveRecord::Base
 
   protected
 
-  # Returns +true+ if an AgendaItemCategory is associated (i.e., a foreign key is present), else +false+.
+  # Returns +true+ if an AgendaItemCategory is associated (i.e. a foreign key
+  # is present), else +false+.
   def has_agenda_item_category?
     !agenda_item_category.nil?
   end

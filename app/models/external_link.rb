@@ -1,4 +1,5 @@
-# An external link is a content node that represents a link to an external location.
+# An external link is a content node that represents a link to an external
+# location.
 #
 # *Specification*
 #
@@ -15,11 +16,11 @@
 #
 class ExternalLink < Link
   # Adds content node functionality to links.
-  acts_as_content_node({
+  acts_as_content_node(
     available_content_representations: ['content_box'],
     show_content_box_header:           false,
     controller_name:                   'external_links'
-  })
+  )
 
   needs_editor_approval
 
@@ -33,11 +34,18 @@ class ExternalLink < Link
 
   # Overrides the +content_title+ method of the +acts_as_content_node+ mixin.
   def content_title
-    self.title.blank? ? self.url : self.title
+    title.present? ? title : url
   end
 
-  # Overwrite the default. In case the title is blank, strip the 'http://' part from the url.
+  # Overwrite the default.
+  # In case the title is blank, strip the 'http://' part from the url.
   def path_for_url_alias(node)
-    title.blank? ? (url.starts_with?('https://') ? url.gsub(/https:\/\//, '') : url.gsub(/http:\/\//, '')) : title
+    if title.present?
+      title
+    elsif url.starts_with?('https://')
+      url.gsub(/https:\/\//, '')
+    else
+      url.gsub(/http:\/\//, '')
+    end
   end
 end
