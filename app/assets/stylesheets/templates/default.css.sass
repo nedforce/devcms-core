@@ -9,11 +9,12 @@ h1, h2, h3, a
   color: #8d0101
 h2
   font-size: 14px !important
-div.htmlField h2, div.htmlField h3
-  color: #8d0101
-  font-size: 14px !important
-  font-family: $headerFontFamily
-  
+div.htmlField
+  h2, h3
+    color: #8d0101
+    font-family: $headerFontFamily
+    font-size: 14px !important
+
 .background_base, .hover_background_base:hover
   background-color: #436677 !important
 
@@ -43,7 +44,7 @@ div.htmlField h2, div.htmlField h3
   width: 980px
   padding-left: 20px
   padding-right: 20px
-  background-color: #AAA
+  background-color: #aaa
   color: #888
   a
     color: $white
@@ -55,9 +56,9 @@ body
   #content
     .metadata, .buttons
       font-size: 10px
-      color: #AAA
+      color: #aaa
       a
-        color: #AAA
+        color: #aaa
 
 #header
   background-image: url(image_path('header_bg.png'))
@@ -87,7 +88,7 @@ body
         &:before
           content: "» "
         &:hover
-          color: #CCC
+          color: #ccc
 
 p
   margin-top: 0.5em

@@ -1,12 +1,3 @@
-#preview div.htmlField
-  h2, h3
-    font-family: inherit
-    font-size: 11px
-    font-weight: bold
-    margin: 0
-    line-height: normal
-    color: $black
-
 #preview
   padding: 15px 15px 0 15px
   #preview-content .forms
@@ -16,101 +7,96 @@
   .forms form + form
     padding-left: 15px
 
-#show h3, #preview h3
-  font-family: $headerFontFamily
-  font-size: 19px
-  font-weight: normal
-  line-height: 23px
-  margin-bottom: 8px
-  margin-top: 3px
-  color: $default
-
-#show p, #preview p
-  margin: 10px 0
-
-#show ul, #preview ul, #show ol, #preview ol
-  line-height: 18px
-  list-style-image: none
-  list-style-position: outside
-  margin: 5px 0
-  padding-left: 25px
-
-#show ul, #preview ul
-  list-style-type: square
-
-#show ol, #preview ol
-  list-style-type: decimal
-
-#show strong, #preview strong
-  font-weight: bold
-
-#show em, #preview em
-  font-style: italic
-  
 #show, #preview
-  width: 446px
   color: $black
   font-family: $sansFontFamily
   font-size: 11px
   line-height: 16px
+  width: 446px
 
-#show h2, #preview h2
-  font-family: $headerFontFamily
-  font-size: 22px
-  font-weight: normal
-  line-height: 26px
-  margin-bottom: 12px
-  margin-top: 5px
-  color: $default
+  div.htmlField
+    h2, h3
+      color: $black
+      font-family: inherit
+      font-size: 11px
+      font-weight: bold
+      line-height: normal
+      margin: 0
 
-#show div.htmlField
-  h2, h3
-    font-family: inherit
-    font-size: 11px
+  h3
+    color: $default
+    font-family: $headerFontFamily
+    font-size: 19px
+    font-weight: normal
+    line-height: 23px
+    margin-bottom: 8px
+    margin-top: 3px
+
+  p
+    margin: 10px 0
+
+  ol, ul
+    line-height: 18px
+    list-style-image: none
+    list-style-position: outside
+    margin: 5px 0
+    padding-left: 25px
+
+  ul
+    list-style-type: square
+  ol
+    list-style-type: decimal
+
+  strong
     font-weight: bold
+  em
+    font-style: italic
+
+  h2
+    color: $default
+    font-family: $headerFontFamily
+    font-size: 22px
+    font-weight: normal
+    line-height: 26px
+    margin-bottom: 12px
+    margin-top: 5px
+
+  /* Specific styles */
+
+  .newsItem .header_image
+    border-top: 1px solid black
+    margin: 20px 0
+    .explanation
+      color: black
+      font-size: 13px
+      margin: 15px 0 25px 0
+
+  .calendarContainer .calendar
+    font-size: 11px !important
+    text-align: center !important
+    th
+      text-align: center !important
+
+  ul.section_items
+    list-style: none outside none !important
+    margin: 5px 0 !important
+    padding-left: 7px !important
+    li
+      padding: 2px 0 2px 10px !important
+
+  ol.top_hits
+    margin: 5px 0 !important
+    li
+      padding: 2px 0 2px 5px !important
+      .hits
+        font-weight: bold
+
+  .calendarDay h3
+    color: $black
+    float: right
+    font-family: $sansFontFamily
+    font-size: 13px
+    font-weight: normal
+    line-height: 16px
     margin: 0
-    line-height: normal
-    color: $black  
-  
-/* Specific styles */  
-#show .newsItem .header_image, #preview .newsItem .header_image
-  border-top: 1px solid black
-  margin: 20px 0
-
-#show .newsItem .header_image .explanation, #preview .newsItem .header_image .explanation
-  font-size: 13px
-  color: black
-  margin: 15px 0 25px 0
-
-#show .calendarContainer .calendar, #preview .calendarContainer .calendar
-  font-size: 11px !important
-  text-align: center !important
-
-#show .calendarContainer .calendar th, #preview .calendarContainer .calendar th
-  text-align: center !important
-
-#show ul.section_items, #preview ul.section_items, #show ol.top_hits, #preview ol.top_hits
-  margin: 5px 0 !important
-
-#show ul.section_items, #preview ul.section_items
-  list-style: none outside none !important
-  padding-left: 7px !important
-
-#show ol.top_hits li, #preview ol.top_hits li
-  padding: 2px 0 2px 5px !important
-
-#show ol.top_hits li .hits, #preview ol.top_hits li .hits
-  font-weight: bold
-
-#show ul.section_items li, #preview ul.section_items li
-  padding: 2px 0 2px 10px !important
-
-#show .calendarDay h3, #preview .calendarDay h3
-  color: $black
-  float: right
-  font-family: $sansFontFamily
-  font-size: 13px
-  font-weight: normal
-  line-height: 16px
-  margin: 0
-  padding: 3px 6px 3px 3px
+    padding: 3px 6px 3px 3px

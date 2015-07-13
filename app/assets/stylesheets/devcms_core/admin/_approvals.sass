@@ -29,23 +29,18 @@
 .x-menu-item .x-form-text
   margin-left: 22px
 
-h2 .diff, .content .diff
-  display: inline
-  margin: 0 1px
-  padding: 0 2px
-
-h2 .diff-ins
-  background-color: lightgreen
-
-.content .diff-ins
-  background-color: lightgreen
-  p
+h2, .content
+  .diff
+    display: inline
+    margin: 0 1px
+    padding: 0 2px
+  .diff-ins
     background-color: lightgreen
+  .diff-del
+    background-color: crimson
 
-h2 .diff-del
-  background-color: crimson
-
-.content .diff-del
-  background-color: crimson
-  p
-    background-color: crimson      
+.content
+  .diff-ins p
+    background-color: lightgreen
+  .diff-del p
+    background-color: crimson

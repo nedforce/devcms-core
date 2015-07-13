@@ -10,12 +10,15 @@ p.weblogInfo
   color: $gray
   margin: 0
   margin-bottom: 10px
-  
+
 .weblogArchive, .weblog, .createWeblog, .editWeblog
   border: 0 !important
 
 .weblogPost
   border-bottom: 1px solid $default
+
+  .weblogPostBody
+    overflow: hidden
 
 .weblogArchive, .weblog, .weblogPost, .weblogFormPage 
   h1 .prefix
@@ -34,16 +37,32 @@ p.weblogInfo
     font-weight: bold
     margin-bottom: 6px
     overflow: hidden
+  a
+    &.new_post_link, &.show_post_link
+      float: left
+      margin-right: 8px
+  .weblogPosts
+    margin-bottom: 15px
+    h3
+      color: $default
+      font-family: $headerFontFamily
+      font-size: 15px
+      font-weight: normal
+      line-height: 16px
+      margin-bottom: 3px
+      margin-top: 1px
+    .weblogPostBody
+      overflow: hidden
+    .oddWeblogPost, .evenWeblogPost
+      padding: 3px 6px 3px 6px
 
-.weblogPost .weblogPostBody
-  overflow: hidden
 
-.weblogArchive, .weblogFormPage 
+.weblogArchive, .weblogFormPage
   .weblogArchiveDescription
     font-weight: bold
     overflow: hidden
 
-.weblogArchive, .weblog 
+.weblogArchive, .weblog
   .weblogPostsOverview
     border-top: 1px solid $default
     border-bottom: 1px solid $default
@@ -55,34 +74,17 @@ p.weblogInfo
     float: left
     margin-right: 8px
 
-.weblog a
-  &.new_post_link, &.show_post_link
-    float: left
-    margin-right: 8px
-
-.weblogArchive .weblogs, .weblog .weblogPosts
-  margin-bottom: 15px
-
-.weblogArchive .weblogs
-  .oddWeblog, .evenWeblog
-    padding: 3px 6px 3px 6px
-
-.weblog .weblogPosts
-  .oddWeblogPost, .evenWeblogPost
-    padding: 3px 6px 3px 6px
-
 .weblogArchive .weblogs .oddWeblog, .weblog .weblogPosts .oddWeblogPost
   background-color: $lightestGray
 
-.weblogArchive .weblogs .weblogDescription
-  float: left
-  width: 250px
-  overflow: hidden
-
-.weblog .weblogPosts .weblogPostBody
-  overflow: hidden
-
 .weblogArchive .weblogs
+  margin-bottom: 15px
+  .oddWeblog, .evenWeblog
+    padding: 3px 6px 3px 6px
+  .weblogDescription
+    float: left
+    width: 250px
+    overflow: hidden
   div.weblogDetails
     color: $gray
     float: right
@@ -98,15 +100,6 @@ p.weblogInfo
     margin-top: 1px
     color: $default
 
-.weblog .weblogPosts h3
-  font-family: $headerFontFamily
-  font-size: 15px
-  font-weight: normal
-  line-height: 16px
-  margin-bottom: 3px
-  margin-top: 1px
-  color: $default
-
 .weblogFormPage
   .weblogForm, .weblogPostForm
     border-top: 1px solid $default
@@ -116,14 +109,14 @@ p.weblogInfo
     text-decoration: none
     &:hover
       text-decoration: underline
-  
+
   p.blueFields select
     border: 1px solid $default
 
 .weblogPostImage
   float: left
   margin-right: 5px
-  
+
 // Content boxes */
 
 .weblog_content_box, .weblog_archive_content_box 
@@ -146,8 +139,6 @@ p.weblogInfo
       width: 80px
       color: $darkGray
       font-weight: bold
-      
+
     .read_more_link
       margin-left: 80px !important
-  
-  
