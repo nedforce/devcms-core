@@ -31,24 +31,16 @@
   #controls
     p
       display: block
-      margin: 0 5px
-      padding-top: 4px
+      margin: 0 8px
+      padding-top: 1px
       float: left
     input.query, div.search_options
       float: left
+    input.query
+      width: 170px
   input, select
     border: 1px solid gray
     padding-left: 3px
-  #controls
-    p, input.query, div.search_options
-      float: left
-    p
-      margin: 0
-      display: block
-      padding-top: 1px
-      margin: 0 8px
-    input.query
-      width: 170px
   input.submit
     width: 110px
     padding: 0
@@ -64,16 +56,17 @@
     width: 160px
   #show_advanced_options, #hide_advanced_options
     float: right
-    width: 110px
     margin-top: 3px
-  #show_advanced_options img, #hide_advanced_options img
-    margin-left: 1px
-  #show_advanced_options a, #hide_advanced_options a
-    font-weight: bold
-    color: $default
-    text-decoration: none
-  #show_advanced_options a:hover, #hide_advanced_options a:hover
-    text-decoration: underline
+    width: 110px
+    img
+      margin-left: 1px
+    a
+      font-weight: bold
+      color: $default
+      text-decoration: none
+      &:hover
+        text-decoration: underline
+
   .number_of_results
     color: $darkGray
     .query

@@ -150,35 +150,26 @@ li.privateSections
 table
   &.items, &#items
     width: 100%
-  &.items th.spacer, &#items th.spacer
-    width: 20px
-  &.items tr.alt, &#items tr.alt
-    background-color: #E6E6E6
-  &.items td, &#items td, &.items th, &#items th
-    padding: 2px 5px 2px 5px
-  &.items td.position, &#items td.position
-    width: 20px
-  &.items td
-    &.date, &.type
-      color: $gray
-      font-weight: normal
-  &#items td
-    &.date, &.type
-      color: $gray
-      font-weight: normal
-  &.items td.gray, &#items td.gray
-    color: $gray
-    font-weight: normal
+    th.spacer
+      width: 20px
+    tr.alt
+      background-color: #e6e6e6
+    th, td
+      padding: 2px 5px 2px 5px
+    td
+      &.date, &.type, &.gray
+        color: $gray
+        font-weight: normal
+      &.position
+        width: 20px
+      &.right
+        text-align: right
+      &.gray a
+        color: $gray
 
 th.gray
   color: $gray
   font-weight: normal
-
-table
-  &.items td.gray a, &#items td.gray a
-    color: $gray
-  &.items td.right, &#items td.right
-    text-align: right
 
 th.right
   text-align: right
@@ -223,7 +214,7 @@ table#items td.right_sized, th.right_sized
 /* bread crumb styles */
 
 .bread_crumbs
-  color: #cccccc
+  color: #ccc
   padding-bottom: 3px
   margin-bottom: 2px
   a
@@ -305,8 +296,8 @@ div
 
 // Highlight background colours for all content boxes with lists
 .content_box .default .hoverable li:hover
-  background-color: #D9EAF2 !important
- 
+  background-color: #d9eaf2 !important
+
 // Datepicker overrides
 .ui-datepicker
   z-index: 9999 !important

@@ -71,10 +71,6 @@ h2
   border-bottom: 1px solid #99bbe8
   height: 32px
 
-.menu
-  border-bottom: 0 !important
-
-.top_bar
   h1
     font-size: 14px
     color: #456ea4
@@ -101,6 +97,9 @@ h2
       float: right
       margin-left: 0
       margin-right: 4px
+
+.menu
+  border-bottom: 0 !important
 
 #show
   padding: 10px
@@ -243,11 +242,10 @@ fieldset
   margin-left: 5px
   margin-top: 2px
   font-style: italic
-
-.x-node-drop-field-txt img
-  display: block
-  margin-top: 5px
-  width: 400px
+  img
+    display: block
+    margin-top: 5px
+    width: 400px
 
 .x-node-drop-field-clear
   margin-left: 5px
@@ -292,7 +290,7 @@ fieldset
 
     table
       margin-top: 10px
-      background-color: #99BBE8
+      background-color: #99bbe8
       td
         background-color: #d0e1f8
 
@@ -322,7 +320,7 @@ fieldset
   margin-bottom: 10px
   label
     padding-left: 5px
-    color: #456EA4
+    color: #456ea4
 
 fieldset .formFieldCt label
   width: 110px
@@ -416,15 +414,13 @@ input.small
   width: auto !important
 
 .interests_group, .newsletter_archives_group
+  background-color: #e8eff9
+  height: 72px
   margin-bottom: 10px
-  background-color: #E8EFF9
-  position: relative
   overflow-x: hidden
   overflow-y: auto
-  height: 72px
+  position: relative
   white-space: nowrap
-
-.interests_group, .newsletter_archives_group
   .x-panel-body
     background-color: #e8eff9
     padding-left: 3px
@@ -437,54 +433,48 @@ input.small
 #content_box_settings
   margin: 15px 0 20px 0
   .content_box_icon_chooser
+    list-style: square outside none
     margin-left: 120px
-    list-style: square outside none
-  .content_box_colour_chooser
-    list-style: square outside none
-  .content_box_icon_chooser li
-    display: block
-    position: relative
-  .content_box_colour_chooser li
-    display: block
-    position: relative
-    width: 40px
-    margin-right: 10px
-    float: left
-  .content_box_icon_chooser
     li
-      width: 120px
-      margin: 4px 20px 0 0
+      display: block
       float: left
+      margin: 4px 20px 0 0
+      position: relative
+      width: 120px
     label
-      float: none
-      display: inline-block
       background-repeat: no-repeat
-  .content_box_colour_chooser label
-    float: none
-    display: inline-block
-    background-repeat: no-repeat
-    width: 20px
-    height: 20px
-    background: transparent
-    margin-right: 20px
-  .content_box_icon_chooser
-    label
-      width: 100px
+      display: inline-block
+      float: none
       height: 48px
-      background: #e7e6e6
       margin-right: 20px
+      width: 100px
+      background: #e7e6e6
     input
       display: inline-block
       position: absolute
       right: 3px
-  .content_box_colour_chooser input
-    display: inline-block
-    position: absolute
-    right: 3px
-  .content_box_icon_chooser input
-    top: 17px
+      top: 17px
+
   .content_box_colour_chooser
+    list-style: square outside none
+    li
+      display: block
+      float: left
+      margin-right: 10px
+      position: relative
+      width: 40px
+    label
+      background-repeat: no-repeat
+      display: inline-block
+      float: none
+      height: 20px
+      margin-right: 20px
+      width: 20px
+      background: transparent
     input
+      display: inline-block
+      position: absolute
+      right: 3px
       top: 3px
 
 /** Responsible user settings **/

@@ -10,7 +10,7 @@
 .forum, .forumTopic, .forumThread, .createForumThread, .editForumThread
   border: 0 !important
 
-.forumTopic, .forumThread, .forumFormPage 
+.forumTopic, .forumThread, .forumFormPage
   h1 .prefix
     font-size: 15px
     color: $gray
@@ -27,18 +27,15 @@
   .forumThreadBody
     overflow: hidden
 
-.forum, .forumTopic, .forumFormPage 
+.forum, .forumTopic, .forumFormPage
   .forumTopicDescription
     font-weight: bold
     overflow: hidden
 
-.forum, .forumTopic, .forumThread 
+.forum, .forumTopic, .forumThread
   .forumPostsOverview
     border-top: 1px solid $default
     border-bottom: 1px solid $default
-
-.forum .forumTopicsOverview
-  margin-top: 15px
 
 .forumTopic
   .forumThreadsOverview
@@ -65,18 +62,18 @@
   background-position: center right
 
 .forum
+  .forumTopicsOverview
+    margin-top: 15px
   .forumDescription
     margin-top: 15px
   .forumTopics
     margin-top: 15px
     margin-bottom: 8px
+    .oddForumTopic, .evenForumTopic
+      padding: 3px 6px 3px 6px
 
 .forumTopic div.forumThreads, .forumThread div.forumPosts
   margin-bottom: 8px
-
-.forum .forumTopics
-  .oddForumTopic, .evenForumTopic
-    padding: 3px 6px 3px 6px
 
 .forumTopic .forumThreads
   .oddForumThread, .evenForumThread
@@ -86,7 +83,7 @@
   .oddForumPost, .evenForumPost
     padding: 3px 6px 3px 6px
 
-.forum, .forumTopic, .forumThread 
+.forum, .forumTopic, .forumThread
   .forumPosts .oddForumPost
     background-color: $lightestGray
 
@@ -108,14 +105,15 @@
 .forumThread .forumPosts p.forumPostDetails, .forum .forumTopics .forumTopicDetails p, .forumTopic .forumThreads .forumThreadDetails p
   margin: 0
 
-.forum div.forumTopics h3, .forumTopic div.forumThreads h3
-  font-family: $headerFontFamily
-  font-size: 15px
-  font-weight: normal
-  line-height: 16px
-  margin-bottom: 3px
-  margin-top: 1px
-  color: $default
+.forum div.forumTopics, .forumTopic div.forumThreads
+  h3
+    color: $default
+    font-family: $headerFontFamily
+    font-size: 15px
+    font-weight: normal
+    line-height: 16px
+    margin-bottom: 3px
+    margin-top: 1px
 
 .forumFormPage
   .forumForm
@@ -137,20 +135,18 @@
     background: none
     padding: 2px 0
     .date
+      color: $darkGray
       display: block
       float: left
+      font-weight: bold
+      width: 80px
     .link
       display: block
       float: left
+      overflow: hidden
+      width: 150px
       a
         background: transparent none
         padding: 0
-    .date
-      width: 80px
-      color: $darkGray
-      font-weight: bold
-    .link
-      width: 150px
-      overflow: hidden
   .read_more_link
     margin-left: 80px !important
