@@ -72,6 +72,12 @@ module DevcmsCore
               page.redirect_to login_path
             end
           end
+          format.json do
+            render text: I18n.t('authenticated_system.not_authenticated'), status: 401
+          end
+          format.any do
+            render nothing: true, status: 401
+          end
         end
       end
 
