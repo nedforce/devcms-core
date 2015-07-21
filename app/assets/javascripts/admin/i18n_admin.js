@@ -5,7 +5,6 @@ I18n.locale['nl'] = {
     delete_all_items: 'Weet u zeker dat u alle items in dit mapje wilt verwijderen?',
     delete_content: 'Content verwijderen',
     delete_failed: 'Sorry, het verwijderen is mislukt.',
-    move_failed: 'Sorry, het verplaatsen is mislukt',
     delete_frontpage_node: 'Deze node fungeert als startpagina voor een sectie. Weet u zeker dat u deze node en al zijn inhoud wilt verwijderen?',
     delete_node: 'Weet u zeker dat u deze node en al zijn inhoud wilt verwijderen?',
     edit_items: 'Items bewerken',
