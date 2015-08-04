@@ -1,15 +1,14 @@
 - content = node.content
-- if content.description.present?
-  .description
-    = strip_tags(truncate(content.description, :length => 200))
+- children = node.children.accessible.public.exclude_content_types(%w( Image Attachment SearchPage Site )).all(limit: node.content_box_number_of_items)
 
-- children = node.children.accessible.public.exclude_content_types(%w( Image Attachment SearchPage Site )).all(:limit => node.content_box_number_of_items)
+- if strip_tags(content.description).present?
+  .description
+    = strip_tags(truncate(content.description, length: 200))
 
 - if children.present?
   %ul
     - children.each do |child|
       %li.hover
         = link_to_node_url h(child.content_title), child
-
 
 = read_more_link(content)
