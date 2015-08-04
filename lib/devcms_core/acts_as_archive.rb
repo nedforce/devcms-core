@@ -99,22 +99,19 @@ module DevcmsCore
     def find_weeks_with_items_for_year(year)
       @weeks = []
 
-      start_of_cwyear = commercial_date(year, 1, 7).beginning_of_week
-      star_of_next_cwyear = (Date.valid_commercial?(year, 53, 7) ? commercial_date(year, 53, 7) : commercial_date(year, 52, 7)).end_of_week + 1.day
+      date_field_model_name    = acts_as_archive_configuration[:date_field_model_name]
+      date_field_database_name = acts_as_archive_configuration[:date_field_database_name]
 
-      date_field_model_name    = self.acts_as_archive_configuration[:date_field_model_name]
-      date_field_database_name = self.acts_as_archive_configuration[:date_field_database_name]
-
-      options = { :conditions => [ date_field_database_name + ' >= ? AND ' + date_field_database_name + ' < ?', start_of_cwyear, star_of_next_cwyear ] }
-      options.update(self.acts_as_archive_configuration[:sql_options]) if self.acts_as_archive_configuration[:sql_options]
+      options = { conditions: [date_field_database_name + ' >= ? AND ' + date_field_database_name + ' < ?', start_of_cwyear(year), start_of_next_cwyear(year)] }
+      options.update(acts_as_archive_configuration[:sql_options]) if acts_as_archive_configuration[:sql_options]
 
       # TODO: optimize this query
-      self.acts_as_archive_items.all(options).each do |item|
+      acts_as_archive_items.all(options).each do |item|
         week = item.send(date_field_model_name).to_date.cweek
         @weeks << week unless @weeks.include?(week)
       end
 
-      @weeks.sort { |a,b| b <=> a }
+      @weeks.sort { |a, b| b <=> a }
     end
 
     # Destroys all items for the given year or month in a year
@@ -131,6 +128,14 @@ module DevcmsCore
       (1..12).each do |month|
         destroy_items_for_month(year, month, paranoid_delete)
       end
+    end
+
+    def start_of_cwyear(year)
+      commercial_date(year, 1, 7).beginning_of_week
+    end
+
+    def start_of_next_cwyear(year)
+      (Date.valid_commercial?(year, 53, 7) ? commercial_date(year, 53, 7) : commercial_date(year, 52, 7)).end_of_week + 1.day
     end
 
     def commercial_date(year, week, day = 1)
