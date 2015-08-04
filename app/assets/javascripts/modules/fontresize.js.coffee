@@ -25,8 +25,8 @@ window.resizeFonts = (i) ->
       currentFontSize = parseInt($element.css('fontSize'))
       $element.data 'prevSize', currentFontSize
       $element.data('originalSize', currentFontSize) if !$element.data('originalSize')
-    .each -> 
-      $element = $(this)    
+    .each ->
+      $element = $(this)
       window.setFontSize($element, parseInt($element.data 'prevSize') + i)
 
 # Increases the text size of all elements with 1px.
