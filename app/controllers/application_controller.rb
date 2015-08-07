@@ -280,7 +280,8 @@ protected
 
   # Find the Attachment and Image children belonging to the current Node instance.
   def find_images_and_attachments
-    @image_content_nodes, @attachment_nodes = [], []
+    @image_content_nodes = []
+    @attachment_nodes = []
 
     @node.children.accessible.with_content_type(%w(Image Attachment ContentCopy)).include_content.all.each do |node|
       node = node.content.copied_node if node.content_type == 'ContentCopy'

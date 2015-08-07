@@ -48,9 +48,7 @@ module DevcmsCore
       def register_content_types!
         # puts "\"Registering all content types, this might take a while..\""
 
-        config.registered_models.each do |model_file|
-          model_file.constantize
-        end
+        config.registered_models.each(&:constantize)
 
         self.content_types_registered = true
       end

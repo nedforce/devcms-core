@@ -460,11 +460,7 @@ class Node < ActiveRecord::Base
   end
 
   def reindex_self_and_children
-    if self.respond_to?(:update_index)
-      self.self_and_descendants.each do |node|
-        node.update_search_index
-      end
-    end
+    self.self_and_descendants.each(&:update_search_index) if self.respond_to?(:update_index)
   end
 
   def disable_search_reindex_until_saved

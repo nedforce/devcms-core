@@ -262,9 +262,7 @@ module NodeExtensions::TreeDelegation
   protected
 
   def add_descendants_to_list
-    descendants.where('position IS NULL').each do |descendant|
-      descendant.add_to_list
-    end
+    descendants.where('position IS NULL').each(&:add_to_list)
   end
 
   def calculate_closure_for(nodes)
