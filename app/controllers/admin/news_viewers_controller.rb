@@ -6,7 +6,7 @@ class Admin::NewsViewersController < Admin::AdminController
   before_filter :find_news_viewer,         :only => [ :show, :edit, :edit_items, :update ]
 
   before_filter :find_recent_news_items,   :only => :show
-  
+
   before_filter :set_commit_type,          :only => [ :create, :update ]
 
   layout false
@@ -42,7 +42,7 @@ class Admin::NewsViewersController < Admin::AdminController
   end
 
   def edit_items
-    @news_archives = NewsArchive.all(:include => :node, :conditions => @news_viewer.node.containing_site.descendant_conditions)
+    @news_archives = NewsArchive.not_archived.all(:include => :node, :conditions => @news_viewer.node.containing_site.descendant_conditions)
   end
 
   # * POST /admin/news_viewers

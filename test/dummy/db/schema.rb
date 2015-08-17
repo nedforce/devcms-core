@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150624115915) do
+ActiveRecord::Schema.define(:version => 20150817055428) do
 
   create_table "abbreviations", :force => true do |t|
     t.string   "abbr",       :null => false

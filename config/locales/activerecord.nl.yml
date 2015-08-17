@@ -225,6 +225,8 @@ nl:
         login: Inlognaam
         password: Wachtwoord
         password_confirmation: Wachtwoordbevestiging
+      news_archive:
+        archived: Gearchiveerd (niet tonen in news viewers)
     errors:
       messages:
         email: "lijkt geen geldig emailadres"

@@ -29,12 +29,15 @@ class NewsArchive < ActiveRecord::Base
     tree_loader_name:                  'news_archives'
   })
 
+  scope :not_archived, ->{ where(archived: false) }
+
   # Extend this class with methods to find items based on their publication date.
   acts_as_archive items_name: :news_items
 
   # A +NewsArchive+ can have many +NewsItem+ children.
   has_children :news_items, order: 'nodes.publication_start_date DESC'
 
+  has_many :news_viewer_archives
   # See the preconditions overview for an explanation of these validations.
   validates :title, presence: true, length: { maximum: 255 }
 

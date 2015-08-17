@@ -15,7 +15,7 @@ class Admin::NewsViewersControllerTest < ActionController::TestCase
     assert assigns(:news_viewer)
     assert assigns(:news_items)
     assert assigns(:news_items_for_table)
-    assert assigns(:latest_news_items)      
+    assert assigns(:latest_news_items)
     assert_equal @news_viewer.node, assigns(:node)
   end
 
@@ -96,6 +96,17 @@ class Admin::NewsViewersControllerTest < ActionController::TestCase
     get :edit_items, :id => @news_viewer
     assert_response :success
     assert assigns(:news_archives)
+  end
+
+  def test_should_get_edit_items_without_archived
+    login_as :sjoerd
+    # Two fixtures, set one as archived
+    news_archives(:other_news).update_attributes(archived: true)
+
+    get :edit_items, :id => @news_viewer
+    assert_response :success
+    assert @news_archives = assigns(:news_archives)
+    assert_equal 1, @news_archives.count
   end
 
   def test_should_update_news_viewer
