@@ -354,6 +354,7 @@ nl:
     number_of_items: Aantal items in content box
     settings: Content box instellingen
     title: Content box titel
+    show_link: Link tonen
   contact_forms:
     add_to: Contactformulier toevoegen aan
     confirm_deletion: Weet u zeker dat u deze inzendingen wilt verwijderen?

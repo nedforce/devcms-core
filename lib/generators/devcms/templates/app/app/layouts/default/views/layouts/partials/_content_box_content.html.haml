@@ -7,7 +7,7 @@
           = image_tag "icons/content_box_#{node.content_box_icon}.png", :class => 'icon_overlay transparent', :alt => content_box_icon_alt_for(node)
         - if sidebox_title.present?
           %h2= sidebox_title
-        - elsif node.content_type_configuration[:has_default_representation]
+        - elsif node.content_type_configuration[:has_default_representation] && node.content_box_show_link
           %h2= link_to_content_node content_box_title_for(node), content
         - else
           %h2= content_box_title_for(node)

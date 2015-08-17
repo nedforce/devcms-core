@@ -11,6 +11,10 @@
           = f.label      :content_box_url, t('content_boxes.url')
           = f.text_field :content_box_url
 
+        .formFieldCt.clearfix
+          = f.label      :content_box_show_link, t('content_boxes.show_link')
+          = f.check_box  :content_box_show_link
+
         - if show_number_of_items_field
           .formFieldCt.clearfix.cb-number-of-items
             = f.label  :content_box_number_of_items, t('content_boxes.number_of_items')
