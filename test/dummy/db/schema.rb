@@ -506,13 +506,14 @@ ActiveRecord::Schema.define(:version => 20150817135049) do
   add_index "meeting_categories", ["updated_at"], :name => "index_meeting_categories_on_updated_at"
 
   create_table "news_archives", :force => true do |t|
-    t.string   "title",          :null => false
+    t.string   "title",                             :null => false
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
     t.integer  "items_featured"
     t.integer  "items_max"
+    t.boolean  "archived",       :default => false
   end
 
   add_index "news_archives", ["created_at"], :name => "index_news_archives_on_created_at"
