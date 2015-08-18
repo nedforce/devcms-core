@@ -79,7 +79,10 @@ class User < ActiveRecord::Base
   has_many :user_poll_question_votes, dependent: :destroy
 
   # A +User+ has and belongs to many +NewsletterArchive+ objects (i.e., subscriptions to newsletters).
-  has_and_belongs_to_many :newsletter_archives
+  #has_and_belongs_to_many :newsletter_archives
+  has_many :newsletter_archives_users
+  has_many :newsletter_archives, through: :newsletter_archives_users
+
   has_many :newsletter_edition_queues
 
   # A +User+ has and belongs to many +Interest+ objects (i.e., general news or art).
@@ -131,7 +134,7 @@ class User < ActiveRecord::Base
 
   # Make sure a verification code is set when a user first registers.
   before_validation :set_verification_code, on: :create
-  
+
   after_create :send_verification_email_or_verify
 
   # Prevents the fields NOT listed here from being assigned to in a mass-assignment.

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150817135049) do
+ActiveRecord::Schema.define(:version => 20150819065406) do
 
   create_table "abbreviations", :force => true do |t|
     t.string   "abbr",       :null => false
@@ -577,9 +577,11 @@ ActiveRecord::Schema.define(:version => 20150817135049) do
   add_index "newsletter_archives", ["deleted_at"], :name => "index_newsletter_archives_on_deleted_at"
   add_index "newsletter_archives", ["updated_at"], :name => "index_newsletter_archives_on_updated_at"
 
-  create_table "newsletter_archives_users", :id => false, :force => true do |t|
-    t.integer "newsletter_archive_id"
-    t.integer "user_id"
+  create_table "newsletter_archives_users", :force => true do |t|
+    t.integer  "newsletter_archive_id"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "newsletter_archives_users", ["newsletter_archive_id", "user_id"], :name => "unique_index_on_newsletter_archive_and_user_ids", :unique => true

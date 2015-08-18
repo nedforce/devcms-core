@@ -1,9 +1,9 @@
 devcms_newsletter_archive:
-  users: roderick, sjoerd, arthur
+  #users: roderick, sjoerd, arthur
   title: Gemeente nieuwsbrief
   description: Gemeentenieuws direct in uw mailbox!
 example_newsletter_archive:
-  users: arthur
+  #users: arthur
   title: Example nieuwsbrief
   description: Example nieuws direct in uw mailbox!
   from_email_address: webmaster@example.nl

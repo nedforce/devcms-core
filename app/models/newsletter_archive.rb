@@ -37,7 +37,10 @@ class NewsletterArchive < ActiveRecord::Base
 
   # A +NewsletterArchive+ has and belongs to many +User+ objects (i.e.
   # subscribed users).
-  has_and_belongs_to_many :users
+  #has_and_belongs_to_many :users
+
+  has_many :newsletter_archives_users
+  has_many :users, through: :newsletter_archives_users
 
   # See the preconditions overview for an explanation of these validations.
   validates :title, presence: true, length: { maximum: 255 }

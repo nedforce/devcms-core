@@ -1,0 +1,15 @@
+roderick_subscription:
+  user: roderick
+  newsletter_archive: devcms_newsletter_archive
+
+sjoerd_subscription:
+  user: sjoerd
+  newsletter_archive: devcms_newsletter_archive
+
+arthur_subscription:
+  user: arthur
+  newsletter_archive: devcms_newsletter_archive
+
+arthur_example_subscription:
+  user: arthur
+  newsletter_archive: example_newsletter_archive
