@@ -7,223 +7,221 @@
 Ext.Updater.defaults.loadScripts = true;
 
 Ext.onReady(function () {
-    perPage = 25
+  perPage = 25;
 
-    // Set default parameters for ajax requests
-    defaultParams = {
-      authenticity_token: '<%= form_authenticity_token -%>',
-      format: 'xml'
-    };
+  // Set default parameters for ajax requests
+  defaultParams = {
+    authenticity_token: '<%= form_authenticity_token -%>',
+    format: 'xml'
+  };
 
-    Ext.QuickTips.init();
+  Ext.QuickTips.init();
 
-    // shorthand alias
-    var fm = Ext.form;
+  // shorthand alias
+  var fm = Ext.form;
 
-    // the column model has information about grid columns
-    // dataIndex maps the column to the specific data field in
-    // the data store (created below)
-    var cm = new Ext.grid.ColumnModel({
-      columns:
-        [{
-             id: 'id',
-             node_id: 'node_id',
-             header: "<%= I18n.t('data_warnings.error_code') %>",
-             dataIndex: 'error_code',
-             width: 100,
-             sortable: true
-          },{
-             header: "<%= I18n.t('data_warnings.subject') %>",
-             dataIndex: 'subject',
-             width: 150,
-             sortable: false
-         },{
-             header: "<%= I18n.t('data_warnings.message') %>",
-             dataIndex: 'message',
-             width: 200,
-             sortable: false,
-             id: 'multiline-column'
-          },{
-             header: "<%= I18n.t('data_warnings.created_at') %>",
-             dataIndex: 'created_at',
-             width: 200,
-             sortable: true
+  // the column model has information about grid columns
+  // dataIndex maps the column to the specific data field in
+  // the data store (created below)
+  var cm = new Ext.grid.ColumnModel({
+    columns:
+      [{
+        id: 'id',
+        node_id: 'node_id',
+        header: "<%= I18n.t('data_warnings.error_code') %>",
+        dataIndex: 'error_code',
+        width: 100,
+        sortable: true
+      }, {
+        header: "<%= I18n.t('data_warnings.subject') %>",
+        dataIndex: 'subject',
+        width: 150,
+        sortable: false
+      }, {
+        header: "<%= I18n.t('data_warnings.message') %>",
+        dataIndex: 'message',
+        width: 200,
+        sortable: false,
+        id: 'multiline-column'
+      }, {
+        header: "<%= I18n.t('data_warnings.created_at') %>",
+        dataIndex: 'created_at',
+        width: 200,
+        sortable: true
+      }]
+    });
+
+  // by default columns are sortable
+  cm.defaultSortable = true;
+
+  // create the Data Store
+  var store = new Ext.data.Store({
+    proxy: new Ext.data.HttpProxy({
+      url: '/admin/data_warnings.json',
+      method: 'GET'
+    }),
+
+    remoteSort: true,
+
+    reader: new Ext.data.JsonReader({
+      root: 'data_warnings',
+      id: 'id',
+      totalProperty: 'total_count'
+    },
+      ['subject', 'error_code', 'message', 'created_at', 'node_id']
+    ),
+
+    autoLoad: { params: { start: 0, limit: perPage } }
+  });
+
+  selModel = new Ext.grid.RowSelectionModel({ singleSelect: false });
+
+  // create the grid
+  grid = new Ext.grid.GridPanel({
+    store: store,
+    cm: cm,
+    stripeRows: true,
+    autoExpandColumn: 0,
+    margins: '0 5 5 5',
+    selModel: selModel,
+    loadMask: true,
+    bbar: new Ext.PagingToolbar({
+      store: store,
+      pageSize: perPage,
+      displayInfo: true,
+      displayMsg: '<%= I18n.t("data_warnings.count_msg") %>',
+      emptyMsg: '<%= I18n.t("data_warnings.empty_msg") %>',
+      afterPageText: '<%= I18n.t("data_warnings.of_page") %>',
+      beforePageText: '<%= I18n.t("data_warnings.page") %>'
+    }),
+    tbar: [
+      {
+        text: '<%= I18n.t("data_warnings.delete") %>',
+        tooltip: '<%= I18n.t("data_warnings.delete_tooltip") %>',
+        handler: handleDelete,
+        iconCls:'menu_item_delete'
+      },
+      {
+        text: '<%= I18n.t("data_warnings.clear") %>',
+        tooltip: '<%= I18n.t("data_warnings.clear_tooltip") %>',
+        handler: handleClear,
+        iconCls:'menu_item_delete'
+      }
+    ]
+  });
+
+  selModel.addListener('rowselect', onRowSelect);
+
+  leftPanel = new Ext.Panel({
+    layout: 'border',
+    border: 'false',
+    items: [Ext.apply(grid, { region: 'center' })]
+  });
+
+  rightPanel = new Ext.Panel({
+    id: 'right_panel',
+    contentEl: 'right_panel_init'
+  });
+
+  mainPanelCfg = {
+    layout: 'border',
+    border: false,
+    defaults: { autoScroll: true },
+    items: [
+      Ext.apply(leftPanel, { margins: '0 5 0 0', region: 'west', split: true, width: '45%' }),
+      Ext.apply(rightPanel, { region: 'center' })
+    ]
+  };
+
+  var last_loaded_item_id = -1;
+
+  function onRowSelect (selModel, rowIndex, record) {
+    rightPanel.load({
+      url: '/admin/nodes/' + record.get('node_id') + '/edit',
+      params: Ext.ux.prepareParams(defaultParams, { format: 'html' }),
+      method: 'GET',
+      callback: function (options, success, response) {
+        if (!success) {
+          Ext.ux.alertResponseError(response);
+        }
+      }
+    });
+  }
+
+  function handleDelete(deleteEvent) {
+    grid.disable();
+    var selectedItems = grid.selModel.getSelections();
+    if (selectedItems.length > 0) {
+      Ext.MessageBox.confirm('<%= I18n.t("data_warnings.message") %>','<%= I18n.t("data_warnings.confirm_delete") %>', deleteRecords);
+    } else {
+      Ext.MessageBox.alert('<%= I18n.t("data_warnings.message") %>','<%= I18n.t("data_warnings.select_one") %>');
+      grid.enable();
+    }
+  }
+
+  function handleClear(clearEvent) {
+    grid.disable();
+    Ext.MessageBox.confirm('<%= I18n.t("data_warnings.message_header") %>','<%= I18n.t("data_warnings.confirm_clear") %>', clearWarnings);
+  }
+
+  function deleteRecords(button) {
+    if (button == 'yes') {
+      var selectedRows = grid.selModel.getSelections();
+      selectedRows.each(function (item) {
+
+        Ext.Ajax.request({
+          waitMsg: '<%= I18n.t("data_warnings.deleting") %>',
+          url: '/admin/data_warnings/' + item.id + '.json',
+          method: 'POST',
+
+          params: "_method=delete",
+          headers: {
+            'X-CSRF-Token': '<%= form_authenticity_token.to_s %>'
+          },
+          callback: function (options, success, response) {
+            if (!success) {
+              Ext.ux.alertResponseError(response);
+              grid.enable();
+            } else {
+              store.reload();
+              grid.enable();
+            }
           }
-      ]
-    });
-
-    // by default columns are sortable
-    cm.defaultSortable = true;
-
-    // create the Data Store
-    var store = new Ext.data.Store({
-        proxy: new Ext.data.HttpProxy({
-          url: '/admin/data_warnings.json',
-          method: 'GET'
-        }),
-
-        remoteSort: true,
-
-        reader: new Ext.data.JsonReader({
-          root: 'data_warnings',
-          id: 'id',
-          totalProperty: 'total_count'
-        },
-          [ 'subject', 'error_code', 'message', 'created_at', 'node_id' ]
-        ),
-
-        autoLoad: { params: { start: 0, limit: perPage } }
-    });
-
-    selModel = new Ext.grid.RowSelectionModel({ singleSelect: false });
-
-    // create the grid
-    grid = new Ext.grid.GridPanel({
-        store: store,
-        cm: cm,
-        stripeRows: true,
-        autoExpandColumn: 0,
-        margins: '0 5 5 5',
-        selModel: selModel,
-        loadMask: true,
-        bbar: new Ext.PagingToolbar({
-            store: store,
-            pageSize: perPage,
-            displayInfo: true,
-            displayMsg: '<%= I18n.t("data_warnings.count_msg") %>',
-            emptyMsg: '<%= I18n.t("data_warnings.empty_msg") %>',
-            afterPageText: '<%= I18n.t("data_warnings.of_page") %>',
-            beforePageText: '<%= I18n.t("data_warnings.page") %>'
-        }),
-        tbar: [
-              {
-                  text: '<%= I18n.t("data_warnings.delete") %>',
-                  tooltip: '<%= I18n.t("data_warnings.delete_tooltip") %>',
-                  handler: handleDelete,
-                  iconCls:'menu_item_delete'
-              },
-              {
-                  text: '<%= I18n.t("data_warnings.clear") %>',
-                  tooltip: '<%= I18n.t("data_warnings.clear_tooltip") %>',
-                  handler: handleClear,
-                  iconCls:'menu_item_delete'
-              }
-        ]
-    });
-
-   selModel.addListener('rowselect', onRowSelect);
-
-   leftPanel = new Ext.Panel({
-     layout: 'border',
-     border: 'false',
-     items: [Ext.apply(grid, { region: 'center' })]
-   })
-
-   rightPanel = new Ext.Panel({
-     id: 'right_panel',
-     contentEl: 'right_panel_init'
-   });
-
-   mainPanelCfg = {
-        layout:'border',
-        border: false,
-        defaults: { autoScroll: true },
-        items: [
-            Ext.apply(leftPanel, {margins: '0 5 0 0', region: 'west', split: true, width: '45%'}),
-            Ext.apply(rightPanel, {region: 'center'})
-        ]
-    }
-
-    var last_loaded_item_id = -1;
-
-    function onRowSelect (selModel, rowIndex, record) {
-      rightPanel.load({
-        url: '/admin/nodes/'+record.get('node_id')+'/edit',
-         params: Ext.ux.prepareParams(defaultParams, {format: 'html'}),
-         method: 'GET',
-         callback: function (options, success, response) {
-           if(!success) Ext.ux.alertResponseError(response)
-         }
+        });
       });
+    } else {
+      grid.enable();
     }
+  }
 
-    function handleDelete(deleteEvent) {
+  function clearWarnings(button) {
+    if (button == 'yes') {
       grid.disable();
-      var selectedItems = grid.selModel.getSelections();
-      if (selectedItems.length > 0)
-      {
-          Ext.MessageBox.confirm('<%= I18n.t("data_warnings.message") %>','<%= I18n.t("data_warnings.confirm_delete") %>', deleteRecords);
-      }
-      else
-      {
-          Ext.MessageBox.alert('<%= I18n.t("data_warnings.message") %>','<%= I18n.t("data_warnings.select_one") %>');
-          grid.enable();
-      }
-    }
+      Ext.Ajax.request({
+        url: 'data_warnings/clear.json',
+        method: 'POST',
+        params: "_method=delete",
+        headers: {
+          'X-CSRF-Token': '<%= form_authenticity_token.to_s %>'
+        },
 
-    function handleClear(clearEvent) {
-      grid.disable();
-      Ext.MessageBox.confirm('<%= I18n.t("data_warnings.message_header") %>','<%= I18n.t("data_warnings.confirm_clear") %>', clearWarnings);
-    }
-
-    function deleteRecords(button) {
-        if (button == 'yes') {
-          var selectedRows = grid.selModel.getSelections();
-          selectedRows.each(function(item) {
-
-              Ext.Ajax.request({
-                  waitMsg: '<%= I18n.t("data_warnings.deleting") %>',
-                  url: '/admin/data_warnings/' + item.id + '.json',
-                  method: 'POST',
-
-                  params: "_method=delete",
-                  headers: {
-                    'X-CSRF-Token': '<%= form_authenticity_token.to_s %>'
-                  },
-                  callback: function (options, success, response) {
-                    if(!success){
-                        Ext.ux.alertResponseError(response)
-                        grid.enable();
-                    }else{
-                        store.reload();
-                        grid.enable();
-                    }
-                  }
-              });
-          });
+        callback: function (options, success, response) {
+          if (!success) {
+            Ext.ux.alertResponseError(response);
+            store.reload();
+            grid.enable();
+          } else {
+            store.reload();
+            grid.enable();
+          }
         }
-        else grid.enable();
-    };
+      });
+    } else {
+      grid.enable();
+    }
+  }
 
-    function clearWarnings(button) {
-        if (button == 'yes')
-        {
-            grid.disable();
-            Ext.Ajax.request({
-              url: 'data_warnings/clear.json',
-              method: 'POST',
-              params: "_method=delete",
-              headers: {
-                'X-CSRF-Token': '<%= form_authenticity_token.to_s %>'
-              },
-
-              callback: function (options, success, response) {
-                if (!success) {
-                    Ext.ux.alertResponseError(response)
-                    store.reload();
-                    grid.enable();
-                } else {
-                    store.reload();
-                    grid.enable();
-                }
-              }
-          });
-        } else {
-          grid.enable();
-        }
-    };
-
-    initViewport(mainPanelCfg);
+  initViewport(mainPanelCfg);
 });
 
 //]]>
