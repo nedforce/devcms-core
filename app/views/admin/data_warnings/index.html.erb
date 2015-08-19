@@ -136,16 +136,18 @@ Ext.onReady(function () {
   var last_loaded_item_id = -1;
 
   function onRowSelect (selModel, rowIndex, record) {
-    rightPanel.load({
-      url: '/admin/nodes/' + record.get('node_id') + '/edit',
-      params: Ext.ux.prepareParams(defaultParams, { format: 'html' }),
-      method: 'GET',
-      callback: function (options, success, response) {
-        if (!success) {
-          Ext.ux.alertResponseError(response);
+    if (record.get('subject') != '(Sindsdien verwijderd)') {
+      rightPanel.load({
+        url: '/admin/nodes/' + record.get('node_id') + '/edit',
+        params: Ext.ux.prepareParams(defaultParams, { format: 'html' }),
+        method: 'GET',
+        callback: function (options, success, response) {
+          if (!success) {
+            Ext.ux.alertResponseError(response);
+          }
         }
-      }
-    });
+      });
+    }
   }
 
   function handleDelete(deleteEvent) {
