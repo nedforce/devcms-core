@@ -94,6 +94,15 @@ class ActiveSupport::TestCase
       Object.send(:remove_const, constant)
     end
   end
+
+  def with_csrf_check_enabled &block
+    begin
+      ActionController::Base.allow_forgery_protection = true
+      yield
+    ensure
+      ActionController::Base.allow_forgery_protection = false
+    end
+  end
 end
 
 class ActionController::IntegrationTest
@@ -105,4 +114,5 @@ class ActionController::IntegrationTest
     Rails.application.config.consider_all_requests_local = false
     Rails.application.config.action_dispatch.show_exceptions = true
   end
+
 end

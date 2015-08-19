@@ -95,4 +95,12 @@ class SessionsControllerTest < ActionController::TestCase
 
     assert !@controller.send(:logged_in?)
   end
+
+  test 'invalid csrf token' do
+    with_csrf_check_enabled do
+      post :create, login: users(:gerjan).login.upcase, password: 'gerjan', authenticity_token: 'wrong_token'
+      assert_response :unprocessable_entity
+    end
+  end
+
 end

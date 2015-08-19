@@ -436,6 +436,11 @@ protected
     @controller_model ||= controller_name.classify.split('::').last.constantize rescue nil
   end
 
+  def handle_unverified_request
+    # raise ActionController::InvalidAuthenticityToken
+    head :unprocessable_entity
+  end
+
 private
 
   def determine_redirect_url(request, ssl)
