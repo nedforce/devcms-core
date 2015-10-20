@@ -40,6 +40,7 @@ class Admin::UrlAliasesController < Admin::AdminController
 
   def destroy
     @node.update_column(:custom_url_suffix, nil)
+    @node.update_column(:custom_url_alias,  nil)
 
     head :ok
   end
