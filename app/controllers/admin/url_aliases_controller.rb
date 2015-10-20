@@ -1,20 +1,19 @@
 class Admin::UrlAliasesController < Admin::AdminController
+  before_filter :find_node,   only: [:update, :destroy]
+  before_filter :set_paging,  only: [:index, :create]
+  before_filter :set_sorting, only: [:index, :create]
 
-  before_filter :find_node,   :only   => [ :update, :destroy ]
-  before_filter :set_paging,  :only   => [ :index, :create ]
-  before_filter :set_sorting, :only   => [ :index, :create ]
-
-  require_role ['admin', 'final_editor']
+  require_role %w(admin final_editor)
 
   def index
     @active_page = :url_aliases
     @nodes       = Node.unscoped { Node.where('custom_url_suffix IS NOT NULL').order("#{@sort_field} #{@sort_direction}").page(@current_page).per(@page_limit) }
     @node_count  = Node.where('custom_url_suffix IS NOT NULL').count
-    
+
     respond_to do |format|
       format.html
-      format.xml  { render :action => :index }
-      format.json { render :json   => { :nodes => @nodes } }
+      format.xml  { render action: :index }
+      format.json { render json: { nodes: @nodes } }
     end
   end
 
@@ -30,26 +29,27 @@ class Admin::UrlAliasesController < Admin::AdminController
   def update
     respond_to do |format|
       if @node.update_attributes params[:node]
-        format.html { redirect_to admin_url_aliases_path, :notice => I18n.t('nodes.node_update_succesful') }
+        format.html { redirect_to admin_url_aliases_path, notice: I18n.t('nodes.node_update_succesful') }
         format.json { head :ok }
       else
         format.html { head :unprocessable_entity }
-        format.json { render :json => @node.errors.full_messages, :status => :unprocessable_entity }
+        format.json { render json: @node.errors.full_messages, status: :unprocessable_entity }
       end
     end
   end
 
   def destroy
     @node.update_column(:custom_url_suffix, nil)
+
     head :ok
   end
 
   protected
-  
+
   def find_node
     @node = Node.unscoped.find params[:id]
   end
-  
+
   # Finds sorting parameters.
   def set_sorting
     if extjs_sorting?
@@ -60,5 +60,4 @@ class Admin::UrlAliasesController < Admin::AdminController
     end
     @sort_field = "UPPER(#{@sort_field})" unless @sort_field =~ /(id|created_at)/
   end
-
 end
