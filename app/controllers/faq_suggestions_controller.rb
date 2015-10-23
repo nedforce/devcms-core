@@ -22,13 +22,15 @@ class FaqSuggestionsController < ApplicationController
   end
 
   private
+
   def find_theme
     @theme = FaqTheme.find(params[:theme_id])
   end
 
   def suggestion_valid?
     @errors = []
-    validate_presence; validate_email
+    validate_presence
+    validate_email
     @errors.none?
   end
 
@@ -46,8 +48,8 @@ class FaqSuggestionsController < ApplicationController
   end
 
   def validate_email
-    unless params[:email] =~ EmailValidator::REGEX
-      @errors << t('faq_suggestions.errors.email_invalid')
-    end
+    return if params[:email] =~ EmailValidator::REGEX
+
+    @errors << t('faq_suggestions.errors.email_invalid')
   end
 end
