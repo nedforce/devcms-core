@@ -296,9 +296,11 @@ module DevcmsCoreHelper
   end
 
   def switch_contrast_mode_link(show_text = false)
-    alt = show_text ? '' : contrast_mode_text
-    link_text = image_tag('icons/contrast-high-icon.png', class: 'icon', alt: alt, title: contrast_mode_text)
-    link_text += contrast_mode_text if show_text
+    if show_text
+      link_text = image_tag('icons/contrast-high-icon.png', class: 'icon', alt: '') + contrast_mode_text
+    else
+      link_text = image_tag('icons/contrast-high-icon.png', class: 'icon', alt: contrast_mode_text, title: contrast_mode_text)
+    end
 
     link_to link_text, params.merge(contrast: target_contrast_mode), rel: 'nofollow'
   end
