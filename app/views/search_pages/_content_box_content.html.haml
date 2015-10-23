@@ -1,10 +1,10 @@
 #side_box_search
-  = form_tag(search_path(:protocol => 'http'), { :method => :get, :class => 'clearfix' }) do
+  = form_tag(search_path(protocol: 'http'), { method: :get, class: 'clearfix' }) do
     .search_terms
-      %label.hidden{ :for => 'search_terms' }
-        =t 'search.search'
-      = text_field_tag(:query, @query, :id => 'side_box_search_terms')
+      %label.hidden{ for: 'search_terms' }
+        = t 'search.search'
+      = text_field_tag(:query, @query, id: 'side_box_search_terms')
       = hidden_field_tag(:search_scope, "node_#{parent.id}")
 
     .clearfix
-      = submit_tag t('search.search'), :class => 'submit'
+      = submit_tag t('search.search'), class: 'submit'
