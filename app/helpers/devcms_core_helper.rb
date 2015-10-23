@@ -1,13 +1,12 @@
 module DevcmsCoreHelper
-
   # Use the asset path for images, as we have our own image controller
-  def image_path *args
+  def image_path(*args)
     asset_path(*args)
   end
 
   def content_box_title_for(node)
     (node.content.respond_to?(:custom_content_box_title) && node.content.custom_content_box_title) ||
-    (node.content_box_title.present? && node.content_box_title) || node.content.title
+      (node.content_box_title.present? && node.content_box_title) || node.content.title
   end
 
   # Creates div elements containing the various flash messages, if any are set.
@@ -16,18 +15,19 @@ module DevcmsCoreHelper
   # type is the type of the flash message.
   def yield_flash
     flash.keys.map do |key|
-      content_tag(:div, :class => "flash #{key}") do
-        content_tag(:p, image_tag("icons/#{key}.png", :class => 'icon', :alt => key) + flash[key].to_s)
+      content_tag(:div, class: "flash #{key}") do
+        content_tag(:p, image_tag("icons/#{key}.png", class: 'icon', alt: key) + flash[key].to_s)
       end
     end.join.html_safe
   end
 
-  # Creates the breadcrumbs element, which displays links to all the node's ancestors.
+  # Creates the breadcrumbs element, which displays links to all the node's
+  # ancestors.
   #
   # See documentation of +bread_crumbs_track_for+ for more information.
   def bread_crumbs_for(node, options = {})
     if @category.blank? && node.content_type != 'ProductCatalogue'
-      string_cache(:breadcrumbs_for_node => node.id,  :last_updated_at => node.path.maximum(:updated_at)) do
+      string_cache(breadcrumbs_for_node: node.id, last_updated_at: node.path.maximum(:updated_at)) do
         build_bread_crumbs_for(node, options)
       end
     else
@@ -37,22 +37,27 @@ module DevcmsCoreHelper
 
   def build_bread_crumbs_for(node, options = {})
     crumb_track = bread_crumbs_track_for(node, options)
-    content_tag(:div, crumb_track.html_safe, :class => 'bread_crumbs') if crumb_track.present?
+    content_tag(:div, crumb_track.html_safe, class: 'bread_crumbs') if crumb_track.present?
   end
 
-  # Creates the breadcrumbs element, which displays links to all the node's ancestors.
+  # Creates the breadcrumbs element, which displays links to all the node's
+  # ancestors.
   #
   # *arguments*
-  # +node+ - The node for which breadcrumbs should be created. It will add all ancestors to it
+  # +node+ - The node for which breadcrumbs should be created. It will add all
+  #          ancestors to it.
   # +options+ A hash with breadcrumb and link options:
   # :include_root: Include the root node in the path
   # :minimum_crumbs: The number of crumbs that should be in the path
   # :separator: The seperator between two crumbs
-  # :popup_window: Link option: when clicked on a crumb, it will open in a new window (using javascript)
-  # :skip_link_self: Link option: Don't create a link for +node+. Useful when a node is invisible or unapproved
-  # :suffix: A tree that follows the node, e.g. a category of a product catalogue
+  # :popup_window: Link option: when clicked on a crumb, it will open in a new
+  #                             window (using JavaScript).
+  # :skip_link_self: Link option: Don't create a link for +node+. Useful when a
+  #                               node is invisible or unapproved.
+  # :suffix: A tree that follows the node, e.g. a category of a
+  #          product catalogue.
   def bread_crumbs_track_for(node, options = {})
-    options = { :minimum_crumbs => 1, :separator => ' &gt; ', :include_root => true }.merge(options)
+    options = { minimum_crumbs: 1, separator: ' &gt; ', include_root: true }.merge(options)
 
     host = options.delete :host
 
@@ -69,7 +74,7 @@ module DevcmsCoreHelper
     suffix = options.delete(suffix) || @category
     if suffix
       product = crumb_nodes.pop if @category && node.content_type == 'Product'
-      crumb_nodes += suffix.ancestors.sort_by { |s| s.id }
+      crumb_nodes += suffix.ancestors.sort_by(&:id)
       crumb_nodes << suffix
       crumb_nodes << product unless product.nil?
     end
@@ -95,12 +100,12 @@ module DevcmsCoreHelper
           elsif node.class == Node
             crumb_track << link_to_content_node(html_escape(n.content_title), n, {}, link_options)
           elsif node.class.name == 'ProductCategory'
-            crumb_track << link_to(html_escape(n.title), product_catalogue_products_path(:product_catalogue_id => @product_catalogue, :selection => 'category', :selection_id => n.id))
+            crumb_track << link_to(html_escape(n.title), product_catalogue_products_path(product_catalogue_id: @product_catalogue, selection: 'category', selection_id: n.id))
           end
         elsif node.class == Node
           crumb_track << "<span class='last_crumb'>#{(options[:skip_link_self] ? n.content_title : link_to_content_node(html_escape(n.content_title), n, {}, link_options))}</span>"
         elsif node.class.name == 'ProductCategory'
-          crumb_track << "<span class='last_crumb'>#{(options[:skip_link_self] ? n.title : link_to(html_escape(n.title), product_catalogue_products_path(:product_catalogue_id => @product_catalogue, :selection => 'category', :selection_id => n.id)))}</span>"
+          crumb_track << "<span class='last_crumb'>#{(options[:skip_link_self] ? n.title : link_to(html_escape(n.title), product_catalogue_products_path(product_catalogue_id: @product_catalogue, selection: 'category', selection_id: n.id)))}</span>"
         end
       end
     end
@@ -108,20 +113,22 @@ module DevcmsCoreHelper
     crumb_track.html_safe
   end
 
-  # Prints error messages for an AR object in a minimal, side box fitting layout element.
+  # Prints error messages for an AR object in a minimal, side box fitting layout
+  # element.
   def side_box_error_messages_for(obj)
     list_items = obj.errors.full_messages.map { |msg| content_tag(:li, msg) }.join("\n").html_safe
-    content_tag(:ul, list_items, :class => 'errors')
+    content_tag(:ul, list_items, class: 'errors')
   end
 
   # Returns the HTML for the footer menu links.
   def create_footer_menu_links
-    current_site.children.accessible.public.shown_in_menu.all(:order => 'nodes.position ASC').map do |node|
+    current_site.children.accessible.public.shown_in_menu.all(order: 'nodes.position ASC').map do |node|
       link_to_node(h(node.content_title.downcase), node)
     end.join(' | ').html_safe
   end
 
-  # Generates include tags for the given scripts and places them in the head element of the page.
+  # Generates include tags for the given scripts and places them in the head
+  # element of the page.
   def include_js(*scripts)
     content_for :javascript do
       scripts.map do |script|
@@ -135,42 +142,42 @@ module DevcmsCoreHelper
   end
 
   def pink_arrow_button(alt = nil, options = {}, &block)
-    content_tag(:div, options.reverse_merge(:class => 'go')) { image_tag('arrow_pink.png', :class => 'icon', :alt => alt) + capture(&block) }
+    content_tag(:div, options.reverse_merge(class: 'go')) { image_tag('arrow_pink.png', class: 'icon', alt: alt) + capture(&block) }
   end
 
   def blue_arrow_button(alt = nil, options = {}, &block)
-    content_tag(:div, options.reverse_merge(:class => 'go')) { image_tag('arrow_blue.png', :class => 'icon', :alt => alt) + capture(&block) }
+    content_tag(:div, options.reverse_merge(class: 'go')) { image_tag('arrow_blue.png', class: 'icon', alt: alt) + capture(&block) }
   end
 
   def orange_arrow_button(alt = nil, options = {}, &block)
-    content_tag(:div, options.reverse_merge(:class => 'go')) { image_tag('arrow_orange.png', :class => 'icon', :alt => alt) + capture(&block) }
+    content_tag(:div, options.reverse_merge(class: 'go')) { image_tag('arrow_orange.png', class: 'icon', alt: alt) + capture(&block) }
   end
 
   def arrow_block_button(title = nil, options = {}, &block)
-    content_tag(:div, options.reverse_merge(:class => 'go')) { image_tag('arrow_block.png', :class => 'icon transparent', :alt => '', :title => title) + capture(&block) }
+    content_tag(:div, options.reverse_merge(class: 'go')) { image_tag('arrow_block.png', class: 'icon transparent', alt: '', title: title) + capture(&block) }
   end
 
   def news_item_button(title = nil, &block)
-    content_tag(:div, :class => 'article') { image_tag('icons/news_item.png', :class => 'icon', :alt => '', :title => title) + capture(&block) }
+    content_tag(:div, class: 'article') { image_tag('icons/news_item.png', class: 'icon', alt: '', title: title) + capture(&block) }
   end
 
   def edit_button(title = nil, &block)
-    content_tag(:div, :class => 'edit') { image_tag('icons/pencil.png', :class => 'icon', :alt => 'Icoon van een wijzigteken', :title => title) + capture(&block) }
+    content_tag(:div, class: 'edit') { image_tag('icons/pencil.png', class: 'icon', alt: 'Icoon van een wijzigteken', title: title) + capture(&block) }
   end
 
   def delete_button(title = nil, &block)
-    content_tag(:div, :class => 'delete') { image_tag('icons/delete.png', :class => 'icon', :alt => 'Icoon van een verwijderteken', :title => title) + capture(&block) }
+    content_tag(:div, class: 'delete') { image_tag('icons/delete.png', class: 'icon', alt: 'Icoon van een verwijderteken', title: title) + capture(&block) }
   end
 
   def right_new_button(title = nil, &block)
-    content_tag(:div, :class => 'newRight') { image_tag('icons/add.png', :class => 'icon', :alt => 'Icoon van een plusteken', :title => title) + capture(&block) }
+    content_tag(:div, class: 'newRight') { image_tag('icons/add.png', class: 'icon', alt: 'Icoon van een plusteken', title: title) + capture(&block) }
   end
 
   # Generates a print button.
   def print_button
-    content_tag(:div, :class => 'print') do
-      image_tag('icons/print.png', :class => 'icon', :alt => '', :title => t('application.print_title')) +
-      link_to(t('application.print'), '?layout=print', :title => t('application.print_title'), :rel => 'nofollow')
+    content_tag(:div, class: 'print') do
+      image_tag('icons/print.png', class: 'icon', alt: '', title: t('application.print_title')) +
+      link_to(t('application.print'), '?layout=print', title: t('application.print_title'), rel: 'nofollow')
     end
   end
 
@@ -180,23 +187,23 @@ module DevcmsCoreHelper
     if random_image.nil?
       header_title = t('application.default_header_photo_alt')
       image_url    = asset_path('default_header_photo.jpg')
-      image_tag    = image_tag(image_url, :alt => header_title, :title => header_title)
+      image_tag    = image_tag(image_url, alt: header_title, title: header_title)
     elsif (big_header)
       header_title = random_image.title
-      image_url    = content_node_path(random_image, :action => :big_header, :format => :jpg)
-      image_tag    = image_tag content_node_path(random_image, :action => :big_header, :format => :jpg), :alt => random_image.alt, :title => header_title
+      image_url    = content_node_path(random_image, action: :big_header, format: :jpg)
+      image_tag    = image_tag content_node_path(random_image, action: :big_header, format: :jpg), alt: random_image.alt, title: header_title
     else
       header_title = random_image.title
-      image_url    = content_node_path(random_image, :action => :header, :format => :jpg)
-      image_tag    = image_tag content_node_path(random_image, :action => :header, :format => :jpg), :alt => random_image.alt, :title => header_title
+      image_url    = content_node_path(random_image, action: :header, format: :jpg)
+      image_tag    = image_tag content_node_path(random_image, action: :header, format: :jpg), alt: random_image.alt, title: header_title
     end
 
-    return { :title => header_title, :image_tag => image_tag, :url => image_url }
+    { title: header_title, image_tag: image_tag, url: image_url }
   end
 
   def header_slideshow(node, big_header = false, cache_slidehow = true)
     if cache_slidehow
-      string_cache(:header_slideshow_for => (node.present? ? node.header_container_ancestry : current_site.child_ancestry)) do
+      string_cache(header_slideshow_for: (node.present? ? node.header_container_ancestry : current_site.child_ancestry)) do
         header_slideshow_content node, big_header
       end
     else
@@ -212,21 +219,22 @@ module DevcmsCoreHelper
       available_header_images = available_header_images_nodes.map.each_with_index do |header_image, index|
         if header_image.is_a?(String)
           {
-            :url   => header_image,
-            :id    => "header-image-#{index}",
-            :alt   => '',
-            :title => nil
+            url:   header_image,
+            id:    "header-image-#{index}",
+            alt:   '',
+            title: nil
           }
         else
           {
-            :url   => big_header ? content_node_path(header_image, :action => :big_header, :format => :jpg) : content_node_path(header_image, :action => :header, :format => :jpg),
-            :id    => "ss-image-#{header_image.id}",
-            :alt   => header_image.alt.to_s,
-            :title => header_image.title
+            url:   big_header ? content_node_path(header_image, action: :big_header, format: :jpg) : content_node_path(header_image, action: :header, format: :jpg),
+            id:    "ss-image-#{header_image.id}",
+            alt:   header_image.alt.to_s,
+            title: header_image.title
           }
         end
       end
-      render :partial => '/layouts/partials/header_slideshow', :locals => { :available_header_images => available_header_images }
+
+      render partial: '/layouts/partials/header_slideshow', locals: { available_header_images: available_header_images }
     end
   end
 
@@ -247,24 +255,24 @@ module DevcmsCoreHelper
 
   def social_media_button(object, image, alt, url)
     url = url.gsub(/\{\{url\}\}/, u("http://#{request.host}/#{object.node.url_alias}")).gsub(/\{\{title\}\}/, u(object.title))
-    link_to(image_tag("icons/#{image}", :alt => alt, :title => alt, :class => 'icon'), url, :rel => 'nofollow')
+    link_to(image_tag("icons/#{image}", alt: alt, title: alt, class: 'icon'), url, rel: 'nofollow')
   end
 
   def social_media_link(image, alt, url)
-    link_to(image_tag("icons/#{image}", :alt => alt, :title => alt, :class => 'icon'), url, :rel => 'nofollow')
+    link_to(image_tag("icons/#{image}", alt: alt, title: alt, class: 'icon'), url, rel: 'nofollow')
   end
 
   def email_button(object, image, alt)
-    link_to(image_tag("icons/#{image}", :alt => alt, :title => alt, :class => 'icon'), new_share_path(:node_id => @node.id), :rel => 'nofollow')
+    link_to(image_tag("icons/#{image}", alt: alt, title: alt, class: 'icon'), new_share_path(node_id: @node.id), rel: 'nofollow')
   end
 
   def read_more_link(content, text = t('shared.read_more'), options = {})
-    options.reverse_merge! :title => "#{t('shared.read_more')} uit #{content.title}"
-    link_to_content_node text, content, {}, :class => 'read_more_link', :title => options[:title]
+    options.reverse_merge! title: "#{t('shared.read_more')} uit #{content.title}"
+    link_to_content_node text, content, {}, class: 'read_more_link', title: options[:title]
   end
 
   def new_button(title = nil, &block)
-    concat(content_tag(:div, :class => 'new') { image_tag('icons/add.png', :class => 'icon', :alt => 'Icoon van een plusteken', :title => title) + capture(&block) })
+    concat(content_tag(:div, class: 'new') { image_tag('icons/add.png', class: 'icon', alt: 'Icoon van een plusteken', title: title) + capture(&block) })
   end
 
   def string_cache(name = {}, options = nil, &block)
@@ -282,9 +290,9 @@ module DevcmsCoreHelper
   def skippable(id, &block)
     # Add random number to prevent duplicate ids
     id = "#{id}-#{SecureRandom.random_number(1000)}"
-    link_to(t('shared.skip_to_bottom'), "\#bottom_of_#{id}", :id => "top_of_#{id}", :class => 'text-alternative') +
+    link_to(t('shared.skip_to_bottom'), "\#bottom_of_#{id}", id: "top_of_#{id}", class: 'text-alternative') +
     capture(&block) +
-    link_to(t('shared.skip_to_top'),    "\#top_of_#{id}", :id => "bottom_of_#{id}", :class => 'text-alternative')
+    link_to(t('shared.skip_to_top'),    "\#top_of_#{id}", id: "bottom_of_#{id}", class: 'text-alternative')
   end
 
   def target_contrast_mode
@@ -308,51 +316,53 @@ module DevcmsCoreHelper
   protected
 
   def render_images
-    render(partial: 'shared/images_bar', locals: { images: @image_content_nodes, rel: @node.id }) if @image_content_nodes.present?
+    return if @image_content_nodes.blank?
+
+    render(partial: 'shared/images_bar', locals: { images: @image_content_nodes, rel: @node.id })
   end
 
   def render_attachments
     render(partial: 'shared/attachments', locals: { container: @node.content, attachments: @attachment_nodes, rel: @node.id }) if @attachment_nodes.present? || (@node && @node.children.accessible.with_content_type(%w(AttachmentTheme)).count > 0)
   end
 
-    # Override +error_messages_for+ to override default header message. For some reason the localization
-    # plugin doesn't allow us to override it manually.
-    def error_messages_for(*params)
-      options = params.extract_options!.symbolize_keys
+  # Override +error_messages_for+ to override default header message. For some
+  # reason the localization plugin doesn't allow us to override it manually.
+  def error_messages_for(*params)
+    options = params.extract_options!.symbolize_keys
 
-      if object = options.delete(:object)
-        objects = [object].flatten
-      else
-        objects = params.map { |object_name| instance_variable_get("@#{object_name}") }.compact
-      end
-
-      count = objects.inject(0) { |sum, object| sum + object.errors.count }
-
-      unless count.zero?
-        html = {}
-
-        [:id, :class].each do |key|
-          if options.include?(key)
-            value     = options[key]
-            html[key] = value if value.present?
-          else
-            html[key] = 'errorExplanation'
-          end
-        end
-
-        options[:object_name]  ||= params.first
-        options[:header_message] = t('application.save_error') unless options.include?(:header_message)
-        options[:message]      ||= (count > 1) ? t('application.field_errors') : t('application.field_error') unless options.include?(:message)
-        error_messages = objects.map { |object| object.errors.full_messages.map { |msg| content_tag(:li, msg) } }
-
-        contents = ''
-        contents << content_tag(options[:header_tag] || :h2, options[:header_message]) if options[:header_message].present?
-        contents << content_tag(:p, options[:message]) if options[:message].present?
-        contents << content_tag(:ul, error_messages.join("\n").html_safe)
-
-        content_tag(:div, contents.html_safe, html)
-      else
-        ''
-      end
+    if object = options.delete(:object)
+      objects = [object].flatten
+    else
+      objects = params.map { |object_name| instance_variable_get("@#{object_name}") }.compact
     end
+
+    count = objects.inject(0) { |sum, object| sum + object.errors.count }
+
+    if count.zero?
+      ''
+    else
+      html = {}
+
+      [:id, :class].each do |key|
+        if options.include?(key)
+          value     = options[key]
+          html[key] = value if value.present?
+        else
+          html[key] = 'errorExplanation'
+        end
+      end
+
+      options[:object_name] ||= params.first
+      options[:header_message] = t('application.save_error') unless options.include?(:header_message)
+      options[:message] ||= (count > 1) ? t('application.field_errors') : t('application.field_error') unless options.include?(:message)
+      error_messages = objects.map { |object| object.errors.full_messages.map { |msg| content_tag(:li, msg) } }
+
+      contents = ''
+      contents << content_tag(options[:header_tag] || :h2, options[:header_message]) if options[:header_message].present?
+      contents << content_tag(:p, options[:message]) if options[:message].present?
+      contents << content_tag(:ul, error_messages.join("\n").html_safe)
+
+      content_tag(:div, contents.html_safe, html)
+    end
+  end
 end
