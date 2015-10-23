@@ -1,16 +1,16 @@
 %h1= t 'faq_suggestions.header', theme: @theme.title
 = form_tag content_node_path(@theme, action: 'suggestie') do
   .formFieldCt.clearfix
-    %label.faq{ :for => 'question' }
+    %label.faq{ for: 'question' }
       = t 'faq_suggestions.question'
-    = text_field_tag 'question', params[:question], :class => 'textfield', :id => nil
+    = text_field_tag 'question', params[:question], class: 'textfield', id: nil
   .formFieldCt.clearfix
-    %label.faq{ :for => 'explanation' }
+    %label.faq{ for: 'explanation' }
       = t 'faq_suggestions.explanation'
-    = text_area_tag 'explanation', params[:explanation], :class => 'textfield', :id => nil
+    = text_area_tag 'explanation', params[:explanation], class: 'textfield', id: nil
   .formFieldCt.clearfix
-    %label.faq{ :for => 'email' }
+    %label.faq{ for: 'email' }
       = t 'shared.email'
-    = text_field_tag 'email', params[:email], :class => 'textfield', :id => nil
+    = text_field_tag 'email', params[:email], class: 'textfield', id: nil
   .formButtonCt
-    = submit_tag t('faq_suggestions.send'), :class => 'submit left'
+    = submit_tag t('faq_suggestions.send'), class: 'submit left'
