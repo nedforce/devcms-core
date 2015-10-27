@@ -16,48 +16,48 @@
 
           - if show_bread_crumbs
             %span.bread_crumbs
-              == #{NewsArchive.human_name}:
-            = bread_crumbs_track_for(news_item.news_archive.node, :include_root => false)
+              #{NewsArchive.human_name}:
+            = bread_crumbs_track_for(news_item.news_archive.node, include_root: false)
 
-          = render :partial => '/shared/metadata', :locals => { :publication_date => news_item.publication_start_date, :last_update_date => news_item.updated_at }
+          = render partial: '/shared/metadata', locals: { publication_date: news_item.publication_start_date, last_update_date: news_item.updated_at }
 
           .content.clearfix
             - if (image_node = news_item.node.children.accessible.with_content_type('Image').first)
               = link_to_node(                                                                                                                                                 |
-                  image_tag(content_node_path(image_node, :action => :thumbnail), :alt => image_node.content.alt.to_s) + content_tag('div', image_node.content.description.to_s, :class => 'hidden'), |
-                  image_node, { :action => :full }, { :data => { :lightbox => "lightbox[#{news_item.node.id}]" }, :title => 'Vergroot deze afbeelding', :class => 'right' })                    |
+                  image_tag(content_node_path(image_node, action: :thumbnail), alt: image_node.content.alt.to_s) + content_tag('div', image_node.content.description.to_s, class: 'hidden'), |
+                  image_node, { :action => :full }, { data: { :lightbox => "lightbox[#{news_item.node.id}]" }, :title => 'Vergroot deze afbeelding', :class => 'right' })                    |
             - if news_item.preamble.present?
               = simple_format(h(news_item.preamble))
 
           .buttons.clearfix
             = news_item_button t('news.full_article') do
-              = link_to_content_node t('news.full_article'), news_item, { :type => :url, :host => news_item.node.containing_site.content.domain }, :title => h(news_item.title)
+              = link_to_content_node t('news.full_article'), news_item, { type: :url, host: news_item.node.containing_site.content.domain }, title: h(news_item.title)
               - if news_item.node.comments.count > 0
-                == (#{pluralize(news_item.node.comments.count, t('news.comment'), t('news.comments'))})
-            = readspeaker_button(:rid => readspeaker_id, :title => h(news_item.title))
+                (#{pluralize(news_item.node.comments.count, t('news.comment'), t('news.comments'))})
+            = readspeaker_button(rid: readspeaker_id, title: h(news_item.title))
 
   - if news_items_for_table.present?
     %h2= t 'news.older_news_items'
-    = skippable 'older_news_items' do  
-      %table#items{ :cellpadding => 0, :cellspacing => 0 }
+    = skippable 'older_news_items' do
+      %table#items{ cellpadding: 0, cellspacing: 0 }
         %caption= t 'news_archives.older_items_caption'
         %thead
           %tr
-            %th.gray{ :scope => 'col' }
+            %th.gray{ scope: 'col' }
               = t 'news.title'
             %th.right_sized.gray
               = t 'news.date'
         %tbody
           - news_items_for_table.each_with_index do |news_item, i|
-            %tr{ :class => "#{'alt' if i.even?}" }
+            %tr{ class: ('alt' if i.even?) }
               %td
-                = link_to_content_node h(truncate(news_item.title, :length => 54)), news_item
+                = link_to_content_node h(truncate(news_item.title, length: 54)), news_item
               %td.right_sized.gray
-                = l news_item.publication_start_date, :format => :long
+                = l news_item.publication_start_date, format: :long
 
   - if show_archive_link
     - date = news_items.first.try(:publication_start_date) || Date.today
-    .pagination= link_to_content_node 'Naar archief...', (@news_viewer || @news_archive), :action => "#{date.year}/#{date.month}"
+    .pagination= link_to_content_node 'Naar archief...', (@news_viewer || @news_archive), action: "#{date.year}/#{date.month}"
 
   - if show_pagination
     .pagination= paginate(news_items)

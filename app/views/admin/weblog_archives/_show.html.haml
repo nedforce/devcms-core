@@ -16,13 +16,13 @@
     - else
       .weblogs
         - @weblogs.each do |weblog|
-          .clearfix{ :class => cycle('oddWeblog', 'evenWeblog') }
-            %h4= link_to h(weblog.title), '#', :title => h(weblog.title)
+          .clearfix{ class: cycle('oddWeblog', 'evenWeblog') }
+            %h4= link_to h(weblog.title), '#', title: h(weblog.title)
 
             .clearfix
               .weblogDescription
-                = truncate(strip_tags(weblog.description), :length => 110)
+                = truncate(strip_tags(weblog.description), length: 110)
               .weblogDetails
-                %p= "#{t 'weblogs.owned_by'}: <span class='userLogin'>#{truncate(weblog.user.login, :length => 12)}</span>"
+                %p= "#{t 'weblogs.owned_by'}: <span class='userLogin'>#{truncate(weblog.user.login, length: 12)}</span>"
                 - unless weblog.weblog_posts.empty?
-                  %p= "#{t 'weblogs.last_post'}: #{l weblog.last_updated_at, :format => :long}"
+                  %p #{t 'weblogs.last_post'}: #{l weblog.last_updated_at, format: :long}

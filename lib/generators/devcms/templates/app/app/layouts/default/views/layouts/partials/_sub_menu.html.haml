@@ -1,5 +1,5 @@
 - show_private_items_in_sub_menu = @node.is_private_or_has_private_ancestor? && current_user_has_any_role?(@node)
-- cache(:sub_menu_for_node => @node.id, :last_updated_at => "#{Node.unscoped.where(@node.sibling_conditions).shown_in_menu.maximum(:updated_at)} #{@node.path.maximum(:updated_at)}", :private => show_private_items_in_sub_menu) do
+- cache(sub_menu_for_node: @node.id, last_updated_at: "#{Node.unscoped.where(@node.sibling_conditions).shown_in_menu.maximum(:updated_at)} #{@node.path.maximum(:updated_at)}", private: show_private_items_in_sub_menu) do
   - self_and_ancestor_ids = @node.self_and_ancestor_ids
   - top_ancestor = Node.find(self_and_ancestor_ids[1])
 
@@ -15,11 +15,11 @@
   - if top_sub_menu_items.any?
     = skippable 'submenu' do
       .content_box.sub_menu_content_box
-        .content_box_wrapper{ :class => "#{top_ancestor.content_box_colour || 'default'}" }
+        .content_box_wrapper{ class: "#{top_ancestor.content_box_colour || 'default'}" }
           .header
             .corner_overlay.transparent
             - if top_ancestor.content_box_icon.present?
-              .icon_overlay{ :class => @node.content_box_icon }
+              .icon_overlay{ class: @node.content_box_icon }
             %h2= link_to_node top_ancestor.content_title, top_ancestor
           .content
             = create_sub_menu(self_and_ancestor_ids, top_sub_menu_items, show_private_items_in_sub_menu)

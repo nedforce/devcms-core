@@ -1,16 +1,16 @@
 .carrousel
   %h2= h @carrousel.title
-  %p== #{Carrousel.human_attribute_name(:display_time)}: #{@carrousel.human_display_time[0]} #{t(@carrousel.human_display_time[1], :scope => 'carrousels.units')}
-  %p== #{Carrousel.human_attribute_name(:animation)}: #{ @animation}
+  %p #{Carrousel.human_attribute_name(:display_time)}: #{@carrousel.human_display_time[0]} #{t(@carrousel.human_display_time[1], scope: 'carrousels.units')}
+  %p #{Carrousel.human_attribute_name(:animation)}: #{@animation}
 
-  - @carrousel.carrousel_items.each_with_index do |carrousel_item,i|
+  - @carrousel.carrousel_items.each_with_index do |carrousel_item, i|
     .carrousel_item
       .counter= (i+1).to_s
 
       .regularPage
-        %h3= link_to_content_node h(carrousel_item.title), carrousel_item.item, {}, :target => '_blank'
+        %h3= link_to_content_node h(carrousel_item.title), carrousel_item.item, {}, target: '_blank'
 
         .content_box.image_content_box
-          .content_box_wrapper{ :class => "#{record.content_box_colour || 'default'}" }
+          .content_box_wrapper{ class: "#{record.content_box_colour || 'default'}" }
             .content.hoverable
-              = render :partial => '/carrousels/carrousel_item', :object => carrousel_item
+              = render partial: '/carrousels/carrousel_item', object: carrousel_item

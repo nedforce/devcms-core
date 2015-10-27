@@ -4,10 +4,10 @@
   .metadata.clearfix
     - if record.publication_start_date.present?
       %p.publicationDate
-        == #{t 'shared.published'}: #{l record.publication_start_date, :format => :long}
+        #{t 'shared.published'}: #{l record.publication_start_date, format: :long}
     - if !record.new_record? && record.last_updated_at.present?
       %p.lastUpdateDate
-        == #{t 'shared.last_updated'}: #{l record.last_updated_at, :format => :long}
+        #{t 'shared.last_updated'}: #{l record.last_updated_at, format: :long}
 
   .content
     - if record.description.present?
@@ -20,7 +20,7 @@
       %ul.section_items
         - @children.each do |content_node|
           %li
-            = image_tag "icons/#{content_node.try :icon_filename}", :class => 'icon', :alt => '', :title => h(content_node.title)
-            = link_to_content_node h(content_node.title), content_node, {}, :target => '_blank'
+            = image_tag "icons/#{content_node.try :icon_filename}", class: 'icon', alt: '', title: h(content_node.title)
+            = link_to_content_node h(content_node.title), content_node, {}, target: '_blank'
 
     = render_attachments

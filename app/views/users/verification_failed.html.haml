@@ -3,5 +3,5 @@
   %p= t 'users.verification_failed_text'
 
   .buttons.clearfix
-    = image_tag 'icons/email.png', :class => 'icon', :alt => t('users.new_verification_email')
+    = image_tag 'icons/email.png', class: 'icon', alt: t('users.new_verification_email')
     = link_to t('users.new_verification_email'), send_verification_email_user_path(@user)

@@ -1,13 +1,13 @@
 = error_messages_for :forum_thread, :start_post
 
 .clearfix.formFieldCt
-  %label.small{ :for => "forum_thread_title" }
+  %label.small{ for: 'forum_thread_title' }
     = t 'shared.title'
-  = f.text_field :title, :class => 'textfield'
+  = f.text_field :title, class: 'textfield'
 
 - include_js '/libraries/tiny_mce/tiny_mce.js'
 
 .clearfix.formFieldCt
-  %label.small{ :for => "start_post_body_ct" }
+  %label.small{ for: 'start_post_body_ct' }
     = t 'forums.start_post_body'
-  = html_editor_tag 'start_post[body]', @start_post.body, :cols => 35 , :front_end => true, :id => 'start_post_body'
+  = html_editor_tag 'start_post[body]', @start_post.body, cols: 35, front_end: true, id: 'start_post_body'
