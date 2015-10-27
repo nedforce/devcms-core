@@ -229,7 +229,7 @@ module DevcmsCoreHelper
             url:   big_header ? content_node_path(header_image, action: :big_header, format: :jpg) : content_node_path(header_image, action: :header, format: :jpg),
             id:    "ss-image-#{header_image.id}",
             alt:   header_image.alt.to_s,
-            title: header_image.title
+            title: (header_image.title if header_image.alt.present?)
           }
         end
       end
