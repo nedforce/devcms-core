@@ -23,14 +23,14 @@ class WeblogArchive < ActiveRecord::Base
   DEFAULT_OFFSET = 20
 
   # Adds content node functionality to weblog archives.
-  acts_as_content_node({
+  acts_as_content_node(
     allowed_child_content_types:       %w( Weblog ),
     allowed_roles_for_create:          %w( admin ),
     allowed_roles_for_destroy:         %w( admin ),
     available_content_representations: ['content_box'],
     children_can_be_sorted:            false,
     tree_loader_name:                  'weblog_archives'
-  })
+  )
 
   # A +WeblogArchive+ can have many +Weblog+ children.
   has_children :weblogs, order: 'weblogs.title'

@@ -19,7 +19,6 @@
 #  * A +TopHitsPage+ can be inserted into nodes of any accepting type.
 #
 class TopHitsPage < ActiveRecord::Base
-
   # Default content types to exclude from the top hits.
   DEFAULT_CONTENT_TYPES_TO_EXCLUDE = %w(
     Calendar CombinedCalendar NewsArchive NewsletterArchive Section Forum
@@ -30,11 +29,11 @@ class TopHitsPage < ActiveRecord::Base
   DEFAULT_AMOUNT_TO_SHOW = 10
 
   # Adds content node functionality to top hits pages.
-  acts_as_content_node({
+  acts_as_content_node(
     allowed_roles_for_create:          %w( admin ),
     allowed_roles_for_destroy:         %w( admin ),
     available_content_representations: %w( content_box )
-  })
+  )
 
   # See the preconditions overview for an explanation of these validations.
   validates :title, presence: true, length: { maximum: 255 }

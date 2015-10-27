@@ -20,9 +20,9 @@ class MeetingCategory < ActiveRecord::Base
   # See the preconditions overview for an explanation of these validations.
   validates :name, presence: true, length: { maximum: 255 }, uniqueness: true
 
-  # Finds the meeting category with the given name, or initializes a new one with
-  # that name (but does *not* save it).
+  # Finds the meeting category with the given name, or initializes a new one
+  # with that name (but does *not* save it).
   def self.find_or_new_by_name(name)
-    MeetingCategory.find_by_name(name) || MeetingCategory.new(:name => name)
+    MeetingCategory.find_by_name(name) || MeetingCategory.new(name: name)
   end
 end

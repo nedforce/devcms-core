@@ -314,7 +314,7 @@ class User < ActiveRecord::Base
   def create_password_reset_token
     begin
       self.password_reset_token = Digest::SHA1.hexdigest("--#{Time.now}--#{self.object_id}--")
-    end while User.exists?(:password_reset_token => self.password_reset_token) # must be unique
+    end while User.exists?(password_reset_token: self.password_reset_token) # must be unique
     self.password_reset_expiration = Time.now + 6.hours
     save!
   end
@@ -374,14 +374,15 @@ class User < ActiveRecord::Base
   # Prevents users from registering reserved logins.
   def should_not_allow_reserved_login
     # TODO: Move to global setting & generalize unit test
-    errors.add(:login, :reserved_login) if self.login =~ Devcms.reserved_logins_regex
+    errors.add(:login, :reserved_login) if login =~ Devcms.reserved_logins_regex
   end
 
   # Prevents information leakage, validates the email and returns false to prevent a save
   def validate_uniqueness_of_email
     user = User.first(conditions: ['UPPER(email_address) = UPPER(?)', email_address])
     UserMailer.email_used_to_create_account(user).deliver if user
-    return !user
+
+    !user
   end
 
   def privileged_users_password_should_be_strong
@@ -391,10 +392,10 @@ class User < ActiveRecord::Base
 
   # Password entropy based on: http://blog.shay.co/password-entropy/
   def self.password_entropy(password)
-    password.length == 0 ? 0 : password.length * Math.log(self.password_alphabet(password)) / Math.log(2)
+    password.length == 0 ? 0 : password.length * Math.log(password_alphabet(password)) / Math.log(2)
   end
 
-  # Determens the password alphabet size
+  # Determines the password alphabet size.
   def self.password_alphabet(password)
     alphabet = 0
     lower    = false
@@ -402,7 +403,6 @@ class User < ActiveRecord::Base
     numbers  = false
     symbols1 = false
     symbols2 = false
-    other    = ''
 
     password.each_char do |c|
       if !lower && !c.match('[a-z]').nil?

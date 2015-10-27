@@ -1,5 +1,7 @@
-# A Site is a content node that represents the whole site or a subsite of the site, as identified by a domain. All the content
-# of a (sub-)site is scoped within a Site node. It has specified +acts_as_content_node+ from Acts::ContentNode::ClassMethods.
+# A Site is a content node that represents the whole site or a subsite of the
+# site, as identified by a domain. All the content of a (sub-)site is scoped
+# within a Site node. It has specified +acts_as_content_node+ from
+# Acts::ContentNode::ClassMethods.
 #
 # *Specification*
 #
@@ -9,13 +11,16 @@
 #
 # Preconditions
 #
-# * Requires the format of +domain+ to conform to VALID_DOMAIN_REGEXP, if specified.
+# * Requires the format of +domain+ to conform to VALID_DOMAIN_REGEXP, if
+#   specified.
 class Site < Section
-  acts_as_content_node({
+  acts_as_content_node(
     allowed_child_content_types: %w(
-      AlphabeticIndex Attachment AttachmentTheme Calendar Carrousel CombinedCalendar ContactBox ContactForm
-      FaqArchive Feed Forum HtmlPage Image LinksBox InternalLink ExternalLink NewsArchive NewsletterArchive
-      NewsViewer Page Poll SearchPage Section Site SocialMediaLinksBox TopHitsPage WeblogArchive
+      AlphabeticIndex Attachment AttachmentTheme Calendar Carrousel
+      CombinedCalendar ContactBox ContactForm FaqArchive Feed Forum HtmlPage
+      Image LinksBox InternalLink ExternalLink NewsArchive NewsletterArchive
+      NewsViewer Page Poll SearchPage Section Site SocialMediaLinksBox
+      TopHitsPage WeblogArchive
     ),
     allowed_roles_for_create:          %w( admin ),
     allowed_roles_for_update:          %w( admin ),
@@ -26,7 +31,7 @@ class Site < Section
     show_in_menu:                      false,
     copyable:                          false,
     expiration_container:              true
-  })
+  )
 
   VALID_DOMAIN_REGEXP = /\A((?:[A-Z0-9\-]+\.)+(?:[A-Z]{2,4}|museum|travel|local)|localhost)\z/i
 
@@ -43,7 +48,7 @@ class Site < Section
     parts = domain.split('.')
     parts.shift if parts.first == 'www'
     domain = parts.join('.')
-    Site.first(include: :node, conditions: [ 'LOWER(sections.domain) = LOWER(?) OR LOWER(sections.domain) = LOWER(?)', domain, 'www.' + domain ]) || Node.root.content
+    Site.first(include: :node, conditions: ['LOWER(sections.domain) = LOWER(?) OR LOWER(sections.domain) = LOWER(?)', domain, 'www.' + domain]) || Node.root.content
   end
 
   def original_domain
@@ -51,12 +56,12 @@ class Site < Section
   end
 
   def domain
-    self.original_domain || Settler[:host]
+    original_domain || Settler[:host]
   end
 
-protected
+  protected
 
   def ensure_parent_is_root
-    self.errors.add(:base, :parent_must_be_root_or_not_a_site) if self.parent && !self.parent.root?
+    errors.add(:base, :parent_must_be_root_or_not_a_site) if parent && !parent.root?
   end
 end

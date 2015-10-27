@@ -19,14 +19,10 @@ class Share < ActiveRecord::Base
   # See the preconditions overview for an explanation of these validations.
   validates_presence_of :from_email_address, :to_email_address, :from_name, :to_name, :node, :message
 
-  validates :from_email_address, :to_email_address, :email => { :allow_blank => true }
+  validates :from_email_address, :to_email_address, email: { allow_blank: true }
 
   def subject
-    if self.node.present? && self.node.content.present?
-      self.node.content.title
-    else
-      nil
-    end
+    node.content.title if node.present? && node.content.present?
   end
 
   def send_recommendation_email

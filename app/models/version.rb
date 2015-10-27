@@ -45,7 +45,7 @@ class Version < ActiveRecord::Base #:nodoc:
   # Return an instance of the versioned ActiveRecord model with the attribute
   # values of this version.
   def model
-    Version.create_version(versionable, YAML::load(self.yaml).merge(draft: drafted?))
+    Version.create_version(versionable, YAML::load(yaml).merge(draft: drafted?))
   end
 
   def self.create_version(original, attributes_to_overwrite = {})

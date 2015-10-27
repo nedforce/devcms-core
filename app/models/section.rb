@@ -7,7 +7,8 @@
 #
 # * +title+ - The title of the section.
 # * +description+ - The description of the section.
-# * +frontpage_node+ - The node that is the frontpage of this Section. Can be blank.
+# * +frontpage_node+ - The node that is the frontpage of this Section.
+#                      Can be blank.
 #
 # Preconditions
 #
@@ -24,11 +25,13 @@
 #
 class Section < ActiveRecord::Base
   # Adds content node functionality to sections.
-  acts_as_content_node({
+  acts_as_content_node(
     allowed_child_content_types: %w(
-      AlphabeticIndex Attachment AttachmentTheme Calendar Carrousel CombinedCalendar ContactBox ContactForm
-      FaqArchive Feed Forum HtmlPage Image LinksBox InternalLink ExternalLink NewsArchive NewsletterArchive
-      NewsViewer Page Poll SearchPage Section SocialMediaLinksBox TopHitsPage WeblogArchive
+      AlphabeticIndex Attachment AttachmentTheme Calendar Carrousel
+      CombinedCalendar ContactBox ContactForm FaqArchive Feed Forum HtmlPage
+      Image LinksBox InternalLink ExternalLink NewsArchive NewsletterArchive
+      NewsViewer Page Poll SearchPage Section SocialMediaLinksBox TopHitsPage
+      WeblogArchive
     ),
     allowed_roles_for_create:          %w( admin final_editor ),
     allowed_roles_for_destroy:         %w( admin final_editor ),
@@ -36,7 +39,7 @@ class Section < ActiveRecord::Base
     has_own_content_box:               true,
     expiration_container:              true,
     has_import:                        true
-  })
+  )
 
   # This content type needs approval when created or altered by an editor.
   needs_editor_approval
@@ -62,10 +65,11 @@ class Section < ActiveRecord::Base
 
   # Returns the last update date
   def last_updated_at
-    self.node.self_and_children.accessible.exclude_content_types(%w( Image Attachment Site )).maximum(:updated_at)
+    node.self_and_children.accessible.exclude_content_types(%w( Image Attachment Site )).maximum(:updated_at)
   end
 
-  # Returns the maximum number of sidebox (content box) columns that are allowed for this content type.
+  # Returns the maximum number of sidebox (content box) columns that are allowed
+  # for this content type.
   def self.max_number_of_columns
     4
   end
@@ -77,17 +81,17 @@ class Section < ActiveRecord::Base
 
   # Returns true if the section has a frontpage.
   def has_frontpage?
-    self.frontpage_node.present?
+    frontpage_node.present?
   end
 
   # Returns the frontpage if one is present.
   def frontpage
-    has_frontpage? ? self.frontpage_node.content : nil
+    frontpage_node.content if has_frontpage?
   end
 
   # Sets the frontpage to the given +node+.
   def set_frontpage!(node)
-    self.update_attributes(:frontpage_node => node)
+    update_attributes(frontpage_node: node)
   end
 
   # Returns the OWMS type.
@@ -99,10 +103,10 @@ class Section < ActiveRecord::Base
     node.tags.empty?
   end
 
-protected
+  protected
 
   def set_frontpage_node_to_nil_if_frontpage_node_is_own_node
-    self.frontpage_node = nil if self.frontpage_node == self.node
+    self.frontpage_node = nil if frontpage_node == node
   end
 
   # Ensures +frontpage_node+ should be nil when the +Section+ is created
@@ -113,13 +117,13 @@ protected
   # Ensures the +frontpage_node+ should be a descendant.
   # def frontpage_node_is_a_descendant
   #   if has_frontpage?
-  #     errors.add(:base, :frontpage_node_should_be_descendant) unless self.frontpage_node.is_descendant_of?(self.node)
+  #     errors.add(:base, :frontpage_node_should_be_descendant) unless frontpage_node.is_descendant_of?(node)
   #   end
   # end
 
   # Ensures the +frontpage_node+ is no +Section+ with a frontpage node.
   def frontpage_node_is_no_section_with_frontpage_node
-    if self.has_frontpage? && self.frontpage_node.content_class == Section && self.frontpage_node.content.frontpage_node.present?
+    if self.has_frontpage? && frontpage_node.content_class == Section && frontpage_node.content.frontpage_node.present?
       errors.add(:base, :frontpage_node_cannot_be_a_section_with_a_frontpage)
     end
   end

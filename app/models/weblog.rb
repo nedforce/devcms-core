@@ -30,7 +30,7 @@
 #
 class Weblog < ActiveRecord::Base
   # Adds content node functionality to weblogs.
-  acts_as_content_node({
+  acts_as_content_node(
     allowed_child_content_types:       %w( WeblogPost ),
     allowed_roles_for_create:          [],
     allowed_roles_for_update:          %w( admin final_editor ),
@@ -42,7 +42,7 @@ class Weblog < ActiveRecord::Base
     children_can_be_sorted:            false,
     tree_loader_name:                  'weblogs',
     nested_resource:                   true
-  })
+  )
 
   # Extend this class with methods to find items based on their
   # publication date.

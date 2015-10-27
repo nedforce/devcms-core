@@ -1,7 +1,7 @@
 # This model is a STI specialization of CalendarItem and is used to represent
-# a meeting. A meeting can contain many agenda items, which in turn are represented
-# with the AgendaItem content type. A Meeting always belongs to an associated
-# MeetingCategory. It has specified +acts_as_content_node+ from
+# a meeting. A meeting can contain many agenda items, which in turn are
+# represented by the AgendaItem content type. A Meeting always belongs to an
+# associated MeetingCategory. It has specified +acts_as_content_node+ from
 # Acts::ContentNode::ClassMethods.
 #
 # *Specification*
@@ -13,19 +13,20 @@
 #
 # Preconditions
 #
-# * Requires +meeting_category_id+ to be present and point to a MeetingCategory instance.
+# * Requires +meeting_category_id+ to be present and point to a MeetingCategory
+#   instance.
 #
 # Child/parent type constraints
 #
 #  * A Meeting only accepts AgendaItem children.
 #
 class Meeting < CalendarItem
-  acts_as_content_node({
+  acts_as_content_node(
     allowed_child_content_types: %w( Attachment AttachmentTheme AgendaItem ),
     show_in_menu:                false,
     copyable:                    false,
     controller_name:             'meetings'
-  })
+  )
 
   needs_editor_approval
 
@@ -40,9 +41,10 @@ class Meeting < CalendarItem
   validates_presence_of     :meeting_category
   validates_numericality_of :meeting_category_id, allow_nil: true
 
-  # Returns the +name+ of the associated MeetingCategory, or +nil+ if no MeetingCategory is associated.
+  # Returns the +name+ of the associated MeetingCategory, or +nil+ if no
+  # MeetingCategory is associated.
   def meeting_category_name
-    self.meeting_category.name if self.meeting_category
+    meeting_category.name if meeting_category
   end
 
   # Sets the associated MeetingCategory using the given +name+.
@@ -56,9 +58,9 @@ class Meeting < CalendarItem
     I18n.t('owms.meeting_info')
   end
 
-protected
+  protected
 
   def cloning_hash
-    super.merge({ meeting_category: self.meeting_category })
+    super.merge(meeting_category: meeting_category)
   end
 end

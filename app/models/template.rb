@@ -1,7 +1,7 @@
 # A template is a layout that is to be used while rendering a node.
 #
 # *Specification*
-# 
+#
 # Attributes
 #
 # * +filename+ - The on-disk filename of the layout to render.
@@ -32,7 +32,7 @@ class Template < ActiveRecord::Base
 
   # Returns the full path name of this template.
   def full_path
-    "templates/#{self.filename}"
+    "templates/#{filename}"
   end
 
   protected

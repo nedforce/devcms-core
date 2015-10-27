@@ -22,13 +22,13 @@
 #
 class Poll < ActiveRecord::Base
   # Adds content node functionality to polls.
-  acts_as_content_node({
+  acts_as_content_node(
     allowed_child_content_types:       %w( PollQuestion ),
     allowed_roles_for_create:          %w( admin final_editor ),
     allowed_roles_for_destroy:         %w( admin final_editor ),
     available_content_representations: ['content_box'],
     children_can_be_sorted:            false
-  })
+  )
 
   has_children :poll_questions
 

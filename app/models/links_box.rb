@@ -1,7 +1,7 @@
 # A LinksBox is a content node that represents a collection of Links.
 
 class LinksBox < ActiveRecord::Base
-  acts_as_content_node({
+  acts_as_content_node(
     allowed_child_content_types:       %w( LinkTheme Image InternalLink ExternalLink ),
     allowed_roles_for_create:          %w( admin ),
     allowed_roles_for_update:          %w( admin ),
@@ -11,7 +11,7 @@ class LinksBox < ActiveRecord::Base
     controller_name:                   'links_boxes',
     show_in_menu:                      false,
     copyable:                          false
-  })
+  )
 
   # This content type needs approval when created or altered by an editor.
   needs_editor_approval
@@ -21,7 +21,7 @@ class LinksBox < ActiveRecord::Base
 
   # Returns the last update date
   def last_updated_at
-    ([self.node.self_and_children.accessible.maximum('nodes.updated_at')] + self.node.children.with_content_type('InternalLink').map { |link_node| link_node.content.linked_node.updated_at }).compact.max
+    ([node.self_and_children.accessible.maximum('nodes.updated_at')] + node.children.with_content_type('InternalLink').map { |link_node| link_node.content.linked_node.updated_at }).compact.max
   end
 
   # Returns the description as the token for indexing.

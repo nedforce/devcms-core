@@ -16,9 +16,8 @@ require 'rss/2.0'
 # * Requires the presence of +title+.
 #
 class NewsArchive < ActiveRecord::Base
-
   # Adds content node functionality to news archives.
-  acts_as_content_node({
+  acts_as_content_node(
     allowed_child_content_types:       %w( NewsItem ),
     allowed_roles_for_update:          %w( admin final_editor ),
     allowed_roles_for_create:          %w( admin final_editor ),
@@ -27,11 +26,12 @@ class NewsArchive < ActiveRecord::Base
     has_own_feed:                      true,
     children_can_be_sorted:            false,
     tree_loader_name:                  'news_archives'
-  })
+  )
 
   scope :not_archived, ->{ where(archived: false) }
 
-  # Extend this class with methods to find items based on their publication date.
+  # Extend this class with methods to find items based on their
+  # publication date.
   acts_as_archive items_name: :news_items
 
   # A +NewsArchive+ can have many +NewsItem+ children.

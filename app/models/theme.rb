@@ -13,13 +13,13 @@
 #
 class Theme < ActiveRecord::Base
   # Adds content node functionality to research themes.
-  acts_as_content_node({
+  acts_as_content_node(
     allowed_child_content_types: %w(),
     allowed_roles_for_create:    %w(),
     allowed_roles_for_update:    %w(),
     allowed_roles_for_destroy:   %w(),
     copyable:                    false
-  })
+  )
 
   # See the preconditions overview for an explanation of these validations.
   validates :title, presence: true, length: { maximum: 255 }
@@ -53,7 +53,8 @@ class Theme < ActiveRecord::Base
     node.children.exclude_content_types(self.class.name).accessible
   end
 
-  # Returns the number of +ResearchReport+ objects directly associated with this theme.
+  # Returns the number of +ResearchReport+ objects directly associated with this
+  # theme.
   def number_of_children
     content_children.count
   end

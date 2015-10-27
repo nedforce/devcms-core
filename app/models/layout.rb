@@ -37,8 +37,8 @@ class Layout
     partial_path = File.join(self.path, 'settings.html.haml')
     if File.exists?(partial_path)
       return partial_path
-    elsif self.parent.present?
-      return self.parent.settings_partial
+    elsif parent.present?
+      return parent.settings_partial
     end
   end
 
@@ -47,21 +47,21 @@ class Layout
     partial_path = File.join(self.path, variant_name, 'targets.html.haml')
     if File.exists?(partial_path)
       return partial_path
-    elsif self.parent.present?
-      return self.parent.targets_partial(variant)
+    elsif parent.present?
+      return parent.targets_partial(variant)
     end
   end
 
   def parent
-    @parent ||= Layout.find(self.config['extends'])
+    @parent ||= Layout.find(config['extends'])
   end
-  
+
   def to_param
     id
   end
 
   def self.find(id)
-    self.all.find{ |layout| layout.id == id }
+    all.find { |layout| layout.id == id }
   end
 
   def self.all
@@ -69,16 +69,17 @@ class Layout
       configs = {}
 
       Rails.application.config.layout_paths.map(&:existent).flatten.each do |layout_path|
-        configs[layout_path.split('/').last] = YAML.load_file(File.join(layout_path, 'config.yml')).merge({ 'path' => layout_path })
+        configs[layout_path.split('/').last] = YAML.load_file(File.join(layout_path, 'config.yml')).merge('path' => layout_path)
       end
 
       @all_layouts = configs.map do |id, config|
         if parent = config['extends']
           config = configs[parent].merge(config)
         end
-        self.new(id, config.dup)
+        new(id, config.dup)
       end
     end
-    return @all_layouts
+
+    @all_layouts
   end
 end
