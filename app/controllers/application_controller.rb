@@ -390,7 +390,7 @@ protected
     if params[model]
       date = params[model].delete("#{field}_day")
       time = params[model].delete("#{field}_time")
-      params[model][field] = "#{date} #{time.to_s}" if date
+      params[model][field] = "#{date} #{time}" if date
     end
   end
 

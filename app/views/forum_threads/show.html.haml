@@ -30,15 +30,15 @@
     - else
       .forumPosts
         - @replies.each do |reply|
-          %div{ :class => "#{cycle('oddForumPost', 'evenForumPost')} clearfix", :id => "reply#{reply.id.to_s}" }
+          .clearfix{ class: cycle('oddForumPost', 'evenForumPost'), id: "reply#{reply.id}" }
             %p.forumPostDetails
-              %span.userLogin= truncate(h(reply.user_name), :length => 12)
-              = "#{I18n.t('forums.at_time')} #{l(reply.created_at, :format => :long)}"
+              %span.userLogin= truncate(h(reply.user_name), length: 12)
+              = "#{t('forums.at_time')} #{l(reply.created_at, format: :long)}"
             .htmlField.forumPostBody= w reply.body
             - if logged_in? && (reply.is_owned_by_user?(current_user) || current_user.has_role?('admin'))
               .clearfix.buttons
                 = delete_button t('forums.delete_post') do
-                  = link_to t('forums.delete_post'), forum_topic_forum_thread_forum_post_path(@forum_topic, @forum_thread, reply), :method => :delete
+                  = link_to t('forums.delete_post'), forum_topic_forum_thread_forum_post_path(@forum_topic, @forum_thread, reply), method: :delete
                 = edit_button t('forums.edit_post') do
                   = link_to t('forums.edit_post'), edit_forum_topic_forum_thread_forum_post_path(@forum_topic, @forum_thread, reply)
   - if logged_in?
