@@ -3,61 +3,60 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 class PollQuestionsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
-  def test_should_get_show
+  test 'should get show' do
     q = poll_questions(:hc_question_1)
-    get :show, :id => q.id
+    get :show, id: q.id
     assert_response :success
     assert_equal q, assigns(:poll_question)
   end
 
-  def test_should_show_results_if_inactive
+  test 'should get show results if inactive' do
     q = poll_questions(:hc_question_1)
     q.update_attribute(:active, false)
-    get :show, :id => q.id
+    get :show, id: q.id
     assert_response :success
     assert_template 'results'
   end
 
-  def test_should_get_results
+  test 'should get results' do
     q = poll_questions(:hc_question_1)
-    get :results, :id => q.id
+    get :results, id: q.id
     assert_response :success
     assert_equal q, assigns(:poll_question)
   end
 
-  def test_should_get_results_with_ajax
+  test 'should get results with ajax' do
     q = poll_questions(:hc_question_1)
-    xhr :get, :results, :id => q.id
+    xhr :get, :results, id: q.id
     assert_response :success
-    #assert_select_rjs "sb_poll_content_#{q.poll.id}"
   end
 
-  def test_should_vote
+  test 'should vote' do
     q = poll_questions(:hc_question_1)
     po = q.poll_options.first
 
     assert_difference 'q.number_of_votes', 1 do
       assert_difference 'po.reload.number_of_votes', 1 do
-        put :vote, :id => q.id, :poll_option_id => po.id
+        put :vote, id: q.id, poll_option_id: po.id
         assert_redirected_to results_poll_question_url(q)
         assert flash.key?(:notice)
       end
     end
   end
 
-  def test_should_vote_with_ajax
+  test 'should vote with ajax' do
     q = poll_questions(:hc_question_1)
     po = q.poll_options.first
 
     assert_difference 'q.number_of_votes', 1 do
       assert_difference 'po.reload.number_of_votes', 1 do
-        xhr :put, :vote, :id => q.id, :poll_option_id => po.id
+        xhr :put, :vote, id: q.id, poll_option_id: po.id
         assert_response :success
       end
     end
   end
 
-  def test_should_vote_with_user_for_secured_poll
+  test 'should vote with user for secured poll' do
     login_as :arthur
 
     q = poll_questions(:hc_question_1)
@@ -67,7 +66,7 @@ class PollQuestionsControllerTest < ActionController::TestCase
     assert_difference 'q.number_of_votes', 1 do
       assert_difference 'po.reload.number_of_votes', 1 do
         assert_difference 'q.user_votes.count', 1 do
-          put :vote, :id => q.id, :poll_option_id => po.id
+          put :vote, id: q.id, poll_option_id: po.id
           assert q.has_vote_from?(users(:arthur))
           assert_response :redirect
         end
@@ -75,8 +74,7 @@ class PollQuestionsControllerTest < ActionController::TestCase
     end
   end
 
-  def test_should_require_user_for_secured_poll
-
+  test 'should require user for secured poll' do
     q = poll_questions(:hc_question_1)
     po = q.poll_options.first
     q.poll.update_attribute :requires_login, true
@@ -84,7 +82,7 @@ class PollQuestionsControllerTest < ActionController::TestCase
     assert_no_difference 'q.number_of_votes' do
       assert_no_difference 'po.reload.number_of_votes' do
         assert_no_difference 'q.user_votes.count' do
-          put :vote, :id => q.id, :poll_option_id => po.id
+          put :vote, id: q.id, poll_option_id: po.id
           assert_redirected_to results_poll_question_url(q)
           assert flash.key?(:warning)
         end
@@ -92,16 +90,17 @@ class PollQuestionsControllerTest < ActionController::TestCase
     end
   end
 
-  def test_should_not_vote_for_inactive_question
+  test 'should not vote for inactive question' do
     q = poll_questions(:hc_question_2)
+
     assert_no_difference 'q.number_of_votes' do
-      put :vote, :id => q.id, :poll_option_id => q.poll_options.first.id
+      put :vote, id: q.id, poll_option_id: q.poll_options.first.id
       assert_redirected_to results_poll_question_url(q)
       assert flash.key?(:warning)
     end
   end
 
-  def test_should_not_allow_second_vote
+  test 'should not allow second vote' do
     q = poll_questions(:hc_question_1)
 
     # Create cookie
@@ -109,7 +108,7 @@ class PollQuestionsControllerTest < ActionController::TestCase
 
     # Second vote
     assert_no_difference 'q.number_of_votes' do
-      put :vote, :id => q.id, :poll_option_id => q.poll_options.last.id
+      put :vote, id: q.id, poll_option_id: q.poll_options.last.id
       assert_redirected_to results_poll_question_url(q)
       assert flash.key?(:warning) # Not okay
     end

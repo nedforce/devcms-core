@@ -55,8 +55,8 @@ class ActiveSupport::TestCase
 
   # Setup all fixtures in test/fixtures/*.(yml|csv) for all tests.
   #
-  # Note: You'll currently still have to declare fixtures explicitly in integration tests
-  # -- they do not yet inherit this setting
+  # Note: You'll currently still have to declare fixtures explicitly in
+  #       integration tests -- they do not yet inherit this setting.
   self.fixture_path = File.dirname(__FILE__) + '/fixtures/'
 
   fixtures :all
@@ -95,7 +95,7 @@ class ActiveSupport::TestCase
     end
   end
 
-  def with_csrf_check_enabled &block
+  def with_csrf_check_enabled(&block)
     begin
       ActionController::Base.allow_forgery_protection = true
       yield
@@ -114,5 +114,4 @@ class ActionController::IntegrationTest
     Rails.application.config.consider_all_requests_local = false
     Rails.application.config.action_dispatch.show_exceptions = true
   end
-
 end

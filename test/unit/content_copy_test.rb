@@ -3,7 +3,7 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 class ContentCopyTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @root_node           = nodes(:root_section_node)
     @section_node        = nodes(:economie_section_node)
     @test_image_copy     = content_copies(:test_image_copy)
@@ -11,7 +11,7 @@ class ContentCopyTest < ActiveSupport::TestCase
     @news_item_node      = nodes(:devcms_news_item_node)
   end
 
-  def test_should_create_content_copy
+  test 'should create content copy' do
     assert_difference 'ContentCopy.count', 1 do
       create_content_copy
     end
@@ -71,14 +71,17 @@ class ContentCopyTest < ActiveSupport::TestCase
     end
   end
 
-  def test_should_override_icon_class_getters
+  test 'should override icon class getters' do
     assert_match(/forum/, @bewoners_forum_copy.icon_filename)
     assert_match(/forum/, @bewoners_forum_copy.tree_icon_class)
   end
 
-protected
+  protected
 
   def create_content_copy(options = {})
-    ContentCopy.create({ parent: @root_node, copied_node: @section_node }.merge(options))
+    ContentCopy.create({
+      parent:      @root_node,
+      copied_node: @section_node
+    }.merge(options))
   end
 end

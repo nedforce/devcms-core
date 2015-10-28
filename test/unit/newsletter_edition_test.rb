@@ -3,7 +3,7 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 class NewsletterEditionTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @root_node                 = nodes(:root_section_node)
     @devcms_newsletter_archive = newsletter_archives(:devcms_newsletter_archive)
     @devcms_newsletter_edition = newsletter_editions(:devcms_newsletter_edition)
@@ -105,15 +105,19 @@ class NewsletterEditionTest < ActiveSupport::TestCase
     assert_equal "#{created_at.day}/#{created_at.month} #{ne.title}", ne.node.tree_text
   end
 
-  def test_should_default_to_first_sibbling_image
+  test 'should default to first sibling image' do
     image = Image.last.node
     image.move_to_child_of(nodes(:newsletter_archive_node))
     assert_equal image, create_newsletter_edition.header
   end
 
-protected
+  protected
 
   def create_newsletter_edition(options = {})
-    NewsletterEdition.create({ :parent => nodes(:newsletter_archive_node), :title => 'Het maandelijkse nieuws uit Nederland!', :body => 'O o o wat is het weer een fijne maand geweest.' }.merge(options))
+    NewsletterEdition.create({
+      parent: nodes(:newsletter_archive_node),
+      title:  'Het maandelijkse nieuws uit Nederland!',
+      body:   'O o o wat is het weer een fijne maand geweest.'
+    }.merge(options))
   end
 end

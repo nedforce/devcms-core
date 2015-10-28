@@ -1,21 +1,21 @@
 require File.expand_path('../../test_helper.rb', __FILE__)
 
 class NodeURLAliasTest < ActiveSupport::TestCase
-  def setup
+  setup do
     @arthur                = users(:arthur)
     @root_node             = nodes(:root_section_node)
     @about_page_node       = nodes(:about_page_node)
     @economie_section_node = nodes(:economie_section_node)
   end
 
-  def test_should_create_url_alias
+  test 'should create url alias' do
     cn = create_page
     assert_equal 'foo', cn.node.url_alias
   end
 
-  def test_should_create_custom_url_alias
+  test 'should create custom url alias' do
     cn = create_page
-    cn.node.update_attributes(:custom_url_suffix => 'test')
+    cn.node.update_attributes(custom_url_suffix: 'test')
     assert_equal 'test', cn.node.custom_url_alias
   end
 
@@ -115,10 +115,10 @@ class NodeURLAliasTest < ActiveSupport::TestCase
     assert_equal "#{parent_node_alias}/test", ni.node.custom_url_alias
   end
 
-  def test_should_set_custom_url_alias_to_custom_url_suffix_if_custom_url_suffix_starts_with_forward_slash
-    na = NewsArchive.create(:parent => @root_node, :title => 'news', :description => 'news')
-    ni = na.news_items.create(:parent => na.node, :user => @arthur, :title => 'foobar', :body => 'foobar')
-    ni.node.update_attributes(:custom_url_suffix => '/test')
+  test 'should set custom_url_alias to custom_url_suffix if custom_url_suffix starts with forward slash' do
+    na = NewsArchive.create(parent: @root_node, title: 'news', description: 'news')
+    ni = na.news_items.create(parent: na.node, user: @arthur, title: 'foobar', body: 'foobar')
+    ni.node.update_attributes(custom_url_suffix: '/test')
 
     assert_equal 'test', ni.node.custom_url_alias
   end

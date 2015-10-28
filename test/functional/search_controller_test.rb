@@ -12,14 +12,14 @@ class SearchControllerTest < ActionController::TestCase
     #   @@index_built = true
     # end
     Node.stubs(:find_with_ferret).returns(stub({
-      :total_hits => 0
+      total_hits: 0
     }))
     Search::FerretSearch.stubs(:create_search_string).returns('query')
     # Search::FerretSearch.stubs(:expand_query).returns('expanded query')
   end
 
-  def test_should_search_on_post
-    post :index, :query => 'forum'
+  test 'should search on post' do
+    post :index, query: 'forum'
     assert_response :success
     assert assigns(:results)
   end
@@ -57,7 +57,7 @@ class SearchControllerTest < ActionController::TestCase
     post :index, :query => 'blaat', :search_scope => "node_#{descendant_section_node.id}"
   end
 
-protected
+  protected
 
   def create_page(_attributes = {}, options = {})
     parent_node = options.delete(:parent_node) || nodes(:root_section_node)

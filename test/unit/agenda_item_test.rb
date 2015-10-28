@@ -64,8 +64,8 @@ class AgendaItemTest < ActiveSupport::TestCase
     end
   end
 
-  def test_agenda_item_category_name_should_return_nil_if_no_agenda_item_category_is_associated
-    agenda_item = create_agenda_item(:agenda_item_category => nil)
+  test 'agenda item category name should return nil if no agenda item category is associated' do
+    agenda_item = create_agenda_item(agenda_item_category: nil)
     assert_nil agenda_item.agenda_item_category_name
   end
 

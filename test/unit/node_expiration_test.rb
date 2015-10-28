@@ -67,7 +67,7 @@ class NodeExpirationTest < ActiveSupport::TestCase
     assert_not_equal expiration_date.to_date, pages(:about_page).reload.expires_on
   end
 
-protected
+  protected
 
   def build_page(options = {})
     Page.new({ :parent => nodes(:root_section_node), :title => 'Page title', :preamble => 'Ambule', :body => 'Page body' }.merge(options))

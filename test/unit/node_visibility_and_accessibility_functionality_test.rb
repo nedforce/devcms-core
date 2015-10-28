@@ -101,12 +101,12 @@ class NodeVisibilityAndAccessibilityFunctionalityTest < ActiveSupport::TestCase
     end
   end
 
-  def test_set_accessibility_should_make_section_node_private
+  test 'set accessibility should make section node private' do
     assert @editor_section_node.set_accessibility!(false)
     assert @editor_section_node.private?
   end
 
-  def test_set_accessibility_should_not_make_non_section_node_private
+  test 'set accessibility should not make non-section node private' do
     node = create_node({}, @editor_section_node)
 
     assert !node.set_accessibility!(false)

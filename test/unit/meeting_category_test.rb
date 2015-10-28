@@ -3,44 +3,44 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 class MeetingCategoryTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @meeting_category = meeting_categories(:gemeenteraad_meetings)
   end
 
-  def test_should_create_meeting_category
+  test 'should create meeting category' do
     assert_difference 'MeetingCategory.count' do
       create_meeting_category
     end
   end
 
-  def test_should_require_name
+  test 'should require name' do
     assert_no_difference 'MeetingCategory.count' do
-      meeting_category = create_meeting_category(:name => nil)
+      meeting_category = create_meeting_category(name: nil)
       assert meeting_category.errors[:name].any?
     end
   end
 
-  def test_should_require_unique_name
+  test 'should require unique name' do
     assert_no_difference 'MeetingCategory.count' do
-      meeting_category = create_meeting_category(:name => @meeting_category.name)
+      meeting_category = create_meeting_category(name: @meeting_category.name)
       assert meeting_category.errors[:name].any?
     end
   end
 
-  def test_should_update_meeting_category
+  test 'should update meeting category' do
     assert_no_difference 'MeetingCategory.count' do
       @meeting_category.name = 'New name'
       assert @meeting_category.save
     end
   end
 
-  def test_should_destroy_meeting_category
+  test 'should destroy meeting category' do
     assert_difference 'MeetingCategory.count', -1 do
       @meeting_category.destroy
     end
   end
 
-  def test_find_or_new_by_name
+  test 'should find or new by name' do
     mc1 = create_meeting_category
 
     assert_no_difference 'MeetingCategory.count' do
@@ -51,9 +51,9 @@ class MeetingCategoryTest < ActiveSupport::TestCase
     end
   end
 
-protected
+  protected
 
   def create_meeting_category(options = {})
-    MeetingCategory.create({ :name => 'Foobarbazquux' }.merge(options))
+    MeetingCategory.create({ name: 'Foobarbazquux' }.merge(options))
   end
 end

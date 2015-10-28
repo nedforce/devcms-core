@@ -3,7 +3,7 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 class SectionTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @root_node              = nodes(:root_section_node)
     @root_section           = sections(:root_section)
     @news_archive_node      = nodes(:devcms_news_node)
@@ -11,26 +11,26 @@ class SectionTest < ActiveSupport::TestCase
     @about_page_node        = nodes(:about_page_node)
   end
 
-  def test_should_create_section
+  test 'should create section' do
     assert_difference('Section.count') do
       section = create_section
       assert !section.new_record?
     end
   end
 
-  def test_should_require_title
+  test 'should require title' do
     assert_no_difference('Section.count') do
-      section = create_section(:title => nil)
+      section = create_section(title: nil)
       assert section.new_record?
       assert section.errors[:title].any?
     end
   end
 
-  def test_last_should_be_blank
-    s = Section.all.last
-    s.update_attribute(:description, nil)
-    s.reload
-    assert_nil s.description
+  test 'last should be blank' do
+    section = Section.all.last
+    section.update_attribute(:description, nil)
+    section.reload
+    assert_nil section.description
   end
 
   # Frontpage functionality related tests

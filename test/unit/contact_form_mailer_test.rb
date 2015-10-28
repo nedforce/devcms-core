@@ -16,5 +16,4 @@ class ContactFormMailerTest < ActionMailer::TestCase
     assert response.parts.first.body =~ /Naam/
     assert response.parts.first.body =~ /meneer_test@nedforce.nl/
   end
-
 end

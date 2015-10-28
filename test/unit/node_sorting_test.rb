@@ -1,25 +1,24 @@
 require File.expand_path('../../test_helper.rb', __FILE__)
 
 class NodeSortingTest < ActiveSupport::TestCase
-
-  def setup
+  setup do
     Node.root.reorder_children
     @root_node             = nodes(:root_section_node)
     @about_page_node       = nodes(:about_page_node)
     @economie_section_node = nodes(:economie_section_node)
   end
 
-  def test_root_children_should_be_sorted_after_setup
+  test 'root children should be sorted after setup' do
     assert Node.root.children.broken_list_ancestries.empty?
     assert_equal Node.root.children.map(&:position), (1..Node.root.children.count).to_a
   end
 
-  def test_should_sort_children
+  test 'should sort children' do
     node = @root_node
     node.sort_children
   end
 
-  def test_should_insert_in_position_on_move_to_left
+  test 'should insert in position on move to left' do
     n = create_page(parent: @economie_section_node).node
     pos = @about_page_node.position
     n.move_to_left_of @about_page_node
@@ -29,7 +28,7 @@ class NodeSortingTest < ActiveSupport::TestCase
     assert_equal @about_page_node.reload.position - 1, n.position 
   end
 
-  def test_should_insert_as_last_on_move_to_parent
+  test 'should insert as last on move to parent' do
     n = create_page(parent: @economie_section_node).node
     pos = @root_node.children.maximum(:position) + 1
     n.move_to_child_of @root_node
@@ -38,14 +37,14 @@ class NodeSortingTest < ActiveSupport::TestCase
     assert n.last?
   end
 
-  def test_should_not_update_position_if_not_moved
+  test 'should not update position if not moved' do
     n = Node.root.children.first
     pos = n.position
     n.update_attributes show_in_menu: !n.show_in_menu
     assert_equal pos, n.reload.position, 'Node position updated!'
   end
 
-  def test_should_not_remove_from_list_on_paranoid_delete
+  test 'should not remove from list on paranoid delete' do
     n = Node.root.children.first
     max_pos = Node.root.children.last.position
     n.paranoid_delete!
@@ -53,13 +52,19 @@ class NodeSortingTest < ActiveSupport::TestCase
     assert_nil Node.unscoped.find(n.id).position
   end
 
-  def test_should_return_path_in_correct_order
+  test 'should return path in correct order' do
     assert_equal [Node.root, nodes(:economie_section_node)], nodes(:economie_poll_node).path.sections
   end
 
   protected
 
   def create_page(options = {})
-    Page.create({ user: users(:arthur), parent: nodes(:root_section_node), title: 'foo', preamble: 'xuu', body: 'bar' }.merge(options))
+    Page.create({
+      user:     users(:arthur),
+      parent:   nodes(:root_section_node),
+      title:    'foo',
+      preamble: 'xuu',
+      body:     'bar'
+    }.merge(options))
   end
 end

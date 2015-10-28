@@ -102,5 +102,4 @@ class SessionsControllerTest < ActionController::TestCase
       assert_response :unprocessable_entity
     end
   end
-
 end

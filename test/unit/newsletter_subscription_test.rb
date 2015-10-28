@@ -32,21 +32,21 @@ class NewsletterSubscriptionTest < ActionMailer::TestCase
 
   protected
 
-    def create_and_test_default
-      @response = NewsletterSubscription.edition_for(@newsletter_edition, @user)
-      body = @response.parts.first.body
+  def create_and_test_default
+    @response = NewsletterSubscription.edition_for(@newsletter_edition, @user)
+    body = @response.parts.first.body
 
-      assert @response.to.to_s =~ /#{@user.email_address}/
-      assert @response.subject =~ /#{@newsletter_edition.title}/
-      assert body =~ /#{@newsletter_edition.body}/
+    assert @response.to.to_s =~ /#{@user.email_address}/
+    assert @response.subject =~ /#{@newsletter_edition.title}/
+    assert body =~ /#{@newsletter_edition.body}/
 
-      @newsletter_edition.items.each do |item|
-        assert body =~ /#{item.title}/
-        if item.respond_to?(:preamble)
-          assert body =~ /#{item.preamble}/
-        else
-          assert body =~ /#{item.body}/
-        end
+    @newsletter_edition.items.each do |item|
+      assert body =~ /#{item.title}/
+      if item.respond_to?(:preamble)
+        assert body =~ /#{item.preamble}/
+      else
+        assert body =~ /#{item.body}/
       end
     end
+  end
 end

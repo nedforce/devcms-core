@@ -4,7 +4,7 @@ require 'fakeweb'
 class FeedWorkerTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     FakeWeb.register_uri(:get, 'http://office.nedforce.nl/correct.rss', body: get_file_as_string('files/nedforce_feed.xml'))
 
     @feed_worker = FeedWorker.new
