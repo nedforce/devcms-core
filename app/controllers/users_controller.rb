@@ -1,26 +1,24 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +User+ objects.
-
 class UsersController < ApplicationController
+  skip_before_filter :find_node
 
-  skip_before_filter :find_node  
-    
   # SSL encryption is required for these actions:
   ssl_required :new, :create, :verification, :edit, :update, :confirm_destroy, :destroy
-  
+
   # SSL encryption is optional for the #show action.
   ssl_allowed :show
 
-  before_filter :verify_invitation_code, :only => [ :new, :create ]
-  
-  before_filter :find_user, :only => [ :send_verification_email, :verification ]
-  
-  # Only allow updates and views for the owner of a user record.
-  before_filter :login_required, :set_user, :only => [ :edit, :update, :show, :profile, :destroy, :confirm_destroy ]
-  before_filter :set_user,                  :only => [ :edit, :update, :show,           :destroy, :confirm_destroy ]
+  before_filter :verify_invitation_code, only: [:new, :create]
 
-  before_filter :get_newsletters, :only => [ :new, :create, :show, :profile ]
-  before_filter :get_interests,   :only => [ :new, :create, :show, :profile ]
+  before_filter :find_user, only: [:send_verification_email, :verification]
+
+  # Only allow updates and views for the owner of a user record.
+  before_filter :login_required, :set_user, only: [:edit, :update, :show, :profile, :destroy, :confirm_destroy]
+  before_filter :set_user,                  only: [:edit, :update, :show,           :destroy, :confirm_destroy]
+
+  before_filter :get_newsletters, only: [:new, :create, :show, :profile]
+  before_filter :get_interests,   only: [:new, :create, :show, :profile]
 
   # Shows the registration form.
   #
@@ -28,10 +26,10 @@ class UsersController < ApplicationController
   # * GET /users/new.xml
   def new
     suplied_email = params[:invitation_email] || params[:email_address]
-    @user = User.new(:email_address => suplied_email)
+    @user = User.new(email_address: suplied_email)
     respond_to do |format|
       format.html # new.html.erb
-      format.xml  { render :xml => @user }
+      format.xml  { render xml: @user }
     end
   end
 
@@ -49,10 +47,10 @@ class UsersController < ApplicationController
       @user = User.new(params[:user].except(:username))
 
       respond_to do |format|
-        # user.save will fail if the e-mail has already been used, but we because
-        # we do not want to leak this information. It still will show a success page.
-        # An e-mail notice will be send with the before_create statement in the user
-        # model.
+        # user.save will fail if the e-mail has already been used, but because
+        # we do not want to leak this information, it will still show a success
+        # page. An e-mail notice will be send with the before_create statement
+        # in the user model.
         if @user.save || @user.valid?
           format.html do
             if Settler[:after_signup_path].present?
@@ -62,12 +60,12 @@ class UsersController < ApplicationController
               redirect_to login_path
             end
           end
-          format.xml  { render :xml => @user.to_xml, :status => :created, :location => @user }
+          format.xml { render xml: @user.to_xml, status: :created, location: @user }
         else
           # Clear the password and password confirmation fields.
           @user.password = @user.password_confirmation = nil
-          format.html { render :action => 'new',     :status => :unprocessable_entity }
-          format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
+          format.html { render action: 'new',     status: :unprocessable_entity }
+          format.xml  { render xml: @user.errors, status: :unprocessable_entity }
         end
       end
     end
@@ -75,7 +73,7 @@ class UsersController < ApplicationController
 
   def profile
     @user = current_user
-    render :action => 'show'
+    render action: 'show'
   end
 
   # Shows user profile page.
@@ -108,7 +106,7 @@ class UsersController < ApplicationController
       if (@user.changed.include?('email_address') || params[:user][:password].present?) && !@user.authenticated?(params[:old_password])
         format.html do
           @user.errors.add :base, I18n.t('users.wrong_password')
-          render :action => 'edit', :status => :unprocessable_entity
+          render action: 'edit', status: :unprocessable_entity
         end
         format.xml  { head :unprocessable_entity }
       elsif @user.save
@@ -118,8 +116,8 @@ class UsersController < ApplicationController
         end
         format.xml  { head :ok }
       else
-        format.html { render :action => 'edit',    :status => :unprocessable_entity }
-        format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
+        format.html { render action: 'edit',    status: :unprocessable_entity }
+        format.xml  { render xml: @user.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -152,7 +150,7 @@ class UsersController < ApplicationController
   #
   # * GET /users/:login/verification?code=XXXXXX
   # * GET /users/:login/verification.xml?code=XXXXXX
-  # 
+  #
   # <b>parameters:</b>
   # * code - String. The user's verification code.
   def verification
@@ -165,22 +163,22 @@ class UsersController < ApplicationController
         format.xml { head :ok }
       else
         @page_title = I18n.t('users.verification_failed')
-        format.html { render :action => 'verification_failed' }
-        format.xml  { render :xml => { :error => I18n.t('users.verification_failed') }.to_xml, :status => :unprocessable_entity }
+        format.html { render action: 'verification_failed' }
+        format.xml  { render xml: { error: I18n.t('users.verification_failed') }.to_xml, status: :unprocessable_entity }
       end
     end
   end
 
   # Generates a new verification code and sends it to the user's email address.
-  # 
+  #
   # * GET /users/:id/send_verification_email
   def send_verification_email
-    unless @user.verified?
+    if @user.verified?
+      flash[:warning] = I18n.t('users.already_verified')
+    else
       @user.reset_verification_code
       UserMailer.verification_email(@user).deliver
-      flash[:notice]  = I18n.t('users.sent_verification_email')
-    else
-      flash[:warning] = I18n.t('users.already_verified')
+      flash[:notice] = I18n.t('users.sent_verification_email')
     end
 
     respond_to do |format|
@@ -188,9 +186,10 @@ class UsersController < ApplicationController
     end
   end
 
-protected
+  protected
 
-  # Finds the requested user and saves it to the <tt>@user</tt> instance variable.
+  # Finds the requested user and saves it to the <tt>@user</tt> instance
+  # variable.
   def find_user
     @user = User.find_by_login!(params[:id])
   end
@@ -202,7 +201,7 @@ protected
   def get_newsletters
     @newsletter_archives = NewsletterArchive.accessible.all.select do |na|
       node = na.node
-      !node.self_and_ancestors.sections.exists?(:private => true) || (current_user && current_user.role_assignments.exists?(:node_id => node.self_and_ancestor_ids))
+      !node.self_and_ancestors.sections.exists?(private: true) || (current_user && current_user.role_assignments.exists?(node_id: node.self_and_ancestor_ids))
     end
   end
 
@@ -212,10 +211,10 @@ protected
 
   def set_page_title
     case action_name.to_s
-      when 'new', 'create'
-        @page_title = I18n.t('users.register')
-      when 'show', 'edit', 'profile'
-        @page_title = I18n.t('users.profile')
+    when 'new', 'create'
+      @page_title = I18n.t('users.register')
+    when 'show', 'edit', 'profile'
+      @page_title = I18n.t('users.profile')
     end
   end
 

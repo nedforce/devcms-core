@@ -1,9 +1,8 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +Theme+ objects.
 class ThemesController < ApplicationController
-
   # The +show+ action needs a +Theme+ object to work with.
-  before_filter :find_theme, :only => :show
+  before_filter :find_theme, only: :show
 
   protected
 

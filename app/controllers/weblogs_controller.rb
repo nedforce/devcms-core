@@ -1,24 +1,24 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +Weblog+ objects. It offers special actions
 # to allow registered users to create, update and delete their own weblogs.
-
 class WeblogsController < ApplicationController
-  # Require the user to be logged in for the +new+, +create+, +edit+, +update+ and +destroy+ actions.
-  before_filter :login_required,          :only => [ :new, :create, :edit, :update, :destroy ]
+  # Require the user to be logged in for the +new+, +create+, +edit+, +update+
+  # and +destroy+ actions.
+  before_filter :login_required,          only: [:new, :create, :edit, :update, :destroy]
 
   # The +new+, +create+, +edit+, +update+ and +destroy+ actions need a parent +WeblogArchive+ object to work with.
-  before_filter :find_weblog_archive,     :only => [ :new, :create, :edit, :update, :destroy ]
+  before_filter :find_weblog_archive,     only: [:new, :create, :edit, :update, :destroy]
 
   # Check whether the user hasn't yet got a weblog for the current weblog archive, for the +new+ and +create+ actions.
-  before_filter :check_absence_of_weblog, :only => [ :new, :create ]
+  before_filter :check_absence_of_weblog, only: [:new, :create]
 
   # The +show+, +edit+, +update+ and +destroy+ actions need a +Weblog+ object to work with.
-  before_filter :find_weblog,             :only => [ :show, :edit, :update, :destroy ]
+  before_filter :find_weblog,             only: [:show, :edit, :update, :destroy]
 
-  before_filter :find_weblog_posts,       :only => :show
+  before_filter :find_weblog_posts,       only: :show
 
   # Check whether the user is authorized to perform the +edit+, +update+ and +destroy+ actions.
-  before_filter :check_weblog_rights,     :only => [ :edit, :update, :destroy ]
+  before_filter :check_weblog_rights,     only: [:edit, :update, :destroy]
 
   # * GET /weblogs/:id
   # * GET /weblogs/:id.atom
@@ -26,8 +26,8 @@ class WeblogsController < ApplicationController
   def show
     respond_to do |format|
       format.html # show.html.erb
-      format.any(:rss, :atom) { render :layout => false }
-      format.xml  { render :xml => @weblog }
+      format.any(:rss, :atom) { render layout: false }
+      format.xml { render xml: @weblog }
     end
   end
 
@@ -48,12 +48,12 @@ class WeblogsController < ApplicationController
     @weblog.parent = @weblog_archive.node
 
     respond_to do |format|
-      if @weblog.save(:user => current_user)
+      if @weblog.save(user: current_user)
         format.html { redirect_to @weblog_archive }
-        format.xml  { render :xml => @weblog, :status => :created, :location => @weblog }
-       else
-        format.html { render :action => :new }
-        format.xml  { render :xml => @weblog.errors, :status => :unprocessable_entity }
+        format.xml  { render xml: @weblog, status: :created, location: @weblog }
+      else
+        format.html { render action: :new }
+        format.xml  { render xml: @weblog.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -64,12 +64,12 @@ class WeblogsController < ApplicationController
     @weblog.attributes = params[:weblog]
 
     respond_to do |format|
-      if @weblog.save(:user => current_user)
+      if @weblog.save(user: current_user)
         format.html { redirect_to aliased_or_delegated_path(@weblog.node) }
         format.xml  { head :ok }
       else
-        format.html { render :action => :edit }
-        format.xml  { render :xml => @weblog.errors, :status => :unprocessable_entity }
+        format.html { render action: :edit }
+        format.xml  { render xml: @weblog.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -84,11 +84,11 @@ class WeblogsController < ApplicationController
         flash[:notice] = I18n.t('weblogs.successfully_destroyed')
         redirect_to aliased_or_delegated_path(@weblog_archive.node)
       end
-      format.xml  { head :ok }
+      format.xml { head :ok }
     end
   end
 
-protected
+  protected
 
   # Finds the +WeblogArchive+ object corresponding to the passed in +weblog_archive_id+ parameter.
   def find_weblog_archive
