@@ -7,7 +7,7 @@ class NewsletterSubscription < ActionMailer::Base
     end
 
     default_url_options[:host] = host = Settler[:host]
-    archive            = edition.newsletter_archive
+    archive = edition.newsletter_archive
 
     @from               = archive.from_email_address.blank? ? Settler[:mail_from_address] : archive.from_email_address
     @subject            = "[#{archive.title}] #{edition.title}"

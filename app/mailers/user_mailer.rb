@@ -12,7 +12,7 @@ class UserMailer < ActionMailer::Base
 
   def email_used_to_create_account(user, options = {})
     set_defaults(user, options)
-    @subject = "Uw e-mail is gebruikt om een account te maken bij #{Settler[:host]}"
+    @subject = "Uw e-mailadres is gebruikt om een account te maken bij #{Settler[:host]}"
     @user    = user
 
     mail(from: @from, to: @recipients, subject: @subject)
