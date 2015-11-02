@@ -142,7 +142,7 @@ module NodeExtensions::Layouting
   # Can inherit from parent node (defaults to true)
   def find_content_representations(target, inherit = true)
     conditions = {}
-    conditions.update(:target => target) if target
+    conditions.update(target: target) if target
 
     if !content_representations.exists?(conditions) && inherit && parent
       parent.find_content_representations(target, inherit) 
@@ -153,7 +153,7 @@ module NodeExtensions::Layouting
 
   # Find header image(s) for this node, either those set on this node or on one of its parents.
   def header_images
-    Image.accessible.where(:is_for_header => true, 'nodes.ancestry' => self.header_container_ancestry)
+    Image.accessible.where(is_for_header: true, 'nodes.ancestry' => self.header_container_ancestry)
   end
 
   # Find the ancestry for the first parent or self containing header images

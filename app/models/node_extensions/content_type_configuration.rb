@@ -16,6 +16,6 @@ module NodeExtensions::ContentTypeConfiguration
   end
 
   def content_type_configuration
-    Node.content_type_configuration(self.sub_content_type)
+    Node.content_type_configuration(sub_content_type)
   end
 end

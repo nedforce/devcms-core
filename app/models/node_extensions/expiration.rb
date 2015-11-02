@@ -83,7 +83,7 @@ module NodeExtensions::Expiration
   def expires_on_valid?
     if expirable? && expires_on.present?
       unless (Date.today..(Date.today + Settler[:default_expiration_time].days)).include?(expires_on)
-        errors.add(:base, I18n.t('nodes.expires_on_out_of_range', :date => I18n.l(Date.today + Settler[:default_expiration_time])))
+        errors.add(:base, I18n.t('nodes.expires_on_out_of_range', date: I18n.l(Date.today + Settler[:default_expiration_time])))
       end
     end
   end
@@ -93,7 +93,7 @@ module NodeExtensions::Expiration
   end
 
   def cascade_expires_on!
-    self.descendants.update_all({ :expires_on => Date.parse(cascade_expires_on) }, { :content_type => Node.expirable_content_types })
+    self.descendants.update_all({ expires_on: Date.parse(cascade_expires_on) }, { content_type: Node.expirable_content_types })
   end
 
   def cascade_expires_on?
