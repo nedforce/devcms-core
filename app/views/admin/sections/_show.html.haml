@@ -20,7 +20,7 @@
       %ul.section_items
         - @children.each do |content_node|
           %li
-            = image_tag "icons/#{content_node.try :icon_filename}", class: 'icon', alt: '', title: h(content_node.title)
+            = image_tag "icons/#{content_node.try :icon_filename}", class: 'icon', alt: ''
             = link_to_content_node h(content_node.title), content_node, {}, target: '_blank'
 
     = render_attachments
