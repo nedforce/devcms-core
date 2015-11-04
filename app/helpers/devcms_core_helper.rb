@@ -158,7 +158,7 @@ module DevcmsCoreHelper
   end
 
   def news_item_button(title = nil, &block)
-    content_tag(:div, class: 'article') { image_tag('icons/news_item.png', class: 'icon', alt: '', title: title) + capture(&block) }
+    content_tag(:div, class: 'article') { image_tag('icons/news_item.png', class: 'icon', alt: '') + capture(&block) }
   end
 
   def edit_button(title = nil, &block)
