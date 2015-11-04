@@ -7,7 +7,11 @@ class ImagePresenter < BasePresenter
   def url?;               @object.url.present?               end
 
   def image(options = {})
-    h.link_to image_tag(options), url, title: description.to_s
+    if description.present?
+      h.link_to image_tag(options), url, title: description
+    else
+      h.link_to image_tag(options), url
+    end
   end
 
   def lightbox_image(node = nil)
