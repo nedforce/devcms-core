@@ -20,7 +20,11 @@
 
     - @contact_form_fields.each do |contact_form_field|
       %tr
-        %td= label_tag "contact_form_field_#{contact_form_field.id}", contact_form_field.label
+        %td
+          - if contact_form_field.field_type == 'multiselect'
+            = label_tag "contact_form_field[#{contact_form_field.id}][#{contact_form_field.default_value.split(',').first.parameterize}]", contact_form_field.label
+          - else
+            = label_tag "contact_form_field_#{contact_form_field.id}", contact_form_field.label
         %td
           - match = @entered_fields.find { |f| f.first == contact_form_field.id }
           - value = match ? match[2] : contact_form_field.default_value
@@ -33,7 +37,7 @@
           - elsif contact_form_field.field_type == 'multiselect'
             - values = params[contact_form_field.label.parameterize.to_s] || {}
             - contact_form_field.default_value.split(',').each do |choice|
-              #{check_box_tag "contact_form_field[#{contact_form_field.id}][]", choice.to_s, values[choice.parameterize.to_s] == '1'} #{label_tag "contact_form_field[#{contact_form_field.id}][#{choice.parameterize}]", choice}
+              #{check_box_tag "contact_form_field[#{contact_form_field.id}][]", choice.to_s, values[choice.parameterize.to_s] == '1', id: "contact_form_field_#{contact_form_field.id}_#{choice.parameterize}"} #{label_tag "contact_form_field[#{contact_form_field.id}][#{choice.parameterize}]", choice}
               %br
           - elsif contact_form_field.field_type == 'date'
             = text_field_tag "contact_form_field_#{contact_form_field.id}", value, name: "contact_form_field[#{contact_form_field.id}]", class: 'contact_field datepicker'
