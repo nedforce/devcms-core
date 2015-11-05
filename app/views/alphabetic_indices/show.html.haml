@@ -1,12 +1,12 @@
 .regularitem.clearfix
-  %h2
+  %h1
     = h @alphabetic_index.title
     - if @letter.present?
-      == #{t 'alphabetic_indices.with_starting_letter'} '#{@letter.upcase}'
+      #{t 'alphabetic_indices.with_starting_letter'} '#{@letter.upcase}'
 
   .alphabeticIndexLetterLinks.clearfix
     - ('A'..'Z').each do |letter|
-      == #{link_to letter, letter_path(@alphabetic_index, letter)}&nbsp;
+      #{link_to letter, letter_path(@alphabetic_index, letter)}&nbsp;
 
   - if @items.present?
     #overview.clearfix
