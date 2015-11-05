@@ -1,5 +1,6 @@
-- if Settler[:login_page_text].present?
-  .textAboveForm.loginPageText.clearfix
+.textAboveForm.loginPageText.clearfix
+  %h1= t 'sessions.log_in'
+  - if Settler[:login_page_text].present?
     = Settler[:login_page_text].html_safe
 
 = form_tag secure_url(:session_url) do
