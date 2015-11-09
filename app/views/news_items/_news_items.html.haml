@@ -45,7 +45,7 @@
           %tr
             %th.gray{ scope: 'col' }
               = t 'news.title'
-            %th.right_sized.gray
+            %th.right_sized.gray{ scope: 'col' }
               = t 'news.date'
         %tbody
           - news_items_for_table.each_with_index do |news_item, i|
