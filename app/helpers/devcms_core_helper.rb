@@ -288,7 +288,6 @@ module DevcmsCoreHelper
   end
 
   def skippable(id, options = {}, &block)
-    random = true
     random = !options[:random].nil? ? options[:random] : true
 
     # Add random number to prevent duplicate ids
