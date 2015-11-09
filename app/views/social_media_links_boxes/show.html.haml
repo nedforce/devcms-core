@@ -1,3 +1,5 @@
+%h1= @social_media_links_box.title
+
 .social_media_links_box_icons
   - if @social_media_links_box.twitter_url.present?
     = social_media_link('social_twitter_large.png',  'Twitter',  @social_media_links_box.twitter_url)
