@@ -16,7 +16,9 @@
           %td= node.ancestors.all(include: :content).map { |n| n.content.content_title }.join(' > ').to_s
           %td= node.updated_at
           %td= node.expires_on
-          %td #{node.responsible_user.full_name} (#{node.responsible_user.login})
+          %td
+            - if node.responsible_user.present?
+              #{node.responsible_user.full_name} (#{node.responsible_user.login})
           %td= link_to I18n.t('layouts.lookup'), admin_nodes_url(active_node_id: node.id, host: @host)
   %p De verantwoordelijke redacteurs zijn op de hoogte gesteld van het verlopen van deze content, maar ondernamen nog geen actie.
   %p Neem voor meer informatie contact op met #{mail_to Settler[:mail_approvals_from_address]}.
