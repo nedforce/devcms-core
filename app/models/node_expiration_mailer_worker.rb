@@ -22,21 +22,17 @@ class NodeExpirationMailerWorker
     end
 
     def send_author_notification(node)
-      begin
-        NodeExpirationMailer.author_notification(node).deliver
-      rescue Exception => exception
-        raise exception unless Rails.env.production?
-        Airbrake.notify(exception, :data => { :message => 'Notifying authors of expired content.', :node => node })
-      end
+      NodeExpirationMailer.author_notification(node).deliver
+    rescue Exception => exception
+      raise exception unless Rails.env.production?
+      Airbrake.notify(exception, data: { message: 'Notifying authors of expired content.', node: node })
     end
 
-    def send_final_editor_notification(final_editor,nodes)
-      begin
-        NodeExpirationMailer.final_editor_notification(final_editor,nodes).deliver
-      rescue Exception => exception
-        raise exception unless Rails.env.production?
-        Airbrake.notify(exception, :data => { :message => 'Notifying final editor of expired content.', :final_editor => final_editor })
-      end
+    def send_final_editor_notification(final_editor, nodes)
+      NodeExpirationMailer.final_editor_notification(final_editor, nodes).deliver
+    rescue Exception => exception
+      raise exception unless Rails.env.production?
+      Airbrake.notify(exception, data: { message: 'Notifying final editor of expired content.', final_editor: final_editor })
     end
   end
 end
