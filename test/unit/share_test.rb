@@ -18,7 +18,7 @@ class ShareTest < ActiveSupport::TestCase
   end
 
   test 'should require to email address' do
-    share = create_share(:to_email_address: nil)
+    share = create_share(to_email_address: nil)
     assert !share.valid?
   end
 
