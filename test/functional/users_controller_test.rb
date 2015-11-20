@@ -25,7 +25,7 @@ class UsersControllerTest < ActionController::TestCase
     assert_equal users(:sjoerd), assigns(:user)
     assert_select '#email_address'
     assert_select '[href=?]', "http://#{@request.host}/users/#{users(:sjoerd).login}/edit"
-    assert_select '.reg_form_additional_info_header'
+    assert_select '.reg_form_fieldset'
   end
 
   test 'should get profile logged in as owner' do
@@ -36,7 +36,7 @@ class UsersControllerTest < ActionController::TestCase
     assert_equal users(:sjoerd), assigns(:user)
     assert_select '#email_address'
     assert_select '[href=?]', "http://#{@request.host}/users/#{users(:sjoerd).login}/edit"
-    assert_select '.reg_form_additional_info_header'
+    assert_select '.reg_form_fieldset'
   end
 
   test 'should not get new for invalid invitation code or invitation email' do
