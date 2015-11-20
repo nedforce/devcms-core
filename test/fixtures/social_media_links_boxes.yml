@@ -1,7 +1,8 @@
 test_social_media_links_box:
-  title:       Test
-  twitter_url:  http://www.twitter.com
-  facebook_url: http://www.facebook.com
-  linkedin_url: http://www.linkedin.com
-  youtube_url:  http://www.youtube.com
-  flickr_url:   http://www.flickr.com
+  title:         Test
+  twitter_url:   http://www.twitter.com
+  facebook_url:  http://www.facebook.com
+  linkedin_url:  http://www.linkedin.com
+  youtube_url:   http://www.youtube.com
+  flickr_url:    http://www.flickr.com
+  instagram_url: http://www.instagram.com

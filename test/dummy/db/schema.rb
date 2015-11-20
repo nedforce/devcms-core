@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150819065406) do
+ActiveRecord::Schema.define(:version => 20151120144715) do
 
   create_table "abbreviations", :force => true do |t|
     t.string   "abbr",       :null => false
@@ -1090,7 +1090,7 @@ ActiveRecord::Schema.define(:version => 20150819065406) do
   add_index "share_point_lists", ["node_id"], :name => "index_share_point_lists_on_node_id"
 
   create_table "social_media_links_boxes", :force => true do |t|
-    t.string   "title",        :null => false
+    t.string   "title",         :null => false
     t.string   "twitter_url"
     t.string   "facebook_url"
     t.string   "linkedin_url"
@@ -1099,6 +1099,7 @@ ActiveRecord::Schema.define(:version => 20150819065406) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
+    t.string   "instagram_url"
   end
 
   add_index "social_media_links_boxes", ["deleted_at"], :name => "index_social_media_links_boxes_on_deleted_at"

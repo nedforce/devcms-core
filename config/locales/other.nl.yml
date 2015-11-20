@@ -1031,6 +1031,7 @@ nl:
     facebook_url: Facebook URL
     failed: Kon social media links box niet opslaan.
     flickr_url: Flickr URL
+    instagram_url: Instagram URL
     linkedin_url: LinkedIn URL
     saved: Social media links box opgeslagen!
     twitter_url: Twitter URL

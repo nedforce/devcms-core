@@ -6,12 +6,13 @@
 #
 # Attributes
 #
-# * +title+        - The title of the social media links box.
-# * +twitter_url+  - A Twitter URL.
-# * +facebook_url+ - A Facebook URL.
-# * +linkedin_url+ - A LinkedIn URL.
-# * +youtube_url+  - A YouTube URL.
-# * +flickr_url+   - A Flickr URL.
+# * +title+         - The title of the social media links box.
+# * +facebook_url+  - A Facebook URL.
+# * +flickr_url+    - A Flickr URL.
+# * +instagram_url+ - An Instagram URL.
+# * +linkedin_url+  - A LinkedIn URL.
+# * +twitter_url+   - A Twitter URL.
+# * +youtube_url+   - A YouTube URL.
 #
 # Preconditions
 #
@@ -32,8 +33,11 @@ class SocialMediaLinksBox < ActiveRecord::Base
   VALID_URL_REGEXP = /(^$)|(^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.([a-z]{2,5}|[0-9]{1,5})(\/.*)?$)/ix
 
   # See the preconditions overview for an explanation of these validations.
-  validates :title, presence: true, length: { maximum: 255 }
-
-  validates_format_of :twitter_url, :facebook_url, :linkedin_url, with: VALID_URL_REGEXP, allow_blank: true
-  validates_format_of :youtube_url, :flickr_url,                  with: VALID_URL_REGEXP, allow_blank: true
+  validates :title,         presence: true, length: { maximum: 255 }
+  validates :facebook_url,  format: { with: VALID_URL_REGEXP, allow_blank: true }
+  validates :flickr_url,    format: { with: VALID_URL_REGEXP, allow_blank: true }
+  validates :instagram_url, format: { with: VALID_URL_REGEXP, allow_blank: true }
+  validates :linkedin_url,  format: { with: VALID_URL_REGEXP, allow_blank: true }
+  validates :twitter_url,   format: { with: VALID_URL_REGEXP, allow_blank: true }
+  validates :youtube_url,   format: { with: VALID_URL_REGEXP, allow_blank: true }
 end

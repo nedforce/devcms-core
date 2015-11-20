@@ -2,7 +2,7 @@
 
 .social_media_links_box_icons
   - if @social_media_links_box.twitter_url.present?
-    = social_media_link('social_twitter_large.png',  'Twitter',  @social_media_links_box.twitter_url)
+    = social_media_link('social_twitter_large.png', 'Twitter', @social_media_links_box.twitter_url)
 
   - if @social_media_links_box.facebook_url.present?
     = social_media_link('social_facebook_large.png', 'Facebook', @social_media_links_box.facebook_url)
@@ -11,7 +11,10 @@
     = social_media_link('social_linkedin_large.png', 'LinkedIn', @social_media_links_box.linkedin_url)
 
   - if @social_media_links_box.youtube_url.present?
-    = social_media_link('social_youtube_large.png',  'YouTube',  @social_media_links_box.youtube_url)
+    = social_media_link('social_youtube_large.png', 'YouTube', @social_media_links_box.youtube_url)
 
   - if @social_media_links_box.flickr_url.present?
-    = social_media_link('social_flickr_large.png',   'Flickr',   @social_media_links_box.flickr_url)
+    = social_media_link('social_flickr_large.png', 'Flickr', @social_media_links_box.flickr_url)
+
+  - if @social_media_links_box.instagram_url.present?
+    = social_media_link('social_instagram_large.png', 'Instagram', @social_media_links_box.instagram_url)

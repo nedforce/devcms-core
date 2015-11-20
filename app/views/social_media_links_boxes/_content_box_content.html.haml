@@ -2,7 +2,7 @@
 
 .social_media_links_box_icons
   - if content.twitter_url.present?
-    = social_media_link('social_twitter_large.png',  'Twitter',  content.twitter_url)
+    = social_media_link('social_twitter_large.png', 'Twitter', content.twitter_url)
 
   - if content.facebook_url.present?
     = social_media_link('social_facebook_large.png', 'Facebook', content.facebook_url)
@@ -11,7 +11,10 @@
     = social_media_link('social_linkedin_large.png', 'LinkedIn', content.linkedin_url)
 
   - if content.youtube_url.present?
-    = social_media_link('social_youtube_large.png',  'YouTube',  content.youtube_url)
+    = social_media_link('social_youtube_large.png', 'YouTube', content.youtube_url)
 
   - if content.flickr_url.present?
-    = social_media_link('social_flickr_large.png',   'Flickr',   content.flickr_url)
+    = social_media_link('social_flickr_large.png', 'Flickr', content.flickr_url)
+
+  - if content.instagram_url.present?
+    = social_media_link('social_instagram_large.png', 'Instagram', content.instagram_url)
