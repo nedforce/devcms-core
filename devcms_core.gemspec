@@ -27,7 +27,7 @@ Gem::Specification.new do |s|
   s.add_dependency  'haml', '~> 4.0'
   s.add_dependency  'libxml-ruby', '~> 2.7.0'
   s.add_dependency  'pg'
-  s.add_dependency  'settler', '~> 1.2.3'
+  s.add_dependency  'settler', '~> 1.2.4'
   s.add_dependency  'tidy_ffi', '~> 0.1.4'
   s.add_dependency  'whenever', '>= 0.4'
   s.add_dependency  'roo', '~> 1.10.1'

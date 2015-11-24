@@ -15,8 +15,8 @@ class Admin::SettingsController < Admin::AdminController
   # * GET /admin/settings.json
   def index
     @active_page    = :settings
-    @settings       = Setting.where(editable: true).order("#{@sort_field} #{@sort_direction}").page(@current_page).per(@page_limit)
-    @settings_count = Setting.where(editable: true).count
+    @settings       = Setting.editable.order("#{@sort_field} #{@sort_direction}").page(@current_page).per(@page_limit)
+    @settings_count = Setting.editable.count
 
     respond_to do |format|
       format.html { render layout: 'admin' }

@@ -40,7 +40,7 @@ PATH
       sanitize
       sass-rails (~> 3.0)
       secure_headers
-      settler (~> 1.2.3)
+      settler (~> 1.2.4)
       sortifiable
       tidy_ffi (~> 0.1.4)
       truncate_html (~> 0.5.5)
