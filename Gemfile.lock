@@ -10,7 +10,7 @@ GIT
 PATH
   remote: .
   specs:
-    devcms_core (2.1.34)
+    devcms_core (2.1.35)
       acts-as-taggable-on (~> 2.4.0)
       addressable (~> 2.1)
       airbrake
