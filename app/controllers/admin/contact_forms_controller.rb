@@ -93,18 +93,6 @@ class Admin::ContactFormsController < Admin::AdminController
     used_fields
   end
 
-  # Check whether all obligatory fields are entered.
-  # Returns +true+ if this is the case, +false+ otherwise.
-  def entered_all_obligatory_fields?(array)
-    @contact_form.obligatory_field_ids.each do |field_id|
-      if array[field_id].blank?
-        return false
-      end
-    end
-
-    true
-  end
-
   # Finds the +ContactForm+ object corresponding to the passed +id+ parameter.
   def find_contact_form
     @contact_form = ContactForm.find(params[:id], include: :contact_form_fields).current_version
