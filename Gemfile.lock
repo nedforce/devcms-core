@@ -10,7 +10,7 @@ GIT
 PATH
   remote: .
   specs:
-    devcms_core (2.1.32)
+    devcms_core (2.1.33)
       acts-as-taggable-on (~> 2.4.0)
       addressable (~> 2.1)
       airbrake
@@ -84,7 +84,7 @@ GEM
       ferret (>= 0.11.8)
       rails (>= 3.0)
     addressable (2.3.8)
-    airbrake (4.3.3)
+    airbrake (4.3.4)
       builder
       multi_json
     ancestry (1.3.0)
