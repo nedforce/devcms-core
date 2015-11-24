@@ -413,6 +413,7 @@ nl:
     obligatory: Verplicht?
     obligatory_fields: "* Deze velden zijn verplicht voor de gebruiker."
     position: Positie
+    subtitle: Subtitel
     textarea: Tekstgebied
     textfield: Tekstveld
   data_warnings:

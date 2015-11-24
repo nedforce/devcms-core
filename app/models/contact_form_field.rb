@@ -26,7 +26,7 @@
 # * Requires +position+ to be unique for a certain +ContactForm+ object.
 #
 class ContactFormField < ActiveRecord::Base
-  FIELD_TYPES = %w(textfield email_address textarea dropdown multiselect date file)
+  FIELD_TYPES = %w(textfield email_address textarea dropdown multiselect date file subtitle)
 
   # A +ContactFormField+ belongs to a +ContactForm+.
   belongs_to :contact_form
@@ -38,8 +38,12 @@ class ContactFormField < ActiveRecord::Base
   validates :position,   presence: true, numericality: { allow_blank: true }, uniqueness: { scope: :contact_form_id, message: I18n.t('activerecord.errors.models.contact_form_field.attributes.position.must_be_unique') }
   validates :field_type, inclusion: { in: ContactFormField::FIELD_TYPES }
 
-  scope :obligatory, -> { where(obligatory: true) }
+  scope :obligatory, -> { where(obligatory: true).where('field_type != ?', 'subtitle') }
   scope :field_type, lambda { |field_type| where(field_type: field_type) }
+
+  def subtitle?
+    field_type == 'subtitle'
+  end
 
   def multiselect?
     field_type == 'multiselect'

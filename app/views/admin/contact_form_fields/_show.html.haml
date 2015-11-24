@@ -2,25 +2,26 @@
 %td= label_tag contact_form_field.label
 
 %td
-  - if ['textfield', 'email_address'].include?(contact_form_field.field_type)
-    = text_field_tag contact_form_field.id, contact_form_field.default_value, :readonly => true, :class => 'contact_field'
-  - elsif contact_form_field.field_type == 'textarea'
-    = text_area_tag contact_form_field.id, contact_form_field.default_value, :readonly => true, :rows => 7, :class => 'contact_field'
-  - elsif contact_form_field.field_type == 'dropdown'
-    = select_tag contact_form_field.id, options_for_select(contact_form_field.default_value.split(',')), :class => 'contact_field'
-  - elsif contact_form_field.field_type == 'date'
-    = text_field_tag contact_form_field.id, contact_form_field.default_value, :readonly => true, :class => 'contact_field datepicker'
-  - elsif contact_form_field.field_type == 'multiselect'
+  - case contact_form_field.field_type
+  - when 'textfield', 'email_address'
+    = text_field_tag contact_form_field.id, contact_form_field.default_value, readonly: true, class: 'contact_field'
+  - when 'textarea'
+    = text_area_tag contact_form_field.id, contact_form_field.default_value, readonly: true, rows: 7, class: 'contact_field'
+  - when 'dropdown'
+    = select_tag contact_form_field.id, options_for_select(contact_form_field.default_value.split(',')), class: 'contact_field'
+  - when 'date'
+    = text_field_tag contact_form_field.id, contact_form_field.default_value, readonly: true, class: 'contact_field datepicker'
+  - when 'multiselect'
     - contact_form_field.default_value.split(',').each do |choice|
-      #{check_box_tag contact_form_field.id, 1, false, :disabled => true} #{label_tag contact_form_field.id, choice}
+      #{check_box_tag contact_form_field.id, 1, false, disabled: true} #{label_tag contact_form_field.id, choice}
       %br
 
 %td.obligatory= contact_form_field.obligatory? ? '*' : ''
 
 %td
-  = form_remote_tag :url => "/admin/contact_forms/#{@contact_form.id}/contact_form_fields/#{contact_form_field.id}/edit", :method => :get do
-    = image_submit_tag 'icons/pencil.png', :alt => t('contact_form_fields.edit_contact_form_field'), :mouseover => t('contact_form_fields.edit_contact_form_field')
+  = form_remote_tag url: "/admin/contact_forms/#{@contact_form.id}/contact_form_fields/#{contact_form_field.id}/edit", method: :get do
+    = image_submit_tag 'icons/pencil.png', alt: t('contact_form_fields.edit_contact_form_field'), mouseover: t('contact_form_fields.edit_contact_form_field')
 
 %td
-  = form_remote_tag :url => "/admin/contact_forms/#{@contact_form.id}/contact_form_fields/#{contact_form_field.id}", :method => :delete do
-    = image_submit_tag 'icons/delete.png', :alt => t('contact_form_fields.destroy_contact_form_field'), :mouseover => t('contact_form_fields.destroy_contact_form_field')
+  = form_remote_tag url: "/admin/contact_forms/#{@contact_form.id}/contact_form_fields/#{contact_form_field.id}", method: :delete do
+    = image_submit_tag 'icons/delete.png', alt: t('contact_form_fields.destroy_contact_form_field'), mouseover: t('contact_form_fields.destroy_contact_form_field')

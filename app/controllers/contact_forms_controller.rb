@@ -1,12 +1,11 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +ContactForm+ objects.
 class ContactFormsController < ApplicationController
-
   # The +show+, +edit+, +update+ and +destroy+ actions
   # each need a +ContactForm+ object to work with/act on.
-  before_filter :find_contact_form,        :only => [ :show, :send_message ]
-  before_filter :find_contact_form_fields, :only => [ :show, :send_message ]
-  around_filter :check_honeypot,           :only => :send_message
+  before_filter :find_contact_form,        only: [:show, :send_message]
+  before_filter :find_contact_form_fields, only: [:show, :send_message]
+  around_filter :check_honeypot,           only: :send_message
 
   # SSL is obligatory here for the authenticity token.
   ssl_required :show, :send_message
@@ -27,22 +26,22 @@ class ContactFormsController < ApplicationController
     get_entered_fields
 
     respond_to do |format|
-      @obligatory_error    = true if !entered_all_obligatory_fields?(@contact_form_field)
-      @email_address_error = true if !valid_email_address_fields?(@contact_form_field)
+      @obligatory_error    = true unless entered_all_obligatory_fields?(@contact_form_field)
+      @email_address_error = true unless valid_email_address_fields?(@contact_form_field)
 
       if @obligatory_error || @email_address_error
-        format.html { render :action => 'show' }
+        format.html { render action: 'show' }
       else
         # Check for send method
         if @contact_form.send_method == ContactForm::SEND_METHOD_DATABASE
           # Store response to database
           # Create a new response object
-          @response_row = Response.create!(:contact_form => @contact_form, :ip => request.remote_ip, :time => Time.now, :email => current_user.try(:email_address))
+          @response_row = Response.create!(contact_form: @contact_form, ip: request.remote_ip, time: Time.now, email: current_user.try(:email_address))
           @response_row.save
 
           # Create response_field objects
           @entered_fields.each do |field|
-            response_field = ResponseField.new(:response => @response_row, :contact_form_field_id => field[:id])
+            response_field = ResponseField.new(response: @response_row, contact_form_field_id: field[:id])
 
             if field[:type] == 'file'
               response_field.file  = field[:value]
@@ -65,7 +64,8 @@ class ContactFormsController < ApplicationController
 
   protected
 
-  # Finds the +ContactForm+ object corresponding to the passed in +id+ parameter.
+  # Finds the +ContactForm+ object corresponding to the passed in +id+
+  # parameter.
   def find_contact_form
     @contact_form = @node.content
   end
@@ -76,7 +76,8 @@ class ContactFormsController < ApplicationController
   end
 
   # Check the fields entered by the user to only use fields that are actually
-  # +ContactFormField+ objects, as we do not want the user to add different input data.
+  # +ContactFormField+ objects, as we do not want the user to add different
+  # input data.
   def get_entered_fields
     @entered_fields = get_used_fields_only(@contact_form_field)
     @entered_fields
@@ -94,11 +95,12 @@ class ContactFormsController < ApplicationController
             value = contact_field["#{field.id}"]
           end
         else
-          # Make sure an empty field is not nil, so that the exported XLS stays correctly formatted
+          # Make sure an empty field is not nil, so that the exported XLS stays
+          # correctly formatted.
           value = ''
         end
 
-        used_fields << { :id => field.id, :label => field.label, :value => value, :type => field.field_type }
+        used_fields << { id: field.id, label: field.label, value: value, type: field.field_type }
       end
     end
 
@@ -113,11 +115,13 @@ class ContactFormsController < ApplicationController
         return false
       end
     end
-    return true
+
+    true
   end
 
   # Check whether all email_address fields are actually an e-mail address.
-  # We allow empty fields, because it is the responsibility of the obligatory setting.
+  # Allow empty fields, because it is the responsibility of the obligatory
+  # setting to check for presence.
   # Returns +true+ if the e-mail addresses are valid, +false+ otherwise.
   def valid_email_address_fields?(array)
     if array.present?
@@ -127,7 +131,8 @@ class ContactFormsController < ApplicationController
         end
       end
     end
-    return true
+
+    true
   end
 
   def check_honeypot
@@ -145,5 +150,4 @@ class ContactFormsController < ApplicationController
   def empty_check
     params[Rails.application.config.honeypot_empty_name] == ''
   end
-
 end
