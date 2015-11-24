@@ -83,16 +83,6 @@ class Admin::ContactFormsController < Admin::AdminController
 
   protected
 
-  def get_used_fields_only(contact_fields)
-    used_fields = []
-    @contact_form_fields.each do |field|
-      if contact_fields[field.id].present?
-        used_fields << [field.id, field.label, contact_fields[field.id]]
-      end
-    end
-    used_fields
-  end
-
   # Finds the +ContactForm+ object corresponding to the passed +id+ parameter.
   def find_contact_form
     @contact_form = ContactForm.find(params[:id], include: :contact_form_fields).current_version
