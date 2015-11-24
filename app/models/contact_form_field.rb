@@ -39,7 +39,11 @@ class ContactFormField < ActiveRecord::Base
   validates :field_type, inclusion: { in: ContactFormField::FIELD_TYPES }
 
   scope :obligatory, -> { where(obligatory: true) }
-  scope :has_field_type, lambda { |field_type| where(field_type: field_type) }
+  scope :field_type, lambda { |field_type| where(field_type: field_type) }
+
+  def multiselect?
+    field_type == 'multiselect'
+  end
 
   def self.human_field_type_for(field_type)
     I18n.t(field_type, scope: 'contact_form_fields')

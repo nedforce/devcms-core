@@ -21,7 +21,7 @@
     - @contact_form_fields.each do |contact_form_field|
       %tr
         %td
-          - if contact_form_field.field_type == 'multiselect'
+          - if contact_form_field.multiselect?
             = label_tag "contact_form_field[#{contact_form_field.id}][#{contact_form_field.default_value.split(',').first.parameterize}]", contact_form_field.label
           - else
             = label_tag "contact_form_field_#{contact_form_field.id}", contact_form_field.label

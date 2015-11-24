@@ -88,7 +88,7 @@ class ContactFormsController < ApplicationController
     if contact_field.present?
       @contact_form_fields.each do |field|
         if contact_field["#{field.id}"].present?
-          if field.field_type == 'multiselect'
+          if field.multiselect?
             value = contact_field["#{field.id}"].join(';')
           else
             value = contact_field["#{field.id}"]

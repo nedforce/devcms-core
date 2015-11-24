@@ -59,7 +59,7 @@ class ContactForm < ActiveRecord::Base
   end
 
   def email_address_field_ids
-    contact_form_fields.has_field_type('email_address').map { |field| field.id }
+    contact_form_fields.field_type('email_address').map { |field| field.id }
   end
 
   protected

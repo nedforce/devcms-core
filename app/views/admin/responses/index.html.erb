@@ -1,8 +1,8 @@
 <%= javascript_tag do %>
-Ext.onReady(function() {
-  Ext.QuickTips.init();
-  
-  var ds = new Ext.data.Store( {
+  Ext.onReady(function () {
+    Ext.QuickTips.init();
+
+  var ds = new Ext.data.Store({
     remoteSort: true,
     proxy: new Ext.data.HttpProxy({
       url: '<%= admin_contact_form_url(@contact_form) %>/responses.xml',
@@ -15,26 +15,26 @@ Ext.onReady(function() {
     }, [
       'id',
       'ip',
-      'email', 
+      'email',
       'created_at',
 <% @contact_form.contact_form_fields.each do |contact_form_field| -%>
 <%= (contact_form_field == @contact_form.contact_form_fields.last ? "'field_#{contact_form_field.id}'" : "'field_#{contact_form_field.id}',").html_safe %>
 <% end -%>
     ]),
-    autoLoad: {params: {start: 0, limit: 25}}
+    autoLoad: { params: { start: 0, limit: 25 } }
   });
-  
+
   var cm = new Ext.grid.ColumnModel(
     [{
       header: '#',
       dataIndex: 'id'
-    },{
+    }, {
       header: 'IP-adres',
       dataIndex: 'ip'
-    },{
+    }, {
       header: 'Emailadres',
       dataIndex: 'email'
-    },{
+    }, {
       header: 'Gemaakt op',
       dataIndex: 'created_at'
     },
@@ -42,12 +42,10 @@ Ext.onReady(function() {
     {
       header: '<%= contact_form_field.label %>',
       dataIndex: 'field_<%= contact_form_field.id %>',
-<% if contact_form_field.field_type == 'textfield' || contact_form_field.field_type == 'date' -%>
+<% if %w(textfield date multiselect).include?(contact_form_field.field_type) -%>
       editor: new Ext.form.TextField()
 <% elsif contact_form_field.field_type == 'textarea' -%>
       editor: new Ext.form.TextArea()
-<% elsif contact_form_field.field_type == 'multiselect' -%>
-      editor: new Ext.form.TextField()
 <% elsif contact_form_field.field_type == 'dropdown' -%>
       editor: new Ext.form.ComboBox({
            editable: false,
@@ -71,134 +69,129 @@ Ext.onReady(function() {
 <% end -%>
     ]
   );
-  
-  cm.defaultSortable = true;
-  
-  var grid = new Ext.grid.EditorGridPanel({
-    title: 'Inzendingen voor <%= @contact_form.title %>',
-    border: false,
-    frame: false,
-    id: 'ResponsesEditorGrid',
-    store: ds,
-    cm: cm,
-    stripeRows: true,
-    selModel: new Ext.grid.RowSelectionModel({singleSelect:false}),
-    clicksToEdit: 2,
-    viewConfig: {forceFit: true},
-    bbar: new Ext.PagingToolbar({
+
+    cm.defaultSortable = true;
+
+    var grid = new Ext.grid.EditorGridPanel({
+      title: 'Inzendingen voor <%= @contact_form.title %>',
+      border: false,
+      frame: false,
+      id: 'ResponsesEditorGrid',
       store: ds,
-      pageSize: 25,
-      displayInfo: true,
-      displayMsg: '<%= I18n.t("contact_forms.count_msg") %>',
-      emptyMsg: '<%= I18n.t("contact_forms.empty_msg") %>',
-      afterPageText: '<%= I18n.t("contact_forms.of_page") %>',
-      beforePageText: '<%= I18n.t("contact_forms.page") %>'
-    }),
-    tbar:
-      [{
-        text: '<%= I18n.t("contact_forms.delete") %>',
-        tooltip: '<%= I18n.t("contact_forms.del_tooltip") %>',
-        handler: handleDelete,
-        iconCls: 'menu_item_delete'
-      },{
-        text: '<%= I18n.t("contact_forms.export_csv") %>',
-        tooltip: '<%= I18n.t("contact_forms.export_csv_tooltip") %>',
-        handler: handleCSVExport,
-        iconCls: 'attachment_icon'
-      },{
-        text: '<%= I18n.t("contact_forms.export_xls") %>',
-        tooltip: '<%= I18n.t("contact_forms.export_xls_tooltip") %>',
-        handler: handleXLSExport,
-        iconCls: 'attachment_icon'
-      }],
-    listeners: {'afteredit': handleEdit}
-  });
-  
-  var panel = new Ext.Panel({
-    layout: 'fit',
-    items: grid,
-    border: false,
-    frame: false
-  });
-  
-  panel.applyToMarkup('right_panel_body');
+      cm: cm,
+      stripeRows: true,
+      selModel: new Ext.grid.RowSelectionModel({ singleSelect: false }),
+      clicksToEdit: 2,
+      viewConfig: { forceFit: true },
+      bbar: new Ext.PagingToolbar({
+        store: ds,
+        pageSize: 25,
+        displayInfo: true,
+        displayMsg: '<%= I18n.t("contact_forms.count_msg") %>',
+        emptyMsg: '<%= I18n.t("contact_forms.empty_msg") %>',
+        afterPageText: '<%= I18n.t("contact_forms.of_page") %>',
+        beforePageText: '<%= I18n.t("contact_forms.page") %>'
+      }),
+      tbar:
+        [{
+          text: '<%= I18n.t("contact_forms.delete") %>',
+          tooltip: '<%= I18n.t("contact_forms.del_tooltip") %>',
+          handler: handleDelete,
+          iconCls: 'menu_item_delete'
+        }, {
+          text: '<%= I18n.t("contact_forms.export_csv") %>',
+          tooltip: '<%= I18n.t("contact_forms.export_csv_tooltip") %>',
+          handler: handleCSVExport,
+          iconCls: 'attachment_icon'
+        }, {
+          text: '<%= I18n.t("contact_forms.export_xls") %>',
+          tooltip: '<%= I18n.t("contact_forms.export_xls_tooltip") %>',
+          handler: handleXLSExport,
+          iconCls: 'attachment_icon'
+        }],
+      listeners: { 'afteredit': handleEdit }
+    });
 
-  function handleDelete(e) {
-    var selectedItems = grid.selModel.getSelections();
-    if (selectedItems.length > 0)
-    {
+    var panel = new Ext.Panel({
+      layout: 'fit',
+      items: grid,
+      border: false,
+      frame: false
+    });
+
+    panel.applyToMarkup('right_panel_body');
+
+    function handleDelete(e) {
+      var selectedItems = grid.selModel.getSelections();
+      if (selectedItems.length > 0) {
         Ext.MessageBox.confirm('<%= I18n.t("contact_forms.message") %>','<%= I18n.t("contact_forms.confirm_deletion") %>', deleteRecords);
-    }
-    else
-    {
+      } else {
         Ext.MessageBox.alert('<%= I18n.t("contact_forms.message") %>','<%= I18n.t("contact_forms.select_one") %>');
+      }
     }
-  }
 
-  function deleteRecords(button) {
-    if (button == 'yes')
-    {
-      var selectedRows = grid.selModel.getSelections();
-      selectedRows.each(function(item) {
-        Ext.Ajax.request({
-          waitMsg: '<%= I18n.t("contact_forms.deleting") %>',
-          url: '/admin/contact_forms/<%= @contact_form.id %>/responses/'+item.id+'.json',
-          method: 'POST',
-          headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' },
-          params: "_method=delete",
-          callback: function(options, success, response){
-            if(!success){
+    function deleteRecords(button) {
+      if (button == 'yes') {
+        var selectedRows = grid.selModel.getSelections();
+        selectedRows.each(function(item) {
+          Ext.Ajax.request({
+            waitMsg: '<%= I18n.t("contact_forms.deleting") %>',
+            url: '/admin/contact_forms/<%= @contact_form.id %>/responses/' + item.id + '.json',
+            method: 'POST',
+            headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' },
+            params: "_method=delete",
+            callback: function (options, success, response) {
+              if (!success) {
                 Ext.ux.alertResponseError(response)
-            }else{
+              } else {
                 ds.reload();
+              }
             }
-          }
+          });
         });
+      }
+    }
+
+    function handleEdit(editEvent) {
+      Ext.Ajax.request({
+        waitMsg: '<%= I18n.t("contact_forms.saving") %>',
+        url: '/admin/contact_forms/<%= @contact_form.id %>/responses/' + editEvent.record.id + '.xml',
+        method: 'POST',
+        headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' },
+        params: "_method=put" +
+                "&response_field[value]=" + editEvent.value +"&contact_form_field_id=" +
+                editEvent.field.split("_")[1] + "&response_id=" + editEvent.record.id,
+
+        failure: function (response, options) {
+          var iterator = document.evaluate('//error', response.responseXML, null, XPathResult.UNORDERED_NODE_ITERATOR_TYPE, null);
+          var errors = ''
+
+          try {
+            var thisError = iterator.iterateNext();
+
+            while (thisError) {
+              errors += thisError.textContent + '\n';
+              thisError = iterator.iterateNext();
+            }
+          } catch (e) {
+            dump('Error: Document tree modified during iteration ' + e);
+          }
+
+          Ext.MessageBox.alert('<%= I18n.t("contact_forms.error") %>', errors);
+        },
+        success: function (response, options) {
+          ds.commitChanges();
+        }
       });
     }
-  }
-  
-  function handleEdit(editEvent) {
-      Ext.Ajax.request({
-          waitMsg: '<%= I18n.t("contact_forms.saving")%>',
-          url: '/admin/contact_forms/<%= @contact_form.id %>/responses/' + editEvent.record.id + '.xml',
-          method: 'POST',
-          headers: { 'X-CSRF-Token': '<%= form_authenticity_token.to_s %>' },
-          params: "_method=put" +
-                  "&response_field[value]=" + editEvent.value +"&contact_form_field_id=" + 
-                  editEvent.field.split("_")[1] + "&response_id=" + editEvent.record.id,
 
-          failure: function(response,options) {
-              var iterator = document.evaluate('//error', response.responseXML, null, XPathResult.UNORDERED_NODE_ITERATOR_TYPE, null);
-              var errors = ''
+    function handleCSVExport(e) {
+      window.location = "<%= admin_contact_form_url(@contact_form) %>/responses.csv";
+    }
 
-              try {
-                var thisError = iterator.iterateNext();
+    function handleXLSExport(e) {
+      window.location = "<%= admin_contact_form_url(@contact_form) %>/responses.xls";
+    }
 
-                while (thisError) {
-                  errors += thisError.textContent + '\n';
-                  thisError = iterator.iterateNext();
-                }
-              }
-              catch (e) {
-                dump('Error: Document tree modified during iteration ' + e);
-              }
-
-              Ext.MessageBox.alert('<%= I18n.t("contact_forms.error")%>',errors);
-          },
-          success: function(response,options) {
-              ds.commitChanges();
-          }
-      });
-  }
-
-  function handleCSVExport(e) {
-    window.location = "<%= admin_contact_form_url(@contact_form) %>/responses.csv";
-  }
-  
-  function handleXLSExport(e) {
-    window.location = "<%= admin_contact_form_url(@contact_form) %>/responses.xls"
-  }
-
-});
+  });
 <% end %>
