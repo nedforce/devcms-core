@@ -38,8 +38,8 @@ class ContactFormField < ActiveRecord::Base
   validates :position,   presence: true, numericality: { allow_blank: true }, uniqueness: { scope: :contact_form_id, message: I18n.t('activerecord.errors.models.contact_form_field.attributes.position.must_be_unique') }
   validates :field_type, inclusion: { in: ContactFormField::FIELD_TYPES }
 
-  scope :obligatory, where(obligatory: true)
-  scope :has_field_type, lambda { |field_type| { conditions: { field_type: field_type } } }
+  scope :obligatory, -> { where(obligatory: true) }
+  scope :has_field_type, lambda { |field_type| where(field_type: field_type) }
 
   def self.human_field_type_for(field_type)
     I18n.t(field_type, scope: 'contact_form_fields')
