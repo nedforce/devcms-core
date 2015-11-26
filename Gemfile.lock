@@ -10,7 +10,7 @@ GIT
 PATH
   remote: .
   specs:
-    devcms_core (2.1.35)
+    devcms_core (2.1.36)
       acts-as-taggable-on (~> 2.4.0)
       addressable (~> 2.1)
       airbrake
@@ -98,7 +98,7 @@ GEM
       activesupport (>= 2)
     bartt-ssl_requirement (1.4.2)
     builder (3.0.4)
-    byebug (8.2.0)
+    byebug (8.2.1)
     carrierwave (0.10.0)
       activemodel (>= 3.2.0)
       activesupport (>= 3.2.0)
