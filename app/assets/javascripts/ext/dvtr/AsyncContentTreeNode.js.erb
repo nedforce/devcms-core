@@ -260,7 +260,7 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
         tree = this.getOwnerTree();
 
         /* adds the load mask if it does not exist, can be moved to TreePanel.js */
-        if(tree.loadMask == undefined) { tree.loadMask = new Ext.LoadMask(tree.body, {msg: I18n.t('loading','generic')}); }
+        if (tree.loadMask == undefined) { tree.loadMask = new Ext.LoadMask(tree.body, {msg: I18n.t('loading', 'generic')}); }
         tree.loadMask.show();
 
         /* disable node */
@@ -533,14 +533,14 @@ Ext.extend(Ext.dvtr.AsyncContentTreeNode, Ext.tree.AsyncTreeNode, {
         promptText += '<br/><br/>' + I18n.t('url_alias_prompt_2', 'nodes') + ' (' + this.host + ') ' + I18n.t('url_alias_prompt_3', 'nodes');
         promptText += ' ' + this.host + '<i>test</i>.' + '<br/>';
 
-        promptText += '<br/>' + I18n.t('url_alias_prompt_current_1', 'nodes') + ' <i>' + this.host + this.URLAlias + '</i>.<br/>';
+        promptText += '<br/>' + I18n.t('url_alias_prompt_current_1', 'nodes') + ' <i>' + this.host + this.URLAlias + '</i><br/>';
 
         if (this.customURLSuffix) {
-            promptText += '<br/>' + I18n.t('url_alias_prompt_current_2', 'nodes') + ' <i>' + this.customURLSuffix + '</i>.<br/>';
+            promptText += '<br/>' + I18n.t('url_alias_prompt_current_2', 'nodes') + ' <i>' + this.customURLSuffix + '</i><br/>';
         }
 
         if (this.customURLAlias) {
-            promptText += '<br/>' + I18n.t('url_alias_prompt_current_3', 'nodes') + ' <i>' + this.host + this.customURLAlias + '</i>.<br/>';
+            promptText += '<br/>' + I18n.t('url_alias_prompt_current_3', 'nodes') + ' <i>' + this.host + this.customURLAlias + '</i><br/>';
         }
 
         promptText += '<br/><br/>' + I18n.t('custom_url_suffix', 'nodes') + ':';
