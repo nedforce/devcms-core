@@ -8,7 +8,7 @@
   - if news_items.empty?
     %p= t 'news.no_news_items'
 
-  = skippable 'recent_news_items' do
+  = skippable 'recent_news_items', title: t('news.recent_news_items') do
     - latest_news_items.each do |news_item|
       = readspeaker(news_item.node.id) do |readspeaker_id|
         .newsItem
@@ -38,7 +38,7 @@
 
   - if news_items_for_table.present?
     %h2= t 'news.older_news_items'
-    = skippable 'older_news_items' do
+    = skippable 'older_news_items', title: t('news.older_news_items') do
       %table#items
         %caption= t 'news_archives.older_items_caption'
         %thead

@@ -9,7 +9,7 @@
     = render_images
 
     - if @children.present?
-      = skippable 'section_items' do
+      = skippable 'section_items', title: t('links_boxes.links') do
         %ul.section_items
           - @children.each do |content_node|
             %li

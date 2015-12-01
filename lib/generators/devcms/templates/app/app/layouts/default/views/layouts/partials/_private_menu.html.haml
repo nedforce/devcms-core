@@ -4,7 +4,7 @@
       .corner_overlay.transparent
       %h2= t 'layouts.private_menu_header'
     .content.hoverable
-      = skippable 'private_menu_items' do
+      = skippable 'private_menu_items', title: t('shared.private_menu') do
         %ul
           - @private_menu_items.each do |item|
             - if item.is_a?(Array)

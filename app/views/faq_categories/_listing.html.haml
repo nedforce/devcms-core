@@ -1,6 +1,6 @@
-= skippable 'faq_list' do
+= skippable 'faq_list', title: t('faq_categories.faqs') do
   %dl.faqs.border_highlight
     - items.each do |item|
       - item.content.tap do |faq|
-        %dt.question.background_highlight= link_to_node faq.title, faq, { }, { name: faq.to_link_name, class: 'font_base' }
+        %dt.question.background_highlight= link_to_node faq.title, faq, {}, { name: faq.to_link_name, class: 'font_base' }
         %dd.answer= faq.answer.html_safe

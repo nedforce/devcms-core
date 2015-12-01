@@ -21,6 +21,7 @@ nl:
     failed: Opslaan mislukt!
     last_updated: Laatst gewijzigd
     locale: Taal van inhoud
+    main_menu: Hoofdmenu
     meta_description: Meta-omschrijving
     more_activities: meer activiteiten
     more_permits: meer bekendmakingen
@@ -29,18 +30,22 @@ nl:
     n: Nee
     tags: Tags
     preview: Preview
+    private_menu: Persoonlijk menu
     published: Gepubliceerd
     read_full_article: Lees het volledige artikel
     read_more: lees meer
     read_more_news: meer nieuws
     "really_delete?": "Wilt u doorgaan met verwijderen?"
     save: Opslaan
-    set_email: Ingestelde E-mailadres
+    set_email: Ingestelde e-mailadres
     size: Grootte
     short_title: Titel voor menu
     meta_fields: Meta instellingen
     skip_to_bottom: Spring naar einde
+    skip_to_bottom_of: "Spring naar einde van %{title}"
     skip_to_top: Spring naar begin
+    skip_to_top_of: "Spring naar begin van %{title}"
+    submenu: Submenu
     submit: Versturen
     succes: Succesvol
     text: Tekst
@@ -105,6 +110,7 @@ nl:
     content_type: Zoeken in
     edit: Bewerken van alfabetische index
     failed: Kon alfabetische index niet opslaan.
+    pages: "Pagina's"
     saved: Alfabetische index opgeslagen!
     with_starting_letter: met beginletter
   application:
@@ -178,6 +184,7 @@ nl:
     add: Toevoegen...
     add_attachments_to: Bijlage(n) toevoegen aan
     add_to: Bijlage(n) toevoegen aan
+    attachments_overview: Bijlage-overzicht
     attachments_table: Dit is een overzicht van alle bijlagen behorende bij deze pagina.
     data: Bestand
     done: Bijlage(n) toegevoegd
@@ -214,6 +221,7 @@ nl:
     body: Tekst
     calendar_failed: Kon kalender niet opslaan.
     calendar_item_failed: Kon item niet opslaan.
+    calendar_items: Kalenderitems
     category: Categorie
     chairman: Voorzitter
     combined_calendar_failed: Kon gecombineerde kalender niet opslaan.
@@ -446,40 +454,42 @@ nl:
     search_page_in: U kunt de gewenste pagina opzoeken in de
     use_search_field: U kunt hiervoor ook het zoekveld gebruiken.
   faqs:
-    add_to: Vraag & antwoord toevoegen aan
-    edit: Vraag & antwoord bewerken
-    failed: Kon vraag & antwoord niet opslaan.
-    saved: Vraag & antwoord opgeslagen!
+    add_to: "Vraag & antwoord toevoegen aan"
+    edit: "Vraag & antwoord bewerken"
+    failed: "Kon vraag & antwoord niet opslaan."
+    saved: "Vraag & antwoord opgeslagen!"
     title: Vraag
     answer: Antwoord
     hits: Clicks
     suggestion: suggestie
-    suggestion_for: Suggestie voor vraag & antwoord thema '%{theme}'
+    suggestion_for: "Suggestie voor vraag & antwoord thema '%{theme}'"
     explanation: Toelichting
     make_suggestion: Staat de informatie die u zoekt er niet bij? Geef ons door wat u wilt weten.
   faq_archives:
-    add_to: Vraag & antwoord module toevoegen aan
-    edit: Vraag & antwoord module bewerken
-    failed: Kon vraag & antwoord module niet opslaan.
-    saved: Vraag & antwoord module opgeslagen!
-    sub_themes: Vraag & antwoord themas en categoriën
+    add_to: "Vraag & antwoord module toevoegen aan"
+    edit: "Vraag & antwoord module bewerken"
+    failed: "Kon vraag & antwoord module niet opslaan."
+    saved: "Vraag & antwoord module opgeslagen!"
+    sub_themes: "Vraag & antwoord thema's en categorieën"
     statistics: Statistieken
   faq_categories:
-    add_to: Vraag & antwoord categorie toevoegen aan
-    edit: Vraag & antwoord categorie bewerken
-    failed: Kon vraag & antwoord categorie niet opslaan.
-    saved: Vraag & antwoord categorie opgeslagen!
+    add_to: "Vraag & antwoord categorie toevoegen aan"
+    edit: "Vraag & antwoord categorie bewerken"
+    failed: "Kon vraag & antwoord categorie niet opslaan."
+    faqs: "Vragen & antwoorden"
+    saved: "Vraag & antwoord categorie opgeslagen!"
   faq_themes:
-    add_to: Vraag & antwoord thema toevoegen aan
-    edit: Vraag & antwoord thema bewerken
-    failed: Kon vraag & antwoord thema niet opslaan.
-    saved: Vraag & antwoord thema opgeslagen!
-    sub_themes: Vraag & antwoord categoriën
+    add_to: "Vraag & antwoord thema toevoegen aan"
+    edit: "Vraag & antwoord thema bewerken"
+    failed: "Kon vraag & antwoord thema niet opslaan."
+    faq_categories: "Vraag & antwoord categorieën"
+    saved: "Vraag & antwoord thema opgeslagen!"
+    sub_themes: "Vraag & antwoord categorieën"
   faq_top_five:
-    add_to: Vraag & antwoord Top 5 toevoegen aan
-    edit: Vraag & antwoord Top 5 bewerken
-    failed: Kon vraag & antwoord Top 5 niet opslaan.
-    saved: Vraag & antwoord Top 5 opgeslagen!
+    add_to: "Vraag & antwoord Top 5 toevoegen aan"
+    edit: "Vraag & antwoord Top 5 bewerken"
+    failed: "Kon vraag & antwoord Top 5 niet opslaan."
+    saved: "Vraag & antwoord Top 5 opgeslagen!"
   faq_suggestions:
     question: Vraag
     delivery_succeeded: Uw vraag is verzonden!
@@ -487,7 +497,7 @@ nl:
     explanation: Toelichting
     email: E-mail
     send: Vraag versturen
-    header: Stel hier uw vraag over %{theme}
+    header: "Stel hier uw vraag over %{theme}"
     errors:
       presence: "%{attribute} niet opgegeven"
       email_invalid: "E-mailadres is ongeldig"
@@ -607,6 +617,7 @@ nl:
     add_to: Links box toevoegen aan
     edit: Bewerken van links box
     goto_site: Ga naar de site
+    links: Links
     read_more: meer websites
     sub_themes: "Alle thema's"
   link_themes:
@@ -614,6 +625,7 @@ nl:
     sub_themes: "Onderliggende thema's"
     edit: Bewerken van thema
     failed: Kon thema niet opslaan.
+    items: Items
     saved: Thema opgeslagen!
   meetings:
     add_to: Vergadering toevoegen aan
@@ -634,6 +646,7 @@ nl:
     preamble: Samenvatting
     print: Print dit artikel
     published_end: Publicatie-einde
+    recent_news_items: Recente berichten
     saved_archive: Nieuwsarchief opgeslagen!
     saved_item: Nieuwsbericht opgeslagen!
     text: Tekst
@@ -967,6 +980,7 @@ nl:
     expiration_notification_sent: Notificaties verzonden!
     failed: Kon sectie niet opslaan.
     failed_site: Kon site niet opslaan
+    items: Items
     none: geen
     not_found: Geen gerelateerde secties gevonden.
     related_content: Deel van thema
@@ -1061,11 +1075,6 @@ nl:
     select_one: Kies tenminste een synoniem
     synonym: Synoniem
     weight: Gewicht
-  top_hits_pages:
-    add_to: Top 10 pagina toevoegen aan
-    edit: Bewerken van top 10 pagina
-    failed: Kon top 10 pagina niet opslaan.
-    saved: Top 10 pagina opgeslagen!
   tags:
     name: Tag
     could_not_save: 'Sorry, kon de tag niet opslaan.'
@@ -1084,6 +1093,13 @@ nl:
     deletion_of: Tag verwijderen van
     message: Bericht
     select_one: Kies tenminste één tag
+  themes:
+    items: Items
+  top_hits_pages:
+    add_to: Top 10 pagina toevoegen aan
+    edit: Bewerken van top 10 pagina
+    failed: Kon top 10 pagina niet opslaan.
+    saved: Top 10 pagina opgeslagen!
   trash:
     content_type: Content-type
     title: Titel

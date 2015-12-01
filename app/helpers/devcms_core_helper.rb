@@ -288,14 +288,22 @@ module DevcmsCoreHelper
   end
 
   def skippable(id, options = {}, &block)
-    random = !options[:random].nil? ? options[:random] : true
-
+    random = !options[:random].nil? ? options.delete(:random) : true
     # Add random number to prevent duplicate ids
     id = random ? "#{id}-#{SecureRandom.random_number(10000)}" : id.to_s
 
-    link_to(t('shared.skip_to_bottom'), "\#bottom_of_#{id}", id: "top_of_#{id}", class: 'text-alternative') +
+    title = options.delete(:title)
+    if title.present?
+      bottom_title = t('shared.skip_to_bottom_of', title: title)
+      top_title    = t('shared.skip_to_top_of',    title: title)
+    else
+      bottom_title = t('shared.skip_to_bottom')
+      top_title    = t('shared.skip_to_top')
+    end
+
+    link_to(bottom_title, "\#bottom_of_#{id}", id: "top_of_#{id}", class: 'text-alternative') +
     capture(&block) +
-    link_to(t('shared.skip_to_top'),    "\#top_of_#{id}", id: "bottom_of_#{id}", class: 'text-alternative')
+    link_to(top_title,    "\#top_of_#{id}", id: "bottom_of_#{id}", class: 'text-alternative')
   end
 
   def target_contrast_mode
@@ -340,32 +348,30 @@ module DevcmsCoreHelper
     end
 
     count = objects.inject(0) { |sum, object| sum + object.errors.count }
+    return '' if count.zero?
 
-    if count.zero?
-      ''
-    else
-      html = {}
 
-      [:id, :class].each do |key|
-        if options.include?(key)
-          value     = options[key]
-          html[key] = value if value.present?
-        else
-          html[key] = 'errorExplanation'
-        end
+    html = {}
+
+    [:id, :class].each do |key|
+      if options.include?(key)
+        value     = options[key]
+        html[key] = value if value.present?
+      else
+        html[key] = 'errorExplanation'
       end
-
-      options[:object_name] ||= params.first
-      options[:header_message] = t('application.save_error') unless options.include?(:header_message)
-      options[:message] ||= (count > 1) ? t('application.field_errors') : t('application.field_error') unless options.include?(:message)
-      error_messages = objects.map { |object| object.errors.full_messages.map { |msg| content_tag(:li, msg) } }
-
-      contents = ''
-      contents << content_tag(options[:header_tag] || :h2, options[:header_message]) if options[:header_message].present?
-      contents << content_tag(:p, options[:message]) if options[:message].present?
-      contents << content_tag(:ul, error_messages.join("\n").html_safe)
-
-      content_tag(:div, contents.html_safe, html)
     end
+
+    options[:object_name] ||= params.first
+    options[:header_message] = t('application.save_error') unless options.include?(:header_message)
+    options[:message] ||= (count > 1) ? t('application.field_errors') : t('application.field_error') unless options.include?(:message)
+    error_messages = objects.map { |object| object.errors.full_messages.map { |msg| content_tag(:li, msg) } }
+
+    contents = ''
+    contents << content_tag(options[:header_tag] || :h2, options[:header_message]) if options[:header_message].present?
+    contents << content_tag(:p, options[:message]) if options[:message].present?
+    contents << content_tag(:ul, error_messages.join("\n").html_safe)
+
+    content_tag(:div, contents.html_safe, html)
   end
 end

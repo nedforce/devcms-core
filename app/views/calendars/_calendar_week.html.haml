@@ -2,10 +2,11 @@
 .calendarWeek
   .weekNavigation.clearfix
     - if @calendar.calendar_items.exists_before_date?(date.start_of_week)
-      .previousWeek=  link_to_content_node('«', @calendar, { :date => (date - 1.week).start_of_week.to_s })
-    .currentWeek=   "#{t("shared.week", :week => date.cweek)}"
+      .previousWeek= link_to_content_node('«', @calendar, { date: (date - 1.week).start_of_week.to_s })
+    .currentWeek= "#{t("shared.week", :week => date.cweek)}"
     - if @calendar.calendar_items.exists_after_date?(date.end_of_week)
-      .nextWeek=      link_to_content_node('»', @calendar, { :date => (date + 1.week ).start_of_week.to_s })
+      .nextWeek= link_to_content_node('»', @calendar, { date: (date + 1.week ).start_of_week.to_s })
+
   - date.start_of_week.upto(date.end_of_week) do |day|
     - @day_items = @calendar_items[day.mday]
 
@@ -18,7 +19,7 @@
 
         / A calendarItems for this day !
         .calendarItems
-          = skippable 'calendar_items' do
+          = skippable 'calendar_items', title: t('calendar.calendar_items') do
             - @day_items.each do |day_item|
               = readspeaker("#{day.mday}_#{day_item.id}") do |rid|
                 .calendarItem
@@ -31,11 +32,11 @@
 
                   .title.clearfix
                     - if day_item.is_a?(Meeting)
-                      = image_tag 'icons/meeting.png', :class => 'icon', :alt => ''
-                      = link_to_content_node h(day_item.title), day_item, { :type => :url, :host => day_item.node.containing_site.content.domain }, :class => 'meeting'
+                      = image_tag 'icons/meeting.png', class: 'icon', alt: ''
+                      = link_to_content_node h(day_item.title), day_item, { type: :url, host: day_item.node.containing_site.content.domain }, class: 'meeting'
                     - else
-                      = image_tag 'icons/calendar_item.png', :class => 'icon', :alt => ''
-                      = link_to_content_node h(day_item.title), day_item, { :type => :url, :host => day_item.node.containing_site.content.domain }, :class => 'event'
+                      = image_tag 'icons/calendar_item.png', class: 'icon', alt: ''
+                      = link_to_content_node h(day_item.title), day_item, { type: :url, host: day_item.node.containing_site.content.domain }, class: 'event'
 
                   .buttons.clearfix
-                    = readspeaker_button(:rid => rid)
+                    = readspeaker_button(rid: rid)

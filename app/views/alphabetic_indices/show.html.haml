@@ -10,7 +10,7 @@
 
   - if @items.present?
     #overview.clearfix
-      = skippable 'items' do
+      = skippable 'items', title: t('alphabetic_indices.pages') do
         %ul.items
           - @items.each do |item|
             %li

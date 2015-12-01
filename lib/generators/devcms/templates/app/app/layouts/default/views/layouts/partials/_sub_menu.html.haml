@@ -13,7 +13,7 @@
     - top_sub_menu_items = top_ancestor.children.accessible.public.shown_in_menu.order(:position).all
 
   - if top_sub_menu_items.any?
-    = skippable 'submenu' do
+    = skippable 'submenu', title: t('shared.submenu') do
       .content_box.sub_menu_content_box
         .content_box_wrapper{ class: "#{top_ancestor.content_box_colour || 'default'}" }
           .header

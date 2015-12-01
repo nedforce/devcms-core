@@ -13,7 +13,7 @@
     = render_images
 
     - if @children.present?
-      = skippable 'section_listing' do
+      = skippable 'section_listing', title: t('sections.items') do
         %ul.section_items
           - @children.each do |content_node|
             - if content_node.node.content_type_configuration[:show_in_menu]
