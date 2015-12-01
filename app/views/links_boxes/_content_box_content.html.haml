@@ -13,6 +13,6 @@
         = toggable_section_link("link_#{link.id}", link)
         .link{ id: "link_#{link.id}" }
           %p= link.description
-          = link_to_content_node t('links_boxes.goto_site'), link, class: 'goto-site-link'
+          = link_to_content_node t('links_boxes.goto_site'), link, {}, class: 'goto-site-link'
 
 = read_more_link(content, t('links_boxes.read_more'))
