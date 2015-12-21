@@ -49,7 +49,6 @@ PATH
 
 GEM
   remote: https://rubygems.org/
-  remote: http://gems.github.com/
   specs:
     actionmailer (3.2.22)
       actionpack (= 3.2.22)
@@ -267,4 +266,4 @@ DEPENDENCIES
   uglifier
 
 BUNDLED WITH
-   1.10.6
+   1.11.2
