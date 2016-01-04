@@ -97,8 +97,7 @@ module MenuHelper
     end
   end
 
-  def create_menu_link(node, opts = {})
-    link_to_node(h(node.menu_title), node, {}, { :title => h(node.menu_title) }.merge(opts))
+  def create_menu_link(node, options = {})
+    link_to_node(h(node.menu_title), node, {}, { title: h(node.menu_title) }.merge(options))
   end
-
 end
