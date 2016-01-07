@@ -298,7 +298,7 @@ class Admin::NodesController < Admin::AdminController
         format.json { render :json => { :success => 'true' } }
       else
         format.xml  { render :xml => @node.errors.to_xml, :status => :unprocessable_entity }
-        format.json { render :json => { :errors => @node.errors.map { |e| e.join(' ') } }.to_json, :status => :unprocessable_entity }
+        format.json { render json: { errors: @node.errors.full_messages.join(' ') }.to_json, status: :unprocessable_entity }
       end
     end
   end
@@ -310,7 +310,7 @@ class Admin::NodesController < Admin::AdminController
         format.json { render :json => { :success => 'true' } }
       else
         format.xml  { render :xml => @node.errors.to_xml, :status => :unprocessable_entity }
-        format.json { render :json => { :errors => @node.errors.map { |e| e.join(' ') } }.to_json, :status => :unprocessable_entity }
+        format.json { render json: { errors: @node.errors.full_messages.join(' ') }.to_json, status: :unprocessable_entity }
       end
     end
   end
