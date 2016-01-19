@@ -19,4 +19,11 @@ namespace :devcms do
       NewsViewer.update_news_items
     end
   end
+
+  namespace :node do
+    desc 'Reduce hit count'
+    task(:reduce_hit_count => :environment) do
+      Node.reduce_hit_count
+    end
+  end
 end
