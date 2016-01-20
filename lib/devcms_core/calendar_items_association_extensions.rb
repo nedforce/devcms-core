@@ -1,8 +1,8 @@
 module DevcmsCore
   module CalendarItemsAssociationExtensions
     def find_all_for_month_of(date)
-      start_of_month = date.start_of_month
-      end_of_month   = date.end_of_month
+      start_of_month = date.start_of_month.to_time.utc
+      end_of_month   = date.end_of_month.to_time.utc
 
       # There is a bug in certain Ruby versions where +end_of_month+ does not
       # take Gregorian leap years into account, so it returns 29 February for a
@@ -15,7 +15,7 @@ module DevcmsCore
       end
 
       conditions = [
-        '((date(start_time) BETWEEN :start_of_month AND :end_of_month) OR (date(end_time) BETWEEN :start_of_month AND :end_of_month) OR (date(start_time) < :start_of_month AND date(end_time) > :end_of_month))',
+        '((start_time BETWEEN :start_of_month AND :end_of_month) OR (end_time BETWEEN :start_of_month AND :end_of_month) OR (start_time < :start_of_month AND end_time > :end_of_month))',
         { start_of_month: start_of_month, end_of_month: end_of_month }
       ]
 
@@ -28,7 +28,7 @@ module DevcmsCore
       end_of_year   = year_time.end_of_year
 
       conditions = [
-        '((date(start_time) BETWEEN :start_of_year AND :end_of_year ) OR (date(end_time) BETWEEN :start_of_year AND :end_of_year) OR (date(start_time) < :start_of_year AND date(end_time) > :end_of_year))',
+        '((date(start_time) BETWEEN :start_of_year AND :end_of_year) OR (date(end_time) BETWEEN :start_of_year AND :end_of_year) OR (date(start_time) < :start_of_year AND date(end_time) > :end_of_year))',
         { start_of_year: start_of_year, end_of_year: end_of_year }
       ]
 
@@ -36,7 +36,7 @@ module DevcmsCore
     end
 
     def exists_after_date?(date = Date.today) #:nodoc:
-      gregorian_date?(date) && accessible.all(conditions: ['? < date(end_time) ', date], limit: 1).size > 0
+      gregorian_date?(date) && accessible.all(conditions: ['? < date(end_time)', date], limit: 1).size > 0
     end
 
     def exists_before_date?(date = Date.today) #:nodoc:
@@ -51,7 +51,7 @@ module DevcmsCore
     end
 
     def current_and_future(time = Time.now, limit = 10) #:nodoc:
-      accessible.where(['( ? < start_time OR ? < end_time )', time, time]).limit(limit).reorder('start_time ASC')
+      accessible.where(['(? < start_time OR ? < end_time)', time, time]).limit(limit).reorder('start_time ASC')
     end
 
     def gregorian_date?(date)
