@@ -4,62 +4,61 @@
 %>
 
 <% if !mainpage %>
-<div class="monthInfo clearfix"> <!-- Monthinfo header !-->
-<% if calendar.calendar_items.exists_before_date?(date) %>
-  <%= link_to_content_node(image_tag('arrow_green_reverse.png', :alt => t('calendars.previous_month')), calendar, { :date => (date << 1).start_of_month.to_s }, :class => 'left' ) -%>
+  <div class="monthInfo clearfix"> <!-- Monthinfo header !-->
+    <% if calendar.calendar_items.exists_before_date?(date) %>
+      <%= link_to_content_node(image_tag('arrow_green_reverse.png', alt: t('calendars.previous_month')), calendar, { date: (date << 1).start_of_month.to_s }, class: 'left') -%>
+    <% end %>
+    <% if calendar.calendar_items.exists_after_date?(date) %>
+      <%= link_to_content_node(image_tag('arrow_green.png',         alt: t('calendars.next_month')),     calendar, { date: (date >> 1).start_of_month.to_s }, class: 'right') -%>
+    <% end %>
+    <%= "#{t('date.month_names')[date.month]} #{date.year}"-%>
+  </div>
 <% end %>
-<% if calendar.calendar_items.exists_after_date?(date) %>
-  <%= link_to_content_node(image_tag('arrow_green.png',         :alt => t('calendars.next_month')    ), calendar, { :date => (date >> 1).start_of_month.to_s }, :class => 'right') -%>
-<% end %>
-  <%= "#{t('date.month_names')[date.month]} #{date.year}"-%>
-</div>
-<% end %>
+
 <table class="calendar">
   <caption>Kalender</caption>
   <thead>
     <tr class="dayInfo">
       <% if mainpage %>
         <th scope="col" class="weekName">week</th>
-      <% end %>      
+      <% end %>
       <% day_names.each do |d| -%>
-
         <th scope="col" class="dayName">
           <abbr title="<%= d.first -%>"><%= d.last -%></abbr>
         </th>
       <% end %>
     </tr>
-   </thead>
-   <tbody>
-     <% #Initializes the date row settings
-       first = date.start_of_month.start_of_week
-       week  = date.start_of_month.cweek
-       while first <= date.end_of_month
-     %>
-   <tr><!-- Contains the week numbers !-->
-
-     <% if mainpage %>
-       <td class="week<%= 'IsSelected ' if week == date.cweek -%>">
-         <%= link_to_content_node week, calendar, :date => first.to_s -%>
-       </td>
-     <% end %>
-     <% first.upto(first.end_of_week) do |day| %>
-       <% if day < date.start_of_month || day > date.end_of_month %>
-        <% @classes = determine_classes(calendar, day, current_user, true,  (@view == :weekly && date == first) || (@view == :daily && date == day)).join(' ') -%>  
-        <td class="<%= @classes -%>"><%= day.mday -%></td>   
-       <% else %>
-        <% @classes = determine_classes(calendar, day, current_user, false, (@view == :weekly && date == first) || (@view == :daily && date == day)).join(' ') -%>    
-        <td class="<%= @classes -%>">           
-          <% if @classes.include?('hasCalendarItems') -%> 
-            <%= link_to_content_node day.mday, calendar, :date => day.to_s, :anchor => 'calendarDay_'+day.mday.to_s -%>
+  </thead>
+  <tbody>
+    <% # Initializes the date row settings
+      first = date.start_of_month.start_of_week
+      week  = date.start_of_month.cweek
+      while first <= date.end_of_month
+    %>
+      <tr><!-- Contains the week numbers !-->
+        <% if mainpage %>
+          <td class="week<%= 'IsSelected ' if week == date.cweek -%>">
+            <%= link_to_content_node week, calendar, date: first.to_s -%>
+          </td>
+        <% end %>
+        <% first.upto(first.end_of_week) do |day| %>
+          <% if day < date.start_of_month || day > date.end_of_month %>
+            <% @classes = determine_classes(calendar, day, current_user, true,  (@view == :weekly && date == first) || (@view == :daily && date == day)).join(' ') -%>
+            <td class="<%= @classes -%>"><%= day.mday -%></td>
           <% else %>
-            <%= day.mday -%>
+            <% @classes = determine_classes(calendar, day, current_user, false, (@view == :weekly && date == first) || (@view == :daily && date == day)).join(' ') -%>
+            <td class="<%= @classes -%>">
+              <% if @classes.include?('hasCalendarItems') -%>
+                <%= link_to_content_node day.mday, calendar, date: day.to_s, anchor: "calendarDay_#{day.mday}" -%>
+              <% else %>
+                <%= day.mday -%>
+              <% end %>
+            </td>
           <% end %>
-        </td>
-      <% end %>
-    <% end %>
-  </tr>
-    <% #Sets the settings for the next week
-      first = first.end_of_week + 1;
+        <% end %>
+      </tr>
+    <% # Sets the settings for the next week
+      first = first.end_of_week + 1
       week  = first.cweek
       end
     %>
