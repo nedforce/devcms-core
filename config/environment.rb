@@ -5,7 +5,7 @@ config.i18n.load_path += Dir[File.join(File.dirname(__FILE__), 'locales', '**', 
 config.autoload_paths += %W(#{RAILS_ROOT}/app/models/node)
 
 config.gem 'acts-as-taggable-on', :version => '2.0.3', :source => 'http://gemcutter.org'
-config.gem 'addressable',         :version => '~> 2.1', :lib => 'addressable/uri'
+config.gem 'addressable',         :version => '< 2.4', :lib => 'addressable/uri'
 config.gem 'ancestry',            :version => '~> 1.3.0'
 config.gem 'dsl_accessor',        :version => '0.3.3'
 config.gem 'dynamic_attributes',  :version => '~> 1.1.3'
