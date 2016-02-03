@@ -26,8 +26,8 @@ module DevcmsCore
       containing_node = node.containing_site
       type = :url if defined?(current_site) && current_site != containing_node
 
+      host = options.delete(:host) || containing_node.content.domain
       if type != :path
-        host = options.delete(:host) || containing_node.content.domain
         if defined?(request) && request.present?
           address = "#{request.protocol}#{host || request.host}:#{request.port}#{address}"
         else
