@@ -1,6 +1,7 @@
 class RemoveParentLeftAndRight < ActiveRecord::Migration
   def self.up
-    raise "Ensure you migrated the tree structure properly!" unless (Node.count.zero? || Node.root.descendants.count == Node.count - 1)
+    Node.reset_column_information
+    raise 'Ensure you migrated the tree structure properly!' unless (Node.unscoped.count.zero? || Node.root.descendants.count == Node.unscoped.count - 1)
 
     remove_column :nodes, :lft
     remove_column :nodes, :rgt
@@ -8,7 +9,7 @@ class RemoveParentLeftAndRight < ActiveRecord::Migration
   end
 
   def self.down
-    puts "WARNING: Requires awesome nested set!"
+    puts 'WARNING: Requires awesome nested set!'
     add_column :nodes, :lft, :integer
     add_column :nodes, :rgt, :integer
     add_column :nodes, :parent_id, :integer

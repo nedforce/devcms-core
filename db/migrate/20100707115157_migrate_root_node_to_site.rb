@@ -1,9 +1,11 @@
 class MigrateRootNodeToSite < ActiveRecord::Migration
   def self.up
-    Node.root.content.update_attribute(:type, 'Site') unless Node.count.zero?
+    Node.reset_column_information
+    Node.root.content.update_attribute(:type, 'Site') unless Node.unscoped.count.zero?
   end
 
   def self.down
-    Node.root.content.update_attribute(:type, nil) unless Node.count.zero?
+    Node.reset_column_information
+    Node.root.content.update_attribute(:type, nil) unless Node.unscoped.count.zero?
   end
 end

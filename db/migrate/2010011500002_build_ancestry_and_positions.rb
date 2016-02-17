@@ -1,15 +1,19 @@
 class BuildAncestryAndPositions < ActiveRecord::Migration
   def self.up
-    say_with_time 'Building ancestry, this will take a while' do
-      Node.build_ancestry_from_parent_ids!
-    end
+    Node.reset_column_information
 
-    say_with_time 'Checking integrity' do
-      Node.check_ancestry_integrity!
-    end
+    if Node.unscoped.count > 0
+      say_with_time 'Building ancestry, this will take a while' do
+        Node.build_ancestry_from_parent_ids!
+      end
 
-    say_with_time 'Setting list positions' do
-      Node.build_list_by_order if Node.respond_to?(:build_list_by_order)
+      say_with_time 'Checking integrity' do
+        Node.check_ancestry_integrity!
+      end
+
+      say_with_time 'Setting list positions' do
+        Node.build_list_by_order if Node.respond_to?(:build_list_by_order)
+      end
     end
   end
 
