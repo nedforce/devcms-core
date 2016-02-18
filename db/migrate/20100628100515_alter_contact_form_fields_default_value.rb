@@ -4,6 +4,6 @@ class AlterContactFormFieldsDefaultValue < ActiveRecord::Migration
   end
 
   def self.down
-    change_column :contact_form_fields, :default_value, :string    
+    change_column :contact_form_fields, :default_value, :string
   end
 end

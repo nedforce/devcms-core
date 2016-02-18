@@ -1,6 +1,6 @@
 class AddCategoryToAttachments < ActiveRecord::Migration
   def self.up
-    add_column :attachments, :category, :string, :null => false, :default => ""
+    add_column :attachments, :category, :string, null: false, default: ''
   end
 
   def self.down

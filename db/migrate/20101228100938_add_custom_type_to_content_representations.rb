@@ -28,7 +28,7 @@ class AddCustomTypeToContentRepresentations < ActiveRecord::Migration
       end
     end
 
-    raise "Failed, created #{ContentRepresentation.count - count} boxes. Expected #{diff}" unless ContentRepresentation.count == count + ( diff )
+    raise "Failed, created #{ContentRepresentation.count - count} boxes. Expected #{diff}" unless ContentRepresentation.count == count + diff
   end
 
   def self.down

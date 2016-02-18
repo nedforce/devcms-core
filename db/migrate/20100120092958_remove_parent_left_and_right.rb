@@ -1,7 +1,7 @@
 class RemoveParentLeftAndRight < ActiveRecord::Migration
   def self.up
     Node.reset_column_information
-    raise 'Ensure you migrated the tree structure properly!' unless (Node.unscoped.count.zero? || Node.root.descendants.count == Node.unscoped.count - 1)
+    raise 'Ensure you migrated the tree structure properly!' unless Node.unscoped.count.zero? || Node.root.descendants.count == Node.unscoped.count - 1
 
     remove_column :nodes, :lft
     remove_column :nodes, :rgt

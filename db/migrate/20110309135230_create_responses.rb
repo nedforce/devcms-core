@@ -1,8 +1,8 @@
 class CreateResponses < ActiveRecord::Migration
   def self.up
     create_table :responses do |t|
-      t.integer :contact_form_id
-      t.string :ip
+      t.integer  :contact_form_id
+      t.string   :ip
       t.datetime :time
 
       t.timestamps

@@ -1,9 +1,9 @@
 class CreateLoginAttempts < ActiveRecord::Migration
   def self.up
     create_table :login_attempts do |t|
-      t.string  :ip,         :null => false
+      t.string  :ip,         null: false
       t.string  :user_login
-      t.boolean :success,    :null => false, :default => false
+      t.boolean :success,    null: false, default: false
       t.timestamps
     end
   end

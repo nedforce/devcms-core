@@ -1,5 +1,4 @@
 class AddSubContentTypeToNodes < ActiveRecord::Migration
-
   class Node < ActiveRecord::Base; end
 
   def self.up

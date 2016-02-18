@@ -3,7 +3,7 @@ class CreateResponseFields < ActiveRecord::Migration
     create_table :response_fields do |t|
       t.integer :response_id
       t.integer :contact_form_field_id
-      t.text :value
+      t.text    :value
 
       t.timestamps
     end

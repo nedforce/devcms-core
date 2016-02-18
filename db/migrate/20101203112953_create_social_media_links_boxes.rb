@@ -1,7 +1,7 @@
 class CreateSocialMediaLinksBoxes < ActiveRecord::Migration
   def self.up
     create_table :social_media_links_boxes do |t|
-      t.string :title,         :null => false
+      t.string :title, null: false
 
       t.string :twitter_url
       t.string :hyves_url

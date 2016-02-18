@@ -11,7 +11,7 @@ class Devcms
     end
 
     def search_configuration
-      return {} unless SETTLER_LOADED
+      return { enabled_search_engines: [] } unless SETTLER_LOADED
 
       {
         enabled_search_engines: ['ferret'],

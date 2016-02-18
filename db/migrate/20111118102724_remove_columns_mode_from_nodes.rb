@@ -4,6 +4,6 @@ class RemoveColumnsModeFromNodes < ActiveRecord::Migration
   end
 
   def self.down
-    add_column :nodes, :columns_mode, :boolean, :default => false
+    add_column :nodes, :columns_mode, :boolean, default: false
   end
 end

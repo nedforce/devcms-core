@@ -1,7 +1,7 @@
 class AddTemplateAttributesToNodes < ActiveRecord::Migration
   def self.up
-    add_column :nodes, :layout, :string
-    add_column :nodes, :layout_variant, :string
+    add_column :nodes, :layout,               :string
+    add_column :nodes, :layout_variant,       :string
     add_column :nodes, :layout_configuration, :text
   end
 

@@ -1,7 +1,7 @@
 class CreateSearchPages < ActiveRecord::Migration
   def self.up
     create_table :search_pages do |t|
-      t.string :title, :null => false
+      t.string :title, null: false
 
       t.timestamps
     end

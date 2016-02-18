@@ -1,8 +1,8 @@
 class MigrateLayoutSettings < ActiveRecord::Migration
   # Faux models to avoid this migration to break
   class SideBoxElement < ActiveRecord::Base
-     belongs_to :parent,  class_name: 'Node'
-     belongs_to :content, class_name: 'Node'
+    belongs_to :parent,  class_name: 'Node'
+    belongs_to :content, class_name: 'Node'
   end
 
   class Template < ActiveRecord::Base
@@ -41,12 +41,12 @@ class MigrateLayoutSettings < ActiveRecord::Migration
 
     say_with_time 'Convert SideBoxElements to ContentRepresentations' do
       SideBoxElement.destroy_all.each do |sbe|
-        cr = ContentRepresentation.create!({
+        ContentRepresentation.create!(
           parent:   sbe.parent,
           content:  sbe.content,
           position: sbe.v_position,
-          target:   ['primary_column', 'secondary_column', 'primary_content_column', 'secondary_content_column'][sbe.h_position]
-        })
+          target:   %w(primary_column secondary_column primary_content_column secondary_content_column)[sbe.h_position]
+        )
       end
     end
   end
