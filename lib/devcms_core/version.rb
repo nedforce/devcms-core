@@ -1,3 +1,3 @@
 module DevcmsCore
-  VERSION = '2.1.48'
+  VERSION = '2.1.49'
 end
