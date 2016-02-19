@@ -140,6 +140,18 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
     assert page.node.commentable
   end
 
+  def test_should_still_show_last_updated_at_if_hidden_or_private
+    page = create_page
+
+    assert_equal page.last_updated_at.to_i, page.updated_at.to_i
+
+    page.node.hidden = true
+    assert_equal page.last_updated_at.to_i, page.updated_at.to_i
+
+    page.node.private = true
+    assert_equal page.last_updated_at.to_i, page.updated_at.to_i
+  end
+
   def test_should_set_publication_dates_to_node_on_save
     page = build_page
 

@@ -35,11 +35,6 @@ class Calendar < ActiveRecord::Base
   # See the preconditions overview for an explanation of these validations.
   validates :title, presence: true, length: { maximum: 255 }
 
-
-  # Returns the last update date
-  def last_updated_at
-    [ self.calendar_items.accessible.maximum('nodes.created_at'), self.updated_at ].compact.max
-  end
   # Returns the description as the token for indexing.
   def content_tokens
     description
