@@ -9,12 +9,12 @@ class ActsAsContentNodeTestTransactional < ActiveSupport::TestCase
     @reader     = users(:reader)
   end
 
-  def test_save_with_parent_should_fail_for_invalid_parent
+  test 'should fail save with parent for invalid parent' do
     page = build_page(parent: nodes(:devcms_news_item_node))
 
     assert_no_difference 'Page.count' do
-      assert !page.save
-      assert page.errors[:'node.base'].any?
+      refute page.save
+      assert page.errors['node.base'].any?
     end
 
     page = build_page(parent: nodes(:devcms_news_item_node))
@@ -26,10 +26,10 @@ class ActsAsContentNodeTestTransactional < ActiveSupport::TestCase
     end
   end
 
-  test 'create with parent should fail for invalid parent' do
+  test 'should fail create with parent for invalid parent' do
     assert_no_difference 'Page.count' do
       page = Page.create(parent: nodes(:devcms_news_item_node), title: 'Page title', preamble: 'Ambule', body: 'Page body', expires_on: 1.day.from_now.to_date)
-      assert page.errors[:'node.base'].any?
+      assert page.errors['node.base'].any?
     end
 
     assert_no_difference 'Page.count' do
@@ -42,7 +42,12 @@ class ActsAsContentNodeTestTransactional < ActiveSupport::TestCase
   protected
 
   def build_page(options = {})
-    Page.new({ parent: nodes(:root_section_node), title: 'Page title', preamble: 'Ambule', body: 'Page body' }.merge(options))
+    Page.new({
+      parent: nodes(:root_section_node),
+      title: 'Page title',
+      preamble: 'Ambule',
+      body: 'Page body'
+    }.merge(options))
   end
 
   def create_page(options = {})
@@ -61,7 +66,7 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
     @reader = users(:reader)
   end
 
-  def test_save_with_parent
+  test 'should save with parent' do
     page = build_page(parent: nodes(:root_section_node))
 
     assert_difference 'Page.count', 1 do
@@ -70,11 +75,11 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
     end
   end
 
-  def test_save_with_parent_should_fail_for_invalid_content
+  test 'should fail save with parent for invalid content' do
     page = build_page body: nil
 
     assert_no_difference 'Page.count' do
-      assert !page.save
+      refute page.save
       assert page.errors[:body].any?
     end
 
@@ -87,28 +92,30 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
     end
   end
 
-  def test_create_with_parent
+  test 'should create with parent' do
     assert_difference 'Page.count', 1 do
       assert_equal nodes(:root_section_node).reload, create_page.node.parent
     end
   end
 
-  def test_create_with_parent_should_fail_for_invalid_content
+  test 'create with parent shoudl fail for invalid content' do
     assert_no_difference 'Page.count' do
       page = create_page body: nil
+
       assert page.errors[:body].any?
     end
   end
 
-  def test_create_with_parent_should_fail_for_nil_parent
+  test 'create with parent should fail for nil parent' do
     assert_no_difference 'Page.count' do
-      p = create_page(parent: nil)
-      assert !p.valid?
-      assert p.new_record?
+      page = create_page(parent: nil)
+
+      refute page.valid?
+      assert page.new_record?
     end
   end
 
-  def test_find_accessible_should_only_find_published_content_nodes
+  test 'find accessible should only find published content nodes' do
     # Published content nodes
     [[1.day.ago, 1.day.from_now]].map do |start_date, end_date|
       page = create_page
@@ -122,7 +129,7 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
       node = page.node
       node.update_attribute(:publication_start_date, start_date)
       node.update_attribute(:publication_end_date, end_date)
-      assert !node.new_record?
+      refute node.new_record?
 
       assert_raise ActiveRecord::RecordNotFound do
         Page.accessible.find page.id
@@ -130,9 +137,9 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
     end
   end
 
-  def test_should_get_commentable_status
+  test 'should get commentable status' do
     page = build_page
-    assert !page.commentable?
+    refute page.commentable?
 
     page.commentable = true
     assert page.save
@@ -140,7 +147,18 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
     assert page.node.commentable
   end
 
-  def test_should_still_show_last_updated_at_if_hidden_or_private
+  test 'should set commentable to node after update' do
+    page = create_page commentable: false
+    refute page.commentable?
+    refute page.node.commentable?
+
+    page.commentable = true
+    assert page.save(user: users(:arthur))
+    assert page.commentable?
+    assert page.node.commentable
+  end
+
+  test 'should return last updated at if hidden or private' do
     page = create_page
 
     assert_equal page.last_updated_at.to_i, page.updated_at.to_i
@@ -150,9 +168,12 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
 
     page.node.private = true
     assert_equal page.last_updated_at.to_i, page.updated_at.to_i
+
+    page.node.hidden = false
+    assert_equal page.last_updated_at.to_i, page.updated_at.to_i
   end
 
-  def test_should_set_publication_dates_to_node_on_save
+  test 'should set publication dates to node on save' do
     page = build_page
 
     assert_nil page.publication_start_date
@@ -175,7 +196,7 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
     assert_equal end_date.to_s, page.node.publication_end_date.to_s
   end
 
-  def test_publication_end_date_should_be_after_publication_start_date
+  test 'publication end date should be after publication start date' do
     page = build_page
 
     start_date = 1.day.from_now
@@ -184,12 +205,12 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
     page.publication_start_date = start_date
     page.publication_end_date = end_date
 
-    assert !page.save
-    assert !page.valid?
-    assert page.errors[:'node.base'].any?
+    refute page.save
+    refute page.valid?
+    assert page.errors['node.base'].any?
   end
 
-  def test_publication_start_date_should_be_set_to_current_time_after_save_if_blank
+  test 'should set publication start date to current time after save if blank' do
     page = build_page
 
     assert_nil page.publication_start_date
@@ -205,31 +226,21 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
     assert_nil page.node.publication_end_date
   end
 
-  def test_publication_start_date_should_be_required_if_publication_end_date_is_present
+  test 'should require publication start date if publication end date is present' do
     page = build_page(publication_end_date: Time.zone.now)
-    assert !page.save
-    assert page.errors[:'node.base'].any?
+
+    refute page.save
+    assert page.errors['node.base'].any?
   end
 
-  def test_should_set_commentable_to_node_after_update
-    page = create_page commentable: false
-    assert !page.commentable?
-    assert !page.node.commentable?
-
-    page.commentable = true
-    assert page.save(user: users(:arthur))
-    assert page.commentable?
-    assert page.node.commentable
-  end
-
-  def test_should_set_publication_dates_to_node_after_update
+  test 'should set publication dates to node after update' do
     start_date = 1.day.from_now
     end_date = 2.days.from_now
 
     page = create_page publication_start_date: start_date, publication_end_date: end_date
 
     assert_equal start_date.to_s, page.publication_start_date.to_s
-    assert_equal end_date.to_s, page.publication_end_date.to_s
+    assert_equal end_date.to_s,   page.publication_end_date.to_s
 
     new_start_date = 1.year.from_now
     new_end_date = 2.years.from_now
@@ -240,7 +251,7 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
     assert page.save(user: users(:arthur))
 
     assert_equal new_start_date.to_s, page.publication_start_date.to_s
-    assert_equal new_end_date.to_s, page.publication_end_date.to_s
+    assert_equal new_end_date.to_s,   page.publication_end_date.to_s
   end
 
   test 'should not require content box attributes' do
@@ -258,36 +269,39 @@ class ActsAsContentNodeTest < ActiveSupport::TestCase
   test 'should have valid content box title length' do
     page = build_page content_box_title: 'a'
 
-    assert !page.save
-    assert !page.valid?
-    assert page.errors[:"node.content_box_title"].any?
+    refute page.save
+    refute page.valid?
+    assert page.errors['node.content_box_title'].any?
 
     page = build_page content_box_title: 'a' * 256
 
-    assert !page.save
-    assert !page.valid?
-    assert page.errors[:'node.content_box_title'].any?
+    refute page.save
+    refute page.valid?
+    assert page.errors['node.content_box_title'].any?
   end
 
   test 'should have valid content box icon' do
     page = build_page content_box_icon: 'foo'
-    assert !page.save
-    assert !page.valid?
-    assert page.errors[:'node.content_box_icon'].any?
+
+    refute page.save
+    refute page.valid?
+    assert page.errors['node.content_box_icon'].any?
   end
 
   test 'should have valid content box color' do
     page = build_page content_box_colour: 'foo'
-    assert !page.save
-    assert !page.valid?
-    assert page.errors[:'node.content_box_colour'].any?
+
+    refute page.save
+    refute page.valid?
+    assert page.errors['node.content_box_colour'].any?
   end
 
   test 'should have valid content box number of items' do
     page = build_page content_box_number_of_items: 1
-    assert !page.save
-    assert !page.valid?
-    assert page.errors[:'node.base'].any?
+
+    refute page.save
+    refute page.valid?
+    assert page.errors['node.base'].any?
   end
 
   test 'should accept empty title alternatives' do
