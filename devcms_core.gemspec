@@ -43,7 +43,7 @@ Gem::Specification.new do |s|
   s.add_dependency  'bartt-ssl_requirement', '~>1.4.0'
   s.add_dependency  'rack-rewrite', '~> 1.2.1'
   s.add_dependency  'truncate_html', '~> 0.5.5'
-  s.add_dependency  'secure_headers', '>= 2.5'
+  s.add_dependency  'secure_headers', '>= 2.5', '< 3.0'
   s.add_dependency  'data_checker'
   # Airbrake 5.x has a different location for its rake tasks.
   s.add_dependency  'airbrake', '~> 4.3'
