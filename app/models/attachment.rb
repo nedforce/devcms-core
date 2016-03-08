@@ -93,6 +93,10 @@ class Attachment < ActiveRecord::Base
     basename.gsub(/[^a-z0-9\-_]/i, '-')
   end
 
+  def cache_control
+    node.visible? ? 'public' : 'private'
+  end
+
   protected
 
   # Clean up the +filename+ for storage.
