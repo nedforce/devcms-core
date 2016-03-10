@@ -35,7 +35,7 @@ class Layout
 
   def settings_partial
     partial_path = File.join(self.path, 'settings.html.haml')
-    if File.exists?(partial_path)
+    if File.exist?(partial_path)
       return partial_path
     elsif parent.present?
       return parent.settings_partial
@@ -45,7 +45,7 @@ class Layout
   def targets_partial(variant)
     variant_name = variant[:id] != 'default' ? variant[:id] : ''
     partial_path = File.join(self.path, variant_name, 'targets.html.haml')
-    if File.exists?(partial_path)
+    if File.exist?(partial_path)
       return partial_path
     elsif parent.present?
       return parent.targets_partial(variant)

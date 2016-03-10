@@ -6,7 +6,7 @@ Rails.application.config.rewriter.append do
 
   # maintenance_file = File.join(Rails.root, 'public', 'system', 'maintenance.html')
   # send_file /(.*)$(?<!css|png|jpg)/, maintenance_file, :if => Proc.new { |rack_env|
-  #   File.exists?(maintenance_file)
+  #   File.exist?(maintenance_file)
   # }
 
   # Redirect example
