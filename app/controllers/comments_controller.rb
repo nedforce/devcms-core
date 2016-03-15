@@ -12,7 +12,7 @@ class CommentsController < ApplicationController
   # * POST /nodes/1/comments.xml
   def create
     if @node.commentable?
-      @comment = @node.comments.build(params[:comment])
+      @comment = @node.comments.build(permitted_attributes)
 
       @comment.user = current_user if logged_in?
 
@@ -54,6 +54,10 @@ class CommentsController < ApplicationController
   end
 
 protected
+
+  def permitted_attributes
+    params.fetch(:comment, {}).permit!
+  end
 
   def find_commentable_node
     @node = current_site.self_and_descendants.accessible.include_content.find(params[:node_id])

@@ -59,7 +59,7 @@ class User < ActiveRecord::Base
     'f' => :female
   }
 
-  scope :exclusive, where(['users.type IS NULL OR users.type = ?', 'User'])
+  scope :exclusive, ->{ where('users.type IS NULL OR users.type = ?', 'User') }
 
   # Virtual attribute to hold the unencrypted password
   attr_accessor :password
@@ -74,7 +74,7 @@ class User < ActiveRecord::Base
   has_many :weblogs, dependent: :destroy
 
   # A +User+ has many +RoleAssignment+ objects (i.e., roles).
-  has_many :role_assignments, dependent: :destroy, conditions: { name: %w(read_access indexer) }
+  has_many :role_assignments, ->{ where(name: %w(read_access indexer)) }, dependent: :destroy
 
   has_many :user_poll_question_votes, dependent: :destroy
 
@@ -137,10 +137,6 @@ class User < ActiveRecord::Base
 
   after_create :send_verification_email_or_verify
 
-  # Prevents the fields NOT listed here from being assigned to in a mass-assignment.
-  # For instance, we don't want the password_hash field to be overwritten.
-  attr_accessible :login, :first_name, :surname, :sex, :email_address, :password, :password_confirmation, :newsletter_archive_ids, :interest_ids
-
   # Login can not be changed after registration.
   attr_readonly :login
 
@@ -164,21 +160,27 @@ class User < ActiveRecord::Base
 
   # Authenticates a user by their login and unencrypted password. Returns the user if successfully authenticated, elsen nil.
   def self.authenticate(login, password)
-    user = first(conditions: ['LOWER(login) = LOWER(?)', login]) if login
-    if user && user.authenticated?(password)
-      user.update_attribute :failed_logins, 0
-      user
-    elsif user
-      # TODO: move this to a separate +block+ method, so we can actually reuse it;
-      #       also make the number of failed logins a +Settler+ setting.
-      if user.is_privileged? && user.failed_logins == 9 # 10th failed attempt on a privileged user...
-        user.blocked = true
-        user.failed_logins = 10
-        user.save!
+    return unless login.present?
+
+    if user = User.where('LOWER(login) = LOWER(?)', login).first
+
+      if user.authenticated?(password)
+        user.update_attribute :failed_logins, 0
+        user
       else
-        user.increment! :failed_logins
+        # TODO: move this to a separate +block+ method, so we can actually reuse it;
+        #       also make the number of failed logins a +Settler+ setting.
+        if user.is_privileged? && user.failed_logins == 9 # 10th failed attempt on a privileged user...
+          user.blocked = true
+          user.failed_logins = 10
+          user.save!
+        else
+          user.increment! :failed_logins
+        end
+
+        nil
       end
-      nil
+
     end
   end
 
@@ -210,7 +212,7 @@ class User < ActiveRecord::Base
   def has_role_on?(*args)
     node  = args.last.is_a?(Node)   ? args.pop   : Node.root
     roles = args.first.is_a?(Array) ? args.first : args
-    self.role_assignments.exists?(node_id: node.path_ids, name: roles)
+    self.role_assignments.where(node_id: node.path_ids, name: roles).exists?
   end
 
   # Checks whether a user has one of the given roles.
@@ -218,7 +220,7 @@ class User < ActiveRecord::Base
   #  +roles+ one or more Strings containing role names.
   def has_role?(*args)
     roles = args.first.is_a?(Array) ? args.first : args
-    self.role_assignments.exists?(name: roles)
+    self.role_assignments.where(name: roles).exists?
   end
 
   # Checks whether a user has whatever role on whatever node.
@@ -240,7 +242,7 @@ class User < ActiveRecord::Base
 
   # Returns the role the user has on a Node.
   def role_on(node)
-    self.role_assignments.first(conditions: { node_id: node.path_ids })
+    self.role_assignments.where(node_id: node.path_ids).first
   end
 
   # Gives the user a role for a specific Node.
@@ -288,7 +290,7 @@ class User < ActiveRecord::Base
   def self.send_invitation_email!(email_address)
     return false if email_address.blank?
 
-    UserMailer.invitation_email(email_address, self.generate_invitation_code(email_address)).deliver
+    UserMailer.invitation_email(email_address, self.generate_invitation_code(email_address)).deliver_now
 
     true
   rescue
@@ -297,7 +299,7 @@ class User < ActiveRecord::Base
 
   # TODO: Documentation
   def send_verification_email_or_verify
-    Settler[:user_verify] ? UserMailer.verification_email(self).deliver : self.verify!
+    Settler[:user_verify] ? UserMailer.verification_email(self).deliver_now : self.verify!
   end
 
   # Verify a given +invitation_code+ based on the supplied +email_address+.
@@ -314,7 +316,7 @@ class User < ActiveRecord::Base
   def create_password_reset_token
     begin
       self.password_reset_token = Digest::SHA1.hexdigest("--#{Time.now}--#{self.object_id}--")
-    end while User.exists?(password_reset_token: self.password_reset_token) # must be unique
+    end while User.where(password_reset_token: self.password_reset_token).exists? # must be unique
     self.password_reset_expiration = Time.now + 6.hours
     save!
   end
@@ -350,7 +352,7 @@ class User < ActiveRecord::Base
 
   # Memoized reader for the role_assignments association
   def fetch_role_assignments
-    @role_assignments ||= self.role_assignments.all
+    @role_assignments ||= role_assignments.to_a
   end
 
   # Set a new verification_code for the user.
@@ -379,8 +381,8 @@ class User < ActiveRecord::Base
 
   # Prevents information leakage, validates the email and returns false to prevent a save
   def validate_uniqueness_of_email
-    user = User.first(conditions: ['UPPER(email_address) = UPPER(?)', email_address])
-    UserMailer.email_used_to_create_account(user).deliver if user
+    user = User.where('UPPER(email_address) = UPPER(?)', email_address).first
+    UserMailer.email_used_to_create_account(user).deliver_now if user
 
     !user
   end

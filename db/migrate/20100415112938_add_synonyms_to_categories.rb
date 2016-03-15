@@ -1,9 +1,9 @@
 class AddSynonymsToCategories < ActiveRecord::Migration
-  def self.up
+  def up
     add_column :categories, :synonyms, :text
   end
 
-  def self.down
+  def down
     remove_column :categories, :synonyms
   end
 end

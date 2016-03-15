@@ -1,5 +1,5 @@
 class CreateUserCategories < ActiveRecord::Migration
-  def self.up
+  def up
     create_table :user_categories do |t|
       t.references :user,     null: false
       t.references :category, null: false
@@ -10,7 +10,7 @@ class CreateUserCategories < ActiveRecord::Migration
     add_index :user_categories, [:user_id, :category_id], unique: true
   end
 
-  def self.down
+  def down
     drop_table :user_categories
   end
 end

@@ -1,1 +1,0 @@
-Rails.application.config.middleware.insert_after(::DevcmsCore::Rewriter, ::ActionDispatch::Static, Rails.public_path) 

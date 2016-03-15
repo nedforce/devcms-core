@@ -27,7 +27,7 @@ class Admin::TopHitsPagesController < Admin::AdminController
 
   # * GET /admin/top_hits_pages/new
   def new
-    @top_hits_page = TopHitsPage.new(params[:top_hits_page])
+    @top_hits_page = TopHitsPage.new(permitted_attributes)
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/new', :locals => { :record => @top_hits_page } }
@@ -36,7 +36,7 @@ class Admin::TopHitsPagesController < Admin::AdminController
 
   # * GET /admin/top_hits_pages/:id/edit
   def edit
-    @top_hits_page.attributes = params[:top_hits_page]
+    @top_hits_page.attributes = permitted_attributes
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/edit', :locals => { :record => @top_hits_page } }
@@ -46,7 +46,7 @@ class Admin::TopHitsPagesController < Admin::AdminController
   # * POST /admin/top_hits_pages
   # * POST /admin/top_hits_pages.xml
   def create
-    @top_hits_page        = TopHitsPage.new(params[:top_hits_page])
+    @top_hits_page        = TopHitsPage.new(permitted_attributes)
     @top_hits_page.parent = @parent_node
 
     respond_to do |format|
@@ -68,7 +68,7 @@ class Admin::TopHitsPagesController < Admin::AdminController
   # * PUT /admin/top_hits_pages/:id
   # * PUT /admin/top_hits_pages/:id.xml
   def update
-    @top_hits_page.attributes = params[:top_hits_page]
+    @top_hits_page.attributes = permitted_attributes
 
     respond_to do |format|
       if @commit_type == 'preview' && @top_hits_page.valid?
@@ -88,9 +88,13 @@ class Admin::TopHitsPagesController < Admin::AdminController
 
 protected
 
+  def permitted_attributes
+    params.fetch(:top_hits_page, {}).permit!
+  end
+
   # Finds the +TopHitsPage+ object corresponding to the passed in +id+ parameter.
   def find_top_hits_page
-    @top_hits_page = TopHitsPage.find(params[:id], :include => :node).current_version
+    @top_hits_page = TopHitsPage.includes(:node).find(params[:id]).current_version
   end
 
   # Finds the top hits based on the +TopHitsPage+ object.

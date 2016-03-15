@@ -50,17 +50,22 @@ class ForumPost < ActiveRecord::Base
   end
 
   # Returns replies only.
-  def self.replies(options = {})
-    ForumPost.all(options).reject { |fp| fp.is_start_post? }
+  def self.replies
+    ForumPost.includes(forum_thread: :forum_topic).reject { |fp| fp.is_start_post? }
   end
 
   # Returns the comments that can be edited by the given +user+.
   def self.editable_comments_for(user, options = {})
     if user.has_role?('editor')
-      user.forum_posts({ :include => :forum_thread }.merge(options)).reject { |fp| fp.is_start_post? }
+      scope = user.forum_posts.includes(:forum_thread)
+      scope = scope.order(options[:order]) if options[:order]
     else
-      ForumPost.replies({ :include => { :forum_thread => :forum_topic } }.merge(options)).select { |post| post.user == user || user.has_role_on?(['admin', 'final_editor'], post.forum_thread.forum_topic.node) }
+      scope = ForumPost.includes(forum_thread: :forum_topic)
+      scope = scope.order(options[:order]) if options[:order]
+      scope = scope.select { |post| post.user == user || user.has_role_on?(['admin', 'final_editor'], post.forum_thread.forum_topic.node) }
     end
+
+    scope.reject { |fp| fp.is_start_post? }
   end
 
   # Returns true if this ForumPost is created by the given +user+, else false.
@@ -70,7 +75,7 @@ class ForumPost < ActiveRecord::Base
 
   # Returns true if this ForumPost is the first post of the associated ForumThread, else false.
   def is_start_post?
-    self.forum_thread.blank? ? false : self == self.forum_thread.start_post
+    forum_thread.blank? ? false : self == forum_thread.start_post
   end
 
   # Added to make ForumPosts similar to Comments. This is used to allow admins
@@ -85,7 +90,7 @@ class ForumPost < ActiveRecord::Base
 
   # Ensures that the ForumThread to which the new ForumPost is added is not closed.
   def ensure_thread_not_closed
-    errors.add(:base, :cannot_be_added_to_closed_thread) if self.forum_thread && self.forum_thread.closed?
+    errors.add(:base, :cannot_be_added_to_closed_thread) if forum_thread && forum_thread.closed?
   end
 
   # Set the +user_name+ to the login of the +user+.
@@ -95,12 +100,12 @@ class ForumPost < ActiveRecord::Base
 
   # Ensure the +ForumPost+ cannot be destroyed if it is the start post of a +ForumThread+.
   def ensure_start_post_cannot_be_destroyed
-    errors.add(:base, :cannot_destroy_first_post) if is_start_post?
+    errors.add(:base, :cannot_destroy_first_post) if is_start_post? && !forum_thread.is_being_destroyed
     return errors.empty?
   end
 
   # Notify the thread owner of a new forum post by sending an email.
   def notify_thread_owner
-    UserMailer.new_forum_post_notification(self.forum_thread.user, self).deliver unless is_start_post?
+    UserMailer.new_forum_post_notification(self.forum_thread.user, self).deliver_now unless is_start_post?
   end
 end

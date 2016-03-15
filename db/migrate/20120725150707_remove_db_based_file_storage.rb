@@ -1,13 +1,13 @@
 class RemoveDbBasedFileStorage < ActiveRecord::Migration
   def up
-    unless Attachment.exists? file: nil
-      drop_table :db_files
+    unless Attachment.exists?
+      drop_table :db_files, cascade: true
       remove_column :attachments, :db_file_id
     else
       raise 'Unconverted attachments found!'
     end
 
-    unless Image.exists? file: nil
+    unless Image.where(file: nil).exists?
       remove_column :images, :data
     else
       raise 'Unconverted images found!'

@@ -1,5 +1,5 @@
 class AddNodeToSynonymsAndAbbreviations < ActiveRecord::Migration
-  def self.up
+  def up
     add_column :synonyms,      :node_id, :integer
     add_column :abbreviations, :node_id, :integer
 
@@ -13,7 +13,7 @@ class AddNodeToSynonymsAndAbbreviations < ActiveRecord::Migration
     end
   end
 
-  def self.down
+  def down
     remove_column :synonyms,      :node_id
     remove_column :abbreviations, :node_id
   end

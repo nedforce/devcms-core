@@ -90,7 +90,7 @@ class Admin::WeblogArchivesController < Admin::AdminController
 
   # * GET /admin/weblog_archives/new
   def new
-    @weblog_archive = WeblogArchive.new(params[:weblog_archive])
+    @weblog_archive = WeblogArchive.new(permitted_attributes)
 
     respond_to do |format|
       format.html { render template: 'admin/shared/new', locals: { record: @weblog_archive } }
@@ -99,7 +99,7 @@ class Admin::WeblogArchivesController < Admin::AdminController
 
   # * GET /admin/weblog_archives/:id/edit
   def edit
-    @weblog_archive.attributes = params[:weblog_archive]
+    @weblog_archive.attributes = permitted_attributes
 
     respond_to do |format|
       format.html { render template: 'admin/shared/edit', locals: { record: @weblog_archive } }
@@ -109,7 +109,7 @@ class Admin::WeblogArchivesController < Admin::AdminController
   # * POST /admin/weblog_archives
   # * POST /admin/weblog_archives.xml
   def create
-    @weblog_archive        = WeblogArchive.new(params[:weblog_archive])
+    @weblog_archive        = WeblogArchive.new(permitted_attributes)
     @weblog_archive.parent = @parent_node
 
     respond_to do |format|
@@ -129,7 +129,7 @@ class Admin::WeblogArchivesController < Admin::AdminController
   # * PUT /admin/weblog_archives/:id
   # * PUT /admin/weblog_archives/:id.xml
   def update
-    @weblog_archive.attributes = params[:weblog_archive]
+    @weblog_archive.attributes = permitted_attributes
 
     respond_to do |format|
       if @commit_type == 'preview' && @weblog_archive.valid?
@@ -150,9 +150,13 @@ class Admin::WeblogArchivesController < Admin::AdminController
 
   protected
 
+  def permitted_attributes
+    params.fetch(:weblog_archive, {}).permit!
+  end
+
   # Finds the +WeblogArchive+ object corresponding to the passed in +id+ parameter.
   def find_weblog_archive
-    @weblog_archive = WeblogArchive.find(params[:id], include: :node).current_version
+    @weblog_archive = WeblogArchive.includes(:node).find(params[:id]).current_version
   end
 
   def find_weblogs

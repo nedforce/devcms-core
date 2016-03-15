@@ -1,9 +1,9 @@
 class AddHeaderToNewsletterArchive < ActiveRecord::Migration
-  def self.up
+  def up
     add_column :newsletter_archives, :header, :string
   end
 
-  def self.down
+  def down
     remove_column :newsletter_archives, :header
   end
 end

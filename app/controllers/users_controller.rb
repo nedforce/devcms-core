@@ -6,9 +6,6 @@ class UsersController < ApplicationController
   # SSL encryption is required for these actions:
   ssl_required :new, :create, :verification, :edit, :update, :confirm_destroy, :destroy
 
-  # SSL encryption is optional for the #show action.
-  ssl_allowed :show
-
   before_filter :verify_invitation_code, only: [:new, :create]
 
   before_filter :find_user, only: [:send_verification_email, :verification]
@@ -44,7 +41,7 @@ class UsersController < ApplicationController
       redirect_to new_user_path
     else
       cookies.delete :auth_token
-      @user = User.new(params[:user].except(:username))
+      @user = User.new(permitted_attributes)
 
       respond_to do |format|
         # user.save will fail if the e-mail has already been used, but because
@@ -99,7 +96,7 @@ class UsersController < ApplicationController
       params[:user][:interest_ids] ||= []
     end
 
-    @user.attributes = params[:user]
+    @user.attributes = permitted_attributes
 
     respond_to do |format|
       # Password check when there's a email/password change
@@ -177,7 +174,7 @@ class UsersController < ApplicationController
       flash[:warning] = I18n.t('users.already_verified')
     else
       @user.reset_verification_code
-      UserMailer.verification_email(@user).deliver
+      UserMailer.verification_email(@user).deliver_now
       flash[:notice] = I18n.t('users.sent_verification_email')
     end
 
@@ -187,6 +184,10 @@ class UsersController < ApplicationController
   end
 
   protected
+
+  def permitted_attributes
+    params.fetch(:user, {}).permit(:login, :first_name, :surname, :sex, :email_address, :password, :password_confirmation, newsletter_archive_ids: [], interest_ids: [])
+  end
 
   # Finds the requested user and saves it to the <tt>@user</tt> instance
   # variable.
@@ -199,14 +200,14 @@ class UsersController < ApplicationController
   end
 
   def get_newsletters
-    @newsletter_archives = NewsletterArchive.accessible.all.select do |na|
+    @newsletter_archives = NewsletterArchive.accessible.to_a.select do |na|
       node = na.node
-      !node.self_and_ancestors.sections.exists?(private: true) || (current_user && current_user.role_assignments.exists?(node_id: node.self_and_ancestor_ids))
+      !node.self_and_ancestors.sections.is_private.exists? || (current_user && current_user.role_assignments.where(node_id: node.self_and_ancestor_ids).exists?)
     end
   end
 
   def get_interests
-    @interests = Interest.order('title').all
+    @interests = Interest.order(:title).to_a
   end
 
   def set_page_title

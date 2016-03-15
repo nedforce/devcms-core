@@ -2,7 +2,7 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 
 # This test might not work when running all tests using 'rake test' due to the
 # fact that the exceptions middleware is not properly initialized in that case.
-class RewriteTest < ActionController::IntegrationTest
+class RewriteTest < ActionDispatch::IntegrationTest
   fixtures :nodes, :pages, :news_archives, :news_items, :images
 
   setup do
@@ -28,21 +28,21 @@ class RewriteTest < ActionController::IntegrationTest
   end
 
   test 'should rewrite finds by node id' do
-    @node = Node.root.descendants.with_content_type('Section').all.sample
+    @node = Node.root.descendants.with_content_type('Section').to_a.sample
     get "/content/#{@node.id}"
     assert_equal @node, assigns(:node)
     assert response.body.include?(@node.content.title)
   end
 
   test 'should rewrite finds by url alias' do
-    @node = Page.includes(:node).where('nodes.url_alias is not null').first!.node
-    get @node.url_alias
+    @node = Page.includes(:node).references(:nodes).where('nodes.url_alias is not null').first!.node
+    get '/' + @node.url_alias
     assert_equal @node, assigns(:node)
     assert response.body.include?(@node.content.title)
   end
 
   test 'should rewrite finds by custom url alias' do
-    @node = Page.all.sample.node
+    @node = Page.all.to_a.sample.node
     assert @node.update_attributes(custom_url_suffix: 'dobedobedo'), @node.errors.full_messages.to_sentence
     get '/' + @node.custom_url_alias
     assert_equal @node, assigns(:node)
@@ -50,7 +50,7 @@ class RewriteTest < ActionController::IntegrationTest
   end
 
   test 'should remove matched custom url part' do
-    @node = Page.all.sample.node
+    @node = Page.all.to_a.sample.node
     assert @node.update_attributes(custom_url_suffix: '/foobar'), @node.errors.full_messages.to_sentence
     assert_equal 'foobar', @node.reload.custom_url_alias
     get '/' + @node.custom_url_alias
@@ -67,7 +67,7 @@ class RewriteTest < ActionController::IntegrationTest
     @node = Page.first.node
     @node.set_url_alias true
     @node.save
-    get @node.url_alias + '/1/2013'
+    get '/' + @node.url_alias + '/1/2013'
     assert_response :not_found
   end
 
@@ -75,15 +75,15 @@ class RewriteTest < ActionController::IntegrationTest
     @node = nodes(:devcms_news_item_voor_vorig_jaar_node)
     @node.set_url_alias true
     @node.save
-    get @node.url_alias
+    get '/' + @node.url_alias
     assert_equal @node, assigns(:node)
   end
 
   test 'should rewrite with action' do
-    @node = Node.root.descendants.with_content_type('Section').all.sample
+    @node = Node.root.descendants.with_content_type('Section').to_a.sample
     @node.set_url_alias true
     @node.save
-    get @node.url_alias + '/changes.atom'
+    get '/' + @node.url_alias + '/changes.atom'
     assert_equal @node, assigns(:node)
     assert response.body.include?(@node.content.title)
   end
@@ -92,7 +92,7 @@ class RewriteTest < ActionController::IntegrationTest
     @node = NewsArchive.first.node
     @node.set_url_alias true
     @node.save
-    get @node.url_alias + '/bla/bla'
+    get '/' + @node.url_alias + '/bla/bla'
     assert_response :not_found
   end
 end

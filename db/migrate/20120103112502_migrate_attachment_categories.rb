@@ -1,9 +1,9 @@
 class MigrateAttachmentCategories < ActiveRecord::Migration
-  def self.up
+  def up
     Attachment.reset_column_information
 
     if Attachment.unscoped.count > 0
-      Attachment.all(conditions: "category != ''").each do |attachment|
+      Attachment.where("category != ''").each do |attachment|
         next if attachment.parent.title == attachment.category && attachment.parent.sub_content_type == 'AttachmentTheme'
         p "Attachment #{attachment.id} with category #{attachment.category}..."
         if theme = attachment.parent.children.with_content_type('AttachmentTheme').find_by_title(attachment.category)
@@ -16,7 +16,7 @@ class MigrateAttachmentCategories < ActiveRecord::Migration
         p "Moved attachment #{attachment.title} to theme #{theme.title}"
       end
 
-      if Attachment.all(conditions: "category != ''").any? { |attachment| attachment.parent.title != attachment.category }
+      if Attachment.where("category != ''").any? { |attachment| attachment.parent.title != attachment.category }
         raise 'Something went wrong, rolling back..'
       end
     end
@@ -24,6 +24,6 @@ class MigrateAttachmentCategories < ActiveRecord::Migration
     remove_column :attachments, :category
   end
 
-  def self.down
+  def down
   end
 end

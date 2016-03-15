@@ -4,51 +4,46 @@ module DevcmsCore
 
     # Returns the items in this archive.
     def acts_as_archive_items
-      self.send(self.acts_as_archive_configuration[:items_name])
+      send(acts_as_archive_configuration[:items_name])
     end
 
     # Finds all items for the month determined by the given +year+, +month+ combination.
-    # Extra parameters can be specified with +args+, these will be passed along to the internal +find+ call.
-    def find_all_items_for_month(year, month, args = {})
+    def find_all_items_for_month(year, month)
       start_of_month = Date.civil(year, month).to_time
       start_of_next_month = start_of_month + 1.month
       date_field_database_name = self.acts_as_archive_configuration[:date_field_database_name]
-      options = { :conditions => [ date_field_database_name + ' >= ? AND ' + date_field_database_name + ' < ?', start_of_month, start_of_next_month ], :order => "#{date_field_database_name} DESC" }
-      options.update(self.acts_as_archive_configuration[:sql_options]) if self.acts_as_archive_configuration[:sql_options]
-      options.update(args)
-      self.acts_as_archive_items.all(options)
+
+      scope = acts_as_archive_items.where(date_field_database_name + ' >= ? AND ' + date_field_database_name + ' < ?', start_of_month, start_of_next_month)
+      item_scope(scope)
     end
 
-    def find_all_items_for_year(year, args = {})
+    def find_all_items_for_year(year)
       start_of_year = Time.zone.parse("#{year}-1-1").beginning_of_year
       end_of_year = Time.zone.parse("#{year}-1-1").end_of_year
-      date_field_database_name = self.acts_as_archive_configuration[:date_field_database_name]
+      date_field_database_name = acts_as_archive_configuration[:date_field_database_name]
 
-      options = { :conditions => [ date_field_database_name + ' >= ? AND ' + date_field_database_name + ' < ?', start_of_year, end_of_year ], :order => "#{date_field_database_name} DESC" }
-      options.update(self.acts_as_archive_configuration[:sql_options]) if self.acts_as_archive_configuration[:sql_options]
-      options.update(args)
-      self.acts_as_archive_items.all(options)
+      scope = acts_as_archive_items.where(date_field_database_name + ' >= ? AND ' + date_field_database_name + ' < ?', start_of_year, end_of_year)
+      item_scope(scope)
     end
 
     # Finds all items for the week determined by the given +year+, +week+ combination.
     # Extra parameters can be specified with +args+, these will be passed along to the internal +find+ call.
-    def find_all_items_for_week(year, week, args = {})
+    def find_all_items_for_week(year, week)
       start_of_week = commercial_date(year,week,1).beginning_of_week
       start_of_next_week = start_of_week.end_of_week - 1.day
-      date_field_database_name = self.acts_as_archive_configuration[:date_field_database_name]
-      options = { :conditions => [ date_field_database_name + ' >= ? AND ' + date_field_database_name + ' < ?', start_of_week, start_of_next_week ], :order => "#{date_field_database_name} DESC" }
-      options.update(self.acts_as_archive_configuration[:sql_options]) if self.acts_as_archive_configuration[:sql_options]
-      options.update(args)
-      self.acts_as_archive_items.all(options)
+      date_field_database_name = acts_as_archive_configuration[:date_field_database_name]
+
+      scope = acts_as_archive_items.where(date_field_database_name + ' >= ? AND ' + date_field_database_name + ' < ?', start_of_week, start_of_next_week)
+      item_scope(scope)
     end
 
     # Returns an array with all years for which this archive has items.
     def find_years_with_items
       @years = []
 
-      date_field_model_name = self.acts_as_archive_configuration[:date_field_model_name]
+      date_field_model_name = acts_as_archive_configuration[:date_field_model_name]
 
-      self.acts_as_archive_items.all.each do |item|
+      acts_as_archive_items.each do |item|
         year = item.send(date_field_model_name).year
         @years << year unless @years.include?(year)
       end
@@ -62,9 +57,9 @@ module DevcmsCore
     def find_commercial_years_with_items
       @years = []
 
-      date_field_model_name = self.acts_as_archive_configuration[:date_field_model_name]
+      date_field_model_name = acts_as_archive_configuration[:date_field_model_name]
 
-      self.acts_as_archive_items.all.each do |item|
+      acts_as_archive_items.each do |item|
         year = item.send(date_field_model_name).to_date.cwyear
         @years << year unless @years.include?(year)
       end
@@ -78,14 +73,12 @@ module DevcmsCore
       start_of_year = Date.civil(year).to_time
       start_of_next_year = start_of_year + 1.year
 
-      date_field_model_name    = self.acts_as_archive_configuration[:date_field_model_name]
-      date_field_database_name = self.acts_as_archive_configuration[:date_field_database_name]
+      date_field_model_name    = acts_as_archive_configuration[:date_field_model_name]
+      date_field_database_name = acts_as_archive_configuration[:date_field_database_name]
 
-      options = { :conditions => [ date_field_database_name + ' >= ? AND ' + date_field_database_name + ' < ?', start_of_year, start_of_next_year ] }
-      options.update(self.acts_as_archive_configuration[:sql_options]) if self.acts_as_archive_configuration[:sql_options]
+      scope = acts_as_archive_items.where(date_field_database_name + ' >= ? AND ' + date_field_database_name + ' < ?', start_of_year, start_of_next_year)
 
-      # TODO: optimize this query
-      self.acts_as_archive_items.all(options).each do |item|
+      item_scope(scope).each do |item|
         month = item.send(date_field_model_name).month
         @months << month unless @months.include?(month)
       end
@@ -102,11 +95,9 @@ module DevcmsCore
       date_field_model_name    = acts_as_archive_configuration[:date_field_model_name]
       date_field_database_name = acts_as_archive_configuration[:date_field_database_name]
 
-      options = { conditions: [date_field_database_name + ' >= ? AND ' + date_field_database_name + ' < ?', start_of_cwyear(year), start_of_next_cwyear(year)] }
-      options.update(acts_as_archive_configuration[:sql_options]) if acts_as_archive_configuration[:sql_options]
+      scope = acts_as_archive_items.where(date_field_database_name + ' >= ? AND ' + date_field_database_name + ' < ?', start_of_cwyear(year), start_of_next_cwyear(year))
 
-      # TODO: optimize this query
-      acts_as_archive_items.all(options).each do |item|
+      item_scope(scope).each do |item|
         week = item.send(date_field_model_name).to_date.cweek
         @weeks << week unless @weeks.include?(week)
       end
@@ -151,6 +142,16 @@ module DevcmsCore
           item.destroy
         end
       end
+    end
+
+    def item_scope initial_scope
+      item_scope = initial_scope.order("#{acts_as_archive_configuration[:date_field_database_name]} DESC")
+
+      if sql_options = acts_as_archive_configuration[:sql_options]
+        item_scope = item_scope.includes(sql_options[:include]) if sql_options[:include]
+      end
+
+      item_scope
     end
   end
 end

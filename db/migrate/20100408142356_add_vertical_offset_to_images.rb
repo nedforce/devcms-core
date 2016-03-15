@@ -1,9 +1,9 @@
 class AddVerticalOffsetToImages < ActiveRecord::Migration
-  def self.up
+  def up
     add_column :images, :vertical_offset, :integer
   end
 
-  def self.down
+  def down
     remove_column :images, :vertical_offset
   end
 end

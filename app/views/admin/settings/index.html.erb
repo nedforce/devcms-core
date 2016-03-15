@@ -20,8 +20,8 @@ Ext.onReady(function () {
              dataIndex: 'key',
              width: 250
           },{
-             header: "<%= I18n.t('settings.alt') %>",
-             dataIndex: 'alt',
+             header: "<%= I18n.t('settings.label') %>",
+             dataIndex: 'label',
              width: 400
           },{
              header: "<%= I18n.t('settings.value') %>",
@@ -65,7 +65,7 @@ Ext.onReady(function () {
           id: 'id',
           totalProperty: 'total_count'
         },
-          [ 'key', 'alt', 'value', 'type' ]
+          [ 'key', 'label', 'value', 'type' ]
         ),
 
         autoLoad: { params: { start: 0, limit: perPage } }

@@ -40,7 +40,7 @@ class Admin::SectionsController < Admin::AdminController
 
   # * GET /admin/sections/new
   def new
-    @section = Section.new(params[:section])
+    @section = Section.new(permitted_attributes)
     respond_to do |format|
       format.html { render :template => 'admin/shared/new', :locals => { :record => @section } }
     end
@@ -49,7 +49,7 @@ class Admin::SectionsController < Admin::AdminController
   # * GET /admin/sections/:id/edit
   def edit
     @show_frontpage_control = can_set_frontpage?
-    @section.attributes     = params[:section]
+    @section.attributes     = permitted_attributes
     respond_to do |format|
       format.html { render :template => 'admin/shared/edit', :locals => { :record => @section } }
     end
@@ -58,7 +58,7 @@ class Admin::SectionsController < Admin::AdminController
   # * POST /admin/sections
   # * POST /admin/pages/sections.xml
   def create
-    @section        = Section.new(params[:section])
+    @section        = Section.new(permitted_attributes)
     @section.parent = @parent_node
 
     respond_to do |format|
@@ -80,7 +80,7 @@ class Admin::SectionsController < Admin::AdminController
   def update
     @show_frontpage_control = can_set_frontpage?
     params[:section].delete(:frontpage_node_id) if !@show_frontpage_control
-    @section.attributes = params[:section]
+    @section.attributes = permitted_attributes
 
     respond_to do |format|
       if @commit_type == 'preview' && @section.valid?
@@ -132,13 +132,17 @@ class Admin::SectionsController < Admin::AdminController
 
 protected
 
+  def permitted_attributes
+    params.fetch(:section, {}).permit!
+  end
+
   # Retrieves the requested +Section+ object using the passed in +id+ parameter.
   def find_section
-    @section = Section.find(params[:id], :include => :node).current_version
+    @section = Section.includes(:node).find(params[:id]).current_version
   end
 
   def find_children
-    @children = @section.node.children.accessible.public.exclude_content_types(%w( Image Attachment SearchPage Site )).include_content.all.map { |n| n.content }
+    @children = @section.node.children.accessible.is_public.exclude_content_types(%w( Image Attachment SearchPage Site )).include_content.map(&:content)
   end
 
   def can_set_frontpage?

@@ -42,7 +42,7 @@ class Admin::AbbreviationsController < Admin::AdminController
 
   # * POST /admin/abbreviations
   def create
-    @abbreviation = @node.abbreviations.new(params[:abbreviation])
+    @abbreviation = @node.abbreviations.new(permitted_attributes)
 
     respond_to do |format|
       if @abbreviation.save
@@ -58,7 +58,7 @@ class Admin::AbbreviationsController < Admin::AdminController
     @abbreviation = @node.abbreviations.find(params[:id])
 
     respond_to do |format|
-      if @abbreviation.update_attributes(params[:abbreviation])
+      if @abbreviation.update_attributes(permitted_attributes)
         format.json { head :ok }
       else
         format.json { render json: @abbreviation.errors, status: :unprocessable_entity }
@@ -78,6 +78,10 @@ class Admin::AbbreviationsController < Admin::AdminController
   end
 
   protected
+
+  def permitted_attributes
+    params.fetch(:abbreviation, {}).permit!
+  end
 
   def find_node
     @node = Node.find(params[:node_id])

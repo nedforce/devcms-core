@@ -43,7 +43,7 @@ class Admin::MeetingsController < Admin::AdminController
 
   # * GET /admin/meetings/new
   def new
-    @meeting = Meeting.new(params[:meeting] || {})
+    @meeting = Meeting.new(permitted_attributes)
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/new', :locals => { :record => @meeting } }
@@ -52,7 +52,7 @@ class Admin::MeetingsController < Admin::AdminController
 
   # * GET /admin/meetings/:id/edit
   def edit
-    @meeting.attributes = params[:meeting]
+    @meeting.attributes = permitted_attributes
     respond_to do |format|
       format.html { render :template => 'admin/shared/edit', :locals => { :record => @meeting } }
     end
@@ -61,7 +61,7 @@ class Admin::MeetingsController < Admin::AdminController
   # * POST /admin/meetings
   # * POST /admin/meetings.xml
   def create
-    @meeting        = Meeting.new(params[:meeting])
+    @meeting        = Meeting.new(permitted_attributes)
     @meeting.parent = @parent_node
 
     respond_to do |format|
@@ -93,7 +93,7 @@ class Admin::MeetingsController < Admin::AdminController
   # * PUT /admin/meetings/:id
   # * PUT /admin/meetings/publication_date1.xml
   def update
-    @meeting.attributes = params[:meeting]
+    @meeting.attributes = permitted_attributes
 
     respond_to do |format|
       if @commit_type == 'preview' && @meeting.valid?
@@ -127,6 +127,10 @@ class Admin::MeetingsController < Admin::AdminController
 
 protected
 
+  def permitted_attributes
+    params.fetch(:meeting, {}).permit!
+  end
+
   # Finds the +Calendar+ object corresponding to the parent node's content.
   def find_calendar
     @calendar = @parent_node.content
@@ -134,11 +138,11 @@ protected
 
   # Finds the +Meeting+ object corresponding to the passed in +id+ parameter.
   def find_meeting
-    @meeting = Meeting.find(params[:id], :include => :node).current_version
+    @meeting = Meeting.includes(:node).find(params[:id]).current_version
   end
 
   # Finds all MeetingCategory objects.
   def find_meeting_categories
-    @categories = MeetingCategory.all(:order => 'name')
+    @categories = MeetingCategory.order(:name)
   end
 end

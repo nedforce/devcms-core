@@ -40,7 +40,7 @@ class Admin::DataWarningsController < Admin::AdminController
       end
     end
   end
-  
+
   # * DELETE /admin/data_warnings/:id.json
   def destroy
     @data_warning = DataChecker::DataWarning.find(params[:id])

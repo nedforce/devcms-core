@@ -1,5 +1,5 @@
 class CreateCarrouselItems < ActiveRecord::Migration
-  def self.up
+  def up
     create_table :carrousel_items do |t|
       t.text :excerpt
       t.references :carrousel, null: false, on_delete: :cascade
@@ -12,7 +12,7 @@ class CreateCarrouselItems < ActiveRecord::Migration
     add_index :carrousel_items, [:item_type, :item_id]
   end
 
-  def self.down
+  def down
     drop_table :carrousel_items
   end
 end

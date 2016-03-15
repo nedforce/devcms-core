@@ -26,7 +26,7 @@ class Admin::ContactFormsController < Admin::AdminController
 
   # * GET /admin/contact_forms/new
   def new
-    @contact_form = ContactForm.new(params[:contact_form])
+    @contact_form = ContactForm.new(permitted_attributes)
 
     respond_to do |format|
       format.html { render template: 'admin/shared/new', locals: { record: @contact_form } }
@@ -35,7 +35,7 @@ class Admin::ContactFormsController < Admin::AdminController
 
   # * GET /admin/contact_forms/:id/edit
   def edit
-    @contact_form.attributes = params[:contact_form]
+    @contact_form.attributes = permitted_attributes
 
     respond_to do |format|
       format.html { render template: 'admin/shared/edit', locals: { record: @contact_form } }
@@ -45,7 +45,7 @@ class Admin::ContactFormsController < Admin::AdminController
   # * POST /admin/contact_forms
   # * POST /admin/contact_forms.xml
   def create
-    @contact_form = ContactForm.new(params[:contact_form])
+    @contact_form = ContactForm.new(permitted_attributes)
     @contact_form.parent = @parent_node
 
     respond_to do |format|
@@ -65,7 +65,7 @@ class Admin::ContactFormsController < Admin::AdminController
   # * PUT /admin/contact_forms/:id
   # * PUT /admin/contact_forms/:id.xml
   def update
-    @contact_form.attributes = params[:contact_form]
+    @contact_form.attributes = permitted_attributes
 
     respond_to do |format|
       if @commit_type == 'preview' && @contact_form.valid?
@@ -83,9 +83,13 @@ class Admin::ContactFormsController < Admin::AdminController
 
   protected
 
+  def permitted_attributes
+    params.fetch(:contact_form, {}).permit!
+  end
+
   # Finds the +ContactForm+ object corresponding to the passed +id+ parameter.
   def find_contact_form
-    @contact_form = ContactForm.find(params[:id], include: :contact_form_fields).current_version
+    @contact_form = ContactForm.includes(:contact_form_fields).find(params[:id]).current_version
     @contact_form_fields = @contact_form.contact_form_fields
   end
 end

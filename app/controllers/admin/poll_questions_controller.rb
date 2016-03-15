@@ -34,21 +34,21 @@ class Admin::PollQuestionsController < Admin::AdminController
 
   # * GET /admin/poll_questions/new
   def new
-    @poll_question = @poll.poll_questions.build(params[:poll_question])
+    @poll_question = @poll.poll_questions.build(permitted_attributes)
 
     2.times { @poll_question.poll_options.build } if @poll_question.poll_options.empty?
   end
 
   # * GET /admin/poll_questions/:id/edit
   def edit
-    @poll_question.attributes = params[:poll_question]
+    @poll_question.attributes = permitted_attributes
   end
 
   # * POST /admin/poll_questions
   # * POST /admin/poll_questions.xml
   def create
     params[:poll_question][:active] = params[:poll_question][:active].present?
-    @poll_question                  = @poll.poll_questions.build(params[:poll_question])
+    @poll_question                  = @poll.poll_questions.build(permitted_attributes)
     @poll_question.parent           = @parent_node
 
     respond_to do |format|
@@ -71,7 +71,7 @@ class Admin::PollQuestionsController < Admin::AdminController
     params[:poll_question][:active] = params[:poll_question][:active].present?
     params[:poll_question][:existing_poll_option_attributes] ||= {}
 
-    @poll_question.attributes = params[:poll_question]
+    @poll_question.attributes = permitted_attributes
 
     respond_to do |format|
       if @commit_type == 'preview' && @poll_question.valid?
@@ -92,6 +92,10 @@ class Admin::PollQuestionsController < Admin::AdminController
 
   protected
 
+  def permitted_attributes
+    params.fetch(:poll_question, {}).permit!
+  end
+
   # Finds the +Poll+ object that will become this questions parent
   def find_poll
     @poll = @parent_node.content
@@ -99,6 +103,6 @@ class Admin::PollQuestionsController < Admin::AdminController
 
   # Finds the +PollQuestion+ object corresponding to the passed in +id+ parameter.
   def find_poll_question
-    @poll_question = ((@poll) ? @poll.poll_questions : PollQuestion).find(params[:id], include: :poll_options).current_version
+    @poll_question = ((@poll) ? @poll.poll_questions : PollQuestion).includes(:poll_options).find(params[:id]).current_version
   end
 end

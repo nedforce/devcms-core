@@ -69,7 +69,7 @@ class Image < ActiveRecord::Base
   validates :offset, numericality: { greater_than_or_equal: 0, only_integer: true, allow_blank: true }
 
   # Join instead of include to ensure the default scopes select is still applied.
-  scope :accessible, lambda { { joins: :node, conditions: Node.accessibility_and_visibility_conditions } }
+  scope :accessible, ->{ joins(:node).merge(Node.accessible) }
 
   # Ensure +url+ is correct.
   before_validation :prepend_http_to_url

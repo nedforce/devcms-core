@@ -1,9 +1,9 @@
 class RemoveSideBoxElements < ActiveRecord::Migration
-  def self.up
+  def up
     drop_table :side_box_elements
   end
 
-  def self.down
+  def down
     raise ActiveRecord::IrreversibleMigration
   end
 end

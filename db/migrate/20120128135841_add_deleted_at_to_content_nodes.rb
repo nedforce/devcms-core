@@ -1,8 +1,8 @@
 class AddDeletedAtToContentNodes < ActiveRecord::Migration
-  def self.up
+  def up
     puts 'Copying deleted_at values for all nodes, this might take a while.'
 
-    self.content_type_tables.each do |content_type_table|
+    content_type_tables.each do |content_type_table|
       next unless ActiveRecord::Base.connection.table_exists?(content_type_table)
 
       add_column content_type_table, :deleted_at, :datetime
@@ -14,13 +14,13 @@ class AddDeletedAtToContentNodes < ActiveRecord::Migration
     puts 'Successfully copied deleted_at values for all nodes.'
   end
 
-  def self.down
-    self.content_type_tables.each do |content_type_table|
+  def down
+    content_type_tables.each do |content_type_table|
       remove_column content_type_table, :deleted_at
     end
   end
 
-  def self.content_type_tables
+  def content_type_tables
     DevcmsCore::Engine.registered_content_types.map(&:constantize).map(&:table_name).uniq
   end
 end

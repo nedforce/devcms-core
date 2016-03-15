@@ -27,7 +27,7 @@ class AlphabeticIndex < ActiveRecord::Base
 
   # Returns an alphabetic list of all the descendant Items
   # of type ContentType of the parent.
-  def items(letter = 'A', options = {})
+  def items(letter = 'A')
     if letter.present?
       if content_type.present?
         klass = content_type.constantize
@@ -35,10 +35,11 @@ class AlphabeticIndex < ActiveRecord::Base
         klass = Page
       end
 
-      conditions = node.parent.descendant_conditions
-      conditions = ["(#{conditions.shift})" + " AND (UPPER(#{klass.table_name}.title) LIKE UPPER(?) OR (taggings.context = 'title_alternatives' AND UPPER(tags.name) LIKE UPPER(?)))", conditions, "#{letter}%", "#{letter}%"].flatten
-
-      klass.accessible.includes(node: :base_tags).all({ order: "CASE WHEN UPPER(#{klass.table_name}.title) LIKE UPPER('#{letter}%') THEN UPPER(#{klass.table_name}.title) ELSE UPPER(tags.name) END", conditions: conditions }.merge(options))
+      klass.accessible
+        .includes(node: :base_tags)
+        .reorder("CASE WHEN UPPER(#{klass.table_name}.title) LIKE UPPER('#{letter}%') THEN UPPER(#{klass.table_name}.title) ELSE UPPER(tags.name) END")
+        .where(node.parent.descendant_conditions)
+        .where("UPPER(#{klass.table_name}.title) LIKE UPPER(:expr) OR (taggings.context = 'title_alternatives' AND UPPER(tags.name) LIKE UPPER(:expr))", expr: "#{letter}%")
     end
   end
 end

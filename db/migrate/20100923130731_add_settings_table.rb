@@ -1,5 +1,5 @@
 class AddSettingsTable < ActiveRecord::Migration
-  def self.up
+  def up
     create_table :settings, force: true do |t|
       t.string  :key, null: false
       t.string  :alt
@@ -13,7 +13,7 @@ class AddSettingsTable < ActiveRecord::Migration
     add_index :settings, :key
   end
 
-  def self.down
+  def down
     drop_table :settings
   end
 end

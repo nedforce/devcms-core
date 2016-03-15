@@ -30,7 +30,7 @@ class Admin::ForumTopicsController < Admin::AdminController
 
   # * GET /admin/forum_topics/new
   def new
-    @forum_topic = @forum.forum_topics.build(params[:forum_topic])
+    @forum_topic = @forum.forum_topics.build(permitted_attributes)
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/new', :locals => { :record => @forum_topic } }
@@ -39,7 +39,7 @@ class Admin::ForumTopicsController < Admin::AdminController
 
   # * GET /admin/forum_topics/:id/edit
   def edit
-    @forum_topic.attributes = params[:forum_topic]
+    @forum_topic.attributes = permitted_attributes
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/edit', :locals => { :record => @forum_topic } }
@@ -49,7 +49,7 @@ class Admin::ForumTopicsController < Admin::AdminController
   # * POST /admin/forum_topics
   # * POST /admin/forum_topics.xml
   def create
-    @forum_topic        = @forum.forum_topics.build(params[:forum_topic])
+    @forum_topic        = @forum.forum_topics.build(permitted_attributes)
     @forum_topic.parent = @parent_node
 
     respond_to do |format|
@@ -69,7 +69,7 @@ class Admin::ForumTopicsController < Admin::AdminController
   # * PUT /admin/forum_topics/:id
   # * PUT /admin/forum_topics/:id.xml
   def update
-    @forum_topic.attributes = params[:forum_topic]
+    @forum_topic.attributes = permitted_attributes
 
     respond_to do |format|
       if @commit_type == 'preview' && @forum_topic.valid?
@@ -90,6 +90,10 @@ class Admin::ForumTopicsController < Admin::AdminController
 
 protected
 
+  def permitted_attributes
+    params.fetch(:forum_topic, {}).permit!
+  end
+
   # Finds the +Forum+ object corresponding to the parent node's content.
   def find_forum
     @forum = @parent_node.content
@@ -97,7 +101,7 @@ protected
 
   # Finds the +ForumTopic+ object corresponding to the passed in +id+ parameter.
   def find_forum_topic
-    @forum_topic = ((@forum) ? @forum.forum_topics : ForumTopic).find(params[:id], :include => :node).current_version
+    @forum_topic = ((@forum) ? @forum.forum_topics : ForumTopic).includes(:node).find(params[:id]).current_version
   end
 
   def find_forum_threads

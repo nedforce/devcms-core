@@ -32,10 +32,16 @@ module DevcmsCore
 
       has_one :node, :as => :content, :autosave => true, :validate => true
 
-      default_scope where("#{table_name}.deleted_at IS NULL")
+      default_scope ->{ where("#{table_name}.deleted_at IS NULL") }
 
-      scope :with_parent, lambda { |node, options| options.merge({ :include => :node, :conditions => [ 'nodes.ancestry = ?', node.child_ancestry ] }) }
-      scope :accessible,  lambda { { :include => :node, :conditions => Node.accessibility_and_visibility_conditions } }
+      scope :with_parent, lambda { |node, options|
+        with_parent_scope = includes(:node).where('nodes.ancestry' => node.child_ancestry)
+        with_parent_scope = with_parent_scope.order(options[:order]) if options[:order]
+        with_parent_scope = with_parent_scope.extending(options[:extend]) if options[:extend]
+        with_parent_scope
+      }
+
+      scope :accessible,  lambda { includes(:node).merge(Node.accessible) }
 
       validates_presence_of :node
 
@@ -112,7 +118,7 @@ module DevcmsCore
         klass = class_name.constantize
 
         define_method(type) {
-          (parent || node.try(:parent)).present? ? klass.first(:include => :node, :conditions => ['nodes.id = ?', parent || node.try(:parent) ]) : nil
+          (parent || node.try(:parent)).present? ? klass.includes(:node).where('nodes.id = ?', parent || node.try(:parent)).references(:nodes).first : nil
         }
 
         (class << self; self; end).send(:define_method, :parent_type) { klass }
@@ -176,9 +182,9 @@ module DevcmsCore
 
     # Returns the last update date
     def last_updated_at
-      scope = self.node.self_and_children
+      scope = node.self_and_children
       scope = scope.accessible unless node.private? || node.hidden?
-      [scope.maximum('nodes.updated_at'), self.node.self_and_children.accessible.maximum('nodes.publication_start_date')].compact.max
+      [scope.maximum('nodes.updated_at'), node.self_and_children.accessible.maximum('nodes.publication_start_date')].compact.max
     end
 
     def touch!
@@ -263,7 +269,7 @@ module DevcmsCore
         # Save base_url_alias for later use
         base_url_alias = node.reload.url_alias.sub(/-\d+\z/, '') # chomp off -1, -2, etc.
         # Search siblings for nodes with identiacal aliases
-        node.siblings.all(conditions: ['url_alias like ?', base_url_alias + '-%']).each(&:update_subtree_url_aliases)
+        node.siblings.where('url_alias like ?', base_url_alias + '-%').each(&:update_subtree_url_aliases)
       end
     end
 
@@ -272,14 +278,12 @@ module DevcmsCore
     end
 
     def copy_deleted_at_from_node
-      Node.unscoped do
-        node_deleted_at = self.node.deleted_at
+      node_deleted_at = node.deleted_at
 
-        self.deleted_at = node_deleted_at
-        self.updated_at = node_deleted_at
+      self.deleted_at = node_deleted_at
+      self.updated_at = node_deleted_at
 
-        self.class.update_all({ :deleted_at => node_deleted_at, :updated_at => node_deleted_at }, self.class.primary_key => id)
-      end
+      self.class.unscoped.where(self.class.primary_key => id).update_all(deleted_at: node_deleted_at, updated_at: node_deleted_at)
     end
 
     def delete_all_associated_versions
@@ -287,14 +291,12 @@ module DevcmsCore
     end
 
     def clear_deleted_at
-      node_updated_at = self.node.updated_at
+      node_updated_at = node.updated_at
 
       self.deleted_at = nil
       self.updated_at = node_updated_at
 
-      self.class.send(:with_exclusive_scope) do
-        self.class.update_all({ :deleted_at => nil, :updated_at => node_updated_at }, self.class.primary_key => id)
-      end
+      self.class.unscoped.where(self.class.primary_key => id).update_all(deleted_at: nil, updated_at: node_updated_at)
     end
 
     def set_url_alias

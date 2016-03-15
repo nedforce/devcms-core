@@ -38,7 +38,7 @@ class ForumTopic < ActiveRecord::Base
 
   # Returns the child ForumThread objects, ordered by their +last_update_date+ values.
   def forum_threads_by_last_update_date
-    forum_threads.select('forum_threads.id, forum_threads.title, forum_threads.user_id, MAX(forum_posts.created_at) AS last_update_date')
+    forum_threads.select('forum_threads.id, forum_threads.title, forum_threads.user_id, forum_threads.closed, MAX(forum_posts.created_at) AS last_update_date')
       .joins(:forum_posts)
       .group('forum_threads.id, forum_threads.title, forum_threads.user_id')
       .order('MAX(forum_posts.created_at) DESC')
@@ -51,7 +51,7 @@ class ForumTopic < ActiveRecord::Base
     if self.forum_threads.empty?
       self.created_at
     else
-      self.forum_threads.maximum('forum_posts.created_at', joins: :forum_posts)
+      self.forum_threads.joins(:forum_posts).maximum('forum_posts.created_at')
     end
   end
 

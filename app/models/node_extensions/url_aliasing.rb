@@ -8,9 +8,6 @@ module NodeExtensions::UrlAliasing
   VALID_CUSTOM_URL_SUFFIX_FORMAT = /\A\/?[a-z0-9_\-]+\z/i
 
   included do
-    # Scopes, validations & associations
-    attr_protected :url_alias, :custom_url_alias
-
     # Validate url_alias. Sync regexp to routes.rb!
     validates_format_of :url_alias,         with: VALID_URL_ALIAS_FORMAT,                 allow_blank: true
     validates_length_of :url_alias,         in:   (2..MAXIMUM_URL_ALIAS_LENGTH),          allow_blank: true
@@ -124,8 +121,8 @@ module NodeExtensions::UrlAliasing
 
   # Instance Methods
   # Update after move
-  def move_to_with_update_url_aliases(*args)
-    move_to_without_update_url_aliases(*args)
+  def move_to(target, position)
+    super(target, position)
     update_subtree_url_aliases
   end
 
@@ -193,7 +190,7 @@ module NodeExtensions::UrlAliasing
 
     unless is_root?
       i = 0
-      while containing_site.subtree.exclude_subtrees_of(nodes_to_exclude).first(conditions: ['id <> ? AND (url_alias = ? OR custom_url_alias = ?)', (id || 0), temp_url_alias, temp_url_alias]) || self.class.url_alias_reserved?(temp_url_alias)
+      while containing_site.subtree.exclude_subtrees_of(nodes_to_exclude).where('id <> ? AND (url_alias = ? OR custom_url_alias = ?)', (id || 0), temp_url_alias, temp_url_alias).first || self.class.url_alias_reserved?(temp_url_alias)
         i += 1
         temp_url_alias = "#{generated_url_alias}-#{i}"
       end
@@ -214,18 +211,18 @@ module NodeExtensions::UrlAliasing
 
   def should_have_unique_url_alias_in_site
     if url_alias.present? && url_alias.size <= MAXIMUM_URL_ALIAS_LENGTH
-      errors.add(:url_alias, :taken) if containing_site.self_and_descendants.exclude_subtrees_of(nodes_to_exclude).where(['url_alias = ? AND id != ?', url_alias, (id || 0)]).any?
+      errors.add(:url_alias, :taken) if containing_site.self_and_descendants.exclude_subtrees_of(nodes_to_exclude).where('url_alias = ? AND id != ?', url_alias, (id || 0)).any?
     end
   end
 
   def should_have_unique_custom_url_alias_in_site
     if custom_url_alias.present? && custom_url_alias.size <= MAXIMUM_URL_ALIAS_LENGTH
-      errors.add(:custom_url_alias, :taken) if containing_site.self_and_descendants.exclude_subtrees_of(nodes_to_exclude).where(['custom_url_alias = ? AND id != ?', custom_url_alias, (id || 0)]).any?
+      errors.add(:custom_url_alias, :taken) if containing_site.self_and_descendants.exclude_subtrees_of(nodes_to_exclude).where('custom_url_alias = ? AND id != ?', custom_url_alias, (id || 0)).any?
     end
   end
 
   def clear_aliases
-    self.class.update_all({ url_alias: nil, custom_url_alias: nil }, ['id IN (?)', subtree_ids])
+    self.class.where(id: subtree_ids).update_all(url_alias: nil, custom_url_alias: nil)
   end
 
   def nodes_to_exclude

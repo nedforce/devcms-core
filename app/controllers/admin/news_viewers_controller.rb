@@ -25,7 +25,7 @@ class Admin::NewsViewersController < Admin::AdminController
 
   # * GET /admin/news_viewers/new
   def new
-    @news_viewer = NewsViewer.new(params[:news_viewer])
+    @news_viewer = NewsViewer.new(permitted_attributes)
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/new', :locals => { :record => @news_viewer } }
@@ -34,7 +34,7 @@ class Admin::NewsViewersController < Admin::AdminController
 
   # * GET /admin/news_viewers/:id/edit
   def edit
-    @news_viewer.attributes = params[:news_viewer]
+    @news_viewer.attributes = permitted_attributes
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/edit', :locals => { :record => @news_viewer } }
@@ -42,13 +42,13 @@ class Admin::NewsViewersController < Admin::AdminController
   end
 
   def edit_items
-    @news_archives = NewsArchive.not_archived.all(:include => :node, :conditions => @news_viewer.node.containing_site.descendant_conditions)
+    @news_archives = NewsArchive.not_archived.includes(:node).references(:nodes).where(@news_viewer.node.containing_site.descendant_conditions)
   end
 
   # * POST /admin/news_viewers
   # * POST /admin/news_viewers.xml
   def create
-    @news_viewer        = NewsViewer.new(params[:news_viewer])
+    @news_viewer        = NewsViewer.new(permitted_attributes)
     @news_viewer.parent = @parent_node
 
     respond_to do |format|
@@ -68,7 +68,7 @@ class Admin::NewsViewersController < Admin::AdminController
   # * PUT /admin/news_viewers/:id
   # * PUT /admin/news_viewers/:id.xml
   def update
-    @news_viewer.attributes = params[:news_viewer]
+    @news_viewer.attributes = permitted_attributes
 
     respond_to do |format|
       if @commit_type == 'preview' && @news_viewer.valid?
@@ -86,9 +86,13 @@ class Admin::NewsViewersController < Admin::AdminController
 
 protected
 
+  def permitted_attributes
+    params.fetch(:news_viewer, {}).permit!
+  end
+
   # Finds the +NewsViewer+ object corresponding to the passed in +id+ parameter.
   def find_news_viewer
-    @news_viewer = NewsViewer.find(params[:id], :include => [:node]).current_version
+    @news_viewer = NewsViewer.includes(:node).find(params[:id]).current_version
   end
 
   def find_recent_news_items

@@ -17,7 +17,7 @@ class NewsViewerItem < ActiveRecord::Base
   belongs_to :news_viewer
 
   # The associated news items are included by default.
-  default_scope includes(:news_item).order('news_viewer_items.position')
+  default_scope ->{ includes(:news_item).order(:position) }
 
   # See the preconditions overview for an explanation of these validations.
   validates_uniqueness_of :news_item_id, scope: :news_viewer_id

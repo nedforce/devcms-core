@@ -89,7 +89,7 @@ class Admin::WeblogsController < Admin::AdminController
 
   # * GET /admin/weblogs/:id/edit
   def edit
-    @weblog.attributes = params[:weblog]
+    @weblog.attributes = permitted_attributes
 
     respond_to do |format|
       format.html { render template: 'admin/shared/edit', locals: { record: @weblog } }
@@ -99,7 +99,7 @@ class Admin::WeblogsController < Admin::AdminController
   # * PUT /admin/weblogs/:id
   # * PUT /admin/weblogs/:id.xml
   def update
-    @weblog.attributes = params[:weblog]
+    @weblog.attributes = permitted_attributes
 
     respond_to do |format|
       if @commit_type == 'preview' && @weblog.valid?
@@ -123,9 +123,13 @@ class Admin::WeblogsController < Admin::AdminController
 
   protected
 
+  def permitted_attributes
+    params.fetch(:weblog, {}).permit!
+  end
+
   # Finds the +Weblog+ object corresponding to the passed in +id+ parameter.
   def find_weblog
-    @weblog = Weblog.find(params[:id], include: :node).current_version
+    @weblog = Weblog.includes(:node).find(params[:id]).current_version
   end
 
   def find_weblog_posts

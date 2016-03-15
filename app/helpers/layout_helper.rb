@@ -3,7 +3,7 @@ module LayoutHelper
     partials        = ''
     node            = (@node || current_site)
 
-    return if node.own_or_inherited_layout_variant[target].blank? || node.own_or_inherited_layout_variant[target]['main_content']
+    return if node.own_or_inherited_layout_variant.try(:[], target).blank? || node.own_or_inherited_layout_variant[target]['main_content']
 
     partial         = '/layouts/partials/' + node.own_or_inherited_layout_variant[target]['representation']
     inheritable     = node.own_or_inherited_layout_variant[target]['inheritable'].nil? || node.own_or_inherited_layout_variant[target]['inheritable']

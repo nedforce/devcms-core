@@ -1,5 +1,5 @@
 class CreateCombinedCalenderNodes < ActiveRecord::Migration
-  def self.up
+  def up
     create_table :combined_calendar_nodes do |t|
       t.references :combined_calendar
       t.references :node
@@ -9,7 +9,7 @@ class CreateCombinedCalenderNodes < ActiveRecord::Migration
     add_index :combined_calendar_nodes, :node_id    
   end
 
-  def self.down
+  def down
     drop_table :combined_calendar_nodes
   end
 end

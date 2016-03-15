@@ -29,7 +29,7 @@ class Admin::ContactFormFieldsController < Admin::AdminController
   # * GET /admin/contact_forms/:contact_form_id/contact_form_fields/new
   # * GET /admin/contact_forms/:contact_form_id/contact_form_fields/new.js
   def new
-    @contact_form_field = @contact_form.contact_form_fields.new(params[:contact_form_field])
+    @contact_form_field = @contact_form.contact_form_fields.new(permitted_attributes)
 
     respond_to do |format|
       format.html { render partial: 'new' }
@@ -44,7 +44,7 @@ class Admin::ContactFormFieldsController < Admin::AdminController
   # * GET /admin/contact_forms/:contact_form_id/contact_form_fields/:id/edit
   # * GET /admin/contact_forms/:contact_form_id/contact_form_fields/:id/edit.js
   def edit
-    @contact_form_field.attributes = params[:contact_form_field]
+    @contact_form_field.attributes = permitted_attributes
 
     respond_to do |format|
       format.html { render partial: 'edit' }
@@ -60,7 +60,7 @@ class Admin::ContactFormFieldsController < Admin::AdminController
   # * POST /admin/contact_forms/:contact_form_id/contact_form_fields.js
   # * POST /admin/contact_forms/:contact_form_id/contact_form_fields.xml
   def create
-    @contact_form_field = @contact_form.contact_form_fields.new(params[:contact_form_field])
+    @contact_form_field = @contact_form.contact_form_fields.new(permitted_attributes)
 
     respond_to do |format|
       if @commit_type == 'preview' && @contact_form_field.valid?
@@ -91,7 +91,7 @@ class Admin::ContactFormFieldsController < Admin::AdminController
   # * PUT /admin/contact_forms/:contact_form_id/contact_form_fields/:id
   # * PUT /admin/contact_forms/:contact_form_id/contact_form_fields/:id.xml
   def update
-    @contact_form_field.attributes = params[:contact_form_field]
+    @contact_form_field.attributes = permitted_attributes
 
     respond_to do |format|
       if @commit_type == 'preview' && @contact_form_field.valid?
@@ -132,6 +132,10 @@ class Admin::ContactFormFieldsController < Admin::AdminController
   end
 
   protected
+
+  def permitted_attributes
+    params.fetch(:contact_form_field, {}).permit!
+  end
 
   # Finds the +ContactForm+ object corresponding to the passed +contact_form_id+
   # parameter.

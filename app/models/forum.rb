@@ -35,19 +35,17 @@ class Forum < ActiveRecord::Base
   validates :title, presence: true, length: { maximum: 255 }, uniqueness: true
 
   # Finds the +limit+ last updated +ForumThread+ grandchildren.
-  def find_last_updated_forum_threads(limit = 5, args = {})
+  def find_last_updated_forum_threads(limit = 5)
     return [] if limit <= 0
-    # Custom SQL query to minimize performance hit
-    ForumThread.all(
-      {
-        :select     => 'forum_threads.id, forum_threads.title, forum_threads.forum_topic_id, MAX(forum_posts.created_at) AS forum_threads_last_update_date', 
-        :joins      => [{ :forum_topic => :node }, :forum_posts],
-        :conditions => { :forum_topic_id => forum_topics },
-        :group      => 'forum_threads.id, forum_threads.title, forum_threads.forum_topic_id', 
-        :limit      => limit,
-        :order      => 'forum_threads_last_update_date DESC'
-      }.merge(args)
-    )
+
+    ForumThread
+      .select('forum_threads.id, forum_threads.title, forum_threads.forum_topic_id, MAX(forum_posts.created_at) AS forum_threads_last_update_date')
+      .joins([{ forum_topic: :node }, :forum_posts])
+      .where(forum_topic_id: forum_topics.to_a)
+      .limit(limit)
+      .group('forum_threads.id')
+      .order('forum_threads_last_update_date DESC')
+      .to_a
   end
 
   # Returns the description as the token for indexing.

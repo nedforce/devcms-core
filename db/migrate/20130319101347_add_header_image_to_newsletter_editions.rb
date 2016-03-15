@@ -1,6 +1,6 @@
 class AddHeaderImageToNewsletterEditions < ActiveRecord::Migration
   def change
-    add_column :newsletter_editions, :header_image_node_id, :integer
+    add_column :newsletter_editions, :header_image_node_id, :integer, references: nil
     NewsletterArchive.all.each do |archive|
       image = if archive.header and File.exist?(Rails.root.join('app', 'assets', 'images', 'newsletter', archive.header))
         archive.header

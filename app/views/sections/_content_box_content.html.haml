@@ -1,5 +1,5 @@
 - content = node.content
-- children = node.children.accessible.public.exclude_content_types(%w( Image Attachment SearchPage Site )).all(limit: node.content_box_number_of_items)
+- children = node.children.accessible.is_public.exclude_content_types(%w( Image Attachment SearchPage Site )).limit(node.content_box_number_of_items)
 
 - if strip_tags(content.description).present?
   .description

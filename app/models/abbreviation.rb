@@ -28,6 +28,6 @@ class Abbreviation < ActiveRecord::Base
 
   # Find a record by normalized abbr.
   def self.search(abbr)
-    where(["REPLACE(LOWER(abbr), '.', '') = ?", normalize(abbr)]).all
+    where("REPLACE(LOWER(abbr), '.', '') = ?", normalize(abbr))
   end
 end

@@ -97,13 +97,14 @@ class Node < ActiveRecord::Base
   # Load layout & template functionality
   include NodeExtensions::Layouting
 
-  # Load Url Aliasing functionality
+  # Load Url Aliasing functionality. Should be loaded after TreeDelegation as it overrides move_to
   include NodeExtensions::UrlAliasing
 
   # Load content type configuration functionality
   include NodeExtensions::ContentTypeConfiguration
 
-  alias_method_chain :move_to, :update_url_aliases
+  # Override move_to to support reindexing after move
+  include NodeExtensions::MoveToWithReindexing
 
   if Devcms.search_configuration[:enabled_search_engines].try(:include?, 'ferret')
     self.extend Search::Modules::Ferret::FerretNodeExtension
@@ -111,8 +112,6 @@ class Node < ActiveRecord::Base
   end
 
   INDEX_DATETIME_FORMAT = "%Y%m%d%H%M"
-
-  attr_protected :hits, :content_type, :sub_content_type
 
   has_many :combined_calendar_nodes, dependent: :destroy
   has_many :combined_calendars,      through: :combined_calendar_nodes
@@ -158,8 +157,6 @@ class Node < ActiveRecord::Base
   # A private copy of the original destroy method that is used for overloading.
   alias_method :original_destroy, :destroy
 
-  attr_protected :publishable, :deleted_at
-
   before_validation :set_publication_start_date_to_current_time_if_blank
 
   # After update to private or hidden or publishable reindex all children
@@ -174,8 +171,8 @@ class Node < ActiveRecord::Base
 
   # Remove from list on paranoid delete
   before_paranoid_delete :remove_from_list
-  after_paranoid_restore :add_to_list
-  after_paranoid_restore :add_descendants_to_list
+  before_paranoid_restore :add_to_list_bottom
+  before_paranoid_restore :add_descendants_to_list
 
   # Prevents the root +Node+ from being marked as deleted.
   before_paranoid_delete :prevent_root_destruction
@@ -194,10 +191,11 @@ class Node < ActiveRecord::Base
   end)
 
   scope :shown_in_menu, (lambda do
+    menu_scope = where('nodes.show_in_menu' => true)
     if Node.content_to_hide_from_menu.present?
-      { :conditions => [ 'nodes.show_in_menu = true AND nodes.sub_content_type NOT IN (?)', Node.content_to_hide_from_menu ] }
+      menu_scope.where('nodes.sub_content_type NOT IN (?)', Node.content_to_hide_from_menu)
     else
-      { :conditions => { 'nodes.show_in_menu' => true } }
+      menu_scope
     end
   end)
 
@@ -205,9 +203,9 @@ class Node < ActiveRecord::Base
     content_types_to_include = Array(content_types_to_include)
 
     if content_types_to_include.present?
-      { :conditions => [ 'nodes.sub_content_type IN (?)', content_types_to_include ] }
+      where('nodes.sub_content_type IN (?)', content_types_to_include)
     else
-      { :conditions => {} }
+      self
     end
   end)
 
@@ -215,24 +213,17 @@ class Node < ActiveRecord::Base
     content_types_to_exclude = Array(content_types_to_exclude)
 
     if content_types_to_exclude.present?
-      { :conditions => [ 'nodes.sub_content_type NOT IN (?)', content_types_to_exclude ] }
+      where('nodes.sub_content_type NOT IN (?)', content_types_to_exclude)
     else
-      { :conditions => {} }
+      self
     end
   end)
 
-  scope :sections, { :conditions => [ 'nodes.sub_content_type IN (?)', %w( Section Site ) ] }
+  scope :sections, ->{ where(sub_content_type: %w( Section Site )) }
 
-  scope :include_content, { :include => :content }
+  scope :include_content, ->{ includes(:content) }
 
-  scope :path_children_by_depth, lambda { |node| { :order => 'nodes.ancestry_depth desc, nodes.position asc', :conditions => { :ancestry => node.path_child_ancestries } } }
-
-  def move_to_with_reindexing(*args)
-    self.move_to_without_reindexing(*args)
-    self.reindex_self_and_children
-  end
-
-  alias_method_chain :move_to, :reindexing
+  scope :path_children_by_depth, ->(node){ order('nodes.ancestry_depth desc, nodes.position asc').where(ancestry: node.path_child_ancestries) }
 
   # The Helper class includes the SanitizeHelper for proxy access.
   class Helper
@@ -383,7 +374,7 @@ class Node < ActiveRecord::Base
   # Checks whether the node is expandable (in the admin view) for the given user.
   # A node is expandable if the user has a role on the node itself or one of its descendants.
   def is_expandable_for_user?(user)
-    user.role_on(self) || user.role_assignments.first(:joins => :node, :conditions => self.descendant_conditions )
+    user.role_on(self) || user.role_assignments.joins(:node).where(descendant_conditions).first
   end
 
   # Returns the text that should be displayed in the node tree
@@ -446,16 +437,24 @@ class Node < ActiveRecord::Base
     end
   end
 
-  def last_changes(on, conditions = {})
+  def last_changes(on, options = {})
+    scope = nil
+
     if on == :all
       # Exclude other sites
       nodes_to_exclude = self.descendants.with_content_type('Site')
 
       # Exclude private sections
-      nodes_to_exclude += self.descendants.sections.private
-      self.self_and_descendants.accessible.exclude_subtrees_of(nodes_to_exclude).with_content_type(%w( Page Section NewsItem )).include_content.all({ :order => 'updated_at DESC' }.merge(conditions))
+      nodes_to_exclude += self.descendants.sections.is_private
+      scope = self.self_and_descendants.exclude_subtrees_of(nodes_to_exclude).with_content_type(%w( Page Section NewsItem ))
     elsif on == :self
-      self.self_and_descendants(:to_depth => 0).accessible.public.exclude_content_types('Site').include_content.all({ :order => 'updated_at DESC' }.merge(conditions))
+      scope = self.self_and_descendants(to_depth: 0).is_public.exclude_content_types('Site')
+    end
+
+    if scope
+      scope = scope.accessible.include_content.order(updated_at: :desc)
+      scope = scope.limit(options[:limit]) if options[:limit]
+      scope
     end
   end
 
@@ -554,7 +553,7 @@ class Node < ActiveRecord::Base
   end
 
   def self.find_related_nodes(node, options = {})
-    (options[:top_node] ? options[:top_node].children : Node.scoped).accessible.public.includes(:node_categories).limit(options[:limit] || 5).where([ 'node_categories.category_id in (?) AND nodes.id <> ?', node.category_ids, node.id ])
+    (options[:top_node] ? options[:top_node].children : Node.scoped).accessible.is_public.includes(:node_categories).limit(options[:limit] || 5).where([ 'node_categories.category_id in (?) AND nodes.id <> ?', node.category_ids, node.id ])
   end
 
   # 25/11/2013: Bulk updates were used for node categories, which have been removed later. Might need it in the future, therefore it's still available.
@@ -637,28 +636,28 @@ class Node < ActiveRecord::Base
 
     self.transaction do
       # Destroy all content copies that are associated with any of the nodes in the subtree and are not a descendant
-      ContentCopy.find_each(:include => :node, :conditions => [ 'copied_node_id IN (:nodes_to_be_paranoid_deleted_ids) AND NOT nodes.id IN (:nodes_to_be_paranoid_deleted_ids)', { :nodes_to_be_paranoid_deleted_ids => nodes_to_be_paranoid_deleted_ids } ]) do |content_copy|
+      ContentCopy.includes(:node).references(:nodes).where('copied_node_id IN (:nodes_to_be_paranoid_deleted_ids) AND NOT nodes.id IN (:nodes_to_be_paranoid_deleted_ids)', nodes_to_be_paranoid_deleted_ids: nodes_to_be_paranoid_deleted_ids).find_each do |content_copy|
         content_copy.destroy
       end
 
       # Destroy all internal links that are associated with any of the nodes in the subtree and are not a descendant
-      InternalLink.find_each(:include => :node, :conditions => [ 'linked_node_id IN (:nodes_to_be_paranoid_deleted_ids) AND NOT nodes.id IN (:nodes_to_be_paranoid_deleted_ids)', { :nodes_to_be_paranoid_deleted_ids => nodes_to_be_paranoid_deleted_ids } ]) do |internal_link|
+      InternalLink.includes(:node).references(:nodes).where('linked_node_id IN (:nodes_to_be_paranoid_deleted_ids) AND NOT nodes.id IN (:nodes_to_be_paranoid_deleted_ids)', nodes_to_be_paranoid_deleted_ids: nodes_to_be_paranoid_deleted_ids).find_each do |internal_link|
         internal_link.destroy
       end
 
       # Unset frontpage for Sections
-      Section.update_all({ :frontpage_node_id => nil }, { :frontpage_node_id => nodes_to_be_paranoid_deleted_ids })
+      Section.where(frontpage_node_id: nodes_to_be_paranoid_deleted_ids).update_all(frontpage_node_id: nil)
 
       # Delete any role assignments, synonyms or abbreviations that are associated with any of the nodes in the subtree
       [ RoleAssignment, Synonym, Abbreviation, CombinedCalendarNode ].each do |klass|
-        klass.delete_all(:node_id => nodes_to_be_paranoid_deleted_ids)
+        klass.where(node_id: nodes_to_be_paranoid_deleted_ids).delete_all
       end
 
       # Do the same for all comments
-      Comment.delete_all(:commentable_id => nodes_to_be_paranoid_deleted_ids)
+      Comment.where(commentable_id: nodes_to_be_paranoid_deleted_ids).delete_all
 
       # Delete content representations where appropriate
-      ContentRepresentation.delete_all [ 'parent_id IN (:nodes_to_be_paranoid_deleted_ids) OR content_id IN (:nodes_to_be_paranoid_deleted_ids)', { :nodes_to_be_paranoid_deleted_ids => nodes_to_be_paranoid_deleted_ids } ]
+      ContentRepresentation.where('parent_id IN (:nodes_to_be_paranoid_deleted_ids) OR content_id IN (:nodes_to_be_paranoid_deleted_ids)', nodes_to_be_paranoid_deleted_ids: nodes_to_be_paranoid_deleted_ids).delete_all
     end
   end
 

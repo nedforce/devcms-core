@@ -23,6 +23,6 @@ protected
   end
 
   def find_forum_topics
-    @forum_topics = @forum.forum_topics.all
+    @forum_topics = @forum.forum_topics
   end
 end

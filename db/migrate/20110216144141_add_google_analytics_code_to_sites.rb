@@ -1,9 +1,9 @@
 class AddGoogleAnalyticsCodeToSites < ActiveRecord::Migration
-  def self.up
+  def up
     add_column :sections, :analytics_code, :string
   end
 
-  def self.down
+  def down
     remove_column :sections, :analytics_code
   end
 end

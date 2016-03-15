@@ -25,10 +25,10 @@ class Admin::ThemesController < Admin::AdminController
       format.xml  { render :xml => @theme }
     end
   end
-  
+
   # * GET /admin/themes/new
   def new
-    @theme = @subclass.new(params[@type])
+    @theme = @subclass.new(permitted_attributes)
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/new', :locals => { :record => @theme } }
@@ -37,7 +37,7 @@ class Admin::ThemesController < Admin::AdminController
 
   # * GET /admin/themes/:id/edit
   def edit
-    @theme.attributes = params[@type]
+    @theme.attributes = permitted_attributes
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/edit', :locals => { :record => @theme } }
@@ -47,7 +47,7 @@ class Admin::ThemesController < Admin::AdminController
   # * POST /admin/themes
   # * POST /admin/themes.xml
   def create
-    @theme        = @subclass.new(params[@type])
+    @theme        = @subclass.new(permitted_attributes)
     @theme.parent = @parent_node
 
     respond_to do |format|
@@ -63,11 +63,11 @@ class Admin::ThemesController < Admin::AdminController
       end
     end
   end
-  
+
   # * PUT /admin/themes/:id
   # * PUT /admin/themes/:id.xml
   def update
-    @theme.attributes = params[@type]
+    @theme.attributes = permitted_attributes
 
     respond_to do |format|
       if @commit_type == 'preview' && @theme.valid?
@@ -85,9 +85,13 @@ class Admin::ThemesController < Admin::AdminController
 
 protected
 
+  def permitted_attributes
+    params.fetch(@type, {}).permit!
+  end
+
   # Finds the +Theme+ object corresponding to the passed in +id+ parameter.
   def find_theme
-    @theme = Theme.find(params[:id], :include => [ :node ]).current_version
+    @theme = Theme.includes(:node).find(params[:id]).current_version
   end
 
   def set_subclass

@@ -24,7 +24,7 @@ module MenuHelper
 
   def top_level_main_menu_items
     @top_level_main_menu_items || begin
-      menu_scope = current_site.descendants(:to_depth => Devcms.main_menu_depth).accessible.public.shown_in_menu
+      menu_scope = current_site.descendants(to_depth: Devcms.main_menu_depth).accessible.is_public.shown_in_menu.reorder(:position)
       top_level_main_menu_items = current_site.closure_for(menu_scope).values.first
     end
   end
@@ -66,14 +66,14 @@ module MenuHelper
   def create_sub_menu_item(node, self_and_ancestors_except_root_ids, show_private_items_in_sub_menu, options = {})
     if show_private_items_in_sub_menu
       if current_user_has_any_role?(node)
-        sub_menu_items = node.children.accessible.shown_in_menu.all(:order => 'position')
+        sub_menu_items = node.children.accessible.shown_in_menu.reorder(:position)
       else
-        sub_menu_items = node.children.accessible.shown_in_menu.all(:order => 'position').select do |sub_menu_item|
+        sub_menu_items = node.children.accessible.shown_in_menu.reorder(:position).select do |sub_menu_item|
           sub_menu_item.public? || current_user_has_any_role?(sub_menu_item)
         end
       end
     else
-      sub_menu_items = node.children.accessible.public.shown_in_menu.all(:order => 'position')
+      sub_menu_items = node.children.accessible.is_public.shown_in_menu.reorder(:position)
     end
 
     has_sub_menu_items = sub_menu_items.any?

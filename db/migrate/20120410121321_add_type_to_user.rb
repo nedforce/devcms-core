@@ -1,12 +1,12 @@
 class AddTypeToUser < ActiveRecord::Migration
-  def self.up
+  def up
     add_column :users, :type, :string
 
-    ids = RoleAssignment.all(select: :user_id, conditions: { name: %w(admin editor final_editor) }).map(&:user_id).uniq
-    puts User.update_all({ type: 'PrivilegedUser' }, { id: ids })
+    ids = RoleAssignment.where(name: %w(admin editor final_editor)).pluck(:user_id).uniq
+    puts User.where(id: ids).update_all(type: 'PrivilegedUser')
   end
 
-  def self.down
+  def down
     remove_column :users, :type
   end
 end

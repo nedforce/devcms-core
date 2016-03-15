@@ -1,5 +1,5 @@
 class CreateNodeCategories < ActiveRecord::Migration
-  def self.up
+  def up
     remove_column :nodes, :category_id
 
     create_table :node_categories do |t|
@@ -12,7 +12,7 @@ class CreateNodeCategories < ActiveRecord::Migration
     add_index :node_categories, [:node_id, :category_id], unique: true
   end
 
-  def self.down
+  def down
     drop_table :node_categories
 
     add_column :nodes, :category_id, :integer

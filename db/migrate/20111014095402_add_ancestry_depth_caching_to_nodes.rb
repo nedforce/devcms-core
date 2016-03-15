@@ -1,5 +1,5 @@
 class AddAncestryDepthCachingToNodes < ActiveRecord::Migration
-  def self.up
+  def up
     add_column :nodes, :ancestry_depth, :integer, default: 0
     add_index  :nodes, :ancestry_depth
 
@@ -12,7 +12,7 @@ class AddAncestryDepthCachingToNodes < ActiveRecord::Migration
     end
   end
 
-  def self.down
+  def down
     remove_column :nodes, :ancestry_depth
   end
 end

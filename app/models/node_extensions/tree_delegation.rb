@@ -3,26 +3,28 @@ module NodeExtensions::TreeDelegation
 
   included do
     has_ancestry cache_depth: true
-    # sortable scope: :ancestry
-    acts_as_list scope: :ancestry
+
+    acts_as_list scope: 'nodes.ancestry = \'#{ancestry}\'', add_new_at: :bottom
 
     validate :parent_should_be_valid, :unless => lambda { |n| Node.count.zero? || (Node.root && Node.root == n) }
     validate :parent_should_allow_type
 
-    scope :broken_list_ancestries, select(:ancestry).group(:ancestry).having('max(nodes.position)!=(SELECT COUNT(*) FROM nodes n2 WHERE n2.ancestry=nodes.ancestry AND deleted_at IS NULL) OR sum(nodes.position)!=(SELECT SUM(DISTINCT position) FROM nodes n3 WHERE n3.ancestry=nodes.ancestry AND deleted_at IS NULL)').reorder(:ancestry)
-
-    def will_leave_list?
-      in_list? && parent_id_changed?
-    end
+    scope :broken_list_ancestries, ->{ select(:ancestry).group(:ancestry).having('max(nodes.position)!=(SELECT COUNT(*) FROM nodes n2 WHERE n2.ancestry=nodes.ancestry AND deleted_at IS NULL) OR sum(nodes.position)!=(SELECT SUM(DISTINCT position) FROM nodes n3 WHERE n3.ancestry=nodes.ancestry AND deleted_at IS NULL)').reorder(:ancestry) }
 
     def in_list?
       !(ancestry_callbacks_disabled? || !super)
     end
 
-    def update_position(new_position) #:nodoc:
-      update_column(position_column, new_position)
-      #set_position new_position
+    def reload_position
+      begin
+        reload
+      rescue ActiveRecord::RecordNotFound
+        true
+      end
+
+      self
     end
+
   end
 
   module ClassMethods
@@ -33,7 +35,7 @@ module NodeExtensions::TreeDelegation
     def exclude_subtrees_conditions_for(nodes = nil)
       nodes = Array(nodes)
 
-      return { :conditions => {} } unless nodes.present?
+      return all unless nodes.present?
 
       sql = ''
       values = {}
@@ -53,7 +55,7 @@ module NodeExtensions::TreeDelegation
 
       sql += ' OR nodes.ancestry IS NULL'
 
-      { :conditions => [ sql, values ] }
+      where(sql, values)
     end
   end
 
@@ -107,16 +109,10 @@ module NodeExtensions::TreeDelegation
   end
 
   def self_and_children
-    base_class = self.base_class
+    base_class = self.class.base_class
     table_name = base_class.table_name
 
-    base_class.scoped :conditions => [
-      "#{table_name}.#{base_class.primary_key} = :own_id OR #{table_name}.#{base_class.ancestry_column} = :child_ancestry",
-      {
-        :own_id => self.send(base_class.primary_key),
-        :child_ancestry => self.child_ancestry
-      }
-    ]
+    base_class.where("#{table_name}.#{base_class.primary_key} = :own_id OR #{table_name}.#{base_class.ancestry_column} = :child_ancestry", own_id: send(base_class.primary_key), child_ancestry: child_ancestry)
   end
 
   # Returns an array of all parents
@@ -140,17 +136,17 @@ module NodeExtensions::TreeDelegation
   end
 
   def is_descendant_of?(other)
-    self.ancestors.include?(other)
+    ancestors.include?(other)
   end
 
   # Find the first sibling to the left
   def left_sibling
-    previous_item
+    higher_item
   end
 
   # Find the first sibling to the right
   def right_sibling
-    next_item
+    lower_item
   end
 
   # Shorthand method for finding the left sibling and moving to the left of it.
@@ -184,11 +180,11 @@ module NodeExtensions::TreeDelegation
     raise ActiveRecord::ActiveRecordError, 'You cannot move a new node' if self.new_record?
 
     transaction do
-      if position == :child
-        self.parent = target
-      else
-        self.parent = target.parent
-      end
+      old_parent = parent
+      new_parent = position == :child ? target : target.parent
+
+      remove_from_list unless parent == new_parent
+      self.parent = new_parent
 
       if save
         case position
@@ -196,11 +192,14 @@ module NodeExtensions::TreeDelegation
           insert_at!(target.position)
         when :right
           insert_at!(target.position + 1)
+        else
+          add_to_list_bottom
         end
       else
         raise ActiveRecord::ActiveRecordError, "Move failed: #{self.errors.full_messages.pretty_inspect}"
       end
-      update_attributes :updated_at => Time.now
+
+      update_attributes updated_at: Time.now
     end
   end
 
@@ -212,7 +211,7 @@ module NodeExtensions::TreeDelegation
         ordered_ids = ids.flatten.uniq
         ordered_ids.each do |child_id|
           position = ordered_ids.index(child_id) + 1
-          self.class.update_all({ position: position }, { id: child_id })
+          self.class.where(id: child_id).update_all(position: position)
         end
       end
     end
@@ -262,7 +261,7 @@ module NodeExtensions::TreeDelegation
   protected
 
   def add_descendants_to_list
-    descendants.where('position IS NULL').each(&:add_to_list)
+    descendants.where('position IS NULL').each(&:add_to_list_bottom)
   end
 
   def calculate_closure_for(nodes)

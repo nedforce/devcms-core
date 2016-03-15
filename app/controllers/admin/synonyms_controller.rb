@@ -1,6 +1,6 @@
 class Admin::SynonymsController < Admin::AdminController
-  before_filter :default_format_json,  :only => [ :create, :update, :destroy ]  
-    
+  before_filter :default_format_json,  :only => [ :create, :update, :destroy ]
+
   before_filter :set_paging,  :only => [ :index, :create ]
   before_filter :set_sorting, :only => [ :index, :create ]
 
@@ -23,7 +23,7 @@ class Admin::SynonymsController < Admin::AdminController
         synonyms = @synonyms.map do |s|
           { :original => s.original,
             :name     => s.name,
-            :weight   => s.weight,   
+            :weight   => s.weight,
             :id       => s.id
           }
         end
@@ -34,7 +34,7 @@ class Admin::SynonymsController < Admin::AdminController
 
   # * POST /admin/synonyms
   def create
-    @synonym = @node.synonyms.new(params[:synonym])
+    @synonym = @node.synonyms.new(permitted_attributes)
 
     respond_to do |format|
       if @synonym.save
@@ -50,7 +50,7 @@ class Admin::SynonymsController < Admin::AdminController
     @synonym = @node.synonyms.find(params[:id])
 
     respond_to do |format|
-      if @synonym.update_attributes(params[:synonym])
+      if @synonym.update_attributes(permitted_attributes)
         format.json { head :ok }
       else
         format.json { render :json => @synonym.errors, :status => :unprocessable_entity }
@@ -70,6 +70,10 @@ class Admin::SynonymsController < Admin::AdminController
   end
 
   protected
+
+  def permitted_attributes
+    params.fetch(:synonym, {}).permit!
+  end
 
   def find_node
     @node = Node.find(params[:node_id])

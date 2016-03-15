@@ -1,5 +1,5 @@
 class BuildAncestryAndPositions < ActiveRecord::Migration
-  def self.up
+  def up
     Node.reset_column_information
 
     if Node.unscoped.count > 0
@@ -17,6 +17,6 @@ class BuildAncestryAndPositions < ActiveRecord::Migration
     end
   end
 
-  def self.down
+  def down
   end
 end

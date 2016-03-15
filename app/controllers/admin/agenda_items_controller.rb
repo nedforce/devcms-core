@@ -40,7 +40,7 @@ class Admin::AgendaItemsController < Admin::AdminController
   def new
     find_agenda_item_categories
     build_speaking_right_options
-    @agenda_item = @meeting.agenda_items.build(params[:agenda_item])
+    @agenda_item = @meeting.agenda_items.build(permitted_attributes)
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/new', :locals => { :record => @agenda_item } }
@@ -51,7 +51,7 @@ class Admin::AgendaItemsController < Admin::AdminController
   def edit
     find_agenda_item_categories
     build_speaking_right_options
-    @agenda_item.attributes = params[:agenda_item]
+    @agenda_item.attributes = permitted_attributes
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/edit', :locals => { :record => @agenda_item } }
@@ -61,7 +61,7 @@ class Admin::AgendaItemsController < Admin::AdminController
   # * POST /admin/agenda_items
   # * POST /admin/agenda_items.xml
   def create
-    @agenda_item        = @meeting.agenda_items.build(params[:agenda_item])    
+    @agenda_item        = @meeting.agenda_items.build(permitted_attributes)
     @agenda_item.parent = @parent_node
 
     respond_to do |format|
@@ -81,7 +81,7 @@ class Admin::AgendaItemsController < Admin::AdminController
         end
         format.xml  { render :xml => @agenda_item, :status => :created, :location => @agenda_item }
       else
-        format.html do 
+        format.html do
           find_agenda_item_categories
           build_speaking_right_options
           render :template => 'admin/shared/new', :locals => { :record => @agenda_item }, :status => :unprocessable_entity
@@ -94,7 +94,7 @@ class Admin::AgendaItemsController < Admin::AdminController
   # * PUT /admin/agenda_items/:id
   # * PUT /admin/agenda_items/:id.xml
   def update
-    @agenda_item.attributes = params[:agenda_item]
+    @agenda_item.attributes = permitted_attributes
 
     respond_to do |format|
       if @commit_type == 'preview' && @agenda_item.valid?
@@ -119,6 +119,10 @@ class Admin::AgendaItemsController < Admin::AdminController
 
 protected
 
+  def permitted_attributes
+    params.fetch(:agenda_item, {}).permit!
+  end
+
   # Finds the Meeting object corresponding to the parent node's content.
   def find_meeting
     @meeting = @parent_node.content
@@ -126,12 +130,12 @@ protected
 
   # Finds the AgendaItem object corresponding to the passed in +id+ parameter.
   def find_agenda_item
-    @agenda_item = ((@meeting) ? @meeting.agenda_items : AgendaItem).find(params[:id], :include => :node).current_version
+    @agenda_item = ((@meeting) ? @meeting.agenda_items : AgendaItem).includes(:node).find(params[:id]).current_version
   end
 
   # Finds all AgendaItemCategory objects.
   def find_agenda_item_categories
-    @categories = AgendaItemCategory.all(:order => 'name')
+    @categories = AgendaItemCategory.order(:name)
   end
 
   # Builds an array for selection fields that select a speaking right option.

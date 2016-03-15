@@ -24,7 +24,7 @@ class Admin::SettingsController < Admin::AdminController
         settings = @settings.map do |s|
           {
             key:   s.key,
-            alt:   s.alt,
+            label: s.label,
             value: s.type == 'password' ? '********' : s.value,
             type:  s.type,
             id:    s.id

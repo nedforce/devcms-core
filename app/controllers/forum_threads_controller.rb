@@ -50,11 +50,11 @@ class ForumThreadsController < ApplicationController
   # * POST /forum_topics/1/forum_threads
   # * POST /forum_topics/1/forum_threads.xml
   def create
-    @forum_thread      = ForumThread.new(params[:forum_thread])
+    @forum_thread      = ForumThread.new(permitted_attributes)
     @forum_thread.user = current_user
     @forum_thread.valid?
 
-    @start_post      = ForumPost.new(params[:start_post])
+    @start_post      = ForumPost.new(permitted_start_post_attributes)
     @start_post.user = current_user
     @start_post.valid?
 
@@ -84,10 +84,10 @@ class ForumThreadsController < ApplicationController
   def update
     @start_post = @forum_thread.start_post
 
-    @forum_thread.attributes = params[:forum_thread]
+    @forum_thread.attributes = permitted_attributes
     @forum_thread_valid = @forum_thread.valid?
 
-    @start_post.attributes = params[:start_post]
+    @start_post.attributes = permitted_start_post_attributes
     @start_post_valid = @start_post.valid?
 
     if @forum_thread_valid && @start_post_valid
@@ -153,30 +153,38 @@ class ForumThreadsController < ApplicationController
 
   protected
 
-    # Finds the +ForumTopic+ object corresponding to the passed in +forum_topic_id+ parameter.
-    def find_forum_topic
-      @forum_topic = ForumTopic.find(params[:forum_topic_id])
-    end
+  def permitted_attributes
+    params.fetch(:forum_thread).except!(:id, :closed, {}).permit!
+  end
 
-    # Finds the +ForumThread+ object corresponding to the passed in +id+ parameter.
-    def find_forum_thread
-      @forum_thread = @forum_topic.forum_threads.find(params[:id])
-    end
+  def permitted_start_post_attributes
+    params.fetch(:start_post, {}).permit!
+  end
 
-    def find_start_post
-      @start_post = @forum_thread.forum_posts.first
-      raise ActiveRecord::RecordNotFound if @start_post.nil?
-    end
+  # Finds the +ForumTopic+ object corresponding to the passed in +forum_topic_id+ parameter.
+  def find_forum_topic
+    @forum_topic = ForumTopic.find(params[:forum_topic_id])
+  end
 
-    # Checks whether the user is authorized to perform the action.
-    def check_authorization_for_forum_thread
-      unless @forum_thread.is_owned_by_user?(current_user) || current_user.has_role?('admin')
-        flash[:notice] = I18n.t('application.not_authorized')
-        redirect_to root_path
-      end
-    end
+  # Finds the +ForumThread+ object corresponding to the passed in +id+ parameter.
+  def find_forum_thread
+    @forum_thread = @forum_topic.forum_threads.find(params[:id])
+  end
 
-    def set_rss_feed_url
-      @rss_feed_url = forum_topic_forum_thread_url(@forum_topic,  @forum_thread, :format => 'atom')
+  def find_start_post
+    @start_post = @forum_thread.forum_posts.first
+    raise ActiveRecord::RecordNotFound if @start_post.nil?
+  end
+
+  # Checks whether the user is authorized to perform the action.
+  def check_authorization_for_forum_thread
+    unless @forum_thread.is_owned_by_user?(current_user) || current_user.has_role?('admin')
+      flash[:notice] = I18n.t('application.not_authorized')
+      redirect_to root_path
     end
+  end
+
+  def set_rss_feed_url
+    @rss_feed_url = forum_topic_forum_thread_url(@forum_topic,  @forum_thread, :format => 'atom')
+  end
 end

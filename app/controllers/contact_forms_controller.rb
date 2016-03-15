@@ -54,7 +54,7 @@ class ContactFormsController < ApplicationController
           end
 
         else
-          ContactFormMailer.contact_message(@contact_form, @entered_fields).deliver
+          ContactFormMailer.contact_message(@contact_form, @entered_fields).deliver_now
         end
 
         format.html # send_message.html.erb
@@ -72,7 +72,7 @@ class ContactFormsController < ApplicationController
 
   # Find the +ContactFormField+ objects related to the +ContactForm+.
   def find_contact_form_fields
-    @contact_form_fields = @contact_form.contact_form_fields.order(:position).all
+    @contact_form_fields = @contact_form.contact_form_fields.order(:position)
   end
 
   # Check the fields entered by the user to only use fields that are actually

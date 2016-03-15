@@ -31,7 +31,7 @@ class Admin::CarrouselsController < Admin::AdminController
 
   # * GET /admin/carrousels/new
   def new
-    @carrousel = Carrousel.new(params[:carrousel])
+    @carrousel = Carrousel.new(permitted_attributes)
 
     if params[:items]
       @item_sortlets = item_sortlet_hash_for_ids(params[:items], params[:carrousel_items])
@@ -42,7 +42,7 @@ class Admin::CarrouselsController < Admin::AdminController
 
   # * GET /admin/carrousels/:id/edit
   def edit
-    @carrousel.attributes = params[:carrousel]
+    @carrousel.attributes = permitted_attributes
 
     if params[:items]
       @item_sortlets = item_sortlet_hash_for_ids(params[:items], params[:carrousel_items])
@@ -56,7 +56,7 @@ class Admin::CarrouselsController < Admin::AdminController
   # * POST /admin/carrousels/create
   # * POST /admin/carrousels/create.xml
   def create
-    @carrousel        = Carrousel.new(params[:carrousel])
+    @carrousel        = Carrousel.new(permitted_attributes)
     @carrousel.parent = @parent_node
     @carrousel.associate_items(@item_ids, @carrousel_items)
 
@@ -78,7 +78,7 @@ class Admin::CarrouselsController < Admin::AdminController
   # * PUT /admin/carrousels/update/:id
   # * PUT /admin/carrousels/update/:id.xml
   def update
-    @carrousel.attributes = params[:carrousel]
+    @carrousel.attributes = permitted_attributes
     @carrousel.associate_items(@item_ids, @carrousel_items)
 
     respond_to do |format|
@@ -101,9 +101,13 @@ class Admin::CarrouselsController < Admin::AdminController
 
   private
 
+  def permitted_attributes
+    params.fetch(:carrousel, {}).permit!
+  end
+
   # Finds the +Carrousel+ object corresponding to the passed in +id+ parameter.
   def find_carrousel
-    @carrousel = Carrousel.find(params[:id], include: :node).current_version
+    @carrousel = Carrousel.includes(:node).find(params[:id]).current_version
   end
 
   def get_item_ids

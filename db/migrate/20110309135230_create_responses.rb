@@ -1,5 +1,5 @@
 class CreateResponses < ActiveRecord::Migration
-  def self.up
+  def up
     create_table :responses do |t|
       t.integer  :contact_form_id
       t.string   :ip
@@ -9,7 +9,7 @@ class CreateResponses < ActiveRecord::Migration
     end
   end
 
-  def self.down
+  def down
     drop_table :responses
   end
 end

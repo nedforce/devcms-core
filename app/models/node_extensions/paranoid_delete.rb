@@ -2,7 +2,7 @@ module NodeExtensions::ParanoidDelete
   extend ActiveSupport::Concern
 
   included do
-    default_scope ordered_by_ancestry.order('nodes.position').where('nodes.deleted_at IS NULL')
+    default_scope ->{ ordered_by_ancestry.order('nodes.position').where(deleted_at: nil) }
 
     define_callbacks :before_paranoid_delete, :after_paranoid_delete, :before_paranoid_restore, :after_paranoid_restore
   end
@@ -15,39 +15,11 @@ module NodeExtensions::ParanoidDelete
 
     # Use this method to retrieve all paranoid deleted node records.
     def deleted
-      unscoped { where("#{table_name}.deleted_at IS NOT NULL") }
+      unscoped.where("#{table_name}.deleted_at IS NOT NULL")
     end
 
-    # Use this method to retrieve all paranoid deleted node records that do not
-    # have paranoid deleted parents.
-    def top_level_deleted(type = :all, *args)
-      options = args.extract_options!
-
-      unscoped do
-        scope = top_level_deleted_scope.scoped(options)
-        scope = scope.where(options.delete(:conditions)) if options.has_key?(:conditions)
-        type == :all ? scope : scope.first
-      end
-    end
-
-    def top_level_deleted_count
-      top_level_deleted_scope.count
-    end
-
-    def top_level_deleted_scope
+    def top_level_deleted
       unscoped.where('nodes.deleted_at IS NOT NULL').joins("JOIN nodes AS parents ON (nodes.ancestry = parents.ancestry || '/' || parents.id OR nodes.ancestry = parents.id::varchar) AND parents.deleted_at IS NULL")
-    end
-
-    # Use this method to retrieve all node records, including the ones that have
-    # been marked as paranoid deleted.
-    def all_including_deleted(*args)
-      unscoped { all(*args) }
-    end
-
-    # Use this method to count all node records, including the ones that have
-    # been marked as paranoid deleted.
-    def count_including_deleted(*args)
-      unscoped { count(*args) }
     end
 
     def find_paranoid_hidden_content(content_type, content_id)
@@ -58,7 +30,7 @@ module NodeExtensions::ParanoidDelete
     # Deletes ALL paranoid deleted nodes and content, use at own risk ;-)
     def delete_all_paranoid_deleted_content!
       transaction do
-        unscoped { delete_all 'deleted_at IS NOT NULL' }
+        unscoped { where('deleted_at IS NOT NULL').delete_all }
 
         # This can be optimized to iterate only over the content type tables
         # that actually contain paranoid deleted entries, by first
@@ -66,7 +38,7 @@ module NodeExtensions::ParanoidDelete
         # For now, this should suffice.
         DevcmsCore::Engine.registered_content_types.each do |content_type|
           content_class = content_type.constantize
-          content_class.unscoped { content_class.delete_all 'deleted_at IS NOT NULL' }
+          content_class.unscoped { content_class.where('deleted_at IS NOT NULL').delete_all }
         end
       end
     end
@@ -86,7 +58,7 @@ module NodeExtensions::ParanoidDelete
         self.deleted_at = time
 
         # Update with an SQL query
-        self.class.update_all({ updated_at: updated_at, deleted_at: deleted_at }, ['id IN (?)', nodes_to_paranoid_delete_ids + [id]])
+        self.class.where(id: nodes_to_paranoid_delete_ids + [id]).update_all(updated_at: updated_at, deleted_at: deleted_at)
 
         return false unless run_paranoid_callbacks(:after_paranoid_delete, nodes_to_paranoid_delete_ids)
       end
@@ -107,12 +79,9 @@ module NodeExtensions::ParanoidDelete
     self.class.transaction do
       return false unless run_paranoid_callbacks(:before_paranoid_restore, nodes_to_paranoid_restore_ids)
 
-      self.class.unscoped do
-        self.updated_at = time
-        self.deleted_at = nil
-
-        self.class.update_all({ updated_at: time, deleted_at: nil }, ['id IN (?)', nodes_to_paranoid_restore_ids + [id]])
-      end
+      self.updated_at = time
+      self.deleted_at = nil
+      self.class.unscoped.where('id IN (?)', nodes_to_paranoid_restore_ids + [id]).update_all(updated_at: time, deleted_at: nil)
 
       return false unless run_paranoid_callbacks(:after_paranoid_restore, nodes_to_paranoid_restore_ids)
     end
@@ -122,32 +91,32 @@ module NodeExtensions::ParanoidDelete
 
   # Use this method to retrieve all descendant records, including the ones that have been marked as paranoid deleted
   def descendants_including_deleted
-    self.class.unscoped { base_class.all(conditions: descendant_conditions) }
+    self.class.unscoped.where(descendant_conditions)
   end
 
   # Use this method to retrieve all ancestor records, including the ones that have been marked as paranoid deleted
   def ancestors_including_deleted
-    self.class.unscoped { base_class.all(conditions: ancestor_conditions) }
+    self.class.unscoped.where(ancestor_conditions)
   end
 
   # Use this method to retrieve all descendant record ids, including the ones that have been marked as paranoid deleted
   def descendant_including_deleted_ids
-    self.class.unscoped { base_class.all(conditions: descendant_conditions, select: base_class.primary_key).map(&base_class.primary_key.to_sym) }
+    descendants_including_deleted.pluck(self.class.base_class.primary_key)
   end
 
   # Use this method to retrieve all ancestor record ids, including the ones that have been marked as paranoid deleted
   def ancestor_including_deleted_ids
-    self.class.unscoped { base_class.all(conditions: ancestor_conditions, select: base_class.primary_key).map(&base_class.primary_key.to_sym) }
+    ancestors_including_deleted.pluck(self.class.base_class.primary_key)
   end
 
   private
 
   def run_paranoid_callbacks(callback, nodes_to_trigger_content_callbacks_ids)
     self.class.unscoped do
-      return false unless run_callbacks(callback) && self.class.find_paranoid_hidden_content(sub_content_type, content_id).run_callbacks(callback)
+      return false if run_callbacks(callback) == false || self.class.find_paranoid_hidden_content(sub_content_type, content_id).run_callbacks(callback) == false
 
       self.class.where(id: nodes_to_trigger_content_callbacks_ids).each do |node|
-        return false unless self.class.find_paranoid_hidden_content(node.sub_content_type, node.content_id).run_callbacks(callback)
+        return false if self.class.find_paranoid_hidden_content(node.sub_content_type, node.content_id).run_callbacks(callback) == false
       end
     end
 

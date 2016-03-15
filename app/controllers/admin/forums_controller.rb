@@ -27,7 +27,7 @@ class Admin::ForumsController < Admin::AdminController
 
   # * GET /admin/forums/new
   def new
-    @forum = Forum.new(params[:forum])
+    @forum = Forum.new(permitted_attributes)
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/new', :locals => { :record => @forum } }
@@ -36,13 +36,13 @@ class Admin::ForumsController < Admin::AdminController
 
   # * GET /admin/forums/:id/edit
   def edit
-    @forum.attributes = params[:forum]
+    @forum.attributes = permitted_attributes
   end
 
   # * POST /admin/forums
   # * POST /admin/forums.xml
   def create
-    @forum        = Forum.new(params[:forum])
+    @forum        = Forum.new(permitted_attributes)
     @forum.parent = @parent_node
 
     respond_to do |format|
@@ -62,7 +62,7 @@ class Admin::ForumsController < Admin::AdminController
   # * PUT /admin/forums/:id
   # * PUT /admin/forums/:id.xml
   def update
-    @forum.attributes = params[:forum]
+    @forum.attributes = permitted_attributes
 
     respond_to do |format|
       if @commit_type == 'preview' && @forum.valid?
@@ -83,12 +83,16 @@ class Admin::ForumsController < Admin::AdminController
 
 protected
 
+  def permitted_attributes
+    params.fetch(:forum, {}).permit!
+  end
+
   # Finds the +Forum+ object corresponding to the passed in +id+ parameter.
   def find_forum
-    @forum = Forum.find(params[:id], :include => [:node]).current_version
+    @forum = Forum.includes(:node).find(params[:id]).current_version
   end
 
   def find_forum_topics
-    @forum_topics = @forum.forum_topics.accessible.all
+    @forum_topics = @forum.forum_topics.accessible
   end
 end

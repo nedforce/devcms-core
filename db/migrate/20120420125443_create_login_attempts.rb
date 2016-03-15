@@ -1,5 +1,5 @@
 class CreateLoginAttempts < ActiveRecord::Migration
-  def self.up
+  def up
     create_table :login_attempts do |t|
       t.string  :ip,         null: false
       t.string  :user_login
@@ -8,7 +8,7 @@ class CreateLoginAttempts < ActiveRecord::Migration
     end
   end
 
-  def self.down
+  def down
     drop_table :login_attempts
   end
 end

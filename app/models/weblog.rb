@@ -71,7 +71,7 @@ class Weblog < ActiveRecord::Base
   def find_last_published_weblog_posts(limit = 5)
     return [] if limit <= 0
 
-    weblog_posts.accessible.all(limit: limit)
+    weblog_posts.accessible.limit(limit)
   end
 
   # Returns the description as the token for indexing.

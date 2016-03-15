@@ -14,7 +14,7 @@ class MigrateLayoutSettings < ActiveRecord::Migration
     belongs_to :content, class_name: 'Node'
   end
 
-  def self.up
+  def up
     say_with_time 'Stop using the Template model' do
       Template.all.each do |template|
         template.nodes.each do |node|
@@ -51,7 +51,7 @@ class MigrateLayoutSettings < ActiveRecord::Migration
     end
   end
 
-  def self.down
+  def down
     raise ActiveRecord::IrreversibleMigration
   end
 end

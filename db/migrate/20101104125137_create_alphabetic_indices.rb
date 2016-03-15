@@ -1,5 +1,5 @@
 class CreateAlphabeticIndices < ActiveRecord::Migration
-  def self.up
+  def up
     create_table :alphabetic_indices do |t|
       t.string :title, null: false
 
@@ -7,7 +7,7 @@ class CreateAlphabeticIndices < ActiveRecord::Migration
     end
   end
 
-  def self.down
+  def down
     drop_table :alphabetic_indices
   end
 end

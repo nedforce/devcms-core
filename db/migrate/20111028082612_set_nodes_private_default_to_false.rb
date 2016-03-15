@@ -1,9 +1,9 @@
 class SetNodesPrivateDefaultToFalse < ActiveRecord::Migration
-  def self.up
+  def up
     change_column_default :nodes, :private, false
   end
 
-  def self.down
+  def down
     change_column_default :nodes, :private, true
   end
 end

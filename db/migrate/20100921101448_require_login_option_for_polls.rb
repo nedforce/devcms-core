@@ -1,5 +1,5 @@
 class RequireLoginOptionForPolls < ActiveRecord::Migration
-  def self.up
+  def up
     add_column :polls, :requires_login, :boolean, default: false
     create_table :user_poll_question_votes do |table|
       table.integer :user_id,          references: :users
@@ -8,7 +8,7 @@ class RequireLoginOptionForPolls < ActiveRecord::Migration
     end
   end
 
-  def self.down
+  def down
     remove_colum :polls, :requires_login
     drop_table :user_poll_question_votes
   end

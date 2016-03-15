@@ -2,7 +2,7 @@
 # the application relating to +Calendar+ objects.
 class Admin::CalendarsController < Admin::AdminController
   before_filter :default_format_json,  :only => :index
-  
+
   # The +create+ action needs the parent +Node+ object to link the new +Calendar+ content node to.
   prepend_before_filter :find_parent_node,    :only => [ :new, :create ]
 
@@ -50,7 +50,7 @@ class Admin::CalendarsController < Admin::AdminController
         else
           role        = current_user.role_on(@calendar_node)
           common_hash = { :treeLoaderName => Node.content_type_configuration('Calendar')[:tree_loader_name], :userRole => role ? role.name : '' }
-          now         = Time.now          
+          now         = Time.now
 
           if @year
             @months = @calendar_node.content.find_months_with_items_for_year(@year).map do |m|
@@ -72,7 +72,7 @@ class Admin::CalendarsController < Admin::AdminController
           else
             @years = @calendar_node.content.find_years_with_items.map do |y|
               year_includes_active_node = archive_includes_active_node ? (active_node.content.publication_start_date.year == y) : false
-              { 
+              {
                 :text        => y,
                 :expanded    => year_includes_active_node || (!archive_includes_active_node && (y == now.year)),
                 :extraParams => {
@@ -91,7 +91,7 @@ class Admin::CalendarsController < Admin::AdminController
 
   # * GET /admin/calendars/new
   def new
-    @calendar = Calendar.new(params[:calendar])
+    @calendar = Calendar.new(permitted_attributes)
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/new', :locals => { :record => @calendar } }
@@ -100,7 +100,7 @@ class Admin::CalendarsController < Admin::AdminController
 
   # * GET /admin/calendars/:id/edit
   def edit
-    @calendar.attributes = params[:calendar]
+    @calendar.attributes = permitted_attributes
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/edit', :locals => { :record => @calendar } }
@@ -110,7 +110,7 @@ class Admin::CalendarsController < Admin::AdminController
   # * POST /admin/calendars
   # * POST /admin/calendars.xml
   def create
-    @calendar        = Calendar.new(params[:calendar])
+    @calendar        = Calendar.new(permitted_attributes)
     @calendar.parent = @parent_node
 
     respond_to do |format|
@@ -130,7 +130,7 @@ class Admin::CalendarsController < Admin::AdminController
   # * PUT /admin/calendars/:id
   # * PUT /admin/calendars/:id.xml
   def update
-    @calendar.attributes = params[:calendar]
+    @calendar.attributes = permitted_attributes
 
     respond_to do |format|
       if @commit_type == 'preview' && @calendar.valid?
@@ -151,9 +151,13 @@ class Admin::CalendarsController < Admin::AdminController
 
 protected
 
+  def permitted_attributes
+    params.fetch(:calendar, {}).permit!
+  end
+
   # Finds the +Calendar+ object corresponding to the passed in +id+ parameter.
   def find_calendar
-    @calendar = Calendar.find(params[:id], :include => [:node]).current_version
+    @calendar = Calendar.includes(:node).find(params[:id]).current_version
   end
 
   def find_calendar_items

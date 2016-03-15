@@ -1,5 +1,5 @@
 class AlterContactBoxes < ActiveRecord::Migration
-  def self.up
+  def up
     add_column :contact_boxes, :default_text, :text
 
     [
@@ -18,7 +18,7 @@ class AlterContactBoxes < ActiveRecord::Migration
     end
   end
 
-  def self.down
+  def down
     remove_column :contact_boxes, :default_text
 
     [

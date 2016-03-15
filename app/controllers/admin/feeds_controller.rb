@@ -39,7 +39,7 @@ class Admin::FeedsController < Admin::AdminController
   # * POST /admin/feeds
   # * POST /admin/feeds.xml
   def create
-    @feed = Feed.new(params[:feed])
+    @feed = Feed.new(permitted_attributes)
     @feed.parent = @parent_node
 
     respond_to do |format|
@@ -56,7 +56,7 @@ class Admin::FeedsController < Admin::AdminController
   # * PUT /admin/feeds/:id
   # * PUT /admin/feeds/:id.xml
   def update
-    @feed.attributes = params[:feed]
+    @feed.attributes = permitted_attributes
 
     respond_to do |format|
       if @feed.save(user: current_user)
@@ -71,6 +71,10 @@ class Admin::FeedsController < Admin::AdminController
   end
 
   protected
+
+  def permitted_attributes
+    params.fetch(:feed, {}).permit!
+  end
 
   # Finds the +Feed+ object corresponding to the passed in +id+ parameter.
   def find_feed

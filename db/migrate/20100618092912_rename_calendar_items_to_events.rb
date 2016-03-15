@@ -1,15 +1,15 @@
 class RenameCalendarItemsToEvents < ActiveRecord::Migration
   class Node < ActiveRecord::Base; end
 
-  def self.up
+  def up
     rename_table :calendar_items, :events
 
-    Node.update_all "content_type = 'Event'", "#{Node.quoted_table_name}.content_type = 'CalendarItem'"
+    Node.where("#{Node.quoted_table_name}.content_type = 'CalendarItem'").update_all "content_type = 'Event'"
   end
 
-  def self.down
+  def down
     rename_table :events, :calendar_items
 
-    Node.update_all "content_type = 'CalendarItem'", "#{Node.quoted_table_name}.content_type = 'Event'"
+    Node.where("#{Node.quoted_table_name}.content_type = 'Event'").update_all "content_type = 'CalendarItem'"
   end
 end

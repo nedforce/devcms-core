@@ -44,19 +44,20 @@ class Comment < ActiveRecord::Base
   # Returns comments that are editable for the given +user+.
   def self.editable_comments_for(user, options = {})
     if user.has_role?('editor')
-      user.comments.all({ :include => :node }.merge(options))
+      scope = user.comments.includes(:node)
+      scope = scope.order(options[:order]) if options[:order]
+      scope
     else
-      Comment.all({ :include => :node }.merge(options)).select { |comment| comment.user == user || user.has_role_on?(['admin', 'final_editor'], comment.node) }
+      scope = Comment.includes(:node)
+      scope = scope.order(options[:order]) if options[:order]
+      scope.select { |comment| comment.user == user || user.has_role_on?(['admin', 'final_editor'], comment.node) }
     end
   end
 
   # Helper class method to look up all comments for
   # commentable class name and commentable id.
   def self.find_comments_for_commentable(commentable_str, commentable_id)
-    find(:all,
-      :conditions => ['commentable_type = ? and commentable_id = ?', commentable_str, commentable_id],
-      :order      => 'created_at DESC'
-    )
+    Comment.where('commentable_type = ? AND commentable_id = ?', commentable_str, commentable_id).order(created_at: :desc)
   end
 
   # Helper class method to look up a commentable object

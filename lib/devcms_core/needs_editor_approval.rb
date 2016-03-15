@@ -62,7 +62,7 @@ module DevcmsCore
       super(*(args << { :should_create_version => should_create_version, :extra_version_attributes => extra_version_attributes, :user => user }))
     end
 
-    def update_attributes(attributes, options = {})
+    def update_attributes(attributes)
       user = attributes.delete(:user)
       parent = attributes[:parent]
 
@@ -71,7 +71,7 @@ module DevcmsCore
       end
 
       approval_required = attributes.delete(:approval_required)
-      self.assign_attributes attributes, options
+      self.assign_attributes attributes
       self.save(:user => user, :approval_required => approval_required)
     end
 

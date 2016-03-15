@@ -10,7 +10,7 @@ class NewsletterEditionMailerWorker
   # Send all newsletter editions.
   def send_newsletter_editions
     logger.info 'Finding newsletter editions to send...'
-    editions = NewsletterEdition.all(include: :node, conditions: ['nodes.publishable = ? AND published <> ? AND nodes.publication_start_date <= ?', true, 'published', Time.now])
+    editions = NewsletterEdition.includes(:node).where('nodes.publishable = ? AND published <> ? AND nodes.publication_start_date <= ?', true, 'published', Time.now)
     logger.info "Found #{editions.size} editions to send."
     editions.each do |edition|
       publish_newsletter_edition(edition)
@@ -36,7 +36,7 @@ class NewsletterEditionMailerWorker
     # crash or bail out.
     if queued_subscription.destroy
       begin
-        NewsletterSubscription.edition_for(queued_subscription.newsletter_edition, queued_subscription.user).deliver
+        NewsletterSubscriptionMailer.edition_for(queued_subscription.newsletter_edition, queued_subscription.user).deliver_now
       rescue Exception => e
         logger.info "#{queued_subscription.newsletter_edition.id}: Could not send to user #{queued_subscription.user.id}."
         logger.info "#{queued_subscription.newsletter_edition.id}: #{e.message}."
@@ -57,7 +57,7 @@ class NewsletterEditionMailerWorker
         NewsletterEditionQueue.create(user: subscriber, newsletter_edition: newsletter_edition)
       end
       newsletter_edition.update_attribute(:published, 'publishing')
-      NewsletterEditionQueue.all(conditions: { newsletter_edition_id: newsletter_edition.id })
+      NewsletterEditionQueue.where(newsletter_edition_id: newsletter_edition.id)
     end
   end
 
@@ -66,7 +66,7 @@ class NewsletterEditionMailerWorker
     queue = nil
     if newsletter_edition.published == 'publishing'
       logger.info "#{newsletter_edition.id}: Resuming from existing queue."
-      queue = NewsletterEditionQueue.all(conditions: { newsletter_edition_id: newsletter_edition.id })
+      queue = NewsletterEditionQueue.where(newsletter_edition_id: newsletter_edition.id)
       logger.info "#{newsletter_edition.id}: Found #{@queue.size} queued subscriptions." rescue nil
     else
       logger.info "#{newsletter_edition.id}: Building new publishing queue."

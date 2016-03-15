@@ -16,7 +16,7 @@ class Admin::UsersController < Admin::AdminController
   def index
     @active_page ||= :users
     @roles ||= current_user.role_assignments.map { |role_assignment| role_assignment.name }
-    user_scope = (@active_page == :privileged_users) ? PrivilegedUser.scoped : User.exclusive
+    user_scope = (@active_page == :privileged_users) ? PrivilegedUser.all : User.exclusive
 
     respond_to do |format|
       format.html do
@@ -28,7 +28,7 @@ class Admin::UsersController < Admin::AdminController
         render :action => :index, :layout => false
       end
       format.json do
-        users = User.select('users.login, users.id').where(["users.login LIKE ?", "#{params[:query]}%"])
+        users = User.select('users.login, users.id').where('users.login LIKE ?', "#{params[:query]}%")
         render :json => { :users => users }.to_json, :status => :ok
       end
       format.csv do
@@ -71,7 +71,7 @@ class Admin::UsersController < Admin::AdminController
     params[:user][:interest_ids] ||= []
 
     respond_to do |format|
-      if @user.update_attributes(params[:user])
+      if @user.update_attributes(permitted_attributes)
         format.html do
           flash[:notice] = I18n.t('users.user_update_succesful')
           redirect_to admin_users_path
@@ -114,7 +114,7 @@ class Admin::UsersController < Admin::AdminController
   def accessible_newsletter_archives
     respond_to do |format|
       format.json do
-        newsletter_archives = NewsletterArchive.accessible.all(:select => "#{NewsletterArchive.quoted_table_name}.id, #{NewsletterArchive.quoted_table_name}.title", :order => 'newsletter_archives.title')
+        newsletter_archives = NewsletterArchive.accessible.select("#{NewsletterArchive.quoted_table_name}.id, #{NewsletterArchive.quoted_table_name}.title").reorder(:title)
         newsletter_archives = newsletter_archives.map do |na|
           {
             :id      => na.id,
@@ -132,7 +132,7 @@ class Admin::UsersController < Admin::AdminController
   def interests
     respond_to do |format|
       format.json do
-        interests = Interest.order('title').all.map do |i|
+        interests = Interest.order('title').map do |i|
           {
             :id      => i.id,
             :title   => i.title,
@@ -194,87 +194,91 @@ class Admin::UsersController < Admin::AdminController
 
   protected
 
-    def find_users(user_scope = User.scoped)
-      if !@sort_by_newsletter_archives
-        # Don't eager load newsletter_archives lest the XML builder will fail.
-        # This may be resolved by transforming this controller into JSON or in
-        # a version of Rails > 2.0.2.
-        @sort_field = 'users.created_at' if @sort_field == 'created_at'
+  def permitted_attributes
+    params.fetch(:user, {}).permit(:login, :first_name, :surname, :sex, :email_address, :password, :password_confirmation, newsletter_archive_ids: [], interest_ids: [])
+  end
 
-        user_scope  = user_scope.includes([ :newsletter_archives, :interests ]).where(filter_conditions).order("#{@sort_field} #{@sort_direction}")      
-        @user_count = user_scope.count
-        @users      = user_scope.page(@current_page).per(@page_limit)
+  def find_users(user_scope = User.scoped)
+    if !@sort_by_newsletter_archives
+      # Don't eager load newsletter_archives lest the XML builder will fail.
+      # This may be resolved by transforming this controller into JSON or in
+      # a version of Rails > 2.0.2.
+      @sort_field = 'users.created_at' if @sort_field == 'created_at'
+
+      user_scope  = user_scope.includes([ :newsletter_archives, :interests ]).where(filter_conditions).order("#{@sort_field} #{@sort_direction}")
+      @user_count = user_scope.count
+      @users      = user_scope.page(@current_page).per(@page_limit)
+    else
+      @users      = user_scope.includes([ :newsletter_archives, :interests ]).where(filter_conditions).order("login #{@sort_direction}")
+      @users      = @users.sort_by { |user| user.newsletter_archives.sort_by { |archive| archive.title.upcase }.map { |archive| archive.title }.join(', ') }
+      @users      = @users.reverse if @sort_direction == 'DESC'
+      @user_count = @users.size
+      @users      = @users.values_at((@page_limit * (@current_page - 1))..(@page_limit * @current_page - 1)).compact
+    end
+  end
+
+  def find_user
+    @user = User.find(params[:id])
+  end
+
+  # Finds sorting parameters.
+  def set_sorting
+    if extjs_sorting?
+      @sort_direction = (params[:dir] == 'ASC' ? 'ASC' : 'DESC')
+
+      # We can't sort the newsletter subscriptions in SQL...
+      if params[:sort].include?('newsletter_archives')
+        @sort_by_newsletter_archives = true
       else
-        @users      = user_scope.includes([ :newsletter_archives, :interests ]).where(filter_conditions).order("login #{@sort_direction}")
-        @users      = @users.sort_by { |user| user.newsletter_archives.sort_by { |archive| archive.title.upcase }.map { |archive| archive.title }.join(', ') }
-        @users      = @users.reverse if @sort_direction == 'DESC'
-        @user_count = @users.size
-        @users      = @users.values_at((@page_limit * (@current_page - 1))..(@page_limit * @current_page - 1)).compact
+        # ...but we can sort all non-polymorphic relationships
+        @sort_field = ActiveRecord::Base.connection.quote_column_name(params[:sort])
       end
+    else
+      @sort_field = 'login'
     end
+    @sort_field = "UPPER(#{@sort_field})" unless @sort_field =~ /(id|created_at)/
+  end
 
-    def find_user
-      @user = User.find(params[:id])
+  # Checks whether some filters are defined in Ext.
+  # If not, don't return any new conditions, otherwise,
+  # generate the conditions defined by the filters
+  def filter_conditions
+    if params[:filter]
+      generate_filter_conditions
+    else
+      []
     end
+  end
 
-    # Finds sorting parameters.
-    def set_sorting
-      if extjs_sorting?
-        @sort_direction = (params[:dir] == 'ASC' ? 'ASC' : 'DESC')
-
-        # We can't sort the newsletter subscriptions in SQL...
-        if params[:sort].include?('newsletter_archives')
-          @sort_by_newsletter_archives = true
+  # Generates SQL conditions based on the filter parameter
+  def generate_filter_conditions
+    filters = params[:filter]
+    conditions = filters.keys.map do |key|
+      filter      = filters[key]
+      filterType  = filter[:data][:type]
+      filterValue = filter[:data][:value]
+      filterField = 'users.' + filter[:field]
+      case filterType
+        when 'string'
+          [ filterField + ' LIKE ?', filterValue + '%']
+        when 'list'
+          sex = (filterValue == I18n.t('users.male')) ? 'm' : 'f'
+          [ filterField + ' = ?', sex]
+        when 'date'
+          comparison = filter[:data][:comparison]
+          date = DateTime.strptime(filterValue, "%m/%d/%Y")
+          if comparison == 'gt'
+            [ filterField + ' > ?', date ]
+          elsif comparison == 'lt'
+            [ filterField + ' < ?', date ]
+          elsif comparison == 'eq'
+            [ filterField + ' BETWEEN ? AND ? ', date, date + 1.days]
+          end
         else
-          # ...but we can sort all non-polymorphic relationships
-          @sort_field = ActiveRecord::Base.connection.quote_column_name(params[:sort])
-        end
-      else
-        @sort_field = 'login'
-      end
-      @sort_field = "UPPER(#{@sort_field})" unless @sort_field =~ /(id|created_at)/
-    end
-
-    # Checks whether some filters are defined in Ext.
-    # If not, don't return any new conditions, otherwise,
-    # generate the conditions defined by the filters
-    def filter_conditions
-      if params[:filter]
-        generate_filter_conditions
-      else
-        []
+          [ filterField + ' = ?', filterValue ]
       end
     end
 
-    # Generates SQL conditions based on the filter parameter
-    def generate_filter_conditions
-      filters = params[:filter]
-      conditions = filters.keys.map do |key|
-        filter      = filters[key]
-        filterType  = filter[:data][:type]
-        filterValue = filter[:data][:value]
-        filterField = 'users.' + filter[:field]
-        case filterType
-          when 'string'
-            [ filterField + ' LIKE ?', filterValue + '%']
-          when 'list'
-            sex = (filterValue == I18n.t('users.male')) ? 'm' : 'f'
-            [ filterField + ' = ?', sex]
-          when 'date'
-            comparison = filter[:data][:comparison]
-            date = DateTime.strptime(filterValue, "%m/%d/%Y")
-            if comparison == 'gt'
-              [ filterField + ' > ?', date ]
-            elsif comparison == 'lt'
-              [ filterField + ' < ?', date ]
-            elsif comparison == 'eq'
-              [ filterField + ' BETWEEN ? AND ? ', date, date + 1.days]
-            end
-          else
-            [ filterField + ' = ?', filterValue ]
-        end
-      end
-
-      [conditions.map { |condition| condition.first }.join(' AND ')] + conditions.map { |condition| condition.last(condition.size - 1) }.flatten
-    end
+    [conditions.map { |condition| condition.first }.join(' AND ')] + conditions.map { |condition| condition.last(condition.size - 1) }.flatten
+  end
 end

@@ -28,7 +28,7 @@ class Admin::ContentCopiesController < Admin::AdminController
   # * POST /admin/content_copies.json
   # * POST /admin/content_copies.xml
   def create
-    @content_copy        = ContentCopy.new(params[:content_copy])
+    @content_copy        = ContentCopy.new(permitted_attributes)
     @content_copy.parent = @parent_node
 
     respond_to do |format|
@@ -45,8 +45,12 @@ class Admin::ContentCopiesController < Admin::AdminController
 
   protected
 
+  def permitted_attributes
+    params.fetch(:content_copy, {}).permit!
+  end
+
   # Finds the ContentCopy object corresponding to the passed in +id+ parameter.
   def find_content_copy
-    @content_copy = ContentCopy.find(params[:id], include: [:copied_node]).current_version
+    @content_copy = ContentCopy.includes(:copied_node).find(params[:id]).current_version
   end
 end

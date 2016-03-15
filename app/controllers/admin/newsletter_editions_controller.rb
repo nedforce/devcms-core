@@ -44,7 +44,7 @@ class Admin::NewsletterEditionsController < Admin::AdminController
 
   # * GET /admin/newsletter_editions/new
   def new
-    @newsletter_edition = @newsletter_archive.newsletter_editions.build({ :parent => @newsletter_archive.node }.merge(params[:newsletter_edition] || {}))
+    @newsletter_edition = @newsletter_archive.newsletter_editions.build({ parent: @newsletter_archive.node }.reverse_merge(permitted_attributes || {}))
 
     if params[:items]
       @item_sortlets = item_sortlet_hash_for_ids(params[:items])
@@ -55,7 +55,7 @@ class Admin::NewsletterEditionsController < Admin::AdminController
 
   # * GET /admin/newsletter_editions/:id/edit
   def edit
-    @newsletter_edition.attributes = params[:newsletter_edition]
+    @newsletter_edition.attributes = permitted_attributes
 
     if params[:items]
       @item_sortlets = item_sortlet_hash_for_ids(params[:items])
@@ -67,7 +67,7 @@ class Admin::NewsletterEditionsController < Admin::AdminController
   # * POST /admin/newsletter_editions/create
   # * POST /admin/newsletter_editions/create.xml
   def create
-    @newsletter_edition        = @newsletter_archive.newsletter_editions.build(params[:newsletter_edition])
+    @newsletter_edition        = @newsletter_archive.newsletter_editions.build(permitted_attributes)
     @newsletter_edition.parent = @parent_node
 
     respond_to do |format|
@@ -91,7 +91,7 @@ class Admin::NewsletterEditionsController < Admin::AdminController
   # * PUT /admin/newsletter_editions/update/:id
   # * PUT /admin/newsletter_editions/update/:id.xml
   def update
-    @newsletter_edition.attributes = params[:newsletter_edition]
+    @newsletter_edition.attributes = permitted_attributes
 
     respond_to do |format|
       if @commit_type == 'preview' && @newsletter_edition.valid?
@@ -119,6 +119,10 @@ class Admin::NewsletterEditionsController < Admin::AdminController
 
 protected
 
+  def permitted_attributes
+    params.fetch(:newsletter_edition, {}).permit!
+  end
+
   # Finds the +NewsletterArchive+ object corresponding to the parent node's content.
   def find_newsletter_archive
     @newsletter_archive = @parent_node.content
@@ -126,7 +130,7 @@ protected
 
   # Finds the +NewsItem+ object corresponding to the passed in +id+ parameter.
   def find_newsletter_edition
-    @newsletter_edition = ((@newsletter_archive) ? @newsletter_archive.newsletter_editions : NewsletterEdition).find(params[:id], :include => :node).current_version
+    @newsletter_edition = ((@newsletter_archive) ? @newsletter_archive.newsletter_editions : NewsletterEdition).includes(:node).find(params[:id]).current_version
   end
 
   def get_item_ids

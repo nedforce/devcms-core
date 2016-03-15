@@ -109,7 +109,7 @@ protected
   def render_image image_data_or_file, type = :file
     if @image_format
       respond_to do |format|
-        headers['Cache-Control'] = (@image.node.private? ? 'private' : 'public') # this can be cached by proxy servers
+        expires_in(24.hours, public: true) unless @image.node.private? # this can be cached by proxy servers
 
         options = {
           :type => Image::MIME_TYPES[@image_format],

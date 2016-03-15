@@ -49,7 +49,7 @@ class Admin::NodesController < Admin::AdminController
       end
       format.json do
         active_node = params.has_key?(:active_node_id) ? Node.find(params[:active_node_id]) : nil
-        @nodes = @root_node.children.all(:include => [:content, :role_assignments])
+        @nodes = @root_node.children.includes([:content, :role_assignments])
         render :json => @nodes.map { |node| node.to_tree_node_for(current_user, { :expand_if_ancestor_of => active_node }) }.to_json
       end
     end
@@ -326,6 +326,10 @@ protected
   end
 
 private
+
+  def permitted_attributes
+    params.fetch(:node).except!(:id, :hits, :content_type, :sub_content_type, :url_alias, :custom_url_alias, :hidden, :private, :publishable, :deleted_at, {}).permit!
+  end
 
   def verify_xhr
     render(:text => '400 Bad Request', :status => 400) unless request.xhr?

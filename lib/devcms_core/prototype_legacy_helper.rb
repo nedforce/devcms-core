@@ -216,7 +216,7 @@ module PrototypeHelper
 
     options[:html] ||= {}
     options[:html][:onsubmit] =
-      (options[:html][:onsubmit] ? options[:html][:onsubmit] + '; ' : '') +
+      (options[:html][:onsubmit] ? options[:html][:onsubmit] + "; " : "") +
       "#{remote_function(options)}; return false;"
 
     form_tag(options[:html].delete(:action) || url_for(options[:url]), options[:html], &block)
@@ -267,12 +267,12 @@ module PrototypeHelper
     when Array
       object = record_or_name_or_array.last
       object_name = ActiveModel::Naming.singular(object)
-      apply_form_for_options!(record_or_name_or_array, options)
+      apply_form_for_options!(record_or_name_or_array, object, options)
       args.unshift object
     else
       object      = record_or_name_or_array
       object_name = ActiveModel::Naming.singular(record_or_name_or_array)
-      apply_form_for_options!(object, options)
+      apply_form_for_options!(object, object, options)
       args.unshift object
     end
 
@@ -351,7 +351,7 @@ module PrototypeHelper
   #
   # Example:
   #
-  #   # Sends params: { :title => 'Title of the book' } when the book_title input
+  #   # Sends params: {:title => 'Title of the book'} when the book_title input
   #   # field is changed.
   #   observe_field 'book_title',
   #     :url => 'http://example.com/books/edit/1',
@@ -414,7 +414,6 @@ module PrototypeHelper
   end
 
   protected
-
     def build_observer(klass, name, options = {})
       if options[:with] && (options[:with] !~ /[\{=(.]/)
         options[:with] = "'#{options[:with]}=' + encodeURIComponent(value)"

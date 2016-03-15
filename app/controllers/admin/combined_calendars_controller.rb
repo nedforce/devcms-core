@@ -29,7 +29,7 @@ class Admin::CombinedCalendarsController < Admin::AdminController
 
   # * GET /admin/combined_calendars/new
   def new
-    @combined_calendar = CombinedCalendar.new(params[:combined_calendar])
+    @combined_calendar = CombinedCalendar.new(permitted_attributes)
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/new', :locals => { :record => @combined_calendar } }
@@ -38,7 +38,7 @@ class Admin::CombinedCalendarsController < Admin::AdminController
 
   # * GET /admin/combined_calendars/:id/edit
   def edit
-    @combined_calendar.attributes = params[:combined_calendar]
+    @combined_calendar.attributes = permitted_attributes
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/edit', :locals => { :record => @combined_calendar } }
@@ -48,7 +48,7 @@ class Admin::CombinedCalendarsController < Admin::AdminController
   # * POST /admin/combined_calendars
   # * POST /admin/combined_calendars.xml
   def create
-    @combined_calendar        = CombinedCalendar.new(params[:combined_calendar])
+    @combined_calendar        = CombinedCalendar.new(permitted_attributes)
     @combined_calendar.parent = @parent_node
 
     respond_to do |format|
@@ -69,7 +69,7 @@ class Admin::CombinedCalendarsController < Admin::AdminController
   # * PUT /admin/combined_calendars/:id
   # * PUT /admin/combined_calendars/:id.xml
   def update
-    @combined_calendar.attributes = params[:combined_calendar]
+    @combined_calendar.attributes = permitted_attributes
 
     respond_to do |format|
       if @commit_type == 'preview' && @combined_calendar.valid?
@@ -91,9 +91,13 @@ class Admin::CombinedCalendarsController < Admin::AdminController
 
 protected
 
+  def permitted_attributes
+    params.fetch(:combined_calendar, {}).permit!
+  end
+
   # Finds the +CombinedCalendar+ object corresponding to the passed in +id+ parameter.
   def find_combined_calendar
-    @combined_calendar = CombinedCalendar.find(params[:id], :include => :node).current_version
+    @combined_calendar = CombinedCalendar.includes(:node).find(params[:id]).current_version
   end
 
   def find_calendar_items

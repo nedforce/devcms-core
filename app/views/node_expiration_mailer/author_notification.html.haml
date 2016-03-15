@@ -11,7 +11,7 @@
     %tbody
       %tr
         %td= link_to @node.content.title, aliased_or_delegated_url(@node, host: @host)
-        %td= @node.ancestors.all(include: :content).map { |n| n.content.content_title }.join(' > ').to_s
+        %td= @node.ancestors.includes(:content).map { |n| n.content.content_title }.join(' > ').to_s
         %td= @node.updated_at
         %td= @node.expires_on
         %td= link_to I18n.t('layouts.lookup'), admin_nodes_url(active_node_id: @node.id, host: @host)

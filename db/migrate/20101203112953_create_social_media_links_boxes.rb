@@ -1,5 +1,5 @@
 class CreateSocialMediaLinksBoxes < ActiveRecord::Migration
-  def self.up
+  def up
     create_table :social_media_links_boxes do |t|
       t.string :title, null: false
 
@@ -14,7 +14,7 @@ class CreateSocialMediaLinksBoxes < ActiveRecord::Migration
     end
   end
 
-  def self.down
+  def down
     drop_table :social_media_links_boxes
   end
 end

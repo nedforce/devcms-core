@@ -24,6 +24,6 @@ class PollsController < ApplicationController
 
   def find_poll_questions
     @question          = @poll.active_question
-    @earlier_questions = @poll.poll_questions.all(order: 'poll_questions.created_at DESC') - [@question]
+    @earlier_questions = @poll.poll_questions.order(created_at: :desc).to_a - [@question]
   end
 end

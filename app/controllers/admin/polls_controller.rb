@@ -28,7 +28,7 @@ class Admin::PollsController < Admin::AdminController
 
    # * GET /admin/polls/new
   def new
-    @poll = Poll.new(params[:poll])
+    @poll = Poll.new(permitted_attributes)
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/new', :locals => { :record => @poll } }
@@ -37,7 +37,7 @@ class Admin::PollsController < Admin::AdminController
 
   # * GET /admin/polls/:id/edit
   def edit
-    @poll.attributes = params[:poll]
+    @poll.attributes = permitted_attributes
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/edit', :locals => { :record => @poll } }
@@ -47,7 +47,7 @@ class Admin::PollsController < Admin::AdminController
   # * POST /admin/polls
   # * POST /admin/polls.xml
   def create
-    @poll        = Poll.new(params[:poll])
+    @poll        = Poll.new(permitted_attributes)
     @poll.parent = @parent_node
 
     respond_to do |format|
@@ -67,7 +67,7 @@ class Admin::PollsController < Admin::AdminController
   # * PUT /admin/polls/:id
   # * PUT /admin/polls/:id.xml
   def update
-    @poll.attributes = params[:poll]
+    @poll.attributes = permitted_attributes
 
     respond_to do |format|
       if @commit_type == 'preview' && @poll.valid?
@@ -88,13 +88,17 @@ class Admin::PollsController < Admin::AdminController
 
 protected
 
+  def permitted_attributes
+    params.fetch(:poll, {}).permit!
+  end
+
   # Finds the +Poll+ object corresponding to the passed in +id+ parameter.
   def find_poll
-    @poll = Poll.find(params[:id], :include => :node).current_version
+    @poll = Poll.includes(:node).find(params[:id]).current_version
   end
 
   def find_poll_questions
     @question          = @poll.active_question
-    @earlier_questions = @poll.poll_questions.accessible.all(:order => 'poll_questions.created_at DESC') - [@question]
+    @earlier_questions = @poll.poll_questions.accessible.reorder(created_at: :desc).to_a - [@question]
   end
 end

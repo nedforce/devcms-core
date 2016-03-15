@@ -1,10 +1,10 @@
 class Share < ActiveRecord::Base
   # Some methods to create a tableless ActiveRecord model.
-  # See http://railscasts.com/episodes/193-tableless-model for more info.
-  def self.columns() @columns ||= []; end
+  def self.columns; @columns ||= []; end
 
   def self.column(name, sql_type = nil, default = nil, null = true)
-    columns << ActiveRecord::ConnectionAdapters::Column.new(name.to_s, default, sql_type.to_s, null)
+    type = "ActiveRecord::Type::#{sql_type.to_s.camelize}".constantize.new
+    columns << ActiveRecord::ConnectionAdapters::Column.new(name.to_s, default, type, null)
   end
 
   column :node_id,            :integer
@@ -26,6 +26,6 @@ class Share < ActiveRecord::Base
   end
 
   def send_recommendation_email
-    ShareMailer.recommendation_email(self).deliver
+    ShareMailer.recommendation_email(self).deliver_now
   end
 end

@@ -4,7 +4,6 @@
 class ApplicationController < ActionController::Base
   include DevcmsCore::AuthenticatedSystem
   include DevcmsCore::RoleRequirementSystem
-  include ::SslRequirement
   include ::SecureHeaders
 
   # Set the X-Frame-Options header (part of the secure_headers gem).
@@ -182,7 +181,7 @@ protected
         # Nested controller access
         if parent_resource_type
           name = parent_resource_type.name
-          node = current_site.self_and_descendants.accessible.with_content_type(name).include_content.first(:conditions => { :content_id => params["#{name.underscore}_id"].to_i })
+          node = current_site.self_and_descendants.accessible.with_content_type(name).include_content.where(content_id: params["#{name.underscore}_id"].to_i).first
           @context_node = node.self_and_ancestors.sections.last if node
         else
           @context_node = current_site
@@ -283,7 +282,7 @@ protected
     @image_content_nodes = []
     @attachment_nodes = []
 
-    @node.children.accessible.with_content_type(%w(Image Attachment ContentCopy)).include_content.all.each do |node|
+    @node.children.accessible.with_content_type(%w(Image Attachment ContentCopy)).include_content.each do |node|
       node = node.content.copied_node if node.content_type == 'ContentCopy'
       if node.content_type == 'Image' && !node.content.is_for_header? && node.content.show_in_listing
         @image_content_nodes << node.content
@@ -294,6 +293,11 @@ protected
   end
 
   ## SSL related functionality ##
+  def self.ssl_required *actions
+    options = { if: :ssl_required? }
+    options[:only] = actions if actions.any?
+    force_ssl options
+  end
 
   # Returns true if SSL encryption is required, else false.
   def ssl_required?
@@ -335,8 +339,8 @@ protected
   end
 
   def find_accessible_private_items_for(user)
-    role_assignments = user.role_assignments.all
-    Node.accessible.private.sections.order(:position).select do |node|
+    role_assignments = user.role_assignments.to_a
+    Node.accessible.is_private.sections.order(:position).select do |node|
       role_assignments.any? { |ra| node.self_and_ancestor_ids.include?(ra.node_id) }
     end
   end
@@ -425,7 +429,7 @@ protected
   end
 
   def find_accessible_children_for_menus
-    @accessible_children_for_menu = current_site.children.accessible.public.shown_in_menu.all(:order => 'nodes.position ASC')
+    @accessible_children_for_menu = current_site.children.accessible.is_public.shown_in_menu.reorder(position: :asc)
   end
 
   def redirect_to_full_domain

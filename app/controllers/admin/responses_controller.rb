@@ -18,7 +18,7 @@ class Admin::ResponsesController < Admin::AdminController
   # * GET /admin/contact_forms/:contact_form_id/responses.xls
   def index
     if params[:type] == 'xml'
-      @responses = Response.where(["contact_form_id = ?", params[:contact_form_id].to_i]).order("#{@sort_field} #{@sort_direction}").page(@current_page).per(@page_limit)
+      @responses = Response.where(["contact_form_id = ?", params[:contact_form_id].to_i]).reorder("#{@sort_field} #{@sort_direction}").page(@current_page).per(@page_limit)
     else
       @responses = @contact_form.responses
     end
@@ -37,7 +37,7 @@ class Admin::ResponsesController < Admin::AdminController
     @response_field = ResponseField.create(:response_id => params[:response_id], :contact_form_field_id => params[:contact_form_field_id]) if @response_field.nil?
 
     respond_to do |format|
-      if @response_field.update_attributes(params[:response_field])
+      if @response_field.update_attributes(permitted_attributes)
         format.xml { head :ok }
       else
         format.xml { render :xml => @response_field.errors, :status => :unprocessable_entity }
@@ -61,7 +61,7 @@ class Admin::ResponsesController < Admin::AdminController
   def upload_csv
     # Determine the required order of files for the uploaded csv
     fields = []
-    ContactFormField.all(:order => 'position asc', :conditions => { :contact_form_id => @contact_form.id }).each do |field|
+    ContactFormField.where(contact_form_id: @contact_form.id).order(position: :asc).each do |field|
       fields << field.label
     end
     @csv_headers = fields.join(',');
@@ -88,7 +88,7 @@ class Admin::ResponsesController < Admin::AdminController
       else
         field_labels = []
         fields = {}
-        ContactFormField.all(:order => 'position asc', :conditions => { :contact_form_id => @contact_form.id }).each do |field|
+        ContactFormField.where(contact_form_id: @contact_form.id).order(position: :asc).each do |field|
           fields[field.id] = field.label
           field_labels << field.label
         end
@@ -122,9 +122,13 @@ class Admin::ResponsesController < Admin::AdminController
 
   protected
 
+  def permitted_attributes
+    params.fetch(:response_field, {}).permit!
+  end
+
   # Finds the +ContactForm+ object corresponding to the passed +id+ parameter.
   def find_contact_form
-    @contact_form = ContactForm.find(params[:contact_form_id], :include => :contact_form_fields)
+    @contact_form = ContactForm.includes(:contact_form_fields).find(params[:contact_form_id])
   end
 
   # Finds sorting parameters.

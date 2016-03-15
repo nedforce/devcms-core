@@ -1,7 +1,11 @@
 namespace :db do
   namespace :populate do
+    task base: :environment do
+      ActionMailer::Base.perform_deliveries = false
+    end
+
     desc 'Create synonym data. The thesaurus should be delimited with semicolons and linebreaks'
-    task synonyms: :environment do
+    task synonyms: :base do
       thesaurus = File.join(Rails.root, 'thesaurus', 'basis-nl.txt')
       f = File.open(thesaurus)
       begin
@@ -21,7 +25,7 @@ namespace :db do
             one with admin permissions on the root node (login: \'webmaster\', password: \'admin\')
             one with editor permissions on the business section node (login: \'redacteur\', password: \'editor\')
             one with final_editor permissions on the business section node and the inhabitants section node (login: \'eindredacteur\', password: \'final_editor\')'
-    task(privileged_users: :environment) do
+    task(privileged_users: :base) do
       if Node.root
         u = PrivilegedUser.create!(login: 'webmaster', email_address: 'webmaster@example.com', password: 'admin', password_confirmation: 'admin')
         u.update_attribute(:verified, true)
@@ -38,7 +42,7 @@ namespace :db do
     end
 
     desc 'Create users for all indexers'
-    task(indexer_users: :environment) do
+    task(indexer_users: :base) do
       if Node.root
         u = User.create!(login: 'luminis', email_address: 'luminis@example.com', password: 'asdY23jhnASD8sd', password_confirmation: 'asdY23jhnASD8sd')
         u.update_attribute(:verified, true)
@@ -49,7 +53,7 @@ namespace :db do
     end
 
     desc 'Create approximately 1000 User instances with random data'
-    task(users: :environment) do
+    task(users: :base) do
       require 'faker'
 
       ActiveRecord::Base.transaction do
@@ -74,12 +78,12 @@ namespace :db do
     end
 
     desc 'Create a node structure with semi-random content'
-    task(nodes: :environment) do
+    task(nodes: :base) do
       require 'faker'
 
       ActiveRecord::Base.transaction do
-        root_section = Site.create!(title: 'Website', description: Faker::Lorem.sentence, expiration_email_subject: 'Content onder uw beheer is verouderd', expiration_email_body: "<p>De onderstaande pagina is al enige tijd niet meer bijgewerkt en is inmiddels verlopen.</p><p>Gelieve de inhoud van deze pagina's te controleren en bij te werken.</p><p>Neem voor meer informatie contact op met de webredactie.</p>")
-        root_section.node.update_attributes!(layout: 'default', layout_variant: 'four_columns', layout_configuration: { 'template_color' => 'default' })
+        root_section = Site.create!(domain: 'localhost', title: 'Website', description: Faker::Lorem.sentence, expiration_email_subject: 'Content onder uw beheer is verouderd', expiration_email_body: "<p>De onderstaande pagina is al enige tijd niet meer bijgewerkt en is inmiddels verlopen.</p><p>Gelieve de inhoud van deze pagina's te controleren en bij te werken.</p><p>Neem voor meer informatie contact op met de webredactie.</p>")
+        root_section.node.update_attributes!(layout: 'default', layout_variant: 'two_columns', layout_configuration: { 'template_color' => 'default' })
 
         news_archive = NewsArchive.new(parent: root_section.node, title: 'Home', description: Faker::Lorem.sentence)
         news_archive.node.url_alias = 'home-nieuws'

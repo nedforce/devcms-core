@@ -41,7 +41,7 @@ class Admin::CalendarItemsController < Admin::AdminController
 
   # * GET /admin/calendar_items/new
   def new
-    @calendar_item = CalendarItem.new(params[:calendar_item] || {})
+    @calendar_item = CalendarItem.new(permitted_attributes || {})
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/new', :locals => { :record => @calendar_item } }
@@ -50,7 +50,7 @@ class Admin::CalendarItemsController < Admin::AdminController
 
   # * GET /admin/calendar_items/:id/edit
   def edit
-    @calendar_item.attributes = params[:calendar_item]
+    @calendar_item.attributes = permitted_attributes
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/edit', :locals => { :record => @calendar_item } }
@@ -60,7 +60,7 @@ class Admin::CalendarItemsController < Admin::AdminController
   # * POST /admin/calendar_items
   # * POST /admin/calendar_items.xml
   def create
-    @calendar_item        = CalendarItem.new(params[:calendar_item])
+    @calendar_item        = CalendarItem.new(permitted_attributes)
     @calendar_item.parent = @parent_node
 
     respond_to do |format|
@@ -87,7 +87,7 @@ class Admin::CalendarItemsController < Admin::AdminController
   # * PUT /admin/calendar_items/:id
   # * PUT /admin/calendar_items/publication_date1.xml
   def update
-    @calendar_item.attributes = params[:calendar_item]
+    @calendar_item.attributes = permitted_attributes
 
     respond_to do |format|
       if @commit_type == 'preview' && @calendar_item.valid?
@@ -121,6 +121,10 @@ class Admin::CalendarItemsController < Admin::AdminController
 
 protected
 
+  def permitted_attributes
+    params.fetch(:calendar_item, {}).except!(:id, :repeat_identifier).permit!
+  end
+
   # Finds the +Calendar+ object corresponding to the parent node's content.
   def find_calendar
     @calendar = @parent_node.content
@@ -128,6 +132,6 @@ protected
 
   # Finds the +CalendarItem+ object corresponding to the passed in +id+ parameter.
   def find_calendar_item
-    @calendar_item = CalendarItem.find(params[:id], :include => :node).current_version
+    @calendar_item = CalendarItem.includes(:node).find(params[:id]).current_version
   end
 end

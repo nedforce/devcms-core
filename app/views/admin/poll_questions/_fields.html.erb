@@ -95,7 +95,7 @@ var addField = function() {
 var addFieldBtn = new Ext.Button({
   cls: 'x-btn-text-icon',
   style: 'margin-left: 150px',
-  icon: '/images/icons/add.png',
+  icon: '<%= image_path('icons/add.png') %>',
   text: '<%= t "polls.add_option" -%>',
   listeners: {
       'click': addField

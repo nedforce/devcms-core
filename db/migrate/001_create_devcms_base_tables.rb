@@ -1,5 +1,5 @@
 class CreateDevcmsBaseTables < ActiveRecord::Migration
-  def self.up
+  def up
     create_table "abbreviations", :force => true do |t|
       t.string   "abbr",       :null => false
       t.string   "definition", :null => false
@@ -615,69 +615,69 @@ class CreateDevcmsBaseTables < ActiveRecord::Migration
     add_index "weblogs", ["updated_at"], :name => "index_weblogs_on_updated_at"
     add_index "weblogs", ["weblog_archive_id", "user_id"], :name => "index_weblogs_on_weblog_archive_id_and_user_id", :unique => true
 
-    add_foreign_key "agenda_items", ["calendar_item_id"], "calendar_items", ["id"], :on_delete => :cascade, :name => "agenda_items_calendar_item_id_fkey"
-    add_foreign_key "agenda_items", ["agenda_item_category_id"], "agenda_item_categories", ["id"], :on_delete => :cascade, :name => "agenda_items_agenda_item_category_id_fkey"
+    add_foreign_key "agenda_items", "calendar_items", :on_delete => :cascade, :name => "agenda_items_calendar_item_id_fkey"
+    add_foreign_key "agenda_items", "agenda_item_categories", :on_delete => :cascade, :name => "agenda_items_agenda_item_category_id_fkey"
 
-    add_foreign_key "attachments", ["parent_id"], "attachments", ["id"], :on_delete => :cascade, :name => "attachments_parent_id_fkey"
-    add_foreign_key "attachments", ["db_file_id"], "db_files", ["id"], :on_delete => :cascade, :name => "attachments_db_file_id_fkey"
+    add_foreign_key "attachments", "attachments", :column => "parent_id", :on_delete => :cascade, :name => "attachments_parent_id_fkey"
+    add_foreign_key "attachments", "db_files", :on_delete => :cascade, :name => "attachments_db_file_id_fkey"
 
-    add_foreign_key "calendar_items", ["calendar_id"], "calendars", ["id"], :on_delete => :cascade, :name => "calendar_items_calendar_id_fkey"
-    add_foreign_key "calendar_items", ["meeting_category_id"], "meeting_categories", ["id"], :on_delete => :cascade, :name => "calendar_items_meeting_category_id_fkey"
+    add_foreign_key "calendar_items", "calendars", :on_delete => :cascade, :name => "calendar_items_calendar_id_fkey"
+    add_foreign_key "calendar_items", "meeting_categories", :on_delete => :cascade, :name => "calendar_items_meeting_category_id_fkey"
 
-    add_foreign_key "categories", ["parent_id"], "categories", ["id"], :on_delete => :cascade, :name => "categories_parent_id_fkey"
+    add_foreign_key "categories", "categories", :column => "parent_id", :on_delete => :cascade, :name => "categories_parent_id_fkey"
 
-    add_foreign_key "contact_form_fields", ["contact_form_id"], "contact_forms", ["id"], :on_delete => :cascade, :name => "contact_form_fields_contact_form_id_fkey"
+    add_foreign_key "contact_form_fields", "contact_forms", :on_delete => :cascade, :name => "contact_form_fields_contact_form_id_fkey"
 
-    add_foreign_key "content_copies", ["copied_node_id"], "nodes", ["id"], :on_delete => :cascade, :name => "content_copies_copied_node_id_fkey"
+    add_foreign_key "content_copies", "nodes", :column => "copied_node_id", :on_delete => :cascade, :name => "content_copies_copied_node_id_fkey"
 
-    add_foreign_key "forum_posts", ["forum_thread_id"], "forum_threads", ["id"], :on_delete => :cascade, :name => "forum_posts_forum_thread_id_fkey"
+    add_foreign_key "forum_posts", "forum_threads", :on_delete => :cascade, :name => "forum_posts_forum_thread_id_fkey"
 
-    add_foreign_key "forum_threads", ["user_id"], "users", ["id"], :on_delete => :cascade, :name => "forum_threads_user_id_fkey"
-    add_foreign_key "forum_threads", ["forum_topic_id"], "forum_topics", ["id"], :on_delete => :cascade, :name => "forum_threads_forum_topic_id_fkey"
+    add_foreign_key "forum_threads", "users", :on_delete => :cascade, :name => "forum_threads_user_id_fkey"
+    add_foreign_key "forum_threads", "forum_topics", :on_delete => :cascade, :name => "forum_threads_forum_topic_id_fkey"
 
-    add_foreign_key "forum_topics", ["forum_id"], "forums", ["id"], :on_delete => :cascade, :name => "forum_topics_forum_id_fkey"
+    add_foreign_key "forum_topics", "forums", :on_delete => :cascade, :name => "forum_topics_forum_id_fkey"
 
-    add_foreign_key "interests_users", ["interest_id"], "interests", ["id"], :on_delete => :cascade, :name => "interests_users_interest_id_fkey"
-    add_foreign_key "interests_users", ["user_id"], "users", ["id"], :on_delete => :cascade, :name => "interests_users_user_id_fkey"
+    add_foreign_key "interests_users", "interests", :on_delete => :cascade, :name => "interests_users_interest_id_fkey"
+    add_foreign_key "interests_users", "users", :on_delete => :cascade, :name => "interests_users_user_id_fkey"
 
-    add_foreign_key "links", ["linked_node_id"], "nodes", ["id"], :on_delete => :cascade, :name => "links_linked_node_id_fkey"
+    add_foreign_key "links", "nodes", :column => "linked_node_id", :on_delete => :cascade, :name => "links_linked_node_id_fkey"
 
-    add_foreign_key "news_items", ["news_archive_id"], "news_archives", ["id"], :on_delete => :cascade, :name => "news_items_news_archive_id_fkey"
+    add_foreign_key "news_items", "news_archives", :on_delete => :cascade, :name => "news_items_news_archive_id_fkey"
 
-    add_foreign_key "newsletter_archives_users", ["newsletter_archive_id"], "newsletter_archives", ["id"], :on_delete => :cascade, :name => "newsletter_archives_users_newsletter_archive_id_fkey"
-    add_foreign_key "newsletter_archives_users", ["user_id"], "users", ["id"], :on_delete => :cascade, :name => "newsletter_archives_users_user_id_fkey"
+    add_foreign_key "newsletter_archives_users", "newsletter_archives",  :on_delete => :cascade, :name => "newsletter_archives_users_newsletter_archive_id_fkey"
+    add_foreign_key "newsletter_archives_users", "users", :on_delete => :cascade, :name => "newsletter_archives_users_user_id_fkey"
 
-    add_foreign_key "newsletter_edition_items", ["newsletter_edition_id"], "newsletter_editions", ["id"], :on_delete => :cascade, :name => "newsletter_edition_items_newsletter_edition_id_fkey"
+    add_foreign_key "newsletter_edition_items", "newsletter_editions", :on_delete => :cascade, :name => "newsletter_edition_items_newsletter_edition_id_fkey"
 
-    add_foreign_key "newsletter_edition_queues", ["newsletter_edition_id"], "newsletter_editions", ["id"], :on_delete => :cascade, :name => "newsletter_edition_queues_newsletter_edition_id_fkey"
-    add_foreign_key "newsletter_edition_queues", ["user_id"], "users", ["id"], :on_delete => :cascade, :name => "newsletter_edition_queues_user_id_fkey"
+    add_foreign_key "newsletter_edition_queues", "newsletter_editions", :on_delete => :cascade, :name => "newsletter_edition_queues_newsletter_edition_id_fkey"
+    add_foreign_key "newsletter_edition_queues", "users", :on_delete => :cascade, :name => "newsletter_edition_queues_user_id_fkey"
 
-    add_foreign_key "newsletter_editions", ["newsletter_archive_id"], "newsletter_archives", ["id"], :on_delete => :cascade, :name => "newsletter_editions_newsletter_archive_id_fkey"
+    add_foreign_key "newsletter_editions", "newsletter_archives", :on_delete => :cascade, :name => "newsletter_editions_newsletter_archive_id_fkey"
 
-    add_foreign_key "nodes", ["parent_id"], "nodes", ["id"], :on_delete => :cascade, :name => "nodes_parent_id_fkey"
-    add_foreign_key "nodes", ["template_id"], "templates", ["id"], :on_delete => :restrict, :name => "nodes_template_id_fkey"
-    add_foreign_key "nodes", ["edited_by"], "users", ["id"], :on_delete => :set_null, :name => "nodes_edited_by_fkey"
-    add_foreign_key "nodes", ["category_id"], "categories", ["id"], :name => "nodes_category_id_fkey"
+    add_foreign_key "nodes", "nodes", :column => "parent_id", :on_delete => :cascade, :name => "nodes_parent_id_fkey"
+    add_foreign_key "nodes", "templates",  :on_delete => :restrict, :name => "nodes_template_id_fkey"
+    add_foreign_key "nodes", "users", :column => "edited_by", :on_delete => :set_null, :name => "nodes_edited_by_fkey"
+    add_foreign_key "nodes", "categories", :name => "nodes_category_id_fkey"
 
-    add_foreign_key "poll_options", ["poll_question_id"], "poll_questions", ["id"], :on_delete => :cascade, :name => "poll_options_poll_question_id_fkey"
+    add_foreign_key "poll_options", "poll_questions", :on_delete => :cascade, :name => "poll_options_poll_question_id_fkey"
 
-    add_foreign_key "poll_questions", ["poll_id"], "polls", ["id"], :on_delete => :cascade, :name => "poll_questions_poll_id_fkey"
+    add_foreign_key "poll_questions", "polls", :on_delete => :cascade, :name => "poll_questions_poll_id_fkey"
 
-    add_foreign_key "role_assignments", ["user_id"], "users", ["id"], :on_delete => :cascade, :name => "role_assignments_user_id_fkey"
-    add_foreign_key "role_assignments", ["node_id"], "nodes", ["id"], :on_delete => :cascade, :name => "role_assignments_node_id_fkey"
+    add_foreign_key "role_assignments", "users", :on_delete => :cascade, :name => "role_assignments_user_id_fkey"
+    add_foreign_key "role_assignments", "nodes", :on_delete => :cascade, :name => "role_assignments_node_id_fkey"
 
-    add_foreign_key "sections", ["frontpage_node_id"], "nodes", ["id"], :on_delete => :set_null, :name => "sections_frontpage_node_id_fkey"
+    add_foreign_key "sections", "nodes", :column => "frontpage_node_id", :on_delete => :set_null, :name => "sections_frontpage_node_id_fkey"
 
-    add_foreign_key "side_box_elements", ["parent_id"], "nodes", ["id"], :on_delete => :cascade, :name => "side_box_elements_parent_id_fkey"
-    add_foreign_key "side_box_elements", ["content_id"], "nodes", ["id"], :on_delete => :cascade, :name => "side_box_elements_content_id_fkey"
+    add_foreign_key "side_box_elements", "nodes", :column => "parent_id", :on_delete => :cascade, :name => "side_box_elements_parent_id_fkey"
+    add_foreign_key "side_box_elements", "nodes", :column => "content_id", :on_delete => :cascade, :name => "side_box_elements_content_id_fkey"
 
-    add_foreign_key "weblog_posts", ["weblog_id"], "weblogs", ["id"], :on_delete => :cascade, :name => "weblog_posts_weblog_id_fkey"
+    add_foreign_key "weblog_posts", "weblogs", :on_delete => :cascade, :name => "weblog_posts_weblog_id_fkey"
 
-    add_foreign_key "weblogs", ["user_id"], "users", ["id"], :on_delete => :cascade, :name => "weblogs_user_id_fkey"
-    add_foreign_key "weblogs", ["weblog_archive_id"], "weblog_archives", ["id"], :on_delete => :cascade, :name => "weblogs_weblog_archive_id_fkey"
+    add_foreign_key "weblogs", "users", :on_delete => :cascade, :name => "weblogs_user_id_fkey"
+    add_foreign_key "weblogs", "weblog_archives", :on_delete => :cascade, :name => "weblogs_weblog_archive_id_fkey"
   end
 
-  def self.down
+  def down
     drop_table "abbreviations"
     drop_table "agenda_item_categories"
     drop_table "agenda_items"
@@ -700,7 +700,7 @@ class CreateDevcmsBaseTables < ActiveRecord::Migration
     drop_table "html_pages"
     drop_table "images"
     drop_table "interests"
-    drop_table "interests_users", :id => false 
+    drop_table "interests_users", :id => false
     drop_table "links"
     drop_table "meeting_categories"
     drop_table "news_archives"

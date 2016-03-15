@@ -9,7 +9,7 @@ Rails.application.routes.draw do
     resources :comments, only: [:create, :destroy]
   end
 
-  match '/alphabetic_indices/:id/:letter' => 'alphabetic_indices#letter', as: :letter
+  get '/alphabetic_indices/:id/:letter' => 'alphabetic_indices#letter', as: :letter
 
   resource :sitemap, only: :show do
     collection do
@@ -90,7 +90,7 @@ Rails.application.routes.draw do
   resources :newsletter_archives, only: :show do
     member do
       post :subscribe
-      match :unsubscribe
+      match :unsubscribe, via: [:get, :delete]
     end
   end
 
@@ -171,10 +171,6 @@ Rails.application.routes.draw do
     resources :alphabetic_indices, except: [:index, :destroy]
 
     resources :attachments, except: [:index, :destroy] do
-      collection do
-        match :categories
-      end
-
       member do
         get :previous
         get :preview
@@ -202,8 +198,8 @@ Rails.application.routes.draw do
 
       resources :responses, only: [:index, :update, :destroy] do
         member do
-          match :import_csv
-          match :upload_csv
+          get :upload_csv
+          post :import_csv
         end
 
         resources :response_fields, only: [] do
@@ -280,10 +276,6 @@ Rails.application.routes.draw do
         get :list
       end
 
-      member do
-        match :subscriptions
-      end
-
       resources :users, only: [:show, :destroy]
     end
 
@@ -302,7 +294,7 @@ Rails.application.routes.draw do
 
       resources :news_viewer_items, only: [:index, :create] do
         collection do
-          match :available_news_items
+          match :available_news_items, via: [:get, :post]
           delete :delete_news_item
           put :update_positions
         end
@@ -329,7 +321,7 @@ Rails.application.routes.draw do
     resources :sections, except: [:index, :destroy] do
       member do
         get :previous
-        match :send_expiration_notifications
+        get :send_expiration_notifications
         get :import
         post :build
       end
@@ -415,10 +407,10 @@ Rails.application.routes.draw do
       end
     end
 
-    match 'nodes/:parent_id/:year/:month' => 'nodes#bulk_destroy', year: /\d{4}/, month: /\d{1,2}/, parent_id: /\d+/
-    match 'nodes/:parent_id/:year' => 'nodes#bulk_destroy', year: /\d{4}/, parent_id: /\d+/
+    match 'nodes/:parent_id/:year/:month' => 'nodes#bulk_destroy', year: /\d{4}/, month: /\d{1,2}/, parent_id: /\d+/, via: :all
+    match 'nodes/:parent_id/:year' => 'nodes#bulk_destroy', year: /\d{4}/, parent_id: /\d+/, via: :all
 
-    match 'final_editor' => 'versions#index'
+    match 'final_editor' => 'versions#index', via: :all
     match 'versions.:format' => 'versions#index', via: :post
 
     root to: 'nodes#index'
@@ -428,20 +420,20 @@ Rails.application.routes.draw do
 
 # =============== CUSTOM ROUTES ===============
 
-  match '/attachments/:id/:basename' => 'attachments#show'
-  match '/attachments/:action/:id/:basename' => 'attachments#index'
-  match '/attachments/:id/:basename.:format' => 'attachments#show', as: :download
-  match '/login' => 'sessions#new', as: :login
-  match '/logout' => 'sessions#destroy', as: :logout
-  match '/signup' => 'users#new', as: :signup
+  get '/attachments/:id/:basename' => 'attachments#show'
+  get '/attachments/:action/:id/:basename' => 'attachments#index'
+  get '/attachments/:id/:basename.:format' => 'attachments#show', as: :download
+  match '/login' => 'sessions#new', as: :login, via: :all
+  match '/logout' => 'sessions#destroy', as: :logout, via: :all
+  get '/signup' => 'users#new', as: :signup
 
-  if SETTLER_LOADED && Settler[:search_enabled_engines].present?
-    match '/search(/:search_engine)' => 'search#index', as: :search
+  if Devcms.search_configuration[:enabled_search_engines].present?
+    get '/search(/:search_engine)' => 'search#index', as: :search
   end
 
-  match '/profile' => 'users#profile', as: :profile
-  match '/synonyms.txt' => 'application#synonyms', as: :synonyms, format: :txt
+  get '/profile' => 'users#profile', as: :profile
+  get '/synonyms.txt' => 'application#synonyms', as: :synonyms, format: :txt
 
-  match "/404", to: "application#handle_404"
-  match "/500", to: "application#handle_500"
+  match "/404", to: "application#handle_404", via: :all
+  match "/500", to: "application#handle_500", via: :all
 end

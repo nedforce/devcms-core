@@ -5,7 +5,7 @@ class RefactorVersioningColumns < ActiveRecord::Migration
   class Version < ActiveRecord::Base
   end
 
-  def self.up
+  def up
     raise(Exception, 'This migration cannot be carried out because there are still versions present in the database!') unless Version.count.zero?
 
     add_column :nodes, :publishable, :boolean, null: false, default: false
@@ -28,7 +28,7 @@ class RefactorVersioningColumns < ActiveRecord::Migration
     add_index :versions, :editor_id
   end
 
-  def self.down
+  def down
     remove_column :nodes, :publishable
 
     add_column :nodes, :status,         :string

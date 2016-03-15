@@ -16,7 +16,7 @@
     = stylesheet_link_tag("templates/#{layout_configuration['template_color'] || 'default'}")
     = yield :css
 
-    = javascript_include_tag('devcms_core', 'application')
+    = javascript_include_tag('application')
 
     /[if lte IE 7]
       = stylesheet_link_tag 'ie'

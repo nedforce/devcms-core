@@ -14,7 +14,7 @@ class Version < ActiveRecord::Base #:nodoc:
 
   before_create :set_number
 
-  default_scope order: 'versions.created_at DESC'
+  default_scope ->{ order(created_at: :desc) }
 
   scope :unapproved, lambda { where(status: UNAPPROVED_STATUSES) }
 
@@ -50,10 +50,7 @@ class Version < ActiveRecord::Base #:nodoc:
 
   def self.create_version(original, attributes_to_overwrite = {})
     klass = original.class
-
-    record = klass.with_exclusive_scope do
-      klass.find(original.id)
-    end
+    record = klass.unscoped.find(original.id)
 
     attributes_to_overwrite.except(*klass.acts_as_versioned_excluded_columns).each do |name, value|
       record.send("#{name}=", value) rescue nil

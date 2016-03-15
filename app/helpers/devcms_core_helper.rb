@@ -62,7 +62,7 @@ module DevcmsCoreHelper
     host = options.delete :host
 
     crumb_track = String.new
-    crumb_nodes = node.self_and_ancestors.reorder(:ancestry_depth)
+    crumb_nodes = node.self_and_ancestors.reorder(:ancestry_depth).to_a
     crumb_nodes.shift unless node.containing_site.root?
     crumb_nodes.shift unless options[:include_root]
     # Remove frontpage node to prevent semingly double crumbs
@@ -96,7 +96,7 @@ module DevcmsCoreHelper
 
         if node != crumb_nodes.last
           if node.class == Node && node.root?
-            crumb_track << link_to(html_escape(n.content_title), root_path, {}, link_options)
+            crumb_track << link_to(html_escape(n.content_title), root_path, link_options)
           elsif node.class == Node
             crumb_track << link_to_content_node(html_escape(n.content_title), n, {}, link_options)
           elsif node.class.name == 'ProductCategory'
@@ -122,7 +122,7 @@ module DevcmsCoreHelper
 
   # Returns the HTML for the footer menu links.
   def create_footer_menu_links
-    current_site.children.accessible.public.shown_in_menu.all(order: 'nodes.position ASC').map do |node|
+    current_site.children.accessible.is_public.shown_in_menu.reorder(position: :asc).map do |node|
       link_to_node(h(node.content_title.downcase), node)
     end.join(' | ').html_safe
   end

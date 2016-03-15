@@ -35,7 +35,7 @@ class PollQuestion < ActiveRecord::Base
   has_parent :poll
 
   # A +PollQuestion+ has many +PollOption+ objects.
-  has_many :poll_options, dependent: :destroy, order: 'created_at'
+  has_many :poll_options, ->{ order(:created_at) }, dependent: :destroy
 
   has_many :user_votes, class_name: 'UserPollQuestionVote', dependent: :destroy
 
@@ -111,22 +111,22 @@ class PollQuestion < ActiveRecord::Base
   end
 
   def has_vote_from?(user)
-    user.present? && user_votes.exists?(user_id: user.id)
+    user.present? && user_votes.where(user_id: user.id).exists?
   end
 
   # Record a vote on an option. For polls that require a logged in user,
   # user has to be given or the vote is ignored.
   # Checks for existing votes as well.
-  def vote(option, user = nil)
+  def vote(option_id, user = nil)
     if poll.requires_login?
       if user.present? && !has_vote_from?(user)
         PollQuestion.transaction do
           registration = user_votes.create(user: user)
-          poll_options.find(option).vote! if registration
+          poll_options.find(option_id).vote! if registration
         end
       end
     else
-      poll_options.find(option).vote!
+      poll_options.find(option_id).vote!
     end
   end
 

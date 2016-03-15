@@ -21,6 +21,10 @@ class NodeSweeper < ActionController::Caching::Sweeper
 
   protected
 
+  def controller
+    @controller ||= ActionController::Base.new
+  end
+
   def sweep(node)
     # If title, url_alias, show_in_menu, private, deleted_at or ancestry changed, we'll need to expire some things
     if node.content.blank? || (node.changed & %w(title url_alias ancestry show_in_menu private deleted_at publication_start_date publication_end_date position layout_configuration)).present? || node.changed == ['updated_at']
@@ -55,5 +59,13 @@ class NodeSweeper < ActionController::Caching::Sweeper
       expire_page(host: Settler[:host], controller: '/images', action: :sidebox,    id: node.content_id, format: 'jpg')
       expire_page(host: Settler[:host], controller: '/images', action: :banner,     id: node.content_id, format: 'jpg')
     end
+  end
+
+  def expire_page *args
+    controller.expire_page *args
+  end
+
+  def expire_fragment *args
+    controller.expire_fragment *args
   end
 end

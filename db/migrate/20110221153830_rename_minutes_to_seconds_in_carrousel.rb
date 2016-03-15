@@ -1,5 +1,5 @@
 class RenameMinutesToSecondsInCarrousel < ActiveRecord::Migration
-  def self.up
+  def up
     rename_column :carrousels, :display_time_in_minutes, :display_time_in_seconds
 
     Carrousel.reset_column_information
@@ -13,7 +13,7 @@ class RenameMinutesToSecondsInCarrousel < ActiveRecord::Migration
     end
   end
 
-  def self.down
+  def down
     rename_column :carrousels, :display_time_in_seconds, :display_time_in_minutes
 
     Carrousel.reset_column_information

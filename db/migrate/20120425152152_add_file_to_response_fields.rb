@@ -1,9 +1,9 @@
 class AddFileToResponseFields < ActiveRecord::Migration
-  def self.up
+  def up
     add_column :response_fields, :file, :string
   end
 
-  def self.down
+  def down
     remove_column :response_fields, :file
   end
 end

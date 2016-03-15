@@ -1,5 +1,5 @@
 class RenameNodesHiddenToPrivate < ActiveRecord::Migration
-  def self.up
+  def up
     remove_index :nodes, :hidden
 
     rename_column :nodes, :hidden, :private
@@ -7,7 +7,7 @@ class RenameNodesHiddenToPrivate < ActiveRecord::Migration
     add_index :nodes, :private
   end
 
-  def self.down
+  def down
     remove_index :nodes, :private
 
     rename_column :nodes, :private, :hidden

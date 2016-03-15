@@ -7,8 +7,8 @@ module NodeExtensions::Layouting
     has_many :sections, foreign_key: :frontpage_node_id
     validate :should_not_hide_global_frontpage
 
-    has_many :content_representations, dependent: :destroy, foreign_key: :parent_id,  order: :position
-    has_many :representations,         dependent: :destroy, foreign_key: :content_id, class_name: 'ContentRepresentation'
+    has_many :content_representations, ->{ order(:position) }, dependent: :destroy, foreign_key: :parent_id
+    has_many :representations, dependent: :destroy, foreign_key: :content_id, class_name: 'ContentRepresentation'
 
     serialize :layout_configuration, Hash
 
@@ -49,8 +49,8 @@ module NodeExtensions::Layouting
 
   def own_or_inherited_layout_variant
     if layout_variant.present?
-      own_or_inherited_layout.find_variant(self.layout_variant)
-    else 
+      own_or_inherited_layout.find_variant(layout_variant)
+    else
       inherited_layout_variant
     end
   end
@@ -77,9 +77,9 @@ module NodeExtensions::Layouting
     without_search_reindex do
       # Delete any empty settings from the configuration and save everything
       layout_config[:node][:layout_configuration].delete_if { |k,v| v.blank? } unless layout_config[:node][:layout_configuration].blank?
-      
+
       return false unless update_attributes(layout_config[:node])
-      
+
       # Find the layout and variant used to set the representations
       layout  = Layout.find(layout_config[:node][:layout]) || inherited_layout
       variant = layout.find_variant(layout_config[:node][:layout_variant]) || inherited_layout_variant
@@ -103,7 +103,7 @@ module NodeExtensions::Layouting
       # Move or create representations for each target
       layout_config[:targets].each do |target, content_ids|
         if content_ids
-          content_ids = content_ids.select { |cid| cid.present? }          
+          content_ids = content_ids.select { |cid| cid.present? }
           if variant[target].try(:[], 'main_content') && self.content_type == 'Section'
             content.update_attributes(:frontpage_node_id => content_ids.first.blank? ? nil : content_ids.first)
           else
@@ -144,8 +144,8 @@ module NodeExtensions::Layouting
     conditions = {}
     conditions.update(target: target) if target
 
-    if !content_representations.exists?(conditions) && inherit && parent
-      parent.find_content_representations(target, inherit) 
+    if !content_representations.where(conditions).exists? && inherit && parent
+      parent.find_content_representations(target, inherit)
     else
       content_representations.where(conditions).includes(:content)
     end
@@ -164,7 +164,7 @@ module NodeExtensions::Layouting
       ancestries << last_path.push(parent_id).join('/')
       last_path
     end
-    container_ancestry = Image.includes(:node).where('is_for_header = ? and nodes.ancestry IN (?)', true, ancestries).group('nodes.ancestry').count.keys.last
+    container_ancestry = Image.includes(:node).references(:nodes).where('is_for_header = ? and nodes.ancestry IN (?)', true, ancestries).group('nodes.ancestry').count.keys.last
     if container_ancestry.present? && container_ancestry != Node.root.id.to_s
       container_ancestry
     else

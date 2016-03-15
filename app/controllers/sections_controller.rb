@@ -23,6 +23,6 @@ protected
   end
 
   def find_children
-    @children = @node.children.accessible.public.exclude_content_types(%w( Image Attachment SearchPage Site )).include_content.all.map { |n| n.content }
+    @children = @node.children.accessible.is_public.exclude_content_types(%w( Image Attachment SearchPage Site )).include_content.map(&:content)
   end
 end

@@ -1,9 +1,9 @@
 class ChangeLoidColumnType < ActiveRecord::Migration
-  def self.up
+  def up
     change_column :db_files, :loid, :oid
   end
 
-  def self.down
+  def down
     change_column :db_files, :loid, :int
   end
 end

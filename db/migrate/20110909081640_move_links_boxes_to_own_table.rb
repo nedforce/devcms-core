@@ -7,7 +7,7 @@ class MoveLinksBoxesToOwnTable < ActiveRecord::Migration
     end
   end
 
-  def self.up
+  def up
     create_table :links_boxes do |t|
       t.string :title, null: false
       t.text   :description
@@ -15,20 +15,18 @@ class MoveLinksBoxesToOwnTable < ActiveRecord::Migration
       t.timestamps
     end
 
-    Section.all(conditions: { type: 'LinksBox' }).each do |links_box|
+    Section.where(type: 'LinksBox').each do |links_box|
       new_id = ActiveRecord::Base.connection.insert("INSERT INTO links_boxes (title, description, created_at, updated_at) VALUES ('#{links_box.title}', '#{links_box.description}', '#{links_box.created_at}', '#{links_box.updated_at}')")
-
-      Node.update_all("content_id = #{new_id}, content_type = 'LinksBox'", "content_id = #{links_box.id} AND content_type = 'Section'")
+      Node.where("content_id = #{links_box.id} AND content_type = 'Section'").update_all("content_id = #{new_id}, content_type = 'LinksBox'")
     end
 
-    Section.delete_all("type = 'LinksBox'")
+    Section.where("type = 'LinksBox'").delete_all
   end
 
-  def self.down
+  def down
     LinksBox.all.each do |links_box|
       new_id = ActiveRecord::Base.connection.insert("INSERT INTO sections (type, title, description, created_at, updated_at) VALUES ('LinksBox', '#{links_box.title}', '#{links_box.description}', '#{links_box.created_at}', '#{links_box.updated_at}')")
-
-      Node.update_all("content_id = #{new_id}, content_type = 'Section'", "content_id = #{links_box.id} AND content_type = 'LinksBox'")
+      Node.where("content_id = #{links_box.id} AND content_type = 'LinksBox'").update_all("content_id = #{new_id}, content_type = 'Section'")
     end
 
     drop_table :links_boxes

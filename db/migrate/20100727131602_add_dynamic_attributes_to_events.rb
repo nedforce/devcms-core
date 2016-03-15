@@ -1,9 +1,9 @@
 class AddDynamicAttributesToEvents < ActiveRecord::Migration
-  def self.up
+  def up
     add_column :events, :dynamic_attributes, :text
   end
 
-  def self.down
+  def down
     remove_column :events, :dynamic_attributes
   end
 end

@@ -48,7 +48,7 @@ class Site < Section
     parts = domain.split('.')
     parts.shift if parts.first == 'www'
     domain = parts.join('.')
-    Site.first(include: :node, conditions: ['LOWER(sections.domain) = LOWER(?) OR LOWER(sections.domain) = LOWER(?)', domain, 'www.' + domain]) || Node.root.content
+    Site.includes(:node).references(:nodes).where('LOWER(sections.domain) = LOWER(?) OR LOWER(sections.domain) = LOWER(?)', domain, 'www.' + domain).first || Node.root.content
   end
 
   def original_domain

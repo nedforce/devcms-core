@@ -10,7 +10,7 @@ module DevcmsCore
 
     module CreateMethods
       def new
-        instance_variable_set("@#{self.class.singular_name}", self.class.content_class_name.constantize.new(params[self.class.singular_name.to_sym]))
+        instance_variable_set("@#{self.class.singular_name}", self.class.content_class_name.constantize.new(permitted_attributes))
 
         respond_to do |format|
           format.html { render :template => 'admin/shared/new', :locals => { :record => record } }
@@ -18,7 +18,7 @@ module DevcmsCore
       end
 
       def create
-        record = self.class.content_class_name.constantize.new(params[self.class.singular_name.to_sym])
+        record = self.class.content_class_name.constantize.new(permitted_attributes)
 
         instance_variable_set("@#{self.class.singular_name}", record)
         record.parent = @parent_node
@@ -40,7 +40,7 @@ module DevcmsCore
 
     module UpdateMethods
       def edit
-        record.attributes = params[self.class.singular_name.to_sym]
+        record.attributes = permitted_attributes
 
         respond_to do |format|
           format.html { render :template => 'admin/shared/edit', :locals => { :record => record } }
@@ -48,7 +48,7 @@ module DevcmsCore
       end
 
       def update
-        record.attributes = params[self.class.singular_name.to_sym]
+        record.attributes = permitted_attributes
 
         respond_to do |format|
           if @commit_type == 'preview' && record.valid?
@@ -106,12 +106,17 @@ module DevcmsCore
 
     protected
 
+    def permitted_attributes
+      param_name = self.class.singular_name.to_sym
+      params.fetch(param_name, {}).permit!
+    end
+
     def record
       instance_variable_get("@#{self.class.singular_name}")
     end
 
     def find_record
-      instance_variable_set("@#{self.class.singular_name}", self.class.content_class_name.constantize.find(params[:id], :include => [:node]).current_version)
+      instance_variable_set("@#{self.class.singular_name}", self.class.content_class_name.constantize.includes(:node).find(params[:id]).current_version)
     end
 
     def render_weeks(record_node, node_id, common_hash, active_node, archive_includes_active_node)
@@ -169,7 +174,7 @@ module DevcmsCore
         }.reverse_merge(common_hash)
       end
 
-      @nodes = record_node.children.with_content_type(%w(Image Attachment)).all(include: [:content, :role_assignments]).map { |node| node.to_tree_node_for(current_user, { expand_if_ancestor_of: active_node }) }
+      @nodes = record_node.children.with_content_type(%w(Image Attachment)).includes([:content, :role_assignments]).map { |node| node.to_tree_node_for(current_user, { expand_if_ancestor_of: active_node }) }
 
       render json: (@nodes + @years).to_json
     end

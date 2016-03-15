@@ -32,7 +32,7 @@ class Admin::SitesController < Admin::AdminController
 
   # * GET /admin/sites/new
   def new
-    @site = Site.new(params[:site])
+    @site = Site.new(permitted_attributes)
     respond_to do |format|
       format.html { render :template => 'admin/shared/new', :locals => { :record => @site } }
     end
@@ -41,7 +41,7 @@ class Admin::SitesController < Admin::AdminController
   # * GET /admin/sites/:id/edit
   def edit
     @show_frontpage_control = can_set_frontpage?
-    @site.attributes     = params[:site]
+    @site.attributes = permitted_attributes
     respond_to do |format|
       format.html { render :template => 'admin/shared/edit', :locals => { :record => @site } }
     end
@@ -50,7 +50,7 @@ class Admin::SitesController < Admin::AdminController
   # * POST /admin/sites
   # * POST /admin/sites.xml
   def create
-    @site        = Site.new(params[:site])
+    @site        = Site.new(permitted_attributes)
     @site.parent = @parent_node
 
     respond_to do |format|
@@ -72,7 +72,7 @@ class Admin::SitesController < Admin::AdminController
   def update
     @show_frontpage_control = can_set_frontpage?
     params[:site].delete(:frontpage_node_id) if !@show_frontpage_control
-    @site.attributes = params[:site]
+    @site.attributes = permitted_attributes
 
     respond_to do |format|
       if @commit_type == 'preview' && @site.valid?
@@ -94,13 +94,17 @@ class Admin::SitesController < Admin::AdminController
 
 protected
 
+  def permitted_attributes
+    params.fetch(:site, {}).permit!
+  end
+
   # Retrieves the requested +Site+ object using the passed in +id+ parameter.
   def find_site
-    @site = Site.find(params[:id], :include => :node).current_version
+    @site = Site.includes(:node).find(params[:id]).current_version
   end
 
   def find_children
-    @children = @node.children.accessible.public.exclude_content_types(%w( Image Attachment SearchPage Site )).include_content.all.map { |n| n.content }
+    @children = @node.children.accessible.is_public.exclude_content_types(%w( Image Attachment SearchPage Site )).include_content.all.map { |n| n.content }
   end
 
   def can_set_frontpage?

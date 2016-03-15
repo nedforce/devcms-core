@@ -37,7 +37,7 @@ class Admin::PagesController < Admin::AdminController
 
   # * GET /admin/pages/new
   def new
-    @page = Page.new(params[:page])
+    @page = Page.new(permitted_attributes)
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/new', :locals => { :record => @page } }
@@ -46,7 +46,7 @@ class Admin::PagesController < Admin::AdminController
 
   # * GET /admin/pages/:id/edit
   def edit
-    @page.attributes = params[:page]
+    @page.attributes = permitted_attributes
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/edit', :locals => { :record => @page } }
@@ -56,7 +56,7 @@ class Admin::PagesController < Admin::AdminController
   # * POST /admin/pages
   # * POST /admin/pages.xml
   def create
-    @page        = Page.new(params[:page])
+    @page        = Page.new(permitted_attributes)
     @page.parent = @parent_node
 
     respond_to do |format|
@@ -76,7 +76,7 @@ class Admin::PagesController < Admin::AdminController
   # * PUT /admin/pages/:id
   # * PUT /admin/pages/:id.xml
   def update
-    @page.attributes = params[:page]
+    @page.attributes = permitted_attributes
 
     respond_to do |format|
       if @commit_type == 'preview' && @page.valid?
@@ -96,6 +96,10 @@ class Admin::PagesController < Admin::AdminController
   end
 
 protected
+
+  def permitted_attributes
+    params.fetch(:page, {}).permit!
+  end
 
   # Finds the +Page+ object corresponding to the passed in +id+ parameter.
   def find_page

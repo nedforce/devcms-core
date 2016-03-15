@@ -63,7 +63,7 @@ class Event < ActiveRecord::Base
   def self.send_registration_notifications
     all(conditions: ['start_time <= ? AND subscription_enabled = ?', Time.now + 1.day, true]).each do |event|
       event.update_attribute :subscription_enabled, false
-      EventMailer.event_registrations(event).deliver if event.event_registrations.any?
+      EventMailer.event_registrations(event).deliver_now if event.event_registrations.any?
     end
   end
 

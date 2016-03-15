@@ -19,7 +19,7 @@ class Admin::HtmlPagesController < Admin::AdminController
 
   # * GET /html_pages/:id
   # * GET /html_pages/:id.xml
-  def show       
+  def show
     respond_to do |format|
       format.html { render :partial => 'show', :layout => 'admin/admin_show' }
       format.xml  { render :xml => @html_page }
@@ -28,7 +28,7 @@ class Admin::HtmlPagesController < Admin::AdminController
 
   # * GET /admin/html_pages/new
   def new
-    @html_page = HtmlPage.new(params[:html_page])
+    @html_page = HtmlPage.new(permitted_attributes)
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/new', :locals => { :record => @html_page } }
@@ -37,7 +37,7 @@ class Admin::HtmlPagesController < Admin::AdminController
 
   # * GET /admin/html_pages/:id/edit
   def edit
-    @html_page.attributes = params[:html_page]
+    @html_page.attributes = permitted_attributes
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/edit', :locals => { :record => @html_page } }
@@ -47,7 +47,7 @@ class Admin::HtmlPagesController < Admin::AdminController
   # * POST /admin/html_pages
   # * POST /admin/html_pages.xml
   def create
-    @html_page        = HtmlPage.new(params[:html_page])
+    @html_page        = HtmlPage.new(permitted_attributes)
     @html_page.parent = @parent_node
 
     respond_to do |format|
@@ -67,7 +67,7 @@ class Admin::HtmlPagesController < Admin::AdminController
   # * PUT /admin/html_pages/:id
   # * PUT /admin/html_pages/:id.xml
   def update
-    @html_page.attributes = params[:html_page]
+    @html_page.attributes = permitted_attributes
 
     respond_to do |format|
       if @commit_type == 'preview' && @html_page.valid?
@@ -87,6 +87,10 @@ class Admin::HtmlPagesController < Admin::AdminController
   end
 
 protected
+
+  def permitted_attributes
+    params.fetch(:html_page, {}).permit!
+  end
 
   # Finds the +HtmlPage+ object corresponding to the passed in +id+ parameter.
   def find_html_page

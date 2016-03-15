@@ -16,25 +16,25 @@ class Admin::FaqArchivesController < Admin::AdminController
 
   # * GET /faq_archives/:id
   # * GET /faq_archives/:id.xml
-  def show       
+  def show
     respond_to do |format|
       format.html { render :partial => 'show', :locals => { :record => @faq_archive }, :layout => 'admin/admin_show' }
       format.xml  { render :xml => @faq_archive }
     end
-  end  
+  end
 
   # * GET /admin/faq_archives/new
   def new
-    @faq_archive = FaqArchive.new(params[:faq_archive])
+    @faq_archive = FaqArchive.new(permitted_attributes)
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/new', :locals => { :record => @faq_archive } }
     end
   end
-  
+
   # * GET /admin/faq_archives/:id/edit
   def edit
-    @faq_archive.attributes = params[:faq_archive]
+    @faq_archive.attributes = permitted_attributes
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/edit', :locals => { :record => @faq_archive } }
@@ -44,7 +44,7 @@ class Admin::FaqArchivesController < Admin::AdminController
   # * POST /admin/faq_archives
   # * POST /admin/faq_archives.xml
   def create
-    @faq_archive        = FaqArchive.new(params[:faq_archive])    
+    @faq_archive        = FaqArchive.new(permitted_attributes)
     @faq_archive.parent = @parent_node
 
     respond_to do |format|
@@ -64,7 +64,7 @@ class Admin::FaqArchivesController < Admin::AdminController
   # * PUT /admin/faq_archives/:id
   # * PUT /admin/faq_archives/:id.xml
   def update
-    @faq_archive.attributes = params[:faq_archive]
+    @faq_archive.attributes = permitted_attributes
 
     respond_to do |format|
       if @commit_type == 'preview' && @faq_archive.valid?
@@ -83,6 +83,10 @@ class Admin::FaqArchivesController < Admin::AdminController
   end
 
   protected
+
+  def permitted_attributes
+    params.fetch(:faq_archive, {}).permit!
+  end
 
   # Finds the +FaqArchive+ object corresponding to the passed in +id+ parameter.
   def find_faq_archive

@@ -21,7 +21,7 @@ class CalendarsController < ApplicationController
   def tomorrow
     tomorrow        = Date.tomorrow
     conditions      = [ '(start_time BETWEEN :start_time AND :end_time) OR (end_time BETWEEN :start_time AND :end_time)', { :start_time => tomorrow.beginning_of_day, :end_time => tomorrow.end_of_day } ]
-    @calendar_items = @calendar.calendar_items.accessible.all(:include => :node, :conditions => conditions, :order => 'start_time')
+    @calendar_items = @calendar.calendar_items.accessible.includes(:node).where(conditions).order(:start_time)
     @feed_title     = I18n.t('calendars.tomorrow')
 
     respond_to do |format|
@@ -43,7 +43,7 @@ class CalendarsController < ApplicationController
         @calendar_items = @calendar.calendar_items.find_all_for_month_of(@date).group_by { |ci| ci.start_time.mday }
       end
       format.any(:rss, :atom) do
-        @calendar_items = @calendar.calendar_items.accessible.all(:include => :node, :order => 'start_time', :conditions => [ 'nodes.ancestry = ? ', @calendar.node.child_ancestry ])
+        @calendar_items = @calendar.calendar_items.accessible.includes(:node).where('nodes.ancestry = ?', @calendar.node.child_ancestry).order(:start_time)
         render :layout => false
       end
       format.xml { render :xml => @calendar }

@@ -1,11 +1,11 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +PollQuestion+ objects.
 class PollQuestionsController < ApplicationController
-  
+
   include PollQuestionsHelper
-  
+
   before_filter :find_poll_question
-  
+
   # Shows the question and a voting form if the requested question is active
   # shows the question's results otherwise.
   #
@@ -17,7 +17,7 @@ class PollQuestionsController < ApplicationController
     else
       respond_to do |format|
         format.html # show.html.erb
-        format.xml { render :xml => @poll_question.to_xml(:include => :poll_options) }
+        format.xml { render :xml => @poll_question.to_xml(include: :poll_options) }
       end
     end
   end

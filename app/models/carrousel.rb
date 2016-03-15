@@ -67,7 +67,7 @@ class Carrousel < ActiveRecord::Base
 
   # Retrieves the items belonging to this carrousel in correct order.
   def items
-    carrousel_items.all.map(&:item)
+    carrousel_items.map(&:item)
   end
 
   # Number of items in this carrousel.
@@ -176,7 +176,7 @@ class Carrousel < ActiveRecord::Base
       if self.current_carrousel_item.nil?
         Node.without_search_reindex do
           # No update of the search index is necessary.
-          connection.update("UPDATE carrousels SET last_cycled = '#{Time.now.to_formatted_s(:db)}', current_carrousel_item_id = #{self.carrousel_items.first.id} WHERE id = #{self.id}")
+          Node.connection.update("UPDATE carrousels SET last_cycled = '#{Time.now.to_formatted_s(:db)}', current_carrousel_item_id = #{self.carrousel_items.first.id} WHERE id = #{self.id}")
         end
         self.current_carrousel_item = carrousel_items.first
       elsif (last_cycled + display_time.seconds) <= Time.now
@@ -184,7 +184,7 @@ class Carrousel < ActiveRecord::Base
         self.current_carrousel_item = carrousel_items.at((current_item_index + 1) % carrousel_items.size)
         Node.without_search_reindex do
           # No update of the search index is necessary.
-          connection.update("UPDATE carrousels SET last_cycled = '#{Time.now.to_formatted_s(:db)}', current_carrousel_item_id = #{self.current_carrousel_item.id} WHERE id = #{self.id}")
+          Node.connection.update("UPDATE carrousels SET last_cycled = '#{Time.now.to_formatted_s(:db)}', current_carrousel_item_id = #{self.current_carrousel_item.id} WHERE id = #{self.id}")
         end
       end
       self.current_carrousel_item

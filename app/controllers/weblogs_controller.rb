@@ -43,7 +43,7 @@ class WeblogsController < ApplicationController
   # * POST /weblog_archives/:weblog_archive_id/weblogs
   # * POST /weblog_archives/:weblog_archive_id/weblogs.xml
   def create
-    @weblog        = @weblog_archive.weblogs.build(params[:weblog])
+    @weblog        = @weblog_archive.weblogs.build(permitted_attributes)
     @weblog.user   = current_user
     @weblog.parent = @weblog_archive.node
 
@@ -61,7 +61,7 @@ class WeblogsController < ApplicationController
   # * PUT /weblog_archives/:weblog_archive_id/weblogs/:id
   # * PUT /weblog_archives/:weblog_archive_id/weblogs/:id.xml
   def update
-    @weblog.attributes = params[:weblog]
+    @weblog.attributes = permitted_attributes
 
     respond_to do |format|
       if @weblog.save(user: current_user)
@@ -89,6 +89,10 @@ class WeblogsController < ApplicationController
   end
 
   protected
+
+  def permitted_attributes
+    params.fetch(:weblog, {}).permit!
+  end
 
   # Finds the +WeblogArchive+ object corresponding to the passed in +weblog_archive_id+ parameter.
   def find_weblog_archive

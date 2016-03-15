@@ -57,6 +57,6 @@ class InternalLink < Link
   # Ensure the linked node is contained in the same site node, so that
   # inter-site links are impossible.
   def linked_node_is_contained_in_same_site
-    errors.add(:base, :linked_node_must_be_contained_in_same_site) if linked_node && parent && !parent.containing_site.self_and_descendants.exists?(id: linked_node_id)
+    errors.add(:base, :linked_node_must_be_contained_in_same_site) if linked_node && parent && !parent.containing_site.self_and_descendants.where(id: linked_node_id).exists?
   end
 end

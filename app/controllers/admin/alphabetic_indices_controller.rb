@@ -23,7 +23,7 @@ class Admin::AlphabeticIndicesController < Admin::AdminController
 
   # * GET /admin/alphabetic_indices/new
   def new
-    @alphabetic_index = AlphabeticIndex.new(params[:alphabetic_index])
+    @alphabetic_index = AlphabeticIndex.new(permitted_attributes)
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/new', :locals => { :record => @alphabetic_index } }
@@ -32,7 +32,7 @@ class Admin::AlphabeticIndicesController < Admin::AdminController
 
   # * GET /admin/alphabetic_indices/:id/edit
   def edit
-    @alphabetic_index.attributes = params[:alphabetic_index]
+    @alphabetic_index.attributes = permitted_attributes
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/edit', :locals => { :record => @alphabetic_index } }
@@ -42,7 +42,7 @@ class Admin::AlphabeticIndicesController < Admin::AdminController
   # * POST /admin/alphabetic_indices
   # * POST /admin/alphabetic_indices.xml
   def create
-    @alphabetic_index        = AlphabeticIndex.new(params[:alphabetic_index])
+    @alphabetic_index        = AlphabeticIndex.new(permitted_attributes)
     @alphabetic_index.parent = @parent_node
 
     respond_to do |format|
@@ -59,7 +59,7 @@ class Admin::AlphabeticIndicesController < Admin::AdminController
   # * PUT /admin/alphabetic_indices/:id
   # * PUT /admin/alphabetic_indices/:id.xml
   def update
-    @alphabetic_index.attributes = params[:alphabetic_index]
+    @alphabetic_index.attributes = permitted_attributes
 
     respond_to do |format|
       if @alphabetic_index.save
@@ -73,6 +73,10 @@ class Admin::AlphabeticIndicesController < Admin::AdminController
   end
 
   protected
+
+  def permitted_attributes
+    params.fetch(:alphabetic_index, {}).permit!
+  end
 
   # Finds the +AlphabeticIndex+ object corresponding to the passed in +id+ parameter.
   def find_alphabetic_index

@@ -18,8 +18,7 @@
 # * Requires the presence of +title+.
 #
 class ForumThread < ActiveRecord::Base
-  # Prevents the +closed+ attribute from being assigned in mass assignments.
-  attr_protected :closed
+  attr_accessor :is_being_destroyed
 
   # A +ForumThread+ belongs to a +ForumTopic+.
   belongs_to :forum_topic
@@ -28,7 +27,7 @@ class ForumThread < ActiveRecord::Base
   belongs_to :user
 
   # A +ForumThread+ can have many +ForumPost+ children.
-  has_many :forum_posts, order: 'created_at ASC', dependent: :destroy do
+  has_many :forum_posts, ->{ order(created_at: :asc) }, inverse_of: :forum_thread, dependent: :destroy do
     # The date at which the last post ForumPost in the ForumThread was added (as identified by +created_at+).
     def last_posting_date
       self.maximum(:created_at)
@@ -53,14 +52,14 @@ class ForumThread < ActiveRecord::Base
   # Returns the date at which this +ForumThread+ was last updated, which is the
   # creation date of the last added +ForumPost+.
   def last_update_date
-    self.forum_posts.last_posting_date
+    forum_posts.last_posting_date
   end
 
   # Closes this +ForumThread+ (i.e. it will no longer accept any new +ForumPost+ children).
   # Returns true if this ForumThread was successfully closed, otherwise false.
   def close
     return false if self.closed?
-    self.update_attribute(:closed, true)
+    update_attribute(:closed, true)
     true
   end
 
@@ -68,23 +67,30 @@ class ForumThread < ActiveRecord::Base
   # Returns true if this ForumThread was successfully re-opened, otherwise false.
   def open
     return false unless self.closed?
-    self.update_attribute(:closed, false)
+    update_attribute(:closed, false)
     true
   end
 
   # Returns the start post of this +ForumThread+, i.e. the first +ForumPost+ of this ForumThread.
   def start_post
-    self.forum_posts.first(order: 'created_at ASC')
+    forum_posts.order(created_at: :asc).first
   end
 
   # Returns the replies to this +ForumThread+, i.e. all +ForumPost+ children of this ForumThread, except the first one.
   def replies
-    @replies ||= self.forum_posts[1..-1]
+    @replies ||= forum_posts[1..-1]
   end
 
   # Returns the number of replies to this ForumThread
   # (which is all posts minus the starting post).
   def number_of_replies
-    self.forum_posts.count - 1
+    forum_posts.count - 1
   end
+
+  # Override destroy to set an accessor. This wel ensure the start post may be deleted as well
+  def destroy
+    self.is_being_destroyed = true
+    super
+  end
+
 end

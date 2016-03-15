@@ -1,5 +1,5 @@
 class CreateSearchPages < ActiveRecord::Migration
-  def self.up
+  def up
     create_table :search_pages do |t|
       t.string :title, null: false
 
@@ -7,7 +7,7 @@ class CreateSearchPages < ActiveRecord::Migration
     end
   end
 
-  def self.down
+  def down
     drop_table :search_pages
   end
 end

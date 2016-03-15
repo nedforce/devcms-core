@@ -84,7 +84,7 @@ class Admin::ImagesController < Admin::AdminController
   # * POST /admin/images.js
   # * POST /admin/images.xml
   def create
-    @image                  = Image.new(params[:image])
+    @image                  = Image.new(permitted_attributes)
     @image.parent           = @parent_node
     @show_image_url_control = can_set_image_url?
     @image.url              = nil if !@show_image_url_control
@@ -138,7 +138,7 @@ class Admin::ImagesController < Admin::AdminController
   def update
     @show_image_url_control = can_set_image_url?
     params[:image].delete(:url) if !@show_image_url_control
-    @image.attributes = params[:image]
+    @image.attributes = permitted_attributes
 
     respond_to do |format|
       if @image.save(:user => current_user, :approval_required => @for_approval)
@@ -163,29 +163,33 @@ class Admin::ImagesController < Admin::AdminController
 
   protected
 
-    def find_image
-      @image = Image.find(params[:id])
-    end
+  def permitted_attributes
+    params.fetch(:image, {}).permit!
+  end
 
-    def find_sibling_images
-      @sibling_images = Image.accessible.all(:conditions => ["nodes.ancestry = :parent_child_ancestry", { :parent_child_ancestry => @parent_node.child_ancestry }])
-    end
+  def find_image
+    @image = Image.find(params[:id])
+  end
 
-    def render_jpg_image_data(image_data)
-      respond_to do |format|
-        format.any do
-          send_data(image_data, :type => 'image/jpeg', :disposition => 'inline')
-        end
+  def find_sibling_images
+    @sibling_images = Image.accessible.where("nodes.ancestry = :parent_child_ancestry", parent_child_ancestry: @parent_node.child_ancestry)
+  end
+
+  def render_jpg_image_data(image_data)
+    respond_to do |format|
+      format.any do
+        send_data(image_data, :type => 'image/jpeg', :disposition => 'inline')
       end
     end
+  end
 
-    def can_set_image_url?
-      current_user_is_admin?(@image.node) || current_user_is_final_editor?(@image.node)
-    end
+  def can_set_image_url?
+    current_user_is_admin?(@image.node) || current_user_is_final_editor?(@image.node)
+  end
 
-    def clean_is_for_header
-      if params[:image] && !current_user.has_role?('admin')
-        params[:image].delete(:is_for_header)
-      end
+  def clean_is_for_header
+    if params[:image] && !current_user.has_role?('admin')
+      params[:image].delete(:is_for_header)
     end
+  end
 end

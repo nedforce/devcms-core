@@ -75,8 +75,6 @@ class CalendarItem < Event
   validate               :repeat_end_should_be_in_the_future, on: :create
   validate               :end_time_should_be_after_start_time
 
-  attr_protected :repeat_identifier
-
   # Virtual attributes for creating repeating calendar items.
   attr_reader :repeat_end, :repeating, :repeat_interval_granularity, :repeat_interval_multiplier
 
@@ -105,7 +103,7 @@ class CalendarItem < Event
   # Destroy calendar item and all of its repetitions
   def self.destroy_calendar_item(calendar_item, paranoid_delete = false)
     if calendar_item.has_repetitions?
-      CalendarItem.all(conditions: { repeat_identifier: calendar_item.repeat_identifier }).each do |repetition|
+      CalendarItem.where(repeat_identifier: calendar_item.repeat_identifier).each do |repetition|
         if paranoid_delete
           repetition.node.paranoid_delete!
         else

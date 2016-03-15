@@ -49,7 +49,7 @@ class NewsletterArchive < ActiveRecord::Base
 
   # Returns the last update date
   def last_updated_at
-    nle = newsletter_editions.accessible.first(include: :node, conditions: ['newsletter_editions.published <> ?', 'unpublished'], order: 'nodes.publication_start_date DESC')
+    nle = newsletter_editions.accessible.includes(:node).where('newsletter_editions.published <> ?', 'unpublished').order('nodes.publication_start_date DESC').first
     last_nle_update = nle ? nle.node.publication_start_date : nil
 
     [last_nle_update, updated_at].compact.max
@@ -58,7 +58,7 @@ class NewsletterArchive < ActiveRecord::Base
   # Returns true if this +NewsletterArchive+ has a subscription for the +User+
   # specified by +user+, else false.
   def has_subscription_for?(user)
-    users.exists?(id: user.id)
+    users.where(id: user.id).exists?
   end
 
   # Returns the description as the token for indexing.

@@ -1,5 +1,5 @@
 class ExtendNodeExpirationSettings < ActiveRecord::Migration
-  def self.up
+  def up
     add_column :sections, :expiration_email_body,    :text
     add_column :sections, :expiration_email_subject, :string
 
@@ -11,7 +11,7 @@ class ExtendNodeExpirationSettings < ActiveRecord::Migration
     Node.root.content.update_attributes(expiration_email_subject: 'Content onder uw beheer is verouderd', expiration_email_body: "<p>De onderstaande pagina is al enige tijd niet meer bijgewerkt en is inmiddels verlopen.</p><p>Gelieve de inhoud van deze pagina's te controleren en bij te werken.</p><p>Neem voor meer informatie contact op met de webredactie.</p>") if Node.unscoped.count > 0 && Node.roots.present?
   end
 
-  def self.down
+  def down
     remove_column :sections, :expiration_email_body
     remove_column :sections, :expiration_email_subject
 

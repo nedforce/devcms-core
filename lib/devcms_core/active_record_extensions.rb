@@ -57,7 +57,7 @@ module DevcmsCore
       # * +:has_edit_items+ => false
       def acts_as_content_node(configuration = {}, versioning_configuration = {})
         configuration.assert_valid_keys(DevcmsCore::ActsAsContentNode::DEFAULT_CONTENT_TYPE_CONFIGURATION.keys)
-  
+
         # Register content type and configuration
         Node.register_content_type(self, DevcmsCore::ActsAsContentNode::DEFAULT_CONTENT_TYPE_CONFIGURATION.merge(configuration))
 
@@ -94,7 +94,7 @@ module DevcmsCore
         options.reverse_merge!({
           :date_field_database_name => 'nodes.publication_start_date',
           :date_field_model_name => :publication_start_date,
-          :sql_options => { :include => :node }
+          :sql_options => { include: :node }
         })
 
         class_inheritable_accessor :acts_as_archive_configuration

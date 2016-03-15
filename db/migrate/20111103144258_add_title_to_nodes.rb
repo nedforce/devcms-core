@@ -1,5 +1,5 @@
 class AddTitleToNodes < ActiveRecord::Migration
-  def self.up
+  def up
     add_column :nodes, :title, :string
 
     add_index :nodes, :title
@@ -21,7 +21,7 @@ class AddTitleToNodes < ActiveRecord::Migration
     puts 'Content title cached for all nodes. Success!'
   end
 
-  def self.down
+  def down
     remove_column :nodes, :title
   end
 end

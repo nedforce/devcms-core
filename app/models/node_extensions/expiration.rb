@@ -5,7 +5,7 @@ module NodeExtensions::Expiration
   included do
     scope :expired, lambda { |*args|
       date = args.first.is_a?(Date) ? args.first : Date.today
-      { conditions: ['nodes.expires_on IS NOT NULL AND nodes.expires_on <= ? AND nodes.content_type IN (?)', date, Node.expirable_content_types] }
+      where('nodes.expires_on IS NOT NULL AND nodes.expires_on <= ? AND nodes.content_type IN (?)', date, Node.expirable_content_types)
     }
 
     before_validation :set_default_expires_on, if: :expiration_required?
@@ -36,12 +36,12 @@ module NodeExtensions::Expiration
     elsif self.expiration_notification_method == 'responsible_user' && self.responsible_user.present?
       self.responsible_user
     else
-      self.ancestors.first(conditions: { expiration_notification_method: ['email', 'responsible_user'] }, order: 'ancestry DESC').inherited_expiration_email_recipient
+      self.ancestors.where(expiration_notification_method: ['email', 'responsible_user']).order(ancestry: :desc).first.inherited_expiration_email_recipient
     end
   end
 
   def inherited_expiration_email_settings_node
-    Section.includes(:node).where(["nodes.id IN (?) AND sections.expiration_email_subject IS NOT NULL AND sections.expiration_email_subject != ''", self.path_ids]).order('ancestry DESC').first
+    Section.includes(:node).references(:nodes).where("nodes.id IN (?) AND sections.expiration_email_subject IS NOT NULL AND sections.expiration_email_subject != ''", self.path_ids).order('nodes.ancestry DESC').first
   end
 
   def expiration_notification_method
@@ -93,7 +93,7 @@ module NodeExtensions::Expiration
   end
 
   def cascade_expires_on!
-    self.descendants.update_all({ expires_on: Date.parse(cascade_expires_on) }, { content_type: Node.expirable_content_types })
+    self.descendants.where(content_type: Node.expirable_content_types).update_all(expires_on: Date.parse(cascade_expires_on))
   end
 
   def cascade_expires_on?

@@ -39,7 +39,7 @@ class Admin::LinksBoxesController < Admin::AdminController
 
   # * GET /admin/links_boxes/new
   def new
-    @links_box = LinksBox.new(params[:links_box])
+    @links_box = LinksBox.new(permitted_attributes)
     respond_to do |format|
       format.html { render :template => 'admin/shared/new', :locals => { :record => @links_box } }
     end
@@ -47,7 +47,7 @@ class Admin::LinksBoxesController < Admin::AdminController
 
   # * GET /admin/links_boxes/:id/edit
   def edit
-    @links_box.attributes     = params[:links_box]
+    @links_box.attributes = permitted_attributes
     respond_to do |format|
       format.html { render :template => 'admin/shared/edit', :locals => { :record => @links_box } }
     end
@@ -56,7 +56,7 @@ class Admin::LinksBoxesController < Admin::AdminController
   # * POST /admin/links_boxes
   # * POST /admin/links_boxes.xml
   def create
-    @links_box        = LinksBox.new(params[:links_box])
+    @links_box        = LinksBox.new(permitted_attributes)
     @links_box.parent = @parent_node
 
     respond_to do |format|
@@ -72,11 +72,11 @@ class Admin::LinksBoxesController < Admin::AdminController
       end
     end
   end
-  
+
   # * PUT /admin/links_boxes/:id
   # * PUT /admin/links_boxes/:id.xml
   def update
-    @links_box.attributes = params[:links_box]
+    @links_box.attributes = permitted_attributes
 
     respond_to do |format|
       if @commit_type == 'preview' && @links_box.valid?
@@ -98,12 +98,16 @@ class Admin::LinksBoxesController < Admin::AdminController
 
 protected
 
+  def permitted_attributes
+    params.fetch(:links_box, {}).permit!
+  end
+
   # Retrieves the requested +LinksBox+ object using the passed in +id+ parameter.
   def find_links_box
-    @links_box = LinksBox.find(params[:id], :include => :node)
+    @links_box = LinksBox.includes(:node).find(params[:id])
   end
 
   def find_children
-    @children = @links_box.node.children.accessible.public.exclude_content_types('Image').include_content.all.map { |n| n.content }
+    @children = @links_box.node.children.accessible.is_public.exclude_content_types('Image').include_content.all.map { |n| n.content }
   end
 end

@@ -29,7 +29,7 @@ class Admin::WeblogPostsController < Admin::AdminController
 
   # * GET /admin/weblog_posts/:id/edit
   def edit
-    @weblog_post.attributes = params[:weblog_post]
+    @weblog_post.attributes = permitted_attributes
 
     respond_to do |format|
       format.html { render template: 'admin/shared/edit', locals: { record: @weblog_post } }
@@ -39,7 +39,7 @@ class Admin::WeblogPostsController < Admin::AdminController
   # * PUT /admin/weblog_posts/:id
   # * PUT /admin/weblog_posts/:id.xml
   def update
-    @weblog_post.attributes = params[:weblog_post]
+    @weblog_post.attributes = permitted_attributes
 
     respond_to do |format|
       if @commit_type == 'preview' && @weblog_post.valid?
@@ -64,13 +64,17 @@ class Admin::WeblogPostsController < Admin::AdminController
 
   protected
 
+  def permitted_attributes
+    params.fetch(:weblog_post, {}).permit!
+  end
+
   # Finds the +WeblogPost+ object corresponding to the passed in +id+ parameter.
   def find_weblog_post
-    @weblog_post = WeblogPost.find(params[:id], include: :node).current_version
+    @weblog_post = WeblogPost.includes(:node).find(params[:id]).current_version
   end
 
   def find_content
     @images   = @image_content_nodes
-    @comments = @weblog_post.node.comments.all(limit: 25, order: 'comments.created_at DESC')
+    @comments = @weblog_post.node.comments.limit(25).reorder(created_at: :desc)
   end
 end

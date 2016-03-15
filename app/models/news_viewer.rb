@@ -29,7 +29,7 @@ class NewsViewer < ActiveRecord::Base
   # children.
   has_many :news_viewer_items,    dependent: :destroy
   has_many :news_viewer_archives, dependent: :destroy
-  has_many :news_items,           through: :news_viewer_items, include: :node
+  has_many :news_items,           ->{ includes(:node) }, through: :news_viewer_items
   has_many :news_archives,        through: :news_viewer_archives
 
   # See the preconditions overview for an explanation of these validations.
@@ -55,12 +55,14 @@ class NewsViewer < ActiveRecord::Base
   # Gets accessible news items for the frontend. This method does not return
   # unapproved content.
   def accessible_news_items(options = {})
-    news_items.newest.accessible.scoped({ order: 'news_viewer_items.position, nodes.publication_start_date DESC' }.merge(options))
+    scope = news_items.newest.accessible.reorder('news_viewer_items.position, nodes.publication_start_date DESC')
+    scope = sope.limit(options[:limit]) if options[:limit]
+    scope
   end
 
   # Returns the date when the +NewsViewer+ was last updated.
   def last_updated_at
-    image_node = news_items.newest.accessible.first(order: 'news_viewer_items.position, nodes.publication_start_date DESC').node.children.with_content_type('Image').first rescue nil
+    image_node = news_items.newest.accessible.reorder('news_viewer_items.position, nodes.publication_start_date DESC').first.node.children.with_content_type('Image').first rescue nil
     [
       news_items.newest.accessible.maximum(:updated_at),
       node.updated_at,
@@ -76,7 +78,7 @@ class NewsViewer < ActiveRecord::Base
   # Update the news items.
   def update_news_items
     # Destroy old items
-    news_items.delete(news_items.all(include: :node, conditions: ['nodes.publication_start_date < ?', (Settler['news_viewer_time_period'] ? Settler['news_viewer_time_period'].to_i : 2).weeks.ago]))
+    news_items.delete(news_items.includes(:node).references(:nodes).where('nodes.publication_start_date < ?', (Settler['news_viewer_time_period'] ? Settler['news_viewer_time_period'].to_i : 2).weeks.ago).to_a)
     # Add any news items from the archives
     news_archives.each { |news_archive| news_archive.news_items.newest.each { |item| self.news_items << item rescue nil } }
   end

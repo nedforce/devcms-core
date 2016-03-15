@@ -78,7 +78,7 @@ class ContentRepresentation < ActiveRecord::Base
 
   # Checkes whether +content+ is in the same site as the content box itself
   def content_should_be_in_same_site
-    errors.add(:content, :should_be_in_same_site) if content && parent && !parent.containing_site.self_and_descendants.exists?(id: content_id)
+    errors.add(:content, :should_be_in_same_site) if content && parent && !parent.containing_site.self_and_descendants.where(id: content_id).exists?
   end
 
   # Checks whether +content+ is allowed as content box content

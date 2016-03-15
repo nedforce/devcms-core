@@ -51,7 +51,7 @@ class NewsletterEdition < ActiveRecord::Base
 
   # Retrieves the items belonging to this newsletter edition in correct order.
   def items
-    self.newsletter_edition_items.order('position ASC').all.map { |ed_item| ed_item.item }
+    newsletter_edition_items.order(position: :asc).map(&:item)
   end
 
   # Returns the number of items belonging to this newsletter edition.

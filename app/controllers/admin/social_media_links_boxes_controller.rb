@@ -25,7 +25,7 @@ class Admin::SocialMediaLinksBoxesController < Admin::AdminController
 
   # * GET /admin/social_media_links_boxes/new
   def new
-    @social_media_links_box = SocialMediaLinksBox.new(params[:social_media_links_box])
+    @social_media_links_box = SocialMediaLinksBox.new(permitted_attributes)
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/new', :locals => { :record => @social_media_links_box } }
@@ -34,7 +34,7 @@ class Admin::SocialMediaLinksBoxesController < Admin::AdminController
 
   # * GET /admin/social_media_links_boxes/:id/edit
   def edit
-    @social_media_links_box.attributes = params[:social_media_links_box]
+    @social_media_links_box.attributes = permitted_attributes
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/edit', :locals => { :record => @social_media_links_box } }
@@ -44,7 +44,7 @@ class Admin::SocialMediaLinksBoxesController < Admin::AdminController
   # * POST /admin/social_media_links_boxes
   # * POST /admin/social_media_links_boxes.xml
   def create
-    @social_media_links_box        = SocialMediaLinksBox.new(params[:social_media_links_box])
+    @social_media_links_box        = SocialMediaLinksBox.new(permitted_attributes)
     @social_media_links_box.parent = @parent_node
 
     respond_to do |format|
@@ -64,7 +64,7 @@ class Admin::SocialMediaLinksBoxesController < Admin::AdminController
   # * PUT /admin/social_media_links_boxes/:id
   # * PUT /admin/social_media_links_boxes/:id.xml
   def update
-    @social_media_links_box.attributes = params[:social_media_links_box]
+    @social_media_links_box.attributes = permitted_attributes
 
     respond_to do |format|
       if @commit_type == 'preview' && @social_media_links_box.valid?
@@ -81,6 +81,10 @@ class Admin::SocialMediaLinksBoxesController < Admin::AdminController
   end
 
   protected
+
+  def permitted_attributes
+    params.fetch(:social_media_links_box, {}).permit!
+  end
 
   # Finds the +SocialMediaLinksBox+ object corresponding to the passed in +id+ parameter.
   def find_social_media_links_box

@@ -7,9 +7,6 @@ class AttachmentsController < ApplicationController
   # No layout should be rendered when an attachment is requested.
   layout false
 
-  # SSL encryption is optional for the #show action.
-  ssl_allowed :show
-
   # Uploads an attachment to the user if the filename matches. If no filename is
   # given, then redirect to the correct filename for caching purposes.
   def show
@@ -41,6 +38,6 @@ class AttachmentsController < ApplicationController
 
   def set_cache_control
     # This can be cached by proxy servers
-    headers['Cache-Control'] = @attachment.cache_control
+    expires_in 24.hours, public: true
   end
 end

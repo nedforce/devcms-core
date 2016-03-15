@@ -11,17 +11,24 @@ class Admin::LayoutsController < Admin::AdminController
   def update
     # Parameters: { "node" => { "layout" => "deventer", "layout_variant" => "default", "template_color" => "default" },
     #               "targets" => { "primary_column" => ["1"], "main_content_column" => ["4","5"], "secondary_column" => [nil] } }
-    if params['node'].present?
+    if params[:node].present?
       set_footer_links
-      success = @node.update_layout(node: params['node'], targets: params['targets']) rescue false
+      success = false
+
+      begin
+        success = @node.update_layout(node: permitted_node_attributes, targets: permitted_targets_attributes)
+      rescue => e
+        render text: e.message, status: :precondition_failed
+        return
+      end
 
       if success
-        render text: 'ok', status: :ok
+        head :ok
       else
         render text: 'not ok', status: :precondition_failed
       end
     elsif @node.reset_layout
-      render text: 'ok', status: :ok
+      head :ok
     end
   end
 
@@ -38,6 +45,14 @@ class Admin::LayoutsController < Admin::AdminController
   end
 
   protected
+
+  def permitted_node_attributes
+    params.fetch(:node, {}).permit!
+  end
+
+  def permitted_targets_attributes
+    params.fetch(:targets, {}).permit!
+  end
 
   def find_node
     @node = Node.find(params[:node_id])

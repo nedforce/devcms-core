@@ -1,5 +1,5 @@
 class CreateEventRegistrations < ActiveRecord::Migration
-  def self.up
+  def up
     create_table :event_registrations do |t|
       t.references :event
       t.references :user
@@ -8,7 +8,7 @@ class CreateEventRegistrations < ActiveRecord::Migration
     end
   end
 
-  def self.down
+  def down
     drop_table :event_registrations
   end
 end

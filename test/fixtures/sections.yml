@@ -2,7 +2,7 @@ root_section:
   type: Site
   title: Website root
   description: Dit is de eerste node in de website's boomstructuur.
-  frontpage_node_id: <%= ActiveRecord::Fixtures.identify(:devcms_news_node) %>
+  frontpage_node_id: <%= ActiveRecord::FixtureSet.identify(:devcms_news_node) %>
   domain: www.example.com
   expiration_email_subject: Content onder uw beheer
 
@@ -35,7 +35,7 @@ section_for_sorting:
 section_with_frontpage:
   title: This is a section with a frontpage node.
   description: No kidding.
-  frontpage_node_id: <%= ActiveRecord::Fixtures.identify(:frontpage_for_section_node) %>
+  frontpage_node_id: <%= ActiveRecord::FixtureSet.identify(:frontpage_for_section_node) %>
 
 bis_section:
   title: BIS

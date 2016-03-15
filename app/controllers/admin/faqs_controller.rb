@@ -35,7 +35,7 @@ class Admin::FaqsController < Admin::AdminController
 
   # * GET /admin/faqs/new
   def new
-    @faq = Faq.new(params[:faq])
+    @faq = Faq.new(permitted_attributes)
 
     respond_to do |format|
       format.html { render template: 'admin/shared/new', locals: { record: @faq } }
@@ -44,7 +44,7 @@ class Admin::FaqsController < Admin::AdminController
 
   # * GET /admin/faqs/:id/edit
   def edit
-    @faq.attributes = params[:faq]
+    @faq.attributes = permitted_attributes
 
     respond_to do |format|
       format.html { render template: 'admin/shared/edit', locals: { record: @faq } }
@@ -54,7 +54,7 @@ class Admin::FaqsController < Admin::AdminController
   # * POST /admin/faqs
   # * POST /admin/faqs.xml
   def create
-    @faq = Faq.new(params[:faq])
+    @faq = Faq.new(permitted_attributes)
     @faq.parent = @parent_node
 
     respond_to do |format|
@@ -74,7 +74,7 @@ class Admin::FaqsController < Admin::AdminController
   # * PUT /admin/faqs/:id
   # * PUT /admin/faqs/:id.xml
   def update
-    @faq.attributes = params[:faq]
+    @faq.attributes = permitted_attributes
 
     respond_to do |format|
       if @commit_type == 'preview' && @faq.valid?
@@ -94,6 +94,10 @@ class Admin::FaqsController < Admin::AdminController
   end
 
   protected
+
+  def permitted_attributes
+    params.fetch(:faq, {}).permit!
+  end
 
   # Finds the +Faq+ object corresponding to the passed in +id+ parameter.
   def find_faq

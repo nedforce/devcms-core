@@ -28,7 +28,7 @@ class WeblogPostsController < ApplicationController
   # * GET /weblogs_posts/:id.xml
   def show
     @images   = @image_content_nodes
-    @comments = @weblog_post.node.comments.all(limit: 25, order: 'comments.created_at DESC')
+    @comments = @weblog_post.node.comments.reorder(created_at: :desc).limit(25)
 
     respond_to do |format|
       format.html # show.html.erb
@@ -52,7 +52,7 @@ class WeblogPostsController < ApplicationController
   # * POST /weblog_archives/1/weblogs/1/weblog_posts
   # * POST /weblog_archives/1/weblogs/1/weblog_posts.xml
   def create
-    @weblog_post        = @weblog.weblog_posts.build(params[:weblog_post])
+    @weblog_post        = @weblog.weblog_posts.build(permitted_attributes)
     @weblog_post.parent = @weblog.node
 
     if params[:images]
@@ -93,7 +93,7 @@ class WeblogPostsController < ApplicationController
       images = @images[0..allowed_extra_images - 1].map { |image| Image.new(parent: @weblog_post.node, file: image[:file], title: image[:file].original_filename) }
     end
 
-    @weblog_post.attributes = params[:weblog_post]
+    @weblog_post.attributes = permitted_attributes
 
     respond_to do |format|
       if @weblog_post.save(user: current_user)
@@ -148,6 +148,10 @@ class WeblogPostsController < ApplicationController
   end
 
   protected
+
+  def permitted_attributes
+    params.fetch(:weblog_post, {}).permit!
+  end
 
   # Finds the +Weblog+ object corresponding to the passed in +weblog_id+
   # parameter.

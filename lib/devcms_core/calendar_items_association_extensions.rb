@@ -36,11 +36,11 @@ module DevcmsCore
     end
 
     def exists_after_date?(date = Date.today) #:nodoc:
-      gregorian_date?(date) && accessible.all(conditions: ['? < date(end_time)', date], limit: 1).size > 0
+      gregorian_date?(date) && accessible.where('? < date(end_time)', date).any?
     end
 
     def exists_before_date?(date = Date.today) #:nodoc:
-      gregorian_date?(date) && accessible.all(conditions: ['? > date(start_time)', date], limit: 1).size > 0
+      gregorian_date?(date) && accessible.where('? > date(start_time)', date).any?
     end
 
     # Checks if the date is between the first and the last known event

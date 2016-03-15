@@ -1,15 +1,15 @@
 class Object
   def to_boolean
-    ActiveRecord::ConnectionAdapters::Column.value_to_boolean(self)
+    ActiveRecord::Type::Boolean.new.type_cast_from_user(self)
   end
 
   # Tell Rails this file is an extension of a file in another engine
   # This requires the file in the other engine, so that you can reopen
   # classes and modules it defines, and expand their functionality.
-  # 
+  #
   # * +extended_from+: the engine or module containing the engine from which to extend.
   #   extension_of requires the file with the same path in this engine
-  # 
+  #
   # * +extended_by+(optional): the engine (or module containing the engine) in which this method is called
   #   this is used to determine the path of this file within it's engine. Default = the current rails app.
   def extension_of(extended_from, extended_by = Rails.application.class)

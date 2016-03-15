@@ -23,7 +23,7 @@ class Admin::ContactBoxesController < Admin::AdminController
 
   # * GET /admin/contact_boxes/new
   def new
-    @contact_box = ContactBox.new(params[:contact_box])
+    @contact_box = ContactBox.new(permitted_attributes)
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/new', :locals => { :record => @contact_box } }
@@ -40,7 +40,7 @@ class Admin::ContactBoxesController < Admin::AdminController
   # * POST /admin/contact_boxes
   # * POST /admin/contact_boxes.xml
   def create
-    @contact_box        = ContactBox.new(params[:contact_box])
+    @contact_box        = ContactBox.new(permitted_attributes)
     @contact_box.parent = @parent_node
 
     respond_to do |format|
@@ -57,8 +57,8 @@ class Admin::ContactBoxesController < Admin::AdminController
   # * PUT /admin/contact_boxs/:id
   # * PUT /admin/contact_boxs/:id.xml
   def update
-    @contact_box.attributes = params[:contact_box]
-    
+    @contact_box.attributes = permitted_attributes
+
     respond_to do |format|
       if @contact_box.save(:user => current_user)
         format.html { render 'admin/shared/update' }
@@ -71,6 +71,10 @@ class Admin::ContactBoxesController < Admin::AdminController
   end
 
 protected
+
+  def permitted_attributes
+    params.fetch(:contact_box, {}).permit!
+  end
 
   # Finds the +ContactBox+ object corresponding to the passed in +id+ parameter.
   def find_contact_box

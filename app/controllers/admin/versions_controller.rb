@@ -36,7 +36,7 @@ class Admin::VersionsController < Admin::AdminController
   def approve
     respond_to do |format|
       if @version.approve!(current_user)
-        UserMailer.approval_notification(current_user, @version.versionable.node, @version.editor, params[:comment], :host => request.host).deliver if @version.editor
+        UserMailer.approval_notification(current_user, @version.versionable.node, @version.editor, params[:comment], :host => request.host).deliver_now if @version.editor
         format.xml { head :ok }
       else
         format.xml { head :internal_server_error }
@@ -49,7 +49,7 @@ class Admin::VersionsController < Admin::AdminController
   def reject
     respond_to do |format|
       if @version.reject!
-        UserMailer.rejection_notification(current_user, @version.versionable.node, @version.editor, params[:reason], :host => request.host).deliver if @version.editor
+        UserMailer.rejection_notification(current_user, @version.versionable.node, @version.editor, params[:reason], :host => request.host).deliver_now if @version.editor
         format.xml { head :ok }
       else
         format.xml { head :internal_server_error }
@@ -64,6 +64,6 @@ class Admin::VersionsController < Admin::AdminController
   end
 
   def find_version
-    @version = Version.unapproved.find(params[:id], :conditions => [ 'id in (?)', @versions.map { |v| v.id } ])
+    @version = Version.unapproved.where('id in (?)', @versions.map(&:id)).find(params[:id])
   end
 end

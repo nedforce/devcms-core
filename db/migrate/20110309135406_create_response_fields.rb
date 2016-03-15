@@ -1,5 +1,5 @@
 class CreateResponseFields < ActiveRecord::Migration
-  def self.up
+  def up
     create_table :response_fields do |t|
       t.integer :response_id
       t.integer :contact_form_field_id
@@ -9,7 +9,7 @@ class CreateResponseFields < ActiveRecord::Migration
     end
   end
 
-  def self.down
+  def down
     drop_table :response_fields
   end
 end

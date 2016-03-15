@@ -50,7 +50,10 @@ class TopHitsPage < ActiveRecord::Base
   # Finds the content nodes within the current site that have been shown the
   # most and are publicly accessible.
   def find_top_hits(options = {})
-    return @top_hits if @top_hits
+    @top_hits ||= {}
+    options_query = options.to_query
+
+    return @top_hits[options_query] if @top_hits[options_query]
 
     include_content          = options.key?(:include_content) ? options.delete(:include_content) : false
     nodes_to_exclude         = options.delete(:nodes_to_exclude) || []
@@ -64,18 +67,15 @@ class TopHitsPage < ActiveRecord::Base
     nodes_to_exclude += containing_site.descendants.with_content_type('Site')
 
     # Exclude private sections
-    nodes_to_exclude += containing_site.descendants.sections.private
+    nodes_to_exclude += containing_site.descendants.sections.is_private
 
     limit = options.delete(:limit) || DEFAULT_AMOUNT_TO_SHOW
     order = options.delete(:order) || 'hits DESC'
 
     top_hits_scope = containing_site.descendants.accessible.exclude_subtrees_of(nodes_to_exclude.uniq).exclude_content_types(content_types_to_exclude)
     top_hits_scope = top_hits_scope.limit(limit).reorder(order)
+    top_hits_scope = top_hits_scope.include_content if include_content
 
-    @top_hits = if include_content
-      top_hits_scope.include_content.all(options)
-    else
-      top_hits_scope.all(options)
-    end
+    @top_hits[options_query] = top_hits_scope
   end
 end

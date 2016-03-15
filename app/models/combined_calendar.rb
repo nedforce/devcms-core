@@ -37,10 +37,10 @@ class CombinedCalendar < ActiveRecord::Base
     nodes_to_exclude = containing_site.descendants.with_content_type('Site') - sites
 
     # Exclude private sections
-    nodes_to_exclude += containing_site.descendants.sections.private
+    nodes_to_exclude += containing_site.descendants.sections.is_private
 
     # Scope within all accessible calendars
-    accessible_calendar_node_child_ancestries = containing_site.descendants.accessible.exclude_subtrees_of(nodes_to_exclude).with_content_type('Calendar').all.map { |n| n.child_ancestry }
+    accessible_calendar_node_child_ancestries = containing_site.descendants.accessible.exclude_subtrees_of(nodes_to_exclude).with_content_type('Calendar').map { |n| n.child_ancestry }
 
     @calendar_items_scope = Event.with_ancestry(accessible_calendar_node_child_ancestries)
   end

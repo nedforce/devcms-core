@@ -5,20 +5,9 @@ module NodeExtensions::VisibilityAndAccessibility
     validates_inclusion_of :private, in: [false, true], allow_nil: false
     validates_inclusion_of :hidden,  in: [false, true], allow_nil: false
 
-    attr_protected :hidden, :private
-
-    scope :accessible, lambda { { conditions: accessibility_and_visibility_conditions } }
-    scope :public,  { conditions: { 'nodes.private' => false } }
-    scope :private, { conditions: { 'nodes.private' => true  } }
-  end
-
-  module ClassMethods
-    def accessibility_and_visibility_conditions
-      [
-        'nodes.hidden = false AND nodes.publishable = true AND (:now >= nodes.publication_start_date AND (nodes.publication_end_date IS NULL OR :now <= nodes.publication_end_date))',
-        { now: Time.now }
-      ]
-    end
+    scope :accessible, ->{ where('nodes.hidden = false AND nodes.publishable = true AND (:now >= nodes.publication_start_date AND (nodes.publication_end_date IS NULL OR :now <= nodes.publication_end_date))', now: Time.now) }
+    scope :is_public,  ->{ where('nodes.private' => false) }
+    scope :is_private, ->{ where('nodes.private' => true) }
   end
 
   def public?
@@ -26,24 +15,24 @@ module NodeExtensions::VisibilityAndAccessibility
   end
 
   def is_private_or_has_private_ancestor?
-    self_and_ancestors.exists?(private: true)
+    self_and_ancestors.where(private: true).exists?
   end
 
   def has_private_ancestor?
-    ancestors.exists?(private: true)
+    ancestors.where(private: true).exists?
   end
 
   def has_hidden_ancestor?
-    ancestors.exists?(hidden: true)
+    ancestors.where(hidden: true).exists?
   end
 
   def top_level_private_ancestor
-    self_and_ancestors.private.first
+    self_and_ancestors.is_private.first
   end
 
   def accessible_for_user?(user = nil)
-    if self_and_ancestors.sections.private.any?
-      user && user.role_assignments.exists?(node_id: self_and_ancestor_ids)
+    if self_and_ancestors.sections.is_private.any?
+      user && user.role_assignments.where(node_id: self_and_ancestor_ids).exists?
     else
       true
     end
@@ -53,16 +42,16 @@ module NodeExtensions::VisibilityAndAccessibility
     if !(content_class <= Section)
       errors.add(:base, I18n.t('activerecord.errors.models.node.attributes.base.can_only_set_accessibility_on_sections'))
       false
-    elsif self.is_global_frontpage? || self.contains_global_frontpage?
+    elsif is_global_frontpage? || contains_global_frontpage?
       errors.add(:base, I18n.t('activerecord.errors.models.node.attributes.base.cant_make_node_public_when_it_has_a_private_ancestor'))
       false
     elsif !accessible
-      update_attribute(:private, true) unless self.private? || self.has_private_ancestor?
+      update_attribute(:private, true) unless private? || has_private_ancestor?
       true
-    elsif self.has_private_ancestor?
+    elsif has_private_ancestor?
       errors.add(:base, I18n.t('activerecord.errors.models.node.attributes.base.cant_make_node_public_when_it_has_a_private_ancestor'))
       false
-    elsif self.private?
+    elsif private?
       update_attribute(:private, false)
       true
     else
@@ -74,18 +63,18 @@ module NodeExtensions::VisibilityAndAccessibility
   end
 
   def set_visibility!(visible)
-    if self.is_global_frontpage? || self.contains_global_frontpage?
+    if is_global_frontpage? || contains_global_frontpage?
       errors.add(:base, I18n.t('activerecord.errors.models.node.attributes.base.cant_make_node_public_when_it_has_a_private_ancestor'))
       false
     elsif !visible
-      Node.update_all('hidden = true', subtree_conditions) unless self.hidden?
+      Node.where(subtree_conditions).update_all(hidden: true) unless hidden?
       self.hidden = true
       true
-    elsif self.has_hidden_ancestor?
+    elsif has_hidden_ancestor?
       errors.add(:base, I18n.t('activerecord.errors.models.node.attributes.base.cant_make_node_visible_when_it_has_a_hidden_ancestor'))
       false
     else
-      Node.update_all('hidden = false', subtree_conditions) if self.hidden?
+      Node.where(subtree_conditions).update_all(hidden: false) if hidden?
       self.hidden = false
       true
     end

@@ -26,7 +26,7 @@ class Admin::NewsItemsController < Admin::AdminController
   # * GET /admin/news_items/:id
   # * GET /admin/news_items/:id.xml
   def show
-    @header_image = Image.accessible.first(:include => :node, :conditions => [ "nodes.ancestry = :latest_news_ancestry", { :latest_news_ancestry => @news_item.node.child_ancestry }])
+    @header_image = Image.accessible.includes(:node).where("nodes.ancestry = :latest_news_ancestry", latest_news_ancestry: @news_item.node.child_ancestry).first
 
     respond_to do |format|
       format.html { render :partial => 'show', :locals => { :record => @news_item }, :layout => 'admin/admin_show' }
@@ -43,7 +43,7 @@ class Admin::NewsItemsController < Admin::AdminController
 
   # * GET /admin/news_items/new
   def new
-    @news_item = @news_archive.news_items.build(params[:news_item])
+    @news_item = @news_archive.news_items.build(permitted_attributes)
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/new', :locals => { :record => @news_item } }
@@ -52,7 +52,7 @@ class Admin::NewsItemsController < Admin::AdminController
 
   # * GET /admin/news_items/:id/edit
   def edit
-    @news_item.attributes = params[:news_item]
+    @news_item.attributes = permitted_attributes
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/edit', :locals => { :record => @news_item } }
@@ -62,7 +62,7 @@ class Admin::NewsItemsController < Admin::AdminController
   # * POST /admin/news_items
   # * POST /admin/news_items.xml
   def create
-    @news_item        = @news_archive.news_items.build(params[:news_item])
+    @news_item        = @news_archive.news_items.build(permitted_attributes)
     @news_item.parent = @parent_node
 
     respond_to do |format|
@@ -82,7 +82,7 @@ class Admin::NewsItemsController < Admin::AdminController
   # * PUT /admin/news_items/:id
   # * PUT /admin/news_items/:id.xml
   def update
-    @news_item.attributes = params[:news_item]
+    @news_item.attributes = permitted_attributes
 
     respond_to do |format|
       if @commit_type == 'preview' && @news_item.valid?
@@ -106,6 +106,10 @@ class Admin::NewsItemsController < Admin::AdminController
 
 protected
 
+  def permitted_attributes
+    params.fetch(:news_item, {}).permit!
+  end
+
   # Finds the NewsArchive object corresponding to the parent node's content.
   def find_news_archive
     @news_archive = @parent_node.content
@@ -113,6 +117,6 @@ protected
 
   # Finds the NewsItem object corresponding to the passed in +id+ parameter.
   def find_news_item
-    @news_item = NewsItem.find(params[:id], :include => :node).current_version
+    @news_item = NewsItem.includes(:node).find(params[:id]).current_version
   end
 end

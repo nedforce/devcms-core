@@ -40,7 +40,7 @@ class ForumPostsController < ApplicationController
   # * POST /forum_topics/1/forum_threads/1/forum_posts
   # * POST /forum_topics/1/forum_threads/1/forum_posts.xml
   def create
-    @forum_post = @forum_thread.forum_posts.build(params[:forum_post])
+    @forum_post = @forum_thread.forum_posts.build(permitted_attributes)
     @forum_post.user = current_user
 
     respond_to do |format|
@@ -58,7 +58,7 @@ class ForumPostsController < ApplicationController
   # * PUT /forum_topics/1/forum_threads/1/forum_posts/1.xml
   def update
     respond_to do |format|
-      if @forum_post.update_attributes(params[:forum_post])
+      if @forum_post.update_attributes(permitted_attributes)
 
         format.html { redirect_to [ @forum_thread.forum_topic, @forum_thread ] }
         format.xml  { head :ok }
@@ -81,6 +81,10 @@ class ForumPostsController < ApplicationController
   end
 
 protected
+
+  def permitted_attributes
+    params.fetch(:forum_post, {}).permit!
+  end
 
   # Finds the +ForumThread+ object corresponding to the passed in +forum_thread_id+ parameter.
   def find_forum_thread

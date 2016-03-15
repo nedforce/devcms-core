@@ -1,25 +1,26 @@
 ENV['RAILS_ENV'] = 'test'
 
-require File.expand_path('../dummy/config/environment.rb', __FILE__)
+require File.expand_path("../../test/dummy/config/environment.rb",  __FILE__)
+ActiveRecord::Migrator.migrations_paths = [File.expand_path("../../test/dummy/db/migrate", __FILE__)]
 require 'rails/test_help'
 require 'mocha/setup'
-require 'html_test'
 require 'byebug'
 
-Rails.backtrace_cleaner.remove_silencers!
+# Filter out Minitest backtrace while allowing backtrace from other libraries
+# to be shown.
+Minitest.backtrace_filter = Minitest::BacktraceFilter.new
+
+# Load support files
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
+
+# Load fixtures from the engine
+if ActiveSupport::TestCase.respond_to?(:fixture_path=)
+  ActiveSupport::TestCase.fixture_path = File.expand_path("../fixtures", __FILE__)
+  ActionDispatch::IntegrationTest.fixture_path = ActiveSupport::TestCase.fixture_path
+  ActiveSupport::TestCase.fixtures :all
+end
 
 include ActionDispatch::TestProcess # Required to make fixture_file_upload work
-
-require 'turn/autorun'
-Turn.config.format = :pretty
-
-# module I18n
-#   def self.just_raise(*args)
-#     raise args.first
-#   end
-# end
-#
-# I18n.exception_handler = :just_raise
 
 # Truncate all tables first
 ActiveRecord::Base.connection.tables.each { |table| ActiveRecord::Base.connection.execute("TRUNCATE #{table} CASCADE") }
@@ -27,55 +28,24 @@ ActiveRecord::Base.connection.tables.each { |table| ActiveRecord::Base.connectio
 # Initialize Settler
 Settler.load!
 
+# Fixture helpers
+module FixtureHelpers
+  def fixtures_to_ancestry(*names)
+    names.map { |name| ActiveRecord::FixtureSet.identify(name) }.join('/')
+  end
+end
+
+ActiveRecord::FixtureSet.context_class.include FixtureHelpers
+
 class ActiveSupport::TestCase
-  # Transactional fixtures accelerate your tests by wrapping each test method
-  # in a transaction that's rolled back on completion.  This ensures that the
-  # test database remains unchanged so your fixtures don't have to be reloaded
-  # between every test method.  Fewer database queries means faster tests.
-  #
-  # Read Mike Clark's excellent walkthrough at
-  #   http://clarkware.com/cgi/blosxom/2005/10/24#Rails10FastTesting
-  #
-  # Every Active Record database supports transactions except MyISAM tables
-  # in MySQL.  Turn off transactional fixtures in this case; however, if you
-  # don't care one way or the other, switching from MyISAM to InnoDB tables
-  # is recommended.
-  #
-  # The only drawback to using transactional fixtures is when you actually
-  # need to test transactions.  Since your test is bracketed by a transaction,
-  # any transactions started in your code will be automatically rolled back.
-  self.use_transactional_fixtures = true
-
-  # Instantiated fixtures are slow, but give you @david where otherwise you
-  # would need people(:david).  If you don't want to migrate your existing
-  # test cases which use the @david style and don't mind the speed hit (each
-  # instantiated fixtures translates to a database query per test method),
-  # then set this back to true.
-  self.use_instantiated_fixtures = false
-
-  # Setup all fixtures in test/fixtures/*.(yml|csv) for all tests.
-  #
-  # Note: You'll currently still have to declare fixtures explicitly in
-  #       integration tests -- they do not yet inherit this setting.
-  self.fixture_path = File.dirname(__FILE__) + '/fixtures/'
-
-  fixtures :all
 
   # Add more helper methods to be used by all tests here...
   include DevcmsCore::AuthenticatedTestHelper
   include DevcmsCore::RoleRequirementTestHelper
   include DevcmsCore::RoutingHelpers
 
-  # Validates all controller and integration test requests if set to true:
-  ApplicationController.validate_all = false
-  # What html validators to use, options: :w3c, :tidy, :xmllint
-  ApplicationController.validators = [:w3c]
-  # Check all redirects
-  ApplicationController.check_redirects = true
-  # Don't check all links
-  ApplicationController.check_urls = false
-  # Comment the following line when not developing at the office
-  Html::Test::Validator.w3c_url = 'http://office.nedforce.nl/w3c-validator/check'
+  # Headhunter: Check HTML by setting HEADHUNTER env variable:
+  # ENV['HEADHUNTER'] = true
 
   def get_file_as_string(filename)
     data = ''
@@ -105,13 +75,15 @@ class ActiveSupport::TestCase
   end
 end
 
-class ActionController::IntegrationTest
+class ActionDispatch::IntegrationTest
   self.fixture_path = File.dirname(__FILE__) + '/fixtures/'
 
   setup :enable_show_exceptions
 
   def enable_show_exceptions
-    Rails.application.config.consider_all_requests_local = false
-    Rails.application.config.action_dispatch.show_exceptions = true
+    Rails.application.config.stubs(:consider_all_requests_local).returns(false)
+    Rails.application.config.action_dispatch.stubs(:show_exceptions).returns(true)
   end
 end
+
+

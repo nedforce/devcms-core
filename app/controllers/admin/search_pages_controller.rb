@@ -21,7 +21,7 @@ class Admin::SearchPagesController < Admin::AdminController
 
   # * GET /admin/search_pages/new
   def new
-    @search_page = SearchPage.new(params[:search_page])
+    @search_page = SearchPage.new(permitted_attributes)
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/new', :locals => { :record => @search_page } }
@@ -30,7 +30,7 @@ class Admin::SearchPagesController < Admin::AdminController
 
   # * GET /admin/search_pages/:id/edit
   def edit
-    @search_page.attributes = params[:search_page]
+    @search_page.attributes = permitted_attributes
 
     respond_to do |format|
       format.html { render :template => 'admin/shared/edit', :locals => { :record => @search_page } }
@@ -40,7 +40,7 @@ class Admin::SearchPagesController < Admin::AdminController
   # * POST /admin/search_pages
   # * POST /admin/search_pages.xml
   def create
-    @search_page = SearchPage.new(params[:search_page])
+    @search_page = SearchPage.new(permitted_attributes)
     @search_page.parent = @parent_node
 
     respond_to do |format|
@@ -57,7 +57,7 @@ class Admin::SearchPagesController < Admin::AdminController
   # * PUT /admin/search_pages/:id
   # * PUT /admin/search_pages/:id.xml
   def update
-    @search_page.attributes = params[:search_page]
+    @search_page.attributes = permitted_attributes
 
     respond_to do |format|
       if @search_page.save(:user => current_user)
@@ -72,8 +72,12 @@ class Admin::SearchPagesController < Admin::AdminController
 
   protected
 
+  def permitted_attributes
+    params.fetch(:search_page, {}).permit!
+  end
+
   # Finds the +SearchPage+ object corresponding to the passed in +id+ parameter.
   def find_search_page
-    @search_page = SearchPage.find(params[:id], :include => :node).current_version
+    @search_page = SearchPage.includes(:node).find(params[:id]).current_version
   end
 end

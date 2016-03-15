@@ -53,7 +53,7 @@ class Admin::AttachmentsController < Admin::AdminController
   # * POST /admin/attachments.xml
   def create
     params[:attachment].delete(:filename) if params[:attachment][:filename].blank? # find out from the uploaded file
-    @attachment        = Attachment.new(params[:attachment])
+    @attachment        = Attachment.new(permitted_attributes)
     @attachment.parent = @parent_node
 
     respond_to do |format|
@@ -86,7 +86,7 @@ class Admin::AttachmentsController < Admin::AdminController
   # * PUT /admin/attachments/:id
   # * PUT /admin/attachments/:id.xml
   def update
-    @attachment.attributes = params[:attachment]
+    @attachment.attributes = permitted_attributes
 
     respond_to do |format|
       if @attachment.save(:user => current_user, :approval_required => @for_approval)
@@ -100,6 +100,10 @@ class Admin::AttachmentsController < Admin::AdminController
   end
 
   protected
+
+  def permitted_attributes
+    params.fetch(:attachment, {}).permit!
+  end
 
   def find_attachment
     @attachment = Attachment.find(params[:id]).current_version

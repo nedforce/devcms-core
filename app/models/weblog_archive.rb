@@ -41,7 +41,7 @@ class WeblogArchive < ActiveRecord::Base
   # Finds the first +DEFAULT_OFFSET+ weblogs belonging to this +WeblogArchive+,
   # starting at the given +offset+.
   def find_weblogs_for_offset(offset)
-    weblogs.all(offset: offset, limit: DEFAULT_OFFSET)
+    weblogs.offset(offset).limit(DEFAULT_OFFSET)
   end
 
   # Returns a hash with the offsets that can be used in subsequent calls to
@@ -71,8 +71,9 @@ class WeblogArchive < ActiveRecord::Base
   # total number of weblogs being 57, the 41st and 57th weblogs will be
   # returned.
   def find_first_and_last_weblog_for_offset(offset)
-    first  = weblogs.first(offset: offset, limit: DEFAULT_OFFSET)
-    second = weblogs.first(offset: offset, limit: DEFAULT_OFFSET, order: 'weblogs.title DESC')
+    scope = weblogs.offset(offset).limit(DEFAULT_OFFSET)
+    first  = scope.first
+    second = scope.reorder('weblogs.title DESC').first
 
     [first, second]
   end
@@ -92,7 +93,7 @@ class WeblogArchive < ActiveRecord::Base
   # Returns true if this +WeblogArchive+ has a +Weblog+
   # associated with the given +User+, else false.
   def has_weblog_for_user?(user)
-    weblogs.exists?(user_id: user)
+    weblogs.where(user_id: user).exists?
   end
 
   # Finds the +limit+ last updated +Weblog+ children.

@@ -15,7 +15,7 @@ class SharesController < ApplicationController
       params[:share][:node_id] = params[:node_id]
     end
 
-    @share = Share.new(params[:share])
+    @share = Share.new(permitted_attributes)
     if verify_recaptcha(:model => @share) && @share.valid?
       flash[:notice] = I18n.t('share.recommendation_successful')
       @share.send_recommendation_email
@@ -26,7 +26,11 @@ class SharesController < ApplicationController
   end
 
   protected
-  
+
+  def permitted_attributes
+    params.fetch(:share, {}).permit!
+  end
+
   def find_share_node
     @node = current_site.self_and_descendants.accessible.include_content.where(:id => params[:node_id]).first!
   end

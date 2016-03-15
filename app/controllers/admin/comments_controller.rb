@@ -7,7 +7,7 @@ class Admin::CommentsController < Admin::AdminController
   before_filter :set_sorting, :only => :index
 
   skip_before_filter :set_actions
-  skip_before_filter :find_node    
+  skip_before_filter :find_node
 
   require_role [ 'admin', 'final_editor', 'editor'], :any_node => true, :except => :new
 
@@ -43,7 +43,7 @@ class Admin::CommentsController < Admin::AdminController
     @comment = @comment_class.find(params[:id])
 
     respond_to do |format|
-      if @comment.update_attributes(params[:comment])
+      if @comment.update_attributes(permitted_attributes)
         format.json { head :ok }
       else
         format.json { render :json => @comment.errors, :status => :unprocessable_entity }
@@ -66,6 +66,10 @@ class Admin::CommentsController < Admin::AdminController
   end
 
 protected
+
+  def permitted_attributes
+    params.fetch(:comment, {}).permit!
+  end
 
   # Finds sorting parameters.
   def set_sorting

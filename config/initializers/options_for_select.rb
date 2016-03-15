@@ -2,6 +2,10 @@ module ActionView
   module Helpers
     module FormOptionsHelper
 
+      def html_escape *args
+        ERB::Util.html_escape *args
+      end
+
       def option_html_attributes(element)
         return '' unless Array === element
         html_attributes = []

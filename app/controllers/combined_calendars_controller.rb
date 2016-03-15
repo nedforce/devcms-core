@@ -20,7 +20,7 @@ class CombinedCalendarsController < ApplicationController
         render 'calendars/show'
       end
       format.any(:atom, :rss) do
-        @calendar_items = @calendar.calendar_items.accessible.all(:include => :node, :order => 'events.start_time DESC', :limit => 25)
+        @calendar_items = @calendar.calendar_items.accessible.includes(:node).order('events.start_time DESC').limit(25)
         render :layout => false, :template => 'calendars/show'
       end
       format.xml { render :xml => @calendar }
@@ -31,7 +31,7 @@ class CombinedCalendarsController < ApplicationController
   def tomorrow
     tomorrow = Date.tomorrow
     conditions = [ '(start_time BETWEEN :start_time AND :end_time) OR (end_time BETWEEN :start_time AND :end_time)', { :start_time => tomorrow.beginning_of_day, :end_time => tomorrow.end_of_day } ]
-    @calendar_items = @calendar.calendar_items.accessible.all(:include => :node, :conditions => conditions, :order => 'events.start_time DESC')
+    @calendar_items = @calendar.calendar_items.accessible.includes(:node).where(conditions).order('events.start_time DESC')
     @feed_title = I18n.t('calendars.tomorrow')
 
     respond_to do |format|

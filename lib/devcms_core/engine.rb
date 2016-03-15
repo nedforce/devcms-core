@@ -7,12 +7,12 @@ module DevcmsCore
     config.registered_models = []
     config.allowed_content_types_for_alphabetic_index = %w( Page )
 
-    config.reserved_slugs = ['admin', 'assets']
+    config.reserved_slugs = ['admin', 'assets', 'signup']
     config.rewrite_paths = []
     config.rewriter = nil
 
-    config.app_middleware.insert_before(Rack::Lock, DevcmsCore::Rewriter)
-    config.app_middleware.insert_before(::DevcmsCore::Rewriter, ::ActionDispatch::Static, "#{root}/public")
+    config.app_middleware.insert_before(Rack::Runtime, DevcmsCore::Rewriter)
+    config.app_middleware.insert_before(::DevcmsCore::Rewriter, ::ActionDispatch::Static, (self.root + 'public').to_s)
 
     # Cookies
     DevcmsCore.config.auth_token_cookie = :auth_token
@@ -80,6 +80,8 @@ module DevcmsCore
         'modules/ie8_text_content.js',
         'modules/ie9_create_contextual_fragment.js'
       ]
+
+      app.config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)
     end
 
     initializer 'data checker config' do |app|

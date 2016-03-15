@@ -7,7 +7,7 @@ class Admin::UrlAliasesController < Admin::AdminController
 
   def index
     @active_page = :url_aliases
-    @nodes       = Node.unscoped { Node.where('custom_url_suffix IS NOT NULL').order("#{@sort_field} #{@sort_direction}").page(@current_page).per(@page_limit) }
+    @nodes       = Node.unscoped { Node.where('custom_url_suffix IS NOT NULL').reorder("#{@sort_field} #{@sort_direction}").page(@current_page).per(@page_limit) }
     @node_count  = Node.where('custom_url_suffix IS NOT NULL').count
 
     respond_to do |format|
@@ -28,7 +28,7 @@ class Admin::UrlAliasesController < Admin::AdminController
 
   def update
     respond_to do |format|
-      if @node.update_attributes params[:node]
+      if @node.update_attributes permitted_attributes
         format.html { redirect_to admin_url_aliases_path, notice: I18n.t('nodes.node_update_succesful') }
         format.json { head :ok }
       else
@@ -46,6 +46,10 @@ class Admin::UrlAliasesController < Admin::AdminController
   end
 
   protected
+
+  def permitted_attributes
+    params.fetch(:node, {}).permit(:custom_url_suffix)
+  end
 
   def find_node
     @node = Node.unscoped.find params[:id]
