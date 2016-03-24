@@ -19,7 +19,7 @@ module NodeExtensions::ParanoidDelete
     end
 
     def top_level_deleted
-      deleted.joins("JOIN nodes AS parents ON (nodes.ancestry = parents.ancestry || '/' || parents.id OR nodes.ancestry = parents.id::varchar) AND parents.deleted_at IS NULL")
+      deleted.joins("INNER JOIN nodes AS parents ON (nodes.ancestry = parents.ancestry || '/' || parents.id OR nodes.ancestry = parents.id::varchar) AND parents.deleted_at IS NULL")
     end
 
     def find_paranoid_hidden_content(content_type, content_id)
