@@ -202,10 +202,4 @@ class Admin::AdminController < ApplicationController
     }
   end
 
-  # Overrides the +ssl_required?+ method in the +ApplicationController+.
-  # We always want ssl enabled for the admin interface, if it is available,
-  # as it ensures we can redirect properly on invalid logins.
-  def ssl_required?
-    !disable_ssl?
-  end
 end
