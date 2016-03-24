@@ -12,7 +12,7 @@ module DevcmsCore
     config.rewriter = nil
 
     config.app_middleware.insert_before(Rack::Runtime, DevcmsCore::Rewriter)
-    config.app_middleware.insert_before(::DevcmsCore::Rewriter, ::ActionDispatch::Static, (self.root + 'public').to_s)
+    config.app_middleware.insert_before(Rack::Sendfile, ::ActionDispatch::Static, (self.root + 'public').to_s)
 
     # Cookies
     DevcmsCore.config.auth_token_cookie = :auth_token
