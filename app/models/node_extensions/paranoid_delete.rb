@@ -15,11 +15,11 @@ module NodeExtensions::ParanoidDelete
 
     # Use this method to retrieve all paranoid deleted node records.
     def deleted
-      unscoped.where("#{table_name}.deleted_at IS NOT NULL")
+      unscope(where: :deleted_at).where.not(deleted_at: nil)
     end
 
     def top_level_deleted
-      unscoped.where('nodes.deleted_at IS NOT NULL').joins("JOIN nodes AS parents ON (nodes.ancestry = parents.ancestry || '/' || parents.id OR nodes.ancestry = parents.id::varchar) AND parents.deleted_at IS NULL")
+      deleted.joins("JOIN nodes AS parents ON (nodes.ancestry = parents.ancestry || '/' || parents.id OR nodes.ancestry = parents.id::varchar) AND parents.deleted_at IS NULL")
     end
 
     def find_paranoid_hidden_content(content_type, content_id)
