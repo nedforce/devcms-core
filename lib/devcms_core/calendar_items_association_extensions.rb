@@ -2,7 +2,7 @@ module DevcmsCore
   module CalendarItemsAssociationExtensions
     def find_all_for_month_of(date)
       start_of_month = date.start_of_month.to_time.utc
-      end_of_month   = date.end_of_month.to_time.utc
+      end_of_month   = date.end_of_day.end_of_month.to_time.utc
 
       # There is a bug in certain Ruby versions where +end_of_month+ does not
       # take Gregorian leap years into account, so it returns 29 February for a
