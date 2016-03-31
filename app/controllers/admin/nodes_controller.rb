@@ -76,7 +76,7 @@ class Admin::NodesController < Admin::AdminController
     end
 
     respond_to do |format|
-      if @node.update_attributes(params[:node])
+      if @node.update_attributes(permitted_attributes)
         format.xml  { head :ok }
         format.json { render :json => { :success => 'true' } }
       else
@@ -168,7 +168,6 @@ class Admin::NodesController < Admin::AdminController
   # * XHR PUT /admin/nodes/2/move?next_sibling=1
   def move
     begin
-
       next_sibling = Node.find(params[:next_sibling]) if params[:next_sibling].present?
       parent = Node.find(params[:parent]) if params[:parent].present?
 
