@@ -1,5 +1,5 @@
 - piwik_site_id = current_site.content.piwik_site_id if current_site.content.piwik_site_id.present?
-- if false && Settler[:piwik_analytics_domain].present? && piwik_site_id
+- if Settler[:piwik_analytics_domain].present? && piwik_site_id
   / Piwik Analytics code
   :javascript
     var _paq = _paq || [];
