@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.authors     = ['Nedforce Informatica Specialisten B.V.']
   s.email       = ['info@nedforce.nl']
-  s.homepage    = 'http://www.nedforce.nl'
+  s.homepage    = 'https://www.nedforce.nl'
   s.summary     = 'CMS engine for Rails 4.2'
   s.description = 'CMS engine for Rails 4.2'
   s.version     = DevcmsCore::VERSION
