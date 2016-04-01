@@ -27,7 +27,7 @@ GIT
 PATH
   remote: .
   specs:
-    devcms_core (3.0.1)
+    devcms_core (3.0.2)
       actionpack-page_caching
       acts-as-taggable-on (~> 3.4.4)
       acts_as_list
@@ -133,7 +133,7 @@ GEM
     colorize (0.7.7)
     concurrent-ruby (1.0.1)
     crass (1.0.2)
-    css_parser (1.4.0)
+    css_parser (1.4.1)
       addressable
     dsl_accessor (0.3.3)
     dynamic_attributes (1.2.0)
