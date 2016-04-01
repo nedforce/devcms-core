@@ -1,10 +1,10 @@
 -# Set content for header first, fixes yields in partial
-- content_for :header, render(:partial => '/layouts/partials/header')
+- content_for :header, render(partial: '/layouts/partials/header')
 !!! Strict
-%html{ :lang => 'nl', 'xml:lang' => 'nl', :xmlns => 'http://www.w3.org/1999/xhtml' }
+%html{ lang: 'nl', 'xml:lang' => 'nl', xmlns: 'http://www.w3.org/1999/xhtml' }
   %head
-    %meta{ :content => 'text/html;charset=utf-8', 'http-equiv' => 'Content-Type' }/
-    %meta{ :content => 'nl_nl', :name => 'language' }/
+    %meta{ content: 'text/html;charset=utf-8', 'http-equiv' => 'Content-Type' }/
+    %meta{ content: 'nl_nl', name: 'language' }/
     = csrf_meta_tags
     - if @node.present?
       = generate_metadata_for(@node)
@@ -12,27 +12,28 @@
     %link{ href: "//#{Settler[:host]}/favicon.ico", rel: 'shortcut icon', type: 'image/vnd.microsoft.icon' }/
 
     = stylesheet_link_tag 'application'
-    = stylesheet_link_tag 'print', :media => 'print'
+    = stylesheet_link_tag 'print', media: 'print'
     = stylesheet_link_tag("templates/#{layout_configuration['template_color'] || 'default'}")
     = yield :css
 
     = javascript_include_tag('application')
 
-    /[if lte IE 7]
-      = stylesheet_link_tag 'ie'
-    /[if lte IE 6]
-      = javascript_include_tag 'iepngfix_tilebg.js'
+    /[if gte IE 8]
+      = javascript_include_tag 'modules/ie8_text_content'
+    /[if gte IE 9]
+      = javascript_include_tag 'modules/ie9_create_contextual_fragment'
 
     = yield :javascript
     - if @rss_feed_url.present?
-      %link{ :href => @rss_feed_url, :rel => 'alternate', :type => 'application/atom+xml' }/
+      %link{ href: @rss_feed_url, rel: 'alternate', type: 'application/atom+xml' }/
     = yield :atom_feed
 
-    = render :partial => '/shared/google_analytics'
+    = render partial: '/shared/google_analytics'
 
   %body
     #main_container
-      = render :partial => '/layouts/partials/content'
+      = render partial: '/layouts/partials/content'
       = yield :header
-    = render :partial => '/layouts/partials/footer'
-    = render :partial => '/shared/admin_tools'
+    = render partial: '/layouts/partials/footer'
+    = render partial: '/shared/admin_tools'
+    = render partial: '/shared/piwik_analytics'
