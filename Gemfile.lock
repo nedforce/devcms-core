@@ -1,14 +1,5 @@
 GIT
-  remote: git@git.nedforce.nl:data_checker.git
-  revision: e5f91813781dea72109047a393cfd403166f6c39
-  branch: rails4
-  specs:
-    data_checker (0.0.2)
-      nokogiri
-      rails (>= 4.0, < 5.0)
-
-GIT
-  remote: git@github.com:netactive/acts_as_ferret.git
+  remote: git://github.com/netactive/acts_as_ferret.git
   revision: cafc3b6942e14295ef98ab6491617d60a1fd6bc9
   branch: rails-4
   specs:
@@ -17,12 +8,21 @@ GIT
       rails (>= 3.0)
 
 GIT
-  remote: git@github.com:rails/prototype-rails.git
+  remote: git://github.com/rails/prototype-rails.git
   revision: 0fed929ff48c10c3b978edd3baa983a81f404dbf
   branch: 4.2
   specs:
     prototype-rails (4.0.0)
       rails (~> 4.0)
+
+GIT
+  remote: git@git.nedforce.nl:data_checker.git
+  revision: e5f91813781dea72109047a393cfd403166f6c39
+  branch: rails4
+  specs:
+    data_checker (0.0.2)
+      nokogiri
+      rails (>= 4.0, < 5.0)
 
 PATH
   remote: .
