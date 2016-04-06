@@ -46,7 +46,7 @@ class SitemapsControllerTest < ActionController::TestCase
   test 'should not contain feeds in atom' do
     get :changes, format: 'atom'
     assert_response :success
-    assert !assigns(:nodes).map(&:content_type).include?('Feed')
+    refute assigns(:nodes).map(&:content_type).include?('Feed')
   end
 
   test 'should not contain hidden content in atom' do
@@ -88,7 +88,7 @@ class SitemapsControllerTest < ActionController::TestCase
   test 'should not contain feeds in rss' do
     get :changes, format: 'rss'
     assert_response :success
-    assert !assigns(:nodes).map(&:content_type).include?('Feed')
+    refute assigns(:nodes).map(&:content_type).include?('Feed')
   end
 
   test 'should not contain hidden content in rss' do

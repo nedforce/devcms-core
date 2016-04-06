@@ -3,7 +3,7 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 class ImporterTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @root_section = sections(:root_section)
     @root_section_node = nodes(:root_section_node)
 
@@ -17,7 +17,7 @@ class ImporterTest < ActiveSupport::TestCase
       instances = importer.instances
 
       instances.each do |instance|
-        assert !instance.new_record?
+        refute instance.new_record?
       end
     end
   end
@@ -28,7 +28,7 @@ class ImporterTest < ActiveSupport::TestCase
       instances = importer.instances
 
       instances.each do |instance|
-        assert !instance.new_record?
+        refute instance.new_record?
       end
     end
   end
@@ -46,7 +46,7 @@ class ImporterTest < ActiveSupport::TestCase
     importer = Importer.import!(@pages_spreadsheet_path, @root_section)
     instances = importer.instances
 
-    [ true, false, true, true, false, true, true ].each_with_index do |show_in_menu, index|
+    [true, false, true, true, false, true, true].each_with_index do |show_in_menu, index|
       assert_equal show_in_menu, instances[index].node.show_in_menu
     end
   end
@@ -61,12 +61,12 @@ class ImporterTest < ActiveSupport::TestCase
       grand_child_section       = first_child_section.children.sections.find_by_title('sectie 2')
       grand_grand_child_section = grand_child_section.children.sections.find_by_title('sectie 3')
 
-      assert !first_child_section.new_record?
-      assert !second_child_section.new_record?
-      assert !grand_child_section.new_record?
-      assert !grand_grand_child_section.new_record?
+      refute first_child_section.new_record?
+      refute second_child_section.new_record?
+      refute grand_child_section.new_record?
+      refute grand_grand_child_section.new_record?
 
-      [ @root_section_node, first_child_section, grand_child_section, @root_section_node, second_child_section, grand_child_section, grand_grand_child_section ].each_with_index do |section_node, index|
+      [@root_section_node, first_child_section, grand_child_section, @root_section_node, second_child_section, grand_child_section, grand_grand_child_section].each_with_index do |section_node, index|
         assert_equal section_node, instances[index].node.parent
       end
     end

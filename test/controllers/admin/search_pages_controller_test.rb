@@ -35,7 +35,7 @@ class Admin::SearchPagesControllerTest < ActionController::TestCase
     assert_difference('SearchPage.count') do
       create_search_page
       assert_response :success
-      assert !assigns(:search_page).new_record?, assigns(:search_page).errors.full_messages.join('; ')
+      refute assigns(:search_page).new_record?, assigns(:search_page).errors.full_messages.join('; ')
     end
   end
 

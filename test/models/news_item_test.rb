@@ -1,7 +1,7 @@
 require File.expand_path('../../test_helper.rb', __FILE__)
 
 class NewsItemTest < ActiveSupport::TestCase
-  def setup
+  setup do
     @devcms_news      = news_archives(:devcms_news)
     @devcms_news_item = news_items(:devcms_news_item)
   end
@@ -15,26 +15,26 @@ class NewsItemTest < ActiveSupport::TestCase
 
   def test_should_require_title
     assert_no_difference 'NewsItem.count' do
-      news_item = create_news_item(:title => nil)
+      news_item = create_news_item(title: nil)
       assert news_item.errors[:title].any?
     end
 
     assert_no_difference 'NewsItem.count' do
-      news_item = create_news_item(:title => '   ')
+      news_item = create_news_item(title: '   ')
       assert news_item.errors[:title].any?
     end
   end
 
   def test_should_require_body
     assert_no_difference 'NewsItem.count' do
-      news_item = create_news_item(:body => nil)
+      news_item = create_news_item(body: nil)
       assert news_item.errors[:body].any?
     end
   end
 
   def test_should_require_parent
     assert_no_difference 'NewsItem.count' do
-      news_item = create_news_item(:parent => nil)
+      news_item = create_news_item(parent: nil)
       assert news_item.errors[:news_archive].any?
     end
   end
@@ -42,8 +42,8 @@ class NewsItemTest < ActiveSupport::TestCase
   def test_should_not_require_unique_title
     assert_difference 'NewsItem.count', 2 do
       2.times do
-        news_item = create_news_item(:title => 'Non-unique title')
-        assert !news_item.errors[:title].any?
+        news_item = create_news_item(title: 'Non-unique title')
+        refute news_item.errors[:title].any?
       end
     end
   end
@@ -52,7 +52,7 @@ class NewsItemTest < ActiveSupport::TestCase
     assert_no_difference 'NewsItem.count' do
       @devcms_news_item.title = 'New title'
       @devcms_news_item.body = 'New body'
-      assert @devcms_news_item.save(:user => users(:arthur))
+      assert @devcms_news_item.save(user: users(:arthur))
     end
   end
 
@@ -72,7 +72,7 @@ class NewsItemTest < ActiveSupport::TestCase
 
   def test_url_alias_for_news_item_with_publication_start_date
     start_date = 2.days.ago
-    ni = create_news_item(:publication_start_date => start_date)
+    ni = create_news_item(publication_start_date: start_date)
     assert_equal "#{start_date.year}/#{start_date.month}/#{start_date.day}/slecht-weer", ni.node.url_alias
   end
 
@@ -84,7 +84,7 @@ class NewsItemTest < ActiveSupport::TestCase
 
   def test_tree_text_for_news_item_with_publication_start_date
     start_date = 2.days.ago
-    ni = create_news_item(:publication_start_date => start_date)
+    ni = create_news_item(publication_start_date: start_date)
     assert_equal "#{start_date.day}/#{start_date.month} #{ni.title}", ni.node.tree_text
   end
 
@@ -94,9 +94,13 @@ class NewsItemTest < ActiveSupport::TestCase
     assert_equal "#{created_at.day}/#{created_at.month} #{ni.title}", ni.node.tree_text
   end
 
-protected
+  protected
 
   def create_news_item(options = {})
-    NewsItem.create({ :parent => nodes(:devcms_news_node), :title => 'Slecht weer!', :body => 'Het zonnetje schijnt niet en de mensen zijn ontevreden.' }.merge(options))
+    NewsItem.create({
+      parent: nodes(:devcms_news_node),
+      title: 'Slecht weer!',
+      body: 'Het zonnetje schijnt niet en de mensen zijn ontevreden.'
+    }.merge(options))
   end
 end

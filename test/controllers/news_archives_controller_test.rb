@@ -9,7 +9,7 @@ class NewsArchivesControllerTest < ActionController::TestCase
     assert_response :success
     assert assigns(:news_archive)
     assert assigns(:latest_news_items)
-    assert !(assigns(:latest_news_items).size > 8)
+    refute (assigns(:latest_news_items).size > 8)
     assert_nil assigns(:news_items_for_table)
     assert_equal nodes(:devcms_news_node), assigns(:node)
   end

@@ -31,7 +31,7 @@ class TopHitsPageTest < ActiveSupport::TestCase
     assert_difference 'TopHitsPage.count', 2 do
       2.times do
         top_hits_page = create_top_hits_page(title: 'Non-unique title')
-        assert !top_hits_page.errors[:title].any?
+        refute top_hits_page.errors[:title].any?
       end
     end
   end
@@ -57,7 +57,7 @@ class TopHitsPageTest < ActiveSupport::TestCase
 
     found_top_hits = top_hits_page.find_top_hits
 
-    assert !found_top_hits.include?(page_node)
+    refute found_top_hits.include?(page_node)
   end
 
   def test_find_top_hits_should_not_include_hidden_content_for_user_without_proper_privileges
@@ -67,7 +67,7 @@ class TopHitsPageTest < ActiveSupport::TestCase
 
     found_top_hits = @top_ten_page.find_top_hits
 
-    assert !found_top_hits.include?(page_node)
+    refute found_top_hits.include?(page_node)
   end
 
   def test_find_top_hits_should_not_include_excluded_content_types
@@ -80,18 +80,26 @@ class TopHitsPageTest < ActiveSupport::TestCase
     found_top_hits = @top_ten_page.find_top_hits(limit: excluded_content_types.size).map(&:content)
 
     excluded_content_types.each do |excluded_content_type|
-      assert !found_top_hits.include?(excluded_content_type), "a content node of type #{excluded_content_type.class} was included in the top list"
+      refute found_top_hits.include?(excluded_content_type), "a content node of type #{excluded_content_type.class} was included in the top list"
     end
   end
 
   protected
 
   def create_top_hits_page(options = {})
-    TopHitsPage.create({ parent: @root_node, title: 'Top hits page' }.merge(options))
+    TopHitsPage.create({
+      parent: @root_node,
+      title: 'Top hits page'
+    }.merge(options))
   end
 
   def create_page(options = {})
-    Page.create({ parent: @root_node, title: 'Page title', preamble: 'Ambule', body: 'Page body' }.merge(options))
+    Page.create({
+      parent: @root_node,
+      title: 'Page title',
+      preamble: 'Ambule',
+      body: 'Page body'
+    }.merge(options))
   end
 
   def create_excluded_content_types

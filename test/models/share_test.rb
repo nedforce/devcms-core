@@ -2,39 +2,40 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 
 class ShareTest < ActiveSupport::TestCase
   test 'should create valid share' do
-    # We cannot assert_difference on the model, because share is not really an ActiveRecord model.
+    # We cannot assert_difference on the model, because share is not really an
+    # ActiveRecord model.
     share = create_share
     assert share.valid?
   end
 
   test 'should require from email address' do
     share = create_share(from_email_address: nil)
-    assert !share.valid?
+    refute share.valid?
   end
 
   test 'should require from name' do
     share = create_share(from_name: nil)
-    assert !share.valid?
+    refute share.valid?
   end
 
   test 'should require to email address' do
     share = create_share(to_email_address: nil)
-    assert !share.valid?
+    refute share.valid?
   end
 
   test 'should require to name' do
     share = create_share(to_name: nil)
-    assert !share.valid?
+    refute share.valid?
   end
 
   test 'should require message' do
     share = create_share(message: nil)
-    assert !share.valid?
+    refute share.valid?
   end
 
   test 'should require node' do
     share = create_share(node: nil)
-    assert !share.valid?
+    refute share.valid?
   end
 
   test 'should return subject' do

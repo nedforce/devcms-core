@@ -36,7 +36,7 @@ class PageTest < ActiveSupport::TestCase
     assert_difference 'Page.count', 2 do
       2.times do
         page = create_page(title: 'Non-unique title')
-        assert !page.errors[:title].any?
+        refute page.errors[:title].any?
       end
     end
   end

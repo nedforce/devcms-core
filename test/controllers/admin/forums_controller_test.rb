@@ -35,7 +35,7 @@ class Admin::ForumsControllerTest < ActionController::TestCase
     assert_difference('Forum.count') do
       create_forum
       assert_response :success
-      assert !assigns(:forum).new_record?, assigns(:forum).errors.full_messages.join('; ')
+      refute assigns(:forum).new_record?, assigns(:forum).errors.full_messages.join('; ')
     end
   end
 

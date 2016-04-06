@@ -91,7 +91,7 @@ class Admin::WeblogArchivesControllerTest < ActionController::TestCase
     end
 
     assert_response :success
-    assert !assigns(:weblog_archive).new_record?, assigns(:weblog_archive).errors.full_messages.join('; ')
+    refute assigns(:weblog_archive).new_record?, assigns(:weblog_archive).errors.full_messages.join('; ')
   end
 
   test 'should get valid preview for create' do

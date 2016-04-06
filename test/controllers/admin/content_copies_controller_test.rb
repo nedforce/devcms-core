@@ -3,7 +3,7 @@ require File.expand_path('../../../test_helper.rb', __FILE__)
 class Admin::ContentCopiesControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @content_copy = content_copies(:test_image_copy)
   end
 
@@ -33,7 +33,7 @@ class Admin::ContentCopiesControllerTest < ActionController::TestCase
       create_content_copy
 
       assert_response :success
-      assert !assigns(:content_copy).new_record?, assigns(:content_copy).errors.full_messages.join('; ')
+      refute assigns(:content_copy).new_record?, assigns(:content_copy).errors.full_messages.join('; ')
       assert nodes(:economie_section_node).parent.children.include? assigns(:content_copy).node
     end
   end

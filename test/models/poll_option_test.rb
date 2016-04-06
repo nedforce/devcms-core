@@ -19,7 +19,7 @@ class PollOptionTest < ActiveSupport::TestCase
   test 'should require text' do
     @o.update_attributes(text: nil)
     assert @o.errors[:text].any?
-    assert !@o.reload.text.blank?
+    refute @o.reload.text.blank?
   end
 
   test 'should not allow duplicate options' do

@@ -3,7 +3,7 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 class CombinedCalendarTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @combined_calendar = combined_calendars(:combined_calendar)
   end
 
@@ -29,7 +29,7 @@ class CombinedCalendarTest < ActiveSupport::TestCase
     assert_difference 'CombinedCalendar.count', 2 do
       2.times do
         combined_calendar = create_combined_calendar(:title => 'Non-unique title')
-        assert !combined_calendar.errors[:title].any?
+        refute combined_calendar.errors[:title].any?
       end
     end
   end
@@ -74,7 +74,7 @@ class CombinedCalendarTest < ActiveSupport::TestCase
     subsite_calendar = create_calendar :parent => subsite
     subsite_calendar_item = create_calendar_item subsite_calendar
 
-    assert !@combined_calendar.calendar_items.include?(subsite_calendar_item)
+    refute @combined_calendar.calendar_items.include?(subsite_calendar_item)
 
     @combined_calendar.sites << subsite
     @combined_calendar.instance_variable_set :@calendar_items_scope, nil

@@ -80,7 +80,7 @@ class ContentCopyTest < ActiveSupport::TestCase
 
   def create_content_copy(options = {})
     ContentCopy.create({
-      parent:      @root_node,
+      parent: @root_node,
       copied_node: @section_node
     }.merge(options))
   end

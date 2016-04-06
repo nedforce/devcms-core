@@ -3,7 +3,7 @@ require File.expand_path('../../../test_helper.rb', __FILE__)
 class Admin::TopHitsPagesControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @top_hits_page = top_hits_pages(:top_ten_page)
   end
 
@@ -38,7 +38,7 @@ class Admin::TopHitsPagesControllerTest < ActionController::TestCase
     assert_difference('TopHitsPage.count') do
       create_top_hits_page
       assert_response :success
-      assert !assigns(:top_hits_page).new_record?, assigns(:top_hits_page).errors.full_messages.join('; ')
+      refute assigns(:top_hits_page).new_record?, assigns(:top_hits_page).errors.full_messages.join('; ')
     end
   end
 

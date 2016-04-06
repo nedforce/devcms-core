@@ -18,12 +18,12 @@ class NewsArchiveTest < ActiveSupport::TestCase
 
   def test_should_require_title
     assert_no_difference 'NewsArchive.count' do
-      news_archive = create_news_archive(:title => nil)
+      news_archive = create_news_archive(title: nil)
       assert news_archive.errors[:title].any?
     end
 
     assert_no_difference 'NewsArchive.count' do
-      news_archive = create_news_archive(:title => '  ')
+      news_archive = create_news_archive(title: '  ')
       assert news_archive.errors[:title].any?
     end
   end
@@ -31,8 +31,8 @@ class NewsArchiveTest < ActiveSupport::TestCase
   def test_should_not_require_unique_title
     assert_difference 'NewsArchive.count', 2 do
       2.times do
-        news_archive = create_news_archive(:title => 'Non-unique title')
-        assert !news_archive.errors[:title].any?
+        news_archive = create_news_archive(title: 'Non-unique title')
+        refute news_archive.errors[:title].any?
       end
     end
   end
@@ -86,7 +86,7 @@ class NewsArchiveTest < ActiveSupport::TestCase
         if news_item.publication_start_date.year == year && news_item.publication_start_date.month == month
           assert found_news_items.include?(news_item)
         else
-          assert !found_news_items.include?(news_item)
+          refute found_news_items.include?(news_item)
         end
       end
     end
@@ -137,10 +137,20 @@ class NewsArchiveTest < ActiveSupport::TestCase
   protected
 
   def create_news_archive(options = {})
-    NewsArchive.create({ :parent => nodes(:root_section_node), :title => 'Good news, everyone!', :description => "I'm sending you all on a highly controversial mission.", :publication_start_date => 2.days.ago }.merge(options))
+    NewsArchive.create({
+      parent: nodes(:root_section_node),
+      title: 'Good news, everyone!',
+      description: "I'm sending you all on a highly controversial mission.",
+      publication_start_date: 2.days.ago
+    }.merge(options))
   end
 
   def create_news_item(news_archive, options = {})
-    NewsItem.create({ :parent => news_archive.node, :title => 'Slecht weer!', :body => 'Het zonnetje schijnt niet en de mensen zijn ontevreden.', :publication_start_date => Time.zone.now }.merge(options))
+    NewsItem.create({
+      parent: news_archive.node,
+      title: 'Slecht weer!',
+      body: 'Het zonnetje schijnt niet en de mensen zijn ontevreden.',
+      publication_start_date: Time.zone.now
+    }.merge(options))
   end
 end

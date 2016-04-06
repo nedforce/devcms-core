@@ -3,7 +3,7 @@ require File.expand_path('../../../test_helper.rb', __FILE__)
 class Admin::HtmlPagesControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @html_page = html_pages(:about_html_page)
   end
 
@@ -38,7 +38,7 @@ class Admin::HtmlPagesControllerTest < ActionController::TestCase
     assert_difference('HtmlPage.count') do
       create_html_page
       assert_response :success
-      assert !assigns(:html_page).new_record?, assigns(:html_page).errors.full_messages.join('; ')
+      refute assigns(:html_page).new_record?, assigns(:html_page).errors.full_messages.join('; ')
     end
   end
 

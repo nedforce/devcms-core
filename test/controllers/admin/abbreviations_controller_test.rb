@@ -3,7 +3,7 @@ require File.expand_path('../../../test_helper.rb', __FILE__)
 class Admin::AbbreviationsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @root = nodes(:root_section_node)
   end
 
@@ -19,7 +19,7 @@ class Admin::AbbreviationsControllerTest < ActionController::TestCase
     assert_difference 'Abbreviation.count' do
       create_abbreviation
       assert_response :success
-      assert !assigns(:abbreviation).new_record?, assigns(:abbreviation).errors.full_messages.join('; ')
+      refute assigns(:abbreviation).new_record?, assigns(:abbreviation).errors.full_messages.join('; ')
     end
   end
 

@@ -3,7 +3,7 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 class RepeatingCalendarItemTest < ActiveSupport::TestCase
 #   self.use_transactional_fixtures = true
 #
-#   def setup
+#   setup do
 #     @events_calendar = calendars(:events_calendar)
 #     @arthur = users(:arthur)
 #   end
@@ -18,7 +18,7 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
 #     assert ci.repeating?
 #
 #     ci = create_calendar_item
-#     assert !ci.repeating?
+#     refute ci.repeating?
 #   end
 #
 #   def test_should_destroy_non_repeating_calendar_item
@@ -80,7 +80,7 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
 #       ci.repeating = repeating
 #       assert ci.save(:user => @arthur)
 #       assert ci.valid?
-#       assert !ci.errors[:repeating].any?
+#       refute ci.errors[:repeating].any?
 #     end
 #   end
 #
@@ -93,7 +93,7 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
 #   def test_should_require_valid_repeat_interval_granularity_on_create_if_repeating_is_true
 #     [ nil, CalendarItem::REPEAT_INTERVAL_GRANULARITIES_VALUES.min - 1, 'foo', CalendarItem::REPEAT_INTERVAL_GRANULARITIES_VALUES.max + 1 ].each do |repeat_interval_granularity|
 #       ci = create_repeating_calendar_item :repeat_interval_granularity => repeat_interval_granularity
-#       assert !ci.valid?
+#       refute ci.valid?
 #       assert ci.errors[:repeat_interval_granularity].any?
 #     end
 #   end
@@ -105,7 +105,7 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
 #       ci.repeat_interval_granularity = repeat_interval_granularity
 #       assert ci.save(:user => @arthur)
 #       assert ci.valid?
-#       assert !ci.errors[:repeat_interval_granularity].any?
+#       refute ci.errors[:repeat_interval_granularity].any?
 #     end
 #   end
 #
@@ -113,7 +113,7 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
 #     [ nil, CalendarItem::REPEAT_INTERVAL_GRANULARITIES_VALUES.min - 1, 'foo', CalendarItem::REPEAT_INTERVAL_GRANULARITIES_VALUES.max + 1 ].each do |repeat_interval_granularity|
 #       ci = create_repeating_calendar_item :repeating => false, :repeat_interval_granularity => repeat_interval_granularity
 #       assert ci.valid?
-#       assert !ci.errors[:repeat_interval_granularity].any?
+#       refute ci.errors[:repeat_interval_granularity].any?
 #     end
 #   end
 #
@@ -126,7 +126,7 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
 #   def test_should_require_valid_repeat_interval_multiplier_on_create_if_repeating_is_true
 #     [ nil, CalendarItem::REPEAT_INTERVAL_MULTIPLIER_RANGE.min - 1, 'foo', CalendarItem::REPEAT_INTERVAL_MULTIPLIER_RANGE.max + 1 ].each do |repeat_interval_multiplier|
 #       ci = create_repeating_calendar_item :repeating => true, :repeat_interval_multiplier => repeat_interval_multiplier
-#       assert !ci.valid?
+#       refute ci.valid?
 #       assert ci.errors[:repeat_interval_multiplier].any?
 #     end
 #   end
@@ -138,7 +138,7 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
 #       ci.repeat_interval_multiplier = repeat_interval_multiplier
 #       assert ci.save(:user => @arthur)
 #       assert ci.valid?
-#       assert !ci.errors[:repeat_interval_multiplier].any?
+#       refute ci.errors[:repeat_interval_multiplier].any?
 #     end
 #   end
 #
@@ -146,7 +146,7 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
 #     [ nil, CalendarItem::REPEAT_INTERVAL_MULTIPLIER_RANGE.min - 1, 'foo', CalendarItem::REPEAT_INTERVAL_MULTIPLIER_RANGE.max + 1 ].each do |repeat_interval_multiplier|
 #       ci = create_repeating_calendar_item :repeating => false, :repeat_interval_multiplier => repeat_interval_multiplier
 #       assert ci.valid?
-#       assert !ci.errors[:repeat_interval_multiplier].any?
+#       refute ci.errors[:repeat_interval_multiplier].any?
 #     end
 #   end
 #
@@ -158,7 +158,7 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
 #
 #   def test_should_require_repeat_end_on_create_if_repeating_is_true
 #     ci = create_repeating_calendar_item :repeating => true, :repeat_end => nil
-#     assert !ci.valid?
+#     refute ci.valid?
 #     assert ci.errors[:repeat_end].any?
 #   end
 #
@@ -168,18 +168,18 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
 #     ci.instance_variable_set(:@repeat_end, nil)
 #     assert ci.save(:user => @arthur)
 #     assert ci.valid?
-#     assert !ci.errors[:repeat_end].any?
+#     refute ci.errors[:repeat_end].any?
 #   end
 #
 #   def test_should_not_require_repeat_end_on_create_if_repeating_is_false
 #     ci = create_repeating_calendar_item :repeating => false
 #     assert ci.valid?
-#     assert !ci.errors[:repeat_end].any?
+#     refute ci.errors[:repeat_end].any?
 #   end
 #
 #   def test_should_require_repeat_end_to_be_in_the_future_on_create_if_repeating_is_true
 #     ci = create_repeating_calendar_item :repeating => true, :repeat_end => 1.day.ago.to_date
-#     assert !ci.valid?
+#     refute ci.valid?
 #     assert ci.errors[:repeat_end].any?
 #   end
 #
@@ -189,13 +189,13 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
 #     ci.instance_variable_set(:@repeat_end, 1.day.ago.to_date)
 #     assert ci.save(:user => @arthur)
 #     assert ci.valid?
-#     assert !ci.errors[:repeat_end].any?
+#     refute ci.errors[:repeat_end].any?
 #   end
 #
 #   def test_should_not_require_repeat_end_to_be_in_the_future_on_create_if_repeating_is_false
 #     ci = create_repeating_calendar_item :repeating => false, :repeat_end => 1.day.ago.to_date
 #     assert ci.valid?
-#     assert !ci.errors[:repeat_end].any?
+#     refute ci.errors[:repeat_end].any?
 #   end
 #
 #   def test_should_assign_repeat_identifier_after_create_if_repeating_is_true
@@ -293,7 +293,7 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
 #     }, {
 #       :repeat_interval_multiplier => 1,
 #       :repeat_interval_granularity => CalendarItem::REPEAT_INTERVAL_GRANULARITIES[:weeks],
-#       :repeat_end => (start_time + 2.month).to_date,
+#       :repeat_end => (start_time + 2.months).to_date,
 #       :title => 'Foo3',
 #       :location_description => 'Foo3',
 #       :body => 'Foo3'

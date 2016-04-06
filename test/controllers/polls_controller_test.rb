@@ -10,6 +10,6 @@ class PollsControllerTest < ActionController::TestCase
     assert_response :success
     assert_equal p, assigns(:poll)
     assert assigns(:earlier_questions)
-    assert !assigns(:earlier_questions).include?(assigns(:question))
+    refute assigns(:earlier_questions).include?(assigns(:question))
   end
 end

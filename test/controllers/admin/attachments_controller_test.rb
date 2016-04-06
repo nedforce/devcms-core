@@ -3,7 +3,7 @@ require File.expand_path('../../../test_helper.rb', __FILE__)
 class Admin::AttachmentsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     AttachmentUploader.any_instance.stubs(:path).returns(File.join(File.dirname(__FILE__), '../../fixtures/files/snippet.css.txt'))
     @attachment = attachments(:besluit_attachment)
   end
@@ -39,7 +39,7 @@ class Admin::AttachmentsControllerTest < ActionController::TestCase
       create_attachment
       assert_response :success
       assert 'test.jpg', assigns(:attachment).filename
-      assert !assigns(:attachment).new_record?, assigns(:attachment).errors.full_messages.join('; ')
+      refute assigns(:attachment).new_record?, assigns(:attachment).errors.full_messages.join('; ')
     end
   end
 

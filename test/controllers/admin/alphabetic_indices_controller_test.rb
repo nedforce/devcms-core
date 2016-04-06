@@ -3,7 +3,7 @@ require File.expand_path('../../../test_helper.rb', __FILE__)
 class Admin::AlphabeticIndicesControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @alphabetic_index = alphabetic_indices(:root_alphabetic_index)
   end
 
@@ -38,7 +38,7 @@ class Admin::AlphabeticIndicesControllerTest < ActionController::TestCase
     assert_difference('AlphabeticIndex.count') do
       create_alphabetic_index
       assert_response :success
-      assert !assigns(:alphabetic_index).new_record?, assigns(:alphabetic_index).errors.full_messages.join('; ')
+      refute assigns(:alphabetic_index).new_record?, assigns(:alphabetic_index).errors.full_messages.join('; ')
     end
   end
 

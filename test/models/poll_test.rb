@@ -9,7 +9,7 @@ class PollTest < ActiveSupport::TestCase
   test 'should create poll' do
     assert_difference 'Poll.count', 1 do
       poll = Poll.create(parent: nodes(:root_section_node), title: 'New poll')
-      assert !poll.new_record?
+      refute poll.new_record?
     end
   end
 

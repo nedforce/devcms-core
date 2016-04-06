@@ -9,12 +9,12 @@ class CommentsControllerTest < ActionController::TestCase
     assert_difference('Comment.count', 2) do
       create_comment
       assert_response :redirect
-      assert !assigns(:comment).new_record?, assigns(:comment).errors.full_messages.join('; ')
+      refute assigns(:comment).new_record?, assigns(:comment).errors.full_messages.join('; ')
       assert_equal users(:gerjan), assigns(:comment).user
 
       create_comment
       assert_response :redirect
-      assert !assigns(:comment).new_record?, assigns(:comment).errors.full_messages.join('; ')
+      refute assigns(:comment).new_record?, assigns(:comment).errors.full_messages.join('; ')
       assert_equal users(:gerjan), assigns(:comment).user
     end
   end

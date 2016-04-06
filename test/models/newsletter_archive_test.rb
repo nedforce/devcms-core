@@ -3,7 +3,7 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 class NewsletterArchiveTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @root_node = nodes(:root_section_node)
     @devcms_newsletter_archive = newsletter_archives(:devcms_newsletter_archive)
   end
@@ -16,12 +16,12 @@ class NewsletterArchiveTest < ActiveSupport::TestCase
 
   def test_should_require_title
     assert_no_difference 'NewsletterArchive.count' do
-      newsletter_archive = create_newsletter_archive(:title => nil)
+      newsletter_archive = create_newsletter_archive(title: nil)
       assert newsletter_archive.errors[:title].any?
     end
 
     assert_no_difference 'NewsletterArchive.count' do
-      newsletter_archive = create_newsletter_archive(:title => '  ')
+      newsletter_archive = create_newsletter_archive(title: '  ')
       assert newsletter_archive.errors[:title].any?
     end
   end
@@ -29,15 +29,15 @@ class NewsletterArchiveTest < ActiveSupport::TestCase
   def test_should_not_require_unique_title
     assert_difference 'NewsletterArchive.count', 2 do
       2.times do
-        newsletter_archive = create_newsletter_archive(:title => 'Non-unique title')
-        assert !newsletter_archive.errors[:title].any?
+        newsletter_archive = create_newsletter_archive(title: 'Non-unique title')
+        refute newsletter_archive.errors[:title].any?
       end
     end
   end
 
   def test_should_update_newsletter_archive
     assert_no_difference 'NewsletterArchive.count' do
-      @devcms_newsletter_archive.title       = 'New title'
+      @devcms_newsletter_archive.title = 'New title'
       @devcms_newsletter_archive.description = 'New description'
       assert @devcms_newsletter_archive.save
     end
@@ -57,7 +57,7 @@ class NewsletterArchiveTest < ActiveSupport::TestCase
         if newsletter_archive.users.include?(user)
           assert newsletter_archive.has_subscription_for?(user)
         else
-          assert !newsletter_archive.has_subscription_for?(user)
+          refute newsletter_archive.has_subscription_for?(user)
         end
       end
     end
@@ -84,7 +84,7 @@ class NewsletterArchiveTest < ActiveSupport::TestCase
 
   def test_find_months_with_newsletter_editions_for_year
     year_month_pairs = @devcms_newsletter_archive.newsletter_editions.map { |newsletter_edition|
-      [ newsletter_edition.publication_start_date.year, newsletter_edition.publication_start_date.month ]
+      [newsletter_edition.publication_start_date.year, newsletter_edition.publication_start_date.month]
     }.uniq
 
     year_month_pairs.each do |year_month_pair|
@@ -97,7 +97,7 @@ class NewsletterArchiveTest < ActiveSupport::TestCase
     newsletter_editions = @devcms_newsletter_archive.newsletter_editions
 
     year_month_pairs = newsletter_editions.map { |newsletter_edition|
-      [ newsletter_edition.publication_start_date.year, newsletter_edition.publication_start_date.month ]
+      [newsletter_edition.publication_start_date.year, newsletter_edition.publication_start_date.month]
     }.uniq
 
     year_month_pairs.each do |year_month_pair|
@@ -109,7 +109,7 @@ class NewsletterArchiveTest < ActiveSupport::TestCase
         if newsletter_edition.publication_start_date.year == year && newsletter_edition.publication_start_date.month == month
           assert found_newsletter_editions.include?(newsletter_edition)
         else
-          assert !found_newsletter_editions.include?(newsletter_edition)
+          refute found_newsletter_editions.include?(newsletter_edition)
         end
       end
     end
@@ -130,10 +130,19 @@ class NewsletterArchiveTest < ActiveSupport::TestCase
   protected
 
   def create_newsletter_archive(options = {})
-    NewsletterArchive.create({ :parent => nodes(:root_section_node), :title => 'Good news, everyone!', :description => "I'm sending you all on a highly controversial mission." }.merge(options))
+    NewsletterArchive.create({
+      parent: nodes(:root_section_node),
+      title: 'Good news, everyone!',
+      description: "I'm sending you all on a highly controversial mission."
+    }.merge(options))
   end
 
   def create_newsletter_edition(newsletter_archive, options = {})
-    NewsletterEdition.create({ :parent => newsletter_archive.node, :title => 'Het maandelijkse nieuws!', :body => 'O o o wat is het weer een fijne maand geweest.', :publication_start_date => 1.minute.from_now }.merge(options))
+    NewsletterEdition.create({
+      parent: newsletter_archive.node,
+      title: 'Het maandelijkse nieuws!',
+      body: 'O o o wat is het weer een fijne maand geweest.',
+      publication_start_date: 1.minute.from_now
+    }.merge(options))
   end
 end

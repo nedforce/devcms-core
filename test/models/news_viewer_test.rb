@@ -28,7 +28,7 @@ class NewsViewerTest < ActiveSupport::TestCase
     assert_difference 'NewsViewer.count', 2 do
       2.times do
         news_viewer = create_news_viewer(:title => 'Non-unique title')
-        assert !news_viewer.errors[:title].any?
+        refute news_viewer.errors[:title].any?
       end
     end
   end

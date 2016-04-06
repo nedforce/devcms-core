@@ -36,7 +36,7 @@ class HtmlPageTest < ActiveSupport::TestCase
     assert_difference 'HtmlPage.count', 2 do
       2.times do
         html_page = create_html_page(title: 'Non-unique title')
-        assert !html_page.errors[:title].any?
+        refute html_page.errors[:title].any?
       end
     end
   end

@@ -3,7 +3,7 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 class ContactBoxTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @root_node = nodes(:root_section_node)
   end
 
@@ -15,27 +15,27 @@ class ContactBoxTest < ActiveSupport::TestCase
 
   def test_should_require_title
     assert_no_difference('ContactBox.count') do
-      contact_box = create_contact_box(:title => nil)
+      contact_box = create_contact_box(title: nil)
       assert contact_box.errors[:title].any?
     end
   end
 
   def test_should_require_contact_information
     assert_no_difference('ContactBox.count') do
-      contact_box = create_contact_box(:contact_information => nil)
+      contact_box = create_contact_box(contact_information: nil)
       assert contact_box.errors[:contact_information].any?
     end
   end
 
   def test_should_require_default_text
     assert_no_difference('ContactBox.count') do
-      contact_box = create_contact_box(:default_text => nil)
+      contact_box = create_contact_box(default_text: nil)
       assert contact_box.errors[:default_text].any?
     end
   end
 
   def test_should_not_require_daily_override_texts
-    [ :monday_text, :tuesday_text, :wednesday_text, :thursday_text, :friday_text ].each do |field|
+    [:monday_text, :tuesday_text, :wednesday_text, :thursday_text, :friday_text].each do |field|
       assert_difference('ContactBox.count') do
         contact_box = create_contact_box(field => nil)
         assert contact_box.errors[field].empty?
@@ -44,7 +44,7 @@ class ContactBoxTest < ActiveSupport::TestCase
   end
 
   def test_should_require_daily_override_texts_to_have_the_proper_length
-    [ :monday_text, :tuesday_text, :wednesday_text, :thursday_text, :friday_text ].each do |field|
+    [:monday_text, :tuesday_text, :wednesday_text, :thursday_text, :friday_text].each do |field|
       assert_no_difference('ContactBox.count') do
         contact_box = create_contact_box(field => 'a')
         assert contact_box.errors[field].any?
@@ -73,10 +73,10 @@ class ContactBoxTest < ActiveSupport::TestCase
 
   def create_contact_box(options = {})
     ContactBox.create({
-      :parent              => @root_node,
-      :title               => 'Contactinformatie',
-      :contact_information => 'Contact info',
-      :default_text        => 'Interesting default text'
+      parent: @root_node,
+      title: 'Contactinformatie',
+      contact_information: 'Contact info',
+      default_text: 'Interesting default text'
     }.merge(options))
   end
 end

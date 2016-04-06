@@ -1,7 +1,7 @@
 require File.expand_path('../../test_helper.rb', __FILE__)
 
 class NewsletterEditionMailerWorkerTest < ActiveSupport::TestCase
-  def setup
+  setup do
     @newsletter_edition_mailer_worker = NewsletterEditionMailerWorker.new
   end
 

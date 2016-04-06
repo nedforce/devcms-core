@@ -18,26 +18,26 @@ class NewsletterEditionTest < ActiveSupport::TestCase
 
   def test_should_require_title
     assert_no_difference 'NewsletterEdition.count' do
-      newsletter_edition = create_newsletter_edition(:title => nil)
+      newsletter_edition = create_newsletter_edition(title: nil)
       assert newsletter_edition.errors[:title].any?
     end
 
     assert_no_difference 'NewsletterEdition.count' do
-      newsletter_edition = create_newsletter_edition(:title => '  ')
+      newsletter_edition = create_newsletter_edition(title: '  ')
       assert newsletter_edition.errors[:title].any?
     end
   end
 
   def test_should_require_body
     assert_no_difference 'NewsletterEdition.count' do
-      newsletter_edition = create_newsletter_edition(:body => nil)
+      newsletter_edition = create_newsletter_edition(body: nil)
       assert newsletter_edition.errors[:body].any?
     end
   end
 
   def test_should_require_parent
     assert_no_difference 'NewsletterEdition.count' do
-      newsletter_edition = create_newsletter_edition(:parent => nil)
+      newsletter_edition = create_newsletter_edition(parent: nil)
       assert newsletter_edition.errors[:newsletter_archive].any?
     end
   end
@@ -45,8 +45,8 @@ class NewsletterEditionTest < ActiveSupport::TestCase
   def test_should_not_require_unique_title
     assert_difference 'NewsletterEdition.count', 2 do
       2.times do
-        newsletter_edition = create_newsletter_edition(:title => 'Non-unique title')
-        assert !newsletter_edition.errors[:title].any?
+        newsletter_edition = create_newsletter_edition(title: 'Non-unique title')
+        refute newsletter_edition.errors[:title].any?
       end
     end
   end
@@ -55,7 +55,7 @@ class NewsletterEditionTest < ActiveSupport::TestCase
     assert_no_difference 'NewsletterEdition.count' do
       @devcms_newsletter_edition.title = 'New title'
       @devcms_newsletter_edition.body = 'New body'
-      assert @devcms_newsletter_edition.save(:user => users(:arthur))
+      assert @devcms_newsletter_edition.save(user: users(:arthur))
     end
   end
 
@@ -83,7 +83,7 @@ class NewsletterEditionTest < ActiveSupport::TestCase
 
   def test_url_alias_for_news_item_with_publication_start_date
     start_date = 2.days.ago
-    ne = create_newsletter_edition(:publication_start_date => start_date)
+    ne = create_newsletter_edition(publication_start_date: start_date)
     assert_equal "#{start_date.year}/#{start_date.month}/#{start_date.day}/het-maandelijkse-nieuws-uit-nederland", ne.node.url_alias
   end
 
@@ -95,7 +95,7 @@ class NewsletterEditionTest < ActiveSupport::TestCase
 
   def test_tree_text_for_news_item_with_publication_start_date
     start_date = 2.days.ago
-    ne = create_newsletter_edition(:publication_start_date => start_date)
+    ne = create_newsletter_edition(publication_start_date: start_date)
     assert_equal "#{start_date.day}/#{start_date.month} #{ne.title}", ne.node.tree_text
   end
 

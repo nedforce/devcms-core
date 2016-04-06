@@ -16,7 +16,7 @@ class Admin::FeedsControllerTest < ActionController::TestCase
 
     assert_difference('Feed.count') do
       create_feed
-      assert !assigns(:feed).new_record?, assigns(:feed).errors.full_messages.join('; ')
+      refute assigns(:feed).new_record?, assigns(:feed).errors.full_messages.join('; ')
       assert_response :success
     end
   end

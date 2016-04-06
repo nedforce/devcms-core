@@ -25,7 +25,7 @@ class WeblogArchiveTest < ActiveSupport::TestCase
     assert_difference 'WeblogArchive.count', 2 do
       2.times do
         weblog_archive = create_weblog_archive(title: 'Non-unique title')
-        assert !weblog_archive.errors[:title].any?
+        refute weblog_archive.errors[:title].any?
       end
     end
   end
@@ -48,7 +48,7 @@ class WeblogArchiveTest < ActiveSupport::TestCase
     offsets = @devcms_weblog_archive.find_offsets
 
     offsets.each do |offset|
-      assert !@devcms_weblog_archive.find_weblogs_for_offset(offset).empty?
+      refute @devcms_weblog_archive.find_weblogs_for_offset(offset).empty?
     end
   end
 
@@ -93,7 +93,7 @@ class WeblogArchiveTest < ActiveSupport::TestCase
     assert @devcms_weblog_archive.has_weblog_for_user?(@weblog.user)
 
     @weblog.destroy
-    assert !@devcms_weblog_archive.reload.has_weblog_for_user?(@weblog.user)
+    refute @devcms_weblog_archive.reload.has_weblog_for_user?(@weblog.user)
   end
 
   protected

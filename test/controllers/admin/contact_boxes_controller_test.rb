@@ -3,7 +3,7 @@ require File.expand_path('../../../test_helper.rb', __FILE__)
 class Admin::ContactBoxesControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @contact_box = contact_boxes(:contact_box)
   end
 
@@ -29,7 +29,7 @@ class Admin::ContactBoxesControllerTest < ActionController::TestCase
     assert_difference('ContactBox.count') do
       create_contact_box
       assert_response :success
-      assert !assigns(:contact_box).new_record?, assigns(:contact_box).errors.full_messages.join('; ')
+      refute assigns(:contact_box).new_record?, assigns(:contact_box).errors.full_messages.join('; ')
     end
   end
 

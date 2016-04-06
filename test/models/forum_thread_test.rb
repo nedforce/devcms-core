@@ -62,7 +62,7 @@ class ForumThreadTest < ActiveSupport::TestCase
         if user == forum_thread.user
           assert forum_thread.is_owned_by_user?(user)
         else
-          assert !forum_thread.is_owned_by_user?(user)
+          refute forum_thread.is_owned_by_user?(user)
         end
       end
     end
@@ -81,20 +81,20 @@ class ForumThreadTest < ActiveSupport::TestCase
   end
 
   def test_should_open_closed_thread
-    assert  @bewoners_forum_thread_one.close
-    assert  @bewoners_forum_thread_one.open
-    assert !@bewoners_forum_thread_one.closed?
+    assert @bewoners_forum_thread_one.close
+    assert @bewoners_forum_thread_one.open
+    refute @bewoners_forum_thread_one.closed?
   end
 
   def test_should_not_close_closed_thread
-    assert  @bewoners_forum_thread_one.close
-    assert !@bewoners_forum_thread_one.close
-    assert  @bewoners_forum_thread_one.reload.closed?
+    assert @bewoners_forum_thread_one.close
+    refute @bewoners_forum_thread_one.close
+    assert @bewoners_forum_thread_one.reload.closed?
   end
 
   def test_should_not_open_open_thread
-    assert !@bewoners_forum_thread_one.open
-    assert !@bewoners_forum_thread_one.reload.closed?
+    refute @bewoners_forum_thread_one.open
+    refute @bewoners_forum_thread_one.reload.closed?
   end
 
   def test_start_post_should_return_first_created_post
@@ -111,7 +111,7 @@ class ForumThreadTest < ActiveSupport::TestCase
     forum_threads.each do |thread|
       replies = thread.replies
       assert_equal((thread.forum_posts.size - 1), replies.size)
-      assert !replies.include?(thread.start_post)
+      refute replies.include?(thread.start_post)
     end
   end
 
@@ -126,6 +126,10 @@ class ForumThreadTest < ActiveSupport::TestCase
   protected
 
   def create_forum_thread(options = {})
-    ForumThread.create({ :forum_topic => @bewoners_forum_topic_wonen, :user => @jan, :title => 'DevCMS forum threads, the best there are!' }.merge(options))
+    ForumThread.create({
+      forum_topic: @bewoners_forum_topic_wonen,
+      user: @jan,
+      title: 'DevCMS forum threads, the best there are!'
+    }.merge(options))
   end
 end

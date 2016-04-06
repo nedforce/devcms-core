@@ -5,7 +5,7 @@ class AbbreviationTest < ActiveSupport::TestCase
   test 'should create abbreviation' do
     assert_difference 'Abbreviation.count' do
       abbr = create_abbreviation
-      assert !abbr.new_record?, "#{abbr.errors.full_messages.to_sentence}"
+      refute abbr.new_record?, "#{abbr.errors.full_messages.to_sentence}"
     end
   end
 

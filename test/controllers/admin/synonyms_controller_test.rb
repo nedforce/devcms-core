@@ -3,7 +3,7 @@ require File.expand_path('../../../test_helper.rb', __FILE__)
 class Admin::SynonymsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @root = nodes(:root_section_node)
   end
 
@@ -19,7 +19,7 @@ class Admin::SynonymsControllerTest < ActionController::TestCase
     assert_difference 'Synonym.count' do
       create_synonym
       assert_response :success
-      assert !assigns(:synonym).new_record?, assigns(:synonym).errors.full_messages.join('; ')
+      refute assigns(:synonym).new_record?, assigns(:synonym).errors.full_messages.join('; ')
     end
   end
 

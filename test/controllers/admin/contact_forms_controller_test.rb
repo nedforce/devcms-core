@@ -31,7 +31,7 @@ class Admin::ContactFormsControllerTest < ActionController::TestCase
       create_contact_form
       assert_response :success
       assert assigns(:contact_form)
-      assert !assigns(:contact_form).new_record?, assigns(:contact_form).errors.full_messages.join('; ')
+      refute assigns(:contact_form).new_record?, assigns(:contact_form).errors.full_messages.join('; ')
     end
   end
 

@@ -7,7 +7,7 @@ class ImageTest < ActiveSupport::TestCase
   test 'should create image' do
     assert_difference('Image.count', 1) do
       image = create_image
-      assert !image.new_record?, image.errors.full_messages.join("\n")
+      refute image.new_record?, image.errors.full_messages.join("\n")
     end
   end
 

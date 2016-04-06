@@ -3,7 +3,7 @@ require File.expand_path('../../../test_helper.rb', __FILE__)
 class Admin::ImagesControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     ImageUploader.any_instance.stubs(:blank?).returns(false)
     ImageUploader.any_instance.stubs(:path).returns(File.join(File.dirname(__FILE__), '../../fixtures/files/test.jpg'))
     @image = images(:test_image)
@@ -39,7 +39,7 @@ class Admin::ImagesControllerTest < ActionController::TestCase
     assert_difference('Image.count', 1) do
       create_image
       assert_response :success
-      assert !assigns(:image).new_record?, assigns(:image).errors.full_messages.join('; ')
+      refute assigns(:image).new_record?, assigns(:image).errors.full_messages.join('; ')
     end
   end
 
@@ -49,7 +49,7 @@ class Admin::ImagesControllerTest < ActionController::TestCase
     assert_difference 'Image.count' do
       create_image(:parent_node_id => nodes(:help_page_node).id)
       assert_response :success
-      assert !assigns(:image).new_record?, assigns(:image).errors.full_messages.join('; ')
+      refute assigns(:image).new_record?, assigns(:image).errors.full_messages.join('; ')
     end
   end
 
@@ -156,7 +156,7 @@ class Admin::ImagesControllerTest < ActionController::TestCase
 
     create_image(:image => { :is_for_header => '1' }, :parent_node_id => nodes(:editor_section_node).id)
     assert_response :success
-    assert !assigns(:image).is_for_header?
+    refute assigns(:image).is_for_header?
   end
 
   def test_should_allow_is_for_header_for_admin

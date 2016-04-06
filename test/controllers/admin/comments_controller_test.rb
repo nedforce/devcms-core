@@ -3,7 +3,7 @@ require File.expand_path('../../../test_helper.rb', __FILE__)
 class Admin::CommentsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @comment = comments(:weblog_post_one_comment_one)
     @forum_start_post = forum_posts(:bewoners_forum_post_one)
     @forum_post = forum_posts(:bewoners_forum_post_five)
@@ -58,7 +58,7 @@ class Admin::CommentsControllerTest < ActionController::TestCase
 
     assert_equal true, assigns(:show_forum_posts)
     assert assigns(:comments).include?(@forum_post)
-    assert !assigns(:comments).include?(@forum_start_post)
+    refute assigns(:comments).include?(@forum_start_post)
   end
 
   def test_should_update_forum_post

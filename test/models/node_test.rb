@@ -3,7 +3,7 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 class NodeTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @arthur                = users(:arthur)
     @editor                = users(:editor)
     @root_node             = nodes(:root_section_node)
@@ -41,7 +41,7 @@ class NodeTest < ActiveSupport::TestCase
     assert_difference 'Node.count' do
       cn = create_page
       assert_equal 'foo', cn.node.url_alias
-      assert !cn.new_record?, 'invalid node: ' + cn.errors.full_messages.join(' ')
+      refute cn.new_record?, 'invalid node: ' + cn.errors.full_messages.join(' ')
     end
   end
 
@@ -144,25 +144,25 @@ class NodeTest < ActiveSupport::TestCase
 
   def test_should_return_hash_for_tree_node_with_roles
     tree_node = nodes(:root_section_node).to_tree_node_for(users(:editor))
-    assert !tree_node[:leaf]
+    refute tree_node[:leaf]
     assert tree_node[:disabled]
     tree_node = nodes(:devcms_news_node).to_tree_node_for(users(:editor))
-    assert !tree_node[:leaf]
-    assert !tree_node[:disabled]
+    refute tree_node[:leaf]
+    refute tree_node[:disabled]
     tree_node = nodes(:devcms_news_item_node).to_tree_node_for(users(:editor))
-    assert !tree_node[:noChildNodes]
-    assert !tree_node[:disabled]
+    refute tree_node[:noChildNodes]
+    refute tree_node[:disabled]
   end
 
   def test_should_create_version_and_check_accessibility_flow
     page = create_editor_content_node(:title => 'Version 1', :publication_start_date => 1.day.ago)
     node = page.node
-    assert !node.publishable?
+    refute node.publishable?
     assert_nil page.previous_version
     assert_raise(ActiveRecord::RecordNotFound) { Node.accessible.find(node.id) }
 
     page.update_attributes(:user => users(:editor), :title => 'Version 2')
-    assert !node.publishable?
+    refute node.publishable?
     assert_nil page.previous_version
     assert_raise(ActiveRecord::RecordNotFound) { Node.accessible.find(node.id) }
 
@@ -217,29 +217,29 @@ class NodeTest < ActiveSupport::TestCase
   def test_is_frontpage?
     @root_section.set_frontpage!(@economie_section_node)
     assert @economie_section_node.is_frontpage?
-    assert !@root_node.is_frontpage?
+    refute @root_node.is_frontpage?
     @root_section.set_frontpage!(@root_node)
-    assert !@economie_section_node.is_frontpage?
-    assert !@root_node.is_frontpage?
+    refute @economie_section_node.is_frontpage?
+    refute @root_node.is_frontpage?
   end
 
   def test_is_global_frontpage?
     @root_section.set_frontpage!(@root_node)
-    assert !@economie_section_node.is_global_frontpage?
+    refute @economie_section_node.is_global_frontpage?
     assert @root_node.is_global_frontpage?
     @root_section.set_frontpage!(@economie_section_node)
     assert @economie_section_node.is_global_frontpage?
-    assert !@root_node.is_global_frontpage?
+    refute @root_node.is_global_frontpage?
   end
 
   def test_contains_global_frontpage?
     @root_section.set_frontpage!(@root_node)
-    assert !@root_node.contains_global_frontpage? # Because it IS the global frontpage
-    assert !@economie_section_node.contains_global_frontpage?
+    refute @root_node.contains_global_frontpage? # Because it IS the global frontpage
+    refute @economie_section_node.contains_global_frontpage?
 
     @root_section.set_frontpage!(@economie_section_node)
     assert @root_node.contains_global_frontpage?
-    assert !@economie_section_node.contains_global_frontpage? # Because it IS the global frontpage
+    refute @economie_section_node.contains_global_frontpage? # Because it IS the global frontpage
   end
 
   def test_node_should_be_expandable_if_user_has_a_role_on_it
@@ -251,7 +251,7 @@ class NodeTest < ActiveSupport::TestCase
   end
 
   def test_node_should_not_be_expandable_if_user_has_no_role_on_it_or_on_a_descendant
-    assert !nodes(:section_with_frontpage_node).is_expandable_for_user?(@editor)
+    refute nodes(:section_with_frontpage_node).is_expandable_for_user?(@editor)
   end
 
   def test_determine_content_date_should_use_publication_start_date_for_news_items_and_newsletter_editions
@@ -331,8 +331,8 @@ class NodeTest < ActiveSupport::TestCase
   end
 
   def test_changes_should_accept_limit
-    assert_equal  5, @root_node.last_changes(:all, :limit =>  5).size
-    assert_equal 15, @root_node.last_changes(:all, :limit => 15).size
+    assert_equal  5, @root_node.last_changes(:all, limit:  5).size
+    assert_equal 15, @root_node.last_changes(:all, limit: 15).size
   end
 
   test 'changes should return self' do
@@ -342,7 +342,7 @@ class NodeTest < ActiveSupport::TestCase
     assert changes.include?(nodes(:devcms_news_node))
   end
 
-  def test_increment_hits
+  test 'should increment hits' do
     node = create_page.node
     assert_equal 0, node.hits
     node.increment_hits!
@@ -351,18 +351,18 @@ class NodeTest < ActiveSupport::TestCase
 
   def test_find_accessible_should_only_find_published_nodes
     # Published nodes
-    [ [ 1.day.ago, nil ], [ 1.day.ago, 1.day.from_now ] ].map do |start_date, end_date|
+    [[1.day.ago, nil], [1.day.ago, 1.day.from_now]].map do |start_date, end_date|
       page = create_page
-      page.update_attributes(:publication_start_date => start_date, :publication_end_date => end_date)
-      assert !page.new_record?
+      page.update_attributes(publication_start_date: start_date, publication_end_date: end_date)
+      refute page.new_record?
       assert_equal page.node, Node.accessible.find(page.node.id)
     end
 
     # Unpublished nodes
-    [ [ 2.days.ago, 1.day.ago ], [ 1.day.from_now, nil ], [ 1.day.from_now, 2.days.from_now ] ].map do |start_date, end_date|
+    [[2.days.ago, 1.day.ago], [1.day.from_now, nil], [1.day.from_now, 2.days.from_now]].map do |start_date, end_date|
       page = create_page
-      page.update_attributes(:publication_start_date => start_date, :publication_end_date => end_date)
-      assert !page.new_record?
+      page.update_attributes(publication_start_date: start_date, publication_end_date: end_date)
+      refute page.new_record?
 
       assert_raise ActiveRecord::RecordNotFound do
         Node.accessible.find page.node.id
@@ -387,14 +387,14 @@ class NodeTest < ActiveSupport::TestCase
   end
 
   def test_should_accept_tag
-    @economie_section_node.update_attributes :tag_list => 'tag'
+    @economie_section_node.update_attributes tag_list: 'tag'
     assert @economie_section_node.valid?
-    assert !@economie_section_node.tag_list.empty?
+    refute @economie_section_node.tag_list.empty?
   end
 
   def test_should_find_related_nodes
-    @economie_section_node.update_attributes :tag_list => 'tag'
-    @about_page_node.update_attributes :tag_list => 'tag'
+    @economie_section_node.update_attributes tag_list: 'tag'
+    @about_page_node.update_attributes tag_list: 'tag'
     assert @economie_section_node.related_content.include? @about_page_node
   end
 
@@ -409,20 +409,20 @@ class NodeTest < ActiveSupport::TestCase
   end
 
   def test_bulk_update_should_return_true_if_updating_succeeds_for_all_nodes
-    node1 = stub(:content => stub(:update_attributes! => true, :class => stub(:requires_editor_approval? => false)))
-    node2 = stub(:content => stub(:update_attributes! => true, :class => stub(:requires_editor_approval? => false)))
-    assert_equal true, Node.bulk_update([ node1, node2 ], { :title => 'ok' })
+    node1 = stub(content: stub(:update_attributes! => true, class: stub(:requires_editor_approval? => false)))
+    node2 = stub(content: stub(:update_attributes! => true, class: stub(:requires_editor_approval? => false)))
+    assert_equal true, Node.bulk_update([node1, node2], { title: 'ok' })
   end
 
   def test_bulk_update_should_return_false_if_updating_fails_for_one_of_the_nodes
-    content = stub(:class => stub(:requires_editor_approval? => false))
+    content = stub(class: stub(:requires_editor_approval? => false))
     content.stubs(:update_attributes!).raises(ActiveRecord::RecordInvalid.new(Node.new))
-    node1 = stub(:content => content)
+    node1 = stub(content: content)
 
-    content = stub(:update_attributes! => true, :class => stub(:requires_editor_approval? => false))
-    node2 = stub(:content => content)
+    content = stub(:update_attributes! => true, class: stub(:requires_editor_approval? => false))
+    node2 = stub(content: content)
 
-    assert_equal false, Node.bulk_update([ node1, node2 ], {})
+    assert_equal false, Node.bulk_update([node1, node2], {})
   end
 
   def test_containing_site
@@ -441,16 +441,16 @@ class NodeTest < ActiveSupport::TestCase
 
   def test_should_not_update_postions_in_subtree_on_move
     node = nodes(:devcms_news_node)
-    node.descendants.update_all(:position => 99)
+    node.descendants.update_all(position: 99)
     assert node.descendants.all? { |n| n.position == 99 }, 'Should have set all descendant positions!'
     node.move_to_child_of nodes(:economie_section_node)
     assert node.descendants.all? { |n| n.position == 99 }, 'Should not have updated positions!'
   end
 
-protected
+  protected
 
   def create_node(options = {}, parent_node = nodes(:root_section_node))
-    create_page({ :parent => parent_node }.merge(options)).node
+    create_page({ parent: parent_node }.merge(options)).node
   end
 
   def create_news_item(options = {})

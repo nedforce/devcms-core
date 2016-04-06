@@ -38,7 +38,7 @@ class Admin::PollQuestionsControllerTest < ActionController::TestCase
         create_poll_question
         assert_response :success
         assert assigns(:poll_question)
-        assert !assigns(:poll_question).new_record?, assigns(:poll_question).errors.full_messages.join('; ')
+        refute assigns(:poll_question).new_record?, assigns(:poll_question).errors.full_messages.join('; ')
 
         assert_equal 3, assigns(:poll_question).reload.poll_options.count
       end
@@ -52,7 +52,7 @@ class Admin::PollQuestionsControllerTest < ActionController::TestCase
       assert_no_difference('PollOption.count') do
         create_poll_question(:new_poll_option_attributes => nil)
         assert_response :success
-        assert !assigns(:poll_question).new_record?, assigns(:poll_question).errors.full_messages.join('; ')
+        refute assigns(:poll_question).new_record?, assigns(:poll_question).errors.full_messages.join('; ')
       end
     end
   end

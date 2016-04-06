@@ -3,7 +3,7 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 class CarrouselsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @carrousel = create_carrousel
   end
 

@@ -36,7 +36,7 @@ class Admin::AgendaItemsControllerTest < ActionController::TestCase
     assert_difference('AgendaItem.count') do
       create_agenda_item
       assert_response :success
-      assert !assigns(:agenda_item).new_record?, assigns(:agenda_item).errors.full_messages.join('; ')
+      refute assigns(:agenda_item).new_record?, assigns(:agenda_item).errors.full_messages.join('; ')
     end
   end
 

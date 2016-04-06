@@ -3,13 +3,13 @@ require File.expand_path('../../../test_helper.rb', __FILE__)
 class Admin::CarrouselsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @carrousel = create_carrousel
   end
 
   def test_should_create_carrousel
     login_as :sjoerd
-    assert !@carrousel.new_record?
+    refute @carrousel.new_record?
     assert_equal [0, 'seconds'], @carrousel.human_display_time
     assert_equal 0, @carrousel.display_time
   end

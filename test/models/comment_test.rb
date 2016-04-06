@@ -3,27 +3,27 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 class CommentTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @user = users(:arthur)
     @news_item_node = news_items(:devcms_news_item).node
   end
 
-  def test_should_create_comment
+  test 'should create comment' do
     assert_difference 'Comment.count' do
       create_comment
     end
   end
 
-  def test_should_validate_length
+  test 'should validate length' do
     username = 'FooBarBazQuuxMosHenkDef' * 100
     assert_no_difference 'Comment.count' do
-      create_comment(:user_name => username, :user => nil)
+      create_comment(user_name: username, user: nil)
     end
   end
 
-  def test_should_require_user
+  test 'should require user' do
     assert_no_difference 'Comment.count' do
-      comment = create_comment(:user => nil)
+      comment = create_comment(user: nil)
       assert comment.errors[:user].any?
     end
   end
@@ -56,7 +56,7 @@ class CommentTest < ActiveSupport::TestCase
     assert_difference 'Comment.count', 2 do
       2.times do
         comment = create_comment(:title => 'Non-unique title')
-        assert !comment.errors[:title].any?
+        refute comment.errors[:title].any?
       end
     end
   end
@@ -76,24 +76,28 @@ class CommentTest < ActiveSupport::TestCase
   def test_should_return_editable_comments
     assert_equal Comment.all, Comment.editable_comments_for(users(:arthur))
 
-    editable_comment  = create_comment(:user => users(:final_editor))
-    editable_comment2 = create_comment(:user => users(:final_editor), :commentable => nodes(:economie_section_node))
+    editable_comment  = create_comment(user: users(:final_editor))
+    editable_comment2 = create_comment(user: users(:final_editor), commentable: nodes(:economie_section_node))
     non_editable_comment = create_comment
 
     editable_comments = Comment.editable_comments_for(users(:final_editor))
-    assert  editable_comments.include?(editable_comment)
-    assert  editable_comments.include?(editable_comment2)
-    assert !editable_comments.include?(non_editable_comment)
+    assert editable_comments.include?(editable_comment)
+    assert editable_comments.include?(editable_comment2)
+    refute editable_comments.include?(non_editable_comment)
 
-    editable_comment = create_comment(:user => users(:editor))
+    editable_comment = create_comment(user: users(:editor))
     editable_comments = Comment.editable_comments_for(users(:editor))
-    assert  editable_comments.include?(editable_comment)
-    assert !editable_comments.include?(non_editable_comment)
+    assert editable_comments.include?(editable_comment)
+    refute editable_comments.include?(non_editable_comment)
   end
 
-protected
+  protected
 
   def create_comment(options = {})
-    Comment.create({ :user => @user, :commentable => @news_item_node, :comment => "I don't like it!" }.merge(options))
+    Comment.create({
+      user: @user,
+      commentable: @news_item_node,
+      comment: "I don't like it!"
+    }.merge(options))
   end
 end

@@ -3,7 +3,7 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 class RepeatingMeetingTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @meetings_calendar = calendars(:meetings_calendar)
     @meeting_category = meeting_categories(:gemeenteraad_meetings)
   end
@@ -11,9 +11,9 @@ class RepeatingMeetingTest < ActiveSupport::TestCase
   def test_should_create_extra_meetings_for_repeating_meeting
     start_time = Time.now
     end_time = start_time + 1.hour
-    common_attributes = { :start_time => start_time, :end_time => end_time }
+    common_attributes = { start_time: start_time, end_time: end_time }
 
-    attribute_hashes = [ {
+    attribute_hashes = [{
       :repeat_interval_multiplier => 1,
       :repeat_interval_granularity => Meeting::REPEAT_INTERVAL_GRANULARITIES[:days],
       :repeat_end => (start_time + 1.week).to_date,
@@ -30,7 +30,7 @@ class RepeatingMeetingTest < ActiveSupport::TestCase
     }, {
       :repeat_interval_multiplier => 1,
       :repeat_interval_granularity => Meeting::REPEAT_INTERVAL_GRANULARITIES[:weeks],
-      :repeat_end => (start_time + 2.month).to_date,
+      :repeat_end => (start_time + 2.months).to_date,
       :title => 'Foo3',
       :body => 'Foo4',
       :meeting_category => @meeting_category
@@ -92,11 +92,12 @@ class RepeatingMeetingTest < ActiveSupport::TestCase
   def create_meeting(options = {})
     now = Time.now
 
-    Meeting.create({ :parent           => @meetings_calendar.node,
-                     :meeting_category => @meeting_category,
-                     :title            => 'New meeting',
-                     :start_time       => now,
-                     :end_time         => now + 1.hour
+    Meeting.create({
+      parent: @meetings_calendar.node,
+      meeting_category: @meeting_category,
+      title: 'New meeting',
+      start_time: now,
+      end_time: now + 1.hour
     }.merge(options))
   end
 
@@ -113,7 +114,7 @@ class RepeatingMeetingTest < ActiveSupport::TestCase
     amount = 0
     next_date = start_date
 
-    while (next_date <= end_date)
+    while next_date <= end_date
       amount += 1
       next_date += span
     end

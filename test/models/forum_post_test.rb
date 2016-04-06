@@ -7,6 +7,7 @@ class ForumPostTest < ActiveSupport::TestCase
     @bewoners_forum_thread_one = forum_threads(:bewoners_forum_thread_one)
     @bewoners_forum_post_one   = forum_posts(:bewoners_forum_post_one)
     @jan                       = users(:jan)
+    @arthur                    = users(:arthur)
   end
 
   test 'should create forum post' do
@@ -17,7 +18,7 @@ class ForumPostTest < ActiveSupport::TestCase
 
   test 'should not destroy start post' do
     assert_no_difference 'ForumPost.count' do
-      assert !@bewoners_forum_post_one.destroy
+      refute @bewoners_forum_post_one.destroy
     end
     assert_equal 5, @bewoners_forum_thread_one.forum_posts.size
     assert_not_nil @bewoners_forum_thread_one.start_post
@@ -92,7 +93,7 @@ class ForumPostTest < ActiveSupport::TestCase
         if user == forum_post.user
           assert forum_post.is_owned_by_user?(user)
         else
-          assert !forum_post.is_owned_by_user?(user)
+          refute forum_post.is_owned_by_user?(user)
         end
       end
     end
@@ -104,7 +105,7 @@ class ForumPostTest < ActiveSupport::TestCase
     forum_threads.each do |thread|
       assert thread.start_post.is_start_post?
       new_post = thread.forum_posts.create(body: 'foo', user: @jan)
-      assert !new_post.is_start_post?
+      refute new_post.is_start_post?
     end
   end
 
@@ -125,8 +126,8 @@ class ForumPostTest < ActiveSupport::TestCase
   end
 
   test 'should not return start posts' do
-    assert !ForumPost.all.select { |fp| fp.is_start_post? }.empty?
-    assert ForumPost.replies.select { |fp| fp.is_start_post? }.empty?
+    refute ForumPost.all.select(&:is_start_post?).empty?
+    assert ForumPost.replies.select(&:is_start_post?).empty?
   end
 
   test 'should get and set body' do
@@ -137,20 +138,20 @@ class ForumPostTest < ActiveSupport::TestCase
   end
 
   test 'should return editable comments' do
-    assert_equal ForumPost.replies, ForumPost.editable_comments_for(users(:arthur))
+    assert_equal ForumPost.replies, ForumPost.editable_comments_for(@arthur)
 
     editable_forum_post     = create_forum_post(user: users(:final_editor))
     non_editable_forum_post = create_forum_post(forum_thread: forum_threads(:bewoners_forum_thread_three))
 
     editable_forum_posts = ForumPost.editable_comments_for(users(:final_editor))
-    assert  editable_forum_posts.include?(editable_forum_post)
-    assert !editable_forum_posts.include?(non_editable_forum_post)
+    assert editable_forum_posts.include?(editable_forum_post)
+    refute editable_forum_posts.include?(non_editable_forum_post)
 
     editable_forum_post  = create_forum_post(user: users(:editor))
     editable_forum_posts = ForumPost.editable_comments_for(users(:editor))
 
-    assert  editable_forum_posts.include?(editable_forum_post)
-    assert !editable_forum_posts.include?(non_editable_forum_post)
+    assert editable_forum_posts.include?(editable_forum_post)
+    refute editable_forum_posts.include?(non_editable_forum_post)
   end
 
   protected

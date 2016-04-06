@@ -3,7 +3,7 @@ require File.expand_path('../../../test_helper.rb', __FILE__)
 class Admin::PagesControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @page = pages(:help_page)
   end
 
@@ -55,7 +55,7 @@ class Admin::PagesControllerTest < ActionController::TestCase
     assert_difference('Page.count') do
       create_page
       assert_response :success
-      assert !assigns(:page).new_record?, assigns(:page).errors.full_messages.join('; ')
+      refute assigns(:page).new_record?, assigns(:page).errors.full_messages.join('; ')
     end
   end
 

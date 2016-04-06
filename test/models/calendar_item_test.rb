@@ -12,7 +12,7 @@ class CalendarItemTest < ActiveSupport::TestCase
 
   def test_has_repetitions?
     ci = create_calendar_item
-    assert !ci.has_repetitions?
+    refute ci.has_repetitions?
   end
 
   def test_should_create_calendar_item
@@ -24,19 +24,19 @@ class CalendarItemTest < ActiveSupport::TestCase
 
   def test_should_require_title
     assert_no_difference 'CalendarItem.count' do
-      calendar_item = create_calendar_item(:title => nil)
+      calendar_item = create_calendar_item(title: nil)
       assert calendar_item.errors[:title].any?
     end
 
     assert_no_difference 'CalendarItem.count' do
-      calendar_item = create_calendar_item(:title => '  ')
+      calendar_item = create_calendar_item(title: '  ')
       assert calendar_item.errors[:title].any?
     end
   end
 
   def test_should_require_start_time
     assert_no_difference 'CalendarItem.count' do
-      calendar_item = create_calendar_item(:start_time => nil)
+      calendar_item = create_calendar_item(start_time: nil)
       assert calendar_item.errors[:start_time].any?
     end
   end
@@ -48,7 +48,7 @@ class CalendarItemTest < ActiveSupport::TestCase
 
   def test_should_require_parent
     assert_no_difference 'CalendarItem.count' do
-      calendar_item = create_calendar_item(:parent => nil)
+      calendar_item = create_calendar_item(parent: nil)
       assert calendar_item.errors[:calendar].any?
     end
   end
@@ -56,8 +56,8 @@ class CalendarItemTest < ActiveSupport::TestCase
   def test_should_not_require_unique_title
     assert_difference 'CalendarItem.count', 2 do
       2.times do
-        calendar_item = create_calendar_item(:title => 'Non-unique title')
-        assert !calendar_item.errors[:title].any?
+        calendar_item = create_calendar_item(title: 'Non-unique title')
+        refute calendar_item.errors[:title].any?
       end
     end
   end
@@ -67,7 +67,7 @@ class CalendarItemTest < ActiveSupport::TestCase
       @events_calendar_item_one.title      = 'New title'
       @events_calendar_item_one.start_time = DateTime.now
       @events_calendar_item_one.end_time   = DateTime.now + 1.hour
-      assert @events_calendar_item_one.save(:user => users(:arthur))
+      assert @events_calendar_item_one.save(user: users(:arthur))
     end
   end
 
@@ -93,23 +93,23 @@ class CalendarItemTest < ActiveSupport::TestCase
     assert event.has_dynamic_attribute?('field_civil_worker')
     assert_equal 'John Doe', event.reload.field_civil_worker
 
-    assert event.update_attributes(:field_civil_worker => 'Jane Doe')
+    assert event.update_attributes(field_civil_worker: 'Jane Doe')
     assert_equal 'Jane Doe', event.field_civil_worker
   end
 
   def test_should_create_dynamic_attribute_on_update
     event = create_calendar_item
-    assert event.update_attributes(:field_civil_worker => 'Jane Doe')
+    assert event.update_attributes(field_civil_worker: 'Jane Doe')
   end
 
   def test_should_set_start_and_end_time_based_on_date
-    event = create_calendar_item(:date => Date.civil(2011, 1, 1), :start_time => Time.parse('16:00'), :end_time => Time.parse('18:00'))
+    event = create_calendar_item(date: Date.civil(2011, 1, 1), start_time: Time.parse('16:00'), end_time: Time.parse('18:00'))
     assert_equal Time.local(2011, 1, 1, 16), event.start_time
     assert_equal Time.local(2011, 1, 1, 18), event.end_time
   end
 
   def test_should_set_end_time_on_next_day_when_end_time_smaller_then_start_time
-    event = create_calendar_item(:date => Date.civil(2011, 1, 1), :start_time => Time.parse('16:00'), :end_time => Time.parse('11:00'))
+    event = create_calendar_item(date: Date.civil(2011, 1, 1), start_time: Time.parse('16:00'), end_time: Time.parse('11:00'))
     assert_equal Time.local(2011, 1, 1, 16), event.start_time
     assert_equal Time.local(2011, 1, 2, 11), event.end_time
   end
@@ -118,6 +118,13 @@ class CalendarItemTest < ActiveSupport::TestCase
 
   def create_calendar_item(options = {})
     now = Time.zone.now
-    CalendarItem.create({ :parent => @events_calendar.node, :repeating => false, :title => 'New event', :start_time => now, :end_time => now + 1.hour }.merge(options))
+
+    CalendarItem.create({
+      parent: @events_calendar.node,
+      repeating: false,
+      title: 'New event',
+      start_time: now,
+      end_time: now + 1.hour
+    }.merge(options))
   end
 end

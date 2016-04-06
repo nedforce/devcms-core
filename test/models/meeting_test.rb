@@ -13,7 +13,7 @@ class MeetingTest < ActiveSupport::TestCase
   test 'should create meeting' do
     assert_difference 'Meeting.count' do
       meeting = create_meeting
-      assert !meeting.new_record?, "#{meeting.errors.full_messages.to_sentence}"
+      refute meeting.new_record?, "#{meeting.errors.full_messages.to_sentence}"
     end
   end
 

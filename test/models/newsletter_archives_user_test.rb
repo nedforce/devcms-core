@@ -1,4 +1,3 @@
-
 require File.expand_path('../../test_helper.rb', __FILE__)
 
 class NewsletterArchivesUserTest < ActiveSupport::TestCase
@@ -12,7 +11,6 @@ class NewsletterArchivesUserTest < ActiveSupport::TestCase
   end
 
   test 'validate uniqueness' do
-
     assert_difference '@sjoerd.newsletter_archives.count', 1 do
       @sjoerd.newsletter_archives << @newsletter
     end
@@ -21,5 +19,4 @@ class NewsletterArchivesUserTest < ActiveSupport::TestCase
       @arthur.newsletter_archives << @newsletter rescue nil
     end
   end
-
 end

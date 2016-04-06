@@ -3,7 +3,7 @@ require File.expand_path('../../../test_helper.rb', __FILE__)
 class Admin::SectionsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @editor_section = sections(:editor_section)
   end
 
@@ -48,7 +48,7 @@ class Admin::SectionsControllerTest < ActionController::TestCase
     assert_difference('Section.count') do
       create_section
       assert_response :success
-      assert !assigns(:section).new_record?, assigns(:section).errors.full_messages.join('; ')
+      refute assigns(:section).new_record?, assigns(:section).errors.full_messages.join('; ')
     end
   end
 

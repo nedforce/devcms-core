@@ -7,7 +7,7 @@ class SearchPageTest < ActiveSupport::TestCase
   test 'should create search page' do
     assert_difference('SearchPage.count') do
       sp = create_search_page
-      assert !sp.new_record?, sp.errors.full_messages.to_sentence
+      refute sp.new_record?, sp.errors.full_messages.to_sentence
     end
   end
 

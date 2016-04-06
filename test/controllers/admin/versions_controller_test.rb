@@ -62,7 +62,7 @@ class Admin::VersionsControllerTest < ActionController::TestCase
     xhr :put, :reject, id: section.versions.current.id
 
     assert_response :success
-    assert !section.reload.node.publishable?
+    refute section.reload.node.publishable?
   end
 
   test 'should send mail on rejection' do
@@ -78,7 +78,7 @@ class Admin::VersionsControllerTest < ActionController::TestCase
       assert_response :success
     end
 
-    assert !section.reload.node.publishable?
+    refute section.reload.node.publishable?
 
     mail = ActionMailer::Base.deliveries.first
     assert_equal editor.email_address, mail.to[0]

@@ -50,7 +50,7 @@ class WeblogPostsControllerTest < ActionController::TestCase
     assert_difference('WeblogPost.count', 1) do
       create_weblog_post
       assert_response :redirect
-      assert !assigns(:weblog_post).new_record?, assigns(:weblog_post).errors.full_messages.join('; ')
+      refute assigns(:weblog_post).new_record?, assigns(:weblog_post).errors.full_messages.join('; ')
     end
   end
 
@@ -59,7 +59,7 @@ class WeblogPostsControllerTest < ActionController::TestCase
     assert_difference('WeblogPost.count', 1) do
       create_weblog_post
       assert_response :redirect
-      assert !assigns(:weblog_post).new_record?, assigns(:weblog_post).errors.full_messages.join('; ')
+      refute assigns(:weblog_post).new_record?, assigns(:weblog_post).errors.full_messages.join('; ')
     end
   end
 
@@ -188,7 +188,7 @@ class WeblogPostsControllerTest < ActionController::TestCase
       assert_difference('Image.count', 2) do
         create_weblog_post({}, { :images => { :image_0 => { :title => 'An Image', :file => image }, :image_1 => { :title => 'Another Image', :file => image } } })
         assert_response :redirect
-        assert !assigns(:weblog_post).new_record?, assigns(:weblog_post).errors.full_messages.join('; ')
+        refute assigns(:weblog_post).new_record?, assigns(:weblog_post).errors.full_messages.join('; ')
       end
     end
     images = assigns(:weblog_post).node.children

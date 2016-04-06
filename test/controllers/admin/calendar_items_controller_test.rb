@@ -3,7 +3,7 @@ require File.expand_path('../../../test_helper.rb', __FILE__)
 class Admin::CalendarItemsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @calendar_item = events(:events_calendar_item_one)
   end
 
@@ -51,7 +51,7 @@ class Admin::CalendarItemsControllerTest < ActionController::TestCase
     assert_difference('CalendarItem.count', 1) do
       create_calendar_item_request
       assert_response :success
-      assert !assigns(:calendar_item).new_record?, assigns(:calendar_item).errors.full_messages.join('; ')
+      refute assigns(:calendar_item).new_record?, assigns(:calendar_item).errors.full_messages.join('; ')
     end
   end
 

@@ -5,7 +5,7 @@ class PollQuestionTest < ActiveSupport::TestCase
   def test_should_create_poll_question
     assert_difference 'PollQuestion.count', 1 do
       pq = create_poll_question
-      assert !pq.new_record?
+      refute pq.new_record?
     end
   end
 
@@ -13,7 +13,7 @@ class PollQuestionTest < ActiveSupport::TestCase
     assert_difference 'PollQuestion.count', 1 do
       assert_difference 'PollOption.count', 2 do
         pq = create_poll_question new_poll_option_attributes: [{ text: 'Option 1' }, { text: 'Option 2' }]
-        assert !pq.new_record?
+        refute pq.new_record?
         assert_equal 2, pq.poll_options.count
       end
     end
@@ -22,11 +22,11 @@ class PollQuestionTest < ActiveSupport::TestCase
   test 'should require valid question' do
     assert_no_difference 'PollQuestion.count' do
       pq1 = create_poll_question question: nil
-      assert !pq1.valid?
+      refute pq1.valid?
       assert pq1.errors[:question].any?
 
       pq2 = create_poll_question question: '  '
-      assert !pq2.valid?
+      refute pq2.valid?
       assert pq2.errors[:question].any?
     end
   end
@@ -35,7 +35,7 @@ class PollQuestionTest < ActiveSupport::TestCase
     assert_no_difference 'PollQuestion.count' do
       assert_no_difference 'PollOption.count' do
         pq = create_poll_question question: ' ', new_poll_option_attributes: [{ text: 'Option 1' }, { text: 'Option 2' }]
-        assert !pq.valid?
+        refute pq.valid?
         assert pq.errors[:question].any?
 
         pq.poll_options.each do |poll_option|
@@ -47,8 +47,8 @@ class PollQuestionTest < ActiveSupport::TestCase
 
   test 'active should default to false' do
     pq = create_poll_question(active: nil)
-    assert !pq.new_record?
-    assert !pq.reload.active?
+    refute pq.new_record?
+    refute pq.reload.active?
   end
 
   def test_should_not_allow_multiple_active_questions_for_single_poll_after_create
@@ -104,7 +104,7 @@ class PollQuestionTest < ActiveSupport::TestCase
 
     assert_no_difference('pq.poll_options.count') do
       pq.new_poll_option_attributes = [{ text: 'Option 1' }, { text: nil }]
-      assert !pq.save
+      refute pq.save
     end
   end
 
@@ -147,7 +147,7 @@ class PollQuestionTest < ActiveSupport::TestCase
     end
 
     pq.existing_poll_option_attributes = existing_poll_option_attributes
-    assert !pq.save
+    refute pq.save
 
     poll_options.each do |poll_option|
       assert_equal old_poll_option_texts[poll_option.id.to_s], poll_option.reload.text

@@ -3,7 +3,7 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 class NodeParanoidDeleteTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @editor                = users(:editor)
     @root_section          = sections(:root_section)
     @root_section_node     = nodes(:root_section_node)
@@ -24,7 +24,7 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
   def test_should_paranoid_delete_non_root
     assert @economie_section_node.paranoid_delete!
     assert_not_nil @economie_section_node.reload.deleted_at
-    assert !Node.exists?(@economie_section_node.id)
+    refute Node.exists?(@economie_section_node.id)
   end
 
   def test_should_set_deleted_at_on_paranoid_delete
@@ -39,7 +39,7 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
 
     @economie_section_node.paranoid_delete!
 
-    assert !Node.exists?(@economie_section_node.id)
+    refute Node.exists?(@economie_section_node.id)
   end
 
   def test_paranoid_delete_should_also_delete_descendants
@@ -49,8 +49,8 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
 
     @economie_section_node.paranoid_delete!
 
-    assert !Node.exists?(@economie_section_node.id)
-    assert !Node.exists?(node.id)
+    refute Node.exists?(@economie_section_node.id)
+    refute Node.exists?(node.id)
   end
 
   def test_paranoid_delete_should_skip_previously_deleted_descendants
@@ -60,17 +60,17 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
 
     node.paranoid_delete!
 
-    assert !Node.exists?(node.id)
+    refute Node.exists?(node.id)
 
     @economie_section_node.paranoid_delete!
 
-    assert !Node.exists?(@economie_section_node.id)
+    refute Node.exists?(@economie_section_node.id)
   end
 
   def test_acts_as_content_node_default_scope_should_filter_out_paranoid_deleted_nodes
     assert_equal @economie_section, Section.find(@economie_section.id)
     assert @economie_section_node.paranoid_delete!
-    assert !Section.exists?(@economie_section.id)
+    refute Section.exists?(@economie_section.id)
   end
 
   def test_paranoid_delete_should_also_delete_associated_content_for_nodes
@@ -137,35 +137,35 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
 
     assert_equal @root_section_node, Node.global_frontpage
 
-    assert !Node.exists?(@economie_section_node.id)
-    assert !Node.exists?(node.id)
-    assert !Section.where(:id => @economie_section_node.content.id).first.present?
-    assert !Page.where(:id => node.content.id).first.present?
+    refute Node.exists?(@economie_section_node.id)
+    refute Node.exists?(node.id)
+    refute Section.where(:id => @economie_section_node.content.id).first.present?
+    refute Page.where(:id => node.content.id).first.present?
 
-    assert !ContentCopy.exists?(cc1.id)
-    assert !ContentCopy.exists?(cc2.id)
-    assert !ContentCopy.exists?(cc3.id)
-    assert !ContentCopy.exists?(cc4.id)
+    refute ContentCopy.exists?(cc1.id)
+    refute ContentCopy.exists?(cc2.id)
+    refute ContentCopy.exists?(cc3.id)
+    refute ContentCopy.exists?(cc4.id)
 
-    assert !InternalLink.exists?(il1.id)
-    assert !InternalLink.exists?(il2.id)
-    assert !InternalLink.exists?(il3.id)
-    assert !InternalLink.exists?(il4.id)
+    refute InternalLink.exists?(il1.id)
+    refute InternalLink.exists?(il2.id)
+    refute InternalLink.exists?(il3.id)
+    refute InternalLink.exists?(il4.id)
 
-    assert !ContentRepresentation.exists?(cr1.id)
-    assert !ContentRepresentation.exists?(cr2.id)
+    refute ContentRepresentation.exists?(cr1.id)
+    refute ContentRepresentation.exists?(cr2.id)
 
-    assert !RoleAssignment.exists?(ra1.id)
-    assert !RoleAssignment.exists?(ra2.id)
+    refute RoleAssignment.exists?(ra1.id)
+    refute RoleAssignment.exists?(ra2.id)
 
-    assert !Synonym.exists?(s1.id)
-    assert !Synonym.exists?(s2.id)
+    refute Synonym.exists?(s1.id)
+    refute Synonym.exists?(s2.id)
 
-    assert !Abbreviation.exists?(a1.id)
-    assert !Abbreviation.exists?(a2.id)
+    refute Abbreviation.exists?(a1.id)
+    refute Abbreviation.exists?(a2.id)
 
-    assert !Comment.exists?(c1.id)
-    assert !Comment.exists?(c2.id)
+    refute Comment.exists?(c1.id)
+    refute Comment.exists?(c2.id)
   end
 
   def test_paranoid_delete_should_also_delete_associated_versions
@@ -189,20 +189,20 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
 
     @economie_section_node.paranoid_delete!
 
-    assert !Node.exists?(@economie_section_node.id)
-    assert !Node.exists?(node.id)
+    refute Node.exists?(@economie_section_node.id)
+    refute Node.exists?(node.id)
 
     assert Node.deleted.include?(@economie_section_node)
     assert Node.deleted.include?(node)
 
     assert Node.top_level_deleted.include?(@economie_section_node)
-    assert !Node.top_level_deleted.include?(node)
+    refute Node.top_level_deleted.include?(node)
   end
 
   def test_paranoid_restore_should_restore_paranoid_deleted_node
     @economie_section_node.paranoid_delete!
 
-    assert !Node.exists?(@economie_section_node.id)
+    refute Node.exists?(@economie_section_node.id)
 
     assert Node.deleted.include?(@economie_section_node)
 
@@ -210,7 +210,7 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
 
     assert Node.exists?(@economie_section_node.id)
 
-    assert !Node.deleted.include?(@economie_section_node)
+    refute Node.deleted.include?(@economie_section_node)
 
     assert_nil @economie_section_node.reload.deleted_at
   end
@@ -222,8 +222,8 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
 
     @economie_section_node.paranoid_delete!
 
-    assert !Node.exists?(@economie_section_node.id)
-    assert !Node.exists?(node.id)
+    refute Node.exists?(@economie_section_node.id)
+    refute Node.exists?(node.id)
 
     assert_raises RuntimeError do
       node.paranoid_restore!
@@ -237,16 +237,16 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
 
     @economie_section_node.paranoid_delete!
 
-    assert !Node.exists?(@economie_section_node.id)
-    assert !Node.exists?(node.id)
+    refute Node.exists?(@economie_section_node.id)
+    refute Node.exists?(node.id)
 
     @economie_section_node.paranoid_restore!
 
     assert Node.exists?(@economie_section_node.id)
     assert Node.exists?(node.id)
 
-    assert !Node.deleted.include?(@economie_section_node)
-    assert !Node.deleted.include?(node)
+    refute Node.deleted.include?(@economie_section_node)
+    refute Node.deleted.include?(node)
 
     assert_nil @economie_section_node.reload.deleted_at
     assert_nil node.reload.deleted_at
@@ -262,9 +262,9 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
 
     @economie_section_node.paranoid_delete!
 
-    assert !Node.exists?(@economie_section_node.id)
-    assert !Node.exists?(node.id)
-    assert !ContentCopy.exists?(cc.id)
+    refute Node.exists?(@economie_section_node.id)
+    refute Node.exists?(node.id)
+    refute ContentCopy.exists?(cc.id)
 
     @economie_section_node.paranoid_restore!
 
@@ -272,8 +272,8 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
     assert Node.exists?(node.id)
     assert ContentCopy.exists?(cc.id)
 
-    assert !Node.deleted.include?(@economie_section_node)
-    assert !Node.deleted.include?(node)
+    refute Node.deleted.include?(@economie_section_node)
+    refute Node.deleted.include?(node)
 
     assert @economie_section_node.content.present?
     assert node.content.present?
@@ -303,10 +303,10 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
 
     @economie_section_node.paranoid_delete!
 
-    assert !Node.exists?(@economie_section_node.id)
-    assert !Node.exists?(node.id)
-    assert !Section.exists?(@economie_section.id)
-    assert !Page.exists?(content.id)
+    refute Node.exists?(@economie_section_node.id)
+    refute Node.exists?(node.id)
+    refute Section.exists?(@economie_section.id)
+    refute Page.exists?(content.id)
 
     Node.unscoped do
       assert Node.exists?(@economie_section_node.id)
@@ -324,16 +324,16 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
     Node.delete_all_paranoid_deleted_content!
 
     Node.unscoped do
-      assert !Node.exists?(@economie_section_node.id)
-      assert !Node.exists?(node.id)
+      refute Node.exists?(@economie_section_node.id)
+      refute Node.exists?(node.id)
     end
 
     Section.unscoped do
-      assert !Section.exists?(@economie_section.id)
+      refute Section.exists?(@economie_section.id)
     end
 
     Page.unscoped do
-      assert !Page.exists?(content.id)
+      refute Page.exists?(content.id)
     end
   end
 

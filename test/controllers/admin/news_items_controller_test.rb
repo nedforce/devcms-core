@@ -3,7 +3,7 @@ require File.expand_path('../../../test_helper.rb', __FILE__)
 class Admin::NewsItemsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @news_item = news_items(:devcms_news_item)
   end
 
@@ -49,7 +49,7 @@ class Admin::NewsItemsControllerTest < ActionController::TestCase
     assert_difference('NewsItem.count') do
       create_news_item
       assert_response :success
-      assert !assigns(:news_item).new_record?, assigns(:news_item).errors.full_messages.join('; ')
+      refute assigns(:news_item).new_record?, assigns(:news_item).errors.full_messages.join('; ')
     end
   end
 

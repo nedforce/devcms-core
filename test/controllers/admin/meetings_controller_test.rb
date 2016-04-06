@@ -3,7 +3,7 @@ require File.expand_path('../../../test_helper.rb', __FILE__)
 class Admin::MeetingsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @meeting = events(:meetings_calendar_meeting_one)
   end
 
@@ -49,7 +49,7 @@ class Admin::MeetingsControllerTest < ActionController::TestCase
     assert_difference('Meeting.count', 1) do
       create_meeting_request
       assert_response :success
-      assert !assigns(:meeting).new_record?, assigns(:meeting).errors.full_messages.join('; ')
+      refute assigns(:meeting).new_record?, assigns(:meeting).errors.full_messages.join('; ')
     end
   end
 

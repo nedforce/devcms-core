@@ -60,7 +60,7 @@ module DevcmsCore
         if should_access
           assert request_passes_role_security_system?(action, params), "request to #{@controller.class}##{action} with user #{user} and params #{params.inspect} should have passed "
         else
-          assert !request_passes_role_security_system?(action, params), "request to #{@controller.class}##{action} with user #{user} and params #{params.inspect} should have been denied"
+          refute request_passes_role_security_system?(action, params), "request to #{@controller.class}##{action} with user #{user} and params #{params.inspect} should have been denied"
         end
       end
     end

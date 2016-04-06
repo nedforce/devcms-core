@@ -8,20 +8,20 @@ class CalendarTest < ActiveSupport::TestCase
     @events_calendar = calendars(:events_calendar)
   end
 
-  def test_should_create_calendar
+  test 'should create calendar' do
     assert_difference 'Calendar.count' do
       create_calendar
     end
   end
 
-  def test_should_require_title
+  test 'should require title' do
     assert_no_difference 'Calendar.count' do
-      calendar = create_calendar(:title => nil)
+      calendar = create_calendar(title: nil)
       assert calendar.errors[:title].any?
     end
 
     assert_no_difference 'Calendar.count' do
-      calendar = create_calendar(:title => '  ')
+      calendar = create_calendar(title: '  ')
       assert calendar.errors[:title].any?
     end
   end
@@ -29,8 +29,8 @@ class CalendarTest < ActiveSupport::TestCase
   def test_should_not_require_unique_title
     assert_difference 'Calendar.count', 2 do
       2.times do
-        calendar = create_calendar(:title => 'Non-unique title')
-        assert !calendar.errors[:title].any?
+        calendar = create_calendar(title: 'Non-unique title')
+        refute calendar.errors[:title].any?
       end
     end
   end
@@ -57,7 +57,7 @@ class CalendarTest < ActiveSupport::TestCase
 
   def test_find_months_with_calendar_items_for_year
     year_month_pairs = @events_calendar.calendar_items.map { |calendar_item|
-      [ calendar_item.start_time.year, calendar_item.start_time.month ]
+      [calendar_item.start_time.year, calendar_item.start_time.month]
     }.uniq
 
     year_month_pairs.each do |year_month_pair|
@@ -70,7 +70,7 @@ class CalendarTest < ActiveSupport::TestCase
     calendar_items = @events_calendar.calendar_items
 
     year_month_pairs = calendar_items.map { |calendar_item|
-      [ calendar_item.start_time.year, calendar_item.start_time.month ]
+      [calendar_item.start_time.year, calendar_item.start_time.month]
     }.uniq
 
     year_month_pairs.each do |year_month_pair|
@@ -82,7 +82,7 @@ class CalendarTest < ActiveSupport::TestCase
         if calendar_item.start_time.year == year && calendar_item.start_time.month == month
           assert found_calendar_items.include?(calendar_item)
         else
-          assert !found_calendar_items.include?(calendar_item)
+          refute found_calendar_items.include?(calendar_item)
         end
       end
     end
@@ -104,7 +104,7 @@ class CalendarTest < ActiveSupport::TestCase
     ae = create_calendar_item({ :calendar => @events_calendar, :title => 'Active event', :start_time => (DateTime.now - 1.hour).to_s(:db),  :end_time => (DateTime.now + 1.hour).to_s(:db), :publication_start_date => 1.day.ago })
     pe = create_calendar_item({ :calendar => @events_calendar, :title =>   'Past event', :start_time => (DateTime.now - 2.hours).to_s(:db), :end_time => (DateTime.now - 1.hour).to_s(:db), :publication_start_date => 1.day.ago })
     assert  @events_calendar.calendar_items.current_and_future.include?(ae)
-    assert !@events_calendar.calendar_items.current_and_future.include?(pe)
+    refute @events_calendar.calendar_items.current_and_future.include?(pe)
   end
 
   def test_last_updated_at_should_return_updated_at_when_no_accessible_calendar_items_are_found

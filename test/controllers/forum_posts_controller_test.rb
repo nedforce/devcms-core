@@ -48,7 +48,7 @@ class ForumPostsControllerTest < ActionController::TestCase
     assert_difference('ForumPost.count', 1) do
       create_forum_post
       assert_response :redirect
-      assert !assigns(:forum_post).new_record?, assigns(:forum_post).errors.full_messages.join('; ')
+      refute assigns(:forum_post).new_record?, assigns(:forum_post).errors.full_messages.join('; ')
       assert_equal users(:gerjan), assigns(:forum_post).user
     end
   end

@@ -27,7 +27,7 @@ class Admin::PollsControllerTest < ActionController::TestCase
       create_poll
       assert_response :success
       assert assigns(:poll)
-      assert !assigns(:poll).new_record?, assigns(:poll).errors.full_messages.join('; ')
+      refute assigns(:poll).new_record?, assigns(:poll).errors.full_messages.join('; ')
     end
   end
 

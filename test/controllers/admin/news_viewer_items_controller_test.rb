@@ -3,7 +3,7 @@ require File.expand_path('../../../test_helper.rb', __FILE__)
 class Admin::NewsViewerItemsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @news_viewer = create_news_viewer
     @news_viewer_item = create_news_viewer_item
   end

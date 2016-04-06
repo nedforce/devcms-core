@@ -35,7 +35,7 @@ class Admin::CombinedCalendarsControllerTest < ActionController::TestCase
     assert_difference('CombinedCalendar.count') do
       create_combined_calendar
       assert_response :success
-      assert !assigns(:combined_calendar).new_record?, assigns(:combined_calendar).errors.full_messages.join('; ')
+      refute assigns(:combined_calendar).new_record?, assigns(:combined_calendar).errors.full_messages.join('; ')
     end
   end
 

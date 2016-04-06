@@ -62,7 +62,7 @@ class Admin::NewsArchivesControllerTest < ActionController::TestCase
     assert_difference('NewsArchive.count') do
       create_news_archive
       assert_response :success
-      assert !assigns(:news_archive).new_record?, assigns(:news_archive).errors.full_messages.join('; ')
+      refute assigns(:news_archive).new_record?, assigns(:news_archive).errors.full_messages.join('; ')
     end
   end
 

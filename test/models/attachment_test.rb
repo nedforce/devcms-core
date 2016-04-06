@@ -14,12 +14,12 @@ class AttachmentTest < ActiveSupport::TestCase
   end
 
   def test_should_require_title
-    assert_no_attachment_difference { create_attachment(:title => nil) }
-    assert_no_attachment_difference { create_attachment(:title => '  ') }
+    assert_no_attachment_difference { create_attachment(title: nil) }
+    assert_no_attachment_difference { create_attachment(title: '  ') }
   end
 
   def test_should_require_uploaded_file
-    assert_no_attachment_difference { create_attachment(:file => nil) }
+    assert_no_attachment_difference { create_attachment(file: nil) }
   end
 
   def test_should_destroy_attachment
@@ -44,25 +44,29 @@ class AttachmentTest < ActiveSupport::TestCase
   end
 
   def test_should_clean_filename
-    attachment = create_attachment(:filename => '2008.68936_Bijlage_Startnotitie_procesaanpak_Toekomstvisie_2030.pdf')
+    attachment = create_attachment(filename: '2008.68936_Bijlage_Startnotitie_procesaanpak_Toekomstvisie_2030.pdf')
     assert_equal '2008-68936_Bijlage_Startnotitie_procesaanpak_Toekomstvisie_2030.pdf', attachment.filename
   end
 
   protected
 
-    def assert_attachment_difference
-      assert_difference 'Attachment.count' do
-        yield
-      end
+  def assert_attachment_difference
+    assert_difference 'Attachment.count' do
+      yield
     end
+  end
 
-    def assert_no_attachment_difference
-      assert_no_difference 'Attachment.count' do
-        yield
-      end
+  def assert_no_attachment_difference
+    assert_no_difference 'Attachment.count' do
+      yield
     end
+  end
 
-    def create_attachment(options = {})
-      Attachment.create({ :parent => nodes(:downloads_page_node), :title => 'Park Zandweerd Matrix plannen', :file => fixture_file_upload(FIXTURE_FILE, 'application/msword') }.merge(options))
-    end
+  def create_attachment(options = {})
+    Attachment.create({
+      parent: nodes(:downloads_page_node),
+      title: 'Park Zandweerd Matrix plannen',
+      file: fixture_file_upload(FIXTURE_FILE, 'application/msword')
+    }.merge(options))
+  end
 end

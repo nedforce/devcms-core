@@ -3,7 +3,7 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 class EditorApprovalRequirementTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     # Make sure no versions are in the database yet
     Version.delete_all
 
@@ -22,7 +22,7 @@ class EditorApprovalRequirementTest < ActiveSupport::TestCase
       assert page.save(:user => @editor)
       assert_equal @editor_section_node, page.node.parent
 
-      assert !page.node.publishable?
+      refute page.node.publishable?
       assert page.previous_version.nil?
       assert_equal 'Version 1', page.body
       assert_equal 'Version 1', page.current_version.body
@@ -30,7 +30,7 @@ class EditorApprovalRequirementTest < ActiveSupport::TestCase
       page.body = 'Version 2'
       assert page.save(:user => @editor)
 
-      assert !page.node.publishable?
+      refute page.node.publishable?
       assert page.previous_version.nil?
       assert_equal 'Version 2', page.body
       assert_equal 'Version 2', page.current_version.body
@@ -70,7 +70,7 @@ class EditorApprovalRequirementTest < ActiveSupport::TestCase
     assert_difference('Page.count', 1) do
       assert page.save(:user => @editor)
 
-      assert !page.node.publishable?
+      refute page.node.publishable?
       assert_equal 'Version 1', page.current_version.body
       assert page.previous_version.nil?
 
@@ -92,14 +92,14 @@ class EditorApprovalRequirementTest < ActiveSupport::TestCase
     assert_difference('Page.count', 1) do
       assert page.save(:user => @editor)
 
-      assert !page.node.publishable?
+      refute page.node.publishable?
       assert_equal 'Version 1', page.current_version.body
       assert page.previous_version.nil?
 
       page.body = 'Version 2'
       assert page.save(:user => @arthur, :approval_required => true)
 
-      assert !page.node.publishable?
+      refute page.node.publishable?
       assert_equal 'Version 2', page.current_version.body
       assert page.previous_version.nil?
     end
@@ -292,7 +292,7 @@ class EditorApprovalRequirementTest < ActiveSupport::TestCase
 
     page.title = 'Version 1'
     page.editor_comment = 'Version 1 comment'
-    assert page.save(:user => @editor)
+    assert page.save(user: @editor)
 
     current_version = page.versions.last
     assert_equal 'Version 1', current_version.model.title
@@ -302,14 +302,14 @@ class EditorApprovalRequirementTest < ActiveSupport::TestCase
     page.title = 'Version 2'
     page.editor_comment = 'Version 2 comment' # This editor comment will be ignored
 
-    assert page.save(:user => @arthur, :approval_required => true)
+    assert page.save(user: @arthur, approval_required: true)
     current_version = page.versions.last
     assert_equal 'Version 2', current_version.model.title
     assert_equal @editor, current_version.editor
     assert_equal 'Version 1 comment', current_version.editor_comment
   end
 
-protected
+  protected
 
   def create_page(options = {})
     Page.create({ :user => @arthur, :parent => nodes(:editor_section_node), :title => 'Page title', :preamble => 'Ambule', :body => 'Page body' }.merge(options))

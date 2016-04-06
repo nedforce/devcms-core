@@ -224,7 +224,7 @@ class UsersControllerTest < ActionController::TestCase
     u = users(:unverified_user)
     get :verification, id: u.login, code: 'Some invalid code'
 
-    assert !assigns(:user).verified, 'User still verified!'
+    refute assigns(:user).verified, 'User still verified!'
     assert_response :success
     assert_template 'verification_failed'
   end

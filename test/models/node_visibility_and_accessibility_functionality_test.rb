@@ -3,7 +3,7 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 class NodeVisibilityAndAccessibilityFunctionalityTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @admin                 = users(:arthur)
     @editor                = users(:editor)
     @root_section          = sections(:root_section)
@@ -14,13 +14,13 @@ class NodeVisibilityAndAccessibilityFunctionalityTest < ActiveSupport::TestCase
   end
 
   def test_has_hidden_ancestor?
-    assert !@economie_section_node.has_hidden_ancestor?
+    refute @economie_section_node.has_hidden_ancestor?
     @root_section_node.update_attribute(:hidden, true)
     assert @economie_section_node.has_hidden_ancestor?
   end
 
   def test_has_private_ancestor?
-    assert !@economie_section_node.has_private_ancestor?
+    refute @economie_section_node.has_private_ancestor?
     @root_section_node.update_attribute(:private, true)
     assert @economie_section_node.has_private_ancestor?
   end
@@ -72,7 +72,7 @@ class NodeVisibilityAndAccessibilityFunctionalityTest < ActiveSupport::TestCase
     @sub_site_section.update_attribute(:private, true)
 
     assert node.accessible_for_user?(@admin)
-    assert !node.accessible_for_user?(@editor)
+    refute node.accessible_for_user?(@editor)
   end
 
   def test_set_visibility_should_hide_node_and_descendants
@@ -97,7 +97,7 @@ class NodeVisibilityAndAccessibilityFunctionalityTest < ActiveSupport::TestCase
     assert @editor_section_node.set_visibility!(true)
 
     @editor_section_node.self_and_descendants do |node|
-      assert !node.hidden?
+      refute node.hidden?
     end
   end
 
@@ -109,34 +109,34 @@ class NodeVisibilityAndAccessibilityFunctionalityTest < ActiveSupport::TestCase
   test 'set accessibility should not make non-section node private' do
     node = create_node({}, @editor_section_node)
 
-    assert !node.set_accessibility!(false)
-    assert !node.private?
+    refute node.set_accessibility!(false)
+    refute node.private?
   end
 
   test 'set accessibility should make section node public' do
     assert @editor_section_node.set_accessibility!(false)
     assert @editor_section_node.set_accessibility!(true)
-    assert !@editor_section_node.private?
+    refute @editor_section_node.private?
   end
 
   test 'should not make global frontpage private' do
     @root_section.set_frontpage!(@economie_section_node)
-    assert !@economie_section_node.set_accessibility!(false)
-    assert !@root_section_node.set_accessibility!(false)
+    refute @economie_section_node.set_accessibility!(false)
+    refute @root_section_node.set_accessibility!(false)
 
     @root_section.set_frontpage!(@root_section_node)
     assert @economie_section_node.set_accessibility!(false)
-    assert !@root_section_node.set_accessibility!(false)
+    refute @root_section_node.set_accessibility!(false)
   end
 
   test 'should not hide global frontpage' do
     @root_section.set_frontpage!(@economie_section_node)
-    assert !@economie_section_node.set_visibility!(false)
-    assert !@root_section_node.set_visibility!(false)
+    refute @economie_section_node.set_visibility!(false)
+    refute @root_section_node.set_visibility!(false)
 
     @root_section.set_frontpage!(@root_section_node)
     assert @economie_section_node.set_visibility!(false)
-    assert !@root_section_node.set_visibility!(false)
+    refute @root_section_node.set_visibility!(false)
   end
 
   protected

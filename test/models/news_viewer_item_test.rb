@@ -1,7 +1,6 @@
 require File.expand_path('../../test_helper.rb', __FILE__)
 
 class NewsViewerItemTest < ActiveSupport::TestCase
-
   setup do
     @news_viewer = create_news_viewer
     @news_viewer_item = create_news_viewer_item
@@ -9,7 +8,7 @@ class NewsViewerItemTest < ActiveSupport::TestCase
 
   def test_should_validate_uniqueness
     item = create_news_viewer_item(news_item: @news_viewer_item.news_item)
-    assert !item.valid?
+    refute item.valid?
   end
 
   private

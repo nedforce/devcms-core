@@ -3,7 +3,7 @@ require File.expand_path('../../../test_helper.rb', __FILE__)
 class Admin::LinksControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @link = links(:internal_link)
   end
 
@@ -44,7 +44,7 @@ class Admin::LinksControllerTest < ActionController::TestCase
     assert_difference('InternalLink.count') do
       create_internal_link(:linked_node_id => nodes(:root_section_node).id)
       assert_response :success
-      assert !assigns(:link).new_record?, assigns(:link).errors.full_messages.join('; ')
+      refute assigns(:link).new_record?, assigns(:link).errors.full_messages.join('; ')
     end
   end
 
@@ -54,7 +54,7 @@ class Admin::LinksControllerTest < ActionController::TestCase
     assert_difference('ExternalLink.count') do
       create_external_link(:url => 'http://www.google.com')
       assert_response :success
-      assert !assigns(:link).new_record?, assigns(:link).errors.full_messages.join('; ')
+      refute assigns(:link).new_record?, assigns(:link).errors.full_messages.join('; ')
     end
   end
 

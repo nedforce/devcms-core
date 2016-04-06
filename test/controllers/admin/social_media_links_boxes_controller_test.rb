@@ -38,7 +38,7 @@ class Admin::SocialMediaLinksBoxesControllerTest < ActionController::TestCase
     assert_difference('SocialMediaLinksBox.count') do
       create_social_media_links_box
       assert_response :success
-      assert !assigns(:social_media_links_box).new_record?, assigns(:social_media_links_box).errors.full_messages.join('; ')
+      refute assigns(:social_media_links_box).new_record?, assigns(:social_media_links_box).errors.full_messages.join('; ')
     end
   end
 

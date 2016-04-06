@@ -37,11 +37,11 @@ class ExternalLinkTest < ActiveSupport::TestCase
 
   def test_should_set_description_and_title_to_nil_if_blank
     l1 = create_external_link(title: '', description: '')
-    assert !l1.new_record?
+    refute l1.new_record?
     assert_nil l1.title
     assert_nil l1.description
     l2 = create_external_link(title: nil, description: nil)
-    assert !l2.new_record?
+    refute l2.new_record?
     l2.update_attributes(user: users(:arthur), title: '', description: '')
     assert_nil l2.title
     assert_nil l2.description
@@ -69,7 +69,7 @@ class ExternalLinkTest < ActiveSupport::TestCase
     assert_difference 'ExternalLink.count', 2 do
       2.times do
         external_link = create_external_link(title: 'Non-unique title')
-        assert !external_link.errors[:title].any?
+        refute external_link.errors[:title].any?
       end
     end
   end

@@ -45,7 +45,7 @@ class WeblogPostTest < ActiveSupport::TestCase
     assert_difference 'WeblogPost.count', 2 do
       2.times do
         weblog_post = create_weblog_post(title: 'Non-unique title')
-        assert !weblog_post.errors[:title].any?
+        refute weblog_post.errors[:title].any?
       end
     end
   end

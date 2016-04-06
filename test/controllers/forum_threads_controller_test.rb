@@ -31,8 +31,8 @@ class ForumThreadsControllerTest < ActionController::TestCase
     assert_difference('ForumThread.count', 1) do
       assert_difference('ForumPost.count', 1) do
         create_forum_thread
-        assert !assigns(:forum_thread).new_record?, assigns(:forum_thread).errors.full_messages.join('; ')
-        assert !assigns(:start_post).new_record?, assigns(:start_post).errors.full_messages.join('; ')
+        refute assigns(:forum_thread).new_record?, assigns(:forum_thread).errors.full_messages.join('; ')
+        refute assigns(:start_post).new_record?, assigns(:start_post).errors.full_messages.join('; ')
         assert_equal users(:gerjan), assigns(:forum_thread).user
         assert_equal users(:gerjan), assigns(:start_post).user
         assert_response :redirect
@@ -176,13 +176,13 @@ class ForumThreadsControllerTest < ActionController::TestCase
   def test_should_not_close_open_thread_for_non_admin
     login_as :gerjan
     put :close, :forum_topic_id => forum_topics(:bewoners_forum_topic_wonen).id, :id => forum_threads(:bewoners_forum_thread_one).id
-    assert !forum_threads(:bewoners_forum_thread_one).closed?
+    refute forum_threads(:bewoners_forum_thread_one).closed?
     assert_response :redirect
   end
 
   def test_should_not_close_open_thread_for_non_user
     put :close, :forum_topic_id => forum_topics(:bewoners_forum_topic_wonen).id, :id => forum_threads(:bewoners_forum_thread_one).id
-    assert !forum_threads(:bewoners_forum_thread_one).closed?
+    refute forum_threads(:bewoners_forum_thread_one).closed?
     assert_response :redirect
   end
 
@@ -199,7 +199,7 @@ class ForumThreadsControllerTest < ActionController::TestCase
     forum_threads(:bewoners_forum_thread_one).close
     login_as :sjoerd
     put :open, :forum_topic_id => forum_topics(:bewoners_forum_topic_wonen).id, :id => forum_threads(:bewoners_forum_thread_one).id
-    assert !assigns(:forum_thread).closed?
+    refute assigns(:forum_thread).closed?
     assert_response :redirect
   end
 
@@ -221,7 +221,7 @@ class ForumThreadsControllerTest < ActionController::TestCase
   def test_should_not_open_open_thread
     login_as :sjoerd
     put :open, :forum_topic_id => forum_topics(:bewoners_forum_topic_wonen).id, :id => forum_threads(:bewoners_forum_thread_one).id
-    assert !assigns(:forum_thread).closed?
+    refute assigns(:forum_thread).closed?
     assert_not_nil flash[:warning]
     assert_response :redirect
   end

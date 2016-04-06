@@ -6,7 +6,7 @@ class ContactFormTest < ActiveSupport::TestCase
   test 'should create contact form' do
     assert_difference('ContactForm.count') do
       cf = create_contact_form
-      assert !cf.new_record?
+      refute cf.new_record?
     end
   end
 

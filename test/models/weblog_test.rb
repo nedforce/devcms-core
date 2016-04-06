@@ -70,7 +70,7 @@ class WeblogTest < ActiveSupport::TestCase
         if user == weblog.user
           assert weblog.is_owned_by_user?(user)
         else
-          assert !weblog.is_owned_by_user?(user)
+          refute weblog.is_owned_by_user?(user)
         end
       end
     end
@@ -111,7 +111,7 @@ class WeblogTest < ActiveSupport::TestCase
         if weblog_post.publication_start_date.year == year && weblog_post.publication_start_date.month == month
           assert found_weblog_posts.include?(weblog_post)
         else
-          assert !found_weblog_posts.include?(weblog_post)
+          refute found_weblog_posts.include?(weblog_post)
         end
       end
     end

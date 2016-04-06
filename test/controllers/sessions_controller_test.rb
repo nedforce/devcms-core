@@ -93,7 +93,7 @@ class SessionsControllerTest < ActionController::TestCase
     @request.cookies['auth_token'] = 'invalid_auth_token'
     get :new
 
-    assert !@controller.send(:logged_in?)
+    refute @controller.send(:logged_in?)
   end
 
   test 'invalid csrf token' do

@@ -3,7 +3,7 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 class NewsViewersControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
-  def setup
+  setup do
     @news_viewer = create_news_viewer
   end
 
@@ -12,7 +12,7 @@ class NewsViewersControllerTest < ActionController::TestCase
     assert_response :success
     assert assigns(:news_viewer)
     assert assigns(:latest_news_items)
-    assert !(assigns(:latest_news_items).size > 8)
+    refute (assigns(:latest_news_items).size > 8)
     assert_nil assigns(:news_items_for_table)
     assert_equal @news_viewer.node, assigns(:node)
   end

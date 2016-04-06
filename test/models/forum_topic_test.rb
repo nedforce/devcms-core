@@ -16,7 +16,7 @@ class ForumTopicTest < ActiveSupport::TestCase
   test 'should require parent' do
     assert_no_difference 'ForumTopic.count' do
       forum_topic = create_forum_topic(parent: nil)
-      assert !forum_topic.valid?
+      refute forum_topic.valid?
     end
   end
 

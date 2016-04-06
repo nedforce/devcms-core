@@ -5,7 +5,7 @@ class UserTest < ActiveSupport::TestCase
   test 'should create user' do
     assert_difference 'User.count' do
       user = create_user
-      assert !user.new_record?, "#{user.errors.full_messages.to_sentence}"
+      refute user.new_record?, user.errors.full_messages.to_sentence.to_s
     end
   end
 
@@ -63,7 +63,7 @@ class UserTest < ActiveSupport::TestCase
     assert u.errors[:login].any?
 
     u = create_user(login: 'numbers_123_underscores_and-dashes-are-OK')
-    assert !u.errors[:login].any?
+    refute u.errors[:login].any?
   end
 
   test 'should not update login' do
@@ -94,35 +94,35 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test 'should have role on root' do
-    assert !users(:final_editor).has_role_on?('admin')
-    assert  users(:arthur).has_role_on?('admin')
-    assert !users(:arthur).has_role_on?('editor')
+    refute users(:final_editor).has_role_on?('admin')
+    assert users(:arthur).has_role_on?('admin')
+    refute users(:arthur).has_role_on?('editor')
   end
 
   test 'should have role on nodes' do
-    assert  users(:editor).has_role_on?('editor', nodes(:devcms_news_node))
-    assert !users(:editor).has_role_on?('editor', nodes(:contact_page_node))
-    assert  users(:editor).has_role_on?('editor', nodes(:devcms_news_item_node))
-    assert  users(:arthur).has_role_on?('admin',  nodes(:devcms_news_item_node))
+    assert users(:editor).has_role_on?('editor', nodes(:devcms_news_node))
+    refute users(:editor).has_role_on?('editor', nodes(:contact_page_node))
+    assert users(:editor).has_role_on?('editor', nodes(:devcms_news_item_node))
+    assert users(:arthur).has_role_on?('admin',  nodes(:devcms_news_item_node))
   end
 
   test 'should have role with multiple roles on nodes' do
-    assert  users(:arthur).has_role_on?('final_editor', 'admin',  nodes(:economie_section_node))
-    assert !users(:arthur).has_role_on?('final_editor', 'editor', nodes(:economie_section_node))
-    assert  users(:editor).has_role_on?('final_editor', 'editor', nodes(:devcms_news_node))
-    assert  users(:final_editor).has_role_on?('final_editor', 'editor', nodes(:economie_section_node))
-    assert !users(:final_editor).has_role_on?(%w(final_editor editor admin), nodes(:devcms_news_node))
+    assert users(:arthur).has_role_on?('final_editor', 'admin',  nodes(:economie_section_node))
+    refute users(:arthur).has_role_on?('final_editor', 'editor', nodes(:economie_section_node))
+    assert users(:editor).has_role_on?('final_editor', 'editor', nodes(:devcms_news_node))
+    assert users(:final_editor).has_role_on?('final_editor', 'editor', nodes(:economie_section_node))
+    refute users(:final_editor).has_role_on?(%w(final_editor editor admin), nodes(:devcms_news_node))
   end
 
   test 'should have role with multiple roles on root node' do
     assert users(:arthur).has_role_on?('final_editor', 'admin')
-    assert !users(:final_editor).has_role_on?(%w(final_editor editor))
+    refute users(:final_editor).has_role_on?(%w(final_editor editor))
   end
 
   test 'should have roles' do
-    assert  users(:arthur).has_role?('admin', 'editor', 'final-editor')
-    assert !users(:arthur).has_role?('editor', 'final-editor')
-    assert !users(:normal_user).has_role?(%w(admin editor final-editor))
+    assert users(:arthur).has_role?('admin', 'editor', 'final-editor')
+    refute users(:arthur).has_role?('editor', 'final-editor')
+    refute users(:normal_user).has_role?(%w(admin editor final-editor))
   end
 
   test 'should have any role' do
@@ -130,7 +130,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test 'should not have any role' do
-    assert !users(:normal_user).has_any_role?
+    refute users(:normal_user).has_any_role?
   end
 
   test 'should return role on node' do
@@ -148,7 +148,7 @@ class UserTest < ActiveSupport::TestCase
   test 'should remove role from node' do
     users(:arthur).give_role_on('admin', Node.root)
     users(:arthur).remove_role_from(Node.root)
-    assert !users(:arthur).has_role?('admin')
+    refute users(:arthur).has_role?('admin')
   end
 
   test 'should not fail on remove of unexisting role' do
@@ -169,20 +169,20 @@ class UserTest < ActiveSupport::TestCase
 
   test 'should lose privileged roles after demote' do
     users(:arthur).demote!
-    assert !User.find(users(:arthur).id).has_any_role?
+    refute User.find(users(:arthur).id).has_any_role?
   end
 
   test 'should keep non-privileged roles after demote' do
     assert users(:editor).give_role_on('read_access', Node.root)
     assert_difference('User.find(users(:editor).id).role_assignments.count', -6) do
       users(:editor).demote!
-      assert !User.find(users(:editor).id).role_assignments.any?(&:is_privileged?)
+      refute User.find(users(:editor).id).role_assignments.any?(&:is_privileged?)
     end
   end
 
   test 'should have roles after demote' do
     users(:arthur).demote!
-    assert !User.find(users(:arthur).id).has_role?('admin', 'editor', 'final-editor')
+    refute User.find(users(:arthur).id).has_role?('admin', 'editor', 'final-editor')
   end
 
   test 'should return role on node after demote' do
@@ -193,7 +193,7 @@ class UserTest < ActiveSupport::TestCase
 
   test 'should strip sensitive information from xml' do
     xml = users(:arthur).to_xml
-    User::SECRETS.each { |secret| assert !xml.include?(secret.dasherize) }
+    User::SECRETS.each { |secret| refute xml.include?(secret.dasherize) }
   end
 
   test 'should keep sensitive information in secrets xml' do
@@ -204,7 +204,7 @@ class UserTest < ActiveSupport::TestCase
   test 'should strip sensitive information from json' do
     json = users(:arthur).to_json
     User::SECRETS.each do |secret|
-      assert !json.include?(secret), "#{json.pretty_inspect} included #{secret}. It shouldn't"
+      refute json.include?(secret), "#{json.pretty_inspect} included #{secret}. It shouldn't"
     end
   end
 
@@ -221,7 +221,7 @@ class UserTest < ActiveSupport::TestCase
         if user.newsletter_archives.include?(newsletter_archive)
           assert user.has_subscription_for?(newsletter_archive)
         else
-          assert !user.has_subscription_for?(newsletter_archive)
+          refute user.has_subscription_for?(newsletter_archive)
         end
       end
     end
@@ -245,8 +245,8 @@ class UserTest < ActiveSupport::TestCase
   test 'should not verify users verification code' do
     u = users(:unverified_user)
     u.update_attribute(:verification_code, '12345')
-    assert !u.verify_with('54321') # Invalid code
-    assert !u.verified?
+    refute u.verify_with('54321') # Invalid code
+    refute u.verified?
   end
 
   test 'should generate valid verification code' do
@@ -260,13 +260,13 @@ class UserTest < ActiveSupport::TestCase
   test 'should require verification code' do
     u = users(:sjoerd)
     u.verification_code = nil
-    assert !u.valid?
+    refute u.valid?
     assert u.errors[:verification_code].any?
   end
 
   test 'should auto set attrs on create' do
     u = create_user
-    assert !u.verified?
+    refute u.verified?
     assert u.verification_code.present?
   end
 
@@ -353,18 +353,18 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test 'should not verify invitation code for missing email address or code' do
-    assert !User.verify_invitation_code(nil, nil)
-    assert !User.verify_invitation_code(nil, ' ')
-    assert !User.verify_invitation_code(' ', nil)
-    assert !User.verify_invitation_code(' ', ' ')
-    assert !User.verify_invitation_code('test@test.nl', nil)
-    assert !User.verify_invitation_code('test@test.nl', ' ')
-    assert !User.verify_invitation_code(nil, 'test')
-    assert !User.verify_invitation_code(' ', 'test')
+    refute User.verify_invitation_code(nil, nil)
+    refute User.verify_invitation_code(nil, ' ')
+    refute User.verify_invitation_code(' ', nil)
+    refute User.verify_invitation_code(' ', ' ')
+    refute User.verify_invitation_code('test@test.nl', nil)
+    refute User.verify_invitation_code('test@test.nl', ' ')
+    refute User.verify_invitation_code(nil, 'test')
+    refute User.verify_invitation_code(' ', 'test')
   end
 
   test 'should not verify invitation code for incorrect code' do
-    assert !User.verify_invitation_code('test@test.nl', 'bla')
+    refute User.verify_invitation_code('test@test.nl', 'bla')
   end
 
   test 'should verify invitation code for correct code' do
@@ -386,7 +386,7 @@ class UserTest < ActiveSupport::TestCase
     email = ActionMailer::Base.deliveries.first
 
     assert email.to.include?(email_address)
-    assert !email.body.include?(I18n.t('layouts.forgot_password'))
+    refute email.body.include?(I18n.t('layouts.forgot_password'))
   end
 
   test 'should send email notice if email address is already in use' do

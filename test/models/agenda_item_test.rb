@@ -27,21 +27,21 @@ class AgendaItemTest < ActiveSupport::TestCase
   test 'should not require body' do
     assert_difference 'AgendaItem.count', 1 do
       agenda_item = create_agenda_item(body: nil)
-      assert !agenda_item.errors[:body].any?
+      refute agenda_item.errors[:body].any?
     end
   end
 
   test 'should not require speaking rights option' do
     assert_difference 'AgendaItem.count', 1 do
       agenda_item = create_agenda_item(speaking_rights: nil)
-      assert !agenda_item.errors[:speaking_rights].any?
+      refute agenda_item.errors[:speaking_rights].any?
     end
   end
 
   test 'should not require agenda item category' do
     assert_difference 'AgendaItem.count', 1 do
       agenda_item = create_agenda_item(agenda_item_category: nil)
-      assert !agenda_item.errors[:agenda_item_category].any?
+      refute agenda_item.errors[:agenda_item_category].any?
     end
   end
 

@@ -14,7 +14,7 @@ class SectionTest < ActiveSupport::TestCase
   test 'should create section' do
     assert_difference('Section.count') do
       section = create_section
-      assert !section.new_record?
+      refute section.new_record?
     end
   end
 
@@ -37,16 +37,16 @@ class SectionTest < ActiveSupport::TestCase
 
   def test_should_not_require_frontpage_node
     assert_difference('Section.count') do
-      section = create_section(:frontpage_node => nil)
-      assert !section.new_record?
+      section = create_section(frontpage_node: nil)
+      refute section.new_record?
       assert_nil section.frontpage_node
     end
   end
 
   def test_should_not_accept_frontpage_node_during_creation
     assert_no_difference('Section.count') do
-      section = create_section(:frontpage_node => @root_node)
-      assert !section.valid?
+      section = create_section(frontpage_node: @root_node)
+      refute section.valid?
       assert section.errors[:base].any?
     end
   end
@@ -60,22 +60,22 @@ class SectionTest < ActiveSupport::TestCase
   def test_should_set_frontpage_node_to_nil_if_frontpage_node_is_own_node
     @root_section.set_frontpage!(@root_section_node)
     assert @root_section.valid?
-    assert !@root_section.errors[:frontpage_node].any?
-    assert !@root_section.has_frontpage?
+    refute @root_section.errors[:frontpage_node].any?
+    refute @root_section.has_frontpage?
     assert_nil @root_section.frontpage_node
   end
 
   # def test_should_accept_descendant_as_frontpage_node
   #   @root_section.set_frontpage!(@news_archive_node)
   #   assert @root_section.valid?
-  #   assert !@root_section.errors[:frontpage_node].any?
+  #   refute @root_section.errors[:frontpage_node].any?
   #   assert_equal @news_archive_node, @root_section.frontpage_node
   # end
 
   # def test_should_not_accept_ancestor_as_frontpage_node
   #   section = create_section
   #   section.set_frontpage!(@root_node)
-  #   assert !section.valid?
+  #   refute section.valid?
   #   assert section.errors[:base].any?
   # end
 
@@ -83,13 +83,13 @@ class SectionTest < ActiveSupport::TestCase
   #   section = create_section
   #   sibling = create_section
   #   section.set_frontpage!(sibling.node)
-  #   assert !section.valid?
+  #   refute section.valid?
   #   assert section.errors[:base].any?
   # end
 
   def test_should_not_accept_section_with_frontpage_node_as_frontpage_node
     @root_section.set_frontpage!(@section_with_frontpage.node)
-    assert !@root_section.valid?
+    refute @root_section.valid?
     assert @root_section.errors[:base].any?
   end
 
@@ -104,10 +104,10 @@ class SectionTest < ActiveSupport::TestCase
   def test_last_updated_at_should_return_updated_at_when_no_accessible_children_are_found
     publication_start_date = 1.day.ago
 
-    s = create_section :publication_start_date => publication_start_date
+    s = create_section publication_start_date: publication_start_date
     assert_equal s.updated_at.to_i, s.last_updated_at.to_i
 
-    p = create_page s, :publication_start_date => publication_start_date
+    p = create_page s, publication_start_date: publication_start_date
 
     p.node.hidden = true
     p.node.save!
@@ -118,10 +118,20 @@ class SectionTest < ActiveSupport::TestCase
   protected
 
   def create_section(options = {})
-    Section.create({ :parent => nodes(:root_section_node), :title => 'new section', :description => 'new description for section.' }.merge(options))
+    Section.create({
+      parent: nodes(:root_section_node),
+      title: 'new section',
+      description: 'new description for section.'
+    }.merge(options))
   end
 
   def create_page(parent, options = {})
-    Page.create({ :parent => parent.node, :title => 'Page title', :preamble => 'Ambule', :body => 'Page body', :expires_on => 1.day.from_now.to_date }.merge(options)).reload
+    Page.create({
+      parent: parent.node,
+      title: 'Page title',
+      preamble: 'Ambule',
+      body: 'Page body',
+      expires_on: 1.day.from_now.to_date
+    }.merge(options)).reload
   end
 end

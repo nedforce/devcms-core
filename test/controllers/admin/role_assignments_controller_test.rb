@@ -15,7 +15,7 @@ class Admin::RoleAssignmentsControllerTest < ActionController::TestCase
     assert_difference('RoleAssignment.count') do
       create_role_assignment()
       assert_response :success
-      assert !assigns(:role_assignment).new_record?, assigns(:role_assignment).errors.full_messages.join('; ')
+      refute assigns(:role_assignment).new_record?, assigns(:role_assignment).errors.full_messages.join('; ')
     end
   end
 

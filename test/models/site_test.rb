@@ -11,7 +11,7 @@ class SiteTest < ActiveSupport::TestCase
   test 'should create site' do
     assert_difference 'Site.count', 1 do
       site = create_site
-      assert !site.new_record?, site.errors.full_messages.to_sentence
+      refute site.new_record?, site.errors.full_messages.to_sentence
     end
   end
 
@@ -32,7 +32,7 @@ class SiteTest < ActiveSupport::TestCase
   test 'should have case insensitive unique domains' do
     assert_difference 'Site.count', 1 do
       site = create_site
-      assert !site.new_record?
+      refute site.new_record?
       site = create_site domain: 'WwW.nEdFoRcE.nL'
       assert site.errors[:domain].any?
     end

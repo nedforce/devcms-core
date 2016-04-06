@@ -11,7 +11,7 @@ class ResponseTest < ActiveSupport::TestCase
   test 'should create a response' do
     assert_difference('Response.count') do
       rsps = create_response
-      assert !rsps.new_record?
+      refute rsps.new_record?
     end
   end
 
@@ -20,8 +20,8 @@ class ResponseTest < ActiveSupport::TestCase
   def create_response(options = {})
     Response.create({
       contact_form: @help_form,
-      ip:           '127.0.0.1',
-      time:         Time.zone.now
+      ip: '127.0.0.1',
+      time: Time.zone.now
     }.merge(options))
   end
 end
