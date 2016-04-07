@@ -57,6 +57,7 @@ module DevcmsCore
   autoload :EngineExtensions
   autoload :Hijacker
   autoload :ImageProcessingExtensions
+  autoload :MailUtils
   # autoload :NewsItemsAssociationExtensions
   # autoload :PrototypeLegacyHelper
   autoload :Recaptcha
