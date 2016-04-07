@@ -143,7 +143,7 @@ module DevcmsCore
     end
 
     def node
-      (super || associate_node).tap { |node| node.content = self }
+      (super || associate_node).tap { |node| node.content = self unless node.frozen? }
     end
 
     def associate_node
