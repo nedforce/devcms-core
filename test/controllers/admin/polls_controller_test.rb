@@ -3,7 +3,7 @@ require File.expand_path('../../../test_helper.rb', __FILE__)
 class Admin::PollsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
-  def test_should_get_new
+  test 'should get new' do
     login_as :sjoerd
 
     get :new, :parent_node_id => nodes(:root_section_node).id
@@ -11,7 +11,7 @@ class Admin::PollsControllerTest < ActionController::TestCase
     assert assigns(:poll)
   end
 
-  def test_should_get_new_with_params
+  test 'should get new with params' do
     login_as :sjoerd
 
     get :new, :parent_node_id => nodes(:root_section_node).id, :poll => { :title => 'foo' }
@@ -66,7 +66,7 @@ class Admin::PollsControllerTest < ActionController::TestCase
     assert assigns(:poll).errors[:title].any?
   end
 
-  def test_should_get_edit
+  test 'should get edit' do
     login_as :sjoerd
 
     get :edit, :id => polls(:healthcare_poll).id
@@ -74,7 +74,7 @@ class Admin::PollsControllerTest < ActionController::TestCase
     assert assigns(:poll)
   end
 
-  def test_should_get_edit_with_params
+  test 'should get edit with params' do
     login_as :sjoerd
 
     get :edit, :id => polls(:healthcare_poll).id, :poll => { :title => 'foo' }

@@ -16,7 +16,7 @@ class Admin::MeetingsControllerTest < ActionController::TestCase
     assert_equal nodes(:meetings_calendar_meeting_one_node), assigns(:node)
   end
 
-  def test_should_get_previous
+  test 'should get previous' do
     @meeting.save :user => User.find_by_login('editor')
 
     login_as :sjoerd
@@ -26,7 +26,7 @@ class Admin::MeetingsControllerTest < ActionController::TestCase
     assert assigns(:meeting)
   end
 
-  def test_should_get_new
+  test 'should get new' do
     login_as :sjoerd
 
     get :new, :parent_node_id => nodes(:events_calendar_node).id
@@ -34,7 +34,7 @@ class Admin::MeetingsControllerTest < ActionController::TestCase
     assert assigns(:meeting)
   end
 
-  def test_should_get_new_with_params
+  test 'should get new with params' do
     login_as :sjoerd
 
     get :new, :parent_node_id => nodes(:events_calendar_node).id, :meeting => { :title => 'foo' }
@@ -89,7 +89,7 @@ class Admin::MeetingsControllerTest < ActionController::TestCase
     assert assigns(:meeting).errors[:title].any?
   end
 
-  def test_should_get_edit
+  test 'should get edit' do
     login_as :sjoerd
 
     get :edit, :id => @meeting
@@ -97,7 +97,7 @@ class Admin::MeetingsControllerTest < ActionController::TestCase
     assert assigns(:meeting)
   end
 
-  def test_should_get_edit_with_params
+  test 'should get edit with params' do
     login_as :sjoerd
 
     get :edit, :id => @meeting, :meeting => { :title => 'foo' }

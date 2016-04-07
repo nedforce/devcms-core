@@ -7,7 +7,7 @@ class Admin::HtmlPagesControllerTest < ActionController::TestCase
     @html_page = html_pages(:about_html_page)
   end
 
-  def test_should_get_show
+  test 'should get show' do
     login_as :arthur
 
     get :show, :id => @html_page
@@ -15,7 +15,7 @@ class Admin::HtmlPagesControllerTest < ActionController::TestCase
     assert assigns(:html_page)
   end
 
-  def test_should_get_new
+  test 'should get new' do
     login_as :arthur
 
     get :new, :parent_node_id => nodes(:root_section_node)
@@ -23,7 +23,7 @@ class Admin::HtmlPagesControllerTest < ActionController::TestCase
     assert assigns(:html_page)
   end
 
-  def test_should_get_new_with_params
+  test 'should get new with params' do
     login_as :arthur
 
     get :new, :parent_node_id => nodes(:root_section_node).id, :html_page => { :title => 'foo' }
@@ -77,7 +77,7 @@ class Admin::HtmlPagesControllerTest < ActionController::TestCase
     assert assigns(:html_page).errors[:title].any?
   end
 
-  def test_should_get_edit
+  test 'should get edit' do
     login_as :arthur
 
     get :edit, :id => @html_page
@@ -85,7 +85,7 @@ class Admin::HtmlPagesControllerTest < ActionController::TestCase
     assert assigns(:html_page)
   end
 
-  def test_should_get_edit_with_params
+  test 'should get edit with params' do
     login_as :arthur
 
     get :edit, :id => @html_page, :html_page => { :title => 'foo' }

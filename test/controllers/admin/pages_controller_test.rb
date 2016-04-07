@@ -7,49 +7,53 @@ class Admin::PagesControllerTest < ActionController::TestCase
     @page = pages(:help_page)
   end
 
-  def test_should_get_show
+  test 'should get show' do
     login_as :sjoerd
 
-    get :show, :id => @page
+    get :show, id: @page
     assert_response :success
     assert assigns(:page)
   end
 
-  def test_should_not_increment_hits_on_show
-    page     = pages(:help_page)
+  test 'should not increment hits on show' do
+    page = pages(:help_page)
     old_hits = page.node.hits
-    get :show, :id => page
+    get :show, id: page
+
     assert_equal old_hits, page.node.reload.hits
   end
 
-  def test_should_get_previous
-    @page.save :user => User.find_by_login('editor')
+  test 'should get previous' do
+    @page.save user: User.find_by_login('editor')
     
     login_as :sjoerd
 
-    get :previous, :id => @page
+    get :previous, id: @page
+
     assert_response :success
     assert assigns(:page)
   end
 
-  def test_should_get_new
+  test 'should get new' do
     login_as :sjoerd
 
-    get :new, :parent_node_id => nodes(:root_section_node).id
+    get :new, parent_node_id: nodes(:root_section_node).id
+
     assert_response :success
     assert assigns(:page)
   end
 
-  def test_should_get_new_with_params
+  test 'should get new with params' do
     login_as :sjoerd
 
-    get :new, :parent_node_id => nodes(:root_section_node).id, :page => { :title => 'foo' }
+    get :new, :parent_node_id => nodes(:root_section_node).id, page: { title: 'foo' }
+
     assert_response :success
     assert assigns(:page)
     assert_equal 'foo', assigns(:page).title
   end
 
-  def test_should_create_page
+  test 'should create page' do
     login_as :sjoerd
 
     assert_difference('Page.count') do
@@ -94,7 +98,7 @@ class Admin::PagesControllerTest < ActionController::TestCase
     assert assigns(:page).errors[:title].any?
   end
 
-  def test_should_get_edit
+  test 'should get edit' do
     login_as :sjoerd
 
     get :edit, :id => pages(:help_page).id
@@ -102,7 +106,7 @@ class Admin::PagesControllerTest < ActionController::TestCase
     assert assigns(:page)
   end
 
-  def test_should_get_edit_with_params
+  test 'should get edit with params' do
     login_as :sjoerd
 
     get :edit, :id => pages(:help_page).id, :page => { :title => 'foo' }

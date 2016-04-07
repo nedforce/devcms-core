@@ -7,7 +7,7 @@ class ContactFormsControllerTest < ActionController::TestCase
     Node.disable_ferret
   end
 
-  def test_should_get_show
+  test 'should get show' do
     cf = contact_forms(:help_form)
     get :show, :id => cf.id
     assert_response :success

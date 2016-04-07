@@ -14,7 +14,7 @@ class ForumThreadsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  def test_should_get_new_for_user
+  test 'should get new for user' do
     login_as :gerjan
     get :new, :forum_topic_id => forum_topics(:bewoners_forum_topic_wonen).id
     assert assigns(:forum_thread)
@@ -72,21 +72,21 @@ class ForumThreadsControllerTest < ActionController::TestCase
     end
   end
 
-  def test_should_get_edit_for_owner
+  test 'should get edit for owner' do
     login_as :henk
     get :edit, :forum_topic_id => forum_topics(:bewoners_forum_topic_wonen).id, :id => forum_threads(:bewoners_forum_thread_one).id
     assert_response :success
     assert assigns(:forum_thread)
   end
 
-  def test_should_get_edit_for_admin
+  test 'should get edit for admin' do
     login_as :sjoerd
     get :edit, :forum_topic_id => forum_topics(:bewoners_forum_topic_wonen).id, :id => forum_threads(:bewoners_forum_thread_one).id
     assert_response :success
     assert assigns(:forum_thread)
   end
 
-  def test_should_not_get_edit_for_non_owner
+  test 'should not get edit for non-owner' do
     login_as :gerjan
     get :edit, :forum_topic_id => forum_topics(:bewoners_forum_topic_wonen).id, :id => forum_threads(:bewoners_forum_thread_one).id
     assert_response :redirect

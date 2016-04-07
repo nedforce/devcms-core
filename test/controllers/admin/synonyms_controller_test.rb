@@ -5,59 +5,56 @@ class Admin::SynonymsControllerTest < ActionController::TestCase
 
   setup do
     @root = nodes(:root_section_node)
+
+    login_as :sjoerd
   end
 
-  def test_should_get_index
-    login_as :sjoerd
-    get :index, :node_id => @root.id
+  test 'should get index' do
+    get :index, node_id: @root.id
+
     assert_response :success
   end
 
-  def test_should_create_synonym
-    login_as :sjoerd
-
+  test 'should create synonym' do
     assert_difference 'Synonym.count' do
       create_synonym
-      assert_response :success
-      refute assigns(:synonym).new_record?, assigns(:synonym).errors.full_messages.join('; ')
     end
+
+    assert_response :success
+    refute assigns(:synonym).new_record?, assigns(:synonym).errors.full_messages.join('; ')
   end
 
-  def test_should_destroy_synonym
-    login_as :sjoerd
-
+  test 'should destroy synonym' do
     assert_difference('Synonym.count', -1) do
-      delete :destroy, :node_id => @root.id, :id => synonyms(:afval_vuilnis).id, :format => 'json'
-      assert_response :success
+      delete :destroy, node_id: @root.id, id: synonyms(:afval_vuilnis).id, format: 'json'
     end
+
+    assert_response :success
   end
 
-  def test_should_require_original
-    login_as :sjoerd
-
+  test 'should require original' do
     assert_no_difference('Synonym.count') do
-      create_synonym(:original => nil)
+      create_synonym(original: nil)
     end
+
     assert_response :unprocessable_entity
     assert assigns(:synonym).new_record?
   end
 
-  def test_should_require_name
-    login_as :sjoerd
-
+  test 'should require name' do
     assert_no_difference('Synonym.count') do
-      create_synonym(:name => nil)
+      create_synonym(name: nil)
     end
+
     assert_response :unprocessable_entity
     assert assigns(:synonym).new_record?
   end
 
-  def test_should_require_weight
-    login_as :sjoerd
-
+  test 'should require weight' do
     assert_no_difference('Synonym.count') do
-      create_synonym(:weight => nil)
+      create_synonym(weight: nil)
     end
+
     assert_response :unprocessable_entity
     assert assigns(:synonym).new_record?
   end
@@ -65,6 +62,10 @@ class Admin::SynonymsControllerTest < ActionController::TestCase
   protected
 
   def create_synonym(options = {})
-    post :create, :node_id => @root.id, :synonym => { :original => 'werthers', :name => 'echte', :weight => '0.25' }.merge(options)
+    post :create, node_id: @root.id, synonym: {
+      original: 'werthers',
+      name: 'echte',
+      weight: '0.25'
+    }.merge(options)
   end
 end

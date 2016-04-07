@@ -7,9 +7,9 @@ class Admin::AbbreviationsControllerTest < ActionController::TestCase
     @root = nodes(:root_section_node)
   end
 
-  def test_should_get_index
+  test 'should get index' do
     login_as :sjoerd
-    get :index, :node_id => @root.id
+    get :index, node_id: @root.id
     assert_response :success
   end
 
@@ -52,15 +52,14 @@ class Admin::AbbreviationsControllerTest < ActionController::TestCase
     assert assigns(:abbreviation).new_record?
   end
 
-  def test_should_get_new_tiny_mce_form
+  test 'should get new tiny mce form' do
     login_as :editor
 
-    get :new, :node_id => @root.id, :abbr => 'wmo'
+    get :new, node_id: @root.id, abbr: 'wmo'
 
     assert_response :success
     assert_equal abbreviations(:wmo), assigns(:abbreviations).first
-    assert_select "form div.panel_wrapper div.panel.current"
-
+    assert_select 'form div.panel_wrapper div.panel.current'
   end
 
   protected

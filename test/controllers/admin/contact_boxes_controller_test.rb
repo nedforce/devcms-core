@@ -7,7 +7,7 @@ class Admin::ContactBoxesControllerTest < ActionController::TestCase
     @contact_box = contact_boxes(:contact_box)
   end
 
-  def test_should_get_show
+  test 'should get show' do
     login_as :arthur
 
     get :show, :id => @contact_box.id
@@ -15,7 +15,7 @@ class Admin::ContactBoxesControllerTest < ActionController::TestCase
     assert assigns(:contact_box)
   end
 
-  def test_should_get_new
+  test 'should get new' do
     login_as :arthur
 
     get :new, :parent_node_id => nodes(:root_section_node).id
@@ -45,7 +45,7 @@ class Admin::ContactBoxesControllerTest < ActionController::TestCase
     assert assigns(:contact_box).errors[:title].any?
   end
 
-  def test_should_get_edit
+  test 'should get edit' do
     login_as :arthur
 
     get :edit, :id => @contact_box.id

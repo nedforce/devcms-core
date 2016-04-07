@@ -3,7 +3,7 @@ require File.expand_path('../../../test_helper.rb', __FILE__)
 class Admin::FeedsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
-  def test_should_get_new
+  test 'should get new' do
     login_as :sjoerd
 
     get :new, :parent_node_id => nodes(:root_section_node).id
@@ -33,7 +33,7 @@ class Admin::FeedsControllerTest < ActionController::TestCase
     assert assigns(:feed).errors[:url].any?
   end
 
-  def test_should_get_edit
+  test 'should get edit' do
     login_as :sjoerd
 
     create_feed

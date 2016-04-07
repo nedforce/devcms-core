@@ -20,14 +20,14 @@ class WeblogPostsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  def test_should_get_new_for_owner_of_weblog
+  test 'should get new for owner of weblog' do
     login_as :henk
     get :new, :weblog_archive_id => weblog_archives(:devcms_weblog_archive).id, :weblog_id => weblogs(:henk_weblog).id
     assert assigns(:weblog_post)
     assert_response :success
   end
 
-  def test_should_get_new_for_admin
+  test 'should get new for admin' do
     login_as :sjoerd
     get :new, :weblog_archive_id => weblog_archives(:devcms_weblog_archive).id, :weblog_id => weblogs(:henk_weblog).id
     assert assigns(:weblog_post)
@@ -87,14 +87,14 @@ class WeblogPostsControllerTest < ActionController::TestCase
     end
   end
 
-  def test_should_get_edit_for_owner_of_weblog
+  test 'should get edit for owner of weblog' do
     login_as :henk
     get :edit, :weblog_archive_id => weblog_archives(:devcms_weblog_archive).id, :weblog_id => weblogs(:henk_weblog).id, :id => weblog_posts(:henk_weblog_post_one).id
     assert_response :success
     assert assigns(:weblog_post)
   end
 
-  def test_should_get_edit_for_admin
+  test 'should get edit for admin' do
     login_as :sjoerd
     get :edit, :weblog_archive_id => weblog_archives(:devcms_weblog_archive).id, :weblog_id => weblogs(:henk_weblog).id, :id => weblog_posts(:henk_weblog_post_one).id
     assert_response :success

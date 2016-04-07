@@ -9,14 +9,14 @@ class Admin::ImagesControllerTest < ActionController::TestCase
     @image = images(:test_image)
   end
 
-  def test_should_get_show
+  test 'should get show' do
     login_as :sjoerd
     get :show, :id => @image
     assert_response :success
     assert assigns(:image)
   end
 
-  def test_should_get_previous
+  test 'should get previous' do
     @image = Image.find(@image.id)
     @image.save :user => User.find_by_login('editor')
 
@@ -26,7 +26,7 @@ class Admin::ImagesControllerTest < ActionController::TestCase
     assert assigns(:image)
   end
 
-  def test_should_get_new
+  test 'should get new' do
     login_as :sjoerd
     get :new, :parent_node_id => nodes(:about_page_node).id
     assert_response :success
@@ -73,7 +73,7 @@ class Admin::ImagesControllerTest < ActionController::TestCase
 
   end
 
-  def test_should_get_edit
+  test 'should get edit' do
     login_as :sjoerd
 
     get :edit, :id => images(:test_image).id

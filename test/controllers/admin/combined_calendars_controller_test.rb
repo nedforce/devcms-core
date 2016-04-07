@@ -12,7 +12,7 @@ class Admin::CombinedCalendarsControllerTest < ActionController::TestCase
     assert_equal nodes(:combined_calendar_node), assigns(:node)
   end
 
-  def test_should_get_new
+  test 'should get new' do
     login_as :sjoerd
 
     get :new, :parent_node_id => nodes(:root_section_node).id
@@ -20,7 +20,7 @@ class Admin::CombinedCalendarsControllerTest < ActionController::TestCase
     assert assigns(:combined_calendar)
   end
 
-  def test_should_get_new_with_params
+  test 'should get new with params' do
     login_as :sjoerd
 
     get :new, :parent_node_id => nodes(:root_section_node).id, :combined_calendar => { :title => 'foo' }
@@ -75,7 +75,7 @@ class Admin::CombinedCalendarsControllerTest < ActionController::TestCase
     assert assigns(:combined_calendar).errors[:title].any?
   end
 
-  def test_should_get_edit
+  test 'should get edit' do
     login_as :sjoerd
 
     get :edit, :id => combined_calendars(:combined_calendar).id
@@ -83,7 +83,7 @@ class Admin::CombinedCalendarsControllerTest < ActionController::TestCase
     assert assigns(:combined_calendar)
   end
 
-  def test_should_get_edit_with_params
+  test 'should get edit with params' do
     login_as :sjoerd
 
     get :edit, :id => combined_calendars(:combined_calendar).id, :combined_calendar => { :title => 'foo' }

@@ -31,7 +31,7 @@ class ForumPostsControllerTest < ActionController::TestCase
     assert_response :not_found
   end
 
-  def test_should_get_new_for_user
+  test 'should get new for user' do
     login_as :gerjan
     get :new, :forum_topic_id => forum_topics(:bewoners_forum_topic_wonen).id, :forum_thread_id => forum_threads(:bewoners_forum_thread_one).id
     assert assigns(:forum_post)
@@ -69,14 +69,14 @@ class ForumPostsControllerTest < ActionController::TestCase
     end
   end
 
-  def test_should_get_edit_for_owner
+  test 'should get edit for owner' do
     login_as :henk
     get :edit, :forum_topic_id => forum_topics(:bewoners_forum_topic_wonen).id, :forum_thread_id => forum_threads(:bewoners_forum_thread_one).id, :id => forum_posts(:bewoners_forum_post_five).id
     assert_response :success
     assert assigns(:forum_post)
   end
 
-  def test_should_get_edit_for_admin
+  test 'should get edit for admin' do
     login_as :sjoerd
     get :edit, :forum_topic_id => forum_topics(:bewoners_forum_topic_wonen).id, :forum_thread_id => forum_threads(:bewoners_forum_thread_one).id, :id => forum_posts(:bewoners_forum_post_five).id
     assert_response :success

@@ -12,7 +12,7 @@ class Admin::SearchPagesControllerTest < ActionController::TestCase
     assert_equal nodes(:standard_search_page_node), assigns(:node)
   end
 
-  def test_should_get_new
+  test 'should get new' do
     login_as :sjoerd
 
     get :new, :parent_node_id => nodes(:root_section_node).id
@@ -20,7 +20,7 @@ class Admin::SearchPagesControllerTest < ActionController::TestCase
     assert assigns(:search_page)
   end
 
-  def test_should_get_new_with_params
+  test 'should get new with params' do
     login_as :sjoerd
 
     get :new, :parent_node_id => nodes(:root_section_node).id, :search_page => { :title => 'foo' }
@@ -51,7 +51,7 @@ class Admin::SearchPagesControllerTest < ActionController::TestCase
     assert assigns(:search_page).errors[:title].any?
   end
 
-  def test_should_get_edit
+  test 'should get edit' do
     login_as :sjoerd
 
     get :edit, :id => search_pages(:standard_search_page).id
@@ -59,7 +59,7 @@ class Admin::SearchPagesControllerTest < ActionController::TestCase
     assert assigns(:search_page)
   end
 
-  def test_should_get_edit_with_params
+  test 'should get edit with params' do
     login_as :sjoerd
 
     get :edit, :id => search_pages(:standard_search_page).id, :search_page => { :title => 'foo' }

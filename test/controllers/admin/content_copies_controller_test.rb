@@ -16,7 +16,7 @@ class Admin::ContentCopiesControllerTest < ActionController::TestCase
     assert_equal nodes(:test_image_copy_node), assigns(:node)
   end
 
-  def test_should_get_previous
+  test 'should get previous' do
     @content_copy.save :user => User.find_by_login('editor')
 
     login_as :sjoerd

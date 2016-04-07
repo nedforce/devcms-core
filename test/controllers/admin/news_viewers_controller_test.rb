@@ -19,7 +19,7 @@ class Admin::NewsViewersControllerTest < ActionController::TestCase
     assert_equal @news_viewer.node, assigns(:node)
   end
 
-  def test_should_get_new
+  test 'should get new' do
     login_as :sjoerd
 
     get :new, :parent_node_id => nodes(:root_section_node).id
@@ -27,7 +27,7 @@ class Admin::NewsViewersControllerTest < ActionController::TestCase
     assert assigns(:news_viewer)
   end
 
-  def test_should_get_new_with_params
+  test 'should get new with params' do
     login_as :sjoerd
 
     get :new, :parent_node_id => nodes(:root_section_node).id, :news_viewer => { :title => 'foo' }
@@ -82,7 +82,7 @@ class Admin::NewsViewersControllerTest < ActionController::TestCase
     assert assigns(:news_viewer).errors[:title].any?
   end
 
-  def test_should_get_edit
+  test 'should get edit' do
     login_as :sjoerd
 
     get :edit, :id => @news_viewer
@@ -90,26 +90,26 @@ class Admin::NewsViewersControllerTest < ActionController::TestCase
     assert assigns(:news_viewer)
   end
 
-  def test_should_get_edit_items
+  test 'should get edit items' do
     login_as :sjoerd
 
-    get :edit_items, :id => @news_viewer
+    get :edit_items, id: @news_viewer
     assert_response :success
     assert assigns(:news_archives)
   end
 
-  def test_should_get_edit_items_without_archived
+  test 'should get edit items without archived' do
     login_as :sjoerd
     # Two fixtures, set one as archived
     news_archives(:other_news).update_attributes(archived: true)
 
-    get :edit_items, :id => @news_viewer
+    get :edit_items, id: @news_viewer
     assert_response :success
     assert assigns(:news_archives)
     assert_equal 1, assigns(:news_archives).count
   end
 
-  def test_should_update_news_viewer
+  test 'should update news viewer' do
     login_as :sjoerd
 
     put :update, :id => @news_viewer, :news_viewer => { :title => 'updated title', :description => 'updated description' }

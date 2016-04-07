@@ -24,7 +24,7 @@ class Admin::CarrouselsControllerTest < ActionController::TestCase
     assert_equal @carrousel.node, assigns(:node)
   end
 
-  def test_should_get_new
+  test 'should get new' do
     login_as :sjoerd
 
     get :new, :parent_node_id => nodes(:root_section_node).id
@@ -32,7 +32,7 @@ class Admin::CarrouselsControllerTest < ActionController::TestCase
     assert assigns(:carrousel)
   end
 
-  def test_should_get_new_with_params
+  test 'should get new with params' do
     login_as :sjoerd
 
     get :new, :parent_node_id => nodes(:root_section_node).id, :carrousel => { :title => 'foo' }
@@ -76,7 +76,7 @@ class Admin::CarrouselsControllerTest < ActionController::TestCase
     assert assigns(:carrousel).errors[:title].any?
   end
 
-  def test_should_get_edit
+  test 'should get edit' do
     login_as :sjoerd
 
     get :edit, :id => @carrousel.id
@@ -84,7 +84,7 @@ class Admin::CarrouselsControllerTest < ActionController::TestCase
     assert assigns(:carrousel)
   end
 
-  def test_should_get_edit_with_params
+  test 'should get edit with params' do
     login_as :sjoerd
 
     get :edit, :id => @carrousel.id, :carrousel => { :title => 'foo' }

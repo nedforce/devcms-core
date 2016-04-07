@@ -7,7 +7,7 @@ class Admin::LinksControllerTest < ActionController::TestCase
     @link = links(:internal_link)
   end
 
-  def test_should_get_show
+  test 'should get show' do
     login_as :sjoerd
 
     get :show, :id => @link, :type => 'internal_link'
@@ -16,7 +16,7 @@ class Admin::LinksControllerTest < ActionController::TestCase
     assert_equal @link.node, assigns(:node)
   end
 
-  def test_should_get_previous
+  test 'should get previous' do
     @link.save :user => User.find_by_login('editor')
 
     login_as :sjoerd
@@ -26,7 +26,7 @@ class Admin::LinksControllerTest < ActionController::TestCase
     assert assigns(:link)
   end
 
-  def test_should_get_new
+  test 'should get new' do
     login_as :sjoerd
 
     get :new, :parent_node_id => nodes(:root_section_node).id, :type => 'internal_link'
@@ -82,7 +82,7 @@ class Admin::LinksControllerTest < ActionController::TestCase
     assert assigns(:link).errors[:linked_node].any?
   end
 
-  def test_should_get_edit
+  test 'should get edit' do
     login_as :sjoerd
 
     get :edit, :id => links(:internal_link).id, :type => 'internal_link'

@@ -16,7 +16,7 @@ class Admin::CalendarItemsControllerTest < ActionController::TestCase
     assert_equal nodes(:events_calendar_item_one_node), assigns(:node)
   end
 
-  def test_should_get_previous
+  test 'should get previous' do
     @calendar_item.title = 'foo'
     @calendar_item.save :user => User.find_by_login('editor')
 
@@ -28,7 +28,7 @@ class Admin::CalendarItemsControllerTest < ActionController::TestCase
     assert assigns(:calendar_item)
   end
 
-  def test_should_get_new
+  test 'should get new' do
     login_as :sjoerd
 
     get :new, :parent_node_id => nodes(:events_calendar_node).id
@@ -36,7 +36,7 @@ class Admin::CalendarItemsControllerTest < ActionController::TestCase
     assert assigns(:calendar_item)
   end
 
-  def test_should_get_new_with_params
+  test 'should get new with params' do
     login_as :sjoerd
 
     get :new, :parent_node_id => nodes(:events_calendar_node).id, :calendar_item => { :title => 'foo' }
@@ -91,7 +91,7 @@ class Admin::CalendarItemsControllerTest < ActionController::TestCase
     assert assigns(:calendar_item).errors[:title].any?
   end
 
-  def test_should_get_edit
+  test 'should get edit' do
     login_as :sjoerd
 
     get :edit, :id => events(:events_calendar_item_one).id
@@ -99,7 +99,7 @@ class Admin::CalendarItemsControllerTest < ActionController::TestCase
     assert assigns(:calendar_item)
   end
 
-  def test_should_get_edit_with_params
+  test 'should get edit with params' do
     login_as :sjoerd
 
     get :edit, :id => events(:events_calendar_item_one).id, :calendar_item => { :title => 'foo' }

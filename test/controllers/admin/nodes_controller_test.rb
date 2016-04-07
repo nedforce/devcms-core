@@ -94,7 +94,7 @@ class Admin::NodesControllerTest < ActionController::TestCase
     assert_redirected_to root_path
   end
 
-  def test_should_get_previous_diffed_for_approved_page_with_new_same_as_previous
+  test 'should get previous diffed for approved page with new same as previous' do
     login_as :sjoerd
     get :previous_diffed, :id => nodes(:about_page_node).id
     assert_response :success
@@ -234,5 +234,4 @@ class Admin::NodesControllerTest < ActionController::TestCase
     end
     assert_response :precondition_failed
   end
-
 end

@@ -46,7 +46,7 @@ class Admin::NewsletterArchivesControllerTest < ActionController::TestCase
     assert assigns(:month)
   end
 
-  def test_should_get_new
+  test 'should get new' do
     login_as :sjoerd
 
     get :new, :parent_node_id => nodes(:root_section_node).id
@@ -54,7 +54,7 @@ class Admin::NewsletterArchivesControllerTest < ActionController::TestCase
     assert assigns(:newsletter_archive)
   end
 
-  def test_should_get_new_with_params
+  test 'should get new with params' do
     login_as :sjoerd
 
     get :new, :parent_node_id => nodes(:root_section_node).id, :newsletter_archive => { :title => 'foo' }
@@ -107,7 +107,7 @@ class Admin::NewsletterArchivesControllerTest < ActionController::TestCase
     assert assigns(:newsletter_archive).errors[:title].any?
   end
 
-  def test_should_get_edit
+  test 'should get edit' do
     login_as :sjoerd
 
     get :edit, :id => newsletter_archives(:devcms_newsletter_archive).id
@@ -115,7 +115,7 @@ class Admin::NewsletterArchivesControllerTest < ActionController::TestCase
     assert assigns(:newsletter_archive)
   end
 
-  def test_should_get_edit_with_params
+  test 'should get edit with params' do
     login_as :sjoerd
 
     get :edit, :id => newsletter_archives(:devcms_newsletter_archive).id, :newsletter_archive => { :title => 'foo' }

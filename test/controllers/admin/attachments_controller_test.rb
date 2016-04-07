@@ -8,7 +8,7 @@ class Admin::AttachmentsControllerTest < ActionController::TestCase
     @attachment = attachments(:besluit_attachment)
   end
 
-  def test_should_get_show
+  test 'should get show' do
     login_as :sjoerd
     get :show, :id => @attachment
     assert assigns(:attachment)
@@ -16,7 +16,7 @@ class Admin::AttachmentsControllerTest < ActionController::TestCase
     assert_equal @attachment.node, assigns(:node)
   end
 
-  def test_should_get_previous
+  test 'should get previous' do
     @attachment.title = 'foo'
     @attachment.save! :user => User.find_by_login('editor')
 
@@ -26,7 +26,7 @@ class Admin::AttachmentsControllerTest < ActionController::TestCase
     assert assigns(:attachment)
   end
 
-  def test_should_get_new
+  test 'should get new' do
     login_as :sjoerd
     get :new, :parent_node_id => nodes(:about_page_node).id
     assert_response :success
@@ -61,7 +61,7 @@ class Admin::AttachmentsControllerTest < ActionController::TestCase
     end
   end
 
-  def test_should_get_edit
+  test 'should get edit' do
     login_as :sjoerd
     get :edit, :id => attachments(:besluit_attachment).id
     assert_response :success

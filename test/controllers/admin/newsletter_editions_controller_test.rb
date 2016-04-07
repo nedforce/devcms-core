@@ -14,7 +14,7 @@ class Admin::NewsletterEditionsControllerTest < ActionController::TestCase
 
   end
 
-  def test_should_get_new
+  test 'should get new' do
     login_as :sjoerd
 
     get :new, :parent_node_id => nodes(:newsletter_archive_node).id
@@ -22,7 +22,7 @@ class Admin::NewsletterEditionsControllerTest < ActionController::TestCase
     assert assigns(:newsletter_edition)
   end
 
-  def test_should_get_new_with_params
+  test 'should get new with params' do
     login_as :sjoerd
 
     get :new, :parent_node_id => nodes(:newsletter_archive_node).id, :newsletter_edition => { :title => 'foo' }
@@ -75,7 +75,7 @@ class Admin::NewsletterEditionsControllerTest < ActionController::TestCase
     assert_template 'new'
   end
 
-  def test_should_get_edit
+  test 'should get edit' do
     login_as :sjoerd
 
     get :edit, :id => newsletter_editions(:devcms_newsletter_edition)
@@ -83,7 +83,7 @@ class Admin::NewsletterEditionsControllerTest < ActionController::TestCase
     assert assigns(:newsletter_edition)
   end
 
-  def test_should_get_edit_with_params
+  test 'should get edit with params' do
     login_as :sjoerd
 
     get :edit, :id => newsletter_editions(:devcms_newsletter_edition), :newsletter_edition => { :title => 'foo' }

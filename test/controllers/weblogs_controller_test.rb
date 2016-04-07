@@ -39,9 +39,9 @@ class WeblogsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  def test_should_get_new_for_user_that_hasnt_got_a_weblog_yet
+  test "should get new for user that hasn't got a weblog yet" do
     login_as :sjoerd
-    get :new, :weblog_archive_id => weblog_archives(:devcms_weblog_archive).id
+    get :new, weblog_archive_id: weblog_archives(:devcms_weblog_archive).id
     assert assigns(:weblog)
     assert_response :success
   end
@@ -92,21 +92,21 @@ class WeblogsControllerTest < ActionController::TestCase
     end
   end
 
-  def test_should_get_edit_for_owner
+  test 'should get edit for owner' do
     login_as :henk
     get :edit, :weblog_archive_id => weblog_archives(:devcms_weblog_archive).id, :id => weblogs(:henk_weblog).id
     assert_response :success
     assert assigns(:weblog)
   end
 
-  def test_should_get_edit_for_admin
+  test 'should get edit for admin' do
     login_as :sjoerd
     get :edit, :weblog_archive_id => weblog_archives(:devcms_weblog_archive).id, :id => weblogs(:henk_weblog).id
     assert_response :success
     assert assigns(:weblog)
   end
 
-  def test_should_not_get_edit_for_non_owner
+  test 'should not get edit for non-owner' do
     login_as :gerjan
     get :edit, :weblog_archive_id => weblog_archives(:devcms_weblog_archive).id, :id => weblogs(:henk_weblog).id
     assert_response :redirect
@@ -117,14 +117,14 @@ class WeblogsControllerTest < ActionController::TestCase
     assert_response :redirect
   end
 
-  def test_should_update_weblog_for_owner
+  test 'should update weblog for owner' do
     login_as :henk
     put :update, :weblog_archive_id => weblog_archives(:devcms_weblog_archive).id, :id => weblogs(:henk_weblog).id, :weblog => { :title => 'updated title' }
     assert_response :redirect
     assert_equal 'updated title', assigns(:weblog).title
   end
 
-  def test_should_update_weblog_for_admin
+  test 'should update weblog for admin' do
     login_as :sjoerd
     put :update, :weblog_archive_id => weblog_archives(:devcms_weblog_archive).id, :id => weblogs(:henk_weblog).id, :weblog => { :title => 'updated title' }
     assert_response :redirect
