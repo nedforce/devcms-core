@@ -20,11 +20,13 @@ class NewsletterSubscriptionMailerTest < ActionMailer::TestCase
 
   def test_no_edition_for_non_subscriber
     user = users(:roderick)
-    assert_raise (RuntimeError) { NewsletterSubscriptionMailer.edition_for(@newsletter_edition, user).deliver_now }
+    assert_raise RuntimeError do
+      NewsletterSubscriptionMailer.edition_for(@newsletter_edition, user).deliver_now
+    end
   end
 
   def test_should_render_newsletter_header_image
-    @newsletter_edition.header_image_node = Image.create({ :parent => nodes(:devcms_news_item_node), :title => 'Dit is een image.', :file => fixture_file_upload('files/test.jpg') }).node
+    @newsletter_edition.header_image_node = Image.create(parent: nodes(:devcms_news_item_node), title: 'Dit is een image.', file: fixture_file_upload('files/test.jpg')).node
     assert NewsletterSubscriptionMailer.edition_for(@newsletter_edition, users(:arthur)).parts.second.body.include?('http://www.example.com/nieuws-voor-iedereen/dit-is-een-image/newsletter_banner.jpg')
   end
 

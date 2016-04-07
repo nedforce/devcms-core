@@ -6,9 +6,15 @@ class ShareMailerTest < ActionMailer::TestCase
   tests ShareMailer
 
   def test_invitation_email
-    share = Share.new(:from_email_address => 'test@nedforce.nl', :from_name => 'Nedforce',
-                      :to_email_address => 'testor@nedforce.nl', :to_name => 'Nedforce Testor',
-                      :message => 'Test message', :node => nodes(:yet_another_page_node))
+    share = Share.new(
+      from_email_address: 'test@nedforce.nl',
+      from_name: 'Nedforce',
+      to_email_address: 'testor@nedforce.nl',
+      to_name: 'Nedforce Testor',
+      message: 'Test message',
+      node: nodes(:yet_another_page_node)
+    )
+
     email = ShareMailer.recommendation_email(share)
     body = email.parts.first.body
 
