@@ -3,34 +3,34 @@ module DevcmsCore
     extend ActiveSupport::Concern
 
     DEFAULT_CONTENT_TYPE_CONFIGURATION = {
-      :enabled => true,
-      :allowed_child_content_types => [],
-      :allowed_roles_for_update  => %w( admin editor final_editor ),
-      :allowed_roles_for_create  => %w( admin editor final_editor ),
-      :allowed_roles_for_destroy => %w( admin editor final_editor ),
-      :available_content_representations => [],
-      :show_in_menu => true,
-      :has_default_representation => true,
-      :copyable => true,
-      :has_own_feed => false,
-      :children_can_be_sorted => true,
-      :has_own_content_box => false,
-      :tree_loader_name => 'nodes',
-      :controller_name => nil, # Defaults to content_class.table_name
-      :show_content_box_header => true,
-      :has_import => false,
-      :has_sync => false,
-      :has_edit_items => false,
-      :expirable => false,
-      :expiration_required => false,
-      :expiration_container => false,
-      :nested_resource => false
+      enabled: true,
+      allowed_child_content_types: [],
+      allowed_roles_for_update:  %w( admin editor final_editor ),
+      allowed_roles_for_create:  %w( admin editor final_editor ),
+      allowed_roles_for_destroy: %w( admin editor final_editor ),
+      available_content_representations: [],
+      show_in_menu: true,
+      has_default_representation: true,
+      copyable: true,
+      has_own_feed: false,
+      children_can_be_sorted: true,
+      has_own_content_box: false,
+      tree_loader_name: 'nodes',
+      controller_name: nil, # Defaults to content_class.table_name
+      show_content_box_header: true,
+      has_import: false,
+      has_sync: false,
+      has_edit_items: false,
+      expirable: false,
+      expiration_required: false,
+      expiration_container: false,
+      nested_resource: false
     }
 
     included do
       define_callbacks :before_paranoid_delete, :after_paranoid_delete, :before_paranoid_restore, :after_paranoid_restore
 
-      has_one :node, :as => :content, :autosave => true, :validate => true
+      has_one :node, as: :content, autosave: true, validate: true
 
       default_scope ->{ where("#{table_name}.deleted_at IS NULL") }
 
@@ -41,12 +41,12 @@ module DevcmsCore
         with_parent_scope
       }
 
-      scope :accessible,  lambda { includes(:node).merge(Node.accessible) }
+      scope :accessible, lambda { includes(:node).merge(Node.accessible) }
 
       validates_presence_of :node
 
       before_destroy do |content|
-        content.node.destroy(:destroy_content_node => false)
+        content.node.destroy(destroy_content_node: false)
       end
 
       before_update :touch_node
@@ -60,7 +60,7 @@ module DevcmsCore
 
       after_paranoid_restore :clear_deleted_at, :set_url_alias
 
-      delegate :update_search_index, :expirable?, :expiration_required?, :expired?, :expiration_container?, :to => :node
+      delegate :update_search_index, :expirable?, :expiration_required?, :expired?, :expiration_container?, to: :node
 
       delegate_accessor :commentable,
                         :content_box_title, :content_box_url, :content_box_icon, :content_box_colour, :content_box_number_of_items,
@@ -72,14 +72,14 @@ module DevcmsCore
                         :expiration_notification_method, :expiration_email_recipient, :cascade_expires_on,
                         :title_alternative_list, :title_alternatives, :tag_list, :tags, :pin_id,
                         :defer_geocoding, :location,
-                        :short_title, :locale, :to => :node
+                        :short_title, :locale, to: :node
     end
 
     module ClassMethods
-      def before_paranoid_delete(*args, &block);  set_callback(:before_paranoid_delete, :before, *args, &block)   end
-      def after_paranoid_delete(*args, &block);   set_callback(:after_paranoid_delete, :after, *args, &block)     end
-      def before_paranoid_restore(*args, &block); set_callback(:before_paranoid_restore, :before, *args, &block)  end
-      def after_paranoid_restore(*args, &block);  set_callback(:after_paranoid_restore, :after, *args, &block)    end
+      def before_paranoid_delete(*args, &block);  set_callback(:before_paranoid_delete,  :before, *args, &block) end
+      def after_paranoid_delete(*args, &block);   set_callback(:after_paranoid_delete,   :after,  *args, &block) end
+      def before_paranoid_restore(*args, &block); set_callback(:before_paranoid_restore, :before, *args, &block) end
+      def after_paranoid_restore(*args, &block);  set_callback(:after_paranoid_restore,  :after,  *args, &block) end
 
       # Register that this is now a content node.
       def is_content_node?
@@ -132,7 +132,7 @@ module DevcmsCore
 
     # Generate a path to suffix the URL alias with. Defaults to the
     # properly formatted content title.
-    def path_for_url_alias(node)
+    def path_for_url_alias(_node)
       content_title
     end
 
@@ -147,7 +147,7 @@ module DevcmsCore
     end
 
     def associate_node
-      build_node.tap { |node| node.sub_content_type = (self.respond_to?(:copied_content_class) ? self.copied_content_class : self.class).name }
+      build_node.tap { |node| node.sub_content_type = (respond_to?(:copied_content_class) ? copied_content_class : self.class).name }
     end
 
     def save(*args)
@@ -188,11 +188,11 @@ module DevcmsCore
     end
 
     def touch!
-      self.update_attribute(:updated_at, Time.now)
+      update_attribute(:updated_at, Time.now)
     end
 
     def content_title
-      self.respond_to?(:title) ? self.title : "#{self.class.name} #{self.id}"
+      respond_to?(:title) ? title : "#{self.class.name} #{id}"
     end
 
     # Returns this content node's tokens that are available for indexing.
@@ -205,7 +205,7 @@ module DevcmsCore
     # Returns the text to be displayed in tree view.
     # It aliases the _content_title_ method by default.
     # You might want to override this method in the model.
-    def tree_text(node)
+    def tree_text(_node)
       content_title
     end
 
@@ -228,7 +228,7 @@ module DevcmsCore
     end
 
     def own_content_class
-      (self.class == ContentCopy) ? self.copied_content_class : self.class
+      (self.class == ContentCopy) ? copied_content_class : self.class
     end
 
     def show_content_box_header
@@ -263,7 +263,7 @@ module DevcmsCore
     private
 
     def update_url_alias_if_title_changed
-      if self.respond_to?(:title) && self.title_changed?
+      if respond_to?(:title) && title_changed?
         # Update self and descendants
         node.update_subtree_url_aliases
         # Save base_url_alias for later use
@@ -287,7 +287,7 @@ module DevcmsCore
     end
 
     def delete_all_associated_versions
-      self.versions.delete_all
+      versions.delete_all
     end
 
     def clear_deleted_at
