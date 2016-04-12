@@ -1,20 +1,20 @@
 - unless news_items.empty?
-  - first_item   = news_items.shift
- 
+  - news_items = news_items.to_a
+  - first_item = news_items.shift
   - header_image = first_item.node.children.accessible.with_content_type('Image').first
 
   - if header_image
     = image_tag(content_node_url(header_image, action: :banner, format: :jpg, host: header_image.containing_site.content.domain), alt: header_image.content.alt.to_s, class: 'banner')
 
   .firstNewsItem
-    %h2= link_to_content_node first_item.content_title, first_item, { type: :url, host: first_item.node.containing_site.content.domain }
+    %h2= link_to_content_node first_item.content_title, first_item
 
     %p.publicationDate
       = l(first_item.publication_start_date.to_date, format: :long)
-    %p= link_to_content_node "#{strip_tags(truncate(first_item.preamble, length: 200))} #{image_tag('pointer_right.png', alt: '')}".html_safe, first_item, { type: :url, host: first_item.node.containing_site.content.domain }, title: t('shared.read_full_article'), class: 'body'
+    %p= link_to_content_node "#{strip_tags(truncate(first_item.preamble, length: 200))} #{image_tag('pointer_right.png', alt: '')}".html_safe, first_item, {}, title: t('shared.read_full_article'), class: 'body'
 
   %ul
     - news_items.each do |news_item|
-      %li= link_to_content_node truncate(h(news_item.content_title), length: 60), news_item, { type: :url, host: news_item.node.containing_site.content.domain }
+      %li= link_to_content_node truncate(h(news_item.content_title), length: 60), news_item
 
 = read_more_link(content, t('shared.read_more_news'), title: t('shared.read_more_news'))
