@@ -1,7 +1,7 @@
 # heavily based off difflib.py - see that file for documentation
 # ported from Python by Bill Atkins
 
-# This does not support all features offered by difflib; it 
+# This does not support all features offered by difflib; it
 # implements only the subset of features necessary
 # to support a Ruby version of HTML Differ.  You're welcome to finish this off.
 
@@ -16,7 +16,7 @@
 # * main change:
 # ** get the tag soup away
 #    the tag soup problem was first reported with <p> tags, but it appeared also with
-#    <li>, <ul> etc... tags 
+#    <li>, <ul> etc... tags
 #   this version should mostly fix these problems
 # ** added a Builder class to manage the creation of the final htmldiff
 # * minor changes:
@@ -25,7 +25,7 @@
 #
 
 module Enumerable
-  def reduce(init)
+  def diff_reduce(init)
     result = init
     each { |item| result = yield(result, item) }
     result
@@ -225,7 +225,7 @@ module Diff
     end
 
     def ratio
-      matches = get_matching_blocks.reduce(0) do |sum, triple|
+      matches = get_matching_blocks.diff_reduce(0) do |sum, triple|
         sum + triple[-1]
       end
       Diff.calculate_ratio(matches, @a.length + @b.length)
@@ -352,7 +352,7 @@ module HTMLDiff
 
     # using this as op_helper would be equivalent to the first version of diff.rb by Bill Atkins
     def op_helper_simple(tagname, tagclass, to_add)
-      @content << "<#{tagname} class=\"#{tagclass}\">" 
+      @content << "<#{tagname} class=\"#{tagclass}\">"
       @content += to_add
       @content << "</#{tagname}>"
     end
