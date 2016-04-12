@@ -71,7 +71,7 @@ module DevcmsCore
                         :responsible_user, :responsible_user_id, :expires_on,
                         :expiration_notification_method, :expiration_email_recipient, :cascade_expires_on,
                         :title_alternative_list, :title_alternatives, :tag_list, :tags, :pin_id,
-                        :defer_geocoding, :location,
+                        :defer_geocoding, :location, :geocode,
                         :short_title, :locale, to: :node
     end
 
