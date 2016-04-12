@@ -27,7 +27,7 @@ GIT
 PATH
   remote: .
   specs:
-    devcms_core (3.0.6)
+    devcms_core (3.0.7)
       actionpack-page_caching
       acts-as-taggable-on (~> 3.4.4)
       acts_as_list
@@ -116,7 +116,7 @@ GEM
       activerecord (>= 3.0.0)
     arel (6.0.3)
     builder (3.2.2)
-    byebug (8.2.2)
+    byebug (8.2.4)
     carrierwave (0.11.0)
       activemodel (>= 3.2.0)
       activesupport (>= 3.2.0)
