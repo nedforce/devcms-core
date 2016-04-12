@@ -52,11 +52,11 @@ class NewsViewer < ActiveRecord::Base
     description
   end
 
-  # Gets accessible news items for the frontend. This method does not return
+  # Gets accessible news items for the front-end. This method does not return
   # unapproved content.
   def accessible_news_items(options = {})
     scope = news_items.newest.accessible.reorder('news_viewer_items.position, nodes.publication_start_date DESC')
-    scope = sope.limit(options[:limit]) if options[:limit]
+    scope = scope.limit(options[:limit]) if options[:limit]
     scope
   end
 
