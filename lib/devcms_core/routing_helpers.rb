@@ -32,7 +32,7 @@ module DevcmsCore
           address = "#{request.protocol}#{host || request.host}:#{request.port}#{address}"
         else
           url_options = Rails.application.config.action_mailer.default_url_options || {}
-          url_options.merge!(host: host) if host
+          url_options[:host] = host if host
           address = URI.join(root_url(url_options), address).to_s
         end
       end

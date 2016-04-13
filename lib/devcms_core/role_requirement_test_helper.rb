@@ -33,7 +33,7 @@ module DevcmsCore
     #   users_access_list - a hash where the key is the label for a fixture, and the value is a boolean.
     #   actions - a list of actions to test against
     #   params - a hash containing the parameters to pass to each test call to the controller.
-    # 
+    #
     # Example:
     #   assert_user_access(
     #     { :admin => true, :quentin => false },
@@ -47,7 +47,8 @@ module DevcmsCore
 
     alias :assert_user_cannot_access :assert_user_cant_access
 
-  private
+    private
+
     def assert_user_access_check(should_access, user, actions, params = {})
       params = HashWithIndifferentAccess.new(params)
 

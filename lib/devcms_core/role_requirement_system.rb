@@ -15,7 +15,7 @@ module DevcmsCore
 
     module RoleSecurityClassMethods
       def reset_role_requirements!
-        self.role_requirements.clear
+        role_requirements.clear
       end
 
       # Add this to the top of your controller to require a role in order to
@@ -38,7 +38,8 @@ module DevcmsCore
       #  * :any_node - Check whether current user has any +role+ with a matching name
       #
       def require_role(roles, options = {})
-        options.assert_valid_keys(:if, :unless,
+        options.assert_valid_keys(
+          :if, :unless,
           :for, :only,
           :for_all_except, :except, :any_node
         )
@@ -57,9 +58,9 @@ module DevcmsCore
 
         # Convert any actions into symbols
         [:only, :except].each do |key|
-          if options.has_key?(key)
+          if options.key?(key)
             options[key] = [options[key]] unless Array === options[key]
-            options[key] = options[key].compact.map { |v| v.to_sym }
+            options[key] = options[key].compact.map(&:to_sym)
           end
         end
 
@@ -78,24 +79,24 @@ module DevcmsCore
           # do the options match the params?
 
           # Check the action
-          if options.has_key?(:only)
+          if options.key?(:only)
             next unless options[:only].include?((params[:action] || 'index').to_sym)
           end
 
-          if options.has_key?(:except)
+          if options.key?(:except)
             next if options[:except].include?((params[:action] || 'index').to_sym)
           end
 
-          if options.has_key?(:if)
+          if options.key?(:if)
             # Execute the proc.  If the procedure returns false,
             # we don't need to authenticate these roles
-            next unless (String === options[:if] ? eval(options[:if], binding) : options[:if].call([params,node]))
+            next unless (String === options[:if] ? eval(options[:if], binding) : options[:if].call([params, node]))
           end
 
-          if options.has_key?(:unless)
+          if options.key?(:unless)
             # Execute the proc.  If the procedure returns true,
             # we don't need to authenticate these roles.
-            next if (String === options[:unless] ? eval(options[:unless], binding) : options[:unless].call([params,node]))
+            next if (String === options[:unless] ? eval(options[:unless], binding) : options[:unless].call([params, node]))
           end
 
           # check to see if they have one of the required roles

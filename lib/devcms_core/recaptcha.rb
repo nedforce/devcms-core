@@ -12,12 +12,11 @@ module DevcmsCore
       # Your private API can be specified in the +options+ hash or preferably
       # the environment variable +RECAPTCHA_PUBLIC_KEY+.
       def verify_recaptcha(options = {})
-        if !options.is_a? Hash
-          options = { :model => options }
-        end
+        options = { model: options } unless options.is_a?(Hash)
 
-        env         = options[:env] || ENV['RAILS_ENV']
+        env = options[:env] || ENV['RAILS_ENV']
         return true if SKIP_VERIFY_ENV.include? env
+
         model       = options[:model]
         attribute   = options[:attribute]   || :base
         private_key = options[:private_key] || Settler[:recaptcha_private_key]
@@ -33,7 +32,7 @@ module DevcmsCore
               'response'   => params[:recaptcha_response_field]
             }
           end
-          answer, error = recaptcha.body.split.map { |s| s.chomp }
+          answer, error = recaptcha.body.split.map(&:chomp)
           unless answer == 'true'
             if model
               model.valid?
@@ -104,7 +103,8 @@ module DevcmsCore
             html << %{</div>\n</noscript>\n}
           end
         end
-        return raw html
+
+        raw html
       end # recaptcha_tags
     end # ClientHelper
   end # Recaptcha
