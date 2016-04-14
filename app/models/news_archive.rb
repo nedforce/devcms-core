@@ -52,6 +52,6 @@ class NewsArchive < ActiveRecord::Base
   end
 
   def last_updated_at
-    node.descendants.maximum(:updated_at) || updated_at
+    node.descendants.accessible.maximum(:updated_at) || updated_at
   end
 end

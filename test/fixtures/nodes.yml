@@ -96,21 +96,21 @@ test_image_two_node:
   hidden: false
   private: false
 
-devcms_news_item_voor_vorige_maand_node:
-  content: devcms_news_item_voor_vorige_maand (NewsItem)
+devcms_news_item_voor_vorig_jaar_node:
+  content: devcms_news_item_voor_vorig_jaar (NewsItem)
   ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_news_node) %>
-  commentable: false
-  publication_start_date: <%= 1.month.ago.to_s(:db) %>
+  publication_start_date: <%= 1.year.ago.to_s(:db) %>
   position: 2
   publishable: true
   sub_content_type: NewsItem
   hidden: false
   private: false
 
-devcms_news_item_voor_vorig_jaar_node:
-  content: devcms_news_item_voor_vorig_jaar (NewsItem)
+devcms_news_item_voor_vorige_maand_node:
+  content: devcms_news_item_voor_vorige_maand (NewsItem)
   ancestry: <%= fixtures_to_ancestry(:root_section_node, :devcms_news_node) %>
-  publication_start_date: <%= 1.year.ago.to_s(:db) %>
+  commentable: false
+  publication_start_date: <%= 1.month.ago.to_s(:db) %>
   position: 3
   publishable: true
   sub_content_type: NewsItem

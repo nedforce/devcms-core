@@ -59,8 +59,8 @@ module DevcmsCore
 
     # Return absolute link to the root site
     def root_site_url(relative_link)
-      root_site = Node.root.content
-      URI.join("#{request.protocol}#{root_site.domain}:#{request.port}", relative_link).to_s
+      @root_site ||= Node.root.content
+      URI.join("#{request.protocol}#{@root_site.domain}:#{request.port}", relative_link).to_s
     end
   end
 end

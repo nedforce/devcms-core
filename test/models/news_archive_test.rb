@@ -130,8 +130,12 @@ class NewsArchiveTest < ActiveSupport::TestCase
     na = create_news_archive
     assert_equal na.updated_at.to_i, na.last_updated_at.to_i
     ni = create_news_item na
-    ni.node.update_attribute(:hidden, true)
+    ni.node.update_attributes!(hidden: true, updated_at: 2.years.from_now)
     assert_equal na.updated_at.to_i, na.last_updated_at.to_i
+  end
+
+  def test_should_order_items_by_publication_date
+    assert_equal [@devcms_news_item_voor_deze_maand, @devcms_news_item_voor_vorige_maand, @devcms_news_item_voor_vorig_jaar], @devcms_news.news_items.accessible.to_a
   end
 
   protected

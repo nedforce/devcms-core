@@ -133,9 +133,11 @@ module NodeExtensions::Layouting
 
   # Merges parent layout config with own layout config
   def own_or_inherited_layout_configuration
-    config = parent.own_or_inherited_layout_configuration unless root? || content_class == Site
-    config ||= {}
-    config.merge(layout_configuration || {})
+    @own_or_inherited_layout_configuration ||= begin
+      config = parent.own_or_inherited_layout_configuration unless root? || content_class == Site
+      config ||= {}
+      config.merge(layout_configuration || {})
+    end
   end
 
   # Retrieve content representations for a given target

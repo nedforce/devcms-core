@@ -184,6 +184,8 @@ class Node < ActiveRecord::Base
     NodeSweeper.instance.after_update(self)
   end
 
+  scope :default_order, lambda{ ordered_by_ancestry.order('nodes.position') }
+
   scope :sorted_by_position, lambda { order('nodes.position') }
 
   scope :exclude_subtrees_of, (lambda do |nodes_to_exclude|
@@ -401,7 +403,7 @@ class Node < ActiveRecord::Base
 
   # Returns the site that directly contains this node as a descendant
   def containing_site
-    return @containing_site if @containing_site
+    return @containing_site if defined?(@containing_site)
 
     @containing_site = if self.depth.zero?
       Node.root
@@ -524,28 +526,28 @@ class Node < ActiveRecord::Base
   # Returns this node's content's class without hitting the database or instantiating the content object.
   # Use this instead of +@node.content.class+.
   def content_class
-    return @content_class if @content_class
+    return @content_class if defined?(@content_class)
 
-    if self.sub_content_type.nil? || self.sub_content_type == 'ContentCopy'
-      content_class = self.sub_content_type.nil? ? self.content.class : self.content.copied_content_class
+    if sub_content_type.nil? || sub_content_type == 'ContentCopy'
+      content_class = sub_content_type.nil? ? content.class : content.copied_content_class
       @content_class = content_class unless content_class == ContentCopy
       content_class
     else
-      @content_class = self.sub_content_type.constantize
+      @content_class = sub_content_type.constantize
     end
   end
 
   # This method is used to cache the titles of content nodes, so we don't have to query separately for them
   def content_title
-    if %w( ExternalLink InternalLink Feed ContentCopy ).include?(self.sub_content_type)
-      self.content.content_title
+    if %w( ExternalLink InternalLink Feed ContentCopy ).include?(sub_content_type)
+      content.try(:content_title)
     else
-      self.title.blank? ? self.content.content_title : self.title
+      title.blank? ? content.try(:content_title) : title
     end
   end
 
   def menu_title
-    self.short_title.blank? ? self.content_title : self.short_title
+    short_title.blank? ? content_title : short_title
   end
 
   def self.root

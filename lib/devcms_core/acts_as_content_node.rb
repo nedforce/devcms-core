@@ -35,13 +35,17 @@ module DevcmsCore
       default_scope ->{ where("#{table_name}.deleted_at IS NULL") }
 
       scope :with_parent, lambda { |node, options|
-        with_parent_scope = includes(:node).where('nodes.ancestry' => node.child_ancestry)
+        with_parent_scope = includes(:node).references(:nodes).where('nodes.ancestry' => node.child_ancestry)
         with_parent_scope = with_parent_scope.order(options[:order]) if options[:order]
         with_parent_scope = with_parent_scope.extending(options[:extend]) if options[:extend]
         with_parent_scope
       }
 
-      scope :accessible, lambda { includes(:node).merge(Node.accessible) }
+      scope :accessible, lambda {
+        node_accessible_scope = Node.accessible
+        node_accessible_scope = node_accessible_scope.only(:where) if all.order_values.present?
+        includes(:node).references(:nodes).merge(node_accessible_scope)
+      }
 
       validates_presence_of :node
 
