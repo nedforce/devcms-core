@@ -6,9 +6,6 @@ class UsersController < ApplicationController
   # SSL encryption is required for these actions:
   ssl_required :new, :create, :verification, :edit, :update, :confirm_destroy, :destroy
 
-  # SSL encryption is optional for the #show action.
-  ssl_allowed :show
-
   before_filter :verify_invitation_code, only: [:new, :create]
 
   before_filter :find_user, only: [:send_verification_email, :verification]
