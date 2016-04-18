@@ -17,7 +17,7 @@ module LayoutHelper
         render_helper = node.own_or_inherited_layout.custom_representations[element.custom_type]['helper']
         partials += send(render_helper || "render_#{element.custom_type}") || ''
       else
-        partials << render(:partial =>  partial, :locals => { :node => element.content, :parent => element.parent, :partial => element.content_partial, :sidebox_title => element.title, :content_box_color => nil, :last => element == representations.last })
+        partials << render(partial: partial, locals: { node: element.content, parent: element.parent, partial: element.content_partial, sidebox_title: element.title, content_box_color: nil, last: element == representations.last })
       end
     end
 
@@ -26,13 +26,13 @@ module LayoutHelper
 
   def render_sub_menu
     unless @node.blank? || @node.root?
-      render :partial => '/layouts/partials/sub_menu'
+      render partial: '/layouts/partials/sub_menu'
     end
   end
 
   def render_private_menu
     if @private_menu_items.present?
-      render :partial => '/layouts/partials/private_menu'
+      render partial: '/layouts/partials/private_menu'
     end
   end
 
@@ -41,27 +41,27 @@ module LayoutHelper
 
     if @node && @node.has_related_content?
       custom_partial = @node.own_or_inherited_layout.custom_representations['related_content']['content_partial'] || 'related_content'
-      render :partial => '/layouts/partials/content_box',
-             :locals  => {
-               :node              => @node,
-               :parent            => @node,
-               :partial           => custom_partial,
-               :sidebox_title     => I18n.t("#{@node.content_type.tableize}.related_content"),
-               :content_box_color => @node.own_or_inherited_layout_configuration['template_color']
+      render partial: '/layouts/partials/content_box',
+             locals: {
+               node:              @node,
+               parent:            @node,
+               partial:           custom_partial,
+               sidebox_title:     I18n.t("#{@node.content_type.tableize}.related_content"),
+               content_box_color: @node.own_or_inherited_layout_configuration['template_color']
              }
     end
   end
 
   def toggable_section_link(dom_id, link_or_link_title, options = {})
-    link_options = { :id => "toggle_section_#{dom_id}", :class => 'toggable_section_link' }
+    link_options = { id: "toggle_section_#{dom_id}", class: 'toggable_section_link' }
 
     if link_or_link_title.is_a?(Link)
-      html = link_to_node_url(truncate(h(link_or_link_title.content_title), :length => 60), link_or_link_title, {}, link_options)
+      html = link_to_node_url(truncate(h(link_or_link_title.content_title), length: 60), link_or_link_title, {}, link_options)
     else
       html = content_tag options[:element_type] || :span, link_or_link_title, link_options
     end
 
-    return html
+    html
   end
 
   def unemptynize(string, default)
