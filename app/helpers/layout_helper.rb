@@ -1,12 +1,13 @@
 module LayoutHelper
   def render_representations(target)
-    partials        = ''
-    node            = (@node || current_site)
+    partials = ''
+    node = @node || current_site
+    layout_variant = node.own_or_inherited_layout_variant
 
-    return if node.own_or_inherited_layout_variant.try(:[], target).blank? || node.own_or_inherited_layout_variant[target]['main_content']
+    return if layout_variant.try(:[], target).blank? || layout_variant[target]['main_content']
 
-    partial         = '/layouts/partials/' + node.own_or_inherited_layout_variant[target]['representation']
-    inheritable     = node.own_or_inherited_layout_variant[target]['inheritable'].nil? || node.own_or_inherited_layout_variant[target]['inheritable']
+    partial         = '/layouts/partials/' + layout_variant[target]['representation']
+    inheritable     = layout_variant[target]['inheritable'].nil? || layout_variant[target]['inheritable']
     representations = node.find_content_representations(target, inheritable)
 
     representations.each do |element|
