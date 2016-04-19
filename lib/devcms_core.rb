@@ -2,6 +2,7 @@
 require 'devcms_core/object_extensions'
 require 'devcms_core/array_extensions'
 require 'devcms_core/date_extensions'
+require 'devcms_core/string_extensions'
 require 'devcms_core/diff'
 
 # Dependencies
