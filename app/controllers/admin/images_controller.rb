@@ -1,16 +1,15 @@
 class Admin::ImagesController < Admin::AdminController
+  prepend_before_action :find_parent_node, only: [:new, :create]
 
-  prepend_before_filter :find_parent_node, :only => [ :new, :create ]
+  before_action :find_sibling_images, only: [:new, :create]
 
-  before_filter :find_sibling_images,      :only => [ :new, :create ]
+  before_action :find_image, except: [:new, :create]
 
-  before_filter :find_image,             :except => [ :new, :create ]
+  before_action :find_node, only: [:update, :destroy, :edit, :show, :preview, :thumbnail, :thumbnail_preview, :banner_preview, :previous]
 
-  before_filter :find_node,                :only => [ :update, :destroy, :edit, :show, :preview, :thumbnail, :thumbnail_preview, :banner_preview, :previous ]
+  before_action :clean_is_for_header, only: [:create, :update]
 
-  before_filter :clean_is_for_header,      :only => [ :create, :update ]
-
-  require_role [ 'admin', 'final_editor', 'editor' ]
+  require_role %w(admin final_editor editor)
 
   layout false
 
@@ -18,8 +17,8 @@ class Admin::ImagesController < Admin::AdminController
   # * GET /admin/images/:id.xml
   def show
     respond_to do |format|
-      format.html { render :partial => 'show', :locals => { :record => @image }, :layout => 'admin/admin_show' }
-      format.xml  { render :xml => @image }
+      format.html { render partial: 'show', locals: { record: @image }, layout: 'admin/admin_show' }
+      format.xml  { render xml: @image }
     end
   end
 
@@ -32,7 +31,7 @@ class Admin::ImagesController < Admin::AdminController
 
   # * GET /admin/images/:id/preview.jpg
   def preview
-    render_jpg_image_data @image.resize!(:size => '800x500', :format => 'jpg')
+    render_jpg_image_data @image.resize!(size: '800x500', format: 'jpg')
   end
 
   # * GET /admin/images/:id/thumbnail.jpg
@@ -41,28 +40,28 @@ class Admin::ImagesController < Admin::AdminController
     offset = @image.offset
     if @image.orientation == :vertical
       if @image.node.parent.content_type == 'NewsItem' && @image.node.left_sibling.blank?
-        ratio  = (100.0/Image::CONTENT_BOX_SIZE[:width].to_f)
+        ratio  = (100.0 / Image::CONTENT_BOX_SIZE[:width].to_f)
         offset = 0 if offset.nil?
-        offset = ((offset + (Image::CONTENT_BOX_SIZE[:height].to_f/2)) * ratio) - 50
+        offset = ((offset + (Image::CONTENT_BOX_SIZE[:height].to_f / 2)) * ratio) - 50
         offset = 0 if offset < 0
-        resized_height = @image.calculate_other_dimension_with(:width => 100)
+        resized_height = @image.calculate_other_dimension_with(width: 100)
         offset = resized_height - 100 if (resized_height - offset) < 100
       end
     end
 
-    render_jpg_image_data @image.resize!(:size => "100x100", :crop => true, :quality => 80, :offset => offset, :upsample => true, :format => 'jpg')
+    render_jpg_image_data @image.resize!(size: '100x100', crop: true, quality: 80, offset: offset, upsample: true, format: 'jpg')
   end
 
   def thumbnail_preview
     if @image.orientation == :vertical
-      render_jpg_image_data @image.resize!(:size => "100x", :upsample => true, :quality => 80, :format => 'jpg')
+      render_jpg_image_data @image.resize!(size: '100x', upsample: true, quality: 80, format: 'jpg')
     else
-      render_jpg_image_data @image.resize!(:size => [nil, 100], :upsample => true, :quality => 80, :format => 'jpg')
+      render_jpg_image_data @image.resize!(size: [nil, 100], upsample: true, quality: 80, format: 'jpg')
     end
   end
 
   def banner_preview
-    render_jpg_image_data @image.resize!(:size => "#{Image::CONTENT_BOX_SIZE[:width]}x", :upsample => true, :quality => 80, :format => 'jpg')
+    render_jpg_image_data @image.resize!(size: "#{Image::CONTENT_BOX_SIZE[:width]}x", upsample: true, quality: 80, format: 'jpg')
   end
 
   # * GET /admin/images/new
@@ -87,46 +86,46 @@ class Admin::ImagesController < Admin::AdminController
     @image                  = Image.new(permitted_attributes)
     @image.parent           = @parent_node
     @show_image_url_control = can_set_image_url?
-    @image.url              = nil if !@show_image_url_control
+    @image.url              = nil unless @show_image_url_control
 
     respond_to do |format|
-      if @image.save(:user => current_user)
+      if @image.save(user: current_user)
 
         format.html # create.html.erb
-        format.xml  { render :xml => @image, :status => :created, :location => @image }
+        format.xml { render xml: @image, status: :created, location: @image }
         format.js do
           responds_to_parent do |page|
             page << "if(Ext.get('no_images_row')) Ext.get('no_images_row').remove();"
 
             if current_user.has_role?('admin')
-              page.insert_html(:bottom, "uploaded_images", "<tr id=\"uploaded_image_#{@image.id}\">
+              page.insert_html(:bottom, 'uploaded_images', "<tr id=\"uploaded_image_#{@image.id}\">
                 <td>#{@image.title}</td>
-                <td>#{image_tag(thumbnail_admin_image_path(@image, :format => :jpg), :alt => @image.alt.to_s)}</td>
-                <td>#{check_box_tag("image_is_for_header_#{@image.id}", "1", @image.is_for_header?, :onchange => "this.disable();" + remote_function(:url => admin_image_path(@image, :format => :jpg), :method => :put, :complete => "$('image_is_for_header_#{@image.id}').enable();", :with => "'image[is_for_header]='+$F('image_is_for_header_#{@image.id}')")+"; return false;")}</td>
+                <td>#{image_tag(thumbnail_admin_image_path(@image, format: :jpg), alt: @image.alt.to_s)}</td>
+                <td>#{check_box_tag("image_is_for_header_#{@image.id}", '1', @image.is_for_header?, onchange: 'this.disable();' + remote_function(url: admin_image_path(@image, format: :jpg), method: :put, complete: "$('image_is_for_header_#{@image.id}').enable();", with: "'image[is_for_header]='+$F('image_is_for_header_#{@image.id}')") + '; return false;')}</td>
                 <td><div id='image_cropper_#{@image.id}'></div> </td>
               </tr>")
             else
-              page.insert_html(:bottom, "uploaded_images", "<tr id=\"uploaded_image_#{@image.id}\">
+              page.insert_html(:bottom, 'uploaded_images', "<tr id=\"uploaded_image_#{@image.id}\">
                 <td>#{@image.title}</td>
-                <td>#{image_tag(thumbnail_admin_image_path(@image, :format => :jpg), :alt => @image.alt.to_s)}</td>
+                <td>#{image_tag(thumbnail_admin_image_path(@image, format: :jpg), alt: @image.alt.to_s)}</td>
                 <td><div id='image_cropper_#{@image.id}'></div> </td>
               </tr>")
             end
 
-            page.call("treePanel.refreshNodesOf", @parent_node.id)
-            page.replace_html("image_cropper_#{@image.id}", :partial => "cropper_#{@image.orientation}", :locals => { :image => @image })
+            page.call('treePanel.refreshNodesOf', @parent_node.id)
+            page.replace_html("image_cropper_#{@image.id}", partial: "cropper_#{@image.orientation}", locals: { image: @image })
 
             @image = Image.new # To reset fields
-            page.replace_html("right_panel_form", :partial => 'form')
+            page.replace_html('right_panel_form', partial: 'form')
           end
         end
       else
-        format.html { render :action => 'new' }
-        format.xml  { render :xml => @image.errors, :status => :unprocessable_entity }
+        format.html { render action: 'new' }
+        format.xml  { render xml: @image.errors, status: :unprocessable_entity }
         format.js do
           responds_to_parent do |page|
             # rerender form with error messages:
-            page.replace_html("right_panel_form", :partial => 'form')
+            page.replace_html('right_panel_form', partial: 'form')
           end
         end
       end
@@ -137,26 +136,26 @@ class Admin::ImagesController < Admin::AdminController
   # * PUT /admin/images/:id.xml
   def update
     @show_image_url_control = can_set_image_url?
-    params[:image].delete(:url) if !@show_image_url_control
+    params[:image].delete(:url) unless @show_image_url_control
     @image.attributes = permitted_attributes
 
     respond_to do |format|
-      if @image.save(:user => current_user, :approval_required => @for_approval)
+      if @image.save(user: current_user, approval_required: @for_approval)
         format.html { render 'admin/shared/update' }
         format.js do
           responds_to_parent do |page|
-            page.replace_html('right_panel_content', :template => 'admin/shared/update')
+            page.replace_html('right_panel_content', template: 'admin/shared/update')
           end
         end
-        format.xml  { head :ok }
+        format.xml { head :ok }
       else
-        format.html { render :edit, :status => :unprocessable_entity }
+        format.html { render :edit, status: :unprocessable_entity }
         format.js do
           responds_to_parent do |page|
-            page.replace_html('right_panel_content', :partial => 'form')
+            page.replace_html('right_panel_content', partial: 'form')
           end
         end
-        format.xml  { render :xml => @image.errors, :status => :unprocessable_entity }
+        format.xml { render xml: @image.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -172,13 +171,13 @@ class Admin::ImagesController < Admin::AdminController
   end
 
   def find_sibling_images
-    @sibling_images = Image.accessible.where("nodes.ancestry = :parent_child_ancestry", parent_child_ancestry: @parent_node.child_ancestry)
+    @sibling_images = Image.accessible.where('nodes.ancestry = :parent_child_ancestry', parent_child_ancestry: @parent_node.child_ancestry)
   end
 
   def render_jpg_image_data(image_data)
     respond_to do |format|
       format.any do
-        send_data(image_data, :type => 'image/jpeg', :disposition => 'inline')
+        send_data(image_data, type: 'image/jpeg', disposition: 'inline')
       end
     end
   end
