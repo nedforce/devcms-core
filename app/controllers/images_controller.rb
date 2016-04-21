@@ -105,7 +105,7 @@ protected
   # def render_image(image_path); render_image(image_path, :file); end
   def render_image_data(image_data); render_image(image_data, :data); end
 
-  # Render image file or data in diferent formats
+  # Render image file or data in different formats
   def render_image image_data_or_file, type = :file
     if @image_format
       respond_to do |format|
