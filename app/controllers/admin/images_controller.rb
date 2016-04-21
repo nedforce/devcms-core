@@ -40,7 +40,7 @@ class Admin::ImagesController < Admin::AdminController
   def thumbnail
     offset = @image.offset
     if @image.orientation == :vertical
-      if @image.node.parent.content_type == 'NewsItem' && @image.node.previous_item.blank?
+      if @image.node.parent.content_type == 'NewsItem' && @image.node.left_sibling.blank?
         ratio  = (100.0/Image::CONTENT_BOX_SIZE[:width].to_f)
         offset = 0 if offset.nil?
         offset = ((offset + (Image::CONTENT_BOX_SIZE[:height].to_f/2)) * ratio) - 50
