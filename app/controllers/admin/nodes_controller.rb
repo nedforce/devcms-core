@@ -48,7 +48,7 @@ class Admin::NodesController < Admin::AdminController
         render :action => 'index' # index.html.erb
       end
       format.json do
-        active_node = params.has_key?(:active_node_id) ? Node.find(params[:active_node_id]) : nil
+        active_node = params.key?(:active_node_id) ? Node.find(params[:active_node_id]) : nil
         @nodes = @root_node.children.includes([:content, :role_assignments])
         render :json => @nodes.map { |node| node.to_tree_node_for(current_user, { :expand_if_ancestor_of => active_node }) }.to_json
       end

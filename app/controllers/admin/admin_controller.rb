@@ -162,7 +162,7 @@ class Admin::AdminController < ApplicationController
   end
 
   def set_for_approval
-    @for_approval = (params.has_key?('for_approval') and params['for_approval'] != 'false') ? true : false
+    @for_approval = (params.key?('for_approval') and params['for_approval'] != 'false') ? true : false
   end
 
   def set_page_title
@@ -170,9 +170,9 @@ class Admin::AdminController < ApplicationController
   end
 
   def parse_start_and_end_times
-    type = if params.has_key?(:calendar_item)
+    type = if params.key?(:calendar_item)
       :calendar_item
-    elsif params.has_key?(:meeting)
+    elsif params.key?(:meeting)
       :meeting
     end
 

@@ -90,7 +90,7 @@ protected
   end
 
   def redirect_to_jpg
-    unless params.has_key?(:format)
+    unless params.key?(:format)
       redirect_to :format => Image::DEFAULT_IMAGE_TYPE
     end
   end

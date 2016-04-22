@@ -27,7 +27,7 @@ class Admin::AttachmentsController < Admin::AdminController
 
   # * GET /admin/attachments/:id/preview.jpg
   def preview
-    if params.has_key?(:basename)
+    if params.key?(:basename)
       # only upload this to the user if it is what he expects
       upload_file
     else

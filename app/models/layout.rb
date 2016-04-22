@@ -21,7 +21,7 @@ class Layout
       var[:id] = id
       # Set column defaults
       self.config['target_defaults'].each do |col, conf|
-        if var.has_key?(col)
+        if var.key?(col)
           var[col] = conf.dup.merge(var[col] || {})
         end
       end
