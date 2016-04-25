@@ -1,44 +1,45 @@
-#responsible_user_settings.clearfix
+.clearfix#responsible_user_settings
   = field_set_tag t('responsible_user.settings') do
     - if content.expirable? || content.expiration_container?
-      = form.radio_button :expiration_notification_method, "inherit", :label => t('shared.inherit')
-      = wrap_with_label(form.radio_button(:expiration_notification_method, "responsible_user", :label => false) + content_tag(:div, '', :id => 'responsible_user_ct'), { :text => t('shared.responsible_user'), :for => 'responsible_user_field' })
-      = wrap_with_label(form.radio_button(:expiration_notification_method, "email", :label => false) + form.text_field(:expiration_email_recipient, :label => false), :text =>  t('shared.email'), :for => :expiration_email_recipient )
+      = form.radio_button :expiration_notification_method, 'inherit', label: t('shared.inherit')
+      = wrap_with_label(form.radio_button(:expiration_notification_method, 'responsible_user', label: false) + content_tag(:div, '', id: 'responsible_user_ct'), { text: t('shared.responsible_user'), for: 'responsible_user_field' })
+      = wrap_with_label(form.radio_button(:expiration_notification_method, 'email', label: false) + form.text_field(:expiration_email_recipient, label: false), text: t('shared.email'), for: :expiration_email_recipient)
       - if content.expiration_container?
-        = form.date_field :cascade_expires_on, :allow_empty => true, :label => t('shared.cascade_expires_on')
+        = form.date_field :cascade_expires_on, allow_empty: true, label: t('shared.cascade_expires_on')
+
       :javascript
         var userStore = new Ext.data.Store({
           proxy: new Ext.data.HttpProxy({
-            url: '#{privileged_admin_users_path(:node => content.node, :format => 'json')}',
+            url: '#{privileged_admin_users_path(node: content.node, format: 'json')}',
             method: 'GET'
           }),
           reader: new Ext.data.JsonReader({
-            root: 'users',      
+            root: 'users',
             id: 'id'
           }, [ 'login', 'id' ])
         });
-        
+
         MyCombo = function(config) {
           MyCombo.superclass.constructor.call(this, config);
         };
         Ext.extend(MyCombo, Ext.form.ComboBox, {
             listAlignOffsets: [0, 0],
             // private
-            restrictHeight : function(){
+            restrictHeight : function() {
                 this.innerList.dom.style.height = '';
                 var inner = this.innerList.dom;
                 var h = Math.max(inner.clientHeight, inner.offsetHeight, inner.scrollHeight);
                 this.innerList.setHeight(h < this.maxHeight ? 'auto' : this.maxHeight);
                 this.list.beginUpdate();
-                this.list.setHeight(this.innerList.getHeight()+this.list.getFrameWidth('tb')+(this.resizable?this.handleHeight:0)+this.assetHeight);
+                this.list.setHeight(this.innerList.getHeight() + this.list.getFrameWidth('tb') + (this.resizable?this.handleHeight:0) + this.assetHeight);
                 this.list.alignTo(this.el, this.listAlign, this.listAlignOffsets);
                 this.list.endUpdate();
             },
             /**
              * Expands the dropdown list if it is currently hidden. Fires the 'expand' event on completion.
              */
-            expand : function(){
-                if(this.isExpanded() || !this.hasFocus){
+            expand : function() {
+                if (this.isExpanded() || !this.hasFocus) {
                     return;
                 }
                 this.list.alignTo(this.el, this.listAlign, this.listAlignOffsets);
@@ -46,9 +47,7 @@
                 Ext.get(document).on('mousedown', this.collapseIf, this);
                 this.fireEvent('expand', this);
             }
-
         });
-        
 
         new MyCombo({
           id: 'responsible_user_combo',
@@ -73,9 +72,10 @@
           renderTo: 'responsible_user_ct',
           forceSelection: true
         });
+
     - if content.expirable?
       - if params[form.object_name] && params[form.object_name][:expires_on]
-        - expire_on_value =  params[form.object_name][:expires_on]
+        - expire_on_value = params[form.object_name][:expires_on]
       - else
         - expire_on_value = content.expires_on
-      = form.date_field :expires_on, :value => expire_on_value, :allow_empty => true, :label => t('shared.expires_on')
+      = form.date_field :expires_on, value: expire_on_value, allow_empty: true, label: t('shared.expires_on')

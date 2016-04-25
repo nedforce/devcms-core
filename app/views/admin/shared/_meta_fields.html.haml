@@ -1,8 +1,8 @@
 = fields_for content do |f|
   = field_set_tag t('shared.meta_fields') do
     .formFieldCt
-      = f.label         :short_title, t('shared.short_title')
-      = f.text_field    :short_title
+      = f.label      :short_title, t('shared.short_title')
+      = f.text_field :short_title
     .formFieldCt
-      = f.label         :locale, t('shared.locale')
-      = f.select        :locale, options_for_select(Devcms.node_locales), :include_blank => true
+      = f.label  :locale, t('shared.locale')
+      = f.select :locale, options_for_select(Devcms.node_locales), include_blank: true

@@ -1,5 +1,5 @@
 - if logged_in? && current_user.has_role?('admin')
-  #content_box_settings.clearfix
+  .clearfix#content_box_settings
     = field_set_tag t('content_boxes.settings') do
       = fields_for content do |f|
 
@@ -12,8 +12,8 @@
           = f.text_field :content_box_url
 
         .formFieldCt.clearfix
-          = f.label      :content_box_show_link, t('content_boxes.show_link')
-          = f.check_box  :content_box_show_link
+          = f.label     :content_box_show_link, t('content_boxes.show_link')
+          = f.check_box :content_box_show_link
 
         - if show_number_of_items_field
           .formFieldCt.clearfix.cb-number-of-items
@@ -26,7 +26,7 @@
             %ul.content_box_colour_chooser.clearfix
               - Devcms.content_box_colours.each do |colour|
                 %li
-                  %label{ :class => colour }= raw '&nbsp;'
+                  %label{ class: colour }= raw '&nbsp;'
                   = radio_button_tag "#{content.class.name.underscore}[content_box_colour]", colour, content.content_box_colour == colour || content.content_box_colour.nil? && colour == 'default'
 
         - if show_icon_field && Devcms.content_box_icons.any?
@@ -39,5 +39,5 @@
 
               - Devcms.content_box_icons.each do |icon|
                 %li
-                  %label{ :class => icon }= raw '&nbsp;'
+                  %label{ class: icon }= raw '&nbsp;'
                   = radio_button_tag "#{content.class.name.underscore}[content_box_icon]", icon, content.content_box_icon == icon
