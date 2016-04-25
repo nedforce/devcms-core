@@ -61,7 +61,7 @@ class NewsArchiveTest < ActiveSupport::TestCase
 
   def test_find_months_with_news_items_for_year
     year_month_pairs = @devcms_news.news_items.map { |news_item|
-      [ news_item.publication_start_date.year, news_item.publication_start_date.month ]
+      [news_item.publication_start_date.year, news_item.publication_start_date.month]
     }.uniq
 
     year_month_pairs.each do |year_month_pair|
@@ -74,7 +74,7 @@ class NewsArchiveTest < ActiveSupport::TestCase
     news_items = @devcms_news.news_items
 
     year_month_pairs = news_items.map { |news_item|
-      [ news_item.publication_start_date.year, news_item.publication_start_date.month ]
+      [news_item.publication_start_date.year, news_item.publication_start_date.month]
     }.uniq
 
     year_month_pairs.each do |year_month_pair|

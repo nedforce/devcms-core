@@ -45,7 +45,7 @@ class CarrouselTest < ActiveSupport::TestCase
   end
 
   def test_human_name_does_not_return_nil
-    assert_not_nil Carrousel.human_name 
+    assert_not_nil Carrousel.human_name
   end
 
   def test_should_add_carrousel_items
@@ -75,16 +75,16 @@ class CarrouselTest < ActiveSupport::TestCase
 
   test 'should set display time' do
     carrousel = create_carrousel(display_time: [5, 'hours'])
-    assert_equal 300*60, carrousel.display_time
+    assert_equal 300 * 60, carrousel.display_time
   end
 
-  def test_should_cycle_current_item
+  test 'should cycle current item' do
     carrousel = create_carrousel(display_time: [5, 'hours'])
     carrousel.associate_items([nodes(:help_page_node).id, nodes(:devcms_news_item_node).id])
     carrousel.save
     assert_equal nodes(:help_page_node), carrousel.find_current_carrousel_item.node
     assert_not_nil carrousel.reload.last_cycled
-    
+
     carrousel.update_attribute(:last_cycled, 5.hours.ago)
     assert_equal nodes(:devcms_news_item_node), carrousel.find_current_carrousel_item.node
     assert carrousel.reload.last_cycled > 5.minutes.ago
@@ -94,7 +94,7 @@ class CarrouselTest < ActiveSupport::TestCase
     assert carrousel.reload.last_cycled > 5.minutes.ago
   end
 
-  def test_should_properly_handle_empty_item_collection
+  test 'should properly handle empty item collection' do
     carrousel = create_carrousel(display_time: [5, 'hours'])
     assert_nil carrousel.find_current_carrousel_item
   end

@@ -6,7 +6,7 @@ class RoleAssignmentTest < ActiveSupport::TestCase
   test 'should create role assignment' do
     assert_difference 'RoleAssignment.count' do
       role_assignment = create_role_assignment
-      refute role_assignment.new_record?, role_assignment.errors.full_messages.to_sentence.to_s
+      refute role_assignment.new_record?, role_assignment.errors.full_messages.to_sentence
     end
   end
 
@@ -15,7 +15,7 @@ class RoleAssignmentTest < ActiveSupport::TestCase
 
     assert_no_difference 'RoleAssignment.count' do
       role_assignment = create_role_assignment
-      assert role_assignment.errors.full_messages.to_sentence.to_s
+      assert role_assignment.errors.full_messages.to_sentence
     end
   end
 
@@ -23,7 +23,7 @@ class RoleAssignmentTest < ActiveSupport::TestCase
     [nodes(:test_image_two_node), nodes(:devcms_news_item_node), nodes(:events_calendar_item_one_node)].each do |node|
       assert_no_difference 'RoleAssignment.count' do
         role_assignment = create_role_assignment(name: 'editor', node: node)
-        assert role_assignment.errors.full_messages.to_sentence.to_s
+        assert role_assignment.errors.full_messages.to_sentence
       end
     end
 
@@ -39,14 +39,14 @@ class RoleAssignmentTest < ActiveSupport::TestCase
   test 'should require root node for admin' do
     assert_no_difference 'RoleAssignment.count' do
       role_assignment = create_role_assignment(name: 'admin', node: nodes(:test_image_two_node))
-      assert role_assignment.errors.full_messages.to_sentence.to_s
+      assert role_assignment.errors.full_messages.to_sentence
     end
   end
 
   test 'should require no inherited roles' do
     assert_no_difference 'RoleAssignment.count' do
       role_assignment = create_role_assignment(user: users(:arthur))
-      assert role_assignment.errors.full_messages.to_sentence.to_s
+      assert role_assignment.errors.full_messages.to_sentence
     end
   end
 

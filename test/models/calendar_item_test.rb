@@ -42,7 +42,7 @@ class CalendarItemTest < ActiveSupport::TestCase
   end
 
   def test_should_force_end_time
-    calendar_item = create_calendar_item(:end_time => nil)
+    calendar_item = create_calendar_item(end_time: nil)
     assert_equal calendar_item.start_time + 30.minutes, calendar_item.end_time
   end
 

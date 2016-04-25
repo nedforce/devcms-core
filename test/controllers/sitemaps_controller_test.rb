@@ -98,7 +98,6 @@ class SitemapsControllerTest < ActionController::TestCase
   end
 
   test 'should get changes since interval' do
-    sleep 3
     Node.root.touch
     get :changes, format: 'xml', interval: 2.second.to_i
     assert assigns(:changes).include?(Node.root)

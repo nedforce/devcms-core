@@ -66,11 +66,11 @@ class NewsletterEditionTest < ActiveSupport::TestCase
   end
 
   def test_human_name_does_not_return_nil
-    assert_not_nil NewsletterEdition.human_name 
+    assert_not_nil NewsletterEdition.human_name
   end
 
   def test_should_add_pages_and_news_item_nodes
-    @devcms_newsletter_edition.associate_items([ nodes(:help_page_node).id, nodes(:devcms_news_item_node).id, nodes(:devcms_news_item_voor_vorige_maand_node).id])
+    @devcms_newsletter_edition.associate_items([nodes(:help_page_node).id, nodes(:devcms_news_item_node).id, nodes(:devcms_news_item_voor_vorige_maand_node).id])
     assert_equal 3, @devcms_newsletter_edition.items_count
   end
 

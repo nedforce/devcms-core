@@ -13,7 +13,7 @@ class MeetingTest < ActiveSupport::TestCase
   test 'should create meeting' do
     assert_difference 'Meeting.count' do
       meeting = create_meeting
-      refute meeting.new_record?, "#{meeting.errors.full_messages.to_sentence}"
+      refute meeting.new_record?, meeting.errors.full_messages.to_sentence
     end
   end
 
@@ -49,7 +49,7 @@ class MeetingTest < ActiveSupport::TestCase
 
   def test_meeting_category_name_should_associate_existing_meeting_category_on_create
     assert_no_difference('MeetingCategory.count') do
-      meeting = create_meeting({ :meeting_category_name => @meeting_category.name, :title => 'New meeting', :start_time => DateTime.now.to_s(:db), :end_time => (DateTime.now + 1.hour).to_s(:db) })
+      meeting = create_meeting(meeting_category_name: @meeting_category.name, title: 'New meeting', start_time: DateTime.now.to_s(:db), end_time: (DateTime.now + 1.hour).to_s(:db))
       assert_equal @meeting_category, meeting.meeting_category
     end
   end

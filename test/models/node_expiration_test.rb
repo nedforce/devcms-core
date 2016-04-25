@@ -62,7 +62,7 @@ class NodeExpirationTest < ActiveSupport::TestCase
 
     expiration_date = 25.days.from_now
 
-    section.update_attributes :cascade_expires_on => expiration_date.to_s
+    section.update_attributes cascade_expires_on: expiration_date.to_s
     assert_equal     expiration_date.to_date, pages(:editor_section_page).reload.expires_on
     assert_not_equal expiration_date.to_date, pages(:about_page).reload.expires_on
   end

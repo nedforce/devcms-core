@@ -14,12 +14,12 @@ class NewsViewerTest < ActiveSupport::TestCase
 
   def test_should_require_title
     assert_no_difference 'NewsViewer.count' do
-      news_viewer = create_news_viewer(:title => nil)
+      news_viewer = create_news_viewer(title: nil)
       assert news_viewer.errors[:title].any?
     end
 
     assert_no_difference 'NewsViewer.count' do
-      news_viewer = create_news_viewer(:title => '  ')
+      news_viewer = create_news_viewer(title: '  ')
       assert news_viewer.errors[:title].any?
     end
   end
@@ -27,7 +27,7 @@ class NewsViewerTest < ActiveSupport::TestCase
   def test_should_not_require_unique_title
     assert_difference 'NewsViewer.count', 2 do
       2.times do
-        news_viewer = create_news_viewer(:title => 'Non-unique title')
+        news_viewer = create_news_viewer(title: 'Non-unique title')
         refute news_viewer.errors[:title].any?
       end
     end
@@ -53,12 +53,12 @@ class NewsViewerTest < ActiveSupport::TestCase
     n2.node.update_attribute(:hidden, true)
     n3 = create_news_item
     n3.node.update_attribute(:publishable, false)
-    n4 = create_news_item :publication_start_date => 3.weeks.ago
+    n4 = create_news_item publication_start_date: 3.weeks.ago
 
-    @news_viewer.news_viewer_items.create(:news_item => n1, :position => 0)
-    @news_viewer.news_viewer_items.create(:news_item => n2, :position => 1)
-    @news_viewer.news_viewer_items.create(:news_item => n3, :position => 2)
-    @news_viewer.news_viewer_items.create(:news_item => n4, :position => 3)
+    @news_viewer.news_viewer_items.create(news_item: n1, position: 0)
+    @news_viewer.news_viewer_items.create(news_item: n2, position: 1)
+    @news_viewer.news_viewer_items.create(news_item: n3, position: 2)
+    @news_viewer.news_viewer_items.create(news_item: n4, position: 3)
 
     @news_viewer.accessible_news_items.each { |ni| assert ni.publication_start_date >= 2.weeks.ago.beginning_of_day }
     assert_equal [n1], @news_viewer.accessible_news_items
@@ -68,8 +68,8 @@ class NewsViewerTest < ActiveSupport::TestCase
     n1 = create_news_item
     n2 = create_news_item
 
-    nvi1 = @news_viewer.news_viewer_items.create(:news_item => n1, :position => 0)
-    nvi2 = @news_viewer.news_viewer_items.create(:news_item => n2, :position => 1)
+    nvi1 = @news_viewer.news_viewer_items.create(news_item: n1, position: 0)
+    nvi2 = @news_viewer.news_viewer_items.create(news_item: n2, position: 1)
 
     assert_equal [n1, n2], @news_viewer.accessible_news_items
 
@@ -80,8 +80,8 @@ class NewsViewerTest < ActiveSupport::TestCase
   end
 
   def test_should_order_by_date
-    n1 = create_news_item :publication_start_date => 1.day.ago
-    n2 = create_news_item :publication_start_date => 2.days.ago
+    n1 = create_news_item publication_start_date: 1.day.ago
+    n2 = create_news_item publication_start_date: 2.days.ago
 
     @news_viewer.news_items << n1
     @news_viewer.news_items << n2
@@ -110,10 +110,10 @@ class NewsViewerTest < ActiveSupport::TestCase
   end
 
   def test_should_update_news_items
-    news_item = create_news_item(:title => 'Add me!')
+    news_item = create_news_item(title: 'Add me!')
 
     @news_viewer.news_archives << news_archives(:devcms_news)
-    (0..30).each { |n| @news_viewer.news_items << create_news_item(:publication_start_date => n.days.ago, :title => (n.days.ago >= 2.weeks.ago) ? 'Keep me!' : 'Remove me!') }
+    (0..30).each { |n| @news_viewer.news_items << create_news_item(publication_start_date: n.days.ago, title: (n.days.ago >= 2.weeks.ago) ? 'Keep me!' : 'Remove me!') }
 
     assert_no_difference 'NewsItem.count' do
       NewsViewer.update_news_items
@@ -126,10 +126,20 @@ class NewsViewerTest < ActiveSupport::TestCase
   private
 
   def create_news_viewer(options = {})
-    NewsViewer.create({ :parent => nodes(:root_section_node), :publication_start_date => 1.day.ago, :title => 'General NewsViewer', :description => 'Gecombineerd nieuws' }.merge(options))
+    NewsViewer.create({
+      parent: nodes(:root_section_node),
+      publication_start_date: 1.day.ago,
+      title: 'General NewsViewer',
+      description: 'Gecombineerd nieuws'
+    }.merge(options))
   end
 
   def create_news_item(options = {})
-    NewsItem.create({ :parent => nodes(:devcms_news_node), :publication_start_date => 1.day.ago, :title => 'Slecht weer!', :body => 'Het zonnetje schijnt niet en de mensen zijn ontevreden.' }.merge(options))
+    NewsItem.create({
+      parent: nodes(:devcms_news_node),
+      publication_start_date: 1.day.ago,
+      title: 'Slecht weer!',
+      body: 'Het zonnetje schijnt niet en de mensen zijn ontevreden.'
+    }.merge(options))
   end
 end

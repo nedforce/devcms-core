@@ -20,12 +20,12 @@ class NodeURLAliasTest < ActiveSupport::TestCase
   end
 
   def test_should_create_url_alias_for_frontpage_child
-    ni = NewsItem.create({ :parent => nodes(:devcms_news_node), :title => 'foo', :preamble => 'xuu', :body => 'bar', :publication_start_date => '2008-05-20 12:00' })
+    ni = NewsItem.create(parent: nodes(:devcms_news_node), title: 'foo', preamble: 'xuu', body: 'bar', publication_start_date: '2008-05-20 12:00')
     assert_equal '2008/5/20/foo', ni.node.url_alias
   end
 
   def test_should_remove_trailing_slashes_from_url_aliases
-    page = Page.create({ :parent => nodes(:root_section_node), :title => 'foo/', :preamble => 'xuu', :body => 'bar', :expires_on => 1.day.from_now.to_date, :publication_start_date => '2008-05-20 12:00' })
+    page = Page.create(parent: nodes(:root_section_node), title: 'foo/', preamble: 'xuu', body: 'bar', expires_on: 1.day.from_now.to_date, publication_start_date: '2008-05-20 12:00')
     assert_equal 'foo', page.node.url_alias
   end
 
@@ -67,23 +67,23 @@ class NodeURLAliasTest < ActiveSupport::TestCase
   end
 
   def test_should_append_parent_url_alias_if_node_has_parent
-    na = NewsArchive.create(:parent => @root_node, :title => 'news', :description => 'news')
+    na = NewsArchive.create(parent: @root_node, title: 'news', description: 'news')
     parent_node_alias = na.node.url_alias
-    ni = na.news_items.create(:parent => na.node, :user => @arthur, :title => 'foobar', :body => 'foobar')
+    ni = na.news_items.create(parent: na.node, user: @arthur, title: 'foobar', body: 'foobar')
 
-    special_ni_url_alias = "/#{Date.today.strftime("%Y/%-m/%-d")}"
+    special_ni_url_alias = "/#{Date.today.strftime('%Y/%-m/%-d')}"
 
     assert_equal "#{parent_node_alias}#{special_ni_url_alias}/foobar", ni.node.url_alias
   end
 
-  def test_should_set_custom_url_alias_to_custom_url_suffix_if_node_has_no_parent
+  test 'should set custom url alias to custom url suffix if node has no parent' do
     page = create_page title: 'foobarbaz'
     page.node.update_attributes(custom_url_suffix: 'test')
 
     assert_equal 'test', page.node.custom_url_alias
   end
 
-  def test_should_append_custom_url_suffix_to_parent_url_alias_if_node_has_parent
+  test 'should append custom url suffix to parent url alias if node has parent' do
     na = NewsArchive.create(parent: @root_node, title: 'news', description: 'news')
     parent_node_alias = na.node.url_alias
     ni = na.news_items.create(parent: na.node, user: @arthur, title: 'foobar', body: 'foobar')

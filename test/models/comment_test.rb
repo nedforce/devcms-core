@@ -28,52 +28,52 @@ class CommentTest < ActiveSupport::TestCase
     end
   end
 
-  def test_user_takes_precedence_over_user_name
-    comment = create_comment(:user => @user, :user_name => @user.login.succ)
+  test 'should ensure user takes precedence over user_name' do
+    comment = create_comment(user: @user, user_name: @user.login.succ)
     assert_equal @user.login, comment.user_name
   end
 
-  def test_should_require_commentable
+  test 'should require commentable' do
     assert_no_difference 'Comment.count' do
-      comment = create_comment(:commentable => nil)
+      comment = create_comment(commentable: nil)
       assert comment.errors[:commentable].any?
     end
   end
 
-  def test_should_require_comment_body
+  test 'should require comment body' do
     assert_no_difference 'Comment.count' do
-      comment = create_comment(:comment => nil)
+      comment = create_comment(comment: nil)
       assert comment.errors[:comment].any?
     end
 
     assert_no_difference 'Comment.count' do
-      comment = create_comment(:comment => '')
+      comment = create_comment(comment: '')
       assert comment.errors[:comment].any?
     end
   end
 
-  def test_should_not_require_unique_title
+  test 'should not require unique title' do
     assert_difference 'Comment.count', 2 do
       2.times do
-        comment = create_comment(:title => 'Non-unique title')
+        comment = create_comment(title: 'Non-unique title')
         refute comment.errors[:title].any?
       end
     end
   end
 
-  def test_should_destroy_comment
+  test 'should destroy comment' do
     create_comment
     assert_difference 'Comment.count', -1 do
       @news_item_node.destroy
     end
   end
 
-  def test_should_have_nodes
+  test 'should have nodes' do
     c = create_comment
     c.node == c.commentable
   end
 
-  def test_should_return_editable_comments
+  test 'should return editable comments' do
     assert_equal Comment.all, Comment.editable_comments_for(users(:arthur))
 
     editable_comment  = create_comment(user: users(:final_editor))

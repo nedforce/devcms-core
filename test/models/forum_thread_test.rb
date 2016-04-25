@@ -17,26 +17,26 @@ class ForumThreadTest < ActiveSupport::TestCase
 
   def test_should_require_user
     assert_no_difference 'ForumThread.count' do
-      forum_thread = create_forum_thread(:user => nil)
+      forum_thread = create_forum_thread(user: nil)
       assert forum_thread.errors[:user].any?
     end
   end
 
   def test_should_require_forum_topic
     assert_no_difference 'ForumThread.count' do
-      forum_thread = create_forum_thread(:forum_topic => nil)
+      forum_thread = create_forum_thread(forum_topic: nil)
       assert forum_thread.errors[:forum_topic].any?
     end
   end
 
   def test_should_require_title
     assert_no_difference 'ForumThread.count' do
-      forum_thread = create_forum_thread(:title => nil)
+      forum_thread = create_forum_thread(title: nil)
       assert forum_thread.errors[:title].any?
     end
 
     assert_no_difference 'ForumThread.count' do
-      forum_thread = create_forum_thread(:title => '   ')
+      forum_thread = create_forum_thread(title: '   ')
       assert forum_thread.errors[:title].any?
     end
   end
@@ -69,9 +69,9 @@ class ForumThreadTest < ActiveSupport::TestCase
   end
 
   def test_last_update_date_should_return_creation_date_of_last_created_forum_post
-    post = @bewoners_forum_thread_one.forum_posts.create(:body => 'foobar', :user => users(:henk), :created_at => 4.hours.from_now)
-    @bewoners_forum_thread_one.forum_posts.create(       :body => 'foobar', :user => users(:henk), :created_at => 3.hours.from_now)
-    @bewoners_forum_thread_one.forum_posts.create(       :body => 'foobar', :user => users(:henk), :created_at => 2.hours.from_now)
+    post = @bewoners_forum_thread_one.forum_posts.create(body: 'foobar', user: users(:henk), created_at: 4.hours.from_now)
+    @bewoners_forum_thread_one.forum_posts.create(       body: 'foobar', user: users(:henk), created_at: 3.hours.from_now)
+    @bewoners_forum_thread_one.forum_posts.create(       body: 'foobar', user: users(:henk), created_at: 2.hours.from_now)
     assert_equal post.reload.created_at, @bewoners_forum_thread_one.last_update_date
   end
 

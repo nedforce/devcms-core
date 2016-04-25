@@ -76,7 +76,7 @@ class AgendaItemTest < ActiveSupport::TestCase
 
   def test_agenda_item_category_name_should_associate_existing_agenda_item_category_on_create
     assert_no_difference('AgendaItemCategory.count') do
-      agenda_item = create_agenda_item({ :agenda_item_category_name => @agenda_item_category.name, :description => "Spannend!", :body => 'Geen grappen!'})
+      agenda_item = create_agenda_item(agenda_item_category_name: @agenda_item_category.name, description: 'Spannend!', body: 'Geen grappen!')
       assert_equal @agenda_item_category, agenda_item.agenda_item_category
     end
   end

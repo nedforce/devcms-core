@@ -55,7 +55,7 @@ class InternalLinkTest < ActiveSupport::TestCase
   def test_should_not_require_unique_title
     assert_difference 'InternalLink.count', 2 do
       2.times do
-        internal_link = create_internal_link(:title => 'Non-unique title')
+        internal_link = create_internal_link(title: 'Non-unique title')
         refute internal_link.errors[:title].any?
       end
     end

@@ -239,12 +239,12 @@ class Admin::PollQuestionsControllerTest < ActionController::TestCase
     assert_equal Time.local(date.year, date.month, date.day, date.hour, date.min), assigns(:poll_question).publication_start_date
   end
 
-protected
+  protected
 
   def create_poll_question(attributes = {}, options = {})
     publication_start_date = attributes.delete(:publication_start_date) || Time.zone.now
 
-    unless attributes.has_key?(:new_poll_option_attributes)
+    unless attributes.key?(:new_poll_option_attributes)
       attributes[:new_poll_option_attributes] = [
         { :text => 'Option one' },
         { :text => 'Option two' },

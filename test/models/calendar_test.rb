@@ -101,16 +101,17 @@ class CalendarTest < ActiveSupport::TestCase
       assert event.start_time > time || event.end_time > time
     end
 
-    ae = create_calendar_item({ :calendar => @events_calendar, :title => 'Active event', :start_time => (DateTime.now - 1.hour).to_s(:db),  :end_time => (DateTime.now + 1.hour).to_s(:db), :publication_start_date => 1.day.ago })
-    pe = create_calendar_item({ :calendar => @events_calendar, :title =>   'Past event', :start_time => (DateTime.now - 2.hours).to_s(:db), :end_time => (DateTime.now - 1.hour).to_s(:db), :publication_start_date => 1.day.ago })
-    assert  @events_calendar.calendar_items.current_and_future.include?(ae)
+    ae = create_calendar_item(calendar: @events_calendar, title: 'Active event', start_time: (DateTime.now - 1.hour).to_s(:db),  end_time: (DateTime.now + 1.hour).to_s(:db), publication_start_date: 1.day.ago)
+    pe = create_calendar_item(calendar: @events_calendar, title: 'Past event',   start_time: (DateTime.now - 2.hours).to_s(:db), end_time: (DateTime.now - 1.hour).to_s(:db), publication_start_date: 1.day.ago)
+    assert @events_calendar.calendar_items.current_and_future.include?(ae)
     refute @events_calendar.calendar_items.current_and_future.include?(pe)
   end
 
   def test_last_updated_at_should_return_updated_at_when_no_accessible_calendar_items_are_found
     c = create_calendar
     assert_equal c.node.updated_at.to_i, c.last_updated_at.to_i
-    ci = create_calendar_item :calendar => c, :publication_start_date => 1.day.ago
+
+    ci = create_calendar_item calendar: c, publication_start_date: 1.day.ago
     ci.node.update_attribute(:hidden, true)
     assert_equal c.node.updated_at.to_i, c.last_updated_at.to_i
   end
@@ -118,10 +119,21 @@ class CalendarTest < ActiveSupport::TestCase
   protected
 
   def create_calendar(options = {})
-    Calendar.create({ :parent => nodes(:root_section_node), :title => 'New calendar', :description => 'This is a new calendar.', :publication_start_date => 2.days.ago }.merge(options))
+    Calendar.create({
+      parent: nodes(:root_section_node),
+      title: 'New calendar',
+      description: 'This is a new calendar.',
+      publication_start_date: 2.days.ago
+    }.merge(options))
   end
 
   def create_calendar_item(options = {})
-    CalendarItem.create({ :parent => options[:calendar] ? options.delete(:calendar).node : @events_calendar.node, :repeating => false, :title => 'New event', :start_time => DateTime.now.to_s(:db), :end_time => (DateTime.now + 1.hour).to_s(:db) }.merge(options))
+    CalendarItem.create({
+      parent: options[:calendar] ? options.delete(:calendar).node : @events_calendar.node,
+      repeating: false,
+      title: 'New event',
+      start_time: DateTime.now.to_s(:db),
+      end_time: (DateTime.now + 1.hour).to_s(:db)
+    }.merge(options))
   end
 end

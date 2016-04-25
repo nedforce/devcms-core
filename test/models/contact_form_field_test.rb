@@ -93,9 +93,9 @@ class ContactFormFieldTest < ActiveSupport::TestCase
       refute cff2.new_record?
     end
   end
-  
+
   def test_should_allow_big_default_value_for_dropdown_field_type
-    assert create_contact_form_field(field_type: 'dropdown', default_value: 'Geen onderwijs / basisonderwijs, LBO/ VBO/ VMBO (kader- en beroepsgerichte leerweg), MAVO/ eerste 3 jaar HAVO en VWO/ VMBO (theoretische en gemengde leerweg), MBO, HAVO en VWO bovenbouw / WO-propedeuse, HBO / WO-bachelor of kandidaats, WO-doctoraal of master,')    
+    assert create_contact_form_field(field_type: 'dropdown', default_value: 'Geen onderwijs / basisonderwijs, LBO/ VBO/ VMBO (kader- en beroepsgerichte leerweg), MAVO/ eerste 3 jaar HAVO en VWO/ VMBO (theoretische en gemengde leerweg), MBO, HAVO en VWO bovenbouw / WO-propedeuse, HBO / WO-bachelor of kandidaats, WO-doctoraal of master,')
   end
 
   protected

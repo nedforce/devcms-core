@@ -5,7 +5,7 @@ class UserTest < ActiveSupport::TestCase
   test 'should create user' do
     assert_difference 'User.count' do
       user = create_user
-      refute user.new_record?, user.errors.full_messages.to_sentence.to_s
+      refute user.new_record?, user.errors.full_messages.to_sentence
     end
   end
 
