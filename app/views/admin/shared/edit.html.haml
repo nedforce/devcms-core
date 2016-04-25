@@ -1,7 +1,7 @@
 .right_panel_content
   %h1 #{t 'edit', scope: record.controller_name} '#{h record.title}'
 
-  = admin_remote_form_for record, url: { action: :update, format: 'html' }, update: 'right_panel_body' do |form|
+  = admin_remote_form_for record, url: polymorphic_path([:admin, record], { format: 'html' }), update: 'right_panel_body' do |form|
     = error_messages_for record.class.base_class.name.underscore
 
     = javascript_tag("document.getElementById('right_panel_body').scrollTop = 0;")

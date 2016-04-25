@@ -1,7 +1,7 @@
 = render partial: 'show', locals: { record: record }
 
 .forms
-  = remote_form_for record, method: :get, url: { action: :edit, format: 'html' }, update: 'right_panel_body' do |form|
+  = remote_form_for record, method: :get, url: polymorphic_path([:admin, record], { action: :edit, format: 'html' }), update: 'right_panel_body' do |form|
     = default_preview_fields form
     = render partial: 'preview_form', locals: { form: form, record: record }
 
@@ -10,7 +10,7 @@
 
     = form.submit t('shared.edit')
 
-  = remote_form_for record, url: { action: :update, format: 'html' }, update: 'right_panel_body' do |form|
+  = remote_form_for record, url: polymorphic_path([:admin, record], { format: 'html' }), update: 'right_panel_body' do |form|
     = default_preview_fields form
     = render partial: 'preview_form', locals: { form: form, record: record }
 
