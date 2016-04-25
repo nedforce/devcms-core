@@ -1,28 +1,28 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +Theme+ objects.
-
 class Admin::ThemesController < Admin::AdminController
-  # The +create+ action needs the parent +Node+ object to link the new +Theme+ content node to.
-  prepend_before_filter :find_parent_node,    :only => [ :new, :create ]
+  # The +create+ action needs the parent +Node+ object to link the new +Theme+
+  # content node to.
+  prepend_before_action :find_parent_node, only: [:new, :create]
 
   # The +show+, +edit+ and +update+ actions need a +Theme+ object to act upon.
-  before_filter         :find_theme,          :only => [ :show, :edit, :update ]
+  before_action :find_theme, only: [:show, :edit, :update]
 
   # Set the subclass of +Theme+ to create based on the parent node
-  before_filter         :set_subclass,        :only => [ :new, :create, :edit, :update ]
+  before_action :set_subclass, only: [:new, :create, :edit, :update]
 
-  before_filter         :set_commit_type,     :only => [ :create, :update ]
+  before_action :set_commit_type, only: [:create, :update]
 
   layout false
 
-  require_role [ 'admin', 'final_editor', 'editor' ], :except => [ :index, :show ]
+  require_role %w(admin final_editor editor), except: [:index, :show]
 
   # * GET /admin/themes/:id
   # * GET /admin/themes/:id.xml
   def show
     respond_to do |format|
-      format.html { render :partial => 'show', :layout => 'admin/admin_show' }
-      format.xml  { render :xml => @theme }
+      format.html { render partial: 'show', layout: 'admin/admin_show' }
+      format.xml  { render xml: @theme }
     end
   end
 
@@ -31,7 +31,7 @@ class Admin::ThemesController < Admin::AdminController
     @theme = @subclass.new(permitted_attributes)
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/new', :locals => { :record => @theme } }
+      format.html { render template: 'admin/shared/new', locals: { record: @theme } }
     end
   end
 
@@ -40,7 +40,7 @@ class Admin::ThemesController < Admin::AdminController
     @theme.attributes = permitted_attributes
 
     respond_to do |format|
-      format.html { render :template => 'admin/shared/edit', :locals => { :record => @theme } }
+      format.html { render template: 'admin/shared/edit', locals: { record: @theme } }
     end
   end
 
@@ -52,14 +52,14 @@ class Admin::ThemesController < Admin::AdminController
 
     respond_to do |format|
       if @commit_type == 'preview' && @theme.valid?
-        format.html { render :template => 'admin/shared/create_preview', :locals => { :record => @theme }, :layout => 'admin/admin_preview' }
-        format.xml  { render :xml => @theme, :status => :created, :location => @theme }
-      elsif @commit_type == 'save' && @theme.save(:user => current_user)
+        format.html { render template: 'admin/shared/create_preview', locals: { record: @theme }, layout: 'admin/admin_preview' }
+        format.xml  { render xml: @theme, status: :created, location: @theme }
+      elsif @commit_type == 'save' && @theme.save(user: current_user)
         format.html { render 'admin/shared/create' }
-        format.xml  { render :xml => @theme, :status => :created, :location => @theme }
+        format.xml  { render xml: @theme, status: :created, location: @theme }
       else
-        format.html { render :template => 'admin/shared/new', :locals => { :record => @theme }, :status => :unprocessable_entity }
-        format.xml  { render :xml => @theme.errors, :status => :unprocessable_entity }
+        format.html { render template: 'admin/shared/new', locals: { record: @theme }, status: :unprocessable_entity }
+        format.xml  { render xml: @theme.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -71,19 +71,19 @@ class Admin::ThemesController < Admin::AdminController
 
     respond_to do |format|
       if @commit_type == 'preview' && @theme.valid?
-        format.html { render :template => 'admin/shared/update_preview', :locals => { :record => @theme }, :layout => 'admin/admin_preview' }
-        format.xml  { render :xml => @theme, :status => :created, :location => @theme }
-      elsif @commit_type == 'save' && @theme.save(:user => current_user)
+        format.html { render template: 'admin/shared/update_preview', locals: { record: @theme }, layout: 'admin/admin_preview' }
+        format.xml  { render xml: @theme, status: :created, location: @theme }
+      elsif @commit_type == 'save' && @theme.save(user: current_user)
         format.html { render 'admin/shared/update' }
         format.xml  { head :ok }
       else
-        format.html { render :template => 'admin/shared/edit', :locals => { :record => @theme }, :status => :unprocessable_entity }
-        format.xml  { render :xml => @theme.errors, :status => :unprocessable_entity }
+        format.html { render template: 'admin/shared/edit', locals: { record: @theme }, status: :unprocessable_entity }
+        format.xml  { render xml: @theme.errors, status: :unprocessable_entity }
       end
     end
   end
 
-protected
+  protected
 
   def permitted_attributes
     params.fetch(@type, {}).permit!
