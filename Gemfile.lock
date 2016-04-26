@@ -27,7 +27,7 @@ GIT
 PATH
   remote: .
   specs:
-    devcms_core (3.0.14)
+    devcms_core (3.0.15)
       actionpack-page_caching
       acts-as-taggable-on (~> 3.4.4)
       acts_as_list
