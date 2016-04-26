@@ -4,7 +4,7 @@ class FaqTopFive < Theme
     allowed_roles_for_create:    %w( admin final_editor editor ),
     allowed_roles_for_update:    %w( admin final_editor editor ),
     allowed_roles_for_destroy:   %w( admin final_editor editor ),
-    controller_name:             'faq_top_five'
+    controller_name:             'faq_top_fives'
   )
 
   def icon_filename

@@ -485,7 +485,7 @@ nl:
     faq_categories: "Vraag & antwoord categorieën"
     saved: "Vraag & antwoord thema opgeslagen!"
     sub_themes: "Vraag & antwoord categorieën"
-  faq_top_five:
+  faq_top_fives:
     add_to: "Vraag & antwoord Top 5 toevoegen aan"
     edit: "Vraag & antwoord Top 5 bewerken"
     failed: "Kon vraag & antwoord Top 5 niet opslaan."
