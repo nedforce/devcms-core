@@ -164,7 +164,7 @@ module Admin::AdminHelper
   def default_preview_fields(form)
     fields = form.hidden_field(:publication_start_date) + form.hidden_field(:publication_end_date)
     if form.object.attributes.keys.include?('title')
-      fields << form.hidden_field(:title) + form.hidden_field(:title_alternative_list) + form.hidden_field(:tag_list)
+      fields << form.hidden_field(:title) + form.hidden_field(:title_alternative_list) + form.hidden_field(:tag_list, value: form.object.tag_list.join(','))
     end
     fields
   end
