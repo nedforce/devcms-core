@@ -153,7 +153,7 @@ module Admin::AdminHelper
   def default_fields_before_form(form)
     form.text_field(:title, label: t(:title, scope: form.object.controller_name, default: t('shared.title'))) +
       form.text_field(:title_alternative_list, label: t('shared.title_alternatives')) +
-      form.text_field(:tag_list, label: t('shared.tags')) +
+      form.text_field(:tag_list, label: t('shared.tags'), value: form.object.tag_list.join(',')) +
       javascript_tag("setupTagComboBoxes(#{ActiveModel::Naming.param_key(form.object).to_json}, #{Node.available_tags.to_json});") if form.object.attributes.keys.include?('title')
   end
 
