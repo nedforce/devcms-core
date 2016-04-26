@@ -232,7 +232,7 @@ Rails.application.routes.draw do
     resources :faq_archives,   except: [:destroy, :index]
     resources :faq_categories, except: :index, controller: 'themes', defaults: { type: 'faq_category' }
     resources :faq_themes,     except: :index, controller: 'themes', defaults: { type: 'faq_theme' }
-    resources :faq_top_five,   except: :index, controller: 'themes', defaults: { type: 'faq_top_five' }
+    resources :faq_top_fives,  except: :index, controller: 'themes', defaults: { type: 'faq_top_five' }
 
     resources :feeds,        except: [:index, :destroy]
     resources :forums,       except: [:index, :destroy]
