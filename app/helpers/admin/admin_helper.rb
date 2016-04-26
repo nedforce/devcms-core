@@ -85,14 +85,14 @@ module Admin::AdminHelper
   end
 
   def create_action_menu
+    return '' unless @actions
+
     menu_anchors = []
-    if @actions
-      @actions.each do |item|
-        unless item[:ajax] == false
-          menu_anchors << link_to_remote(item[:text], update: 'right_panel_body', url: item[:url], method: item[:method])
-        else
-          menu_anchors << link_to(item[:text], item[:url], target: (item[:target] == :blank) ? '_blank' : '')
-        end
+    @actions.each do |item|
+      if item[:ajax] == false
+        menu_anchors << link_to(item[:text], item[:url], target: (item[:target] == :blank) ? '_blank' : '')
+      else
+        menu_anchors << link_to_remote(item[:text], update: 'right_panel_body', url: item[:url], method: item[:method])
       end
     end
 
@@ -138,7 +138,7 @@ module Admin::AdminHelper
   end
 
   def commit_fields(form, continue = false)
-    html =  hidden_field_tag(:commit_type)
+    html = hidden_field_tag(:commit_type)
     html << form.submit(I18n.t('shared.preview'), onclick: "$('commit_type').setValue('preview'); return true;")
     html << form.submit(I18n.t('shared.save'),    onclick: "$('commit_type').setValue('save'); return true;")
 
