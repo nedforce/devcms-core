@@ -38,7 +38,7 @@ class Poll < ActiveRecord::Base
   # Returns the active +PollQuestion+ of this +Poll+ if one exists,
   # returns +nil+ otherwise.
   def active_question
-    poll_questions.accessible.where(active: true).first
+    poll_questions.accessible.active.first
   end
 
   # Returns the image file name to be used for icons on the front-end website.

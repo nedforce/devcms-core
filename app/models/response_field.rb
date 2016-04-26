@@ -5,4 +5,14 @@ class ResponseField < ActiveRecord::Base
   mount_uploader :file, ResponseFileUploader
 
   serialize :value
+
+  def csv_value
+    if value.blank?
+      ''
+    elsif file?
+      read_attribute(:file)
+    else
+      value
+    end
+  end
 end

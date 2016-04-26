@@ -55,13 +55,13 @@ class PollQuestionTest < ActiveSupport::TestCase
     2.times do |i|
       create_poll_question question: 'Vraag ' + (i + 1).to_s
     end
-    assert_equal 1, polls(:economy_poll).poll_questions.where(active: true).count
+    assert_equal 1, polls(:economy_poll).poll_questions.active.count
   end
 
   def test_should_not_allow_multiple_active_questions_for_single_poll_after_update
     poll_questions(:hc_question_1).send(:update_attributes, active: true)
     poll_questions(:hc_question_2).send(:update_attributes, active: true)
-    assert_equal 1, polls(:healthcare_poll).poll_questions.where(active: true).count
+    assert_equal 1, polls(:healthcare_poll).poll_questions.active.count
   end
 
   test 'should allow one active question per poll' do
@@ -69,7 +69,7 @@ class PollQuestionTest < ActiveSupport::TestCase
     poll_questions(:eco_question_1).send(:update_attributes, active: true)
     poll_questions(:hc_question_2).send(:update_attributes, active: true)
 
-    assert_equal 2, PollQuestion.where(active: true).count
+    assert_equal 2, PollQuestion.active.count
   end
 
   def test_should_return_correct_content_title

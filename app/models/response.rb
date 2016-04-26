@@ -19,7 +19,9 @@ class Response < ActiveRecord::Base
   belongs_to :contact_form
   has_many :response_fields, dependent: :destroy
 
-  validates_presence_of :contact_form_id, :ip, :time
+  validates :contact_form_id, presence: true
+  validates :ip,              presence: true
+  validates :time,            presence: true
 
   def self.to_csv_file(options = {})
     return '' unless any?
@@ -33,14 +35,7 @@ class Response < ActiveRecord::Base
       all.each do |response|
         row_fields = []
         response.response_fields.includes(:contact_form_field).order('contact_form_fields.position ASC').each do |field|
-          # TODO: create a method in the +ResponseField+ model for this. Something like +to_csv+.
-          if field.value.blank?
-            row_fields << ''
-          elsif field.file?
-            row_fields << field.read_attribute(:file)
-          else
-            row_fields << field.value
-          end
+          row_fields << field.csv_value
         end
         csv << row_fields
       end

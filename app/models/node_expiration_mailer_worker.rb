@@ -7,8 +7,8 @@ class NodeExpirationMailerWorker
 
     def notify_authors(node = Node.root)
       logger.info 'Notifying responsible authors of expired content...'
-      node.descendants.expired.each do |node|
-        send_author_notification(node)
+      node.descendants.expired.each do |expired_node|
+        send_author_notification(expired_node)
       end
     end
 

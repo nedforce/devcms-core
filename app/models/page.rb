@@ -34,7 +34,8 @@ class Page < ActiveRecord::Base
   # This content type needs approval when created or altered by an editor.
   needs_editor_approval
 
-  # A +Page+ has many +NewsletterEditionItem+ objects and many +NewsletterEdition+ through +NewsletterEditionItem+.
+  # A +Page+ has many +NewsletterEditionItem+ objects and many
+  # +NewsletterEdition+ objects through +NewsletterEditionItem+.
   has_many :newsletter_edition_items, as: :item, dependent: :destroy
   has_many :newsletter_editions,      through: :newsletter_edition_items
 
@@ -65,7 +66,7 @@ class Page < ActiveRecord::Base
   protected
 
   def remove_associated_content
-    self.newsletter_edition_items.destroy_all
-    self.carrousel_items.destroy_all
+    newsletter_edition_items.destroy_all
+    carrousel_items.destroy_all
   end
 end

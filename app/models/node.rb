@@ -31,31 +31,39 @@
 # <b>Taxonomy</b>
 #
 # Nodes are ordered in a tree structure using a nested set. This represents
-# the website's taxonomy of content nodes and is implemented using AwesomeNestedSet.
-# Content node types can have certain constraints applied to it regarding its accepting
-# types (i.e. content node types of which content nodes are accepted as children),
-# and whether it is insertable in content nodes of any type (default) or not.
-# See +acts_as_content_node+ for more information on how to do this.
+# the website's taxonomy of content nodes and is implemented using
+# AwesomeNestedSet.
+# Content node types can have certain constraints applied to it regarding its
+# accepting types (i.e. content node types of which content nodes are accepted
+# as children), and whether it is insertable in content nodes of any type
+# (default) or not. See +acts_as_content_node+ for more information on how to do
+# this.
 #
 # <b>Content type register</b>
 #
-# The Node class also houses the content type register. If a new content type is to be implemented
-# do not forget to add it to the array returned by +Node#content_types+.
+# The Node class also houses the content type register. If a new content type is
+# to be implemented do not forget to add it to the array returned by
+# +Node#content_types+.
 #
 # *Specification*
 #
 # Attributes
 #
-# * +content+ - The associated content node.
-# * +layout+  - The layout, this maybe nil.
-# * +layout_variant+  - The layout variant, this maybe nil.
-# * +layout_configuration+  - Serialized hash of additional options to be used by the layout, this maybe nil.
-# * +url_alias+ - An URL alias for this node.
-# * +commentable+ - True if a node can be commented on, else false.
-# * +content_box_title+ - The title of the content box representation of this node (see SideboxElement).
-# * +content_box_icon+ - The icon of the content box representation of this node.
-# * +content_box_colour+ - The colour of the content box representation of this node.
-# * +content_box_number_of_items+ - The number of items of the content box representation of this node.
+# * +content+               - The associated content node.
+# * +layout+                - The layout, this maybe nil.
+# * +layout_variant+        - The layout variant, this maybe nil.
+# * +layout_configuration+  - Serialized hash of additional options to be used
+#                             by the layout, this maybe nil.
+# * +url_alias+             - An URL alias for this node.
+# * +commentable+           - True if a node can be commented on, else false.
+# * +content_box_title+     - The title of the content box representation of
+#                             this node (see SideboxElement).
+# * +content_box_icon+      - The icon of the content box representation of this
+#                             node.
+# * +content_box_colour+    - The colour of the content box representation of
+#                             this node.
+# * +content_box_number_of_items+ - The number of items of the content box
+#                                   representation of this node.
 #
 # Preconditions
 #
@@ -65,53 +73,57 @@
 # * Requires a properly formatted +url_alias+ if not blank.
 # * Requires +url_alias+ to not contain any reserved words if not blank.
 # * Requires !is_global_frontpage? && !contains_global_frontpage? to hide.
-# * Requires +external_id+ to be unique with in the scope of its parent. Allows nil.
+# * Requires +external_id+ to be unique with in the scope of its parent.
+#   Allows nil.
 #
 # Postconditions
 #
 # * The content node will be destroyed before this node is.
 #
 class Node < ActiveRecord::Base
-  # A node is commentable
+  # A node is commentable.
   acts_as_commentable
 
-  # Nodes are taggable with alterative titles & tags
+  # Nodes are taggable with alterative titles & tags.
   acts_as_taggable_on :title_alternatives
   acts_as_ordered_taggable_on :tags
 
   # Prevents the root +Node+ from being destroyed.
   before_destroy :prevent_root_destruction
 
-  # Delegate tree calls to use Ancestry. Ensure this is added *after* other before/after filters.
+  # Delegate tree calls to use Ancestry. Ensure this is added *after* other
+  # before/after filters.
   include NodeExtensions::TreeDelegation
 
-  # Load paranoid delete functionality. Make sure this is loaded after Node::TreeDelegation and before any other extensions.
+  # Load paranoid delete functionality. Make sure this is loaded after
+  # +Node::TreeDelegation+ and before any other extensions.
   include NodeExtensions::ParanoidDelete
 
-  # # Load visibility & accessibility functionality
+  # # Load visibility & accessibility functionality.
   include NodeExtensions::VisibilityAndAccessibility
 
-  # Load expiration functionality
+  # Load expiration functionality.
   include NodeExtensions::Expiration
 
-  # Load layout & template functionality
+  # Load layout & template functionality.
   include NodeExtensions::Layouting
 
-  # Load Url Aliasing functionality. Should be loaded after TreeDelegation as it overrides move_to
+  # Load Url Aliasing functionality. Should be loaded after TreeDelegation as it
+  # overrides +move_to+.
   include NodeExtensions::UrlAliasing
 
-  # Load content type configuration functionality
+  # Load content type configuration functionality.
   include NodeExtensions::ContentTypeConfiguration
 
-  # Override move_to to support reindexing after move
+  # Override +move_to+ to support reindexing after move.
   include NodeExtensions::MoveToWithReindexing
 
   if Devcms.search_configuration[:enabled_search_engines].try(:include?, 'ferret')
-    self.extend Search::Modules::Ferret::FerretNodeExtension
+    extend Search::Modules::Ferret::FerretNodeExtension
     acts_as_searchable
   end
 
-  INDEX_DATETIME_FORMAT = "%Y%m%d%H%M"
+  INDEX_DATETIME_FORMAT = '%Y%m%d%H%M'
 
   has_many :combined_calendar_nodes, dependent: :destroy
   has_many :combined_calendars,      through: :combined_calendar_nodes
@@ -134,16 +146,16 @@ class Node < ActiveRecord::Base
   validates :sub_content_type,       presence: true
   validates :publication_start_date, presence: true
 
-  validates_presence_of   :deleted_at, :if => lambda { |node| node.parent.try(:deleted_at) }
+  validates_presence_of   :deleted_at, if: lambda { |node| node.parent.try(:deleted_at) }
 
-  validates_uniqueness_of :content_id, :scope => :content_type
+  validates_uniqueness_of :content_id, scope: :content_type
 
-  validates_inclusion_of :publishable,       :in => [ false, true ], :allow_nil => false
+  validates_inclusion_of :publishable, in: [false, true], allow_nil: false
 
-  validates_inclusion_of :commentable,       :in => [ false, true ], :allow_nil => true
+  validates_inclusion_of :commentable, in: [false, true], allow_nil: true
 
-  validates_inclusion_of :content_box_colour, :in => Devcms.content_box_colours, :allow_blank => true
-  validates_inclusion_of :content_box_icon,   :in => Devcms.content_box_icons,   :allow_blank => true, :if => Proc.new { Rails.application.config.use_devcms_icons }
+  validates_inclusion_of :content_box_colour, in: Devcms.content_box_colours, allow_blank: true
+  validates_inclusion_of :content_box_icon,   in: Devcms.content_box_icons,   allow_blank: true, if: Proc.new { Rails.application.config.use_devcms_icons }
 
   validates :content_box_title, :content_box_url, length: 2..255, allow_blank: true
 
@@ -184,9 +196,9 @@ class Node < ActiveRecord::Base
     NodeSweeper.instance.after_update(self)
   end
 
-  scope :default_order, lambda{ ordered_by_ancestry.order('nodes.position') }
+  scope :default_order, -> { ordered_by_ancestry.order('nodes.position') }
 
-  scope :sorted_by_position, lambda { order('nodes.position') }
+  scope :sorted_by_position, -> { order('nodes.position') }
 
   scope :exclude_subtrees_of, (lambda do |nodes_to_exclude|
     Node.exclude_subtrees_conditions_for(nodes_to_exclude)
@@ -221,9 +233,9 @@ class Node < ActiveRecord::Base
     end
   end)
 
-  scope :sections, ->{ where(sub_content_type: %w( Section Site )) }
+  scope :sections, -> { where(sub_content_type: %w( Section Site )) }
 
-  scope :include_content, ->{ includes(:content) }
+  scope :include_content, -> { includes(:content) }
 
   scope :path_children_by_depth, ->(node){ order('nodes.ancestry_depth desc, nodes.position asc').where(ancestry: node.path_child_ancestries) }
 
@@ -271,7 +283,7 @@ class Node < ActiveRecord::Base
     else
       # Disable ferret updates (ferret_destroy is executed anyway)
       without_search_reindex do
-        self.original_destroy
+        original_destroy
       end
     end
   end
@@ -374,7 +386,8 @@ class Node < ActiveRecord::Base
   end
 
   # Checks whether the node is expandable (in the admin view) for the given user.
-  # A node is expandable if the user has a role on the node itself or one of its descendants.
+  # A node is expandable if the user has a role on the node itself or one of its
+  # descendants.
   def is_expandable_for_user?(user)
     user.role_on(self) || user.role_assignments.joins(:node).where(descendant_conditions).first
   end
@@ -383,10 +396,10 @@ class Node < ActiveRecord::Base
   def tree_text
     tree_text = ''
 
-    latest_version = self.content.versions.current
+    latest_version = content.versions.current
 
     if latest_version.present?
-      tree_text += " <i>("
+      tree_text += ' <i>('
 
       if latest_version.drafted?
         tree_text += I18n.t('nodes.draft')
@@ -396,19 +409,19 @@ class Node < ActiveRecord::Base
         tree_text += I18n.t('nodes.unapproved')
       end
 
-      tree_text += ")</i>"
+      tree_text += ')</i>'
     end
-    "#{self.content.current_version.tree_text(self)}#{tree_text.html_safe}"
+    "#{content.current_version.tree_text(self)}#{tree_text.html_safe}"
   end
 
   # Returns the site that directly contains this node as a descendant
   def containing_site
     return @containing_site if defined?(@containing_site)
 
-    @containing_site = if self.depth.zero?
+    @containing_site = if depth.zero?
       Node.root
     else
-      node = Node.find(self.path_ids[1]) rescue nil
+      node = Node.find(path_ids[1]) rescue nil
       node && node.sub_content_type == 'Site' ? node : Node.root
     end
   end
@@ -417,22 +430,23 @@ class Node < ActiveRecord::Base
   def published?
     now = Time.now
 
-    self.publication_start_date <= now && (self.publication_end_date.blank? || self.publication_end_date >= now)
+    publication_start_date <= now && (publication_end_date.blank? || publication_end_date >= now)
   end
 
   def visible?
-    !self.hidden? && !self.private? && self.publishable?
+    !hidden? && !private? && publishable?
   end
 
   # Increments the hits counter without updating the updated_at value.
   # This implementation does not affect the +updated_at+ field.
   def increment_hits!
     Node.without_search_reindex do # No update of the search index is necessary.
-      Node.increment_counter :hits, self.id
+      Node.increment_counter :hits, id
     end
   end
 
-  # See :increment_hits! Same construct, but now for removing a percentage of the hits.
+  # See :increment_hits! Same construct, but now for removing a percentage of
+  # the hits.
   def self.reduce_hit_count(factor = 0.9)
     Node.without_search_reindex do
       connection.update("UPDATE nodes SET hits = hits * #{1 - factor}")
@@ -444,13 +458,13 @@ class Node < ActiveRecord::Base
 
     if on == :all
       # Exclude other sites
-      nodes_to_exclude = self.descendants.with_content_type('Site')
+      nodes_to_exclude = descendants.with_content_type('Site')
 
       # Exclude private sections
-      nodes_to_exclude += self.descendants.sections.is_private
-      scope = self.self_and_descendants.exclude_subtrees_of(nodes_to_exclude).with_content_type(%w( Page Section NewsItem ))
+      nodes_to_exclude += descendants.sections.is_private
+      scope = self_and_descendants.exclude_subtrees_of(nodes_to_exclude).with_content_type(%w( Page Section NewsItem ))
     elsif on == :self
-      scope = self.self_and_descendants(to_depth: 0).is_public.exclude_content_types('Site')
+      scope = self_and_descendants(to_depth: 0).is_public.exclude_content_types('Site')
     end
 
     if scope
@@ -461,32 +475,32 @@ class Node < ActiveRecord::Base
   end
 
   def reindex_self_and_children
-    self.self_and_descendants.each(&:update_search_index) if self.respond_to?(:update_index)
+    self_and_descendants.each(&:update_search_index) if respond_to?(:update_index)
   end
 
   def disable_search_reindex_until_saved
-    self.disable_reindex_until_saved if self.respond_to?(:disable_reindex_until_saved)
+    disable_reindex_until_saved if respond_to?(:disable_reindex_until_saved)
   end
 
   def add_to_search_index
-    self.add_to_index if self.respond_to?(:add_to_index)
+    add_to_index if respond_to?(:add_to_index)
   end
 
   def update_search_index
-    self.update_index if self.respond_to?(:update_index)
+    update_index if respond_to?(:update_index)
     true
   end
 
   def without_search_reindex(&block)
-    if self.respond_to?(:without_reindex)
-      self.without_reindex(&block)
+    if respond_to?(:without_reindex)
+      without_reindex(&block)
     else
       yield
     end
   end
 
   def self.without_search_reindex(&block)
-    if self.respond_to?(:without_reindex)
+    if respond_to?(:without_reindex)
       Node.without_reindex(&block)
     else
       yield
@@ -499,13 +513,15 @@ class Node < ActiveRecord::Base
   #
   # *options*
   #
-  # [:sort_by]   (Symbol) Property to sort by, e.g. :content_title or :created_at. (Defaults to :content_title.)
-  # [:order]     (String) Either 'desc' for descending order or 'asc' for ascending order. (Defaults to 'asc'.)
+  # [:sort_by]   (Symbol) Property to sort by, e.g. :content_title or
+  #                       :created_at. (Defaults to :content_title.)
+  # [:order]     (String) Either 'desc' for descending order or 'asc' for
+  #                       ascending order. (Defaults to 'asc'.)
   def sort_children(options = {})
-    options = { :sort_by => :content_title, :order => 'asc' }.merge(options)
+    options = { sort_by: :content_title, order: 'asc' }.merge(options)
 
     # sort in memory
-    sorted_children = self.children.sort do |c1, c2|
+    sorted_children = children.sort do |c1, c2|
       cn1 = c1.content.send(options[:sort_by].to_sym)
       cn2 = c2.content.send(options[:sort_by].to_sym)
 
@@ -519,11 +535,12 @@ class Node < ActiveRecord::Base
     sorted_children.reverse! if options[:order] == 'desc'
 
     without_search_reindex do
-      self.reorder_children(sorted_children.map { |child| child.id })
+      reorder_children(sorted_children.map(&:id))
     end
   end
 
-  # Returns this node's content's class without hitting the database or instantiating the content object.
+  # Returns this node's content's class without hitting the database or
+  # instantiating the content object.
   # Use this instead of +@node.content.class+.
   def content_class
     return @content_class if defined?(@content_class)
@@ -537,7 +554,8 @@ class Node < ActiveRecord::Base
     end
   end
 
-  # This method is used to cache the titles of content nodes, so we don't have to query separately for them
+  # This method is used to cache the titles of content nodes, so we don't have
+  # to query separately for them.
   def content_title
     if %w( ExternalLink InternalLink Feed ContentCopy ).include?(sub_content_type)
       content.try(:content_title)
@@ -551,21 +569,22 @@ class Node < ActiveRecord::Base
   end
 
   def self.root
-    Node.roots.first || raise(ActiveRecord::RecordNotFound, "No root node found!")
+    Node.roots.first || raise(ActiveRecord::RecordNotFound, 'No root node found!')
   end
 
   def self.find_related_nodes(node, options = {})
-    (options[:top_node] ? options[:top_node].children : Node.scoped).accessible.is_public.includes(:node_categories).limit(options[:limit] || 5).where([ 'node_categories.category_id in (?) AND nodes.id <> ?', node.category_ids, node.id ])
+    (options[:top_node] ? options[:top_node].children : Node.scoped).accessible.is_public.includes(:node_categories).limit(options[:limit] || 5).where(['node_categories.category_id in (?) AND nodes.id <> ?', node.category_ids, node.id])
   end
 
-  # 25/11/2013: Bulk updates were used for node categories, which have been removed later. Might need it in the future, therefore it's still available.
+  # 25/11/2013: Bulk updates were used for node categories, which have been
+  # removed later. Might need it in the future, therefore it's still available.
   def self.bulk_update(nodes, attributes, user = nil)
     Node.transaction do
       nodes.each do |node|
         content = node.content
 
         if content.class.requires_editor_approval? && user.present?
-          content.update_attributes!(attributes.merge(:user => user))
+          content.update_attributes!(attributes.merge(user: user))
         else
           content.update_attributes!(attributes)
         end
@@ -577,13 +596,15 @@ class Node < ActiveRecord::Base
     false
   end
 
-  # Determines the "content date" of the content
-  # This is used to determine whether the content date is "past", "current" or "future"
+  # Determines the "content date" of the content. This is used to determine
+  # whether the content date is "past", "current" or "future".
   def determine_content_date(today)
-    # For NewsItem and NewsletterEdition instance, we only look at the publication date
+    # For NewsItem and NewsletterEdition instance, we only look at the
+    # publication date.
     if content_class == NewsItem || content_class == NewsletterEdition
-      content_date = self.publication_start_date.to_date
-    # For CalendarItem and Meeting instances, we look at both the start and end times
+      content_date = publication_start_date.to_date
+    # For CalendarItem and Meeting instances, we look at both the start and
+    # end times.
     else
       start_date = content.start_time.to_date
       end_date   = content.end_time.to_date
@@ -630,42 +651,41 @@ class Node < ActiveRecord::Base
 
   # Prevents the root +Node+ from being destroyed.
   def prevent_root_destruction
-    raise ActiveRecord::ActiveRecordError, I18n.t('activerecord.errors.models.node.attributes.base.cant_remove_root') if self.root?
+    raise ActiveRecord::ActiveRecordError, I18n.t('activerecord.errors.models.node.attributes.base.cant_remove_root') if root?
   end
 
   def remove_associated_meta_content
-    nodes_to_be_paranoid_deleted_ids = self.subtree_ids
+    nodes_to_be_paranoid_deleted_ids = subtree_ids
 
-    self.transaction do
-      # Destroy all content copies that are associated with any of the nodes in the subtree and are not a descendant
-      ContentCopy.includes(:node).references(:nodes).where('copied_node_id IN (:nodes_to_be_paranoid_deleted_ids) AND NOT nodes.id IN (:nodes_to_be_paranoid_deleted_ids)', nodes_to_be_paranoid_deleted_ids: nodes_to_be_paranoid_deleted_ids).find_each do |content_copy|
-        content_copy.destroy
-      end
+    transaction do
+      # Destroy all content copies that are associated with any of the nodes in
+      # the subtree and are not a descendant.
+      ContentCopy.includes(:node).references(:nodes).where('copied_node_id IN (:nodes_to_be_paranoid_deleted_ids) AND NOT nodes.id IN (:nodes_to_be_paranoid_deleted_ids)', nodes_to_be_paranoid_deleted_ids: nodes_to_be_paranoid_deleted_ids).find_each(&:destroy)
 
-      # Destroy all internal links that are associated with any of the nodes in the subtree and are not a descendant
-      InternalLink.includes(:node).references(:nodes).where('linked_node_id IN (:nodes_to_be_paranoid_deleted_ids) AND NOT nodes.id IN (:nodes_to_be_paranoid_deleted_ids)', nodes_to_be_paranoid_deleted_ids: nodes_to_be_paranoid_deleted_ids).find_each do |internal_link|
-        internal_link.destroy
-      end
+      # Destroy all internal links that are associated with any of the nodes in
+      # the subtree and are not a descendant.
+      InternalLink.includes(:node).references(:nodes).where('linked_node_id IN (:nodes_to_be_paranoid_deleted_ids) AND NOT nodes.id IN (:nodes_to_be_paranoid_deleted_ids)', nodes_to_be_paranoid_deleted_ids: nodes_to_be_paranoid_deleted_ids).find_each(&:destroy)
 
-      # Unset frontpage for Sections
+      # Unset frontpage for Sections.
       Section.where(frontpage_node_id: nodes_to_be_paranoid_deleted_ids).update_all(frontpage_node_id: nil)
 
-      # Delete any role assignments, synonyms or abbreviations that are associated with any of the nodes in the subtree
-      [ RoleAssignment, Synonym, Abbreviation, CombinedCalendarNode ].each do |klass|
+      # Delete any role assignments, synonyms or abbreviations that are
+      # associated with any of the nodes in the subtree.
+      [RoleAssignment, Synonym, Abbreviation, CombinedCalendarNode].each do |klass|
         klass.where(node_id: nodes_to_be_paranoid_deleted_ids).delete_all
       end
 
-      # Do the same for all comments
+      # Do the same for all comments.
       Comment.where(commentable_id: nodes_to_be_paranoid_deleted_ids).delete_all
 
-      # Delete content representations where appropriate
+      # Delete content representations where appropriate.
       ContentRepresentation.where('parent_id IN (:nodes_to_be_paranoid_deleted_ids) OR content_id IN (:nodes_to_be_paranoid_deleted_ids)', nodes_to_be_paranoid_deleted_ids: nodes_to_be_paranoid_deleted_ids).delete_all
     end
   end
 
-  # Sets the publication_end_date to current time if none is specified
+  # Sets the publication_end_date to current time if none is specified.
   def set_publication_start_date_to_current_time_if_blank
-    self.publication_start_date = Time.now unless self.publication_start_date
+    self.publication_start_date = Time.now unless publication_start_date
   end
 
   private
@@ -673,25 +693,25 @@ class Node < ActiveRecord::Base
   # Validation methods
 
   def ensure_publication_start_date_is_present_when_publication_end_date_is_present
-    if self.publication_end_date
-      self.errors.add(:base, I18n.t('acts_as_content_node.publication_start_date_should_be_present')) unless self.publication_start_date
+    if publication_end_date
+      errors.add(:base, I18n.t('acts_as_content_node.publication_start_date_should_be_present')) unless publication_start_date
     end
   end
 
   def ensure_publication_end_date_after_publication_start_date
-    if self.publication_start_date && self.publication_end_date
-      self.errors.add(:base, I18n.t('acts_as_content_node.publication_end_date_should_be_after_publication_start_date')) if self.publication_start_date >= self.publication_end_date
+    if publication_start_date && publication_end_date && publication_start_date >= publication_end_date
+      errors.add(:base, I18n.t('acts_as_content_node.publication_end_date_should_be_after_publication_start_date'))
     end
   end
 
   def ensure_content_box_number_of_items_should_be_greater_than_two
-    if self.content_box_number_of_items
-      self.errors.add(:base, I18n.t('acts_as_content_node.content_box_number_of_items_should_be_greater_than_two')) if self.content_box_number_of_items.to_i <= 2
+    if content_box_number_of_items && content_box_number_of_items.to_i <= 2
+      errors.add(:base, I18n.t('acts_as_content_node.content_box_number_of_items_should_be_greater_than_two'))
     end
   end
 
   def ensure_maximum_tags
-    self.errors.add(:tags, I18n.t('node.number_of_tags_should_be_lt_3')) if self.tags.count > 3
+    errors.add(:tags, I18n.t('node.number_of_tags_should_be_lt_3')) if tags.count > 3
   end
 
   ActiveSupport.run_load_hooks(:node, self)

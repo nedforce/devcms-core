@@ -35,7 +35,7 @@ class PollQuestion < ActiveRecord::Base
   has_parent :poll
 
   # A +PollQuestion+ has many +PollOption+ objects.
-  has_many :poll_options, ->{ order(:created_at) }, dependent: :destroy
+  has_many :poll_options, -> { order(:created_at) }, dependent: :destroy
 
   has_many :user_votes, class_name: 'UserPollQuestionVote', dependent: :destroy
 
@@ -47,6 +47,8 @@ class PollQuestion < ActiveRecord::Base
   # Ensures that all the associated +PollOption+ objects are validated when this
   # +PollQuestion+ is validated.
   validates_associated :poll_options
+
+  scope :active, -> { where(active: true) }
 
   # Ensure there is always only one active +PollQuestion+.
   before_save :ensure_unique_active_question
@@ -92,7 +94,7 @@ class PollQuestion < ActiveRecord::Base
   # TODO: Documentation
   def tree_text(_node)
     txt = content_title
-    txt += ' (Actief)' if self.active?
+    txt += ' (Actief)' if active?
     txt
   end
 
@@ -107,7 +109,7 @@ class PollQuestion < ActiveRecord::Base
   end
 
   def title_changed?
-    self.question_changed?
+    question_changed?
   end
 
   def has_vote_from?(user)
@@ -141,7 +143,7 @@ class PollQuestion < ActiveRecord::Base
   # Sets all questions for this question's poll to be inactive if this question
   # will be activated on save to ensure only one active question per poll.
   def ensure_unique_active_question
-    if self.active_changed? && self.active
+    if active_changed? && active
       poll.poll_questions.each { |pq| pq.update_attribute(:active, false) }
     end
   end
