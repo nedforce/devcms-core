@@ -44,7 +44,7 @@ Rails.application.routes.draw do
   end
 
   resources :events, only: :show do
-    resources :event_registrations, only: [ :create, :destroy ]
+    resources :event_registrations, only: [:create, :destroy]
   end
 
   resources :faqs,            only: :show
@@ -157,7 +157,7 @@ Rails.application.routes.draw do
 
   resources :weblog_posts, except: :index
 
-# =============== ADMIN NAMESPACE ===============
+  # =============== ADMIN NAMESPACE ===============
 
   namespace :admin do
     resources :abbreviations, except: [:show, :edit]
@@ -216,7 +216,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :data_warnings, only: [ :index, :destroy ] do
+    resources :data_warnings, only: [:index, :destroy] do
       collection do
         delete :clear
       end
@@ -228,16 +228,16 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :faqs,            except: [:destroy, :index]
-    resources :faq_archives,    except: [:destroy, :index]
-    resources :faq_categories,  except: :index, controller: 'themes', defaults: { type: 'faq_category' }
-    resources :faq_themes,      except: :index, controller: 'themes', defaults: { type: 'faq_theme' }
-    resources :faq_top_five,    except: :index, controller: 'themes', defaults: { type: 'faq_top_five' }
+    resources :faqs,           except: [:destroy, :index]
+    resources :faq_archives,   except: [:destroy, :index]
+    resources :faq_categories, except: :index, controller: 'themes', defaults: { type: 'faq_category' }
+    resources :faq_themes,     except: :index, controller: 'themes', defaults: { type: 'faq_theme' }
+    resources :faq_top_five,   except: :index, controller: 'themes', defaults: { type: 'faq_top_five' }
 
-    resources :feeds, :except  => [:index, :destroy]
-    resources :forums, except: [:index, :destroy]
+    resources :feeds,        except: [:index, :destroy]
+    resources :forums,       except: [:index, :destroy]
     resources :forum_topics, except: [:index, :destroy]
-    resources :html_pages, except: [:index, :destroy]
+    resources :html_pages,   except: [:index, :destroy]
 
     resources :images, except: [:index, :destroy] do
       member do
@@ -327,16 +327,15 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :settings,  only: [:index, :update]
-    resources :sites,     except: [:index, :destroy]
+    resources :settings, only: [:index, :update]
+    resources :sites, except: [:index, :destroy]
     resources :social_media_links_boxes, except: [:index, :destroy]
-    resources :synonyms,  only: [:index, :create, :update, :destroy]
-    resources :link_themes,     except: :index, controller: 'themes', defaults: { type: 'link_theme' }
-    resources :top_hits_pages,  except: [:index, :destroy]
-    resources :tags,      only: [:index, :update, :destroy]
+    resources :synonyms, only: [:index, :create, :update, :destroy]
+    resources :link_themes, except: :index, controller: 'themes', defaults: { type: 'link_theme' }
+    resources :top_hits_pages, except: [:index, :destroy]
+    resources :tags, only: [:index, :update, :destroy]
 
-
-    resources :trash, only: [ :index ] do
+    resources :trash, only: [:index] do
       collection do
         delete :clear
       end
@@ -416,9 +415,9 @@ Rails.application.routes.draw do
     root to: 'nodes#index'
   end
 
-  root  to: 'pages#home'
+  root to: 'pages#home'
 
-# =============== CUSTOM ROUTES ===============
+  # =============== CUSTOM ROUTES ===============
 
   get '/attachments/:id/:basename' => 'attachments#show'
   get '/attachments/:action/:id/:basename' => 'attachments#index'
@@ -434,6 +433,6 @@ Rails.application.routes.draw do
   get '/profile' => 'users#profile', as: :profile
   get '/synonyms.txt' => 'application#synonyms', as: :synonyms, format: :txt
 
-  match "/404", to: "application#handle_404", via: :all
-  match "/500", to: "application#handle_500", via: :all
+  match '/404', to: 'application#handle_404', via: :all
+  match '/500', to: 'application#handle_500', via: :all
 end
