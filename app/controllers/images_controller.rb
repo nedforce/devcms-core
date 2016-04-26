@@ -127,6 +127,11 @@ class ImagesController < ApplicationController
           end
         end
       end
+    else
+      respond_to do |format|
+        format.rss { head 404 }
+        format.any
+      end
     end
   end
 end
