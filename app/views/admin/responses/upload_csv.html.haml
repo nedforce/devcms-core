@@ -1,8 +1,8 @@
 .right_panel_content
-  %h1== #{t 'responses.import_csv_to'} '#{h @contact_form.title}'
+  %h1 #{t 'responses.import_csv_to'} '#{h @contact_form.title}'
 
-  #right_panel_form.clearfix
-    = render :partial => 'form'
+  .clearfix#right_panel_form
+    = render partial: 'form'
 
   / hidden iframe to enable regular posts instead of ajax posts
-  %iframe{ :name => "upload_target", :style => "height: 1px; width: 1px; border: 0;" }
+  %iframe{ name: 'upload_target', style: 'height: 1px; width: 1px; border: 0;' }

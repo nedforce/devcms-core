@@ -2,7 +2,7 @@
   .content
     %h2= h record.title
 
-    = image_tag preview_admin_image_path(record), :alt => h(record.title)
+    = image_tag preview_admin_image_path(record), alt: h(record.title)
     - if record.description
       .htmlField.imageDescription= record.description
 
@@ -12,17 +12,17 @@
     %h1 Publieke urls
 
     %p
-      - [:original, :thumbnail, :banner , :header].each do |type|
+      - [:original, :thumbnail, :banner, :header].each do |type|
         = link_to t(type, scope: 'images.types'), aliased_or_delegated_url(record, action: (type unless type == :original), format: 'jpg'), target: :_blank
 
     %h1 Thumbnail uitsnede
 
-    .cropper{ :id => "image_cropper_#{record.id}" }
+    .cropper{ id: "image_cropper_#{record.id}" }
       = render_cropper record
 
     - if record.content_box_title.present?
       .content_box.image_content_box
-        .content_box_wrapper{ :class => "#{record.content_box_colour || content_box_color || 'default'}" }
+        .content_box_wrapper{ class: "#{record.content_box_colour || content_box_color || 'default'}" }
           .content.hoverable
             - present(record) do |presenter|
               %h1 Banner

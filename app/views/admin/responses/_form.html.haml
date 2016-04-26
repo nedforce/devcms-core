@@ -1,10 +1,10 @@
-= admin_form_for(Response.new, :url => { :action => 'import_csv', :format => 'js' }, :html => { :multipart => true, :target => 'upload_target' }) do |f|
+= admin_form_for(Response.new, url: { action: 'import_csv', format: 'js' }, html: { multipart: true, target: 'upload_target' }) do |f|
   = error_messages_for :attachment
 
-  %p== #{t 'responses.explanation'} <br /><br />
-  
-  %p== #{@csv_headers} <br /><br />
+  %p #{t 'responses.explanation'} <br /><br />
 
-  = f.file_field :uploaded_data, :label => t('responses.data')
+  %p #{@csv_headers} <br /><br />
+
+  = f.file_field :uploaded_data, label: t('responses.data')
 
   = f.submit t('responses.add')

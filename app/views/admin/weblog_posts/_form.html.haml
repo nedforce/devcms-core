@@ -1,6 +1,6 @@
-= form.date_field  :publication_start_date_day,  :label => t('weblogs.date'), :value => @weblog_post.publication_start_date, :allow_empty => true
-= form.time_field  :publication_start_date_time, :label => t('weblogs.time'), :value => @weblog_post.publication_start_date, :allow_empty => true
+= form.date_field :publication_start_date_day,  label: t('weblogs.date'), value: @weblog_post.publication_start_date, allow_empty: true
+= form.time_field :publication_start_date_time, label: t('weblogs.time'), value: @weblog_post.publication_start_date, allow_empty: true
 
-= form.text_area   :preamble,    :label => t('weblogs.preamble'), :rows => 5
-= form.html_editor :body,        :label => t('weblogs.text')
-= form.check_box   :commentable, :label => t('weblogs.commentable')
+= form.text_area   :preamble,    label: t('weblogs.preamble'), rows: 5
+= form.html_editor :body,        label: t('weblogs.text')
+= form.check_box   :commentable, label: t('weblogs.commentable')

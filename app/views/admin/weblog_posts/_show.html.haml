@@ -5,11 +5,13 @@
 
   .metadata.clearfix
     %p.publicationDate
-      == #{t 'shared.published'}: #{l @weblog_post.publication_start_date, :format => :long}
+      #{t 'shared.published'}:
+      = l @weblog_post.publication_start_date, format: :long
 
     - unless @weblog_post.new_record?
       %p.lastUpdateDate
-        == #{t 'shared.last_updated'}: #{l @weblog_post.updated_at, :format => :long}
+        #{t 'shared.last_updated'}:
+        = l @weblog_post.updated_at, format: :long
 
   - if @weblog_post.preamble
     .preamble
@@ -21,7 +23,7 @@
   - unless @images.empty?
     %div
       %p.clearfix
-        %label.left{ :for => "weblog_post_images" }
+        %label.left{ for: 'weblog_post_images' }
           = t 'weblogs.images'
-      #images_bar.images-bar.clearfix
-        = render :partial => 'image', :collection => @images, :locals => { :is_form => false }
+      .images-bar.clearfix#images_bar
+        = render partial: 'image', collection: @images, locals: { is_form: false }

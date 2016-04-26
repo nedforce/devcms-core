@@ -1,13 +1,13 @@
 - if record.is_a?(Meeting)
   = hidden_field_tag 'calendar_item[meeting_category_name]', record.meeting_category_name
 
-= form.hidden_field :repeating,                   :name => 'calendar_item[repeating]'
-= form.hidden_field :repeat_interval_multiplier,  :name => 'calendar_item[repeat_interval_multiplier]'
-= form.hidden_field :repeat_interval_granularity, :name => 'calendar_item[repeat_interval_granularity]'
-= form.hidden_field :repeat_end,                  :name => 'calendar_item[repeat_end]'
-= form.hidden_field :start_time,                  :name => 'calendar_item[start_time]', :value => record.start_time.strftime("%H:%M")
-= form.hidden_field :end_time,                    :name => 'calendar_item[end_time]',   :value => record.end_time.strftime("%H:%M")
-= form.hidden_field :date,                        :name => 'calendar_item[date]'
-= form.hidden_field :location_description,        :name => 'calendar_item[location_description]'
-= form.hidden_field :body,                        :name => 'calendar_item[body]'
-= form.hidden_field :commentable,                 :name => 'calendar_item[commentable]'
+= form.hidden_field :repeating,                   name: 'calendar_item[repeating]'
+= form.hidden_field :repeat_interval_multiplier,  name: 'calendar_item[repeat_interval_multiplier]'
+= form.hidden_field :repeat_interval_granularity, name: 'calendar_item[repeat_interval_granularity]'
+= form.hidden_field :repeat_end,                  name: 'calendar_item[repeat_end]'
+= form.hidden_field :start_time,                  name: 'calendar_item[start_time]', value: record.start_time.strftime('%H:%M')
+= form.hidden_field :end_time,                    name: 'calendar_item[end_time]',   value: record.end_time.strftime('%H:%M')
+= form.hidden_field :date,                        name: 'calendar_item[date]'
+= form.hidden_field :location_description,        name: 'calendar_item[location_description]'
+= form.hidden_field :body,                        name: 'calendar_item[body]'
+= form.hidden_field :commentable,                 name: 'calendar_item[commentable]'

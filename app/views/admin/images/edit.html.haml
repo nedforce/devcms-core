@@ -1,8 +1,7 @@
-#right_panel_content.rightPanelDefault
+.rightPanelDefault#right_panel_content
   .right_panel_content
     %h1
-      = t 'edit', :scope => @image.controller_name
+      = t 'edit', scope: @image.controller_name
       = @image.title
 
     = render 'form'
-    

@@ -1,11 +1,11 @@
 .right_panel_content
-  %h1== #{t 'attachments.edit'} '#{h @attachment.title}'
+  %h1 #{t 'attachments.edit'} '#{h @attachment.title}'
 
-  = admin_remote_form_for @attachment, :url => admin_attachment_path(@attachment, :format => 'html'), :update => 'right_panel_body' do |f|
+  = admin_remote_form_for @attachment, url: admin_attachment_path(@attachment, format: 'html'), update: 'right_panel_body' do |f|
     = error_messages_for :attachment
 
-    = f.text_field :title,    :label => t('shared.title')
-    = f.text_field :filename, :label => t('attachments.filename')
+    = f.text_field :title,    label: t('shared.title')
+    = f.text_field :filename, label: t('attachments.filename')
 
     = f.submit t('shared.save')
 

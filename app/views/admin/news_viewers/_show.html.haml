@@ -4,10 +4,11 @@
   - unless @news_viewer.new_record?
     .metadata
       %p.lastUpdateDate
-        == #{t 'shared.last_updated'}: #{l @news_viewer.last_updated_at, :format => :long}
+        #{t 'shared.last_updated'}:
+        = l @news_viewer.last_updated_at, format: :long
 
   - if @news_viewer.description.present?
     .htmlField.newsViewerDescription
       = w @news_viewer.description
 
-  = render :partial => '/admin/news_items/news_items', :locals => { :news_items => @news_items, :latest_news_items => @latest_news_items, :news_items_for_table => @news_items_for_table, :show_bread_crumbs => true }
+  = render partial: '/admin/news_items/news_items', locals: { news_items: @news_items, latest_news_items: @latest_news_items, news_items_for_table: @news_items_for_table, show_bread_crumbs: true }

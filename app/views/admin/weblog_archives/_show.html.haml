@@ -25,4 +25,6 @@
               .weblogDetails
                 %p= "#{t 'weblogs.owned_by'}: <span class='userLogin'>#{truncate(weblog.user.login, length: 12)}</span>"
                 - unless weblog.weblog_posts.empty?
-                  %p #{t 'weblogs.last_post'}: #{l weblog.last_updated_at, format: :long}
+                  %p
+                    #{t 'weblogs.last_post'}:
+                    = l weblog.last_updated_at, format: :long

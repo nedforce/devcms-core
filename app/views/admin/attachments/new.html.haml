@@ -1,11 +1,11 @@
 .right_panel_content
-  %h1== #{t 'attachments.add_attachments_to'} '#{h @parent_node.content.title}'
+  %h1 #{t 'attachments.add_attachments_to'} '#{h @parent_node.content.title}'
 
-  #right_panel_form.clearfix
-    = render :partial => 'form'
+  .clearfix#right_panel_form
+    = render partial: 'form'
 
   / hidden iframe to enable regular posts instead of ajax posts
-  %iframe{ :name => "upload_target", :style => "height: 1px; width: 1px; border: 0;" }
+  %iframe{ name: 'upload_target', style: 'height: 1px; width: 1px; border: 0;' }
 
   %h2= t 'attachments.uploaded_attachments'
 
@@ -16,7 +16,7 @@
       %th= t 'attachments.size'
 
     %tr#no_attachments_row
-      %td{ :colspan => 3 }
+      %td{ colspan: 3 }
         %i= t 'attachments.no_attachments'
 
   %div

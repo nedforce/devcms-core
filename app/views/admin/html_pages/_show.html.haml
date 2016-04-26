@@ -4,7 +4,8 @@
   - unless @html_page.new_record?
     .metadata
       %p.lastUpdateDate
-        == #{t 'shared.last_updated'}: #{l @html_page.updated_at, format: :long}
+        #{t 'shared.last_updated'}:
+        = l @html_page.updated_at, format: :long
 
   .htmlField
     = @html_page.body
