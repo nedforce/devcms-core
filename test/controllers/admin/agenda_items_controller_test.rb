@@ -3,10 +3,12 @@ require File.expand_path('../../../test_helper.rb', __FILE__)
 class Admin::AgendaItemsControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
-  def test_should_show_agenda_item
+  setup do
     login_as :sjoerd
+  end
 
-    get :show, :id => agenda_items(:agenda_item_one).id
+  test 'should show agenda item' do
+    get :show, id: agenda_items(:agenda_item_one).id
 
     assert assigns(:agenda_item)
     assert_response :success
@@ -14,61 +16,54 @@ class Admin::AgendaItemsControllerTest < ActionController::TestCase
   end
 
   test 'should get new' do
-    login_as :sjoerd
+    get :new, parent_node_id: nodes(:meetings_calendar_meeting_one_node).id
 
-    get :new, :parent_node_id => nodes(:meetings_calendar_meeting_one_node).id
     assert_response :success
     assert assigns(:agenda_item)
   end
 
   test 'should get new with params' do
-    login_as :sjoerd
+    get :new, parent_node_id: nodes(:meetings_calendar_meeting_one_node).id, agenda_item: { body: 'foo' }
 
-    get :new, :parent_node_id => nodes(:meetings_calendar_meeting_one_node).id, :agenda_item => { :body => 'foo' }
     assert_response :success
     assert assigns(:agenda_item)
     assert_equal 'foo', assigns(:agenda_item).body
   end
 
-  def test_should_create_agenda_item
-    login_as :sjoerd
-
+  test 'should create agenda item' do
     assert_difference('AgendaItem.count') do
       create_agenda_item
-      assert_response :success
-      refute assigns(:agenda_item).new_record?, assigns(:agenda_item).errors.full_messages.join('; ')
     end
+
+    assert_response :success
+    refute assigns(:agenda_item).new_record?, assigns(:agenda_item).errors.full_messages.join('; ')
   end
 
-  def test_should_get_valid_preview_for_create
-    login_as :sjoerd
-
+  test 'should get valid preview for create' do
     assert_no_difference('AgendaItem.count') do
-      create_agenda_item({ :body => 'foobar' }, { :commit_type => 'preview' })
-      assert_response :success
-      assert assigns(:agenda_item).new_record?
-      assert_equal 'foobar', assigns(:agenda_item).body
-      assert_template 'create_preview'
+      create_agenda_item({ body: 'foobar' }, commit_type: 'preview')
     end
+
+    assert_response :success
+    assert assigns(:agenda_item).new_record?
+    assert_equal 'foobar', assigns(:agenda_item).body
+    assert_template 'create_preview'
   end
 
-  def test_should_not_get_invalid_preview_for_create
-    login_as :sjoerd
-
+  test 'should not get invalid preview for create' do
     assert_no_difference('AgendaItem.count') do
-      create_agenda_item({ :description => nil }, { :commit_type => 'preview' })
-      assert_response :unprocessable_entity
-      assert assigns(:agenda_item).new_record?
-      assert assigns(:agenda_item).errors[:description].any?
-      assert_template 'new'
+      create_agenda_item({ description: nil }, commit_type: 'preview')
     end
+
+    assert_response :unprocessable_entity
+    assert assigns(:agenda_item).new_record?
+    assert assigns(:agenda_item).errors[:description].any?
+    assert_template 'new'
   end
 
-  def test_should_require_description
-    login_as :sjoerd
-
+  test 'should require description' do
     assert_no_difference('AgendaItem.count') do
-      create_agenda_item(:description => nil)
+      create_agenda_item(description: nil)
     end
 
     assert_response :unprocessable_entity
@@ -77,37 +72,31 @@ class Admin::AgendaItemsControllerTest < ActionController::TestCase
   end
 
   test 'should get edit' do
-    login_as :sjoerd
+    get :edit, id: agenda_items(:agenda_item_one).id
 
-    get :edit, :id => agenda_items(:agenda_item_one).id
     assert_response :success
     assert assigns(:agenda_item)
   end
 
   test 'should get edit with params' do
-    login_as :sjoerd
+    get :edit, id: agenda_items(:agenda_item_one).id, agenda_item: { body: 'foo' }
 
-    get :edit, :id => agenda_items(:agenda_item_one).id, :agenda_item => { :body => 'foo' }
     assert_response :success
     assert assigns(:agenda_item)
     assert_equal 'foo', assigns(:agenda_item).body
   end
 
-  def test_should_update_agenda_item
-    login_as :sjoerd
-
-    put :update, :id => agenda_items(:agenda_item_one).id, :agenda_item => { :description => 'updated title', :body => 'updated body' }
+  test 'should update agenda item' do
+    put :update, id: agenda_items(:agenda_item_one).id, agenda_item: { description: 'updated title', body: 'updated body' }
 
     assert_response :success
     assert_equal 'updated title', assigns(:agenda_item).description
   end
 
-  def test_should_get_valid_preview_for_update
-    login_as :sjoerd
-
+  test 'should get valid preview for update' do
     agenda_item = agenda_items(:agenda_item_one)
     old_body = agenda_item.body
-    put :update, :id => agenda_item, :agenda_item => { :body => 'updated body' }, :commit_type => 'preview'
+    put :update, id: agenda_item, agenda_item: { body: 'updated body' }, commit_type: 'preview'
 
     assert_response :success
     assert_equal 'updated body', assigns(:agenda_item).body
@@ -115,12 +104,10 @@ class Admin::AgendaItemsControllerTest < ActionController::TestCase
     assert_template 'update_preview'
   end
 
-  def test_should_not_get_invalid_preview_for_update
-    login_as :sjoerd
-
+  test 'should not get invalid preview for update' do
     agenda_item = agenda_items(:agenda_item_one)
     old_description = agenda_item.description
-    put :update, :id => agenda_item, :agenda_item => { :description => nil }, :commit_type => 'preview'
+    put :update, id: agenda_item, agenda_item: { description: nil }, commit_type: 'preview'
 
     assert_response :unprocessable_entity
     assert assigns(:agenda_item).errors[:description].any?
@@ -128,17 +115,23 @@ class Admin::AgendaItemsControllerTest < ActionController::TestCase
     assert_template 'edit'
   end
 
-  def test_should_not_update_agenda_item_with_invalid_title
-    login_as :sjoerd
+  test 'should not update agenda item with invalid title' do
+    put :update, id: agenda_items(:agenda_item_one).id, agenda_item: { description: nil }
 
-    put :update, :id => agenda_items(:agenda_item_one).id, :agenda_item => { :description => nil }
     assert_response :unprocessable_entity
     assert assigns(:agenda_item).errors[:description].any?
   end
 
-protected
+  protected
 
   def create_agenda_item(attributes = {}, options = {})
-    post :create, { :parent_node_id => nodes(:meetings_calendar_meeting_one_node).id, :agenda_item => { :description => 'description', :body => 'Lorem ipsum', :agenda_item_category_name => agenda_item_categories(:hamerstukken).name }.merge(attributes) }.merge(options)
+    post :create, {
+      parent_node_id: nodes(:meetings_calendar_meeting_one_node).id,
+      agenda_item: {
+        description: 'description',
+        body: 'Lorem ipsum',
+        agenda_item_category_name: agenda_item_categories(:hamerstukken).name
+      }.merge(attributes)
+    }.merge(options)
   end
 end

@@ -5,48 +5,44 @@ class Admin::AlphabeticIndicesControllerTest < ActionController::TestCase
 
   setup do
     @alphabetic_index = alphabetic_indices(:root_alphabetic_index)
+
+    login_as :sjoerd
   end
 
   test 'should get show' do
-    login_as :sjoerd
+    get :show, id: @alphabetic_index.id
 
-    get :show, :id => @alphabetic_index.id
     assert_response :success
     assert assigns(:alphabetic_index)
   end
 
   test 'should get new' do
-    login_as :sjoerd
+    get :new, parent_node_id: nodes(:root_section_node).id
 
-    get :new, :parent_node_id => nodes(:root_section_node).id
     assert_response :success
     assert assigns(:alphabetic_index)
   end
 
   test 'should get new with params' do
-    login_as :sjoerd
+    get :new, parent_node_id: nodes(:root_section_node).id, alphabetic_index: { title: 'foo' }
 
-    get :new, :parent_node_id => nodes(:root_section_node).id, :alphabetic_index => { :title => 'foo' }
     assert_response :success
     assert assigns(:alphabetic_index)
     assert_equal 'foo', assigns(:alphabetic_index).title
   end
 
-  def test_should_create_alphabetic_index
-    login_as :sjoerd
-
+  test 'should create alphabetic index' do
     assert_difference('AlphabeticIndex.count') do
       create_alphabetic_index
-      assert_response :success
-      refute assigns(:alphabetic_index).new_record?, assigns(:alphabetic_index).errors.full_messages.join('; ')
     end
+
+    assert_response :success
+    refute assigns(:alphabetic_index).new_record?, assigns(:alphabetic_index).errors.full_messages.join('; ')
   end
 
-  def test_should_require_title
-    login_as :sjoerd
-
+  test 'should require title' do
     assert_no_difference('AlphabeticIndex.count') do
-      create_alphabetic_index({ :title => nil })
+      create_alphabetic_index(title: nil)
     end
 
     assert_response :unprocessable_entity
@@ -55,42 +51,42 @@ class Admin::AlphabeticIndicesControllerTest < ActionController::TestCase
   end
 
   test 'should get edit' do
-    login_as :sjoerd
+    get :edit, id: alphabetic_indices(:subsection_alphabetic_index).id
 
-    get :edit, :id => alphabetic_indices(:subsection_alphabetic_index).id
     assert_response :success
     assert assigns(:alphabetic_index)
   end
 
   test 'should get edit with params' do
-    login_as :sjoerd
+    get :edit, id: alphabetic_indices(:subsection_alphabetic_index).id, alphabetic_index: { title: 'foo' }
 
-    get :edit, :id => alphabetic_indices(:subsection_alphabetic_index).id, :alphabetic_index => { :title => 'foo' }
     assert_response :success
     assert assigns(:alphabetic_index)
     assert_equal 'foo', assigns(:alphabetic_index).title
   end
 
-  def test_should_update_alphabetic_index
-    login_as :sjoerd
-
-    put :update, :id => alphabetic_indices(:subsection_alphabetic_index).id, :alphabetic_index => { :title => 'updated title' }
+  test 'should update alphabetic index' do
+    put :update, id: alphabetic_indices(:subsection_alphabetic_index).id, alphabetic_index: { title: 'updated title' }
 
     assert_response :success
     assert_equal 'updated title', assigns(:alphabetic_index).title
   end
 
-  def test_should_not_update_alphabetic_index
-    login_as :sjoerd
+  test 'should not update alphabetic index' do
+    put :update, id: alphabetic_indices(:subsection_alphabetic_index).id, alphabetic_index: { title: nil }
 
-    put :update, :id => alphabetic_indices(:subsection_alphabetic_index).id, :alphabetic_index => { :title => nil }
     assert_response :unprocessable_entity
     assert assigns(:alphabetic_index).errors[:title].any?
   end
 
-protected
+  protected
 
   def create_alphabetic_index(attributes = {}, options = {})
-    post :create, { :parent_node_id => nodes(:root_section_node).id, :alphabetic_index => { :title => 'new title' }.merge(attributes) }.merge(options)
+    post :create, {
+      parent_node_id: nodes(:root_section_node).id,
+      alphabetic_index: {
+        title: 'new title'
+      }.merge(attributes)
+    }.merge(options)
   end
 end

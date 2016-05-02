@@ -13,7 +13,7 @@ class ContactBoxTest < ActiveSupport::TestCase
     end
   end
 
-  def test_should_require_title
+  test 'should require title' do
     assert_no_difference('ContactBox.count') do
       contact_box = create_contact_box(title: nil)
       assert contact_box.errors[:title].any?

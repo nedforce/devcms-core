@@ -16,7 +16,7 @@ class NewsArchiveTest < ActiveSupport::TestCase
     end
   end
 
-  def test_should_require_title
+  test 'should require title' do
     assert_no_difference 'NewsArchive.count' do
       news_archive = create_news_archive(title: nil)
       assert news_archive.errors[:title].any?

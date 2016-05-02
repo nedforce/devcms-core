@@ -29,7 +29,7 @@ class ForumThreadTest < ActiveSupport::TestCase
     end
   end
 
-  def test_should_require_title
+  test 'should require title' do
     assert_no_difference 'ForumThread.count' do
       forum_thread = create_forum_thread(title: nil)
       assert forum_thread.errors[:title].any?

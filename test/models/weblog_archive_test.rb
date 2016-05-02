@@ -14,7 +14,7 @@ class WeblogArchiveTest < ActiveSupport::TestCase
     end
   end
 
-  def test_should_require_title
+  test 'should require title' do
     assert_no_difference 'WeblogArchive.count' do
       weblog_archive = create_weblog_archive(title: nil)
       assert weblog_archive.errors[:title].any?

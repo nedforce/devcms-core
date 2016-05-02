@@ -10,7 +10,8 @@ class Admin::AttachmentsControllerTest < ActionController::TestCase
 
   test 'should get show' do
     login_as :sjoerd
-    get :show, :id => @attachment
+    get :show, id: @attachment
+
     assert assigns(:attachment)
     assert_response :success
     assert_equal @attachment.node, assigns(:node)
@@ -18,82 +19,94 @@ class Admin::AttachmentsControllerTest < ActionController::TestCase
 
   test 'should get previous' do
     @attachment.title = 'foo'
-    @attachment.save! :user => User.find_by_login('editor')
+    @attachment.save! user: User.find_by_login('editor')
 
     login_as :sjoerd
-    get :previous, :id => @attachment
+    get :previous, id: @attachment
+
     assert_response :success
     assert assigns(:attachment)
   end
 
   test 'should get new' do
     login_as :sjoerd
-    get :new, :parent_node_id => nodes(:about_page_node).id
+    get :new, parent_node_id: nodes(:about_page_node).id
+
     assert_response :success
     assert assigns(:attachment)
   end
 
-  def test_should_create_attachment
+  test 'should create attachment' do
     login_as :sjoerd
+
     assert_difference('Attachment.count', 1) do
       create_attachment
-      assert_response :success
-      assert 'test.jpg', assigns(:attachment).filename
-      refute assigns(:attachment).new_record?, assigns(:attachment).errors.full_messages.join('; ')
     end
+
+    assert_response :success
+    assert 'test.jpg', assigns(:attachment).filename
+    refute assigns(:attachment).new_record?, assigns(:attachment).errors.full_messages.join('; ')
   end
 
-  def test_should_not_create_attachment
+  test 'should not create attachment' do
     login_as :sjoerd
+
     assert_no_difference('Attachment.count') do
-      create_attachment(:title => nil)
-      assert_response :unprocessable_entity
-      assert assigns(:attachment).errors[:title].any?
+      create_attachment(title: nil)
     end
+
+    assert_response :unprocessable_entity
+    assert assigns(:attachment).errors[:title].any?
   end
 
-  def test_should_allow_custom_filename
+  test 'should allow custom filename' do
     login_as :sjoerd
+
+    filename = 'Test bestand.jpg'
     assert_difference('Attachment.count', 1) do
-      filename = "Test bestand.jpg"
-      create_attachment(:filename => filename)
+      create_attachment(filename: filename)
       assert filename, assigns(:attachment).filename
     end
   end
 
   test 'should get edit' do
     login_as :sjoerd
-    get :edit, :id => attachments(:besluit_attachment).id
+    get :edit, id: attachments(:besluit_attachment).id
+
     assert_response :success
     assert assigns(:attachment)
   end
 
-  def test_should_get_redirect_for_preview
+  test 'should get redirect for preview' do
     login_as :sjoerd
     besluit = attachments(:besluit_attachment)
-    get :preview, :id => besluit.id
+    get :preview, id: besluit.id
+
     assert_response :redirect
   end
 
-  def test_should_get_preview
+  test 'should get preview' do
     login_as :sjoerd
     besluit = attachments(:besluit_attachment)
-    get :preview, :id => besluit.id, :basename => besluit.basename, :baseformat => besluit.extension
+    get :preview, id: besluit.id, basename: besluit.basename, baseformat: besluit.extension
+
     assert assigns(:attachment)
     assert_response :success
   end
 
-  def test_should_update_image
+  test 'should update image' do
     login_as :sjoerd
-    put :update, :id => attachments(:besluit_attachment).id, :attachment => { :title => 'updated title' }
+    put :update, id: attachments(:besluit_attachment).id, attachment: { title: 'updated title' }
+
     assert_response :success
     assert_equal 'updated title', assigns(:attachment).title
     assert_equal attachments(:besluit_attachment).content_type, assigns(:attachment).content_type
   end
 
-  def test_should_not_update_image
+  test 'should not update image' do
     login_as :sjoerd
-    put :update, :id => attachments(:besluit_attachment).id, :attachment => { :title => nil }
+    put :update, id: attachments(:besluit_attachment).id, attachment: { title: nil }
+
     assert_response :unprocessable_entity
     assert assigns(:attachment).errors[:title].any?
   end
@@ -101,6 +114,12 @@ class Admin::AttachmentsControllerTest < ActionController::TestCase
   protected
 
   def create_attachment(attributes = {}, options = {})
-    post :create, { :parent_node_id => nodes(:about_page_node).id, :attachment => { :title => 'An Image', :file => fixture_file_upload('files/test.jpg', 'image/jpeg', true) }.merge(attributes) }.merge(options)
+    post :create, {
+      parent_node_id: nodes(:about_page_node).id,
+      attachment: {
+        title: 'An Image',
+        file: fixture_file_upload('files/test.jpg', 'image/jpeg', true)
+      }.merge(attributes)
+    }.merge(options)
   end
 end

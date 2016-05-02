@@ -13,7 +13,7 @@ class NewsItemTest < ActiveSupport::TestCase
     end
   end
 
-  def test_should_require_title
+  test 'should require title' do
     assert_no_difference 'NewsItem.count' do
       news_item = create_news_item(title: nil)
       assert news_item.errors[:title].any?

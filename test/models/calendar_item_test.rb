@@ -22,7 +22,7 @@ class CalendarItemTest < ActiveSupport::TestCase
     end
   end
 
-  def test_should_require_title
+  test 'should require title' do
     assert_no_difference 'CalendarItem.count' do
       calendar_item = create_calendar_item(title: nil)
       assert calendar_item.errors[:title].any?

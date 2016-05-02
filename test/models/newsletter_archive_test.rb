@@ -14,7 +14,7 @@ class NewsletterArchiveTest < ActiveSupport::TestCase
     end
   end
 
-  def test_should_require_title
+  test 'should require title' do
     assert_no_difference 'NewsletterArchive.count' do
       newsletter_archive = create_newsletter_archive(title: nil)
       assert newsletter_archive.errors[:title].any?

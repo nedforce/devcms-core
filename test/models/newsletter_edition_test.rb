@@ -16,7 +16,7 @@ class NewsletterEditionTest < ActiveSupport::TestCase
     end
   end
 
-  def test_should_require_title
+  test 'should require title' do
     assert_no_difference 'NewsletterEdition.count' do
       newsletter_edition = create_newsletter_edition(title: nil)
       assert newsletter_edition.errors[:title].any?

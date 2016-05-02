@@ -9,45 +9,51 @@ class Admin::AbbreviationsControllerTest < ActionController::TestCase
 
   test 'should get index' do
     login_as :sjoerd
+
     get :index, node_id: @root.id
+
     assert_response :success
   end
 
-  def test_should_create_abbreviation
+  test 'should create abbreviation' do
     login_as :sjoerd
 
     assert_difference 'Abbreviation.count' do
       create_abbreviation
-      assert_response :success
-      refute assigns(:abbreviation).new_record?, assigns(:abbreviation).errors.full_messages.join('; ')
     end
+
+    assert_response :success
+    refute assigns(:abbreviation).new_record?, assigns(:abbreviation).errors.full_messages.join('; ')
   end
 
-  def test_should_destroy_abbreviation
+  test 'should destroy abbreviation' do
     login_as :sjoerd
 
     assert_difference('Abbreviation.count', -1) do
-      delete :destroy, :node_id => @root.id, :id => abbreviations(:wmo).id, :format => 'json'
-      assert_response :success
+      delete :destroy, node_id: @root.id, id: abbreviations(:wmo).id, format: 'json'
     end
+
+    assert_response :success
   end
 
-  def test_should_require_original
+  test 'should require original' do
     login_as :sjoerd
 
     assert_no_difference('Abbreviation.count') do
-      create_abbreviation(:abbr => nil)
+      create_abbreviation(abbr: nil)
     end
+
     assert_response :unprocessable_entity
     assert assigns(:abbreviation).new_record?
   end
 
-  def test_should_require_name
+  test 'should require name' do
     login_as :sjoerd
 
     assert_no_difference('Abbreviation.count') do
-      create_abbreviation(:definition => nil)
+      create_abbreviation(definition: nil)
     end
+
     assert_response :unprocessable_entity
     assert assigns(:abbreviation).new_record?
   end
@@ -65,6 +71,6 @@ class Admin::AbbreviationsControllerTest < ActionController::TestCase
   protected
 
   def create_abbreviation(options = {})
-    post :create, :node_id => @root.id, :abbreviation => {  :abbr => "snafu", :definition => "Situation Normal All Fizzed Up" }.merge(options)
+    post :create, node_id: @root.id, abbreviation: { abbr: 'snafu', definition: 'Situation Normal All Fizzed Up' }.merge(options)
   end
 end

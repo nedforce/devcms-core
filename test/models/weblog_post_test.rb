@@ -15,7 +15,7 @@ class WeblogPostTest < ActiveSupport::TestCase
     end
   end
 
-  def test_should_require_title
+  test 'should require title' do
     assert_no_difference 'WeblogPost.count' do
       weblog_post = create_weblog_post(title: nil)
       assert weblog_post.errors[:title].any?

@@ -63,7 +63,7 @@ class Admin::CombinedCalendarsControllerTest < ActionController::TestCase
     end
   end
 
-  def test_should_require_title
+  test 'should require title' do
     login_as :sjoerd
 
     assert_no_difference('CombinedCalendar.count') do

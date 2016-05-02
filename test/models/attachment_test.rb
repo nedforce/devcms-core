@@ -13,7 +13,7 @@ class AttachmentTest < ActiveSupport::TestCase
     assert_equal f.read, @attachment.file.file.read
   end
 
-  def test_should_require_title
+  test 'should require title' do
     assert_no_attachment_difference { create_attachment(title: nil) }
     assert_no_attachment_difference { create_attachment(title: '  ') }
   end

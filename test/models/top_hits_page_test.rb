@@ -15,7 +15,7 @@ class TopHitsPageTest < ActiveSupport::TestCase
     end
   end
 
-  def test_should_require_title
+  test 'should require title' do
     assert_no_difference 'TopHitsPage.count' do
       top_hits_page = create_top_hits_page(title: nil)
       assert top_hits_page.errors[:title].any?
