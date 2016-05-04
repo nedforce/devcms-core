@@ -1,3 +1,3 @@
 module DevcmsCore
-  VERSION = '3.0.17'
+  VERSION = '3.0.18'
 end
