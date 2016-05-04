@@ -55,7 +55,7 @@ class ContentCopy < ActiveRecord::Base
 
   # Returns the CSS class name to be used for icons in tree view.
   def tree_icon_class
-    copied_node.content_type.underscore + '_icon'
+    copied_node.content.tree_icon_class
   end
 
   # Returns the image file name to be used for icons in a Section's show view.
