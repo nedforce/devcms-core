@@ -231,8 +231,12 @@ module DevcmsCore
       !!commentable
     end
 
+    def content_copy?
+      self.class == ContentCopy
+    end
+
     def own_content_class
-      (self.class == ContentCopy) ? copied_content_class : self.class
+      content_copy? ? copied_content_class : self.class
     end
 
     def show_content_box_header

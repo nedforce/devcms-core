@@ -298,6 +298,10 @@ class Node < ActiveRecord::Base
     find_related_tags[0..(limit || self.content_box_number_of_items || 10) - 1]
   end
 
+  def content_copy?
+    self.content_type == ContentCopy.name
+  end
+
   # Returns a hash representing this node's config properties for an Ext.dvtr.AsyncTreeNode javascript object.
   # Note: Convert to JSON before usage in Javascript.
   def to_tree_node_for(user, options = {})
@@ -338,7 +342,7 @@ class Node < ActiveRecord::Base
       end.sort_by { |hash| hash[:text] },
       :allowedChildContentTypes        => self.content_type_configuration[:allowed_child_content_types],
       :ownContentType                  => self.content_class.name,
-      :allowEdit                       => self.content_type_configuration[:allowed_roles_for_update].include?(role_name),
+      :allowEdit                       => !self.content_copy? && self.content_type_configuration[:allowed_roles_for_update].include?(role_name),
       :controllerName                  => "/admin/#{self.content.controller_name}",
       :parentNodeId                    => self.parent_id,
       :parentURLAlias                  => self.parent_url_alias,
@@ -352,14 +356,14 @@ class Node < ActiveRecord::Base
       :userRole                        => role ? role_name : nil,
       :undeletable                     => self.root? || !content_type_configuration[:allowed_roles_for_destroy].include?(role_name) || (!user_is_admin && self.content_class == Image && self.content.is_for_header?),
       :allowGlobalFrontpageSetting     => user_is_admin,
-      :isContentCopy                   => self.content_type == ContentCopy.name,
+      :isContentCopy                   => self.content_copy?,
       :isFrontpage                     => self.is_frontpage?,
       :isGlobalFrontpage               => self.is_global_frontpage?,
       :isRepeatingCalendarItem         => self.content_class <= CalendarItem && self.content.has_repetitions?,
       :containsGlobalFrontpage         => self.contains_global_frontpage?,
       :allowTogglePrivate              => self.content_class <= Section && user_is_admin,
       :allowToggleHidden               => user_is_final_editor || user_is_admin,
-      :allowShowInMenu                 => !Node.content_to_hide_from_menu.include?(self.sub_content_type),
+      :allowShowInMenu                 => !self.content_copy? && !Node.content_to_hide_from_menu.include?(self.sub_content_type),
       :isHidden                        => self.hidden?,
       :isPrivate                       => self.private?,
       :showInMenu                      => self.show_in_menu,
@@ -368,7 +372,7 @@ class Node < ActiveRecord::Base
       :hasPrivateAncestor              => self.has_private_ancestor?,
       :hasHiddenAncestor               => self.has_hidden_ancestor?,
       :allowUrlAliasSetting            => user_is_final_editor || user_is_admin,
-      :allowContentCopyCreation        => !self.root? && content_type_configuration[:copyable],
+      :allowContentCopyCreation        => !self.root? && !self.content_copy? && content_type_configuration[:copyable],
       :isRoot                          => self.root?,
       :treeLoaderName                  => content_type_configuration[:tree_loader_name],
       :allowLayoutConfig               => user_is_admin || user_is_final_editor,
