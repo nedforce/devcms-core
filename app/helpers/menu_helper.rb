@@ -2,12 +2,17 @@ module MenuHelper
 
   # Returns the html for the double-level main menu.
   def create_main_menu
-    string_cache(:main_menu_for_site => current_site.id) do
-      if top_level_main_menu_items.any?
-        content_tag(:ul, top_level_main_menu_items.map { |item, sub_items| create_main_menu_item(item, sub_items.keys) }.join("\n").html_safe, :class => 'clearfix main-menu')
-      else
-        raw '&nbsp;'
+    if (top_level_menu_nodes = current_site.content.top_level_menu_nodes).any?
+      items = top_level_menu_nodes.map do |top_node|
+        string_cache(menu_for_top_node: top_node.id) do
+          main_menu_item = top_level_main_menu_items.keys.detect{|item| item == top_node }
+          create_main_menu_item(main_menu_item, top_level_main_menu_items[main_menu_item].keys) if main_menu_item
+        end
       end
+
+      content_tag(:ul, items.join("\n").html_safe, :class => 'clearfix main-menu')
+    else
+      raw '&nbsp;'
     end
   end
 
@@ -23,7 +28,7 @@ module MenuHelper
   protected
 
   def top_level_main_menu_items
-    @top_level_main_menu_items || begin
+    @top_level_main_menu_items ||= begin
       menu_scope = current_site.descendants(to_depth: Devcms.main_menu_depth).accessible.is_public.shown_in_menu.reorder(:position)
       top_level_main_menu_items = current_site.closure_for(menu_scope).values.first
     end

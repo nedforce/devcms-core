@@ -34,8 +34,11 @@ class NodeSweeper < ActionController::Caching::Sweeper
           # Expire footer if parent is a site
           expire_fragment(footer_for_site: node.parent.id) if node.parent.sub_content_type == 'Site'
         end
-        # Expire mainmenu of containing site if in main menu scope of containing site
-        expire_fragment(main_menu_for_site: node.containing_site.id) if node.depth - node.containing_site.depth <= Devcms.main_menu_depth
+        # Expire menu of top level node
+        if node.depth > 0 && node.depth - node.containing_site.depth <= Devcms.main_menu_depth
+          top_node = node.containing_site.content.top_level_menu_nodes.detect{|top_node| node.path.include?(top_node) }
+          expire_fragment(menu_for_top_node: top_node.id) if top_node
+        end
       end
       # Expire slideshow on delete/destroy
       expire_fragment(header_slideshow_for: node.child_ancestry) if node.layout_configuration_changed? || node.deleted_at.present?

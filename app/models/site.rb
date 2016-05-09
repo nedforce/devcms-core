@@ -59,6 +59,10 @@ class Site < Section
     original_domain || Settler[:host]
   end
 
+  def top_level_menu_nodes
+    node.children.accessible.is_public.shown_in_menu
+  end
+
   protected
 
   def ensure_parent_is_root
