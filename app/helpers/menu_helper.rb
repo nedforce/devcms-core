@@ -4,10 +4,8 @@ module MenuHelper
   def create_main_menu
     if (top_level_menu_nodes = current_site.content.top_level_menu_nodes).any?
       items = top_level_menu_nodes.map do |top_node|
-        string_cache(menu_for_top_node: top_node.id) do
-          main_menu_item = top_level_main_menu_items.keys.detect{|item| item == top_node }
-          create_main_menu_item(main_menu_item, top_level_main_menu_items[main_menu_item].keys) if main_menu_item
-        end
+        main_menu_item = top_level_main_menu_items.keys.detect{|item| item == top_node }
+        create_main_menu_item(main_menu_item, top_level_main_menu_items[main_menu_item].keys) if main_menu_item
       end
 
       content_tag(:ul, items.join("\n").html_safe, :class => 'clearfix main-menu')
@@ -46,7 +44,7 @@ module MenuHelper
     else
       content_tag(:li, :class => template_color) do
         [ create_menu_link(node, :class => 'main-menu-link'),
-          create_main_menu_sub_menu(children)
+          string_cache(menu_for_top_node: node.id){ create_main_menu_sub_menu(children) }
         ].join.html_safe
       end
     end
