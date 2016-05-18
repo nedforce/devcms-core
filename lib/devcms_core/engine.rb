@@ -21,6 +21,7 @@ module DevcmsCore
     DevcmsCore.config.refresh_auth_token_after_sign_out = true
     DevcmsCore.config.refresh_auth_token_after_password_reset = true
     DevcmsCore.config.refresh_auth_token_after_sign_in = false
+    DevcmsCore.config.node_field_partials = []
 
     # Honeypot defaults
     config.honeypot_name       = 'OgJhm3UT'
