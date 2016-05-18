@@ -157,8 +157,12 @@ module Admin::AdminHelper
       javascript_tag("setupTagComboBoxes(#{ActiveModel::Naming.param_key(form.object).to_json}, #{Node.available_tags.to_json});") if form.object.attributes.keys.include?('title')
   end
 
-  def default_fields_after_form(_form)
-    ''
+  def default_fields_after_form(form)
+    if defined?(super)
+      super
+    else
+      ''
+    end
   end
 
   def default_preview_fields(form)
