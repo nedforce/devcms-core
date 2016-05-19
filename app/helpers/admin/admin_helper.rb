@@ -151,14 +151,15 @@ module Admin::AdminHelper
   end
 
   def default_fields_before_form(form)
-    form.text_field(:title, label: t(:title, scope: form.object.controller_name, default: t('shared.title'))) +
-      form.text_field(:title_alternative_list, label: t('shared.title_alternatives')) +
-      form.text_field(:tag_list, label: t('shared.tags'), value: form.object.tag_list.join(',')) +
-      javascript_tag("setupTagComboBoxes(#{ActiveModel::Naming.param_key(form.object).to_json}, #{Node.available_tags.to_json});") if form.object.attributes.keys.include?('title')
+    find_all_partials(name: 'before_form', prefix: 'admin/shared').map{|path| render(template: path, locals: { form: form }) }.join.html_safe
   end
 
-  def default_fields_after_form(_form)
-    ''
+  def default_fields_after_form(form)
+    find_all_partials(name: 'after_form', prefix: 'admin/shared').map{|path| render(template: path, locals: { form: form }) }.join.html_safe
+  end
+
+  def find_all_partials name:, prefix:
+    view_paths.map{|resolver| resolver.find_all(name, prefix, true, { formats: [:html], locale: [:nl], variants: [], handlers: [:haml] }) }.flatten
   end
 
   def default_preview_fields(form)
