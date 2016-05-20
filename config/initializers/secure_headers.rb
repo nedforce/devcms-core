@@ -3,7 +3,7 @@
 #
 # Note that not all methods are called in the application controller.
 SecureHeaders::Configuration.default do |config|
-  config.hsts = "max-age=#{20.years.to_i}"
+  config.hsts = { max_age: 20.years.to_i, include_subdomains: true }
 
   # Cannot use 'DENY', because the upload functionality in the back-end
   # uses iframes.
