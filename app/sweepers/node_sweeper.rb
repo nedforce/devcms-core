@@ -1,4 +1,6 @@
 class NodeSweeper < ActionController::Caching::Sweeper
+  include Rails.application.routes.url_helpers
+
   observe Node
 
   def after_create(node)
@@ -64,8 +66,8 @@ class NodeSweeper < ActionController::Caching::Sweeper
     end
   end
 
-  def expire_page *args
-    controller.expire_page *args
+  def expire_page(options = {})
+    controller.expire_page(url_for(options.merge(only_path: true, skip_relative_url_root: true)))
   end
 
   def expire_fragment *args
