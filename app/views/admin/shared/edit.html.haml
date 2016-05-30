@@ -11,7 +11,7 @@
     = default_fields_after_form form
 
     - DevcmsCore.config.node_field_partials.each do |partial|
-      = render(partial, form: form)
+      = render(partial, form: form, record: record)
 
     - if record.node.expiration_required? || record.node.expired?
       - if current_user_is_admin?(record.node) || current_user_is_final_editor?(record.node)
