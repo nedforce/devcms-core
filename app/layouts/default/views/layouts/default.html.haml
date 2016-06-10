@@ -10,6 +10,7 @@
       = generate_metadata_for(@node)
     %title= [@page_title, Settler[:site_name]].compact.join(' | ')
     %link{ href: "//#{Settler[:host]}/favicon.ico", rel: 'shortcut icon', type: 'image/vnd.microsoft.icon' }/
+    = canonical_link
 
     = stylesheet_link_tag :application
     = stylesheet_link_tag 'print', media: 'print'
