@@ -25,3 +25,8 @@ config.gem 'tidy',                :version => '1.1.2'
 config.gem 'whenever',            :version => '>= 0.4', :lib => false
 config.gem 'spreadsheet',         :version => '~> 0.6.5.2'
 config.gem 'roo',                 :version => '~> 1.10.1'
+
+# Deployment
+# config.gem 'highline',   :version => '~> 1.6.0'
+# config.gem 'net-ssh',    :version => '~> 2.2'
+# config.gem 'capistrano', :version => '~> 2.15'
