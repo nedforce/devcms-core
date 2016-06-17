@@ -264,6 +264,3 @@ DEPENDENCIES
   sass-rails (~> 3.2.3)
   turn
   uglifier
-
-BUNDLED WITH
-   1.11.2

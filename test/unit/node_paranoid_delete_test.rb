@@ -68,7 +68,7 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
   end
 
   def test_acts_as_content_node_default_scope_should_filter_out_paranoid_deleted_nodes
-    assert_equal @economie_section, Section.find(@economie_section)    
+    assert_equal @economie_section, Section.find(@economie_section)
     assert @economie_section_node.paranoid_delete!
     assert !Section.exists?(@economie_section)
   end
@@ -262,25 +262,24 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
 
     @economie_section_node.paranoid_delete!
 
-    assert !Node.exists?(@economie_section_node)
-    assert !Node.exists?(node)
-    assert !ContentCopy.exists?(cc)
+    refute Node.exists?(@economie_section_node)
+    refute Node.exists?(node)
+    refute ContentCopy.exists?(cc)
 
     @economie_section_node.paranoid_restore!
 
     assert Node.exists?(@economie_section_node)
     assert Node.exists?(node)
-    assert ContentCopy.exists?(cc)
+    refute ContentCopy.exists?(cc)
 
-    assert !Node.deleted.include?(@economie_section_node)
-    assert !Node.deleted.include?(node)
+    refute Node.deleted.include?(@economie_section_node)
+    refute Node.deleted.include?(node)
 
     assert @economie_section_node.content.present?
     assert node.content.present?
 
     assert_nil @economie_section_node.content.reload.deleted_at
     assert_nil node.content.reload.deleted_at
-    assert_nil cc.reload.deleted_at
   end
 
   def test_delete_all_paranoid_deleted_content_should_not_delete_non_paranoid_deleted_content
