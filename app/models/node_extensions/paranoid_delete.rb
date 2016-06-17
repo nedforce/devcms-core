@@ -48,7 +48,8 @@ module NodeExtensions::ParanoidDelete
     if deleted_at.blank?
 
       time = Time.now
-      nodes_to_paranoid_delete_ids = descendant_ids
+      nodes_to_destroy_ids = descendants.where(content_type: 'ContentCopy').pluck(:id)
+      nodes_to_paranoid_delete_ids = descendant_ids - nodes_to_destroy_ids
 
       self.class.transaction do
         return false unless run_paranoid_callbacks(:before_paranoid_delete, nodes_to_paranoid_delete_ids)
@@ -56,6 +57,9 @@ module NodeExtensions::ParanoidDelete
         # Set updated_at, deleted_at of the in-memory node for the paranoid destroy callbacks
         self.updated_at = time
         self.deleted_at = time
+
+        # Destroy nodes marked for destruction
+        self.class.where(id: nodes_to_destroy_ids).destroy_all
 
         # Update with an SQL query
         self.class.where(id: nodes_to_paranoid_delete_ids + [id]).update_all(updated_at: updated_at, deleted_at: deleted_at)

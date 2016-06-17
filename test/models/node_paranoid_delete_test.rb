@@ -270,7 +270,7 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
 
     assert Node.exists?(@economie_section_node.id)
     assert Node.exists?(node.id)
-    assert ContentCopy.exists?(cc.id)
+    refute ContentCopy.exists?(cc.id)
 
     refute Node.deleted.include?(@economie_section_node)
     refute Node.deleted.include?(node)
@@ -280,7 +280,6 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
 
     assert_nil @economie_section_node.content.reload.deleted_at
     assert_nil node.content.reload.deleted_at
-    assert_nil cc.reload.deleted_at
   end
 
   def test_delete_all_paranoid_deleted_content_should_not_delete_non_paranoid_deleted_content
