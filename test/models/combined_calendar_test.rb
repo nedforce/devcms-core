@@ -58,6 +58,12 @@ class CombinedCalendarTest < ActiveSupport::TestCase
     end
   end
 
+  test 'should destroy combined calendar ndoes on paranoid delete' do
+    ccn = @combined_calendar.combined_calendar_nodes.create!(node: Node.root)
+    assert @combined_calendar.node.paranoid_delete!
+    assert_raises(ActiveRecord::RecordNotFound){ ccn.reload }
+  end
+
   test 'should return updated_at for last_updated_at when no accessible calendar items are found' do
     CalendarItem.delete_all
     c = create_combined_calendar
