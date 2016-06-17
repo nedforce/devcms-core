@@ -22,6 +22,8 @@ class CombinedCalendar < ActiveRecord::Base
     :has_own_feed => true
   })
 
+  after_paranoid_delete :remove_associated_content
+
   has_many :combined_calendar_nodes, dependent: :destroy
   has_many :sites,                   through: :combined_calendar_nodes, source: :node
 
@@ -54,4 +56,11 @@ class CombinedCalendar < ActiveRecord::Base
   def content_tokens
     description
   end
+
+  protected
+
+  def remove_associated_content
+    combined_calendar_nodes.destroy_all
+  end
+
 end

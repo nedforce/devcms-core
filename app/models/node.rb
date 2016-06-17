@@ -633,7 +633,7 @@ class Node < ActiveRecord::Base
 
   # Prevents the root +Node+ from being destroyed.
   def prevent_root_destruction
-    raise ActiveRecord::ActiveRecordError, I18n.t('activerecord.errors.models.node.attributes.base.cant_remove_root') if self.root?
+    raise ActiveRecord::ActiveRecordError, I18n.t('activerecord.errors.models.node.attributes.base.cant_remove_root') if root? && deleted_at.blank?
   end
 
   def remove_associated_meta_content
