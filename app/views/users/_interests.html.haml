@@ -10,4 +10,4 @@
           .form_checkbox.clearfix
             = check_box_tag 'user[interest_ids][]', interest.id, @user.interests.include?(interest), id: dom_id(interest)
             %label{ for: dom_id(interest) }
-              = h interest.title
+              = interest.title

@@ -64,6 +64,9 @@ class User < ActiveRecord::Base
   # Virtual attribute to hold the unencrypted password
   attr_accessor :password
 
+  # Set to force users to supply a password
+  attr_accessor :require_password
+
   # A +User+ can have multiple nodes which he has edited
   has_many :nodes, foreign_key: :editor_by
 
@@ -123,10 +126,12 @@ class User < ActiveRecord::Base
   validate :should_not_allow_reserved_login
 
   validate :privileged_users_password_should_be_strong, unless: Proc.new { Rails.env.development? }
+  validate :password_should_be_different_from_original, if: ->{ password_required? && should_renew_password? }
 
   # Make sure the user's password (stored in the virtual attribute +password+)
   # is stored as a hash after the user is created/updatedRoleAssignment.
   before_save :encrypt_password
+  before_save { self.renewed_password_at = Time.now if password.present? }
   before_save { generate_token(:auth_token) if auth_token.nil? }
 
   # Make sure the email is unique and no error is shown
@@ -348,6 +353,10 @@ class User < ActiveRecord::Base
     update_column :type, 'PrivilegedUser'
   end
 
+  def should_renew_password?
+    renewed_password_at.present? && renewed_password_at < DevcmsCore.config.renew_password_after.ago
+  end
+
   protected
 
   # Memoized reader for the role_assignments association
@@ -368,9 +377,14 @@ class User < ActiveRecord::Base
     self.password_hash = encrypt(password)
   end
 
+  def password_should_be_different_from_original
+    return if password.blank?
+    errors.add(:password, :password_equals_current_password) if authenticated?(password)
+  end
+
   # Returns true if a password should be supplied, else false.
   def password_required?
-    password_hash.blank? || password.present?
+    password_hash.blank? || password.present? || @require_password
   end
 
   # Prevents users from registering reserved logins.

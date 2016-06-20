@@ -4,6 +4,8 @@
 # form, the +create+ action authenticates and (if successful) logs the user in,
 # and the +destroy+ action logs the user out.
 class SessionsController < ApplicationController
+  skip_before_filter :check_password_renewal
+
   before_filter :confirm_destroy, only: :destroy, unless: lambda { request.delete? }
 
   # Makes sure that users that are already logged in
@@ -36,15 +38,21 @@ class SessionsController < ApplicationController
 
       if @user && @user.verified? && !@user.blocked?
         if params[:remember_me] == '1'
+          session[:use_permanent_auth_token] = true
           set_auth_token(@user, permanent: true)
         else
+          session[:use_permanent_auth_token] = false
           set_auth_token(@user)
         end
       end
 
       if logged_in?
-        flash[:notice] = I18n.t('sessions.logged_in_as', login: current_user.login)
-        redirect_back_or_default(profile_path, false)
+        check_password_renewal
+
+        unless performed?
+          flash[:notice] = I18n.t('sessions.logged_in_as', login: current_user.login)
+          redirect_back_or_default(profile_path, false)
+        end
       elsif @user && !@user.verified?
         flash.now[:notice] = (I18n.t('sessions.not_yet_verified') + ' ' + I18n.t('sessions.no_email?') + " <a href = \"#{send_verification_email_user_path(@user)}\">#{I18n.t('sessions.request_new_code')}</a>").html_safe
         render_login_form

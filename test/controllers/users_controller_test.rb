@@ -4,41 +4,6 @@ require File.expand_path('../../test_helper.rb', __FILE__)
 class UsersControllerTest < ActionController::TestCase
   self.use_transactional_fixtures = true
 
-  test 'should not get show logged out' do
-    get :show, id: users(:sjoerd).login
-
-    assert_response :redirect
-  end
-
-  test 'should not get show logged in as different user' do
-    login_as :arthur
-    get :show, id: users(:sjoerd).login
-
-    assert_response :not_found
-  end
-
-  test 'should get show logged in as owner' do
-    login_as :sjoerd
-    get :show, id: users(:sjoerd).login
-
-    assert_response :success
-    assert_equal users(:sjoerd), assigns(:user)
-    assert_select '#email_address'
-    assert_select '[href=?]', "http://#{@request.host}/users/#{users(:sjoerd).login}/edit"
-    assert_select '.reg_form_fieldset'
-  end
-
-  test 'should get profile logged in as owner' do
-    login_as :sjoerd
-    get :profile
-
-    assert_response :success
-    assert_equal users(:sjoerd), assigns(:user)
-    assert_select '#email_address'
-    assert_select '[href=?]', "http://#{@request.host}/users/#{users(:sjoerd).login}/edit"
-    assert_select '.reg_form_fieldset'
-  end
-
   test 'should not get new for invalid invitation code or invitation email' do
     get :new
     assert_response :redirect
@@ -157,58 +122,6 @@ class UsersControllerTest < ActionController::TestCase
     assert_nil assigns(:user).password
     assert_nil assigns(:user).password_confirmation
     assert_response :unprocessable_entity
-  end
-
-  test 'should show edit' do
-    login_as :sjoerd
-    get :edit, id: users(:sjoerd).login
-
-    assert_response :success
-    assert_template 'edit'
-  end
-
-  test 'should require login for edit' do
-    get :edit, id: users(:sjoerd).login
-
-    assert_response :redirect
-  end
-
-  test 'should require owner on edit' do
-    login_as :arthur
-    get :edit, id: users(:sjoerd).login
-
-    assert_response :not_found
-  end
-
-  test 'should update user' do
-    login_as :sjoerd
-    put :update, id: users(:sjoerd).login, user: { first_name: 'Sjors' }
-
-    assert_redirected_to user_path(users(:sjoerd))
-    assert flash[:notice].present?
-    assert_equal 'Sjors', assigns(:user).first_name
-  end
-
-  test 'should not update user with invalid attr' do
-    login_as :sjoerd
-    put :update, id: users(:sjoerd).login, user: { email_address: 'sjoerd@invalid' }, old_password: 'sjoerd'
-
-    assert_response :unprocessable_entity
-    assert assigns(:user).errors[:email_address].any?
-  end
-
-  test 'update should require login' do
-    put :update, id: users(:sjoerd).login, user: { email_address: 'sjoerd@nedforce.nl' }
-
-    assert_response :redirect
-    assert flash[:warning].present?
-  end
-
-  test 'update should require owner' do
-    login_as :arthur
-    put :update, id: users(:sjoerd).login, user: { email_address: 'sjoerd@nedforce.nl' }
-
-    assert_response :not_found
   end
 
   test 'should verify user' do

@@ -109,6 +109,7 @@ Rails.application.routes.draw do
     end
   end
   resources :pages, only: :show
+  resource  :password_renewal, only: [:edit, :update]
   resources :password_resets, only: [:new, :create, :edit, :update]
   resources :polls, only: :show
 
@@ -116,6 +117,12 @@ Rails.application.routes.draw do
     member do
       put :vote
       get :results
+    end
+  end
+
+  resource :profile, only: [:show, :edit, :update, :destroy] do
+    member do
+      get :confirm_destroy
     end
   end
 
@@ -129,12 +136,10 @@ Rails.application.routes.draw do
   end
   resources :top_hits_pages, only: :show
 
-  resources :users, except: :index do
+  resources :users, only: [:new, :create] do
     member do
       get :send_verification_email
       get :verification
-      get :profile
-      get :confirm_destroy
     end
   end
 
@@ -430,7 +435,6 @@ Rails.application.routes.draw do
     get '/search(/:search_engine)' => 'search#index', as: :search
   end
 
-  get '/profile' => 'users#profile', as: :profile
   get '/synonyms.txt' => 'application#synonyms', as: :synonyms, format: :txt
 
   match '/404', to: 'application#handle_404', via: :all

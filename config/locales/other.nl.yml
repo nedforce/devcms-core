@@ -1166,6 +1166,7 @@ nl:
     full_name: Naam
     interests: Onderwerp interesses
     joined_at: Geregistreerd op
+    renewed_password_at: Wachtwoord vernieuwd op
     last_update: Laatst bijgewerkt op
     leave_blank_to_preserve_password: Alleen invullen als u uw wachtwoord wilt wijzigen.
     leave_empty: Niet invullen
@@ -1187,6 +1188,8 @@ nl:
     page: Pagina
     password: Wachtwoord
     password_confirmation: Bevestig wachtwoord
+    password_renewal: Wachtwoord vernieuwen
+    password_renewal_text: De geldigheid van uw wachtwoord is verlopen en u dient daarom een nieuw wachtwoord in te stellen.
     password_reset: Wachtwoord opnieuw instellen
     password_reset_expired: Uw wachtwoord herstel-link is verlopen!
     password_reset_text: Vul hieronder uw loginnaam of e-mailadres in. U krijgt per e-mail een link om een nieuw wachtwoord in te stellen.

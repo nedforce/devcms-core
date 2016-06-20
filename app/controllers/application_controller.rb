@@ -24,6 +24,7 @@ class ApplicationController < ActionController::Base
   rescue_from ActionController::RoutingError, ActionController::UnknownController, ::AbstractController::ActionNotFound, ActiveRecord::RecordNotFound, :with => :handle_404 unless Rails.env.development?
 
   before_filter :redirect_to_full_domain
+  before_filter :check_password_renewal, if: :logged_in?
 
   # Try retrieve the +Node+ object for the current request.
   # This needs to be done before any authorization attempts, a +Node+ might be needed.
@@ -440,6 +441,10 @@ protected
   def handle_unverified_request
     # raise ActionController::InvalidAuthenticityToken
     head :unprocessable_entity
+  end
+
+  def check_password_renewal
+    redirect_to edit_password_renewal_url if current_user.should_renew_password?
   end
 
 private

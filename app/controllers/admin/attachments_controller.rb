@@ -3,8 +3,6 @@ class Admin::AttachmentsController < Admin::AdminController
 
   before_filter :find_attachment,        :except => [:new, :create, :ajax]
 
-  before_filter :login_required
-
   require_role ['admin', 'final_editor', 'editor']
 
   layout false

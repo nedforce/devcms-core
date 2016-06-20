@@ -8,4 +8,4 @@
           .form_checkbox.clearfix
             = check_box_tag 'user[newsletter_archive_ids][]', newsletter_archive.id, @user.newsletter_archives.include?(newsletter_archive), id: dom_id(newsletter_archive)
             %label{ for: dom_id(newsletter_archive) }
-              = h newsletter_archive.title
+              = newsletter_archive.title

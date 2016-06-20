@@ -88,7 +88,7 @@ module DevcmsCore
         session[:return_to] = fullpath if !request.xhr? && request.method == 'GET'
       end
 
-      # First attempts to redirect to the location set by <tt>params[:return_to]</tt> then to 
+      # First attempts to redirect to the location set by <tt>params[:return_to]</tt> then to
       # the location stored on the last <tt>store_location</tt> call.
       # If no location is set in the params or session, a <tt>redirect_to :back</tt> is attempted.
       # If that fails, a redirection to the passed <tt>default</tt> is issued.

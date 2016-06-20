@@ -404,6 +404,30 @@ class UserTest < ActiveSupport::TestCase
     assert email.parts.first.body.include?('nieuw wachtwoord aanvragen')
   end
 
+  test 'should ask for password renewal after a given period of time' do
+    user = create_user
+
+    refute user.should_renew_password?
+    assert user.update_column :renewed_password_at, (DevcmsCore.config.renew_password_after - 1.day).ago
+    refute user.should_renew_password?
+    assert user.update_column :renewed_password_at, (DevcmsCore.config.renew_password_after + 1.day).ago
+    assert user.should_renew_password?
+  end
+
+  test 'should check that a renewed password differs from the original on renewal' do
+    user = users(:gerjan)
+    assert user.update_column :renewed_password_at, (DevcmsCore.config.renew_password_after + 1.day).ago
+
+    refute user.update_attributes(password: 'gerjan', password_confirmation: 'gerjan')
+    assert user.errors[:password].any?{|error| error =~ /mag niet hetzelfde zijn/ }
+  end
+
+  test 'should record password renew date' do
+    user = users(:gerjan)
+    assert user.update_attributes(password: 'new password 123', password_confirmation: 'new password 123')
+    assert_equal Date.today, user.renewed_password_at.to_date
+  end
+
   protected
 
   def create_user(options = {})

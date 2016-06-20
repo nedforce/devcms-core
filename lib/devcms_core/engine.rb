@@ -15,13 +15,14 @@ module DevcmsCore
     config.app_middleware.insert_before(Rack::Sendfile, ::ActionDispatch::Static, (self.root + 'public').to_s)
 
     # Cookies
-    DevcmsCore.config.auth_token_cookie = :auth_token
-    DevcmsCore.config.cookie_options = { httponly: true }
-    DevcmsCore.config.signed_cookies = !Rails.env.test?
-    DevcmsCore.config.refresh_auth_token_after_sign_out = true
-    DevcmsCore.config.refresh_auth_token_after_password_reset = true
-    DevcmsCore.config.refresh_auth_token_after_sign_in = false
-    DevcmsCore.config.node_field_partials = []
+    config.auth_token_cookie = :auth_token
+    config.cookie_options = { httponly: true }
+    config.signed_cookies = !Rails.env.test?
+    config.refresh_auth_token_after_sign_out = true
+    config.refresh_auth_token_after_password_reset = true
+    config.refresh_auth_token_after_sign_in = false
+    config.renew_password_after = 3.months
+    config.node_field_partials = []
 
     # Honeypot defaults
     config.honeypot_name       = 'OgJhm3UT'
