@@ -165,6 +165,11 @@ protected
   def find_node
     return unless params[:id].present? && controller_model.respond_to?(:is_content_node?) && controller_model.is_content_node?
     @node = current_site.self_and_descendants.accessible.include_content.where([ 'content_type = ? AND content_id = ?', controller_model.base_class.name, params[:id].to_i ]).first!
+
+    # Redirect when the appropriate url alias for the node is not used
+    if request.get? && request.fullpath == request.env['ORIGINAL_FULLPATH']
+      redirect_to aliased_or_delegated_url(@node, params.except(:action, :controller, :id)), status: :moved_permanently
+    end
   end
 
   # Used to find the context node (for authorization purposes)

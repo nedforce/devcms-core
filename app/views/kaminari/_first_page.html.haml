@@ -6,4 +6,5 @@
 -#    per_page:      number of items to fetch per page
 -#    remote:        data-remote
 %span.first
+  - url = node_url_for(@node, params.merge(local_assigns[:extra_params] || {}).merge(page: 1)) if @node
   = link_to_unless current_page.first?, raw(t 'views.pagination.first'), url, :remote => remote

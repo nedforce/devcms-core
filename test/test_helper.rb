@@ -75,7 +75,6 @@ class ActiveSupport::TestCase
 end
 
 class ActionDispatch::IntegrationTest
-  self.fixture_path = File.dirname(__FILE__) + '/fixtures/'
 
   setup :enable_show_exceptions
 

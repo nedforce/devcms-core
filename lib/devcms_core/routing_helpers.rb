@@ -57,6 +57,22 @@ module DevcmsCore
     end
     alias_method :content_node_url, :aliased_or_delegated_url
 
+    # Like url_for, but for nodes
+    def node_url_for node_or_content, options = {}
+      url_options = {}
+      url_options[:action] = options[:path] if options[:path].present?
+
+      options.except(:action, :controller, :id, :commit, :utf8, :path, :only_path).each do |key, value|
+        url_options[key] = value if value.present?
+      end
+
+      if options[:only_path].nil? || options[:only_path]
+        aliased_or_delegated_address(node_or_content, url_options)
+      else
+        aliased_or_delegated_url(node_or_content, url_options)
+      end
+    end
+
     # Return absolute link to the root site
     def root_site_url(relative_link)
       @root_site ||= Node.root.content

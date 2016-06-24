@@ -6,4 +6,5 @@
 -#    num_pages:     total number of pages
 -#    per_page:      number of items to fetch per page
 -#    remote:        data-remote
+- url = node_url_for(@node, params.merge(local_assigns[:extra_params] || {}).merge(page: page)) if @node
 = link_to_unless page.current?, page, url, :class => 'pageNumbers'

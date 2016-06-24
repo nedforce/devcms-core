@@ -55,9 +55,9 @@
               %td.right_sized.gray
                 = l news_item.publication_start_date, format: :long
 
-  - if show_archive_link
-    - date = news_items.first.try(:publication_start_date) || Date.today
-    .pagination= link_to_content_node 'Naar archief...', (@news_viewer || @news_archive), action: "#{date.year}/#{date.month}"
+  - (news_items.first.try(:publication_start_date) || Date.today).tap do |date|
+    - if show_archive_link
+      .pagination= link_to_node 'Naar archief...', @node, action: "#{date.year}/#{date.month}"
 
-  - if show_pagination
-    .pagination= paginate(news_items)
+    - if show_pagination
+      .pagination= paginate(news_items, extra_params: { year: nil, month: nil, path: "#{date.year}/#{date.month}" })
