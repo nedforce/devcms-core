@@ -3,7 +3,11 @@
 #
 # Note that not all methods are called in the application controller.
 SecureHeaders::Configuration.default do |config|
-  config.hsts = "max-age=#{20.years.to_i}"
+  if Rails.env.production?
+    config.hsts = "max-age=#{20.years.to_i}"
+  else
+    config.hsts = 'max-age=0'
+  end
 
   # Cannot use 'DENY', because the upload functionality in the back-end
   # uses iframes.
