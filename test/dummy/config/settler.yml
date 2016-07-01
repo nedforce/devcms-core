@@ -224,6 +224,10 @@ settings: &settings
     label: Path where a user is redirected to after signup
     value: ''
     editable: true
+  subsites_do_not_inherit:
+    label: Subsites do not inherit content from their parent nodes
+    value: false
+    editable: true
 
 development:
   <<: *settings

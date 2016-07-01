@@ -1,12 +1,14 @@
 require File.expand_path('../../test_helper.rb', __FILE__)
 
 class NodeLayoutingTest < ActiveSupport::TestCase
-  test 'should set to default for sites' do
-    site = Site.create(title: 'sub_site', domain: 'sub.test.local.dev', parent: Node.root)
+  setup do
+    @site = Site.create(title: 'sub_site', domain: 'sub.test.local.dev', parent: Node.root)
+  end
 
-    assert_equal Node.root.layout, site.node.layout
-    assert_equal 'default', site.node.layout_variant
-    assert_equal Hash.new, site.node.layout_configuration
+  test 'should set to default for sites' do
+    assert_equal Node.root.layout, @site.node.layout
+    assert_equal 'default', @site.node.layout_variant
+    assert_equal Hash.new, @site.node.layout_configuration
   end
 
   test 'should return first parent containing headers' do
@@ -17,5 +19,16 @@ class NodeLayoutingTest < ActiveSupport::TestCase
 
   test 'should return containing site as header container with no headers' do
     assert_equal nodes(:sub_site_section_node), nodes(:yet_another_page_node).header_container
+  end
+
+  test 'subsites should not inherit if appropriate setting is set' do
+    section = Section.create title: 'section', parent: Node.root
+
+    refute @site.node.do_not_inherit_content?
+    refute section.node.do_not_inherit_content?
+    Settler.subsites_do_not_inherit.update_attribute :value, true
+    assert @site.node.do_not_inherit_content?
+    refute section.node.do_not_inherit_content?
+    Settler.subsites_do_not_inherit.update_attribute :value, false
   end
 end

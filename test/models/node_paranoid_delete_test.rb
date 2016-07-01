@@ -31,7 +31,7 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
     now = Time.zone.now
     Time.stubs(now: now)
     assert @economie_section_node.paranoid_delete!
-    assert_equal now, @economie_section_node.reload.deleted_at
+    assert_in_delta now, @economie_section_node.reload.deleted_at
   end
 
   def test_default_scope_should_filter_out_paranoid_deleted_nodes
