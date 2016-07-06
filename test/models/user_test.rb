@@ -405,7 +405,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test 'should ask for password renewal after a given period of time' do
-    user = create_user
+    user = users(:gerjan)
 
     refute user.should_renew_password?
     assert user.update_column :renewed_password_at, (DevcmsCore.config.renew_password_after - 1.day).ago

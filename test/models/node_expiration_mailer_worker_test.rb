@@ -16,6 +16,8 @@ class NodeExpirationMailerWorkerTest < ActionMailer::TestCase
     n4.responsible_user = users(:final_editor)
     n4.expires_on = 2.weeks.ago
     n4.save(validate: false)
+
+    ActionMailer::Base.deliveries.clear
   end
 
   test 'should notify authors' do
