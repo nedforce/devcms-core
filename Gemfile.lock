@@ -352,6 +352,3 @@ DEPENDENCIES
   mocha
   prototype-rails!
   rsolr (~> 0.12.1)
-
-BUNDLED WITH
-   1.12.5

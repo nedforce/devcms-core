@@ -354,7 +354,10 @@ class User < ActiveRecord::Base
   end
 
   def should_renew_password?
-    renewed_password_at.present? && renewed_password_at < DevcmsCore.config.renew_password_after.ago
+    DevcmsCore.config.enforce_password_renewal &&
+    is_privileged? &&
+    renewed_password_at.present? &&
+    renewed_password_at < DevcmsCore.config.renew_password_after.ago
   end
 
   protected

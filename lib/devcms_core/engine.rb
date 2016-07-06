@@ -7,6 +7,7 @@ module DevcmsCore
     config.registered_models = []
     config.allowed_content_types_for_alphabetic_index = %w( Page )
 
+    config.allow_content_node_routes = true
     config.reserved_slugs = ['admin', 'assets', 'signup']
     config.rewrite_paths = []
     config.rewriter = nil
@@ -21,6 +22,7 @@ module DevcmsCore
     config.refresh_auth_token_after_sign_out = true
     config.refresh_auth_token_after_password_reset = true
     config.refresh_auth_token_after_sign_in = false
+    config.enforce_password_renewal = true
     config.renew_password_after = 3.months
     config.node_field_partials = []
 
