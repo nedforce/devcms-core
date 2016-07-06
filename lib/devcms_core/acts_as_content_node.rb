@@ -30,7 +30,7 @@ module DevcmsCore
     included do
       define_callbacks :before_paranoid_delete, :after_paranoid_delete, :before_paranoid_restore, :after_paranoid_restore
 
-      has_one :node, as: :content, autosave: true, validate: true
+      has_one :node, as: :content, autosave: true, validate: true, dependent: :destroy
 
       default_scope ->{ where("#{table_name}.deleted_at IS NULL") }
 
@@ -48,10 +48,6 @@ module DevcmsCore
       }
 
       validates_presence_of :node
-
-      before_destroy do |content|
-        content.node.destroy(destroy_content_node: false)
-      end
 
       before_update :touch_node
       after_update  :update_url_alias_if_title_changed

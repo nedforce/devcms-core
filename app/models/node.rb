@@ -128,7 +128,7 @@ class Node < ActiveRecord::Base
   has_many :combined_calendar_nodes, dependent: :destroy
   has_many :combined_calendars,      through: :combined_calendar_nodes
 
-  belongs_to :content,          polymorphic: true
+  belongs_to :content,          polymorphic: true, dependent: :destroy
   belongs_to :responsible_user, class_name: 'User'
 
   has_many :links,            dependent: :destroy, class_name: 'InternalLink', foreign_key: :linked_node_id
@@ -165,9 +165,6 @@ class Node < ActiveRecord::Base
             :ensure_maximum_tags
 
   delegate  :has_related_content?, to: :content
-
-  # A private copy of the original destroy method that is used for overloading.
-  alias_method :original_destroy, :destroy
 
   before_validation :set_publication_start_date_to_current_time_if_blank
 
@@ -244,48 +241,6 @@ class Node < ActiveRecord::Base
     include Singleton
     include ActionView::Helpers::SanitizeHelper
     extend  ActionView::Helpers::SanitizeHelper::ClassMethods
-  end
-
-  # Destroys this node and its associated content node.
-  #
-  # The destruction of self is delegated to the content node through its
-  # <tt>before_destroy</tt> callback method.
-  #
-  # *Arguments*
-  #
-  # [options] Options hash.
-  #
-  # *Options*
-  #
-  # [:destroy_content_node] WARNING: For internal use only and it should *not* be set to _false_ manually.
-  #                         We have to take care to prevent infinite recursion because the content
-  #                         node will call node.destroy (i.e. this method) again to destroy us.
-  #                         Therefore the destroy_content_node option is introduced, which will be
-  #                         set to false when node.destroy is called from the content node.
-  def destroy(options = { :destroy_content_node => true })
-    if options[:destroy_content_node] && content
-      begin
-        destroyed_content = content.destroy # Content will on its turn call node.destroy again.
-      rescue NoMethodError => e
-        # ContentCopy and InternalLink nodes are destroyed when their associated copied/linked node is destroyed.
-        # This will cause problems when an ancestor of these nodes is destroyed, resulting in a double
-        # destruction of the ContentCopy or InternalLink node. This nasty hack here prevents that.
-        case self.content_class
-          when ContentCopy
-            raise e if ContentCopy.exists?(self.id)
-          when InternalLink
-            raise e if InternalLink.exists?(self.id)
-          else
-            raise e # Re-raise e as it's an unrelated error
-        end
-      end
-      destroyed_content.nil? ? nil : self
-    else
-      # Disable ferret updates (ferret_destroy is executed anyway)
-      without_search_reindex do
-        original_destroy
-      end
-    end
   end
 
   def self.content_to_hide_from_menu
