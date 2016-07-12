@@ -145,15 +145,15 @@ module NodeExtensions::Layouting
   def find_content_representations(target, inherit = true)
     conditions = {}
     conditions.update(target: target) if target
-    if !content_representations.where(conditions).exists? && inherit && parent && !do_not_inherit_content?
+    if !content_representations.where(conditions).exists? && inherit && parent && inherit_content?
       parent.find_content_representations(target, inherit)
     else
       content_representations.where(conditions).includes(:content)
     end
   end
 
-  def do_not_inherit_content?
-    self.sub_content_type == 'Site' && !!Settler[:subsites_do_not_inherit]
+  def inherit_content?
+    self.sub_content_type != 'Site' || !Settler[:subsites_do_not_inherit]
   end
 
   # Find header image(s) for this node, either those set on this node or on one of its parents.

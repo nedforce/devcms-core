@@ -24,11 +24,11 @@ class NodeLayoutingTest < ActiveSupport::TestCase
   test 'subsites should not inherit if appropriate setting is set' do
     section = Section.create title: 'section', parent: Node.root
 
-    refute @site.node.do_not_inherit_content?
-    refute section.node.do_not_inherit_content?
+    assert @site.node.inherit_content?
+    assert section.node.inherit_content?
     Settler.subsites_do_not_inherit.update_attribute :value, true
-    assert @site.node.do_not_inherit_content?
-    refute section.node.do_not_inherit_content?
+    refute @site.node.inherit_content?
+    assert section.node.inherit_content?
     Settler.subsites_do_not_inherit.update_attribute :value, false
   end
 end
