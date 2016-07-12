@@ -199,6 +199,12 @@ settings: &settings
     label: Kommagescheiden IP-adressen die vrijgesteld zijn van loginbeveiliging
     value: 127.0.0.1
     editable: true
+  subsites_do_not_inherit:
+    label: Subsites do not inherit content from their parent nodes
+    value: false
+    editable: true
+    typecast: boolean
+
 development:
   <<: *settings
 

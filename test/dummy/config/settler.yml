@@ -228,6 +228,7 @@ settings: &settings
     label: Subsites do not inherit content from their parent nodes
     value: false
     editable: true
+    typecast: boolean
 
 development:
   <<: *settings
