@@ -1,9 +1,9 @@
 class ImagesController < ApplicationController
-  prepend_before_action :redirect_to_jpg, except: :show
-
   skip_before_action :confirm_destroy, :set_search_scopes, :set_private_menu, :find_accessible_content_children_for_menu, :set_rss_feed_url, :set_view_paths
 
-  before_action :find_image, :set_image_format
+  before_action :find_image
+  before_action :redirect_to_jpg, except: :show
+  before_action :set_image_format
 
   before_action :redirect_private, except: :show
 
@@ -91,7 +91,7 @@ class ImagesController < ApplicationController
 
   def redirect_to_jpg
     unless params.key?(:format)
-      redirect_to format: Image::DEFAULT_IMAGE_TYPE
+      redirect_to aliased_or_delegated_url(@image, action: params[:action], format: Image::DEFAULT_IMAGE_TYPE)
     end
   end
 
