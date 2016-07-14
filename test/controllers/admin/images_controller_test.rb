@@ -11,161 +11,174 @@ class Admin::ImagesControllerTest < ActionController::TestCase
 
   test 'should get show' do
     login_as :sjoerd
-    get :show, :id => @image
+
+    get :show, id: @image
+
     assert_response :success
     assert assigns(:image)
   end
 
   test 'should get previous' do
     @image = Image.find(@image.id)
-    @image.save :user => User.find_by_login('editor')
-
+    @image.save user: User.find_by_login('editor')
     login_as :sjoerd
-    get :previous, :id => @image
+
+    get :previous, id: @image
+
     assert_response :success
     assert assigns(:image)
   end
 
   test 'should get new' do
     login_as :sjoerd
-    get :new, :parent_node_id => nodes(:about_page_node).id
+
+    get :new, parent_node_id: nodes(:about_page_node).id
+
     assert_response :success
     assert assigns(:image)
   end
 
-  def test_should_create_image
+  test 'should create image' do
     login_as :sjoerd
 
     assert_difference('Image.count', 1) do
       create_image
-      assert_response :success
-      refute assigns(:image).new_record?, assigns(:image).errors.full_messages.join('; ')
     end
+
+    assert_response :success
+    refute assigns(:image).new_record?, assigns(:image).errors.full_messages.join('; ')
   end
 
   def test_should_create_image_for_editor
     login_as :editor
 
     assert_difference 'Image.count' do
-      create_image(:parent_node_id => nodes(:help_page_node).id)
-      assert_response :success
-      refute assigns(:image).new_record?, assigns(:image).errors.full_messages.join('; ')
+      create_image(parent_node_id: nodes(:help_page_node).id)
     end
+
+    assert_response :success
+    refute assigns(:image).new_record?, assigns(:image).errors.full_messages.join('; ')
   end
 
-  def test_should_create_image_for_editor_js
-   login_as :editor
+  test 'should create image for editor js' do
+    login_as :editor
 
-   assert_difference 'Image.count' do
-     create_image(:parent_node_id => nodes(:help_page_node).id, :format => 'js')
-     assert_response :success
-   end
+    assert_difference 'Image.count' do
+      create_image(parent_node_id: nodes(:help_page_node).id, format: 'js')
+    end
+
+    assert_response :success
   end
 
-  def test_should_not_create_image
+  test 'should not create image' do
     login_as :sjoerd
 
     assert_no_difference('Image.count') do
-      create_image(:image => { :title => nil })
-      assert_response :success
-      assert assigns(:image).errors[:title].any?
+      create_image(image: { title: nil })
     end
 
+    assert_response :success
+    assert assigns(:image).errors[:title].any?
   end
 
   test 'should get edit' do
     login_as :sjoerd
 
-    get :edit, :id => images(:test_image).id
+    get :edit, id: images(:test_image).id
+
     assert_response :success
     assert assigns(:image)
   end
 
-  def test_should_get_preview
+  test 'should get preview' do
     login_as :sjoerd
     image = images(:test_image)
-    get :preview, :id => image.id
+
+    get :preview, id: image.id
+
     assert_response :success
     assert assigns(:image)
   end
 
-  def test_should_get_thumbnail_for_editor
+  test 'should get thumbnail for editor' do
     login_as :editor
     image = images(:test_image_two)
-    get :thumbnail, :id => image.id
+
+    get :thumbnail, id: image.id
+
     assert_response :success
     assert assigns(:image)
   end
 
-  def test_should_update_image
+  test 'should update image' do
     login_as :sjoerd
 
-    put :update, :id => images(:test_image).id, :image => { :title => 'updated title' }
+    put :update, id: images(:test_image).id, image: { title: 'updated title' }
 
     assert_response :success
     assert_equal 'updated title', assigns(:image).title
   end
 
-  def test_should_not_update_image
+  test 'should not update image' do
     login_as :sjoerd
 
-    put :update, :id => images(:test_image).id, :image => { :title => nil }
+    put :update, id: images(:test_image).id, image: { title: nil }
     assert_response :unprocessable_entity
     assert assigns(:image).errors[:title].any?
   end
 
-  def test_should_not_show_image_url_controls_to_editors
+  test 'should not show image url controls to editors' do
     login_as :editor
 
-    get :new, :parent_node_id => nodes(:editor_section_node).id
+    get :new, parent_node_id: nodes(:editor_section_node).id
     assert_response :success
     assert @response.body !~ /image_url/
 
-    create_image(:image => { :url => 'http://example.com' }, :parent_node_id => nodes(:editor_section_node).id)
+    create_image(image: { url: 'http://test.host' }, parent_node_id: nodes(:editor_section_node).id)
     assert_response :success
     assert_nil assigns(:image).url
   end
 
-  def test_should_show_frontpage_controls_to_admins
+  test 'should show frontpage controls to admins' do
     login_as :sjoerd
 
-    get :new, :parent_node_id => nodes(:economie_section_node).id
+    get :new, parent_node_id: nodes(:economie_section_node).id
     assert @response.body =~ /image_url/
 
-    create_image(:image => { :url => 'http://example.com' })
+    create_image(image: { url: 'http://test.host' })
     assert_response :success
-    assert_equal 'http://example.com', assigns(:image).url
+    assert_equal 'http://test.host', assigns(:image).url
   end
 
-  def test_should_show_frontpage_controls_to_final_editors
+  test 'should show frontpage controls to final editor' do
     login_as :final_editor
 
-    get :new, :parent_node_id => nodes(:economie_section_node).id
+    get :new, parent_node_id: nodes(:economie_section_node).id
     assert @response.body =~ /image_url/
 
-    create_image(:image => { :url => 'http://example.com' }, :parent_node_id => nodes(:economie_section_node).id)
+    create_image(image: { url: 'http://test.host' }, parent_node_id: nodes(:economie_section_node).id)
     assert_response :success
-    assert_equal 'http://example.com', assigns(:image).url
+    assert_equal 'http://test.host', assigns(:image).url
   end
 
-  def test_should_ignore_is_for_header_for_non_admin
+  test 'should ignore is for header for non-admin' do
     login_as :editor
 
-    get :new, :parent_node_id => nodes(:editor_section_node).id
+    get :new, parent_node_id: nodes(:editor_section_node).id
     assert_response :success
 
-    create_image(:image => { :is_for_header => '1' }, :parent_node_id => nodes(:editor_section_node).id)
+    create_image(image: { is_for_header: '1' }, parent_node_id: nodes(:editor_section_node).id)
     assert_response :success
     refute assigns(:image).is_for_header?
   end
 
-  def test_should_allow_is_for_header_for_admin
+  test 'should allow is for header for admin' do
     login_as :arthur
 
-    get :new, :parent_node_id => nodes(:editor_section_node).id
+    get :new, parent_node_id: nodes(:editor_section_node).id
     assert_response :success
 
-    create_image(:image => { :is_for_header => '1' }, :parent_node_id => nodes(:editor_section_node).id)
+    create_image(image: { is_for_header: '1' }, parent_node_id: nodes(:editor_section_node).id)
     assert_response :success
     assert assigns(:image).is_for_header?
   end
@@ -173,6 +186,12 @@ class Admin::ImagesControllerTest < ActionController::TestCase
   protected
 
   def create_image(attributes = {}, options = {})
-    post :create, { :parent_node_id => nodes(:about_page_node).id, :image => { :title => 'An Image', :file => fixture_file_upload('files/test.jpg') } }.merge(attributes).merge(options)
+    post :create, {
+      parent_node_id: nodes(:about_page_node).id,
+      image: {
+        title: 'An Image',
+        file: fixture_file_upload('files/test.jpg')
+      }
+    }.merge(attributes).merge(options)
   end
 end
