@@ -27,7 +27,7 @@ GIT
 PATH
   remote: .
   specs:
-    devcms_core (3.0.26)
+    devcms_core (3.0.27)
       actionpack-page_caching
       acts-as-taggable-on (~> 3.4.4)
       acts_as_list
@@ -106,7 +106,7 @@ GEM
       tzinfo (~> 1.1)
     acts-as-taggable-on (3.4.4)
       activerecord (>= 3.2, < 5)
-    acts_as_list (0.7.5)
+    acts_as_list (0.7.6)
       activerecord (>= 3.0)
     addressable (2.4.0)
     airbrake (4.3.8)
