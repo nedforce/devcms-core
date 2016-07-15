@@ -50,12 +50,12 @@ class CalendarItem < Event
   end.freeze
 
   # Adds content node functionality to event.
-  acts_as_content_node({
-    allowed_child_content_types: %w( Attachment AttachmentTheme ),
+  acts_as_content_node(
+    allowed_child_content_types: %w(Attachment AttachmentTheme),
     show_in_menu:                false,
     copyable:                    false,
     controller_name:             'calendar_items'
-  })
+  )
 
   needs_editor_approval
 
@@ -85,7 +85,7 @@ class CalendarItem < Event
 
   # Do we need to create repetitions?
   def repeating?
-    !self.repeating.nil? && self.repeating
+    !repeating.nil? && repeating
   end
 
   # Possible multipliers for repetition interval as array
@@ -150,48 +150,50 @@ class CalendarItem < Event
 
   # Validate that calendar items ends later than it starts.
   def end_time_should_be_after_start_time
-    errors.add(:end_time, :end_time_not_after_start_time) if self.start_time && self.end_time && (self.end_time <= self.start_time)
+    errors.add(:end_time, :end_time_not_after_start_time) if start_time && end_time && (end_time <= start_time)
   end
 
   # Validate that the end of repetition is in the future.
   def repeat_end_should_be_in_the_future
-    errors.add(:repeat_end, :repeat_end_should_be_in_the_future) if self.repeating? && self.repeat_end && self.repeat_end <= Date.today
+    errors.add(:repeat_end, :repeat_end_should_be_in_the_future) if repeating? && repeat_end && repeat_end <= Date.today
   end
 
   # Set the repetition grouping identifier when calendar item is repeated.
   def assign_repeat_identifier_if_repeating
-    self.repeat_identifier = (CalendarItem.maximum(:repeat_identifier) || 0) + 1 if self.repeating? && self.repeat_identifier.blank?
+    self.repeat_identifier = (CalendarItem.maximum(:repeat_identifier) || 0) + 1 if repeating? && repeat_identifier.blank?
   end
 
   # Create repetitions of calendar item if it is repeating.
   def create_repeating_calendar_items
     # Don't do anything if this item is not repeating.
-    return true unless self.repeating?
+    return true unless repeating?
 
     # Calculate the time interval between repeating items.
-    span = self.repeat_interval_multiplier.send(REPEAT_INTERVAL_GRANULARITIES_REVERSE[self.repeat_interval_granularity])
+    span = repeat_interval_multiplier.send(REPEAT_INTERVAL_GRANULARITIES_REVERSE[repeat_interval_granularity])
 
     # Assign local variables.
-    parent          = self.calendar.node
-    next_start_time = self.start_time + span
-    next_end_time   = self.end_time   + span
-    end_date        = self.repeat_end
+    parent          = calendar.node
+    next_start_time = start_time + span
+    next_end_time   = end_time + span
+    end_date        = repeat_end
 
     # Loop that creates items.
-    while (next_start_time.to_date <= end_date)
+    while next_start_time.to_date <= end_date
       # Initialize with cloned parameters and new times.
-      calendar_item = self.class.new(cloning_hash.merge({
-        repeating:  false,
-        start_time: next_start_time,
-        end_time:   next_end_time
-      }))
+      calendar_item = self.class.new(
+        cloning_hash.merge(
+          repeating:  false,
+          start_time: next_start_time,
+          end_time:   next_end_time
+        )
+      )
 
       # Assign other attributes.
-      calendar_item.repeat_identifier = self.repeat_identifier
+      calendar_item.repeat_identifier = repeat_identifier
       calendar_item.parent            = parent
 
       # Save calendar item.
-      if (self.versioned?)
+      if versioned?
         calendar_item.save!(user: versions.current.editor)
       else
         calendar_item.save!

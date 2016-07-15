@@ -22,10 +22,10 @@ class Site < Section
       NewsViewer Page Poll SearchPage Section Site SocialMediaLinksBox
       TopHitsPage WeblogArchive
     ),
-    allowed_roles_for_create:          %w( admin ),
-    allowed_roles_for_update:          %w( admin ),
-    allowed_roles_for_destroy:         %w( admin ),
-    available_content_representations: %w( content_box ),
+    allowed_roles_for_create:          %w(admin),
+    allowed_roles_for_update:          %w(admin),
+    allowed_roles_for_destroy:         %w(admin),
+    available_content_representations: %w(content_box),
     has_own_content_box:               true,
     controller_name:                   'sites',
     show_in_menu:                      false,
@@ -35,9 +35,9 @@ class Site < Section
 
   VALID_DOMAIN_REGEXP = /\A((?:[A-Z0-9\-]+\.)+(?:[A-Z]{2,4}|museum|travel|local)|localhost)\z/i
 
-  validates_presence_of   :original_domain,                   unless: Proc.new { |s| s.parent.blank? }
-  validates_format_of     :domain, with: VALID_DOMAIN_REGEXP, unless: Proc.new { |s| s.original_domain.nil? }
-  validates_uniqueness_of :domain, case_sensitive: false,     unless: Proc.new { |s| s.original_domain.nil? }
+  validates_presence_of   :original_domain,                   unless: proc { |s| s.parent.blank? }
+  validates_format_of     :domain, with: VALID_DOMAIN_REGEXP, unless: proc { |s| s.original_domain.nil? }
+  validates_uniqueness_of :domain, case_sensitive: false,     unless: proc { |s| s.original_domain.nil? }
 
   validates_format_of     :analytics_code, allow_nil: true, with: /\A(|UA-\d*-\d*)\z/i
 

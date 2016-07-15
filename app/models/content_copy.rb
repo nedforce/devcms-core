@@ -25,11 +25,11 @@
 #
 class ContentCopy < ActiveRecord::Base
   # Adds content node functionality to content copies.
-  acts_as_content_node({
+  acts_as_content_node(
     allowed_roles_for_update: [],
     show_in_menu:             false,
     copyable:                 false
-  })
+  )
 
   # This content type needs approval when created or altered by an editor
   needs_editor_approval
@@ -71,7 +71,7 @@ class ContentCopy < ActiveRecord::Base
   # Try to delegate unknown methods to the copied node's content
   def method_missing(method_name, *args)
     if copied_node.present? && copied_node.content.respond_to?(method_name)
-      self.copied_node.content.send(method_name, *args)
+      copied_node.content.send(method_name, *args)
     else
       super
     end

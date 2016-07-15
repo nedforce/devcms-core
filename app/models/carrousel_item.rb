@@ -31,7 +31,7 @@ class CarrouselItem < ActiveRecord::Base
   validates_uniqueness_of :item_id, scope: [:item_type, :carrousel_id]
 
   # Default sort by position.
-  default_scope ->{ order(position: :asc) }
+  default_scope -> { order(position: :asc) }
 
   # Returns the title of the approved content node item.
   def title

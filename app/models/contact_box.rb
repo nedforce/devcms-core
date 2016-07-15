@@ -6,16 +6,16 @@
 #
 # Attributes
 #
-# * +title+ - The title.
+# * +title+               - The title.
 # * +contact_information+ - Contact information text.
-# * +default_text+ - The default text.
-# * +monday_text+ - The optional overriding text for (next) monday.
-# * +tuesday_text+ - The optional overriding text for (next) tuesday.
-# * +wednesday_text+ - The optional overriding text for (next) wednesday.
-# * +thursday_text+ - The optional overriding text for (next) thursday.
-# * +friday_text+ - The optional overriding text for (next) friday.
-# * +saturday_text+ - The optional overriding text for (next) saturday.
-# * +sunday_text+ - The optional overriding text for (next) sunday.
+# * +default_text+        - The default text.
+# * +monday_text+         - The optional overriding text for (next) monday.
+# * +tuesday_text+        - The optional overriding text for (next) tuesday.
+# * +wednesday_text+      - The optional overriding text for (next) wednesday.
+# * +thursday_text+       - The optional overriding text for (next) thursday.
+# * +friday_text+         - The optional overriding text for (next) friday.
+# * +saturday_text+       - The optional overriding text for (next) saturday.
+# * +sunday_text+         - The optional overriding text for (next) sunday.
 #
 # Preconditions
 #
@@ -30,14 +30,14 @@
 #
 class ContactBox < ActiveRecord::Base
   # Adds content node functionality to contact boxes.
-  acts_as_content_node({
-    allowed_child_content_types:       %w( Image ),
+  acts_as_content_node(
+    allowed_child_content_types:       %w(Image),
     show_in_menu:                      false,
-    allowed_roles_for_create:          %w( admin ),
-    allowed_roles_for_destroy:         %w( admin ),
+    allowed_roles_for_create:          %w(admin),
+    allowed_roles_for_destroy:         %w(admin),
     available_content_representations: ['content_box'],
     show_content_box_header:           false
-  })
+  )
 
   # See the preconditions overview for an explanation of these validations.
   validates :title,               presence: true, length: { in: 3..255 }

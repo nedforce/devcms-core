@@ -15,7 +15,8 @@
 # * Requires the presence of +title+.
 #
 # * Requires +frontpage_node+ to be nil if the +Section+ has a frontpage.
-# * Requires +frontpage_node+ of the +Section+ to be a descendant of the Section.
+# * Requires +frontpage_node+ of the +Section+ to be a descendant of the
+#   Section.
 # * Requires +frontpage_node+ to not be a +Section+ with a frontpage_node.
 #
 # Child/parent type constraints
@@ -33,8 +34,8 @@ class Section < ActiveRecord::Base
       NewsViewer Page Poll SearchPage Section SocialMediaLinksBox TopHitsPage
       WeblogArchive
     ),
-    allowed_roles_for_create:          %w( admin final_editor ),
-    allowed_roles_for_destroy:         %w( admin final_editor ),
+    allowed_roles_for_create:          %w(admin final_editor),
+    allowed_roles_for_destroy:         %w(admin final_editor),
     available_content_representations: ['content_box'],
     has_own_content_box:               true,
     expiration_container:              true,
@@ -50,7 +51,7 @@ class Section < ActiveRecord::Base
   # See the preconditions overview for an explanation of these validations.
   validates :title, presence: true, length: { maximum: 255 }
   validates_numericality_of :frontpage_node_id, allow_nil: true,                                            on: :update
-  validates_presence_of     :frontpage_node, unless: Proc.new { |section| section.frontpage_node_id.nil? }, on: :update
+  validates_presence_of     :frontpage_node, unless: proc { |section| section.frontpage_node_id.nil? }, on: :update
 
   before_validation :set_frontpage_node_to_nil_if_frontpage_node_is_own_node, on: :update
 
@@ -65,7 +66,7 @@ class Section < ActiveRecord::Base
 
   # Returns the last update date
   def last_updated_at
-    node.self_and_children.accessible.exclude_content_types(%w( Image Attachment Site )).maximum(:updated_at)
+    node.self_and_children.accessible.exclude_content_types(%w(Image Attachment Site)).maximum(:updated_at)
   end
 
   # Returns the maximum number of sidebox (content box) columns that are allowed
@@ -111,7 +112,7 @@ class Section < ActiveRecord::Base
 
   # Ensures +frontpage_node+ should be nil when the +Section+ is created
   def frontpage_node_is_nil
-    errors.add(:base, :frontpage_node_should_be_nil) if self.has_frontpage?
+    errors.add(:base, :frontpage_node_should_be_nil) if has_frontpage?
   end
 
   # Ensures the +frontpage_node+ should be a descendant.
@@ -123,7 +124,7 @@ class Section < ActiveRecord::Base
 
   # Ensures the +frontpage_node+ is no +Section+ with a frontpage node.
   def frontpage_node_is_no_section_with_frontpage_node
-    if self.has_frontpage? && frontpage_node.content_class == Section && frontpage_node.content.frontpage_node.present?
+    if has_frontpage? && frontpage_node.content_class == Section && frontpage_node.content.frontpage_node.present?
       errors.add(:base, :frontpage_node_cannot_be_a_section_with_a_frontpage)
     end
   end

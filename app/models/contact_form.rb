@@ -78,10 +78,9 @@ class ContactForm < ActiveRecord::Base
     unless @contact_form_fields_before_save.blank? || !@contact_form_fields_before_save.is_a?(Array)
       @contact_form_fields_before_save.delete_if { |options| options.values.all?(&:blank?) }
       @contact_form_fields_before_save.each do |options|
-        inst = nil
         delete_contact_form_field = options.delete(:delete)
         contact_form_field_id     = options.delete(:id)
-        if contact_form_field_id && !self.new_record?
+        if contact_form_field_id && !new_record?
           if delete_contact_form_field == '1'
             @deleted_contact_form_fields << contact_form_field_id
           else
@@ -90,7 +89,7 @@ class ContactForm < ActiveRecord::Base
           end
         else
           inst = ContactFormField.new(options.merge({ contact_form: self }.merge(options)))
-          self.contact_form_fields << inst
+          contact_form_fields << inst
         end
       end
     end
@@ -123,8 +122,6 @@ class ContactForm < ActiveRecord::Base
       @errors['contact_form_fields'] = [message]
     end
   end
-
-  protected
 
   def remove_associated_content
     contact_form_fields.destroy_all

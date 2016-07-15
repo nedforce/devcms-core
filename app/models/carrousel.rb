@@ -29,15 +29,15 @@ class Carrousel < ActiveRecord::Base
   ANIMATION_NAMES         = { 0 => 'None', 1 => 'Fade', 2 => 'Slide', 3 => 'Dia', 4 => 'Spring' }
 
   # Adds content node functionality to news archives.
-  acts_as_content_node({
+  acts_as_content_node(
     show_in_menu:                      false,
     show_content_box_header:           false,
     copyable:                          false,
-    allowed_roles_for_update:          %w( admin ),
-    allowed_roles_for_create:          %w( admin ),
-    allowed_roles_for_destroy:         %w( admin ),
+    allowed_roles_for_update:          %w(admin),
+    allowed_roles_for_create:          %w(admin),
+    allowed_roles_for_destroy:         %w(admin),
     available_content_representations: ['content_box']
-  })
+  )
 
   belongs_to :current_carrousel_item, class_name: 'CarrouselItem', dependent: :destroy
 
@@ -107,7 +107,7 @@ class Carrousel < ActiveRecord::Base
   end
 
   # Alternative text for tree nodes.
-  def tree_text(node)
+  def tree_text(_node)
     title
   end
 
@@ -148,17 +148,16 @@ class Carrousel < ActiveRecord::Base
 
   # Get human display time
   def human_display_time
-    case
-    when display_time < 60
-      [display_time,                 'seconds']
-    when display_time < 60 * 60
-      [display_time/60,              'minutes']
-    when display_time < (60 * 60 * 24)
-      [display_time/(60*60),         'hours']
-    when display_time < (30 * (60 * 60 * 24))
-      [display_time/(60*60*24),      'days']
+    if display_time < 60
+      [display_time, 'seconds']
+    elsif display_time < 60 * 60
+      [display_time / 60, 'minutes']
+    elsif display_time < (60 * 60 * 24)
+      [display_time / (60 * 60), 'hours']
+    elsif display_time < (30 * (60 * 60 * 24))
+      [display_time / (60 * 60 * 24), 'days']
     else
-      [display_time/(30*(60*60*24)), 'months']
+      [display_time / (30 * (60 * 60 * 24)), 'months']
     end
   end
 
@@ -172,11 +171,11 @@ class Carrousel < ActiveRecord::Base
 
   # Cycle the current carrousel item if it is time to do so and fetch it
   def fetch_or_cycle_current_carrousel_item
-    unless self.carrousel_items.empty?
-      if self.current_carrousel_item.nil?
+    unless carrousel_items.empty?
+      if current_carrousel_item.nil?
         Node.without_search_reindex do
           # No update of the search index is necessary.
-          Node.connection.update("UPDATE carrousels SET last_cycled = '#{Time.now.to_formatted_s(:db)}', current_carrousel_item_id = #{self.carrousel_items.first.id} WHERE id = #{self.id}")
+          Node.connection.update("UPDATE carrousels SET last_cycled = '#{Time.now.to_formatted_s(:db)}', current_carrousel_item_id = #{carrousel_items.first.id} WHERE id = #{id}")
         end
         self.current_carrousel_item = carrousel_items.first
       elsif (last_cycled + display_time.seconds) <= Time.now
@@ -184,10 +183,11 @@ class Carrousel < ActiveRecord::Base
         self.current_carrousel_item = carrousel_items.at((current_item_index + 1) % carrousel_items.size)
         Node.without_search_reindex do
           # No update of the search index is necessary.
-          Node.connection.update("UPDATE carrousels SET last_cycled = '#{Time.now.to_formatted_s(:db)}', current_carrousel_item_id = #{self.current_carrousel_item.id} WHERE id = #{self.id}")
+          Node.connection.update("UPDATE carrousels SET last_cycled = '#{Time.now.to_formatted_s(:db)}', current_carrousel_item_id = #{current_carrousel_item.id} WHERE id = #{id}")
         end
       end
-      self.current_carrousel_item
+
+      current_carrousel_item
     end
   end
 end

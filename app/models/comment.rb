@@ -50,7 +50,7 @@ class Comment < ActiveRecord::Base
     else
       scope = Comment.includes(:node)
       scope = scope.order(options[:order]) if options[:order]
-      scope.select { |comment| comment.user == user || user.has_role_on?(['admin', 'final_editor'], comment.node) }
+      scope.select { |comment| comment.user == user || user.has_role_on?(%w(admin final_editor), comment.node) }
     end
   end
 
@@ -70,6 +70,6 @@ class Comment < ActiveRecord::Base
 
   # Set the +user_name+ to the login of the +user+.
   def set_user_name
-    self.user_name = self.user.login if self.user
+    self.user_name = user.login if user
   end
 end

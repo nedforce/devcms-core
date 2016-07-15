@@ -4,9 +4,10 @@ class Devcms
       {}
     end
 
-    # Returns a hash representing this node's config properties for an Ext.dvtr.AsyncTreeNode JavaScript object.
-    # The hash returned will be reverse merged with node.to_tree_node_for(user)
-    def tree_node_for(node, user, options = {})
+    # Returns a hash representing this node's config properties for an
+    # +Ext.dvtr.AsyncTreeNode+ JavaScript object.
+    # The hash returned will be reverse merged with node.to_tree_node_for(user).
+    def tree_node_for(_node, _user, _options = {})
       {}
     end
 
@@ -25,11 +26,11 @@ class Devcms
     end
 
     def content_box_colours
-      %w( default )
+      %w(default)
     end
 
     def content_box_icons
-      %w( )
+      []
     end
 
     def reserved_logins_regex

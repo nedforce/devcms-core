@@ -39,7 +39,7 @@ class ExternalLink < Link
 
   # Overwrite the default.
   # In case the title is blank, strip the 'http://' part from the url.
-  def path_for_url_alias(node)
+  def path_for_url_alias(_node)
     if title.present?
       title
     elsif url.starts_with?('https://')

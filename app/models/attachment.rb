@@ -89,7 +89,7 @@ class Attachment < ActiveRecord::Base
     I18n.t('owms.official_publication')
   end
 
-  def path_for_url_alias(node)
+  def path_for_url_alias(_node)
     basename.gsub(/[^a-z0-9\-_]/i, '-')
   end
 

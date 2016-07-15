@@ -51,7 +51,7 @@ class Event < ActiveRecord::Base
   end
 
   # Returns a URL alias for a given +node+.
-  def path_for_url_alias(node)
+  def path_for_url_alias(_node)
     "#{start_time.year}/#{start_time.month}/#{start_time.day}/#{title}"
   end
 
