@@ -53,6 +53,11 @@ class NewsletterEdition < ActiveRecord::Base
 
   after_paranoid_delete :remove_associated_content
 
+  scope :published,   -> { where(published: 'published') }
+  scope :unpublished, -> { where(published: 'unpublished') }
+  scope :publishing,  -> { where(published: 'publishing') }
+  scope :to_publish,  -> { includes(:node).references(:nodes).where('nodes.publishable = ? AND published <> ? AND nodes.publication_start_date <= ?', true, 'published', Time.now.utc) }
+
   # Retrieves the items belonging to this newsletter edition in correct order.
   def items
     newsletter_edition_items.order(position: :asc).map(&:item)

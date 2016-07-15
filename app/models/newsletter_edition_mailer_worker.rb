@@ -10,23 +10,21 @@ class NewsletterEditionMailerWorker
   # Send all newsletter editions.
   def send_newsletter_editions
     logger.info 'Finding newsletter editions to send...'
-    editions = NewsletterEdition.includes(:node).references(:nodes).where('nodes.publishable = ? AND published <> ? AND nodes.publication_start_date <= ?', true, 'published', Time.now)
+    editions = NewsletterEdition.to_publish
     logger.info "Found #{editions.size} editions to send."
-    editions.each do |edition|
-      publish_newsletter_edition(edition)
-    end
+    editions.each { |edition| publish_newsletter_edition(edition) }
   end
 
   # Publish the given +newsletter_edition+.
   def publish_newsletter_edition(newsletter_edition)
     logger.info "#{newsletter_edition.id}: Started."
     queue = get_queue_for(newsletter_edition)
-    if queue
-      logger.info "#{newsletter_edition.id}: Now sending..."
-      queue.each { |queued_subscription| send_queued_subscription(queued_subscription) }
-      logger.info "#{newsletter_edition.id}: Done sending."
-      newsletter_edition.update_attribute(:published, 'published')
-    end
+    return unless queue
+
+    logger.info "#{newsletter_edition.id}: Now sending..."
+    queue.each { |queued_subscription| send_queued_subscription(queued_subscription) }
+    logger.info "#{newsletter_edition.id}: Done sending."
+    newsletter_edition.update_attribute(:published, 'published')
   end
 
   # Send the given +queued_subscription+.
