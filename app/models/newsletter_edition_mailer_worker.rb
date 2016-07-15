@@ -10,7 +10,7 @@ class NewsletterEditionMailerWorker
   # Send all newsletter editions.
   def send_newsletter_editions
     logger.info 'Finding newsletter editions to send...'
-    editions = NewsletterEdition.includes(:node).where('nodes.publishable = ? AND published <> ? AND nodes.publication_start_date <= ?', true, 'published', Time.now)
+    editions = NewsletterEdition.includes(:node).references(:nodes).where('nodes.publishable = ? AND published <> ? AND nodes.publication_start_date <= ?', true, 'published', Time.now)
     logger.info "Found #{editions.size} editions to send."
     editions.each do |edition|
       publish_newsletter_edition(edition)

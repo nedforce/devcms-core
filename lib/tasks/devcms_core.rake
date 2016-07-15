@@ -6,6 +6,13 @@ namespace :devcms do
     end
   end
 
+  namespace :newsletter_edition_mailer_worker do
+    desc 'Send newsletter editions'
+    task send_newsletter_editions: :environment do
+      NewsletterEditionMailerWorker.new.send_newsletter_editions
+    end
+  end
+
   namespace :news_viewer do
     desc 'Update the news items of a news viewer'
     task update_news_items: :environment do
