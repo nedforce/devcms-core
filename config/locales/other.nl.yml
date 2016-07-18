@@ -1010,7 +1010,7 @@ nl:
     user_or_password_error: De loginnaam/wachtwoord combinatie is onjuist.
   settings:
     key: Instelling
-    alt: Omschrijving
+    label: Omschrijving
     value: Waarde
     could_not_save: 'Sorry, kon de instelling niet opslaan.'
     count_msg: 'Instellingen {0} tot {1} van {2} worden weergegeven'
