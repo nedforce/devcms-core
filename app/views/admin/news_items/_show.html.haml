@@ -24,4 +24,4 @@
       %p.explanation
         = t 'images.header_image_explanation'
       - if @header_image
-        = image_tag(banner_image_path(@header_image, format: :jpg), alt: @header_image.alt.to_s, class: 'banner')
+        = image_tag(aliased_or_delegated_path(@header_image, action: 'banner', format: :jpg), alt: @header_image.alt.to_s, class: 'banner')
