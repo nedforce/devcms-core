@@ -133,7 +133,7 @@ class Admin::AdminController < ApplicationController
   # Helper method for parsing dates corresponding to the passed in +year+ and/or +month+ parameters.
   def parse_date_parameters
     if params[:year] && params[:month]
-      date   = Date.civil(params[:year].to_i, params[:month].to_i) rescue nil
+      date = Date.civil(params[:year].to_i, params[:month].to_i) rescue nil
       if date
         @year  = date.year
         @month = date.month
@@ -148,12 +148,13 @@ class Admin::AdminController < ApplicationController
   def set_actions
     @actions = []
 
-    unless params[:show_actions] == 'false' || @node.blank?
-      role = current_user.role_on(@node)
+    return if params[:show_actions] == 'false'
+    return if @node.blank?
+    return if @node.content_copy?
 
-      if role && @node.content_type_configuration[:allowed_roles_for_update].include?(role.name)
-        @actions << { url: { action: :edit }, text: I18n.t('admin.edit'), method: :get }
-      end
+    role = current_user.role_on(@node)
+    if role && @node.content_type_configuration[:allowed_roles_for_update].include?(role.name)
+      @actions << { url: { action: :edit }, text: I18n.t('admin.edit'), method: :get }
     end
   end
 
@@ -201,5 +202,4 @@ class Admin::AdminController < ApplicationController
       xtype:          'sortlet'
     }
   end
-
 end

@@ -1,2 +1,2 @@
 .content.content_copy
-  %p= "#{t 'nodes.copy_of'} #{link_to_content_node h(record.copied_node.content.title), record.copied_node.content}."
+  %p!= "#{t 'nodes.copy_of'} #{link_to_content_node h(record.copied_node.content.title), record.copied_node.content}."
