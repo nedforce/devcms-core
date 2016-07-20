@@ -1,11 +1,11 @@
 class Admin::TrashController < Admin::AdminController
-  before_filter :set_paging,  :only => :index
-  before_filter :set_sorting, :only => :index
+  before_filter :set_paging,  only: :index
+  before_filter :set_sorting, only: :index
 
   skip_before_filter :set_actions
   skip_before_filter :find_node
 
-  require_role [ 'admin', 'final_editor' ], :any_node => true
+  require_role %w(admin final_editor), any_node: true
 
   layout false
 
@@ -18,18 +18,18 @@ class Admin::TrashController < Admin::AdminController
     @trash_items = Node.top_level_deleted.reorder("#{@sort_field} #{@sort_direction} NULLS LAST").page(@current_page).per(@page_limit)
 
     respond_to do |format|
-      format.html { render :layout => 'admin' }
+      format.html { render layout: 'admin' }
       format.json do
         trash_items_for_json = @trash_items.map do |ti|
           {
-            :title => ti.title,
-            :content_type => (ti.sub_content_type.constantize.model_name.human rescue ti.sub_content_type),
-            :path => ti.ancestors_including_deleted.map(&:title).join(" / "),
-            :deleted_at => ti.deleted_at,
-            :id => ti.id
+            title:        ti.title,
+            content_type: (ti.sub_content_type.constantize.model_name.human rescue ti.sub_content_type),
+            path:         ti.ancestors_including_deleted.map(&:title).join(' / '),
+            deleted_at:   ti.deleted_at,
+            id:           ti.id
           }
         end
-        render :json => { :trash_items => trash_items_for_json, :total_count => @trash_items_count }.to_json, :status => :ok
+        render json: { trash_items: trash_items_for_json, total_count: @trash_items_count }.to_json, status: :ok
       end
     end
   end
@@ -44,7 +44,7 @@ class Admin::TrashController < Admin::AdminController
       if success
         format.json { head :ok }
       else
-        format.json { render :json => I18n.t("trash.restore_failed"), :status => :unprocessable_entity }
+        format.json { render json: I18n.t('trash.restore_failed'), status: :unprocessable_entity }
       end
     end
   end
@@ -57,12 +57,12 @@ class Admin::TrashController < Admin::AdminController
       if success
         format.json { head :ok }
       else
-        format.json { render :json => I18n.t("trash.clear_failed"), :status => :unprocessable_entity }
+        format.json { render json: I18n.t('trash.clear_failed'), status: :unprocessable_entity }
       end
     end
   end
 
-protected
+  protected
 
   # Finds sorting parameters.
   def set_sorting
