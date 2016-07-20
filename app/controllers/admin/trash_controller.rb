@@ -51,7 +51,7 @@ class Admin::TrashController < Admin::AdminController
 
   # * DELETE /admin/trash/:id/clear.json
   def clear
-    success = Node.delete_all_paranoid_deleted_content! rescue false
+    success = Node.destroy_all_paranoid_deleted_content!
 
     respond_to do |format|
       if success

@@ -37,8 +37,18 @@ module NodeExtensions::ParanoidDelete
         # querying the node table for all paranoid deleted nodes.
         # For now, this should suffice.
         DevcmsCore::Engine.registered_content_types.each do |content_type|
-          content_class = content_type.constantize
-          content_class.unscoped { content_class.where('deleted_at IS NOT NULL').delete_all }
+          content_type.constantize.unscoped.where('deleted_at IS NOT NULL').delete_all
+        end
+      end
+    end
+
+    # Destroys ALL paranoid deleted nodes and content.
+    def destroy_all_paranoid_deleted_content!
+      transaction do
+        unscoped { where('deleted_at IS NOT NULL').ordered_by_ancestry.reverse.each(&:destroy) }
+
+        DevcmsCore::Engine.registered_content_types.each do |content_type|
+          content_type.constantize.unscoped.where('deleted_at IS NOT NULL').destroy_all
         end
       end
     end

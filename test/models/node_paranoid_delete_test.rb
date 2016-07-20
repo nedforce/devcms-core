@@ -12,7 +12,7 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
     @economie_poll_node    = nodes(:economie_poll_node)
   end
 
-  def test_should_not_paranoid_delete_root
+  test 'should not paranoid delete root' do
     assert_raises ActiveRecord::ActiveRecordError do
       @root_section_node.paranoid_delete!
     end
@@ -21,20 +21,20 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
     assert Node.exists?(@root_section_node.id)
   end
 
-  def test_should_paranoid_delete_non_root
+  test 'should paranoid delete non-root' do
     assert @economie_section_node.paranoid_delete!
     assert_not_nil @economie_section_node.reload.deleted_at
     refute Node.exists?(@economie_section_node.id)
   end
 
-  def test_should_set_deleted_at_on_paranoid_delete
+  test 'should set deleted at on paranoid delete' do
     now = Time.zone.now
     Time.stubs(now: now)
     assert @economie_section_node.paranoid_delete!
     assert_in_delta now, @economie_section_node.reload.deleted_at
   end
 
-  def test_default_scope_should_filter_out_paranoid_deleted_nodes
+  test 'should filter paranoid deleted nodes out the default scope' do
     assert_equal @economie_section_node, Node.find(@economie_section_node.id)
 
     @economie_section_node.paranoid_delete!
@@ -42,7 +42,7 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
     refute Node.exists?(@economie_section_node.id)
   end
 
-  def test_paranoid_delete_should_also_delete_descendants
+  test 'should also paranoid delete descendants' do
     node = create_node(@economie_section_node)
 
     assert Node.exists?(node.id)
@@ -53,7 +53,7 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
     refute Node.exists?(node.id)
   end
 
-  def test_paranoid_delete_should_skip_previously_deleted_descendants
+  test 'should skip previously deleted descendants fo paranoid delete' do
     node = create_node(@economie_section_node)
 
     assert Node.exists?(node.id)
@@ -252,7 +252,7 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
     assert_nil node.reload.deleted_at
   end
 
-  def test_paranoid_restore_should_restore_associated_content
+  test 'should restore associated content for paranoid restore' do
     node = create_node(@economie_section_node)
 
     cc = create_content_copy(@economie_section_node, @economie_section_node)
@@ -291,6 +291,15 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
     assert node.content.present?
   end
 
+  def test_destroy_all_paranoid_deleted_content_should_not_destroy_non_paranoid_deleted_content
+    node = create_node(@economie_section_node)
+
+    Node.destroy_all_paranoid_deleted_content!
+
+    assert Node.exists?(node.id)
+    assert node.content.present?
+  end
+
   def test_delete_all_paranoid_deleted_content_should_delete_paranoid_deleted_content
     node = create_node(@economie_section_node)
     content = node.content
@@ -307,39 +316,57 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
     refute Section.exists?(@economie_section.id)
     refute Page.exists?(content.id)
 
-    Node.unscoped do
-      assert Node.exists?(@economie_section_node.id)
-      assert Node.exists?(node.id)
-    end
-
-    Section.unscoped do
-      assert Section.exists?(@economie_section.id)
-    end
-
-    Page.unscoped do
-      assert Page.exists?(content.id)
-    end
+    assert Node.unscoped.exists?(@economie_section_node.id)
+    assert Node.unscoped.exists?(node.id)
+    assert Section.unscoped.exists?(@economie_section.id)
+    assert Page.unscoped.exists?(content.id)
 
     Node.delete_all_paranoid_deleted_content!
 
-    Node.unscoped do
-      refute Node.exists?(@economie_section_node.id)
-      refute Node.exists?(node.id)
-    end
+    refute Node.unscoped.exists?(@economie_section_node.id)
+    refute Node.unscoped.exists?(node.id)
+    refute Section.unscoped.exists?(@economie_section.id)
+    refute Page.unscoped.exists?(content.id)
+  end
 
-    Section.unscoped do
-      refute Section.exists?(@economie_section.id)
-    end
+  def test_destroy_all_paranoid_deleted_content_should_destroy_paranoid_deleted_content
+    node = create_node(@economie_section_node)
+    content = node.content
 
-    Page.unscoped do
-      refute Page.exists?(content.id)
-    end
+    Node.destroy_all_paranoid_deleted_content!
+
+    assert Node.exists?(node.id)
+    assert node.content.present?
+
+    @economie_section_node.paranoid_delete!
+
+    refute Node.exists?(@economie_section_node.id)
+    refute Node.exists?(node.id)
+    refute Section.exists?(@economie_section.id)
+    refute Page.exists?(content.id)
+
+    assert Node.unscoped.exists?(@economie_section_node.id)
+    assert Node.unscoped.exists?(node.id)
+    assert Section.unscoped.exists?(@economie_section.id)
+    assert Page.unscoped.exists?(content.id)
+
+    Node.destroy_all_paranoid_deleted_content!
+
+    refute Node.unscoped.exists?(@economie_section_node.id)
+    refute Node.unscoped.exists?(node.id)
+    refute Section.unscoped.exists?(@economie_section.id)
+    refute Page.unscoped.exists?(content.id)
   end
 
   protected
 
   def create_node(parent = nodes(:root_section_node))
-    p = Page.create! parent: parent, title: 'Page title', body: 'Page body', expires_on: 1.day.from_now.to_date
+    p = Page.create!(
+      parent: parent,
+      title: 'Page title',
+      body: 'Page body',
+      expires_on: 1.day.from_now.to_date
+    )
     p.node
   end
 
