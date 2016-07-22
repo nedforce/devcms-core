@@ -46,7 +46,7 @@ module DevcmsCore
       before_update :touch_node
       after_update  :update_url_alias_if_title_changed
 
-      after_commit :update_search_index
+      after_commit :update_search_index, unless: :destroyed?
 
       before_paranoid_delete :delete_all_associated_versions
 
