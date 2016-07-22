@@ -40,6 +40,7 @@ module DevcmsCore
       validates_presence_of :node
 
       before_destroy do |content|
+        delete_all_associated_versions
         content.node.destroy(:destroy_content_node => false)
       end
 
