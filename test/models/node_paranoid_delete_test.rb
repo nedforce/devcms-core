@@ -53,7 +53,7 @@ class NodeParanoidDeleteTest < ActiveSupport::TestCase
     refute Node.exists?(node.id)
   end
 
-  test 'should skip previously deleted descendants fo paranoid delete' do
+  test 'should skip previously deleted descendants for paranoid delete' do
     node = create_node(@economie_section_node)
 
     assert Node.exists?(node.id)
