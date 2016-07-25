@@ -70,6 +70,17 @@ module NodeExtensions::ParanoidDelete
         end
       end
     end
+
+    # Destroy ALL paranoid deleted nodes and content, use at own risk ;-)
+    def destroy_all_paranoid_deleted_content!
+      transaction do
+        unscoped do
+          where('deleted_at IS NOT NULL').ordered_by_ancestry.reverse.each do |n|
+            n.content_type.constantize.unscoped { n.content.destroy }
+          end
+        end
+      end
+    end
   end
 
   def paranoid_delete!
