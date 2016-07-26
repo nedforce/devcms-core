@@ -57,7 +57,7 @@ require 'digest/sha2'
 class User < ActiveRecord::Base
   # Override default of include_root_in_json (Ext cannot use additional nesting)
   Category.include_root_in_json = false if Category.respond_to?(:include_root_in_json)
-  
+
   SEXES = {
     'm' => :male,
     'f' => :female
@@ -77,7 +77,7 @@ class User < ActiveRecord::Base
 
   # A +User+ has many +RoleAssignment+ objects (i.e., roles).
   has_many :role_assignments, :dependent => :destroy, :conditions => { :name => %w(read_access indexer)}
-    
+
   has_many :user_poll_question_votes, :dependent => :destroy
 
   # A +User+ has and belongs to many +NewsletterArchive+ objects (i.e., subscriptions to newsletters).
@@ -92,16 +92,18 @@ class User < ActiveRecord::Base
 
   # A +User+ can have created many forum posts.
   has_many :forum_posts,     :dependent => :destroy
-  
+
   has_many :user_categories, :dependent => :destroy
   has_many :categories,      :through => :user_categories
-  
+
   has_many :versions,        :foreign_key => :editor_id, :dependent => :destroy
-  
+
   has_many :event_registrations, :dependent => :destroy
 
   has_many :created_nodes, :foreign_key => :created_by_id, :class_name => 'Node', :dependent => :nullify
   has_many :updated_nodes, :foreign_key => :updated_by_id, :class_name => 'Node', :dependent => :nullify
+
+  named_scope :exclusive, lambda { { :conditions => ['users.type IS NULL OR users.type = ?', 'User'] } }
 
   named_scope :verified, lambda { { :conditions => { :verified => true } } }
 
@@ -120,7 +122,6 @@ class User < ActiveRecord::Base
   validates_email_format_of :email_address, :allow_blank => true
   # To make sure editing still checks uniqueness
   validates_uniqueness_of   :email_address, :case_sensitive => false, :if => Proc.new { |user| !user.new_record? }
-
 
   validates_presence_of     :verification_code
 
@@ -257,7 +258,7 @@ class User < ActiveRecord::Base
   def has_any_role?
     self.role_assignments.exists?
   end
-  
+
   # Checks whether this user has a +RoleAssignment+ for the given node or one of its ancestors.
   # Faster than the other 'has_*_role* methods because of memoizing.
   # If no node is supplied, checks whether a user has whatever role on whatever node.
@@ -337,7 +338,7 @@ class User < ActiveRecord::Base
   # Returns true if the +invitation_code+ is valid for the supplied +email_address+, false otherwise.
   def self.verify_invitation_code(email_address, invitation_code)
     return false if email_address.blank? || invitation_code.blank?
-    
+
     self.generate_invitation_code(email_address) == invitation_code
   end
 
