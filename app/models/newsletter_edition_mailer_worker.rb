@@ -66,7 +66,7 @@ class NewsletterEditionMailerWorker
     if newsletter_edition.published == 'publishing'
       logger.info "#{Time.now}: #{newsletter_edition.id}: Resuming from existing queue."
       queue = NewsletterEditionQueue.all(:conditions => { :newsletter_edition_id => newsletter_edition.id })
-      logger.info "#{Time.now}: #{newsletter_edition.id}: Found #{@queue.size} queued subscriptions." rescue nil
+      logger.info "#{Time.now}: #{newsletter_edition.id}: Found #{queue.size} queued subscriptions."
     else
       logger.info "#{Time.now}: #{newsletter_edition.id}: Building new publishing queue."
       queue = build_queue_for(newsletter_edition)
