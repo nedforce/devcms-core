@@ -17,7 +17,7 @@ class Admin::UsersController < Admin::AdminController
   def index
     @active_page ||= :users
 
-    user_model = @active_page == :privileged_users ? PrivilegedUser : User
+    user_model = @active_page == :privileged_users ? PrivilegedUser : User.exclusive
 
     # Sort the polymorphic node relationship separately if necessary.
     if !@sort_by_newsletter_archives
