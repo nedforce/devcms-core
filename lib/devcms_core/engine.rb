@@ -15,6 +15,9 @@ module DevcmsCore
     config.app_middleware.insert_before(Rack::Runtime, DevcmsCore::Rewriter)
     config.app_middleware.insert_before(Rack::Sendfile, ::ActionDispatch::Static, (self.root + 'public').to_s)
 
+    # SSL
+    config.ssl_enabled = false
+
     # Cookies
     config.auth_token_cookie = :auth_token
     config.cookie_options = { httponly: true }

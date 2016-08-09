@@ -176,11 +176,6 @@ settings: &settings
     editable: true
     validations:
       presence: true
-  ssl_enabled:
-    label: SSL ondersteuning beschikbaar?
-    value: true
-    editable: true
-    typecast: boolean
   user_verify:
     label: E-mail adressen van nieuwe gebruikers verifieren?
     value: true

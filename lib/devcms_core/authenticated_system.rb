@@ -144,7 +144,7 @@ module DevcmsCore
       def set_auth_token user, options = {}
         user.generate_token!(:auth_token) if user.auth_token.nil? || DevcmsCore.config.refresh_auth_token_after_sign_in
         cookie_data = DevcmsCore.config.cookie_options.merge(value: user.auth_token)
-        cookie_data[:secure] = true if ssl_required?
+        cookie_data[:secure] = true if DevcmsCore.config.ssl_enabled
 
         cookie_jar = auth_cookies
         cookie_jar = auth_cookies.permanent if options[:permanent]

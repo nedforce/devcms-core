@@ -1,7 +1,5 @@
 <div style="font-family: Arial, Helvetica, sans-serif; font-size: 12px;">
-  <p>
-      Beste <%=@user.login-%>,
-  </p>
+  <p>Beste <%=@user.login-%>,</p>
   <p>
       U ontvangt deze e-mail omdat u zich hebt aangemeld
       als gebruiker van <%= @host %>. Alvorens u gebruik kunt maken van de
@@ -10,10 +8,10 @@
       <br/><br/>
 
       <% url = verification_user_url(@user,
-        :code => @user.verification_code, 
-        :only_path => false,
-        :protocol => (Settler[:ssl_enabled] ? 'https://' : 'http://'),
-        :host => @host
+        code: @user.verification_code,
+        only_path: false,
+        protocol: (DevcmsCore.config.ssl_enabled ? 'https://' : 'http://'),
+        host: @host
       ) %>
 
       <%= link_to url, url %>

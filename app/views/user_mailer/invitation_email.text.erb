@@ -3,11 +3,11 @@ Beste heer/mevrouw,
 U ontvangt deze e-mail omdat u bent uitgenodigd om een gebruiker te worden van <%= @host %>. Om een gebruiker te worden,
 dient u eerst een eigen account aan te maken op het volgende adres:
 
-<%= new_user_url(:invitation_email => @invitation_email,
-        :invitation_code => @invitation_code,
-        :only_path => false,
-        :protocol => (Settler[:ssl_enabled] ? 'https://' : 'http://'),
-        :host => @host
+<%= new_user_url(invitation_email: @invitation_email,
+  invitation_code: @invitation_code,
+  only_path: false,
+  protocol: (DevcmsCore.config.ssl_enabled ? 'https://' : 'http://'),
+  host: @host
 ) %>
 
 Met vriendelijke groet,

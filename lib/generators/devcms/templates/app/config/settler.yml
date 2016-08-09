@@ -131,11 +131,6 @@ settings: &settings
     editable: true
     validations:
       presence: true
-  ssl_enabled:
-    label: Enable SSL support
-    value: true
-    editable: true
-    typecast: boolean
   user_session_time_limit_enabled:
     label: Enable time limited sessions
     value: true
