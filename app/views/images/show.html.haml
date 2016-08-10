@@ -1,2 +1,8 @@
-%h1= @image.title
-= image_tag aliased_or_delegated_path(@image.node, action: 'full'), alt: @image.title.to_s
+!!!
+%html
+  %head
+    %title= @image.title
+    %link{ rel: 'shortcut icon', href: "//#{Settler[:host]}/favicon.ico", type: 'image/vnd.microsoft.icon' }
+  %body
+    %h1= @image.title
+    = image_tag aliased_or_delegated_path(@image.node, action: 'full'), alt: @image.title.to_s
