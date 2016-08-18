@@ -37,7 +37,7 @@ class NodeSweeper < ActionController::Caching::Sweeper
           expire_fragment(footer_for_site: node.parent.id) if node.parent.sub_content_type == 'Site'
         end
         # Expire menu of top level node
-        if node.depth > 0 && node.depth - node.containing_site.depth <= Devcms.main_menu_depth
+        if node.depth > 0 && node.depth - node.containing_site.depth <= Devcms.main_menu_depth && node.containing_site.content
           top_node = node.containing_site.content.top_level_menu_nodes.detect{|top_node| node.path.include?(top_node) }
           expire_fragment(menu_for_top_node: top_node.id) if top_node
         end
