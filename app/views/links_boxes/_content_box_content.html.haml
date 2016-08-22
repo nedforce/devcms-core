@@ -1,5 +1,5 @@
 - content = node.content
-- links   = node.children.accessible.with_content_type(%w(InternalLink ExternalLink)).include_content.limit(node.content_box_number_of_items).map { |n| n.content }
+- links   = node.children.accessible.with_content_type(%w(InternalLink ExternalLink MailLink)).include_content.limit(node.content_box_number_of_items).map(&:content)
 
 - unless links.empty?
   - header_image = node.children.accessible.with_content_type('Image').include_content.first.try(:content)

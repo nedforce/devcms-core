@@ -262,6 +262,12 @@ Rails.application.routes.draw do
 
     resources :links_boxes, except: [:index, :destroy]
 
+    resources :mail_links, except: [:index, :destroy], controller: 'links', defaults: { type: 'mail_link' } do
+      member do
+        get :previous
+      end
+    end
+
     resources :meetings, except: :index do
       member do
         get :previous

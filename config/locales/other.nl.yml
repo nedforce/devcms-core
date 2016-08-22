@@ -603,12 +603,15 @@ nl:
     unknown: Onbekend
     username: loginnaam
   links:
-    add_to_internal: Interne link toevoegen aan
     add_to_external: Externe link toevoegen aan
+    add_to_internal: Interne link toevoegen aan
+    add_to_mail: Mail links toevoegen aan
     edit: Bewerken van link
+    email_address: E-mailadres
     external: Externe link
     failed: Kon link niet opslaan.
     internal: Interne link
+    mail: E-mail link
     prev_version: Vorige versie
     saved: Link opgeslagen!
     type: Type

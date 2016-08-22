@@ -31,6 +31,7 @@ nl:
       image: Afbeelding
       internal_link: Interne link
       links_box: Links box
+      mail_link: E-mail link
       meeting: Vergadering
       meeting_category: Categorie
       news_archive: Nieuwsarchief
@@ -154,6 +155,8 @@ nl:
         title: Titel
       link_theme:
         title: naam
+      mail_link:
+        email_address: E-mailadres
       meeting:
         end_time: Eindtijd
         meeting_category: Categorie

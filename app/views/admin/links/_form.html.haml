@@ -1,4 +1,8 @@
+= form.text_area :description, label: t('shared.description'), rows: 2
+
 - if @link.is_a?(InternalLink)
   = render partial: 'admin/internal_links/form', locals: { form: form, record: record }
-- else
+- elsif @link.is_a?(ExternalLink)
   = render partial: 'admin/external_links/form', locals: { form: form, record: record }
+- else
+  = render partial: 'admin/mail_links/form', locals: { form: form, record: record }

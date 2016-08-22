@@ -1,11 +1,10 @@
 # A LinksBox is a content node that represents a collection of Links.
-
 class LinksBox < ActiveRecord::Base
   acts_as_content_node(
-    allowed_child_content_types:       %w( LinkTheme Image InternalLink ExternalLink ),
-    allowed_roles_for_create:          %w( admin ),
-    allowed_roles_for_update:          %w( admin ),
-    allowed_roles_for_destroy:         %w( admin ),
+    allowed_child_content_types:       %w(LinkTheme Image InternalLink ExternalLink MailLink),
+    allowed_roles_for_create:          %w(admin),
+    allowed_roles_for_update:          %w(admin),
+    allowed_roles_for_destroy:         %w(admin),
     available_content_representations: ['content_box'],
     has_own_content_box:               false,
     controller_name:                   'links_boxes',

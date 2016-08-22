@@ -224,12 +224,23 @@ external_link_node:
   hidden: false
   private: false
 
+mail_link_node:
+  content: mail_link (Link)
+  ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
+  show_in_menu: true
+  publication_start_date: <%= 1.day.ago.to_s(:db) %>
+  position: 9
+  publishable: true
+  sub_content_type: MailLink
+  hidden: false
+  private: false
+
 newsletter_archive_node:
   content: devcms_newsletter_archive (NewsletterArchive)
   ancestry: <%= fixtures_to_ancestry(:root_section_node) %>
   show_in_menu: true
   publication_start_date: <%= 1.day.ago.to_s(:db) %>
-  position: 9
+  position: 10
   publishable: true
   sub_content_type: NewsletterArchive
   hidden: false

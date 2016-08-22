@@ -516,7 +516,7 @@ class Node < ActiveRecord::Base
   # This method is used to cache the titles of content nodes, so we don't have
   # to query separately for them.
   def content_title
-    if %w( ExternalLink InternalLink Feed ContentCopy ).include?(sub_content_type)
+    if %w(ExternalLink InternalLink MailLink Feed ContentCopy).include?(sub_content_type)
       content.try(:content_title)
     else
       title.blank? ? content.try(:content_title) : title

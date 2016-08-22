@@ -2,8 +2,8 @@
 # using Single Table Inheritance (STI). It has specified +acts_as_content_node+
 # from Acts::ContentNode::ClassMethods.
 #
-# It is not possible to create +Link+ instances; use the +InternalLink+ and
-# +ExternalLink+ subclasses instead.
+# It is not possible to create +Link+ instances; use the +InternalLink+,
+# +ExternalLink+ and +MailLink+ subclasses instead.
 #
 # *Specification*
 #
@@ -26,9 +26,9 @@ class Link < ActiveRecord::Base
   before_validation :set_title_and_description_to_nil_if_blank
 
   # Check the length of the +title+ and +description+ attributes, if they exist.
-  validates :title,       length: { in: 2..255, allow_nil: true }
-  validates :description, length: { in: 2..255, allow_nil: true }
-  validates :type,        inclusion: { in: %w(InternalLink ExternalLink), allow_blank: false }
+  validates :title,       length: { maximum: 255, allow_nil: true }
+  validates :description, length: { maximum: 255, allow_nil: true }
+  validates :type,        inclusion: { in: %w(InternalLink ExternalLink MailLink), allow_blank: false }
 
   # Returns the description as the token for indexing.
   def content_tokens

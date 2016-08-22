@@ -1,13 +1,14 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
-# the application relating to +InternalLink+ and +ExternalLink+ objects.
+# the application relating to +InternalLink+, +ExternalLink+ and +MailLink+
+# objects.
 class LinksController < ApplicationController
+  before_action :find_link, only: :show
 
-  before_filter :find_link, :only => :show
-
-  # The +show+ action for a given +InternalLink+ or +ExternalLink+ object
-  # performs a redirect to the represented link. In the case of an
+  # The +show+ action for a given +InternalLink+, +ExternalLink+ or +MailLink+
+  # object performs a redirect to the represented link. In the case of an
   # +InternalLink+ object, an internal redirect is issued. In the case of an
-  # +ExternalLink+ object, an external redirect is issued.
+  # +ExternalLink+ object, an external redirect is issued. In the case of a
+  # +MailLink+ object, a mailto redirect is issued.
   #
   # * GET /sections/:id
   # * GET /sections/:id.xml
@@ -29,8 +30,10 @@ class LinksController < ApplicationController
   def generate_url_for_link(link)
     if link.is_a? InternalLink
       aliased_or_delegated_path link.linked_node
-    else # ExternalLink
+    elsif link.is_a? ExternalLink
       link.url
+    else # MailLink
+      link.mailto_link
     end
   end
 end

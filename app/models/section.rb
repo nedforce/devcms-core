@@ -30,9 +30,9 @@ class Section < ActiveRecord::Base
     allowed_child_content_types: %w(
       AlphabeticIndex Attachment AttachmentTheme Calendar Carrousel
       CombinedCalendar ContactBox ContactForm FaqArchive Feed Forum HtmlPage
-      Image LinksBox InternalLink ExternalLink NewsArchive NewsletterArchive
-      NewsViewer Page Poll SearchPage Section SocialMediaLinksBox TopHitsPage
-      WeblogArchive
+      Image LinksBox InternalLink ExternalLink MailLink NewsArchive
+      NewsletterArchive NewsViewer Page Poll SearchPage Section
+      SocialMediaLinksBox TopHitsPage WeblogArchive
     ),
     allowed_roles_for_create:          %w(admin final_editor),
     allowed_roles_for_destroy:         %w(admin final_editor),
