@@ -17,7 +17,7 @@ GIT
 
 GIT
   remote: git@git.nedforce.nl:data_checker.git
-  revision: e5f91813781dea72109047a393cfd403166f6c39
+  revision: 62763351a65a1322a57e1c185530e5d65de4ebe3
   branch: rails4
   specs:
     data_checker (0.0.2)
@@ -106,7 +106,7 @@ GEM
       tzinfo (~> 1.1)
     acts-as-taggable-on (3.4.4)
       activerecord (>= 3.2, < 5)
-    acts_as_list (0.7.7)
+    acts_as_list (0.8.0)
       activerecord (>= 3.0)
     addressable (2.4.0)
     airbrake (4.3.8)
@@ -239,7 +239,7 @@ GEM
       builder (>= 2.1.2)
     ruby-ole (1.2.12)
     rubyzip (0.9.9)
-    sanitize (4.1.0)
+    sanitize (4.2.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.4.4)
       nokogumbo (~> 1.4.1)
@@ -271,10 +271,11 @@ GEM
       schema_plus_pg_indexes (~> 0.1, >= 0.1.3)
       schema_plus_tables (~> 0.1)
       schema_plus_views (~> 0.1)
-    schema_plus_columns (0.1.2)
-      activerecord (~> 4.2)
+    schema_plus_columns (0.1.3)
+      activerecord (>= 4.2, < 5.1)
       its-it (~> 1.2)
-      schema_plus_indexes (~> 0.1)
+      schema_plus_core
+      schema_plus_indexes (~> 0.2)
     schema_plus_core (1.0.2)
       activerecord (~> 4.2)
       its-it (~> 1.2)
@@ -295,10 +296,10 @@ GEM
       its-it (~> 1.2)
       schema_plus_core (~> 1.0)
       valuable
-    schema_plus_indexes (0.2.3)
-      activerecord (~> 4.2)
+    schema_plus_indexes (0.2.4)
+      activerecord (>= 4.2, < 5.1)
       its-it (~> 1.2)
-      schema_plus_core (~> 1.0)
+      schema_plus_core
     schema_plus_pg_indexes (0.1.12)
       activerecord (~> 4.2)
       its-it (~> 1.2)
