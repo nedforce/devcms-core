@@ -239,7 +239,7 @@ module DevcmsCoreHelper
   end
 
   def image_url(source)
-    abs_path = compute_public_path(source, 'images')
+    abs_path = compute_public_path(source, 'assets')
     unless abs_path =~ /\Ahttp/
       abs_path = "#{request.protocol}#{request.host_with_port}#{abs_path}"
     end
