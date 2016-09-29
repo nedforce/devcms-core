@@ -1,7 +1,7 @@
 class SitemapsController < ApplicationController
-  skip_before_filter :find_node
+  skip_before_action :find_node
 
-  before_filter :set_node_to_root, :only => :changes
+  before_action :set_node_to_root, only: :changes
 
   # Shows the sitemap.
   #
@@ -28,7 +28,7 @@ class SitemapsController < ApplicationController
     end
   end
 
-protected
+  protected
 
   def set_node_to_root
     @node = current_site

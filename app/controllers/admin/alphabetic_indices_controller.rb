@@ -1,16 +1,15 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +AlphabeticIndex+ objects.
 class Admin::AlphabeticIndicesController < Admin::AdminController
-
   # The +create+ action needs the parent +Node+ object to link the new +AlphabeticIndex+ content node to.
-  prepend_before_filter :find_parent_node, :only => [:new, :create ]
+  prepend_before_action :find_parent_node, only: [:new, :create]
 
   # The +show+, +edit+ and +update+ actions need an +AlphabeticIndex+ object to act upon.
-  before_filter :find_alphabetic_index,    :only => [ :show, :edit, :update ]
+  before_action :find_alphabetic_index, only: [:show, :edit, :update]
 
   layout false
 
-  require_role [ 'admin' ], :except => [ :show ]
+  require_role ['admin'], except: :show
 
   # * GET /alhpabetic_indices/:id
   # * GET /alphabetic_indices/:id.xml

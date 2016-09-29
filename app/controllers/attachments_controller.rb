@@ -2,7 +2,7 @@
 # the application relating to +Attachment+ objects.
 class AttachmentsController < ApplicationController
   # Find the relevant attachment and skip node/sidebox loading.
-  before_filter :find_attachment, only: :show
+  before_action :find_attachment, only: :show
 
   # No layout should be rendered when an attachment is requested.
   layout false

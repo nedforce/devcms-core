@@ -1,5 +1,5 @@
 class FaqSuggestionsController < ApplicationController
-  before_filter :find_theme
+  before_action :find_theme
 
   def new
   end

@@ -1,15 +1,14 @@
 # This administrative controller is used to manage the website newsletter subscriptions. It is
 # set up to communicate with ExtJS components using XML.
-
 class Admin::NewsletterSubscriptionsController < Admin::AdminController
   # Require users to have at least one of the roles +admin+ or +final_editor+.
-  require_role ['admin', 'final_editor'], :any_node => true
+  require_role ['admin', 'final_editor'], any_node: true
 
-  before_filter :set_paging,  :except => :destroy
-  before_filter :set_sorting, :except => :destroy
+  before_action :set_paging,  except: :destroy
+  before_action :set_sorting, except: :destroy
 
-  skip_before_filter :set_actions
-  skip_before_filter :find_node
+  skip_before_action :set_actions
+  skip_before_action :find_node
 
   layout false
 

@@ -2,10 +2,10 @@
 # the application relating to +Feed+ objects.
 class Admin::FeedsController < Admin::AdminController
   # The +new+ and +create+ actions need the parent +Node+ object.
-  prepend_before_filter :find_parent_node, only: [:new, :create]
+  prepend_before_action :find_parent_node, only: [:new, :create]
 
   # The +edit+ and +update+ actions need a +Feed+ object to act upon.
-  before_filter :find_feed, only: [:show, :edit, :update]
+  before_action :find_feed, only: [:show, :edit, :update]
 
   layout false
 

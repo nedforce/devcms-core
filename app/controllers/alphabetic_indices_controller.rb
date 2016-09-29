@@ -1,12 +1,11 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +AlphabeticIndex+ objects.
 class AlphabeticIndicesController < ApplicationController
-  
-  helper AlphabeticIndexHelper  
+  helper AlphabeticIndexHelper
 
   # The +show+ action needs a +AlphabeticIndex+ object to work with.
-  before_filter :find_alphabetic_index, :only => [ :show, :letter ]
-  before_filter :find_pages,            :only => [ :show, :letter ]
+  before_action :find_alphabetic_index, only: [:show, :letter]
+  before_action :find_pages,            only: [:show, :letter]
 
   # * GET /alphabetic_indices/:id
   def show

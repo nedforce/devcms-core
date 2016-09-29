@@ -1,21 +1,20 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +LinksBox+ objects.
 class Admin::LinksBoxesController < Admin::AdminController
-
   # The +create+ action needs the parent +Node+ object to link the new +LinksBox+ content node to.
-  prepend_before_filter :find_parent_node,     :only => [ :new, :create ]
+  prepend_before_action :find_parent_node, only: [:new, :create]
 
   # The +show+, +edit+ and +update+ actions need a +LinksBox+ object to act upon.
-  before_filter :find_links_box,                :only => [ :show,  :previous, :edit, :update ]
+  before_action :find_links_box, only: [:show, :previous, :edit, :update]
 
   # Parse the publication start date for the +create+ and +update+ actions.
-  before_filter :parse_publication_start_date, :only => [ :create, :update ]
+  before_action :parse_publication_start_date, only: [:create, :update]
 
-  before_filter :find_images_and_attachments,  :only => [ :show, :previous ]
+  before_action :find_images_and_attachments, only: [:show, :previous]
 
-  before_filter :find_children,                :only => [ :show, :previous ]
+  before_action :find_children, only: [:show, :previous]
 
-  before_filter :set_commit_type,              :only => [ :create, :update ]
+  before_action :set_commit_type, only: [:create, :update]
 
   layout false
 

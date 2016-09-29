@@ -1,27 +1,26 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to NewsItem objects.
 class Admin::NewsItemsController < Admin::AdminController
-
   # Only the +new+ and +create+ actions need a parent Node object.
-  prepend_before_filter :find_parent_node,     :only => [:new, :create ]
+  prepend_before_action :find_parent_node, only: [:new, :create]
 
   # The +new+ and +create+ actions need a NewsArchive object to act upon.
-  before_filter :find_news_archive,            :only => [ :new, :create ]
+  before_action :find_news_archive, only: [:new, :create]
 
   # The +show+, +edit+ and +update+ actions need a NewsItem object to act upon.
-  before_filter :find_news_item,               :only => [ :show, :edit, :update, :previous ]
+  before_action :find_news_item, only: [:show, :edit, :update, :previous]
 
   # Parse the publication dates for the +create+ and +update+ actions.
-  before_filter :parse_publication_start_date, :only => [ :create, :update ]
-  before_filter :parse_publication_end_date,   :only => [ :create, :update ]
+  before_action :parse_publication_start_date, only: [:create, :update]
+  before_action :parse_publication_end_date,   only: [:create, :update]
 
-  before_filter :find_images_and_attachments,  :only => [ :show, :previous ]
+  before_action :find_images_and_attachments, only: [:show, :previous]
 
-  before_filter :set_commit_type,              :only => [ :create, :update ]
+  before_action :set_commit_type, only: [:create, :update]
 
   layout false
 
-  require_role [ 'admin', 'final_editor', 'editor' ]
+  require_role ['admin', 'final_editor', 'editor']
 
   # * GET /admin/news_items/:id
   # * GET /admin/news_items/:id.xml

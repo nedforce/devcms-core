@@ -1,12 +1,12 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +Comment+ objects.
 class CommentsController < ApplicationController
-  prepend_before_filter :find_commentable_node, :only => :create
+  prepend_before_action :find_commentable_node, only: :create
 
-  before_filter :find_comment, :only => :destroy
+  before_action :find_comment, only: :destroy
 
   # Only admins and final editors are allowed to delete comments
-  require_role ['admin', 'final_editor'], :only => :destroy
+  require_role ['admin', 'final_editor'], only: :destroy
 
   # * POST /nodes/1/comments
   # * POST /nodes/1/comments.xml

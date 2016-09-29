@@ -1,28 +1,27 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +NewsletterEdition+ objects.
 class Admin::NewsletterEditionsController < Admin::AdminController
-
   # The +show+, +new+, +edit+, +update+ and +create+ actions need a parent +Node+ object.
-  prepend_before_filter :find_parent_node,     :only => [ :new, :create ]
+  prepend_before_action :find_parent_node, only: [:new, :create]
 
   # The +show+, +edit+, +create+ and +update+ actions need a +NewsletterArchive+ object to act upon.
-  before_filter :find_newsletter_archive,      :only => [ :new, :create ]
+  before_action :find_newsletter_archive, only: [:new, :create]
 
   # The +show+, +edit+ and +update+ actions need a +NewsletterEdition+ object to act upon.
-  before_filter :find_newsletter_edition,      :only => [ :show, :edit, :update, :previous ]
+  before_action :find_newsletter_edition, only: [:show, :edit, :update, :previous]
 
   # Parse the publication start date for the +create+ and +update+ actions.
-  before_filter :parse_publication_start_date, :only => [ :create, :update ]
+  before_action :parse_publication_start_date, only: [:create, :update]
 
-  before_filter :find_images_and_attachments,  :only => [ :show, :previous ]
+  before_action :find_images_and_attachments, only: [:show, :previous]
 
-  before_filter :set_commit_type,              :only => [ :create, :update ]
+  before_action :set_commit_type, only: [:create, :update]
 
-  before_filter :get_item_ids,                 :only => [ :create, :update ]
+  before_action :get_item_ids, only: [:create, :update]
 
   layout false
 
-  require_role [ 'admin', 'final_editor', 'editor' ] , :for_all_except => [ :show ]
+  require_role ['admin', 'final_editor', 'editor'], for_all_except: [:show]
 
   # * GET /admin/newsletter_editions/:id
   # * GET /admin/newsletter_editions/:id.xml

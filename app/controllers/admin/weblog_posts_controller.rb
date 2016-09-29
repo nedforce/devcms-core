@@ -1,18 +1,17 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +WeblogPost+ objects.
-
 class Admin::WeblogPostsController < Admin::AdminController
   # The +show+, +edit+ and +update+ actions need a +WeblogPost+ object to act upon.
-  before_filter :find_weblog_post,             only: [:show, :edit, :update]
+  before_action :find_weblog_post, only: [:show, :edit, :update]
 
   # Parse the publication start date for the +create+ and +update+ actions.
-  before_filter :parse_publication_start_date, only: [:update]
+  before_action :parse_publication_start_date, only: [:update]
 
-  before_filter :find_images_and_attachments,  only: :show
+  before_action :find_images_and_attachments, only: :show
 
-  before_filter :find_content,                 only: :show
+  before_action :find_content, only: :show
 
-  before_filter :set_commit_type,              only: :update
+  before_action :set_commit_type, only: :update
 
   layout false
 

@@ -1,7 +1,7 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +SocialMediaLinksBox+ objects.
 class SocialMediaLinksBoxesController < ApplicationController
-  before_filter :find_social_media_links_box, only: :show
+  before_action :find_social_media_links_box, only: :show
 
   # * GET /social_media_links_boxes/:id
   # * GET /social_media_links_boxes/:id.xml

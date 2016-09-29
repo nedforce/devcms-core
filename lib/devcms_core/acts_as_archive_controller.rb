@@ -5,7 +5,7 @@ module DevcmsCore
     included do
       cattr_accessor :content_class_name, :singular_name, :date_attribute, :weeks
 
-      before_filter :default_format_json, :only => :index
+      before_action :default_format_json, only: :index
     end
 
     module CreateMethods

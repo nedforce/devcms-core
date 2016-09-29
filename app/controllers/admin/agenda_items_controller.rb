@@ -1,20 +1,19 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to AgendaItem objects.
-
 class Admin::AgendaItemsController < Admin::AdminController
   # Only the +new+ and +create+ actions need a parent Node object.
-  prepend_before_filter :find_parent_node,    :only => [ :new, :create ]
+  prepend_before_action :find_parent_node, only: [:new, :create]
 
   # The +new+ and +create+ actions need a Meeting object to act upon.
-  before_filter :find_meeting,                :only => [ :new, :create ]
+  before_action :find_meeting, only: [:new, :create]
 
   # The +show+, +edit+ and +update+ actions need an AgendaItem object to act upon.
-  before_filter :find_agenda_item,            :only => [ :show, :edit, :update, :previous ]
+  before_action :find_agenda_item, only: [:show, :edit, :update, :previous]
 
   # Find the child nodes for the +show+ and +previous+ actions.
-  before_filter :find_images_and_attachments, :only => [ :show, :previous ]
+  before_action :find_images_and_attachments, only: [:show, :previous]
 
-  before_filter :set_commit_type,             :only => [ :create, :update ]
+  before_action :set_commit_type, only: [:create, :update]
 
   layout false
 

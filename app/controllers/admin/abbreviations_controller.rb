@@ -1,11 +1,11 @@
 class Admin::AbbreviationsController < Admin::AdminController
-  before_filter :default_format_json, only: [:create, :update, :destroy]
+  before_action :default_format_json, only: [:create, :update, :destroy]
 
-  before_filter :set_paging,  only: [:index, :create]
-  before_filter :set_sorting, only: [:index, :create]
+  before_action :set_paging,  only: [:index, :create]
+  before_action :set_sorting, only: [:index, :create]
 
-  skip_before_filter :set_actions
-  before_filter :find_node, only: [:index, :new, :create, :update, :destroy]
+  skip_before_action :set_actions
+  before_action :find_node, only: [:index, :new, :create, :update, :destroy]
 
   require_role 'admin', except: :new
 

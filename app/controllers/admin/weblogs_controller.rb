@@ -1,14 +1,14 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +Weblog+ objects.
 class Admin::WeblogsController < Admin::AdminController
-  before_filter :default_format_json, only: :index
+  before_action :default_format_json, only: :index
 
   # The +show+, +edit+ and +update+ actions need a +Weblog+ object to act upon.
-  before_filter :find_weblog,       only: [:show, :edit, :update]
+  before_action :find_weblog,       only: [:show, :edit, :update]
 
-  before_filter :find_weblog_posts, only: :show
+  before_action :find_weblog_posts, only: :show
 
-  before_filter :set_commit_type,   only: :update
+  before_action :set_commit_type,   only: :update
 
   layout false
 

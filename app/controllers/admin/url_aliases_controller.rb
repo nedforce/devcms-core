@@ -1,7 +1,7 @@
 class Admin::UrlAliasesController < Admin::AdminController
-  before_filter :find_node,   only: [:update, :destroy]
-  before_filter :set_paging,  only: [:index, :create]
-  before_filter :set_sorting, only: [:index, :create]
+  before_action :find_node,   only: [:update, :destroy]
+  before_action :set_paging,  only: [:index, :create]
+  before_action :set_sorting, only: [:index, :create]
 
   require_role %w(admin final_editor)
 

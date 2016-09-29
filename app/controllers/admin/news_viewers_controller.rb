@@ -1,17 +1,17 @@
 class Admin::NewsViewersController < Admin::AdminController
   # The +create+ action needs the parent +Node+ object to link the new +NewsViewer+ content node to.
-  prepend_before_filter :find_parent_node, :only => [ :new, :create ]
+  prepend_before_action :find_parent_node, only: [:new, :create]
 
   # The +show+, +edit+ and +update+ actions need a +NewsViewer+ object to act upon.
-  before_filter :find_news_viewer,         :only => [ :show, :edit, :edit_items, :update ]
+  before_action :find_news_viewer, only: [:show, :edit, :edit_items, :update]
 
-  before_filter :find_recent_news_items,   :only => :show
+  before_action :find_recent_news_items, only: :show
 
-  before_filter :set_commit_type,          :only => [ :create, :update ]
+  before_action :set_commit_type, only: [:create, :update]
 
   layout false
 
-  require_role [ 'admin', 'final_editor' ], :except => [ :show ]
+  require_role ['admin', 'final_editor'], except: :show
 
   # * GET /news_viewers/:id
   # * GET /news_viewers/:id.xml

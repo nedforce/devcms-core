@@ -1,9 +1,9 @@
 class Admin::NewsViewerItemsController < Admin::AdminController
-  skip_before_filter :find_node
+  skip_before_action :find_node
 
-  prepend_before_filter :find_news_viewer_and_node
+  prepend_before_action :find_news_viewer_and_node
 
-  before_filter :find_news_archive, :only => :available_news_items
+  before_action :find_news_archive, only: :available_news_items
 
   layout false
 

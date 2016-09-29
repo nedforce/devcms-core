@@ -1,21 +1,20 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +HtmlPage+ objects.
-
 class Admin::HtmlPagesController < Admin::AdminController
   # The +create+ action needs the parent +Node+ object to link the new +HtmlPage+ content node to.
-  prepend_before_filter :find_parent_node,    :only => [ :new, :create ]
+  prepend_before_action :find_parent_node, only: [:new, :create]
 
   # The +show+, +edit+ and +update+ actions need a +HtmlPage+ object to act upon.
-  before_filter :find_html_page,              :only => [ :show, :edit, :update ]
+  before_action :find_html_page, only: [:show, :edit, :update]
 
-  before_filter :find_images_and_attachments, :only => [ :show ]
+  before_action :find_images_and_attachments, only: :show
 
-  before_filter :set_commit_type,             :only => [ :create, :update ]
+  before_action :set_commit_type, only: [:create, :update]
 
   layout false
 
   # Only admins are allowed to create and manipulate HTML pages
-  require_role ['admin'], :except => :show
+  require_role ['admin'], except: :show
 
   # * GET /html_pages/:id
   # * GET /html_pages/:id.xml

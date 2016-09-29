@@ -1,9 +1,8 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +CombinedCalendar+ objects.
-
 class CombinedCalendarsController < ApplicationController
   # The +show+ action needs a +CombinedCalendar+ object to work with.
-  before_filter :find_combined_calendar, :only => [ :show, :tomorrow ]
+  before_action :find_combined_calendar, only: [:show, :tomorrow]
 
   # * GET /combined_calendars/:id
   # * GET /combined_calendars/:id.atom

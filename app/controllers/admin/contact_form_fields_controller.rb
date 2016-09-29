@@ -3,17 +3,17 @@
 class Admin::ContactFormFieldsController < Admin::AdminController
   # A +ContactFormField+ object is always associated with a +ContactForm+
   # object.
-  before_filter :find_contact_form
+  before_action :find_contact_form
 
   # The +show+, +edit+ and +update+ actions need a +ContactFormField+ object to
   # act upon.
-  before_filter :find_contact_form_field, only: [:show, :edit, :update, :destroy]
+  before_action :find_contact_form_field, only: [:show, :edit, :update, :destroy]
 
-  before_filter :set_field_types, only: [:new, :edit]
+  before_action :set_field_types, only: [:new, :edit]
 
-  before_filter :set_commit_type, only: [:create, :update]
+  before_action :set_commit_type, only: [:create, :update]
 
-  skip_before_filter :find_node, only: [:edit, :update]
+  skip_before_action :find_node, only: [:edit, :update]
 
   layout false
 

@@ -1,7 +1,7 @@
 class Admin::LayoutsController < Admin::AdminController
-  before_filter :find_node, only: [:edit, :variants_settings_and_targets, :targets, :update]
-  before_filter :find_layout
-  before_filter :find_current_sortlets, only: [:edit, :targets, :variants_settings_and_targets]
+  before_action :find_node, only: [:edit, :variants_settings_and_targets, :targets, :update]
+  before_action :find_layout
+  before_action :find_current_sortlets, only: [:edit, :targets, :variants_settings_and_targets]
 
   layout false
 

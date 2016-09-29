@@ -1,11 +1,11 @@
 class Admin::DataWarningsController < Admin::AdminController
-  before_filter :set_paging,  :only => :index
-  before_filter :set_sorting, :only => :index
+  before_action :set_paging,  only: :index
+  before_action :set_sorting, only: :index
 
-  skip_before_filter :set_actions
-  skip_before_filter :find_node
+  skip_before_action :set_actions
+  skip_before_action :find_node
 
-  require_role ['admin', 'final_editor'], :any_node => true
+  require_role ['admin', 'final_editor'], any_node: true
 
   layout false
 

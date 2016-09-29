@@ -1,21 +1,21 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +Calendar+ objects.
 class Admin::CalendarsController < Admin::AdminController
-  before_filter :default_format_json,  :only => :index
+  before_action :default_format_json, only: :index
 
   # The +create+ action needs the parent +Node+ object to link the new +Calendar+ content node to.
-  prepend_before_filter :find_parent_node,    :only => [ :new, :create ]
+  prepend_before_action :find_parent_node, only: [:new, :create]
 
   # The +show+, +edit+ and +update+ actions need a +Calendar+ object to act upon.
-  before_filter         :find_calendar,       :only => [ :show, :edit, :update ]
+  before_action :find_calendar, only: [:show, :edit, :update]
 
-  before_filter         :find_calendar_items, :only => :show
+  before_action :find_calendar_items, only: :show
 
-  before_filter         :set_commit_type,     :only => [ :create, :update ]
+  before_action :set_commit_type, only: [:create, :update]
 
   layout false
 
-  require_role [ 'admin', 'final_editor' ], :except => [ :index, :show ]
+  require_role ['admin', 'final_editor'], except: [:index, :show]
 
   # * GET /admin/calendars/:id
   # * GET /admin/calendars/:id.xml

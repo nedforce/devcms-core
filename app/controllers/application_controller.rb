@@ -1,16 +1,15 @@
 # Filters added to this controller apply to all controllers in the application.
 # Likewise, all the methods added will be available for all controllers.
-
 class ApplicationController < ActionController::Base
   include DevcmsCore::AuthenticatedSystem
   include DevcmsCore::RoleRequirementSystem
   include ::SecureHeaders
 
   # Set the X-Frame-Options header (part of the secure_headers gem).
-  before_filter :set_x_frame_options_header
+  before_action :set_x_frame_options_header
 
   protect_from_forgery
-  skip_before_filter [:verify_authenticity_token, :check_authorization], :only => [:handle_500, :handle_404]
+  skip_before_action [:verify_authenticity_token, :check_authorization], only: [:handle_500, :handle_404]
 
   # Catch all exceptions (except 404 errors, which are handled below) to render
   # a custom 500 page. Also makes sure a notification mail is sent.
@@ -23,40 +22,40 @@ class ApplicationController < ActionController::Base
   # catching them in the +find_[resource]+ methods throughout all controllers.
   rescue_from ActionController::RoutingError, ActionController::UnknownController, ::AbstractController::ActionNotFound, ActiveRecord::RecordNotFound, :with => :handle_404 unless Rails.env.development?
 
-  before_filter :redirect_to_full_domain
-  before_filter :check_password_renewal, if: :logged_in?
+  before_action :redirect_to_full_domain
+  before_action :check_password_renewal, if: :logged_in?
 
   # Try retrieve the +Node+ object for the current request.
   # This needs to be done before any authorization attempts, a +Node+ might be needed.
-  before_filter :find_node
-  before_filter :find_context_node
+  before_action :find_node
+  before_action :find_context_node
 
   # Set view paths
-  before_filter :set_view_paths
-  before_filter :set_high_contrast_mode
+  before_action :set_view_paths
+  before_action :set_high_contrast_mode
 
   # Performs the actual authorization procedure
-  before_filter :check_authorization
+  before_action :check_authorization
 
   # Set the private menu items for the side box.
-  before_filter :set_private_menu
+  before_action :set_private_menu
 
   # Find the children for the current node
-  before_filter :find_accessible_children_for_menus
+  before_action :find_accessible_children_for_menus
 
   # Set the search options for the search field.
-  before_filter :set_search_scopes
+  before_action :set_search_scopes
 
-  before_filter :set_page_title
+  before_action :set_page_title
 
   # Limit the session time
-  before_filter :extend_and_limit_session_time
+  before_action :extend_and_limit_session_time
 
   # Set the rss feed url if needed
-  before_filter :set_rss_feed_url, :only => :show
+  before_action :set_rss_feed_url, only: :show
 
   # Increment the number of hits for the accessed node, if a node was accessed
-  after_filter :increment_hits, :only => :show
+  after_action :increment_hits, only: :show
 
   # Set the layout
   layout :set_layout

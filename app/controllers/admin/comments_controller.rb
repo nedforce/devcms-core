@@ -1,15 +1,15 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +Comment+ and +ForumPost+ objects.
 class Admin::CommentsController < Admin::AdminController
-  before_filter :set_show_forum_posts
-  before_filter :set_comment_class
-  before_filter :set_paging,  :only => :index
-  before_filter :set_sorting, :only => :index
+  before_action :set_show_forum_posts
+  before_action :set_comment_class
+  before_action :set_paging,  only: :index
+  before_action :set_sorting, only: :index
 
-  skip_before_filter :set_actions
-  skip_before_filter :find_node
+  skip_before_action :set_actions
+  skip_before_action :find_node
 
-  require_role [ 'admin', 'final_editor', 'editor'], :any_node => true, :except => :new
+  require_role ['admin', 'final_editor', 'editor'], any_node: true, except: :new
 
   layout false
 

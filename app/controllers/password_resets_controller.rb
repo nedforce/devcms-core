@@ -1,11 +1,11 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +User+ password resets.
 class PasswordResetsController < ApplicationController
-  skip_before_filter :find_node
+  skip_before_action :find_node
 
   ssl_required :new, :create, :edit, :update
 
-  before_filter :find_user_by_password_reset_token, only: [:edit, :update]
+  before_action :find_user_by_password_reset_token, only: [:edit, :update]
 
   def new
     respond_to do |format|

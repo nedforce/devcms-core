@@ -1,23 +1,23 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +Meeting+ objects.
 class Admin::CalendarItemsController < Admin::AdminController
-  before_filter :default_format_json,  :only => :destroy
+  before_action :default_format_json, only: :destroy
 
   # The +new+ and +create+ actions needs a parent +Node+ object.
-  prepend_before_filter :find_parent_node,  :only => [ :new, :create ]
+  prepend_before_action :find_parent_node, only: [:new, :create]
 
   # The +new+, +create+ and +delete+ actions need a +Calendar+ object to act upon.
-  before_filter :find_calendar,             :only => [ :new, :create ]
+  before_action :find_calendar, only: [:new, :create]
 
   # The +show+, +edit+, +update+ and +delete+ actions need a +CalendarItem+ object to act upon.
-  before_filter :find_calendar_item,        :only => [ :show, :edit, :update, :previous, :destroy ]
+  before_action :find_calendar_item, only: [:show, :edit, :update, :previous, :destroy]
 
   # Parse the start and end times for the +create+ and +update+ actions.
-  before_filter :parse_start_and_end_times, :only => [ :create, :update ]
+  before_action :parse_start_and_end_times, only: [:create, :update]
 
-  before_filter :find_children,             :only => [ :show, :previous ]
+  before_action :find_children, only: [:show, :previous]
 
-  before_filter :set_commit_type,           :only => [ :create, :update ]
+  before_action :set_commit_type, only: [:create, :update]
 
   layout false
 

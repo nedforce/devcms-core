@@ -2,21 +2,21 @@
 # the application relating to +Carrousel+ objects.
 class Admin::CarrouselsController < Admin::AdminController
   # The +show+, +new+, +edit+, +update+ and +create+ actions need a parent +Node+ object.
-  before_filter :find_parent_node,             only: [:new, :create]
+  before_action :find_parent_node, only: [:new, :create]
 
   # The +show+, +edit+ and +update+ actions need a +Carrousel+ object to act upon.
-  before_filter :find_carrousel,               only: [:show, :edit, :update]
+  before_action :find_carrousel, only: [:show, :edit, :update]
 
   # Parse the publication start date for the +create+ and +update+ actions.
-  before_filter :parse_publication_start_date, only: [:create, :update]
+  before_action :parse_publication_start_date, only: [:create, :update]
 
-  before_filter :set_commit_type,              only: [:create, :update]
+  before_action :set_commit_type, only: [:create, :update]
 
-  before_filter :get_item_ids,                 only: [:create, :update]
+  before_action :get_item_ids, only: [:create, :update]
 
   layout false
 
-  require_role ['admin'], except: [:show]
+  require_role ['admin'], except: :show
 
   # * GET /admin/carrousels/:id
   # * GET /admin/carrousels/:id.xml

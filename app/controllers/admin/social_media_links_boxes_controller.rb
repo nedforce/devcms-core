@@ -1,18 +1,17 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +SocialMediaLinksBox+ objects.
 class Admin::SocialMediaLinksBoxesController < Admin::AdminController
-
   # The +create+ action needs the parent +Node+ object to link the new +SocialMediaLinksBox+ content node to.
-  prepend_before_filter :find_parent_node,    :only => [ :new, :create ]
+  prepend_before_action :find_parent_node, only: [:new, :create]
 
   # The +show+, +edit+ and +update+ actions need a +SocialMediaLinksBox+ object to act upon.
-  before_filter :find_social_media_links_box, :only => [ :show, :edit, :update ]
+  before_action :find_social_media_links_box, only: [:show, :edit, :update]
 
-  before_filter :set_commit_type,             :only => [ :create, :update ]
+  before_action :set_commit_type, only: [:create, :update]
 
   layout false
 
-  require_role [ 'admin' ], :except => [ :show ]
+  require_role ['admin'], except: :show
 
   # * GET /admin/social_media_links_boxes/:id
   # * GET /admin/social_media_links_boxes/:id.xml

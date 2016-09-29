@@ -1,10 +1,9 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +PollQuestion+ objects.
 class PollQuestionsController < ApplicationController
-
   include PollQuestionsHelper
 
-  before_filter :find_poll_question
+  before_action :find_poll_question
 
   # Shows the question and a voting form if the requested question is active
   # shows the question's results otherwise.

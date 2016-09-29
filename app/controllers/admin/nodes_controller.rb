@@ -1,20 +1,20 @@
 # This administrative controller is used to manage the website's nodes.
 class Admin::NodesController < Admin::AdminController
-  before_filter :default_format_json,  :only => :destroy
+  before_action :default_format_json, only: :destroy
 
   # Only allow XHMLHttpRequests some actions.
-  before_filter :verify_xhr, :only => [ :move, :move_by_date, :count_children, :sort_children, :set_visibility, :set_accessibility, :export_newsletter ]
+  before_action :verify_xhr, only: [:move, :move_by_date, :count_children, :sort_children, :set_visibility, :set_accessibility, :export_newsletter]
 
-  before_filter :find_nodes, :only => [ :bulk_edit, :bulk_update ]
+  before_action :find_nodes, only: [:bulk_edit, :bulk_update]
 
-  before_filter :find_images_and_attachments, :only => [ :audit_show, :audit_edit, :previous_diffed ]
+  before_action :find_images_and_attachments, only: [:audit_show, :audit_edit, :previous_diffed]
 
   # Require a role for the current node on update, destroy and move
-  require_role 'admin', :only => :set_accessibility
+  require_role 'admin', only: :set_accessibility
 
-  require_role ['admin', 'final_editor'], :except => [ :index, :update, :set_visibility, :set_accessibility, :bulk_edit, :bulk_update, :destroy, :export_newsletter ]
+  require_role ['admin', 'final_editor'], except: [:index, :update, :set_visibility, :set_accessibility, :bulk_edit, :bulk_update, :destroy, :export_newsletter]
 
-  require_role ['admin', 'final_editor', 'editor'], :only => [ :update, :bulk_edit, :bulk_update, :set_visibility, :destroy, :move, :sort_children, :count_children, :move_by_date ]
+  require_role ['admin', 'final_editor', 'editor'], only: [:update, :bulk_edit, :bulk_update, :set_visibility, :destroy, :move, :sort_children, :count_children, :move_by_date]
 
   # Shows the sitemap admin page for html requests. The tree's root will be
   # the node with the given id, or the root node if no id is given.

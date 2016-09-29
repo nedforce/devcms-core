@@ -1,7 +1,7 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +EventRegistration+ objects.
 class EventRegistrationsController < ApplicationController
-  before_filter :find_event
+  before_action :find_event
 
   # * POST /events/:id/event_registrations
   def create

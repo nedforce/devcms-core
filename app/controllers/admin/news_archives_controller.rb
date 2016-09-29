@@ -1,14 +1,13 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +NewsArchive+ objects.
-
 class Admin::NewsArchivesController < Admin::AdminController
-  acts_as_archive_controller :news_archive, :date_attribute => :publication_start_date
+  acts_as_archive_controller :news_archive, date_attribute: :publication_start_date
 
-  before_filter :find_recent_news_items, :only => :show
+  before_action :find_recent_news_items, only: :show
 
-  require_role ['admin', 'final_editor'], :except => [:index, :show]
+  require_role ['admin', 'final_editor'], except: [:index, :show]
 
-protected
+  protected
 
   # Finds recent news items.
   def find_recent_news_items

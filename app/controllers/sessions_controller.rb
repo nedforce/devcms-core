@@ -4,13 +4,13 @@
 # form, the +create+ action authenticates and (if successful) logs the user in,
 # and the +destroy+ action logs the user out.
 class SessionsController < ApplicationController
-  skip_before_filter :check_password_renewal
+  skip_before_action :check_password_renewal
 
-  before_filter :confirm_destroy, only: :destroy, unless: lambda { request.delete? }
+  before_action :confirm_destroy, only: :destroy, unless: lambda { request.delete? }
 
   # Makes sure that users that are already logged in
   # can't request the login form, or login again.
-  before_filter :redirect_logged_in_users, only: [:new, :create]
+  before_action :redirect_logged_in_users, only: [:new, :create]
 
   # SSL encryption is required for the +new+ and +create+ actions.
   ssl_required :new, :create

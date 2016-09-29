@@ -1,16 +1,15 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +NewsletterArchive+ objects.
 class Admin::NewsletterArchivesController < Admin::AdminController
-
   acts_as_archive_controller :newsletter_archive
 
-  before_filter :find_newsletter_editions, :only => :show
+  before_action :find_newsletter_editions, only: :show
   
-  skip_before_filter :find_node, :only => :index
+  skip_before_action :find_node, only: :index
 
-  skip_before_filter :set_cache_buster, :only => [ :index, :show ]
+  skip_before_action :set_cache_buster, only: [:index, :show]
 
-  require_role [ 'admin', 'final_editor' ], :except => [ :index, :show ]
+  require_role ['admin', 'final_editor'], except: [:index, :show]
 
   def index
     respond_to do |format|

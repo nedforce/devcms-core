@@ -1,7 +1,7 @@
 class Admin::AttachmentsController < Admin::AdminController
-  prepend_before_filter :find_parent_node, :only => [:new, :create]
+  prepend_before_action :find_parent_node, only: [:new, :create]
 
-  before_filter :find_attachment,        :except => [:new, :create, :ajax]
+  before_action :find_attachment, except: [:new, :create, :ajax]
 
   require_role ['admin', 'final_editor', 'editor']
 

@@ -3,40 +3,40 @@
 # to inherit.
 class Admin::AdminController < ApplicationController
   # Override non-JS DELETE hyprlinks fallback for admin pages.
-  skip_before_filter :confirm_destroy
+  skip_before_action :confirm_destroy
 
-  skip_before_filter :find_context_node
+  skip_before_action :find_context_node
 
   # Don't set search scopes in backend
-  skip_before_filter :set_search_scopes
+  skip_before_action :set_search_scopes
 
-  skip_before_filter :set_private_menu
+  skip_before_action :set_private_menu
 
-  skip_before_filter :find_accessible_content_children_for_menu
+  skip_before_action :find_accessible_content_children_for_menu
 
-  skip_before_filter :set_page_title
+  skip_before_action :set_page_title
 
-  skip_before_filter :set_rss_feed_url
+  skip_before_action :set_rss_feed_url
 
-  skip_before_filter :check_authorization
+  skip_before_action :check_authorization
 
   # Require the user to be logged in for all actions.
-  before_filter :login_required
+  before_action :login_required
 
   # Require users to have at least one of the roles +admin+, +final_editor+ and
   # +editor+.
   require_role %w(admin final_editor editor), any_node: true
 
   # Set the action buttons for the +show+ and +previous+ actions.
-  before_filter :set_actions, only: [:show, :previous]
+  before_action :set_actions, only: [:show, :previous]
 
-  before_filter :set_for_approval, only: [:edit, :update]
+  before_action :set_for_approval, only: [:edit, :update]
 
-  # Skip the filter that increments the hits for nodes
-  skip_after_filter :increment_hits
+  # Skip incrementing hits for nodes
+  skip_after_action :increment_hits
 
   # Politely ask browsers to not cache anything in the admin namespace..
-  before_filter :set_cache_buster, only: [:show, :edit, :update, :previous, :import, :build]
+  before_action :set_cache_buster, only: [:show, :edit, :update, :previous, :import, :build]
 
   layout :layout?
 

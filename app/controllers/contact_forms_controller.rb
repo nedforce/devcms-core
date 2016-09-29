@@ -3,9 +3,9 @@
 class ContactFormsController < ApplicationController
   # The +show+, +edit+, +update+ and +destroy+ actions
   # each need a +ContactForm+ object to work with/act on.
-  before_filter :find_contact_form,        only: [:show, :send_message]
-  before_filter :find_contact_form_fields, only: [:show, :send_message]
-  around_filter :check_honeypot,           only: :send_message
+  before_action :find_contact_form,        only: [:show, :send_message]
+  before_action :find_contact_form_fields, only: [:show, :send_message]
+  around_action :check_honeypot,           only: :send_message
 
   # SSL is obligatory here for the authenticity token.
   ssl_required :show, :send_message

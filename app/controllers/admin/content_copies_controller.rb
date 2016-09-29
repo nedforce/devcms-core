@@ -2,10 +2,10 @@
 # the application relating to ContentCopy objects.
 class Admin::ContentCopiesController < Admin::AdminController
   # Only the +create+ action needs a parent Node object.
-  prepend_before_filter :find_parent_node, only: :create
+  prepend_before_action :find_parent_node, only: :create
 
   # The +show+ action needs a ContentCopy object to act upon.
-  before_filter :find_content_copy, only: [:show, :previous]
+  before_action :find_content_copy, only: [:show, :previous]
 
   layout false
 

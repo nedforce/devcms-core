@@ -1,20 +1,19 @@
 # This +RESTful+ controller is used to orchestrate and control the flow of
 # the application relating to +CombinedCalendar+ objects.
 class Admin::CombinedCalendarsController < Admin::AdminController
-
   # The +create+ action needs the parent +Node+ object to link the new +CombinedCalendar+ content node to.
-  prepend_before_filter :find_parent_node, :only => [ :new, :create ]
+  prepend_before_action :find_parent_node, only: [:new, :create]
 
   # The +show+, +edit+ and +update+ actions need a +CombinedCalendar+ object to act upon.
-  before_filter :find_combined_calendar,   :only => [ :show, :edit, :update ]
+  before_action :find_combined_calendar, only: [:show, :edit, :update]
 
-  before_filter :find_calendar_items,      :only => :show
+  before_action :find_calendar_items, only: :show
 
-  before_filter :set_commit_type,          :only => [ :create, :update ]
+  before_action :set_commit_type, only: [:create, :update]
 
   layout false
 
-  require_role [ 'admin', 'final_editor' ], :except => [ :index, :show ]
+  require_role ['admin', 'final_editor'], except: [:index, :show]
 
   # * GET /admin/combined_calendars/:id
   # * GET /admin/combined_calendars/:id.xml
