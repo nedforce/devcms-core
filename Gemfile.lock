@@ -27,7 +27,7 @@ GIT
 PATH
   remote: .
   specs:
-    devcms_core (3.2.4)
+    devcms_core (3.2.5)
       actionpack-page_caching
       acts-as-taggable-on (~> 3.4.4)
       acts_as_list
@@ -106,7 +106,7 @@ GEM
       tzinfo (~> 1.1)
     acts-as-taggable-on (3.4.4)
       activerecord (>= 3.2, < 5)
-    acts_as_list (0.8.1)
+    acts_as_list (0.8.2)
       activerecord (>= 3.0)
     addressable (2.4.0)
     airbrake (4.3.8)
@@ -197,7 +197,7 @@ GEM
       pkg-config (~> 1.1.7)
     nokogumbo (1.4.9)
       nokogiri
-    pg (0.18.4)
+    pg (0.19.0)
     pkg-config (1.1.7)
     rack (1.6.4)
     rack-rewrite (1.2.1)
@@ -239,7 +239,7 @@ GEM
       builder (>= 2.1.2)
     ruby-ole (1.2.12)
     rubyzip (0.9.9)
-    sanitize (4.3.0)
+    sanitize (4.4.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.4.4)
       nokogumbo (~> 1.4.1)
@@ -290,10 +290,10 @@ GEM
       activerecord (~> 4.2)
       its-it (~> 1.2)
       schema_plus_core (~> 1.0)
-    schema_plus_enums (0.1.4)
-      activerecord (~> 4.2)
+    schema_plus_enums (0.1.5)
+      activerecord (>= 4.2, < 5.1)
       its-it (~> 1.2)
-      schema_plus_core (~> 1.0)
+      schema_plus_core
     schema_plus_foreign_keys (0.1.7)
       activerecord (>= 4.2, < 5.1)
       its-it (~> 1.2)
@@ -361,4 +361,4 @@ DEPENDENCIES
   rsolr (~> 0.12.1)
 
 BUNDLED WITH
-   1.12.5
+   1.13.4
