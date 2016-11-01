@@ -4,6 +4,7 @@ class SectionsController < ApplicationController
   before_action :find_section,                only: :show
   before_action :find_images_and_attachments, only: :show
   before_action :find_children,               only: :show
+  before_action :set_meta_description,        only: :show
 
   # * GET /sections/:id
   # * GET /sections/:id.xml
@@ -22,6 +23,10 @@ class SectionsController < ApplicationController
   end
 
   def find_children
-    @children = @node.children.accessible.is_public.exclude_content_types(%w( Image Attachment SearchPage Site )).include_content.map(&:content)
+    @children = @node.children.accessible.is_public.exclude_content_types(%w(Image Attachment SearchPage Site)).include_content.map(&:content)
+  end
+
+  def set_meta_description
+    @meta_description = @section.meta_description
   end
 end
