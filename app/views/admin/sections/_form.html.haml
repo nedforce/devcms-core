@@ -16,3 +16,7 @@
   - field_set_tag t('sections.expiration_settings') do
     = form.text_field  :expiration_email_subject, label: t('sections.expiration_email_subject')
     = form.html_editor :expiration_email_body,    label: t('sections.expiration_email_body'), height: 100
+
+- if record.is_a?(Site)
+  = field_set_tag 'Zoekmachine instellingen' do
+    = form.text_area :meta_description, label: t('shared.meta_description'), rows: 3

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160822124012) do
+ActiveRecord::Schema.define(version: 20161101122926) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -581,6 +581,7 @@ ActiveRecord::Schema.define(version: 20160822124012) do
     t.string   "expiration_email_subject", :limit=>255
     t.datetime "deleted_at",               :index=>{:name=>"index_sections_on_deleted_at"}
     t.string   "piwik_site_id",            :limit=>255
+    t.string   "meta_description"
   end
 
   create_table "settings", force: :cascade do |t|
