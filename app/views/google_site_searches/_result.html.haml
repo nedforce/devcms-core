@@ -1,0 +1,10 @@
+- link = CGI::unescape(result.link)
+
+.search-result
+  %h2.search-result-title= link_to result.title, link
+  %p.search-result-description= raw result.description
+
+  .search-result-metadata
+    %p
+      %strong Onderdeel:
+      = link_to link, link

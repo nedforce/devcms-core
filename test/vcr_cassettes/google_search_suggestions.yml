@@ -1,0 +1,54 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://clients1.google.com/complete/search?client=partner&cp=2&ds=cse&partnerid=123456&q=jo
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Host:
+      - clients1.google.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 21 Jun 2016 10:10:26 GMT
+      Expires:
+      - Tue, 21 Jun 2016 10:10:26 GMT
+      Cache-Control:
+      - private, max-age=3600
+      Content-Type:
+      - text/javascript; charset=ISO-8859-1
+      Content-Disposition:
+      - attachment; filename="f.txt"
+      Server:
+      - gws
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Frame-Options:
+      - SAMEORIGIN
+      Alternate-Protocol:
+      - 443:quic
+      Alt-Svc:
+      - quic=":443"; ma=2592000; v="34,33,32,31,30,29,28,27,26,25"
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: window.google.ac.h(["jo",[["jongerenloket ___p2",[],{"a":"Jongerenloket
+        Deventer","b":"http://jongerenloket.deventer.nl","c":"","d":"Ben jij tussen
+        de 16 en 27 jaar? Zit je thuis zonder opleiding of werk, wil je verder leren
+        of zoek je een baan die beter bij je past? Dan ben je hier op de goede plek,
+        want thuis zitten hoeft niet."}],["jongeren hulp"],["jongeren ontmoetingsplek"]],{"k":1,"q":"Q-9DdcDJ9CyTAoiC1paYqNnmzRE"}])
+    http_version:
+  recorded_at: Tue, 21 Jun 2016 10:10:26 GMT
+recorded_with: VCR 2.9.3

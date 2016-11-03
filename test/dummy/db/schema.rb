@@ -582,6 +582,7 @@ ActiveRecord::Schema.define(version: 20161101122926) do
     t.datetime "deleted_at",               :index=>{:name=>"index_sections_on_deleted_at"}
     t.string   "piwik_site_id",            :limit=>255
     t.string   "meta_description"
+    t.string   "google_search_engine"
   end
 
   create_table "settings", force: :cascade do |t|

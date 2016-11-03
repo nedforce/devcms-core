@@ -437,6 +437,11 @@ Rails.application.routes.draw do
   match '/logout' => 'sessions#destroy', as: :logout, via: :all
   get '/signup' => 'users#new', as: :signup
 
+  if DevcmsCore.config.search_engine == 'google_site_search'
+    get 'zoeken', to: 'google_site_searches#show', as: :google_site_search
+    get 'search_suggestions', to: 'google_site_searches#search_suggestions', as: :google_search_suggestions
+  end
+
   if Devcms.search_configuration[:enabled_search_engines].present?
     get '/search(/:search_engine)' => 'search#index', as: :search
   end

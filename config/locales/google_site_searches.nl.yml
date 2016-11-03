@@ -1,0 +1,6 @@
+google_site_searches:
+  searched: 'Gezocht op'
+  no_results: 'Er is geen zoekresultaat gevonden, probeert u het nog eens met een ander zoekwoord.'
+  empty: 'leeg'
+  search_engine: 'Zoekmachine'
+  google_search_engine: 'Google zoekmachine (CX)'

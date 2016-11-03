@@ -43,4 +43,6 @@ Rails.application.configure do
 
   config.airbrake_redmine_project = 'devmcms-core'
   config.airbrake_redmine_api_key = ''
+
+  config.search_engine = 'google_site_search'
 end

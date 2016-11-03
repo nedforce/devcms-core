@@ -4,7 +4,11 @@ require File.expand_path('../../test/dummy/config/environment.rb',  __FILE__)
 ActiveRecord::Migrator.migrations_paths = [File.expand_path('../../test/dummy/db/migrate', __FILE__)]
 require 'rails/test_help'
 require 'mocha/setup'
+require 'faker'
+require 'factory_girl_rails'
 require 'byebug'
+require 'webmock'
+require 'vcr'
 
 # Filter out Minitest backtrace while allowing backtrace from other libraries
 # to be shown.
@@ -39,9 +43,16 @@ ActiveRecord::FixtureSet.context_class.include FixtureHelpers
 
 class ActiveSupport::TestCase
   # Add more helper methods to be used by all tests here...
+  include FactoryGirl::Syntax::Methods
   include DevcmsCore::AuthenticatedTestHelper
   include DevcmsCore::RoleRequirementTestHelper
   include DevcmsCore::RoutingHelpers
+
+  VCR.configure do |config|
+    config.cassette_library_dir = 'test/vcr_cassettes'
+    config.hook_into :webmock # or :fakeweb
+    config.allow_http_connections_when_no_cassette = false
+  end
 
   # Headhunter: Check HTML by setting HEADHUNTER env variable:
   # ENV['HEADHUNTER'] = true
@@ -75,7 +86,6 @@ class ActiveSupport::TestCase
 end
 
 class ActionDispatch::IntegrationTest
-
   setup :enable_show_exceptions
 
   def enable_show_exceptions

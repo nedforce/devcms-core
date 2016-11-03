@@ -43,6 +43,9 @@ module DevcmsCore
     config.airbrake_redmine_secure           = false
     config.airbrake_redmine_login            = 'exception_notifier'
 
+    # Search
+    config.search_engine = false
+
     config.use_devcms_icons = true
 
     register_cms_modules

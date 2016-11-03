@@ -42,6 +42,10 @@ settings: &settings
     label: Google maps API sleutel
     value: ''
     editable: true
+  google_search_engine:
+    label: 'Google zoekmachine (CX)'
+    value: '010762692398331695174:amq3vom3xdc'
+    editable: true
   host: &host
     label: De hostnaam van de website
     value: 'localhost:3000'

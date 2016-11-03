@@ -45,6 +45,8 @@ Gem::Specification.new do |s|
   s.add_dependency  'data_checker'
   s.add_dependency  'rails-observers'
   s.add_dependency  'actionpack-page_caching'
+  s.add_dependency  'actionpack-action_caching'
+  s.add_dependency  'google-site-search'
 
   # Airbrake 5.x has a different location for its rake tasks.
   s.add_dependency  'airbrake', '~> 4.3'
@@ -70,4 +72,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'fakeweb'
   s.add_development_dependency 'rsolr', '~> 0.12.1'
   s.add_development_dependency 'acts_as_ferret', '~> 0.5.4'
+  s.add_development_dependency 'factory_girl_rails'
+  s.add_development_dependency 'webmock'
+  s.add_development_dependency 'vcr'
 end

@@ -24,9 +24,9 @@ require 'open-uri'
 #
 class Feed < ActiveRecord::Base
   # Adds content node functionality to Feed.
-  acts_as_content_node({
+  acts_as_content_node(
     available_content_representations: ['content_box']
-  })
+  )
 
   # See the preconditions overview for an explanation of these validations.
   validates :url, presence: true
@@ -39,8 +39,10 @@ class Feed < ActiveRecord::Base
     # cache miss
     local_parsed_feed = parse_feed
 
-    # May be nil, in which case to_yaml would cache a NilClass, so test if parse_feed returned anything meaningful.
-    # Then remove all lines containing only space characters because they can confuse YAML::load.
+    # May be nil, in which case to_yaml would cache a NilClass, so test if
+    # parse_feed returned anything meaningful.
+    # Then remove all lines containing only space characters because they can
+    # confuse YAML::load.
     update_attributes(cached_parsed_feed: local_parsed_feed.to_yaml.gsub(/\n\s+\n/, '\n')) if local_parsed_feed
     local_parsed_feed
   end
@@ -48,7 +50,9 @@ class Feed < ActiveRecord::Base
   # Returns the title.
   def title
     value = self.read_attribute(:title)
-    value.blank? ? (parsed_feed ? parsed_feed.title : 'Feed') : value
+    return value if value.present?
+
+    parsed_feed ? parsed_feed.title : 'Feed'
   end
 
   # Returns the entries of the parsed feed.
@@ -76,29 +80,27 @@ class Feed < ActiveRecord::Base
 
   # Returns the entry titles and descriptions as the tokens for indexing.
   def content_tokens
-    entries.map { |entry| [ entry.title, entry.description ].join(' ') }.compact.join(' ')
+    entries.map { |entry| [entry.title, entry.description].join(' ') }.compact.join(' ')
   end
 
   protected
 
   # Read the feed.
   def read_feed
-    begin
-      self.xml = open(url).read.gsub(/\n/, ' ').gsub(/\s+/, ' ')
-    rescue => e
-      Rails.logger.error(e)
-      return nil
-    end
+    self.xml = open(url).read.gsub(/\n/, ' ').gsub(/\s+/, ' ')
+  rescue => e
+    Rails.logger.error(e)
+    return nil
   end
 
   # Parse the feed and normalize it using +FeedNormalizer+.
   def parse_feed
     read_feed if xml.blank?
-    FeedNormalizer::FeedNormalizer.parse(ActiveSupport::Multibyte::Unicode.tidy_bytes(xml)) unless xml.blank?
+    FeedNormalizer::FeedNormalizer.parse(ActiveSupport::Multibyte::Unicode.tidy_bytes(xml)) if xml.present?
   end
 
   # Validate that we can parse the new feed URL or restore the old XML.
   def valid_feed?
-    errors.add(:url, :invalid_feed) unless self.url.blank? || parsed_feed
+    errors.add(:url, :invalid_feed) if url.present? && !parsed_feed
   end
 end
