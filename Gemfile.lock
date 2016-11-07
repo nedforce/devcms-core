@@ -27,7 +27,7 @@ GIT
 PATH
   remote: .
   specs:
-    devcms_core (3.4.1)
+    devcms_core (3.4.2)
       actionpack-action_caching
       actionpack-page_caching
       acts-as-taggable-on (~> 3.4.4)
@@ -112,7 +112,8 @@ GEM
       activerecord (>= 3.2, < 5)
     acts_as_list (0.8.2)
       activerecord (>= 3.0)
-    addressable (2.4.0)
+    addressable (2.5.0)
+      public_suffix (~> 2.0, >= 2.0.2)
     airbrake (4.3.8)
       builder
       multi_json
@@ -214,6 +215,7 @@ GEM
     nokogumbo (1.4.10)
       nokogiri
     pg (0.19.0)
+    public_suffix (2.0.4)
     rack (1.6.4)
     rack-rewrite (1.2.1)
     rack-test (0.6.3)
