@@ -1,0 +1,86 @@
+$searchPageBlack: rgb(51, 51, 51)
+$searchPageBrown: SaddleBrown
+$searchPageRed: red
+$searchPageGray: grey
+$searchPageBlue: rgb(45, 131, 213)
+
+.search-page
+  font-size: 15px
+  h1
+    font-family: arial, sans-serif
+    color: $searchPageBrown
+    font-weight: normal
+    font-size: 15px
+    margin-bottom: 0
+
+  .gray
+    color: $searchPageGray
+
+  .brown
+    color: $searchPageBrown
+
+  .blue
+    color: $searchPageBlue
+
+  .search-summary
+    margin-bottom: 10px
+    p
+      margin: 5px 0
+
+  .search-pagination
+    &.top-search-pagination
+      margin-bottom: 10px
+    &.bottom-search-pagination
+      border-top: solid 1px $searchPageBlack
+      padding-top: 10px
+    a
+      color: $searchPageBrown
+      font-size: 15px
+
+    a.previous
+      margin-right: 10px
+
+  ul.search-tabs
+    list-style: none outside none
+    border-bottom: solid 2px $default
+    padding-left: 4px
+    margin: 15px 0 30px 0
+
+    li
+      padding: 0
+      display: inline-block
+      a
+        color: $darkGray
+        text-decoration: none
+        display: block
+        padding: 0px 6px
+        background-color: $defaultLight
+        &:hover, &.active
+          text-decoration: none
+          color: white
+          background-color: $default
+
+  .search-result
+    border-top: 1px solid #333
+    padding: 5px 0
+
+    a:hover
+      color: red
+
+    .search-result-title
+      margin: 0
+      font-weight: bold
+
+    .search-result-description
+      margin-top: 5px
+
+    .search-result-metadata
+      a, p
+        color: $searchPageGray
+      a:hover
+        color: $searchPageRed
+      p
+        display: block
+        margin: 0
+        overflow: hidden
+        text-overflow: ellipsis
