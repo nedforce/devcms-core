@@ -1,6 +1,6 @@
 - link = CGI::unescape(result.link)
 
-.search-result
+.search-result{class: ('promotion' if result.is_promotion?) }
   %h2.search-result-title= link_to result.title, link
   %p.search-result-description= raw result.description
 

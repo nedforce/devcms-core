@@ -18,7 +18,7 @@ class GoogleSiteSearchesController < ApplicationController
       url.scheme = 'https'
 
       @search = GoogleSiteSearch::FacetSearch.new(url, GoogleSearchResult).query
-      @results = @search.results
+      @results = @search.results.select(&:is_promotion?) + @search.results.reject(&:is_promotion?)
       @facets = @search.facets
     end
 

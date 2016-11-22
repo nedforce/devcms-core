@@ -35,6 +35,10 @@ class GoogleSearchResult < GoogleSiteSearch::Result
     end
   end
 
+  def is_promotion?
+    promotion_title.present?
+  end
+
   private
 
   def strip_html(string, allowed_tags = [])
