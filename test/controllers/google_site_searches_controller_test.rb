@@ -11,7 +11,7 @@ class GoogleSiteSearchesControllerTest < ActionController::TestCase
     )
     @search = build(
       :facet_search,
-      results: [stub(title: 'A title', description: 'A description', link: Faker::Internet.url)]
+      results: [stub(title: 'A title', description: 'A description', link: Faker::Internet.url, is_promotion?: false)]
     )
     GoogleSiteSearch::FacetSearch.any_instance.expects(:query).returns(@search)
 
