@@ -232,7 +232,7 @@ class NodeURLAliasTest < ActiveSupport::TestCase
     assert_equal 'suffix', cn.custom_url_alias
     cn.update_attributes custom_url_suffix: ''
     cn.reload
-    assert_equal nil, cn.custom_url_alias
+    assert_nil cn.custom_url_alias
   end
 
   protected
