@@ -247,9 +247,9 @@ module DevcmsCoreHelper
   end
 
   def social_media_buttons(page)
-    social_media_button(page, 'social_twitter.png',  t('application.add_to_twitter'),  'http://twitter.com/?status={{title}}%20{{url}}') +
-    social_media_button(page, 'social_facebook.png', t('application.add_to_facebook'), 'http://www.facebook.com/sharer.php?u={{url}}&amp;t={{title}}') +
-    social_media_button(page, 'social_blogger.png',  t('application.add_to_blogger'),  'http://www.blogger.com/blog_this.pyra?t=&amp;u={{url}}&amp;n={{title}}') +
+    social_media_button(page, 'social_twitter.png',  t('application.add_to_twitter'),  'https://twitter.com/?status={{title}}%20{{url}}') +
+    social_media_button(page, 'social_facebook.png', t('application.add_to_facebook'), 'https://www.facebook.com/sharer.php?u={{url}}&amp;t={{title}}') +
+    social_media_button(page, 'social_blogger.png',  t('application.add_to_blogger'),  'https://www.blogger.com/blog_this.pyra?t=&amp;u={{url}}&amp;n={{title}}') +
     email_button(page, 'email.png', t('application.email_page'))
   end
 
