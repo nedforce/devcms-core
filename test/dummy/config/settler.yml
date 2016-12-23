@@ -148,7 +148,7 @@ settings: &settings
       presence: true
   skype_box_call_url:
     label: Call URL van het Skype-contactblok voor producten
-    value: http://deventer.nl/admin/skype:TH85GemDummy7411?call
+    value: https://deventer.nl/admin/skype:TH85GemDummy7411?call
     editable: true
     validations:
       presence: true

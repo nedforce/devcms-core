@@ -41,7 +41,7 @@ module ReadspeakerHelper
 
   # Returns a URL to Readspeaker.
   def readspeaker_url_for(target_url, options = {})
-    url = "http://app.readspeaker.com/cgi-bin/rsent?customerid=#{Settler[:readspeaker_cid]}"
+    url = "https://app.readspeaker.com/cgi-bin/rsent?customerid=#{Settler[:readspeaker_cid]}"
     url << "&amp;readid=readspeaker_block_#{options[:rid]}" if options[:rid].present?
     url << "&amp;lang=#{readspeaker_lang(options[:lang])}"
     url << "&amp;url=#{CGI.escape(target_url)}"
