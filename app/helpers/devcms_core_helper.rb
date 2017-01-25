@@ -326,6 +326,10 @@ module DevcmsCoreHelper
 
   protected
 
+  def render_top
+    return
+  end
+
   def render_images
     return if @image_content_nodes.blank?
 

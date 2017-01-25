@@ -1,5 +1,6 @@
 .regularPage.pollQuestion
   = readspeaker do
+    = render_top
     %h1= h @poll_question.poll.title
 
     = render :partial => '/shared/metadata', :locals => { :publication_date => @poll_question.publication_start_date, :last_update_date => @poll_question.updated_at }

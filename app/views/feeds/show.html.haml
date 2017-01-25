@@ -1,4 +1,5 @@
 .regularPage.feed
+  = render_top
   %h1= h @feed.title
   = render partial: '/shared/metadata', locals: { last_update_date: @feed.updated_at }
   - @feed.entries[0..3].each_with_index do |entry, i|
