@@ -1,7 +1,6 @@
 - container = @news_archive || @news_viewer
 .regularPage.newsArchive
   = readspeaker(container.node.id) do |readspeaker_id|
-    = render_top
     %h1= container.title
 
     = render :partial => '/shared/metadata', :locals => { :last_update_date => container.last_updated_at }
