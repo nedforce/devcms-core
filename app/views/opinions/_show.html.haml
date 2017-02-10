@@ -1,0 +1,21 @@
+.opinionContainer
+  %table
+    %tr
+      %th{ colspan: 3 }
+        = @opinion.subtitle
+    %tr
+      %td
+        = link_to image_tag('smiley_good.png', alt: t('opinions.good')), new_opinion_entry_path(feeling: 1, node_id: @node, opinion_id: @opinion)
+      %td
+        = link_to image_tag('smiley_neutral.png', alt: t('opinions.neutral')), new_opinion_entry_path(feeling: 2, node_id: @node, opinion_id: @opinion)
+      %td
+        = link_to image_tag('smiley_bad.png', alt: t('opinions.bad')), new_opinion_entry_path(feeling: 3, node_id: @node, opinion_id: @opinion)
+    %tr
+      %td
+        = link_to t('opinions.good'), new_opinion_entry_path(feeling: 1, node_id: @node, opinion_id: @opinion)
+      %td
+        = link_to t('opinions.neutral'), new_opinion_entry_path(feeling: 2, node_id: @node, opinion_id: @opinion)
+      %td
+        = link_to t('opinions.bad'), new_opinion_entry_path(feeling: 3, node_id: @node, opinion_id: @opinion)
+
+

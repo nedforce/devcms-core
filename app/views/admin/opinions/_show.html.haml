@@ -1,0 +1,31 @@
+- if @votes.any?
+  %h2= t('opinions.alreadysubmitted')
+
+  %table.properties_box
+    %tr
+      %th
+        = t('opinions.opinion')
+      %th
+        = t('opinions.description')
+      %th
+        = t('opinions.text')    
+    - @votes.each do |vote|
+      - feeling = 'neutral'
+      - if vote.feeling == 1
+        - feeling = 'good'
+      - elsif vote.feeling == 3
+        - feeling = 'bad'
+      %tr
+        %td
+          = t("opinions.#{ feeling }")
+        %td        
+          = t("opinions.option_#{ feeling }_#{ vote.description }")
+        %td
+          = vote.text
+- else
+  %h2= t('opinions.nosubmissions')
+          
+%h2= @opinion.title
+= render partial: '/opinions/show'
+= render partial: '/opinion_entries/showall'
+

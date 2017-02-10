@@ -22,7 +22,7 @@
 #
 class Meeting < CalendarItem
   acts_as_content_node(
-    allowed_child_content_types: %w( Attachment AttachmentTheme AgendaItem ),
+    allowed_child_content_types: %w( Attachment AttachmentTheme AgendaItem Opinion ),
     show_in_menu:                false,
     copyable:                    false,
     controller_name:             'meetings'

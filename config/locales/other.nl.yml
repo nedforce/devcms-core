@@ -805,6 +805,47 @@ nl:
     succesfully_destroyed: Node succesvol verwijderd.
     succesfully_moved: Node succesvol verplaatst.
     unapproved: Niet goedgekeurd
+  opinions:
+    edit: Bewerken van de opinievraag
+    opinion_failed: Kon opinie niet opslaan
+    add_opinion_to: Opinievraag toevoegen aan
+    alreadysubmitted: Reeds ingevoerde opinies
+    nosubmissions: Nog geen opinies ingevoerd
+    opinion: Opinie
+    description: Keuze
+    text: Extra tekst
+    good: Goed
+    neutral: Neutraal
+    bad: Slecht
+    good2: goed
+    neutral2: matig
+    bad2: slecht
+    title: titel
+    subtitle: vraag
+    default_title: Geef uw mening
+    default_subtitle: Wat vindt u van deze pagina?
+    why: Waarom vindt u deze informatie %{opinion}?
+    option_good_0: Niet ingevuld
+    option_good_1: De informatie is makkelijk te vinden
+    option_good_2: De informatie is duidelijk
+    option_good_3: Mijn vraag is beantwoord
+    option_good_4: Een andere reden (geef hieronder verklaring)
+    option_neutral_0: Niet ingevuld
+    option_neutral_1: Het duurt lang om de informatie te vinden
+    option_neutral_2: De informatie is niet helemaal duidelijk
+    option_neutral_3: Mijn vraag is niet helemaal beantwoord
+    option_neutral_4: Een andere reden (geef hieronder verklaring)
+    option_bad_0: Niet ingevuld
+    option_bad_1: Het duurt te lang om te vinden
+    option_bad_2: De informatie is niet duidelijk
+    option_bad_3: Mijn vraag is niet beantwoord
+    option_bad_4: Een andere reden (geef hieronder verklaring)    
+    before_text: Hebt u verder nog op- of aanmerkingen?
+    submit: Versturen
+    annul: Terug naar de pagina
+    okmessage: Uw opmerking is opgeslagen
+    failmessage: Uw opmerking kon niet worden opgeslagen
+    label: Reden %{nummer} voor opinie %{opinie}
   owms:
     announcement: bekendmaking
     annual_plan: jaarplan

@@ -31,7 +31,7 @@ class Section < ActiveRecord::Base
       AlphabeticIndex Attachment AttachmentTheme Calendar Carrousel
       CombinedCalendar ContactBox ContactForm FaqArchive Feed Forum HtmlPage
       Image LinksBox InternalLink ExternalLink MailLink NewsArchive
-      NewsletterArchive NewsViewer Page Poll SearchPage Section
+      NewsletterArchive NewsViewer Opinion Page Poll SearchPage Section
       SocialMediaLinksBox TopHitsPage WeblogArchive
     ),
     allowed_roles_for_create:          %w(admin final_editor),

@@ -19,7 +19,7 @@
 class NewsletterArchive < ActiveRecord::Base
   # Adds content node functionality to news archives.
   acts_as_content_node(
-    allowed_child_content_types:       %w( NewsletterEdition Image ),
+    allowed_child_content_types:       %w( NewsletterEdition Image Opinion ),
     allowed_roles_for_update:          %w( admin final_editor ),
     allowed_roles_for_create:          %w( admin final_editor ),
     allowed_roles_for_destroy:         %w( admin final_editor ),

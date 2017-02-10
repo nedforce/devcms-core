@@ -108,6 +108,10 @@ Rails.application.routes.draw do
       get :archive
     end
   end
+
+  resources :opinions, only: :show
+  resources :opinion_entries, only: [:new, :create]
+  
   resources :pages, only: :show
   resource  :password_renewal, only: [:edit, :update]
   resources :password_resets, only: [:new, :create, :edit, :update]
@@ -317,6 +321,8 @@ Rails.application.routes.draw do
         end
       end
     end
+
+    resources :opinions, except: [:index]   
 
     resources :pages, except: [:index, :destroy] do
       member do

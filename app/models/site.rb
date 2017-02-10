@@ -19,7 +19,7 @@ class Site < Section
       AlphabeticIndex Attachment AttachmentTheme Calendar Carrousel
       CombinedCalendar ContactBox ContactForm FaqArchive Feed Forum HtmlPage
       Image LinksBox InternalLink ExternalLink MailLink NewsArchive
-      NewsletterArchive NewsViewer Page Poll SearchPage Section Site
+      NewsletterArchive NewsViewer Opinion Page Poll SearchPage Section Site
       SocialMediaLinksBox TopHitsPage WeblogArchive
     ),
     allowed_roles_for_create:          %w(admin),
