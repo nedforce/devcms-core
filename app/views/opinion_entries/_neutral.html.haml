@@ -5,24 +5,23 @@
     = hidden_field_tag 'feeling', @feeling
     = hidden_field_tag 'node_id', @redirectnode.id
     = hidden_field_tag 'opinion_id', @opinion.id
-    = t('opinions.why', opinion: t('opinions.neutral2'))
+    %fieldset
+      %legend= t('opinions.why', opinion: t('opinions.neutral2'))
+      = radio_button_tag(:description, '1')
+      = label_tag(:description_1, @opinion.entry_2_1)
+      %br
+      = radio_button_tag(:description, '2')
+      = label_tag(:description_2, @opinion.entry_2_2)
+      %br
+      = radio_button_tag(:description, '3')
+      = label_tag(:description_3, @opinion.entry_2_3)
+      %br
+      = radio_button_tag(:description, '4')
+      = label_tag(:description_4, @opinion.entry_2_4)
     %br
-    = radio_button_tag(:description, '1')
-    = label_tag(:description_1, @opinion.entry_2_1)
+    = label_tag(:text, t('opinions.before_text'))
     %br
-    = radio_button_tag(:description, '2')
-    = label_tag(:description_2, @opinion.entry_2_2)
-    %br
-    = radio_button_tag(:description, '3')
-    = label_tag(:description_3, @opinion.entry_2_3)
-    %br
-    = radio_button_tag(:description, '4')
-    = label_tag(:description_4, @opinion.entry_2_4)
-    %br
-    %br
-    = t('opinions.before_text')
-    %br
-    = text_area_tag(:text, nil, size: "40x6")
+    = text_area_tag(:text, nil, size: "60x6")
     %br
     = submit_tag t('opinions.submit')
   = link_to t('opinions.annul'), content_node_path(@opinion.parent)

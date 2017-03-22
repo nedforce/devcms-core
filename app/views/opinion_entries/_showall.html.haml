@@ -1,6 +1,6 @@
 %h2= t('opinions.good')
 %fieldset
-  = t('opinions.why', opinion: t('opinions.good2'))
+  %label= t('opinions.why', opinion: t('opinions.good2'))
   %br
   = radio_button_tag(:description, '1')
   = label_tag(:description_1, @opinion.entry_1_1)
@@ -16,7 +16,7 @@
 
 %h2= t('opinions.neutral')
 %fieldset
-  = t('opinions.why', opinion: t('opinions.neutral2'))
+  %label= t('opinions.why', opinion: t('opinions.neutral2'))
   %br
   = radio_button_tag(:description, '1')
   = label_tag(:description_1, @opinion.entry_2_1)
@@ -32,7 +32,7 @@
 
 %h2= t('opinions.bad')
 %fieldset
-  = t('opinions.why', opinion: t('opinions.bad2'))
+  %label= t('opinions.why', opinion: t('opinions.bad2'))
   %br
   = radio_button_tag(:description, '1')
   = label_tag(:description_1, @opinion.entry_3_1)
@@ -46,6 +46,6 @@
   = radio_button_tag(:description, '4')
   = label_tag(:description_4, @opinion.entry_3_4)
 %fieldset
-  = t('opinions.before_text')
+  = label_tag(:text, t('opinions.before_text'))
   %br
-  = text_area_tag(:text, nil, size: "40x6")
+  = text_area_tag(:text, nil, size: "60x6")
