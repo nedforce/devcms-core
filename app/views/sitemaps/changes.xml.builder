@@ -7,7 +7,7 @@ xml.tag!("sitemap:urlset",
 
   @changes.each do |change|
     xml.url("xmlns" => "http://www.sitemaps.org/schemas/sitemap/0.9") do
-      xml.loc "/#{change.url_alias}"
+      xml.loc "https://#{change.containing_site.content.domain}/#{change.url_alias}"
       xml.lastmod change.updated_at.utc.to_s(:w3cdtfutc)
 
       if  (change.deleted_at.present? && (change.updated_at - change.deleted_at) < 1.0) ||
