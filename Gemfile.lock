@@ -27,7 +27,7 @@ GIT
 PATH
   remote: .
   specs:
-    devcms_core (3.4.8)
+    devcms_core (3.4.9)
       actionpack-action_caching
       actionpack-page_caching
       acts-as-taggable-on (~> 3.4.4)
@@ -110,7 +110,7 @@ GEM
       tzinfo (~> 1.1)
     acts-as-taggable-on (3.4.4)
       activerecord (>= 3.2, < 5)
-    acts_as_list (0.9.4)
+    acts_as_list (0.9.5)
       activerecord (>= 3.0)
     addressable (2.5.0)
       public_suffix (~> 2.0, >= 2.0.2)
@@ -122,7 +122,7 @@ GEM
     arel (6.0.3)
     builder (3.2.2)
     byebug (9.0.6)
-    carrierwave (1.0.0)
+    carrierwave (1.1.0)
       activemodel (>= 4.0.0)
       activesupport (>= 4.0.0)
       mime-types (>= 1.16)
@@ -158,7 +158,7 @@ GEM
       simple-rss (>= 1.1)
     ferret (0.11.8.6)
     ffi (1.9.18)
-    geokit (1.10.0)
+    geokit (1.11.0)
     geokit-rails (2.2.0)
       geokit (~> 1.5)
       rails (>= 3.0)
@@ -365,7 +365,7 @@ GEM
       thread_safe (~> 0.1)
     uglifier (3.2.0)
       execjs (>= 0.3.0, < 3)
-    user_agent_parser (2.3.0)
+    user_agent_parser (2.3.1)
     valuable (0.9.13)
     vcr (3.0.3)
     webmock (2.1.0)
