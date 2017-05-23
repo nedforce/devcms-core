@@ -37,7 +37,7 @@ class Attachment < ActiveRecord::Base
     show_in_menu:            false,
     show_content_box_header: false
   }, {
-    exclude: [:id, :created_at, :updated_at, :size, :height, :width, :db_file_id, :parent_id, :filename, :thumbnail, :content_type]
+    exclude: [:id, :created_at, :updated_at, :size, :height, :width, :db_file_id, :parent_id, :filename, :thumbnail, :content_type, :file]
   })
 
   # This content type needs approval when created or altered by an editor.
