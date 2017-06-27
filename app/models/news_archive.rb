@@ -1,5 +1,5 @@
 require 'rss/2.0'
-
+require 'csv'
 # This model is used to represent a news archive that can contain multiple news
 # items, which are represented using +NewsItem+ objects. It has specified
 # +acts_as_content_node+ from Acts::ContentNode::ClassMethods.
@@ -16,6 +16,7 @@ require 'rss/2.0'
 # * Requires the presence of +title+.
 #
 class NewsArchive < ActiveRecord::Base
+  include DevcmsCore::RoutingHelpers
   # Adds content node functionality to news archives.
   acts_as_content_node(
     allowed_child_content_types:       %w( NewsItem ),
@@ -53,5 +54,18 @@ class NewsArchive < ActiveRecord::Base
 
   def last_updated_at
     node.descendants.accessible.maximum(:updated_at) || updated_at
+  end
+
+  def to_csv
+    CSV.generate do |csv|
+      csv << ['title', 'preamble', 'body', 'published_at', 'created_at', 'updated_at', 'image_urls', 'attachments']
+      news_items.where('nodes.publication_start_date < ?', Time.now).each do |news_item|
+        image_urls = news_item.node.children.accessible.with_content_type('Image').map do |image|
+          content_node_path(image) if !image.content.is_for_header? && image.content.show_in_listing
+        end.compact
+        attachments = news_item.node.children.accessible.with_content_type('Attachment').map {|attachment| content_node_path(attachment, format: attachment.content.extension) }
+        csv << [news_item.title, news_item.preamble, news_item.body, news_item.node.publication_start_date, news_item.created_at, news_item.updated_at, image_urls, attachments]
+      end
+    end
   end
 end

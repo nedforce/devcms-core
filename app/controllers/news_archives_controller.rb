@@ -10,6 +10,7 @@ class NewsArchivesController < ApplicationController
 
   # The +show+ action needs a list of recent news items to work with.
   before_filter :find_recent_news_items, :only => :show
+  caches_action :archive, cache_path: lambda { |controller| { id: @node.id }}, expires_in: 12.hours
 
   # * GET /news_archives/:id
   # * GET /news_archives/:id.atom
@@ -25,16 +26,24 @@ class NewsArchivesController < ApplicationController
   # * GET /news_archives/:id/archive
   # * GET /news_archives/:id/:year/:month
   def archive
-    @date        = Date.parse("#{params[:year]||params[:date][:year]}-#{params[:month]||params[:date][:month]}-1") rescue Date.today
-    @news_items  = @news_archive.news_items.accessible
-    @start_date  = @news_items.minimum(:publication_start_date).to_date rescue Date.today
-    @end_date    = @news_items.maximum(:publication_start_date).to_date rescue Date.today
-    @valid_range = (@start_date.beginning_of_month..Date.today.end_of_month)
-    @date        = Date.today unless @valid_range.cover? @date
-    @news_items  = @news_items.where('nodes.publication_start_date' => @date.beginning_of_month..@date.end_of_month).page(params[:page]).per(@max_news_items)
-
     respond_to do |format|
-      format.html # archive.html.haml
+      format.html do
+        @date        = Date.parse("#{params[:year]||params[:date][:year]}-#{params[:month]||params[:date][:month]}-1") rescue Date.today
+        @news_items  = @news_archive.news_items.accessible
+        @start_date  = @news_items.minimum(:publication_start_date).to_date rescue Date.today
+        @end_date    = @news_items.maximum(:publication_start_date).to_date rescue Date.today
+        @valid_range = (@start_date.beginning_of_month..Date.today.end_of_month)
+        @date        = Date.today unless @valid_range.cover? @date
+        @news_items  = @news_items.where('nodes.publication_start_date' => @date.beginning_of_month..@date.end_of_month).page(params[:page]).per(@max_news_items)
+        # archive.html.haml
+      end
+      format.xml do
+        @news_items = @news_archive.news_items.where('nodes.publication_start_date < ?', Time.now)
+        render file: 'news_archives/archive.pxml'
+      end
+      format.csv do
+        render text: @news_archive.to_csv
+      end
     end
   end
 
