@@ -7,3 +7,4 @@
 #= require modules/slideshow
 #= require modules/search
 #= require modules/faq
+#= require modules/search_autocomplete

@@ -6,6 +6,15 @@ class SearchControllerTest < ActionController::TestCase
   @@index_built = false
 
   setup do
+    Devcms.stubs(:search_configuration).returns(
+      enabled_search_engines: ['ferret'],
+      default_search_engine: 'ferret',
+      default_page_size: 5,
+      ferret: {
+        synonym_weight: 0.25,
+        proximity: 0.8
+      }
+    )
     # unless @@index_built
     #   Node.rebuild_index
     #   Synonym.rebuild_index

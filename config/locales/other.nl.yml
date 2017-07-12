@@ -839,7 +839,7 @@ nl:
     option_bad_1: Het duurt te lang om te vinden
     option_bad_2: De informatie is niet duidelijk
     option_bad_3: Mijn vraag is niet beantwoord
-    option_bad_4: Een andere reden (geef hieronder verklaring)    
+    option_bad_4: Een andere reden (geef hieronder verklaring)
     before_text: Hebt u verder nog op- of aanmerkingen?
     submit: Versturen
     annul: Terug naar de pagina
@@ -968,6 +968,7 @@ nl:
     common_pages: Algemene pagina
     date: Datum
     downloads: Bijlagen
+    empty: leeg
     failed: Kon zoekpagina niet opslaan.
     for: voor
     for_zipcode: Zoek op postcode
@@ -998,6 +999,7 @@ nl:
     search: Zoek
     search_in: Zoek in
     search_results: Zoekresultaten
+    searched: Gezocht op
     show_advanced_options: Toon uitgebreide zoekopties
     simple_search: Simpel zoeken
     site: Gehele site

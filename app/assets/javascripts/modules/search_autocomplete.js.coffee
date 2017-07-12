@@ -12,7 +12,7 @@ $ ->
     source: (request, response) ->
       term = request.term
       # Only do JSON request for the first two characters
-      cache_key = term.substring(0,2)
+      cache_key = term
       if cache[cache_key] != undefined
         response( sortResults(term, cache[ cache_key ]) )
       else

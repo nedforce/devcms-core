@@ -15,8 +15,8 @@ class Devcms
       return { enabled_search_engines: [] } unless SETTLER_LOADED
 
       {
-        enabled_search_engines: ['ferret'],
-        default_search_engine:  'ferret',
+        enabled_search_engines: ['pando_search', 'ferret'],
+        default_search_engine:  'pando_search',
         default_page_size:      Settler[:search_default_page_size].to_i,
         ferret: {
           synonym_weight: Settler[:search_ferret_synonym_weight].to_f,
