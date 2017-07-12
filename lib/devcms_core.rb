@@ -35,11 +35,6 @@ require 'rails-observers'
 require 'action_controller/page_caching'
 require 'action_controller/action_caching'
 
-# Google Site Search
-require 'google-site-search'
-require 'google_site_search/facet_search'
-require 'google_site_search/search_suggestions'
-
 # Libs
 module DevcmsCore
   extend ActiveSupport::Autoload

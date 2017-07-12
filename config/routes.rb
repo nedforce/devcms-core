@@ -111,7 +111,7 @@ Rails.application.routes.draw do
 
   resources :opinions, only: :show
   resources :opinion_entries, only: [:new, :create]
-  
+
   resources :pages, only: :show
   resource  :password_renewal, only: [:edit, :update]
   resources :password_resets, only: [:new, :create, :edit, :update]
@@ -322,7 +322,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :opinions, except: [:index]   
+    resources :opinions, except: [:index]
 
     resources :pages, except: [:index, :destroy] do
       member do
@@ -443,9 +443,8 @@ Rails.application.routes.draw do
   match '/logout' => 'sessions#destroy', as: :logout, via: :all
   get '/signup' => 'users#new', as: :signup
 
-  if DevcmsCore.config.search_engine == 'google_site_search'
-    get 'zoeken', to: 'google_site_searches#show', as: :google_site_search
-    get 'search_suggestions', to: 'google_site_searches#search_suggestions', as: :google_search_suggestions
+  if DevcmsCore.config.search_engine == 'pando_search'
+    get 'search_suggestions', to: 'pando_search#search_suggestions', as: :search_suggestions
   end
 
   if Devcms.search_configuration[:enabled_search_engines].present?

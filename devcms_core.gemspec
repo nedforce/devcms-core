@@ -46,7 +46,6 @@ Gem::Specification.new do |s|
   s.add_dependency  'rails-observers'
   s.add_dependency  'actionpack-page_caching'
   s.add_dependency  'actionpack-action_caching'
-  s.add_dependency  'google-site-search'
 
   # Airbrake 5.x has a different location for its rake tasks.
   s.add_dependency  'airbrake', '~> 4.3'

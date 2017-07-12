@@ -1,6 +1,0 @@
-.search-pagination{ class: local_assigns[:pagination_class] }
-  - if @search.previous_results_url
-    = link_to "< #{t('application.previous_page')}", { page: (@page - 1), query: @query }, class: 'previous'
-
-  - if @search.next_results_url
-    = link_to "#{t('application.next_page')} >", page: (@page + 1), query: @query
