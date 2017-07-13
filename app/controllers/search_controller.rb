@@ -1,7 +1,6 @@
 class SearchController < ApplicationController
-  before_filter :set_search_scope
-  before_filter :parse_search_scope
   before_filter :set_search_engine
+  before_filter :set_search_scope, :parse_search_scope
 
   def index
     @query = params[:query].try(:strip)
@@ -11,7 +10,7 @@ class SearchController < ApplicationController
 
     @advanced = params[:advanced]
     if @query
-      @results = Searcher(@engine).search(@query, :page => params[:page], :for => current_user, :zipcode => params[:zipcode], :from => @from, :to => @to, :sort => params[:sort], :content_types_to_include => @content_types_to_include, :content_types_to_exclude => @content_types_to_exclude, :top_node => @top_node)
+      @results = Searcher(@engine).search(@query, :page => params[:page], :for => current_user, :zipcode => params[:zipcode], :from => @from, :to => @to, :sort => params[:sort], :content_types_to_include => @content_types_to_include, :content_types_to_exclude => @content_types_to_exclude, :top_node => @top_node, :facets => params[:facets])
     else
       @results = []
     end

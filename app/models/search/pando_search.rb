@@ -7,6 +7,7 @@ class Search::PandoSearch
 
   def self.search(query, page, page_size, user, top_node, options)
     query = { q: query, size: page_size, page: page}
+    query.merge!(facets: options[:facets]) if options[:facets]
     results = query_pando query
     if results.is_a?(Net::HTTPSuccess)
       parsed_results, total_results = parse_results results.body
