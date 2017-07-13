@@ -47,6 +47,7 @@ module DevcmsCore
     config.search_engine = false
 
     config.pando_search_url = ''
+    config.pando_suggest_url = ''
 
     config.use_devcms_icons = true
 

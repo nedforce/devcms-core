@@ -38,7 +38,7 @@ class Search::PandoSearch
   end
 
   def self.search_suggestions term
-    uri = URI.parse('https://search.enrise.com/deventer.nl/suggest')
+    uri = URI.parse(DevcmsCore.config.pando_suggest_url)
     uri.query = {q: term}.to_param
 
     req = Net::HTTP::Get.new(uri.to_s)
