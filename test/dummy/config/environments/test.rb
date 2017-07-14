@@ -45,4 +45,6 @@ Rails.application.configure do
   config.airbrake_redmine_api_key = ''
 
   config.search_engine = 'ferret'
+
+  config.minitest_spec_rails.mini_shoulda = true
 end

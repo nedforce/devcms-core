@@ -1,4 +1,6 @@
 class SearchController < ApplicationController
+  skip_before_filter :find_node
+
   before_filter :set_search_engine
   before_filter :set_search_scope, :parse_search_scope
 

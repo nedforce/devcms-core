@@ -1,0 +1,48 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://search.enrise.com/deventer.nl/search?page=1&q=&size=5
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Fri, 14 Jul 2017 10:24:11 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Keep-Alive:
+      - timeout=300
+      Vary:
+      - Accept-Encoding
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Methods:
+      - GET, OPTIONS
+      Access-Control-Allow-Headers:
+      - Content-Type
+    body:
+      encoding: UTF-8
+      string: '{"request":{"q":"","page":1,"size":5,"facets":{},"full":false,"nocorrect":false,"track":true,"notiming":false},"received":{"q":"","page":1,"size":5},"timing":{"request":1.35}}'
+    http_version: 
+  recorded_at: Fri, 14 Jul 2017 10:24:11 GMT
+recorded_with: VCR 3.0.3

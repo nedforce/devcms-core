@@ -1,5 +1,5 @@
 class PandoSearchController < ApplicationController
-
+  skip_before_filter :find_node
   caches_action :search_suggestions, cache_path: -> (_controller) { { term: @term } }
 
   def search_suggestions

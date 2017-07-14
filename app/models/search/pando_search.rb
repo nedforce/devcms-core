@@ -26,6 +26,7 @@ class Search::PandoSearch
   def self.parse_results results
     result_hash = JSON.parse(results)
     results = []
+    return results, 0 unless result_hash['hits'].present?
     searchResult   = Searcher::SEARCH_RESULT_STRUCT
     result_hash['hits'].each do |hit|
       res         = searchResult.new

@@ -66,6 +66,44 @@ class SearchControllerTest < ActionController::TestCase
     post :index, :query => 'blaat', :search_scope => "node_#{descendant_section_node.id}"
   end
 
+  context 'use pandosearch' do
+    setup do
+      Devcms.stubs(:search_configuration).returns(
+        enabled_search_engines: ['pando_search'],
+        default_search_engine: 'pando_search',
+        default_page_size: 5
+      )
+
+      DevcmsCore.config.pando_search_url = 'https://search.enrise.com/deventer.nl/search'
+    end
+
+    test 'should search on post' do
+      VCR.use_cassette('search_post') do
+        post :index, query: 'forum'
+      end
+      assert_response :success
+      assert assigns(:results)
+    end
+
+    def test_should_search_on_get
+      VCR.use_cassette('search') do
+        get :index, :query => 'forum'
+      end
+      assert_response :success
+      assert assigns(:results)
+    end
+
+    test 'should get no results if searching with empty query' do
+      VCR.use_cassette('search_empty') do
+        get :index, :query => ''
+      end
+      assert_response :success
+      assert assigns(:results)
+      assert_equal assigns(:results).count, 0
+    end
+  end
+
+
   protected
 
   def create_page(_attributes = {}, options = {})
