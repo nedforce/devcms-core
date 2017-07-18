@@ -8,7 +8,7 @@ class AgendaItemTest < ActiveSupport::TestCase
     @meeting                  = events(:meetings_calendar_meeting_one)
     @agenda_item_category     = agenda_item_categories(:hamerstukken)
     @agenda_item_category_two = agenda_item_categories(:stukken_ter_kennisname)
-    @agenda_item              = agenda_items(:agenda_item_one)
+    @agenda_item              = agenda_items(:agenda_item_two)
   end
 
   test 'should create agenda item' do

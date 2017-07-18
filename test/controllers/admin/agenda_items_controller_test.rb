@@ -94,7 +94,7 @@ class Admin::AgendaItemsControllerTest < ActionController::TestCase
   end
 
   test 'should get valid preview for update' do
-    agenda_item = agenda_items(:agenda_item_one)
+    agenda_item = agenda_items(:agenda_item_two)
     old_body = agenda_item.body
     put :update, id: agenda_item, agenda_item: { body: 'updated body' }, commit_type: 'preview'
 

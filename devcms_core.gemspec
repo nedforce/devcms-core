@@ -26,7 +26,7 @@ Gem::Specification.new do |s|
   s.add_dependency  'feed-normalizer', '~> 1.5.2'
   s.add_dependency  'haml', '~> 4.0'
   s.add_dependency  'libxml-ruby', '~> 2.7.0'
-  s.add_dependency  'pg'
+  s.add_dependency  'pg', '0.20.0' # Gives deprecation warning from 0.21 on if using Rails 4
   s.add_dependency  'settler', '~> 2.0.1'
   s.add_dependency  'tidy_ffi', '~> 0.1.4'
   s.add_dependency  'whenever', '>= 0.4'
@@ -43,7 +43,7 @@ Gem::Specification.new do |s|
   s.add_dependency  'truncate_html', '~> 0.5.5'
   s.add_dependency  'secure_headers', '~> 2.5'
   s.add_dependency  'data_checker'
-  s.add_dependency  'rails-observers'
+  s.add_dependency  'rails-observers', '0.1.2'
   s.add_dependency  'actionpack-page_caching'
   s.add_dependency  'actionpack-action_caching'
 

@@ -65,10 +65,9 @@ class RepeatingCalendarItemTest < ActiveSupport::TestCase
   end
 
   test 'should assign repeating to virtual attribute' do
-    [[true, true], [false, false], [nil, nil], [' ', nil], ['0', false], ['1', true]].each do |k, v|
+    [[true, true], [false, false], [nil, nil], [' ', nil], ['0', false], ['1', true]].each do |k, va|
       ci = create_repeating_calendar_item repeating: k
-
-      assert_equal v, ci.repeating, " #{v.inspect} expected but was #{ci.repeating.inspect} for #{k.inspect}"
+      assert_equal va, ci.repeating.inspect, " #{va.inspect} expected but was #{ci.repeating.inspect} for #{k.inspect}"
     end
   end
 

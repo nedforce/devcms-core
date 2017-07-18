@@ -47,6 +47,7 @@ class FeedTest < ActiveSupport::TestCase
   test 'should not update xml with no response' do
     @feed.url = 'http://diturlbestaatniet'
     @feed.update_feed
+    @feed.reload
     assert_equal feeds(:nedforce_feed).xml, @feed.xml
   end
 
