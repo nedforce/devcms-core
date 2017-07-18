@@ -1,11 +1,10 @@
 #= require jquery
 #= require jquery_ujs
 #= require jquery-ui/core
-#= require jquery-ui/effect.all
 #= require jquery-ui/widget
-#= require jquery-ui/mouse
 #= require jquery-ui/position
-#= require jquery-ui/datepicker
-#= require jquery-ui/datepicker-nl
+#= require jquery-ui/effect.all
+#= require jquery-ui/widgets/datepicker
+#= require jquery-ui/i18n/datepicker-nl
 #= require jquery.cookie
 #= require jquery.placeholder

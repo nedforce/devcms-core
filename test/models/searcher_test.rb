@@ -1,8 +1,6 @@
 require File.expand_path('../../test_helper.rb', __FILE__)
 
 class SearcherTest < ActiveSupport::TestCase
-  require 'rsolr'
-
   setup do
     Devcms.stubs(:search_configuration).returns(
       enabled_search_engines: ['ferret'],

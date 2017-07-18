@@ -5,7 +5,7 @@ module DevcmsCore
   # See RoleSecurityClassMethods for some methods it provides.
   module RoleRequirementSystem
     def self.included(klass)
-      klass.send :class_inheritable_array, :role_requirements
+      klass.send :class_attribute, :role_requirements
       klass.send :include, RoleSecurityInstanceMethods
       klass.send :extend, RoleSecurityClassMethods
       klass.send :helper_method, :url_options_authenticate?
@@ -65,7 +65,7 @@ module DevcmsCore
         end
 
         self.role_requirements ||= []
-        self.role_requirements << { roles: roles, options: options }
+        self.role_requirements += [{ roles: roles, options: options }]
       end
 
       # This is the core of RoleRequirement.  Here is where it discerns if a

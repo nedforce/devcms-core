@@ -15,7 +15,7 @@ SecureHeaders::Configuration.default do |config|
 
   config.x_content_type_options = 'nosniff'
   config.x_xss_protection = '1; mode=block'
-  config.x_download_options = 'noopen'
+  config.x_download_options = SecureHeaders::OPT_OUT
   config.x_permitted_cross_domain_policies = 'none'
   config.csp = {
     default_src: %w(https: 'self'),
@@ -29,7 +29,6 @@ SecureHeaders::Configuration.default do |config|
     script_src: %w('self'),
     style_src: %w('unsafe-inline'),
     base_uri: %w('self'),
-    child_src: %w('self'),
     form_action: %w('self' github.com),
     frame_ancestors: %w('none'),
     plugin_types: %w(application/x-shockwave-flash),

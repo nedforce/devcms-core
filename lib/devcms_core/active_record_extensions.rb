@@ -97,7 +97,7 @@ module DevcmsCore
           :sql_options => { include: :node }
         })
 
-        class_inheritable_accessor :acts_as_archive_configuration
+        class_attribute :acts_as_archive_configuration
 
         self.acts_as_archive_configuration = options
 
