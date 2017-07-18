@@ -1,0 +1,29 @@
+$ ->
+  if '<%= DevcmsCore.config.search_engine %>' == 'pando_search'
+    cache = {}
+
+    sortResults = (term, results) ->
+      matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( term ), "i" )
+      sortedResults = $.grep results, (item) ->
+        matcher.test( item )
+      sortedResults
+
+    $('#search_terms').autocomplete
+      autoFocus: false,
+      source: (request, response) ->
+        term = request.term
+        # Only do JSON request for the first two characters
+        cache_key = term
+        if cache[cache_key] != undefined
+          response( sortResults(term, cache[ cache_key ]) )
+        else if term.length < 2
+          response( sortResults(term, []) )
+        else
+          $.getJSON "#{'<%= DevcmsCore.config.pando_suggest_url %>'}?q=#{term}", request, ( json, status, xhr) =>
+            results = $.map json['suggestions'], (val, i) ->
+              val.text
+            cache[ cache_key ] =  results
+            response( sortResults(term, results) )
+      select: (event, ui) ->
+        $(this).val( ui.item.value )
+        $(this).closest('form').submit()

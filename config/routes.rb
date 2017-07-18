@@ -445,9 +445,6 @@ Rails.application.routes.draw do
 
   if Devcms.search_configuration[:enabled_search_engines].present?
     get '/search(/:search_engine)' => 'search#index', as: :search
-    if Devcms.search_configuration[:enabled_search_engines].include? 'pando_search'
-      get 'search_suggestions', to: 'pando_search#search_suggestions', as: :search_suggestions
-    end
   end
 
   get '/synonyms.txt' => 'application#synonyms', as: :synonyms, format: :txt

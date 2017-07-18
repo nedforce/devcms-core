@@ -38,16 +38,4 @@ class Search::PandoSearch
     total_results = result_hash['total']
     return results, total_results
   end
-
-  def self.search_suggestions term
-    uri = URI.parse(DevcmsCore.config.pando_suggest_url)
-    uri.query = {q: term}.to_param
-
-    req = Net::HTTP::Get.new(uri.to_s)
-    res = Net::HTTP.start(uri.host, uri.port, :use_ssl => true) {|http|
-      http.request(req)
-    }
-    result = JSON.parse(res.body)
-    result['suggestions'].map{|sug| sug['text']}
-  end
 end
