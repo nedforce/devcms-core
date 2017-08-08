@@ -45,9 +45,10 @@ module DevcmsCore
 
     # Search
     config.search_engine = false
-
     config.pando_search_url = ''
     config.pando_suggest_url = ''
+
+    config.owms_terms_url = 'http://standaarden.overheid.nl/owms/terms'
 
     config.use_devcms_icons = true
 

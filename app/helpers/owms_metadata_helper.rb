@@ -3,7 +3,7 @@ module OwmsMetadataHelper
     metadata = []
 
     metadata << tag(:link, rel: 'schema.DCTERMS', href: 'http://purl.org/dc/terms')
-    metadata << tag(:link, rel: 'schema.OVERHEID', href: 'http://standaarden.overheid.nl/owms/terms')
+    metadata << tag(:link, rel: 'schema.OVERHEID', href: DevcmsCore.config.owms_terms_url)
 
     metadata << indexing_metadata_for(node)
     metadata << owms_core_metadata_for(node)
