@@ -3,19 +3,9 @@ class SearchController < ApplicationController
 
   before_filter :set_search_engine
   before_filter :set_search_scope, :parse_search_scope
+  before_filter :perform_query, :get_available_facets, :perform_suggested_query
 
   def index
-    @query = params[:query].try(:strip)
-
-    @from = Date.parse(params[:from]) rescue nil
-    @to   = Date.parse(params[:to])   rescue nil
-
-    @advanced = params[:advanced]
-    if @query
-      @results = Searcher(@engine).search(@query, :page => params[:page], :for => current_user, :zipcode => params[:zipcode], :from => @from, :to => @to, :sort => params[:sort], :content_types_to_include => @content_types_to_include, :content_types_to_exclude => @content_types_to_exclude, :top_node => @top_node, :facets => params[:facets])
-    else
-      @results = []
-    end
   end
 
 protected
@@ -31,5 +21,30 @@ protected
   def set_search_engine
     @engine = params[:search_engine] if params[:search_engine].present?
     @engine = Devcms.search_configuration[:default_search_engine] unless Devcms.search_configuration[:enabled_search_engines].include?(@engine)
+  end
+
+  def perform_query
+    @query = params[:query].try(:strip)
+
+    @from = Date.parse(params[:from]) rescue nil
+    @to   = Date.parse(params[:to])   rescue nil
+
+    @advanced = params[:advanced]
+    if @query
+      @results = Searcher(@engine).search(@query, :page => params[:page], :for => current_user, :zipcode => params[:zipcode], :from => @from, :to => @to, :sort => params[:sort], :content_types_to_include => @content_types_to_include, :content_types_to_exclude => @content_types_to_exclude, :top_node => @top_node, :facets => params[:facets])
+    else
+      @results = []
+    end
+  end
+
+  def perform_suggested_query
+    return if @engine != 'pando_search' || @results.any?
+
+    @suggested_query, @results, @available_facets = Search::PandoSearch.suggestion_results
+  end
+
+  def get_available_facets
+    return if @engine != 'pando_search'
+    @available_facets = Search::PandoSearch.available_facets
   end
 end
