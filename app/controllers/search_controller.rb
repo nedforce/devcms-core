@@ -45,6 +45,6 @@ protected
 
   def get_available_facets
     return if @engine != 'pando_search'
-    @available_facets = Search::PandoSearch.available_facets
+    @available_facets = @results.any? ? Search::PandoSearch.available_facets : []
   end
 end
