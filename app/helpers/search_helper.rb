@@ -1,7 +1,7 @@
 module SearchHelper
   def highlighted_title_link(result, url)
     if result.highlighted_title.blank?
-      link_to highlight(white_list(result.title), @query.split, :higlighter => '<span class="searchHighlight">\1</span>'), url
+      link_to highlight(white_list(result.title), @query.try(:split), :higlighter => '<span class="searchHighlight">\1</span>'), url
     else
       link_to white_list(result.highlighted_title, :tags => ['span'], :attributes => ['class']), url
     end

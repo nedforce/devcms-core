@@ -32,9 +32,8 @@ protected
     @advanced = params[:advanced]
     if @query
       @results = Searcher(@engine).search(@query, :page => params[:page], :for => current_user, :zipcode => params[:zipcode], :from => @from, :to => @to, :sort => params[:sort], :content_types_to_include => @content_types_to_include, :content_types_to_exclude => @content_types_to_exclude, :top_node => @top_node, :facets => params[:facets])
-    else
-      @results = []
     end
+    @results ||= []
   end
 
   def perform_suggested_query
