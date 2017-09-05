@@ -1,9 +1,7 @@
 module HeadHelper
   def canonical_link
-    if includes_params_excluded_from_canonical? && canonical_url
+    if (includes_params_excluded_from_canonical? || @show_canonical?) && canonical_url
       tag(:link, rel: 'canonical', href: canonical_url)
-    elsif @canonical_link.present?
-      tag(:link, rel: 'canonical', href: @canonical_link)
     end
   end
 
