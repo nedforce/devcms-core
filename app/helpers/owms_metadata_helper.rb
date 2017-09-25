@@ -9,7 +9,8 @@ module OwmsMetadataHelper
     metadata << owms_core_metadata_for(node)
     metadata << owms_permit_metadata_for(node) if node.content_type == 'Permit'
 
-    metadata << meta_tag('keywords', node.tag_list.join(","))
+    keyword_list = node.tag_list + (node.content.keyword_list if node.content_type == "Product")
+    metadata << meta_tag('keywords', keyword_list.join(","))
 
     metadata << meta_tag('DCTERMS.alternative', node.title_alternative_list.to_s) if node.title_alternative_list.present?
 
