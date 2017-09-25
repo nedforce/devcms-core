@@ -115,7 +115,7 @@ module OwmsMetadataHelper
   # Metadata that should be added to a SOLR search index
   def indexing_metadata_for(node)
     tags = []
-    tags << meta_tag('DCTERMS.alternative', node.content.keyword_list) if node.content_type == "Product"
+    tags << meta_tag('DCTERMS.alternative', node.content.keyword_list.join(',')) if node.content_type == "Product"
     tags
   end
 
