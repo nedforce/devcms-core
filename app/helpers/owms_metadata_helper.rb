@@ -9,10 +9,7 @@ module OwmsMetadataHelper
     metadata << owms_core_metadata_for(node)
     metadata << owms_permit_metadata_for(node) if node.content_type == 'Permit'
 
-    keyword_list = node.tag_list + (node.content.keyword_list if node.content_type == "Product")
-    metadata << meta_tag('keywords', keyword_list.join(","))
-
-    metadata << meta_tag('DCTERMS.alternative', node.title_alternative_list.to_s) if node.title_alternative_list.present?
+    metadata << meta_tag('keywords', node.tag_list.join(", "))
 
     metadata.flatten.join("\n").html_safe
   end
@@ -116,7 +113,9 @@ module OwmsMetadataHelper
   # Metadata that should be added to a SOLR search index
   def indexing_metadata_for(node)
     tags = []
-    tags << meta_tag('DCTERMS.alternative', node.content.keyword_list.join(',')) if node.content_type == "Product"
+    terms_list = node.title_alternative_list
+    terms_list += node.content.keyword_list if node.content_type == "Product"
+    tags << meta_tag('DCTERMS.alternative', terms_list.uniq.join(', '))
     tags
   end
 
