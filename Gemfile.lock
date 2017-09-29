@@ -27,7 +27,7 @@ GIT
 PATH
   remote: .
   specs:
-    devcms_core (3.6.12)
+    devcms_core (3.6.13)
       actionpack-action_caching
       actionpack-page_caching
       acts-as-taggable-on (< 4.0)
@@ -153,12 +153,12 @@ GEM
     ferret (0.11.8.7)
     ffi (1.9.18)
     geokit (1.11.0)
-    geokit-rails (2.2.0)
+    geokit-rails (2.3.0)
       geokit (~> 1.5)
       rails (>= 3.0)
     globalid (0.4.0)
       activesupport (>= 4.2.0)
-    haml (5.0.2)
+    haml (5.0.3)
       temple (>= 0.8.0)
       tilt
     hashdiff (0.3.4)
@@ -291,13 +291,13 @@ GEM
       schema_plus_pg_indexes (~> 0.1, >= 0.1.3)
       schema_plus_tables (~> 0.1)
       schema_plus_views (~> 0.1)
-    schema_plus_columns (0.1.3)
-      activerecord (>= 4.2, < 5.1)
+    schema_plus_columns (0.2.0)
+      activerecord (>= 4.2, < 5.2)
       its-it (~> 1.2)
       schema_plus_core
       schema_plus_indexes (~> 0.2)
-    schema_plus_compatibility (0.2.0)
-      activerecord (>= 4.2, < 5.1)
+    schema_plus_compatibility (0.3.0)
+      activerecord (>= 4.2, < 5.2)
       schema_monkey (~> 2.1)
     schema_plus_core (1.0.2)
       activerecord (~> 4.2)
@@ -310,8 +310,8 @@ GEM
       activerecord (>= 4.2, < 6.0)
       its-it (~> 1.2)
       schema_plus_core (>= 1.0, < 3.0)
-    schema_plus_enums (0.1.5)
-      activerecord (>= 4.2, < 5.1)
+    schema_plus_enums (0.1.6)
+      activerecord (>= 4.2, <= 5.1)
       its-it (~> 1.2)
       schema_plus_core
     schema_plus_foreign_keys (0.1.7)
@@ -320,8 +320,8 @@ GEM
       schema_plus_compatibility (~> 0.2)
       schema_plus_core
       valuable
-    schema_plus_indexes (0.2.4)
-      activerecord (>= 4.2, < 5.1)
+    schema_plus_indexes (0.3.0)
+      activerecord (>= 4.2, < 5.2)
       its-it (~> 1.2)
       schema_plus_core
     schema_plus_pg_indexes (0.1.12)
@@ -335,7 +335,7 @@ GEM
     schema_plus_views (0.3.1)
       activerecord (~> 4.2)
       schema_plus_core (~> 1.0)
-    secure_headers (3.6.7)
+    secure_headers (3.7.1)
       useragent
     settler (2.0.1)
       activerecord (>= 3.1)

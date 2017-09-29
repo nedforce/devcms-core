@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
   # Note that this rescue_from statement has precedence over the one above.
   # ActionNotFound and RecordNotFound exceptions are given a special treatment, so you don't have to worry about
   # catching them in the +find_[resource]+ methods throughout all controllers.
-  rescue_from ActionController::RoutingError, ActionController::UnknownController, ::AbstractController::ActionNotFound, ActiveRecord::RecordNotFound, :with => :handle_404 unless Rails.env.development?
+  rescue_from ActionController::RoutingError, ActionController::UnknownController, ::AbstractController::ActionNotFound, ActiveRecord::RecordNotFound, ActionController::UnknownFormat, :with => :handle_404 unless Rails.env.development?
 
   before_action :redirect_to_full_domain
   before_action :check_password_renewal, if: :logged_in?
