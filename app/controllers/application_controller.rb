@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
   # Note that this rescue_from statement has precedence over the one above.
   # ActionNotFound and RecordNotFound exceptions are given a special treatment, so you don't have to worry about
   # catching them in the +find_[resource]+ methods throughout all controllers.
-  rescue_from ActionController::RoutingError, ActionController::UnknownController, ::AbstractController::ActionNotFound, ActiveRecord::RecordNotFound, ActionController::UnknownFormat, :with => :handle_404 unless Rails.env.development?
+  rescue_from ActionController::RoutingError, ActionController::UnknownController, ::AbstractController::ActionNotFound, ActiveRecord::RecordNotFound, :with => :handle_404 unless Rails.env.development?
 
   before_action :redirect_to_full_domain
   before_action :check_password_renewal, if: :logged_in?
@@ -105,6 +105,7 @@ class ApplicationController < ActionController::Base
 
   # Renders a custom 500 page. Also makes sure a notification mail is sent.
   def handle_500(exception = env["action_dispatch.exception"])
+    return head 406 if exception.class == ActionController::UnknownFormat
     # Some one requested '/500' directly?
     if exception.blank?
       if (error_500_url_alias = Settler[:error_page_500]).present? && @node = Node.find_by_url_alias(error_500_url_alias)
@@ -116,19 +117,13 @@ class ApplicationController < ActionController::Base
       return
     end
 
-    if Rails.env.test?
-      puts "\n#{exception.message}"
-      puts exception.backtrace.join("\n")
-    end
-
     send_exception_notification(exception)
-    error = { :error => "#{exception} (#{exception.class})", :backtrace => exception.backtrace.join('\n') }
     @page_title = t('errors.internal_server_error')
 
     respond_to do |f|
       f.html do
         if request.xhr?
-          render :json => error.to_json, :status => :internal_server_error
+          render :nothing, :status => :internal_server_error
         else
           set_view_paths
           if (error_500_url_alias = Settler[:error_page_500]).present? && @node = Node.find_by_url_alias(error_500_url_alias)
@@ -139,9 +134,6 @@ class ApplicationController < ActionController::Base
           end
         end
       end
-      f.xml               { render :xml  => error.to_xml,  :status => :internal_server_error }
-      f.any(:json, :js)   { render :json => error.to_json, :status => :internal_server_error }
-      f.any(:rss, :atom)  { render :xml  => error.to_xml,  :status => :internal_server_error, :layout => false }
       f.all               { render :nothing => true,       :status => :internal_server_error }
     end
   end
