@@ -12,6 +12,7 @@ class ContactFormsController < ApplicationController
 
   # * GET /contact_forms/:id
   def show
+    @errors = {}
     @entered_fields = []
 
     respond_to do |format|
@@ -22,14 +23,16 @@ class ContactFormsController < ApplicationController
   # * POST /contact_forms/:id/send_message
   def send_message
     @contact_form_field = params[:contact_form_field]
+    
+    @errors = {}
 
     get_entered_fields
 
     respond_to do |format|
-      @obligatory_error    = true unless entered_all_obligatory_fields?(@contact_form_field)
-      @email_address_error = true unless valid_email_address_fields?(@contact_form_field)
-
-      if @obligatory_error || @email_address_error
+#      @obligatory_error    = true unless entered_all_obligatory_fields?(@contact_form_field)
+#      @email_address_error = true unless valid_email_address_fields?(@contact_form_field)
+      @errors = check_errors(@contact_form_field)
+      if @errors.any?
         format.html { render action: 'show' }
       else
         # Check for send method
@@ -107,6 +110,23 @@ class ContactFormsController < ApplicationController
     used_fields
   end
 
+  def check_errors(array)
+    check_errors_hash = {}
+    if array.present?
+      @contact_form.obligatory_field_ids.each do |field_id|
+        if array["#{field_id}"].blank?
+          check_errors_hash["#{field_id}"] = 'contact_forms.should_enter_obligatory_field'
+        end
+      end
+      @contact_form.email_address_field_ids.each do |field_id|
+        if array["#{field_id}"].present? && array["#{field_id}"] !~ EmailValidator::REGEX
+          check_errors_hash["#{field_id}"] = 'contact_forms.should_enter_valid_email_address'
+        end
+      end
+    end
+    check_errors_hash
+  end
+  
   # Check whether all obligatory fields are entered.
   # Returns +true+ if this is the case, +false+ otherwise.
   def entered_all_obligatory_fields?(array)
