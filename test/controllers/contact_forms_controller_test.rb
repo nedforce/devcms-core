@@ -117,7 +117,7 @@ class ContactFormsControllerTest < ActionController::TestCase
       Rails.application.config.honeypot_name => Rails.application.config.honeypot_value
     
     errors = assigns[:errors]
-    assert_equal errors[@name.id.to_s], "contact_forms.should_enter_obligatory_field"
-    assert_equal errors[@email_address.id.to_s], "contact_forms.should_enter_valid_email_address"
+    assert_equal errors[@name.id], I18n.t("contact_forms.should_enter_obligatory_field")
+    assert_equal errors[@email_address.id], I18n.t("contact_forms.should_enter_valid_email_address")
   end
 end

@@ -30,6 +30,7 @@ class ContactFormsController < ApplicationController
 
     respond_to do |format|
       @errors = check_errors(@contact_form_field)
+
       if @errors.any?
         format.html { render action: 'show' }
       else
@@ -111,34 +112,24 @@ class ContactFormsController < ApplicationController
   # Check whether all obligatory fields are entered.
   # Check whether all email_address fields are actually an e-mail address.
   # Returns errors
-  #
-  # TODO: Rename `array` argument to something more clear. The name array is
-  #       vague. It is an error of what?
-  def check_errors(array)
-    # TODO: A better name is `errors_hash` or just `errors`. The 'check' part
-    #       does not add anything to the meaning.
-    check_errors_hash = {}
-    if array.present?
+  def check_errors(contact_form_field)
+ 
+    errors = {}
+    if contact_form_field.present?
       @contact_form.obligatory_field_ids.each do |field_id|
-        # TODO: String interpolation is not necessary here.
-        #  See http://ruby-doc.org/core-2.4.2/Hash.html
-        if array["#{field_id}"].blank?
 
-          # TODO: The `check_errors_hash` contains the translation key of the
-          # error message rather than the error message itself. I think the
-          # latter is a bit better because it keeps the view more clean.
-          check_errors_hash["#{field_id}"] = 'contact_forms.should_enter_obligatory_field'
+        if contact_form_field[field_id.to_s].blank?
+           errors[field_id] = t 'contact_forms.should_enter_obligatory_field'
         end
       end
       @contact_form.email_address_field_ids.each do |field_id|
 
-        # TODO: String interpolation is not necessary here.
-        if array["#{field_id}"].present? && array["#{field_id}"] !~ EmailValidator::REGEX
-          check_errors_hash["#{field_id}"] = 'contact_forms.should_enter_valid_email_address'
+        if contact_form_field[field_id.to_s].present? && contact_form_field[field_id.to_s] !~ EmailValidator::REGEX
+          errors[field_id] = t 'contact_forms.should_enter_valid_email_address'
         end
       end
     end
-    check_errors_hash
+    errors
   end
 
   def check_honeypot
