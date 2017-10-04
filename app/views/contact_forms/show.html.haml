@@ -5,7 +5,7 @@
     = w @contact_form.description_before_contact_fields
 
 - if @errors.any?
-  %p.error 
+  %p.error
     %b= t 'contact_forms.should_enter_valid_data'
 
 = form_tag "/contact_forms/#{@contact_form.id}/send_message", method: :post, multipart: @contact_form_fields.any? { |field| field.field_type == 'file' } do
@@ -49,6 +49,7 @@
               = file_field_tag "contact_form_field_#{contact_form_field.id}", name: "contact_form_field[#{contact_form_field.id}]", class: 'contact_field'
           - if contact_form_field.obligatory?
             %td.obligatory *
+          - #TODO: Remove unecessary string interpolation.
           - if @errors.has_key?("#{contact_form_field.id}")
             %td.error= t @errors["#{contact_form_field.id}"]
 
