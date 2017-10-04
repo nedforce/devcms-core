@@ -97,4 +97,27 @@ class ContactFormsControllerTest < ActionController::TestCase
 
     assert_response :unprocessable_entity
   end
+  
+  def test_should_validate_response
+    @help_form = contact_forms(:help_form)
+
+    @name          = contact_form_fields(:name)
+    @email_address = contact_form_fields(:email_address)
+    @phone_number  = contact_form_fields(:phone_number)
+    @question      = contact_form_fields(:question)
+
+    post :send_message, :id => @help_form.id,
+      :contact_form_field => {
+                 @name.id.to_s => '',
+        @email_address.id.to_s => 'a@b',
+         @phone_number.id.to_s => '+31(0)6',
+             @question.id.to_s => 'What is the answer to the question of life, the universe and everything?'
+      },
+      Rails.application.config.honeypot_empty_name => '',
+      Rails.application.config.honeypot_name => Rails.application.config.honeypot_value
+    
+    errors = assigns[:errors]
+    assert_equal errors[@name.id.to_s], "contact_forms.should_enter_obligatory_field"
+    assert_equal errors[@email_address.id.to_s], "contact_forms.should_enter_valid_email_address"
+  end
 end

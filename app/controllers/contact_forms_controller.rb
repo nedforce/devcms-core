@@ -29,8 +29,6 @@ class ContactFormsController < ApplicationController
     get_entered_fields
 
     respond_to do |format|
-#      @obligatory_error    = true unless entered_all_obligatory_fields?(@contact_form_field)
-#      @email_address_error = true unless valid_email_address_fields?(@contact_form_field)
       @errors = check_errors(@contact_form_field)
       if @errors.any?
         format.html { render action: 'show' }
@@ -110,6 +108,9 @@ class ContactFormsController < ApplicationController
     used_fields
   end
 
+  # Check whether all obligatory fields are entered.
+  # Check whether all email_address fields are actually an e-mail address.
+  # Returns errors
   def check_errors(array)
     check_errors_hash = {}
     if array.present?
@@ -125,34 +126,6 @@ class ContactFormsController < ApplicationController
       end
     end
     check_errors_hash
-  end
-  
-  # Check whether all obligatory fields are entered.
-  # Returns +true+ if this is the case, +false+ otherwise.
-  def entered_all_obligatory_fields?(array)
-    @contact_form.obligatory_field_ids.each do |field_id|
-      if array.blank? || array["#{field_id}"].blank?
-        return false
-      end
-    end
-
-    true
-  end
-
-  # Check whether all email_address fields are actually an e-mail address.
-  # Allow empty fields, because it is the responsibility of the obligatory
-  # setting to check for presence.
-  # Returns +true+ if the e-mail addresses are valid, +false+ otherwise.
-  def valid_email_address_fields?(array)
-    if array.present?
-      @contact_form.email_address_field_ids.each do |field_id|
-        if array["#{field_id}"].present? && array["#{field_id}"] !~ EmailValidator::REGEX
-          return false
-        end
-      end
-    end
-
-    true
   end
 
   def check_honeypot
