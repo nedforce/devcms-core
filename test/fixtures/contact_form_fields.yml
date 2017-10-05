@@ -6,7 +6,7 @@ name:
   contact_form: help_form
 email_address:
   label: E-mailadres
-  field_type: textfield
+  field_type: email_address
   position: 2
   obligatory: true
   contact_form: help_form

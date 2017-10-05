@@ -12,6 +12,7 @@ class ContactFormsController < ApplicationController
 
   # * GET /contact_forms/:id
   def show
+    @errors = {}
     @entered_fields = []
 
     respond_to do |format|
@@ -23,13 +24,14 @@ class ContactFormsController < ApplicationController
   def send_message
     @contact_form_field = params[:contact_form_field]
 
+    @errors = {}
+
     get_entered_fields
 
     respond_to do |format|
-      @obligatory_error    = true unless entered_all_obligatory_fields?(@contact_form_field)
-      @email_address_error = true unless valid_email_address_fields?(@contact_form_field)
+      @errors = check_errors(@contact_form_field)
 
-      if @obligatory_error || @email_address_error
+      if @errors.any?
         format.html { render action: 'show' }
       else
         # Check for send method
@@ -108,31 +110,26 @@ class ContactFormsController < ApplicationController
   end
 
   # Check whether all obligatory fields are entered.
-  # Returns +true+ if this is the case, +false+ otherwise.
-  def entered_all_obligatory_fields?(array)
-    @contact_form.obligatory_field_ids.each do |field_id|
-      if array.blank? || array["#{field_id}"].blank?
-        return false
-      end
-    end
-
-    true
-  end
-
   # Check whether all email_address fields are actually an e-mail address.
-  # Allow empty fields, because it is the responsibility of the obligatory
-  # setting to check for presence.
-  # Returns +true+ if the e-mail addresses are valid, +false+ otherwise.
-  def valid_email_address_fields?(array)
-    if array.present?
+  # Returns errors
+  def check_errors(contact_form_field)
+ 
+    errors = {}
+    if contact_form_field.present?
+      @contact_form.obligatory_field_ids.each do |field_id|
+
+        if contact_form_field[field_id.to_s].blank?
+           errors[field_id] = t 'contact_forms.should_enter_obligatory_field'
+        end
+      end
       @contact_form.email_address_field_ids.each do |field_id|
-        if array["#{field_id}"].present? && array["#{field_id}"] !~ EmailValidator::REGEX
-          return false
+
+        if contact_form_field[field_id.to_s].present? && contact_form_field[field_id.to_s] !~ EmailValidator::REGEX
+          errors[field_id] = t 'contact_forms.should_enter_valid_email_address'
         end
       end
     end
-
-    true
+    errors
   end
 
   def check_honeypot
