@@ -20,6 +20,9 @@ class SitemapsController < ApplicationController
       format.xml do
         raise ::AbstractController::ActionNotFound if params[:interval].blank?
         @changes = Node.unscoped.where('updated_at > ?', Time.now - params[:interval].to_i).reorder(updated_at: :desc)
+        unless params[:full] == '1'
+          @changes = @changes.select{|node| node.content.nil? || (node.content.updated_at > (Time.now - params[:interval].to_i)) }
+        end
       end
       format.any(:rss, :atom) do
         @nodes = @node.last_changes(:all, { limit: 25 })
