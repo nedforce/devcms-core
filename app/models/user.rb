@@ -83,7 +83,7 @@ class User < ActiveRecord::Base
 
   # A +User+ has and belongs to many +NewsletterArchive+ objects (i.e., subscriptions to newsletters).
   #has_and_belongs_to_many :newsletter_archives
-  has_many :newsletter_archives_users
+  has_many :newsletter_archives_users, dependent: :destroy
   has_many :newsletter_archives, through: :newsletter_archives_users
 
   has_many :newsletter_edition_queues
