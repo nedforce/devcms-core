@@ -23,12 +23,13 @@ class Opinion < ActiveRecord::Base
     show_in_menu:    false,
     copyable:        false,
     has_own_content_box: true,
+    has_default_representation: false,
   )
 
   has_many :opinion_entries, dependent: :destroy
 
   after_paranoid_delete :remove_associated_content
-    
+
   def content_title
     title || default_title
   end
