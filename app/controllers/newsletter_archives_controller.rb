@@ -89,6 +89,23 @@ class NewsletterArchivesController < ApplicationController
     end
   end
 
+  def unsubscribe_by_mail
+    subscription = NewsletterArchivesUser.where(identifier_hash: params[:hash]).first
+    if subscription.present?
+      archive = subscription.newsletter_archive
+      subscription.destroy
+      flash[:notice] = I18n.t('newsletters.unsubscribe_successful')
+      if archive.node.visible?
+        redirect_to(archive)
+      else
+        redirect_to root_path
+      end
+    else
+      flash[:warning] = I18n.t('newsletters.unsubscribe_unsuccessful')
+      handle_404
+    end
+  end
+
 protected
 
   # Finds the +NewsletterArchive+ object corresponding to the passed in +id+ parameter.

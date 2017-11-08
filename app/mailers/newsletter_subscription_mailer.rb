@@ -15,6 +15,7 @@ class NewsletterSubscriptionMailer < ActionMailer::Base
     @newsletter_edition = edition
     @user               = user
     @host               = host
+    @unsubscribe_hash   = NewsletterArchivesUser.where(user_id: @user.id, newsletter_archive_id: archive.id).first.identifier_hash
 
     mail(from: @from, to: @recipients, subject: @subject)
   end
