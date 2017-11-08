@@ -447,8 +447,8 @@ Rails.application.routes.draw do
     get '/search(/:search_engine)' => 'search#index', as: :search
   end
 
-  get 'opzeggen/:hash', to: 'newsletter_archives#unsubscribe_by_mail', as: :unsubscribe_by_mail
-  
+  get '/opzeggen/:hash', to: 'newsletter_archives#unsubscribe_by_mail', as: :unsubscribe_by_mail
+
   get '/synonyms.txt' => 'application#synonyms', as: :synonyms, format: :txt
 
   match '/404', to: 'application#handle_404', via: :all

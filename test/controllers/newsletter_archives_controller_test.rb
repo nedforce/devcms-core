@@ -20,7 +20,7 @@ class NewsletterArchivesControllerTest < ActionController::TestCase
       assert_redirected_to newsletter_archive_path(newsletter_archives(:devcms_newsletter_archive))
     end
   end
-  
+
   def test_should_not_subscribe_to_news_archive_if_already_subscribed
     login_as :sjoerd
 
@@ -69,6 +69,13 @@ class NewsletterArchivesControllerTest < ActionController::TestCase
     assert_no_difference('newsletter_archives(:devcms_newsletter_archive).users.count') do
       delete :unsubscribe, :id => newsletter_archives(:devcms_newsletter_archive).id
       assert_response :redirect
+    end
+  end
+
+  def test_should_unsubscribe_if_using_link_with_hash
+    assert_difference('newsletter_archives(:devcms_newsletter_archive).users.count', -1) do
+      get :unsubscribe_by_mail, hash: "1NLGrb6CtHkQ6C4UAP2rMmBiNmNssTFJjn4olCGWZS0"
+      assert_redirected_to newsletter_archive_path(newsletter_archives(:devcms_newsletter_archive))
     end
   end
 

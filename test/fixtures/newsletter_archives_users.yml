@@ -1,15 +1,19 @@
 roderick_subscription:
   user: roderick
   newsletter_archive: devcms_newsletter_archive
+  identifier_hash: 1NLGrb6CtHkQ6C4UAP2rMmBiNmNssTFJjn4olCGWZS0
 
 sjoerd_subscription:
   user: sjoerd
   newsletter_archive: devcms_newsletter_archive
+  identifier_hash: UYNE959Rrr2LP6ujmu7TFCXDpzrMkNfAdh91W6MBAbE
 
 arthur_subscription:
   user: arthur
   newsletter_archive: devcms_newsletter_archive
+  identifier_hash: PlUUqaaWQQAJo1u05qvcTUMDCsj3-CTrCRBeU_qCugo
 
 arthur_example_subscription:
   user: arthur
   newsletter_archive: example_newsletter_archive
+  identifier_hash: DsruJ918DKT7WmsDmUcXaTYje807RSe77FGcw6uWQSg

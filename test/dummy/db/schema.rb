@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170718134119) do
+ActiveRecord::Schema.define(version: 20171108122036) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -471,6 +471,7 @@ ActiveRecord::Schema.define(version: 20170718134119) do
     t.integer  "user_id",               :foreign_key=>{:references=>"users", :name=>"newsletter_archives_users_user_id_fkey", :on_update=>:no_action, :on_delete=>:cascade}
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "identifier_hash"
   end
 
   create_table "newsletter_editions", force: :cascade do |t|
