@@ -72,7 +72,7 @@ module DevcmsCore
                         :expiration_notification_method, :expiration_email_recipient, :cascade_expires_on,
                         :title_alternative_list, :title_alternatives, :tag_list, :tags, :pin_id,
                         :defer_geocoding, :location, :geocode,
-                        :short_title, :locale, to: :node
+                        :short_title, :locale, :section_description, to: :node
     end
 
     module ClassMethods

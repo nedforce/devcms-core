@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171108122036) do
+ActiveRecord::Schema.define(version: 20180109152515) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -79,6 +79,7 @@ ActiveRecord::Schema.define(version: 20171108122036) do
     t.datetime "last_checked_at"
     t.string   "content_box_url"
     t.boolean  "content_box_show_link",          :default=>true
+    t.string   "section_description"
   end
 
   create_table "abbreviations", force: :cascade do |t|
