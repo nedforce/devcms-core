@@ -16,7 +16,7 @@ GIT
       rails (~> 4.0)
 
 GIT
-  remote: git@git.nedforce.nl:data_checker.git
+  remote: https://github.com/nedforce/data_checker.git
   revision: 14c8e8c94eb082b91627ca10c428d273b3dd3eaf
   branch: rails4
   specs:
@@ -390,4 +390,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   1.15.4
+   1.16.0
